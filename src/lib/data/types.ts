@@ -1,5 +1,32 @@
-import type { EventCategory, EventVisibility, AnnouncementKind } from "@prisma/client";
 import type { Clash } from "@/lib/clash";
+
+export const CATEGORIES = ["GAMING", "SPORTS", "TECH", "CULTURAL", "WORKSHOP", "TALK", "PARTY"] as const;
+export type EventCategory = (typeof CATEGORIES)[number];
+export type EventStatus = "draft" | "published" | "closed" | "cancelled";
+export type EventAccess = "public" | "code";
+/** UI-facing visibility (kept from the original components). */
+export type EventVisibility = "PUBLIC" | "CODE_ONLY";
+export type AnnouncementKind = "SCHEDULE_CHANGE" | "VENUE_CHANGE" | "INFO";
+
+/** Raw `events` row. */
+export interface EventRow {
+  id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  category: EventCategory;
+  venue: string;
+  starts_at: string;
+  ends_at: string;
+  capacity: number;
+  price_paise: number;
+  status: EventStatus;
+  access: EventAccess;
+  access_code: string | null;
+  organizer_id: string;
+  banner_key: string | null;
+  created_at: string;
+}
 
 export interface EventSummary {
   id: string;
@@ -8,6 +35,7 @@ export interface EventSummary {
   tagline?: string | null;
   category: EventCategory;
   visibility: EventVisibility;
+  status: EventStatus;
   startsAt: Date;
   endsAt: Date;
   venueName: string | null;
@@ -18,9 +46,11 @@ export interface EventSummary {
 }
 
 export interface NextUp extends EventSummary {
+  registrationId: string;
   passSerial: string;
+  /** QR payload: evntcult://p/<pass_token> */
   passToken: string;
-  paymentStatus: "NOT_REQUIRED" | "PENDING" | "PAID" | "FAILED" | "REFUNDED" | "WAIVED";
+  paymentStatus: "NOT_REQUIRED" | "PENDING" | "PAID";
   directions?: string | null;
 }
 
@@ -31,13 +61,6 @@ export interface AnnouncementItem {
   title: string;
   body: string;
   createdAt: Date;
-}
-
-export interface CertificateItem {
-  id: string;
-  eventTitle: string;
-  serial: string;
-  issuedAt: Date;
 }
 
 export interface HostedEvent {
@@ -57,17 +80,14 @@ export interface OrganizerPanel {
   live: { id: string; title: string; capacity: number; registered: number; checkedIn: number } | null;
   hosted: HostedEvent[];
   clashes: (Clash & { forEvent: string })[];
-  remindersQueued: number;
-  whatsappReach: number; // registered attendees who opted in
 }
 
 export interface DashboardData {
-  stats: { registered: number; thisWeek: number; certificates: number; photosOfYou: number };
+  stats: { registered: number; thisWeek: number; attended: number; photosOfYou: number };
   nextUp: NextUp | null;
   upcoming: EventSummary[];
   campus: EventSummary[];
   announcements: AnnouncementItem[];
-  certificates: CertificateItem[];
   /** ISO date (yyyy-mm-dd, IST) → number of events that day, this month */
   calendar: Record<string, { campus: number; mine: number }>;
   organizer: OrganizerPanel | null;

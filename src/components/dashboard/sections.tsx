@@ -33,7 +33,7 @@ import {
   Wrench,
   Cpu,
 } from "lucide-react";
-import type { AnnouncementItem, CertificateItem, EventSummary, NextUp, OrganizerPanel } from "@/lib/data/types";
+import type { AnnouncementItem, EventSummary, NextUp, OrganizerPanel } from "@/lib/data/types";
 import { Card } from "@/components/ui/Card";
 import { Chip, type ChipTone } from "@/components/ui/Chip";
 import { EventArt } from "@/components/ui/EventArt";
@@ -360,18 +360,11 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
       <Card eyebrow="Quick actions" title="Run your event" icon={Sparkles} className="lg:col-span-6">
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
           <QuickAction href="/organizer/events/new" icon={Plus} label="New event" primary />
-          <QuickAction href="/organizer/broadcast" icon={Megaphone} label="Broadcast update" color="#efebff" ink="#3b22d6" />
-          <QuickAction
-            href="/organizer/reminders"
-            icon={MessageCircle}
-            label="WhatsApp reminder"
-            hint={`${data.whatsappReach.toLocaleString("en-IN")} opted in`}
-            color="#dcfce7"
-            ink="#15803d"
-          />
-          <QuickAction href="/organizer/scan" icon={ScanLine} label="Scan passes" color="#e0f2fe" ink="#0369a1" />
-          <QuickAction href="/organizer/sponsors" icon={FileText} label="Sponsor ROI deck" color="#fff3df" ink="#b45309" />
-          <QuickAction href="/organizer/certificates" icon={Award} label="Issue certificates" color="#fae8ff" ink="#a21caf" />
+          <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} color="#e0f2fe" ink="#0369a1" />
+          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="payments, export" color="#fff3df" ink="#b45309" />
+          <QuickAction planned icon={Megaphone} label="Broadcast update" />
+          <QuickAction planned icon={MessageCircle} label="WhatsApp reminder" />
+          <QuickAction planned icon={Award} label="Issue certificates" />
         </div>
       </Card>
     </div>
@@ -384,10 +377,12 @@ function QuickAction({
   label,
   hint,
   primary,
+  planned,
   color = "#f4f4f7",
   ink = "#3d3d48",
 }: {
-  href: string;
+  href?: string;
+  planned?: boolean;
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   hint?: string;
@@ -395,6 +390,19 @@ function QuickAction({
   color?: string;
   ink?: string;
 }) {
+  if (planned || !href) {
+    return (
+      <div aria-disabled="true" className="flex cursor-not-allowed flex-col justify-between gap-6 rounded-2xl border border-dashed border-line p-4 opacity-60">
+        <span className="grid size-9 place-items-center rounded-xl bg-canvas text-ink-subtle">
+          <Icon className="size-[18px]" />
+        </span>
+        <div>
+          <p className="text-[13.5px] font-bold leading-tight">{label}</p>
+          <p className="mt-0.5 text-[11.5px] font-semibold uppercase tracking-wider text-ink-subtle">Planned</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <Link
       href={href}
@@ -453,29 +461,23 @@ export function Announcements({ items }: { items: AnnouncementItem[] }) {
   );
 }
 
-/* ─── Certificates ──────────────────────────────────────────────────────── */
+/* ─── Planned features (honest, disabled) ───────────────────────────────── */
 
-export function Certificates({ items }: { items: CertificateItem[] }) {
+export function PlannedCard({
+  eyebrow,
+  title,
+  icon,
+  body,
+}: {
+  eyebrow: string;
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  body: string;
+}) {
   return (
-    <Card eyebrow="Certificates" title="Ready to download" icon={Award} className="h-full" action={{ label: "All", href: "/passes?tab=certificates" }}>
-      <ul className="space-y-2">
-        {items.map((c) => (
-          <li key={c.id}>
-            <a href={`/passes/certificates/${c.id}`} className="group flex items-center gap-3 rounded-2xl bg-canvas p-2.5 transition-colors hover:bg-[#ececf2]">
-              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-sun to-[#ffb547] text-[#7a4b00]">
-                <Award className="size-[18px]" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-[14px] font-bold">{c.eventTitle}</span>
-                <span className="block font-mono text-[11px] text-ink-subtle">{c.serial}</span>
-              </span>
-              <span className="grid size-8 place-items-center rounded-full bg-white text-ink-2 transition-colors group-hover:bg-ink group-hover:text-white">
-                <Download className="size-3.5" />
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
+    <Card eyebrow={eyebrow} title={title} icon={icon} className="h-full border-dashed">
+      <span className="inline-block rounded-full bg-canvas px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-ink-subtle">Planned</span>
+      <p className="mt-3 text-[13.5px] text-ink-muted">{body}</p>
     </Card>
   );
 }
@@ -582,7 +584,7 @@ function EventCard({ e }: { e: EventSummary }) {
 export function VaultTeaser({ photosOfYou }: { photosOfYou: number }) {
   const tiles = ["violet", "orange", "teal", "pink", "blue", "green"];
   return (
-    <Card eyebrow="Photo Vault" title={`${photosOfYou} new photos of you`} icon={Camera} action={{ label: "Open", href: "/vault" }} className="h-full">
+    <Card eyebrow="Photo Vault" title={photosOfYou === 1 ? "1 photo of you" : `${photosOfYou} photos of you`} icon={Camera} action={{ label: "Open", href: "/vault" }} className="h-full">
       <div className="grid grid-cols-3 gap-1.5">
         {tiles.map((t, i) => (
           <div key={t} className={cn("relative isolate overflow-hidden rounded-2xl", i === 0 ? "col-span-2 row-span-2 aspect-auto" : "aspect-square")}>
@@ -592,7 +594,7 @@ export function VaultTeaser({ photosOfYou }: { photosOfYou: number }) {
         ))}
       </div>
       <p className="mt-4 flex items-center gap-2 text-[13px] font-semibold text-ink-muted">
-        <ScanFace className="size-4 text-brand" /> Found with face match · only you see your matches
+        <ScanFace className="size-4 text-brand" /> Tap &ldquo;that&apos;s me&rdquo; on event photos to collect yours
       </p>
     </Card>
   );

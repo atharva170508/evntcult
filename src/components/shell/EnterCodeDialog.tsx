@@ -27,17 +27,18 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setState({ status: "loading" });
-    const res = await fetch("/api/codes/redeem", {
+    const res = await fetch("/api/events/unlock", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code }),
     });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) return setState({ status: "error", message: data.error ?? "Something went wrong." });
-    setState({ status: "ok", message: `Unlocked ${data.event.title}` });
+    const data = (await res.json().catch(() => ({}))) as { error?: { message?: string }; event?: { title: string; slug: string } };
+    if (!res.ok || !data.event) return setState({ status: "error", message: data.error?.message ?? "Something went wrong." });
+    const ev = data.event;
+    setState({ status: "ok", message: `Unlocked ${ev.title}` });
     setTimeout(() => {
       onClose();
-      router.push(`/events/${data.event.slug}`);
+      router.push(`/events/${ev.slug}?code=${encodeURIComponent(code)}`);
     }, 700);
   }
 

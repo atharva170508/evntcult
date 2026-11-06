@@ -9,3 +9,5 @@ coverage
 .DS_Store
 .open-next
 .wrangler
+.dev.vars
+seed.sql

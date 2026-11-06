@@ -9,9 +9,18 @@
     "binding": "ASSETS"
   },
   "observability": { "enabled": true },
-  // Demo mode: sample data, no database or sign-in needed.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "evntcult-db",
+      "database_id": "3f09c8c8-be37-4863-a04d-4fd81b39774c",
+      "migrations_dir": "migrations"
+    }
+  ],
   "vars": {
-    "DEMO_MODE": "true",
-    "PAYMENTS_ENABLED": "false"
+    "PAYMENTS_ENABLED": "false",
+    // Comma-separated email domains allowed to sign in. Empty = any domain (dev only).
+    "ALLOWED_EMAIL_DOMAINS": ""
   }
+  // SESSION_SECRET is a secret: `wrangler secret put SESSION_SECRET` (prod), `.dev.vars` (local).
 }

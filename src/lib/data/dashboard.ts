@@ -1,227 +1,185 @@
 import "server-only";
-import { Prisma, type EventStatus } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
-import { isDemoMode } from "@/lib/env";
+import { all, count } from "@/lib/db";
 import type { Viewer } from "@/lib/rbac";
 import { detectClashes } from "@/lib/clash";
-import { getMockDashboard } from "./mock";
-import type { DashboardData, EventSummary } from "./types";
+import { bufferFor } from "@/lib/venues";
+import { passQrPayload } from "@/lib/tokens";
+import { istYmd } from "@/lib/time";
+import { SEATS_TAKEN_SQL, toSummary, type EventRowWithCount } from "./events";
+import type { AnnouncementItem, DashboardData, OrganizerPanel } from "./types";
 
 const DAY = 86_400_000;
-const ACCENTS = ["blue", "violet", "orange", "teal", "pink", "green", "red"];
-const accentFor = (id: string) => ACCENTS[[...id].reduce((s, c) => s + c.charCodeAt(0), 0) % ACCENTS.length];
 
-const eventSelect = {
-  id: true,
-  slug: true,
-  title: true,
-  tagline: true,
-  category: true,
-  visibility: true,
-  startsAt: true,
-  endsAt: true,
-  capacity: true,
-  feeAmountPaise: true,
-  accentColor: true,
-  venue: { select: { name: true, directions: true } },
-  venueOverride: true,
-  _count: { select: { registrations: { where: { status: { in: ["REGISTERED", "ATTENDED"] } } } } },
-} satisfies Prisma.EventSelect;
+const KIND: Record<string, { kind: AnnouncementItem["kind"]; title: string }> = {
+  schedule: { kind: "SCHEDULE_CHANGE", title: "Schedule change" },
+  venue: { kind: "VENUE_CHANGE", title: "Venue change" },
+  update: { kind: "INFO", title: "Update" },
+};
 
-type EventRow = Prisma.EventGetPayload<{ select: typeof eventSelect }>;
-const loadEvents = (args: Omit<Prisma.EventFindManyArgs, "select" | "include">) =>
-  prisma.event.findMany({ ...args, select: eventSelect });
-
-function toSummary(e: EventRow): EventSummary {
-  return {
-    id: e.id,
-    slug: e.slug,
-    title: e.title,
-    tagline: e.tagline,
-    category: e.category,
-    visibility: e.visibility,
-    startsAt: e.startsAt,
-    endsAt: e.endsAt,
-    venueName: e.venue?.name ?? e.venueOverride ?? null,
-    capacity: e.capacity,
-    registered: e._count.registrations,
-    feePaise: e.feeAmountPaise,
-    accent: e.accentColor ?? accentFor(e.id),
-  };
-}
-
+/** Every number on /dashboard comes from one of these queries. */
 export async function getDashboardData(viewer: Viewer): Promise<DashboardData> {
-  if (isDemoMode()) return getMockDashboard(viewer);
-
   const now = new Date();
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-  const live = { status: { in: ["PUBLISHED", "LIVE"] as EventStatus[] } };
+  const nowIso = now.toISOString();
+  const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1) - 5.5 * 3_600_000).toISOString();
+  const monthEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1) - 5.5 * 3_600_000).toISOString();
 
-  const [myRegs, campusRows, announcements, certificates, photosOfYou, monthEvents] = await Promise.all([
-    prisma.registration.findMany({
-      where: { userId: viewer.id, status: "REGISTERED", event: { endsAt: { gt: now }, ...live } },
-      select: {
-        eventId: true,
-        pass: { select: { serial: true, token: true, revokedAt: true } },
-        payment: { select: { status: true } },
-      },
-    }),
-    loadEvents({
-      where: { ...live, visibility: "PUBLIC", endsAt: { gt: now }, registrations: { none: { userId: viewer.id } } },
-      orderBy: { startsAt: "asc" },
-      take: 8,
-    }),
-    prisma.announcement.findMany({
-      where: { event: { registrations: { some: { userId: viewer.id, status: "REGISTERED" } } } },
-      orderBy: [{ pinned: "desc" }, { createdAt: "desc" }],
-      take: 5,
-      select: { id: true, kind: true, title: true, body: true, createdAt: true, event: { select: { title: true } } },
-    }),
-    prisma.certificate.findMany({
-      where: { registration: { userId: viewer.id } },
-      orderBy: { issuedAt: "desc" },
-      take: 5,
-      select: { id: true, serial: true, issuedAt: true, registration: { select: { event: { select: { title: true } } } } },
-    }),
-    prisma.photoMatch.count({ where: { userId: viewer.id, hiddenByUser: false, confirmed: { not: false } } }),
-    prisma.event.findMany({
-      where: {
-        ...live,
-        startsAt: { gte: monthStart, lt: monthEnd },
-        OR: [{ visibility: "PUBLIC" }, { registrations: { some: { userId: viewer.id } } }],
-      },
-      select: { startsAt: true, registrations: { where: { userId: viewer.id }, select: { id: true } } },
-    }),
+  const [mine, campus, updates, attended, photosOfYou, monthRows] = await Promise.all([
+    all<EventRowWithCount & { reg_id: string; pass_code: string; pass_token: string; payment_status: string }>(
+      `SELECT e.*, ${SEATS_TAKEN_SQL} AS taken, r.id AS reg_id, r.pass_code, r.pass_token, r.payment_status
+         FROM registrations r JOIN events e ON e.id = r.event_id
+        WHERE r.user_id = ? AND r.status = 'registered' AND e.status = 'published' AND e.ends_at > ?
+        ORDER BY e.starts_at ASC`,
+      viewer.id,
+      nowIso,
+    ),
+    all<EventRowWithCount>(
+      `SELECT e.*, ${SEATS_TAKEN_SQL} AS taken FROM events e
+        WHERE e.status = 'published' AND e.access = 'public' AND e.ends_at > ?
+          AND NOT EXISTS (SELECT 1 FROM registrations r WHERE r.event_id = e.id AND r.user_id = ? AND r.status != 'cancelled')
+        ORDER BY e.starts_at ASC LIMIT 8`,
+      nowIso,
+      viewer.id,
+    ),
+    all<{ id: string; kind: string; body: string; created_at: string; title: string }>(
+      `SELECT u.id, u.kind, u.body, u.created_at, e.title FROM event_updates u JOIN events e ON e.id = u.event_id
+        WHERE EXISTS (SELECT 1 FROM registrations r WHERE r.event_id = u.event_id AND r.user_id = ? AND r.status = 'registered')
+           OR e.organizer_id = ?
+        ORDER BY u.created_at DESC LIMIT 5`,
+      viewer.id,
+      viewer.id,
+    ),
+    count(
+      `SELECT COUNT(*) AS n FROM checkins c JOIN registrations r ON r.id = c.registration_id WHERE r.user_id = ?`,
+      viewer.id,
+    ),
+    count(`SELECT COUNT(*) AS n FROM photo_tags WHERE user_id = ?`, viewer.id),
+    all<{ starts_at: string; mine: number }>(
+      `SELECT e.starts_at,
+              EXISTS (SELECT 1 FROM registrations r WHERE r.event_id = e.id AND r.user_id = ? AND r.status = 'registered') AS mine
+         FROM events e
+        WHERE e.status = 'published' AND e.starts_at >= ? AND e.starts_at < ?
+          AND (e.access = 'public' OR EXISTS (SELECT 1 FROM registrations r WHERE r.event_id = e.id AND r.user_id = ?))`,
+      viewer.id,
+      monthStart,
+      monthEnd,
+      viewer.id,
+    ),
   ]);
 
-  const myEventRows = await loadEvents({
-    where: { id: { in: myRegs.map((r) => r.eventId) } },
-    orderBy: { startsAt: "asc" },
-  });
-  const upcoming = myEventRows.map(toSummary);
-  const regByEvent = new Map(myRegs.map((r) => [r.eventId, r]));
-
-  const firstRow = myEventRows[0];
-  const firstReg = firstRow && regByEvent.get(firstRow.id);
-  const nextUp =
-    firstRow && firstReg?.pass && !firstReg.pass.revokedAt
-      ? {
-          ...toSummary(firstRow),
-          passSerial: firstReg.pass.serial,
-          passToken: firstReg.pass.token,
-          paymentStatus: firstReg.payment?.status ?? ("NOT_REQUIRED" as const),
-          directions: firstRow.venue?.directions,
-        }
-      : null;
+  const upcoming = mine.map(toSummary);
+  const first = mine[0];
+  const nextUp = first
+    ? {
+        ...toSummary(first),
+        registrationId: first.reg_id,
+        passSerial: first.pass_code,
+        passToken: passQrPayload(first.pass_token),
+        paymentStatus: first.price_paise === 0 ? ("NOT_REQUIRED" as const) : first.payment_status === "paid" ? ("PAID" as const) : ("PENDING" as const),
+      }
+    : null;
 
   const calendar: DashboardData["calendar"] = {};
-  const ymd = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(d);
-  for (const ev of monthEvents) {
-    const k = ymd(ev.startsAt);
+  for (const row of monthRows) {
+    const k = istYmd(new Date(row.starts_at));
     calendar[k] ??= { campus: 0, mine: 0 };
     calendar[k].campus++;
-    if (ev.registrations.length) calendar[k].mine++;
+    if (row.mine) calendar[k].mine++;
   }
 
   return {
     stats: {
       registered: upcoming.length,
       thisWeek: upcoming.filter((e) => +e.startsAt - +now < 7 * DAY).length,
-      certificates: certificates.length,
+      attended,
       photosOfYou,
     },
     nextUp,
     upcoming,
-    campus: campusRows.map(toSummary),
-    announcements: announcements.map((a) => ({ ...a, eventTitle: a.event.title })),
-    certificates: certificates.map((c) => ({
-      id: c.id,
-      serial: c.serial,
-      issuedAt: c.issuedAt,
-      eventTitle: c.registration.event.title,
+    campus: campus.map(toSummary),
+    announcements: updates.map((u) => ({
+      id: u.id,
+      eventTitle: u.title,
+      kind: (KIND[u.kind] ?? KIND.update).kind,
+      title: (KIND[u.kind] ?? KIND.update).title,
+      body: u.body,
+      createdAt: new Date(u.created_at),
     })),
     calendar,
     organizer: viewer.verifiedOrganizer ? await getOrganizerPanel(viewer, now) : null,
   };
 }
 
-async function getOrganizerPanel(viewer: Viewer, now: Date): Promise<DashboardData["organizer"]> {
-  const hostedWhere =
-    viewer.role === "ADMIN"
-      ? {}
-      : { OR: [{ hostId: viewer.id }, { team: { some: { userId: viewer.id } } }] };
+async function getOrganizerPanel(viewer: Viewer, now: Date): Promise<OrganizerPanel> {
+  const nowIso = now.toISOString();
+  const ownerClause = viewer.role === "admin" ? "1 = 1" : "e.organizer_id = ?";
+  const ownerArgs = viewer.role === "admin" ? [] : [viewer.id];
 
-  const hosted = await prisma.event.findMany({
-    where: { ...hostedWhere, endsAt: { gt: new Date(+now - DAY) }, status: { not: "CANCELLED" } },
-    orderBy: { startsAt: "asc" },
-    take: 6,
-    select: {
-      id: true,
-      title: true,
-      startsAt: true,
-      endsAt: true,
-      status: true,
-      capacity: true,
-      feeAmountPaise: true,
-      venueId: true,
-      category: true,
-    },
-  });
-  const ids = hosted.map((h) => h.id);
-
-  const [regCounts, checkInCounts, paymentCounts, remindersQueued, whatsappReach] = await Promise.all([
-    prisma.registration.groupBy({ by: ["eventId"], where: { eventId: { in: ids }, status: { in: ["REGISTERED", "ATTENDED"] } }, _count: true }),
-    prisma.registration.groupBy({ by: ["eventId"], where: { eventId: { in: ids }, pass: { checkIns: { some: { direction: "IN" } } } }, _count: true }),
-    prisma.payment.findMany({ where: { registration: { eventId: { in: ids } } }, select: { status: true, registration: { select: { eventId: true } } } }),
-    prisma.reminder.count({ where: { eventId: { in: ids }, status: "QUEUED" } }),
-    prisma.user.count({ where: { whatsappOptIn: true, registrations: { some: { eventId: { in: ids }, status: "REGISTERED" } } } }),
-  ]);
-
-  const count = (rows: { eventId: string; _count: number }[], id: string) => rows.find((r) => r.eventId === id)?._count ?? 0;
-  const pay = (id: string, s: string) => paymentCounts.filter((p) => p.registration.eventId === id && p.status === s).length;
+  const hosted = await all<
+    EventRowWithCount & { checked_in: number; paid: number; unpaid: number }
+  >(
+    `SELECT e.*, ${SEATS_TAKEN_SQL} AS taken,
+            (SELECT COUNT(*) FROM checkins c WHERE c.event_id = e.id) AS checked_in,
+            (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id AND r.status = 'registered' AND r.payment_status = 'paid') AS paid,
+            (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id AND r.status = 'registered' AND r.payment_status = 'unpaid') AS unpaid
+       FROM events e
+      WHERE ${ownerClause} AND e.status IN ('published','closed') AND e.ends_at > ?
+      ORDER BY e.starts_at ASC LIMIT 8`,
+    ...ownerArgs,
+    new Date(+now - DAY).toISOString(),
+  );
 
   const rows = hosted.map((h) => ({
     id: h.id,
     title: h.title,
-    startsAt: h.startsAt,
+    startsAt: new Date(h.starts_at),
     status: h.status,
     capacity: h.capacity,
-    registered: count(regCounts, h.id),
-    checkedIn: count(checkInCounts, h.id),
-    paid: pay(h.id, "PAID"),
-    pendingPayments: pay(h.id, "PENDING"),
-    feePaise: h.feeAmountPaise,
+    registered: h.taken,
+    checkedIn: h.checked_in,
+    paid: h.price_paise > 0 ? h.paid : 0,
+    pendingPayments: h.price_paise > 0 ? h.unpaid : 0,
+    feePaise: h.price_paise,
   }));
 
-  const liveEv = hosted.find((h) => h.startsAt <= now && h.endsAt > now);
-  const liveRow = liveEv && rows.find((r) => r.id === liveEv.id);
+  const liveRow = hosted.find((h) => h.starts_at <= nowIso && h.ends_at > nowIso);
 
-  // Re-check every DRAFT the organizer has against the published calendar.
-  const drafts = hosted.filter((h) => h.status === "DRAFT");
-  let clashes: NonNullable<DashboardData["organizer"]>["clashes"] = [];
+  // Real clash check: each of my drafts against the published calendar.
+  const drafts = await all<{ id: string; title: string; venue: string; starts_at: string; ends_at: string; category: string }>(
+    `SELECT id, title, venue, starts_at, ends_at, category FROM events e WHERE ${ownerClause} AND status = 'draft' AND ends_at > ?`,
+    ...ownerArgs,
+    nowIso,
+  );
+  let clashes: OrganizerPanel["clashes"] = [];
   if (drafts.length) {
-    const minStart = new Date(Math.min(...drafts.map((d) => +d.startsAt)) - DAY);
-    const maxEnd = new Date(Math.max(...drafts.map((d) => +d.endsAt)) + DAY);
-    const existing = await prisma.event.findMany({
-      where: { status: { in: ["PUBLISHED", "LIVE"] }, startsAt: { lt: maxEnd }, endsAt: { gt: minStart } },
-      select: { id: true, title: true, venueId: true, startsAt: true, endsAt: true, status: true, category: true, capacity: true, venue: { select: { name: true, bufferMinutes: true } } },
-    });
-    const ex = existing.map((e) => ({ ...e, venueName: e.venue?.name, bufferMinutes: e.venue?.bufferMinutes }));
+    const published = await all<{ id: string; title: string; venue: string; starts_at: string; ends_at: string; status: string; category: string; capacity: number }>(
+      `SELECT id, title, venue, starts_at, ends_at, status, category, capacity FROM events WHERE status = 'published' AND ends_at > ?`,
+      nowIso,
+    );
+    const existing = published.map((p) => ({
+      id: p.id,
+      title: p.title,
+      venueId: p.venue,
+      venueName: p.venue,
+      startsAt: new Date(p.starts_at),
+      endsAt: new Date(p.ends_at),
+      status: "PUBLISHED",
+      category: p.category,
+      capacity: p.capacity,
+      bufferMinutes: bufferFor(p.venue),
+    }));
     clashes = drafts.flatMap((d) =>
-      detectClashes({ id: d.id, venueId: d.venueId, startsAt: d.startsAt, endsAt: d.endsAt, category: d.category }, ex).map(
-        (c) => ({ ...c, forEvent: d.title }),
-      ),
+      detectClashes(
+        { id: d.id, venueId: d.venue, startsAt: new Date(d.starts_at), endsAt: new Date(d.ends_at), category: d.category },
+        existing,
+      ).map((c) => ({ ...c, forEvent: d.title })),
     );
   }
 
   return {
     live: liveRow
-      ? { id: liveRow.id, title: liveRow.title, capacity: liveRow.capacity ?? liveRow.registered, registered: liveRow.registered, checkedIn: liveRow.checkedIn }
+      ? { id: liveRow.id, title: liveRow.title, capacity: liveRow.capacity, registered: liveRow.taken, checkedIn: liveRow.checked_in }
       : null,
     hosted: rows,
     clashes,
-    remindersQueued,
-    whatsappReach,
   };
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Award, CalendarCheck2, Images, Ticket } from "lucide-react";
+import { CalendarCheck2, DoorOpen, Images, Map as MapIcon, Award, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDashboardData } from "@/lib/data/dashboard";
 import { PassCard } from "@/components/dashboard/PassCard";
@@ -7,12 +7,11 @@ import { MiniCalendar } from "@/components/dashboard/MiniCalendar";
 import {
   Announcements,
   CampusRail,
-  Certificates,
   EmptyNextUp,
-  NavigatorTeaser,
   NextUpHero,
   OrganizerConsole,
   OrgKpis,
+  PlannedCard,
   QuickTiles,
   StatTile,
   UpcomingList,
@@ -72,7 +71,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatTile label="Registered" value={data.stats.registered} hint="upcoming events" icon={Ticket} color="#efebff" ink="#3b22d6" delay={60} />
         <StatTile label="This week" value={data.stats.thisWeek} hint="on your calendar" icon={CalendarCheck2} color="#e0f2fe" ink="#0369a1" delay={110} />
-        <StatTile label="Certificates" value={data.stats.certificates} hint="earned so far" icon={Award} color="#fff3df" ink="#b45309" delay={160} />
+        <StatTile label="Attended" value={data.stats.attended} hint="checked in at the gate" icon={DoorOpen} color="#fff3df" ink="#b45309" delay={160} />
         <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="in the vault" icon={Images} color="#ffe4ec" ink="#be123c" delay={210} />
       </div>
 
@@ -110,8 +109,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <VaultTeaser photosOfYou={data.stats.photosOfYou} />
-        <NavigatorTeaser next={data.nextUp} />
-        <Certificates items={data.certificates} />
+        <PlannedCard eyebrow="Venue Navigator" title="Campus map & directions" icon={MapIcon} body="Walking directions to every hall, lab and ground. Not built yet." />
+        <PlannedCard eyebrow="Certificates" title="Proof of attendance" icon={Award} body="Certificates for events you checked in to. Not built yet." />
       </section>
     </div>
   );
