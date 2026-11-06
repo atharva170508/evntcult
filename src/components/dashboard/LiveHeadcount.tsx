@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 import { Chip } from "@/components/ui/Chip";
 
 /**
- * Live check-in ring (Zoho Backstage "checked in vs not yet" idea). Subscribes to
- * the SSE headcount stream and animates as volunteers scan passes at the gate.
+ * Live check-in ring (Zoho Backstage "checked in vs not yet" idea). Connects to the
+ * event's live gate count (WebSocket to its EventLive Durable Object, see worker.ts)
+ * and animates as volunteers scan passes. Falls back to asking every 5 seconds when
+ * a live connection isn't available (e.g. plain `next dev`).
  */
 export function LiveHeadcount({
   eventId,
   title,
   capacity,
-  registered,
+  registered: initialRegistered,
   initial,
 }: {
   eventId: string;
@@ -21,27 +23,68 @@ export function LiveHeadcount({
   initial: number;
 }) {
   const [count, setCount] = useState(initial);
-  const [connected, setConnected] = useState(false);
+  const [registered, setRegistered] = useState(initialRegistered);
+  const [mode, setMode] = useState<"connecting" | "live" | "polling">("connecting");
   const [bump, setBump] = useState(false);
 
   useEffect(() => {
-    const es = new EventSource(`/api/events/${eventId}/headcount?start=${initial}`);
-    es.onopen = () => setConnected(true);
-    es.onerror = () => setConnected(false);
-    es.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      if (typeof data.checkedIn === "number") {
-        setCount((prev) => {
-          if (data.checkedIn !== prev) {
-            setBump(true);
-            setTimeout(() => setBump(false), 400);
-          }
-          return Math.min(data.checkedIn, registered);
-        });
-      }
+    const apply = (d: { checkedIn?: number; registered?: number }) => {
+      if (typeof d.registered === "number") setRegistered(d.registered);
+      if (typeof d.checkedIn !== "number") return;
+      const next = d.checkedIn;
+      setCount((prev) => {
+        if (next !== prev) {
+          setBump(true);
+          setTimeout(() => setBump(false), 400);
+        }
+        return next;
+      });
     };
-    return () => es.close();
-  }, [eventId, initial, registered]);
+
+    let ws: WebSocket | null = null;
+    let closed = false;
+    let retry: ReturnType<typeof setTimeout> | undefined;
+    let ping: ReturnType<typeof setInterval> | undefined;
+    const connect = () => {
+      ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/api/events/${eventId}/live`);
+      ws.onopen = () => {
+        setMode("live");
+        ping = setInterval(() => ws?.readyState === WebSocket.OPEN && ws.send("ping"), 25_000);
+      };
+      ws.onmessage = (m) => {
+        try {
+          const d = JSON.parse(m.data as string);
+          if (d.type === "counts") apply(d);
+        } catch {
+          // "pong"
+        }
+      };
+      ws.onclose = () => {
+        clearInterval(ping);
+        setMode("polling");
+        if (!closed) retry = setTimeout(connect, 15_000);
+      };
+    };
+    connect();
+
+    const poll = setInterval(async () => {
+      if (ws?.readyState === WebSocket.OPEN) return;
+      try {
+        const res = await fetch(`/api/events/${eventId}/gate-count`, { cache: "no-store" });
+        if (res.ok) apply(await res.json());
+      } catch {
+        // offline: keep the last number
+      }
+    }, 5000);
+
+    return () => {
+      closed = true;
+      clearTimeout(retry);
+      clearInterval(ping);
+      clearInterval(poll);
+      ws?.close();
+    };
+  }, [eventId]);
 
   const pct = Math.min(1, count / Math.max(1, registered));
   const R = 62;
@@ -86,8 +129,8 @@ export function LiveHeadcount({
       </div>
 
       <div className="min-w-0 flex-1 space-y-3">
-        <Chip tone={connected ? "live" : "neutral"} pulse={connected}>
-          {connected ? "Live" : "Connecting…"}
+        <Chip tone={mode === "live" ? "live" : "neutral"} pulse={mode === "live"}>
+          {mode === "live" ? "Live" : mode === "polling" ? "Updates every 5 s" : "Connecting…"}
         </Chip>
         <p className="headline truncate text-[19px]">{title}</p>
         <div className="grid grid-cols-3 gap-2 text-center">

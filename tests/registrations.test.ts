@@ -2,10 +2,8 @@
  * Registration, waitlist and hold rules, tested against a real local D1 database
  * (wrangler's getPlatformProxy, in memory, so your dev database is never touched).
  */
-import { readdirSync, readFileSync } from "node:fs";
-import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { getPlatformProxy } from "wrangler";
+import { testDatabase } from "./helpers/d1";
 import {
   cancel,
   confirmHold,
@@ -17,27 +15,12 @@ import {
   type EventForRegistration,
 } from "@/lib/data/registrations";
 
-let proxy: Awaited<ReturnType<typeof getPlatformProxy<{ DB: D1Database }>>>;
 let db: D1Database;
+let dispose: () => Promise<void>;
 
 const HOUR = 3_600_000;
 const T0 = new Date("2026-11-20T04:30:00.000Z"); // 10:00 IST
 const at = (minutes: number) => new Date(T0.getTime() + minutes * 60_000);
-
-/** Run every migration file, statement by statement. */
-async function migrate() {
-  const dir = path.resolve(__dirname, "../migrations");
-  for (const file of readdirSync(dir).filter((f) => f.endsWith(".sql")).sort()) {
-    const statements = readFileSync(path.join(dir, file), "utf8")
-      .split("\n")
-      .filter((l) => !l.trim().startsWith("--"))
-      .join("\n")
-      .split(";")
-      .map((s) => s.trim())
-      .filter(Boolean);
-    await db.batch(statements.map((s) => db.prepare(s)));
-  }
-}
 
 async function addUser(n: number) {
   const id = `u${n}`;
@@ -79,15 +62,13 @@ const regOf = async (eventId: string, userId: string) =>
   (await db.prepare("SELECT * FROM registrations WHERE event_id = ? AND user_id = ?").bind(eventId, userId).first<{ id: string; status: string; hold_expires_at: string | null; pass_code: string; pass_token: string }>())!;
 
 beforeAll(async () => {
-  proxy = await getPlatformProxy<{ DB: D1Database }>({ configPath: path.resolve(__dirname, "../wrangler.jsonc"), persist: false });
-  db = proxy.env.DB;
-  await migrate();
+  ({ db, dispose } = await testDatabase());
   await db.prepare("INSERT INTO users (id, email, name, role, created_at) VALUES ('org', 'org@college.edu', 'Org', 'organizer', ?)").bind(T0.toISOString()).run();
   for (let i = 1; i <= 60; i++) await addUser(i);
 }, 60_000);
 
 afterAll(async () => {
-  await proxy?.dispose();
+  await dispose?.();
 });
 
 describe("holdExpiry", () => {
