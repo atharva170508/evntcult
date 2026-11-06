@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { PhoneFields } from "@/components/profile/PhoneFields";
 
 export function SignInForm({ next, signup = false }: { next: string; signup?: boolean }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [optIn, setOptIn] = useState(false);
   const [needName, setNeedName] = useState(signup);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,7 +20,7 @@ export function SignInForm({ next, signup = false }: { next: string; signup?: bo
     const res = await fetch("/api/auth/session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(needName ? { email, name } : { email }),
+      body: JSON.stringify(needName ? { email, name, phone, whatsappOptIn: optIn } : { email }),
     });
     const data = (await res.json().catch(() => ({}))) as { error?: { code: string; message: string } };
     setBusy(false);
@@ -60,6 +63,7 @@ export function SignInForm({ next, signup = false }: { next: string; signup?: bo
           />
         </label>
       )}
+      {needName && <PhoneFields phone={phone} setPhone={setPhone} optIn={optIn} setOptIn={setOptIn} />}
       {error && (
         <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
           {error}

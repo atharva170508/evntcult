@@ -78,3 +78,14 @@ describe("money", () => {
     expect(upiUri({ vpa: "club@okaxis", payeeName: "Club", amountPaise: 10050, note: "Pass" })).toContain("am=100.50");
   });
 });
+
+import { normalizeIndianMobile, formatPhone } from "../src/lib/phone";
+describe("phone numbers", () => {
+  it("normalises common Indian formats to +91", () => {
+    for (const v of ["9876543210", "98765 43210", "+91 98765-43210", "919876543210", "09876543210"]) expect(normalizeIndianMobile(v)).toBe("+919876543210");
+  });
+  it("rejects landlines, short and foreign numbers", () => {
+    for (const v of ["1234567890", "98765", "+1 415 555 0100", "abcdefghij"]) expect(normalizeIndianMobile(v)).toBeNull();
+  });
+  it("formats for display", () => expect(formatPhone("+919876543210")).toBe("+91 98765 43210"));
+});

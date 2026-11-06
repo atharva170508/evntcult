@@ -12,6 +12,9 @@ export interface Viewer {
   email: string;
   image?: string | null;
   role: Role;
+  /** E.164 mobile, or null if not added yet. */
+  phone: string | null;
+  whatsappOptIn: boolean;
   /** Organizer or admin (role is re-read from the DB on every request). */
   verifiedOrganizer: boolean;
 }
@@ -20,12 +23,21 @@ export interface Viewer {
 export async function getViewer(): Promise<Viewer | null> {
   const uid = await readSessionValue((await cookies()).get(SESSION_COOKIE)?.value);
   if (!uid) return null;
-  const u = await first<{ id: string; name: string; email: string; role: Role }>(
-    "SELECT id, name, email, role FROM users WHERE id = ?",
+  const u = await first<{ id: string; name: string; email: string; role: Role; phone: string | null; whatsapp_opt_in: number }>(
+    "SELECT id, name, email, role, phone, whatsapp_opt_in FROM users WHERE id = ?",
     uid,
   );
   if (!u) return null;
-  return { ...u, image: null, verifiedOrganizer: u.role === "organizer" || u.role === "admin" };
+  return {
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    role: u.role,
+    phone: u.phone,
+    whatsappOptIn: u.whatsapp_opt_in === 1,
+    image: null,
+    verifiedOrganizer: u.role === "organizer" || u.role === "admin",
+  };
 }
 
 export async function requireUser(): Promise<Viewer> {

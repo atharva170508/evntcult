@@ -5,6 +5,7 @@ import { getDashboardData, getPublicDashboard } from "@/lib/data/dashboard";
 import Link from "next/link";
 import { EventArt } from "@/components/ui/EventArt";
 import { PassCard } from "@/components/dashboard/PassCard";
+import { AddPhoneCard } from "@/components/profile/AddPhoneCard";
 import { MiniCalendar } from "@/components/dashboard/MiniCalendar";
 import {
   Announcements,
@@ -57,6 +58,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           </p>
         )}
       </header>
+      {!viewer.phone && <AddPhoneCard />}
       <QuickTiles />
 
       {/* Next up + pass */}
