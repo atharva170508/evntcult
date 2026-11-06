@@ -15,6 +15,7 @@
  *    seat moves to the next person.
  */
 import { newId, newPassToken } from "@/lib/tokens";
+import { istLabel, notifyUser } from "@/lib/notify";
 
 export const HOLD_MS = 2 * 60 * 60 * 1000; // 2 hours to confirm a held seat…
 export const MIN_HOLD_MS = 20 * 60 * 1000; // …but never less than 20 minutes,
@@ -212,9 +213,9 @@ async function describe(db: D1Database, reg: RegistrationRow): Promise<RegisterR
  */
 export async function promoteWaitlist(db: D1Database, eventId: string, now = new Date()): Promise<RegistrationRow[]> {
   const event = await db
-    .prepare("SELECT id, capacity, status, starts_at, ends_at FROM events WHERE id = ?")
+    .prepare("SELECT id, slug, title, capacity, status, starts_at, ends_at FROM events WHERE id = ?")
     .bind(eventId)
-    .first<{ id: string; capacity: number; status: string; starts_at: string; ends_at: string }>();
+    .first<{ id: string; slug: string; title: string; capacity: number; status: string; starts_at: string; ends_at: string }>();
   if (!event || event.status !== "published" || Date.parse(event.ends_at) <= now.getTime()) return [];
 
   const promoted: RegistrationRow[] = [];
@@ -242,6 +243,16 @@ export async function promoteWaitlist(db: D1Database, eventId: string, now = new
     const held = (await getRegistration(db, head.id))!;
     promoted.push(held);
     await audit(db, null, "hold_offered", held.id, { event_id: eventId, until: held.hold_expires_at }, now);
+    // WhatsApp (queued; only if they opted in). The sender adds the site address to the link.
+    await notifyUser(
+      db,
+      held.user_id,
+      eventId,
+      "seat_hold",
+      { event_title: event.title, confirm_by: istLabel(held.hold_expires_at!), link: `/events/${event.slug}` },
+      `hold:${held.id}:${held.hold_expires_at}`,
+      now,
+    );
   }
   return promoted;
 }

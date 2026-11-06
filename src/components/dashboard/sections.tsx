@@ -359,8 +359,15 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
           <QuickAction href="/organizer/events/new" icon={Plus} label="New event" primary />
           <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} color="#e0f2fe" ink="#0369a1" />
           <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="payments, export" color="#fff3df" ink="#b45309" />
-          <QuickAction planned icon={Megaphone} label="Broadcast update" />
-          <QuickAction planned icon={MessageCircle} label="WhatsApp reminder" />
+          <QuickAction
+            href={data.live ? `/organizer/events/${data.live.id}` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}` : "/organizer"}
+            icon={Megaphone}
+            label="Broadcast update"
+            hint={data.live?.title ?? data.hosted[0]?.title ?? "pick an event"}
+            color="#ede9fe"
+            ink="#5b3fff"
+          />
+          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" hint="reminders queue automatically" color="#dcfce7" ink="#15803d" />
           <QuickAction planned icon={Award} label="Issue certificates" />
         </div>
       </Card>
