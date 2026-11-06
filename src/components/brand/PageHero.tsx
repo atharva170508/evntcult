@@ -29,7 +29,7 @@ export function PageHero({
       <div className="relative flex flex-wrap items-end justify-between gap-5">
         <div className="min-w-0 max-w-3xl">
           <p className="eyebrow text-ink-2">{eyebrow}</p>
-          <h1 className="title-serif mt-3 text-[clamp(40px,5.6vw,80px)] [&_em]:text-aurora">{title}</h1>
+          <h1 className="title-xl mt-3 text-[clamp(40px,5.6vw,80px)] ">{title}</h1>
           {sub && <div className="mt-3 text-[15.5px] text-ink-2">{sub}</div>}
         </div>
         {actions && <div className="flex flex-wrap gap-2">{actions}</div>}

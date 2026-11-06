@@ -42,7 +42,7 @@ export function PaymentCell({ regId, paid, method, refCode }: { regId: string; p
     return (
       <div className="flex items-center gap-2">
         <span className="rounded-full bg-warn-soft px-2.5 py-1 text-[12px] font-bold text-warn">Unpaid</span>
-        <button onClick={() => setOpen(true)} className="rounded-full border border-line px-3 py-1 text-[12px] font-semibold hover:border-ink">Mark paid</button>
+        <button onClick={() => setOpen(true)} className="rounded-full border border-line px-3 py-1 text-[12px] font-semibold hover:border-volt/60">Mark paid</button>
       </div>
     );
   }
@@ -62,7 +62,7 @@ export function PaymentCell({ regId, paid, method, refCode }: { regId: string; p
       {how === "upi" && (
         <input value={ref} onChange={(e) => setRef(e.target.value)} placeholder="UPI ref (optional)" aria-label="UPI reference (optional)" maxLength={35} className="w-36 rounded-full border border-line bg-surface px-3 py-1 font-mono text-[12px]" />
       )}
-      <button disabled={busy} className="inline-flex items-center gap-1 rounded-full bg-ink px-3 py-1 text-[12px] font-semibold text-ink-inverse disabled:opacity-50">
+      <button disabled={busy} className="inline-flex items-center gap-1 rounded-full bg-volt px-3 py-1 text-[12px] font-semibold text-ink-inverse disabled:opacity-50">
         {busy && <Loader2 className="size-3 animate-spin" />} Save
       </button>
       <button type="button" onClick={() => setOpen(false)} className="text-[12px] font-semibold text-ink-muted">Cancel</button>

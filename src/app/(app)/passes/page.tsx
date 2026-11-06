@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import QRCode from "qrcode";
-import { CalendarPlus, CheckCircle2, Clock, Hourglass, MapPin, Ticket } from "lucide-react";
+import { Award, CalendarPlus, CheckCircle2, Clock, Hourglass, MapPin, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { all } from "@/lib/db";
 import { passQrPayload } from "@/lib/tokens";
@@ -12,6 +12,7 @@ import { Chip } from "@/components/ui/Chip";
 import { accentFor } from "@/lib/data/events";
 import { EventArt } from "@/components/ui/EventArt";
 import { PageHero } from "@/components/brand/PageHero";
+import { SavePassButton } from "@/components/passes/SavePassButton";
 
 export const metadata: Metadata = { title: "My passes" };
 export const dynamic = "force-dynamic";
@@ -73,9 +74,9 @@ export default async function PassesPage() {
       {upcoming.length === 0 ? (
         <section className="card flex flex-col items-start gap-3 p-8">
           <Ticket className="size-8 text-ink-subtle" />
-          <h2 className="title-serif text-[32px]">No upcoming passes</h2>
+          <h2 className="title-xl text-[32px]">No upcoming passes</h2>
           <p className="text-[14.5px] text-ink-muted">When you register for an event, your pass shows up here.</p>
-          <Link href="/events" className="mt-1 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-inverse">Find an event</Link>
+          <Link href="/events" className="mt-1 rounded-full bg-volt px-5 py-2.5 text-[14px] font-semibold text-ink-inverse">Find an event</Link>
         </section>
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
@@ -87,7 +88,7 @@ export default async function PassesPage() {
 
       {past.length > 0 && (
         <section className="space-y-3">
-          <h2 className="title-serif text-[32px]">Past events</h2>
+          <h2 className="title-xl text-[32px]">Past events</h2>
           <ul className="card divide-y divide-line">
             {past.map((r) => (
               <li key={r.id} className="flex items-center justify-between gap-3 px-5 py-3.5">
@@ -95,7 +96,11 @@ export default async function PassesPage() {
                   <Link href={`/events/${r.slug}`} className="block truncate text-[14.5px] font-semibold hover:underline">{r.title}</Link>
                   <p className="text-[12.5px] text-ink-muted">{fmtDate(new Date(r.starts_at), { day: "numeric", month: "short", year: "numeric" })} · {r.venue}</p>
                 </div>
-                {r.checked_in_at ? <Chip tone="live">Attended</Chip> : <Chip>{r.status === "waitlisted" ? "Didn't get a seat" : "Not checked in"}</Chip>}
+                {r.checked_in_at ? (
+                  <Link href={`/certificates/${r.id}`} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-volt/40 bg-volt/10 px-3 py-1.5 text-[12.5px] font-bold text-volt hover:bg-volt hover:text-ink-inverse">
+                    <Award className="size-3.5" aria-hidden /> Certificate
+                  </Link>
+                ) : <Chip>{r.status === "waitlisted" ? "Didn't get a seat" : "Not checked in"}</Chip>}
               </li>
             ))}
           </ul>
@@ -125,7 +130,7 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
           ) : r.status === "waitlisted" ? (
             <Chip tone="warn">Waitlist{r.waitlist_position ? ` · #${r.waitlist_position}` : ""}</Chip>
           ) : live ? (
-            <Chip tone="live" pulse>Happening now</Chip>
+            <Chip tone="volt" pulse>Happening now</Chip>
           ) : (
             <Chip tone="white">Confirmed</Chip>
           )}
@@ -166,9 +171,19 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
             ))}
 
           <div className="flex flex-wrap gap-2 pt-1">
-            <a href={`/api/registrations/${r.id}/ics`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-2 text-[13px] font-semibold hover:border-ink">
+            <a href={`/api/registrations/${r.id}/ics`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-2 text-[13px] font-semibold hover:border-volt/60">
               <CalendarPlus className="size-4" /> Add to calendar
             </a>
+            {r.status === "registered" && qrSvg && (
+              <SavePassButton
+                title={r.title}
+                dateLabel={fmtDate(starts, { weekday: "short", day: "numeric", month: "short" })}
+                timeLabel={fmtRange(starts, ends)}
+                venue={r.venue}
+                passCode={r.pass_code}
+                qrSvg={qrSvg}
+              />
+            )}
             <Link href={`/events/${r.slug}`} className="inline-flex items-center rounded-full px-3 py-2 text-[13px] font-semibold text-ink-muted hover:text-ink">View event</Link>
           </div>
         </div>

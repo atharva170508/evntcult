@@ -45,14 +45,14 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 transition-[background-color,box-shadow] duration-300",
+        "sticky top-0 z-30 print:hidden transition-[background-color,box-shadow] duration-300",
         scrolled ? "bg-canvas/85 shadow-[0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl" : "bg-canvas",
       )}
     >
       <div className="mx-auto flex h-[72px] max-w-[1280px] items-center gap-3 px-4 lg:px-8">
         <Link href="/dashboard" className={cn("flex shrink-0 items-center gap-2.5", viewer && "md:hidden")} aria-label="EvntCult home">
           <Logo />
-          {!viewer && <span className="hidden font-serif text-[26px] leading-none tracking-[-0.02em] sm:inline">EvntCult</span>}
+          {!viewer && <span className="hidden font-brand text-[26px] font-semibold leading-none tracking-[-0.01em] sm:inline">EvntCult</span>}
         </Link>
         {!viewer && (
           <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
@@ -100,7 +100,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
             </select>
           </label>
           <kbd className="mr-1 hidden rounded-md border border-line px-1.5 py-0.5 font-mono text-[11px] text-ink-subtle 2xl:block">Ctrl K</kbd>
-          <button className="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-ink-inverse transition-colors hover:bg-ink-2" aria-label="Search">
+          <button className="grid size-9 shrink-0 place-items-center rounded-full bg-volt text-ink-inverse transition-colors hover:bg-volt-hover" aria-label="Search">
             <Search className="size-4" />
           </button>
         </form>
@@ -110,13 +110,13 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
             <>
               <button
                 onClick={onEnterCode}
-                className="hidden items-center gap-1.5 rounded-full border border-line bg-surface px-3.5 py-2.5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-ink sm:inline-flex"
+                className="hidden items-center gap-1.5 rounded-full border border-line bg-surface px-3.5 py-2.5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-volt/60 sm:inline-flex"
               >
                 <KeyRound className="size-4" /> Enter code
               </button>
               <Link
                 href="/profile"
-                className="grid size-11 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-brand to-[#f472b6] text-[13px] font-bold text-ink-inverse ring-2 ring-canvas"
+                className="grid size-11 place-items-center overflow-hidden rounded-full bg-volt text-[13px] font-bold text-ink-inverse ring-2 ring-canvas"
                 title={`${viewer.name} · ${viewer.email}`}
                 aria-label={`Your profile (${viewer.name})`}
               >
@@ -126,17 +126,17 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
                 onClick={logout}
                 title="Log out"
                 aria-label="Log out"
-                className="grid size-11 place-items-center rounded-full border border-line bg-surface text-ink-2 transition-colors hover:border-ink"
+                className="grid size-11 place-items-center rounded-full border border-line bg-surface text-ink-2 transition-colors hover:border-volt/60"
               >
                 <LogOut className="size-[18px]" />
               </button>
             </>
           ) : (
             <>
-              <Link href="/signin" className="rounded-full border border-line bg-surface px-4 py-2.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink">
+              <Link href="/signin" className="rounded-full border border-line bg-surface px-4 py-2.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-volt/60">
                 Log in
               </Link>
-              <Link href="/signin?mode=signup" className="rounded-full bg-ink px-4 py-2.5 text-[13.5px] font-semibold text-ink-inverse transition-colors hover:bg-ink-2">
+              <Link href="/signin?mode=signup" className="rounded-full bg-volt px-4 py-2.5 text-[13.5px] font-semibold text-ink-inverse transition-colors hover:bg-volt-hover">
                 Sign up
               </Link>
             </>

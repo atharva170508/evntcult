@@ -94,7 +94,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
       <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
         <section className="card p-5">
-          <h2 className="title-serif text-[32px]">Post an update</h2>
+          <h2 className="title-xl text-[32px]">Post an update</h2>
           <p className="mb-3 mt-0.5 text-[13px] text-ink-muted">Shows on registered students&apos; dashboards straight away.</p>
           {e.status === "draft" ? (
             <p className="rounded-2xl bg-canvas p-4 text-[14px] font-semibold text-ink-2">Publish the event first, then you can post updates.</p>
@@ -127,14 +127,14 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
       <section className="card overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line p-4">
-          <h2 className="title-serif text-[32px]">Attendees <span className="font-mono text-[15px] text-ink-muted tabular-nums">({attendees.length}{q ? " found" : ""})</span></h2>
+          <h2 className="title-xl text-[32px]">Attendees <span className="font-mono text-[15px] text-ink-muted tabular-nums">({attendees.length}{q ? " found" : ""})</span></h2>
           <div className="flex flex-wrap items-center gap-2">
             <form className="flex h-10 items-center rounded-full border border-line bg-surface pl-3.5 pr-1">
               <Search className="size-4 text-ink-subtle" />
               <input name="q" defaultValue={q} placeholder="Name, email or pass code" aria-label="Search attendees" className="w-48 bg-transparent px-2 text-[13.5px] focus:outline-none" />
-              <button className="rounded-full bg-ink px-3 py-1.5 text-[12.5px] font-semibold text-ink-inverse">Search</button>
+              <button className="rounded-full bg-volt px-3 py-1.5 text-[12.5px] font-semibold text-ink-inverse">Search</button>
             </form>
-            <a href={`/api/events/${e.id}/attendees?format=csv${q ? `&q=${encodeURIComponent(q)}` : ""}`} className="inline-flex h-10 items-center gap-1.5 rounded-full border border-line px-4 text-[13px] font-semibold hover:border-ink">
+            <a href={`/api/events/${e.id}/attendees?format=csv${q ? `&q=${encodeURIComponent(q)}` : ""}`} className="inline-flex h-10 items-center gap-1.5 rounded-full border border-line px-4 text-[13px] font-semibold hover:border-volt/60">
               <Download className="size-4" /> CSV
             </a>
           </div>

@@ -60,7 +60,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <div className="relative">
             <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-white/80">{fmtDate(s.startsAt, { weekday: "long", day: "numeric", month: "long" })}</p>
             <h1 className="shout mt-3 text-[clamp(34px,4.6vw,60px)]">{e.title}</h1>
-            {s.tagline && <p className="mt-3 max-w-md font-serif text-[24px] italic leading-snug text-white/90">{s.tagline}</p>}
+            {s.tagline && <p className="mt-3 max-w-md text-[20px] font-medium leading-snug text-white/90">{s.tagline}</p>}
           </div>
         </div>
 
@@ -91,7 +91,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             <div className="space-y-2">
               <p className="text-[13px] font-semibold text-ink-muted">You organize this event{e.access === "code" && e.access_code ? <> · join code <span className="font-mono font-bold text-ink">{e.access_code}</span></> : null}.</p>
               <div className="flex flex-wrap gap-2">
-                <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[14px] font-semibold hover:border-ink"><Pencil className="size-4" /> Edit</Link>
+                <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[14px] font-semibold hover:border-volt/60"><Pencil className="size-4" /> Edit</Link>
                 {e.status === "published" && (
                   <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-volt px-4 py-2.5 text-[14px] font-bold text-ink-inverse hover:bg-volt-hover"><ScanLine className="size-4" /> Open gate scanner</Link>
                 )}
@@ -125,7 +125,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </section>
 
       {photos.view && (photoCount > 0 || photos.manage) && (
-        <Link href={`/events/${e.slug}/photos`} className="card flex items-center gap-4 p-5 hover:border-ink">
+        <Link href={`/events/${e.slug}/photos`} className="card flex items-center gap-4 p-5 hover:border-volt/60">
           <span className="grid size-11 place-items-center rounded-2xl bg-canvas"><Camera className="size-5" /></span>
           <span className="flex-1">
             <span className="block text-[16px] font-bold">Photos</span>
@@ -140,7 +140,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
 
       {e.description && (
         <section className="card p-6 md:p-8">
-          <h2 className="title-serif text-[32px]">About</h2>
+          <h2 className="title-xl text-[32px]">About</h2>
           <div className="mt-3 space-y-2 whitespace-pre-line text-[15px] leading-relaxed text-ink-2">{e.description}</div>
         </section>
       )}

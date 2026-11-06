@@ -18,7 +18,7 @@ import {
   NextUpHero,
   OrganizerConsole,
   OrgKpis,
-  PlannedCard,
+  LinkCard,
   QuickTiles,
   StatTile,
   UpcomingList,
@@ -55,8 +55,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <Marquee words={["Tonight on campus", "Your passes", "Live at the gate"]} className="absolute inset-x-0 bottom-3 text-[clamp(56px,9vw,128px)] text-white/[0.04]" />
         <div className="relative">
           <p className="eyebrow text-ink-2">{new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Kolkata" }).format(new Date())}</p>
-          <h1 className="title-serif mt-3 text-[clamp(44px,6.6vw,100px)]">
-            {greeting()}, <em className="text-aurora">{firstName}</em>
+          <h1 className="title-xl mt-3 text-[clamp(44px,6.6vw,100px)]">
+            {greeting()}, <em className="text-volt">{firstName}</em>
           </h1>
           <p className="mt-3 text-[16px] font-medium text-ink-2">{summary}</p>
           <div className="mt-6 flex flex-wrap gap-2">
@@ -86,10 +86,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label="Registered" value={data.stats.registered} hint="upcoming events" icon={Ticket} color="#a594ff1f" ink="#a594ff" delay={60} />
-        <StatTile label="This week" value={data.stats.thisWeek} hint="on your calendar" icon={CalendarCheck2} color="#7dd3fc1f" ink="#7dd3fc" delay={110} />
-        <StatTile label="Attended" value={data.stats.attended} hint="checked in at the gate" icon={DoorOpen} color="#fbbf241f" ink="#fbbf24" delay={160} />
-        <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="in the vault" icon={Images} color="#fb71851f" ink="#fb7185" delay={210} />
+        <StatTile label="Registered" value={data.stats.registered} hint="upcoming events" icon={Ticket} delay={60} />
+        <StatTile label="This week" value={data.stats.thisWeek} hint="on your calendar" icon={CalendarCheck2} delay={110} />
+        <StatTile label="Attended" value={data.stats.attended} hint="checked in at the gate" icon={DoorOpen} delay={160} />
+        <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="in the vault" icon={Images} delay={210} />
       </div>
 
       {/* Organizer console */}
@@ -98,7 +98,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           <div className="flex flex-wrap items-end justify-between gap-3 animate-fade-up">
             <div>
               <p className="eyebrow">Organizer</p>
-              <h2 className="title-serif mt-2 text-[clamp(38px,4.4vw,60px)]">Your events, <em className="text-aurora">at a glance</em></h2>
+              <h2 className="title-xl mt-2 text-[clamp(38px,4.4vw,60px)]">Your events, <em className="text-volt">at a glance</em></h2>
             </div>
           </div>
           <OrgKpis data={data.organizer} />
@@ -126,8 +126,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <VaultTeaser photosOfYou={data.stats.photosOfYou} preview={data.vaultPreview} />
-        <PlannedCard eyebrow="Venue Navigator" title="Campus map & directions" icon={MapIcon} body="Walking directions to every hall, lab and ground. Not built yet." />
-        <PlannedCard eyebrow="Certificates" title="Proof of attendance" icon={Award} body="Certificates for events you checked in to. Not built yet." />
+        <LinkCard href="/venues" eyebrow="Venues" title="Find your way" icon={MapIcon} body="Every venue on campus, what's on there next, and directions." />
+        <LinkCard
+          href="/certificates"
+          eyebrow="Certificates"
+          title={data.stats.attended ? `${data.stats.attended} earned` : "Proof you were there"}
+          icon={Award}
+          body={data.stats.attended ? "One for every event where your pass was scanned. Print or save as PDF." : "Get your pass scanned at an event and your certificate appears here."}
+        />
       </section>
     </div>
   );

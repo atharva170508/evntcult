@@ -429,7 +429,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         </Link>
         <div className="min-w-0 flex-1">
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60">Gate scanner</p>
-          <h1 className="truncate font-serif text-[24px] leading-tight">{event.title}</h1>
+          <h1 className="truncate font-display text-[20px] font-bold leading-tight">{event.title}</h1>
         </div>
         <span
           className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-semibold ${online ? "bg-[#0fa968]/20 text-[#5ee0a5]" : "bg-[#f59e0b]/20 text-[#fbbf5a]"}`}

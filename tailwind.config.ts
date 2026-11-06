@@ -1,9 +1,10 @@
 import type { Config } from "tailwindcss";
 
 /**
- * EvntCult design tokens — dark "cinematic event night" theme (M7 redesign).
- * References: luxury event-agency sites (huge editorial serif, marquee type),
- * premium booking platforms (purple→blue aurora gradients, glass cards, volt-lime CTAs).
+ * EvntCult design tokens — Apple-style dark mode with ONE accent: neon yellow (M8).
+ * Neon yellow ("volt") marks every call to action, active state, hover highlight,
+ * live dot and key metric. Text on yellow is always the dark `ink.inverse`.
+ * Type: Outfit everywhere (friendly geometric sans), Fredoka for the EvntCult logotype.
  * Near-black control-room canvas, bright poster accents (violet + sun yellow).
  * Every text colour here passes WCAG AA (4.5:1) on canvas and surface.
  * `ink.inverse` is the dark text used on light fills (ink pills, brand buttons, white chips).
@@ -27,10 +28,10 @@ const config: Config = {
           inverse: "#08080c",
         },
         brand: {
-          DEFAULT: "#7c66ff",
-          hover: "#9480ff",
-          soft: "#221d45",
-          ink: "#a594ff",
+          DEFAULT: "#d4ff3a",
+          hover: "#e2ff73",
+          soft: "#1d2109",
+          ink: "#d4ff3a",
         },
         live: { DEFAULT: "#34d399", soft: "#0f2a20" },
         warn: { DEFAULT: "#fbbf24", soft: "#2e230b" },
@@ -38,16 +39,14 @@ const config: Config = {
         sun: "#ffd25e",
         /** Neon-lime call-to-action accent (always with dark text). */
         volt: { DEFAULT: "#d4ff3a", hover: "#e2ff73" },
-        /** Aurora gradient stops: violet → electric blue → magenta. */
-        aurora: { 1: "#7c66ff", 2: "#4f7bff", 3: "#b14dff" },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "Consolas", "monospace"],
-        /** Editorial serif for statements and huge headlines (Instrument Serif). */
-        serif: ["var(--font-serif)", "Georgia", "Times New Roman", "serif"],
-        /** Wide poster grotesk for uppercase shouts (Unbounded). */
-        display: ["var(--font-display)", "var(--font-sans)", "system-ui", "sans-serif"],
+        /** Big headings: the same friendly sans, used heavy and tight. */
+        display: ["var(--font-sans)", "system-ui", "-apple-system", "sans-serif"],
+        /** The EvntCult logotype only (Fredoka, rounded). */
+        brand: ["var(--font-brand)", "var(--font-sans)", "system-ui", "sans-serif"],
       },
       letterSpacing: {
         tightest: "-0.04em",
@@ -59,7 +58,7 @@ const config: Config = {
       boxShadow: {
         card: "0 1px 0 rgba(255,255,255,0.03) inset, 0 10px 30px -18px rgba(0,0,0,0.8)",
         pop: "0 30px 70px -30px rgba(0,0,0,0.9)",
-        brand: "0 12px 30px -12px rgba(124,102,255,0.55)",
+        brand: "0 14px 34px -16px rgba(212,255,58,0.55)",
       },
       keyframes: {
         "fade-up": {

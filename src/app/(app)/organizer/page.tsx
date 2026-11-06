@@ -111,7 +111,7 @@ export default async function OrganizerHome() {
 
       {upcoming.length === 0 ? (
         <section className="card flex flex-col items-start gap-3 p-8">
-          <h2 className="title-serif text-[32px]">No upcoming events</h2>
+          <h2 className="title-xl text-[32px]">No upcoming events</h2>
           <p className="text-[14.5px] text-ink-muted">Create one and it shows up here with live registrations and check-ins.</p>
         </section>
       ) : (
@@ -122,7 +122,7 @@ export default async function OrganizerHome() {
 
       {past.length > 0 && (
         <section className="space-y-3">
-          <h2 className="title-serif text-[32px]">Past events</h2>
+          <h2 className="title-xl text-[32px]">Past events</h2>
           <div className="grid gap-4 md:grid-cols-2">{past.map((e) => <EventRow key={e.id} e={e} />)}</div>
         </section>
       )}
@@ -133,7 +133,7 @@ export default async function OrganizerHome() {
 function EventRow({ e }: { e: MyEvent }) {
   const live = Date.parse(e.starts_at) <= Date.now() && Date.parse(e.ends_at) > Date.now() && e.status === "published";
   const statusChip =
-    e.status === "draft" ? <Chip tone="warn">Draft</Chip> : e.status === "cancelled" ? <Chip tone="danger">Cancelled</Chip> : live ? <Chip tone="live" pulse>Live now</Chip> : e.status === "closed" ? <Chip>Closed</Chip> : <Chip tone="outline">Published</Chip>;
+    e.status === "draft" ? <Chip tone="warn">Draft</Chip> : e.status === "cancelled" ? <Chip tone="danger">Cancelled</Chip> : live ? <Chip tone="volt" pulse>Live now</Chip> : e.status === "closed" ? <Chip>Closed</Chip> : <Chip tone="outline">Published</Chip>;
 
   return (
     <article className="card space-y-4 p-5">
@@ -160,8 +160,8 @@ function EventRow({ e }: { e: MyEvent }) {
       </dl>
 
       <div className="flex flex-wrap gap-2">
-        <Link href={`/organizer/events/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-ink-inverse"><Users className="size-4" /> Attendees & updates</Link>
-        {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-[13px] font-semibold hover:border-ink"><ScanLine className="size-4" /> Scanner</Link>}
+        <Link href={`/organizer/events/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-volt px-4 py-2 text-[13px] font-semibold text-ink-inverse"><Users className="size-4" /> Attendees & updates</Link>
+        {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-[13px] font-semibold hover:border-volt/60"><ScanLine className="size-4" /> Scanner</Link>}
         <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[13px] font-semibold text-ink-muted hover:text-ink"><Pencil className="size-4" /> Edit</Link>
       </div>
     </article>
