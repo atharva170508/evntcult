@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft, Download, MessageCircle, Pencil, ScanLine, Search } from "lucide-react";
+import { ArrowLeft, Camera, Download, MessageCircle, Pencil, ScanLine, Search } from "lucide-react";
 import { canManageEvent, getViewer } from "@/lib/rbac";
 import { all, count, first, getDB } from "@/lib/db";
 import { listAttendees } from "@/lib/data/organizer-actions";
@@ -70,6 +70,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
         </div>
         <div className="flex flex-wrap gap-2">
           {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-[13.5px] font-semibold text-white"><ScanLine className="size-4" /> Gate scanner</Link>}
+          {e.status !== "draft" && <Link href={`/events/${e.slug}/photos`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[13.5px] font-semibold hover:border-ink"><Camera className="size-4" /> Photos</Link>}
           <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[13.5px] font-semibold hover:border-ink"><Pencil className="size-4" /> Edit</Link>
         </div>
       </header>

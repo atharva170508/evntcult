@@ -577,15 +577,23 @@ export function EventCard({ e }: { e: EventSummary }) {
 
 /* ─── Vault + navigator teasers ─────────────────────────────────────────── */
 
-export function VaultTeaser({ photosOfYou }: { photosOfYou: number }) {
+export function VaultTeaser({ photosOfYou, preview = [] }: { photosOfYou: number; preview?: string[] }) {
   const tiles = ["violet", "orange", "teal", "pink", "blue", "green"];
   return (
     <Card eyebrow="Photo Vault" title={photosOfYou === 1 ? "1 photo of you" : `${photosOfYou} photos of you`} icon={Camera} action={{ label: "Open", href: "/vault" }} className="h-full">
       <div className="grid grid-cols-3 gap-1.5">
         {tiles.map((t, i) => (
-          <div key={t} className={cn("relative isolate overflow-hidden rounded-2xl", i === 0 ? "col-span-2 row-span-2 aspect-auto" : "aspect-square")}>
-            <EventArt accent={t} intensity={0.8} />
-            <Camera className="absolute bottom-2 right-2 size-3.5 text-white/70" />
+          <div key={t} className={cn("relative isolate overflow-hidden rounded-2xl bg-canvas", i === 0 ? "col-span-2 row-span-2 aspect-auto" : "aspect-square")}>
+            {preview[i] ? (
+              // Real thumbnails of photos I tagged myself in.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={`/api/photos/${preview[i]}?size=thumb`} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />
+            ) : (
+              <>
+                <EventArt accent={t} intensity={0.8} />
+                <Camera className="absolute bottom-2 right-2 size-3.5 text-white/70" />
+              </>
+            )}
           </div>
         ))}
       </div>

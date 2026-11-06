@@ -84,6 +84,8 @@ export interface OrganizerPanel {
 
 export interface DashboardData {
   stats: { registered: number; thisWeek: number; attended: number; photosOfYou: number };
+  /** Up to 6 photo ids I've tagged myself in, newest first (thumbnails for the Vault card). */
+  vaultPreview: string[];
   nextUp: NextUp | null;
   upcoming: EventSummary[];
   campus: EventSummary[];
