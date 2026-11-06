@@ -133,7 +133,7 @@ export function StatTile({
         </span>
         <ArrowUpRight className="size-4 text-ink-subtle" />
       </div>
-      <p className="mt-4 text-[32px] font-extrabold leading-none tracking-tighter tabular-nums">{value}</p>
+      <p className="mt-4 font-serif text-[52px] leading-none tracking-[-0.02em] tabular-nums">{value}</p>
       <p className="mt-1.5 text-[13px] font-semibold text-ink-2">{label}</p>
       {hint && <p className="text-[12px] text-ink-subtle">{hint}</p>}
     </div>
@@ -158,7 +158,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
           <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-white/80">
             {fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "long" })}
           </p>
-          <h2 className="mt-1 text-[clamp(32px,4.4vw,50px)] font-extrabold leading-[1.02] tracking-tightest">{event.title}</h2>
+          <h2 className="shout mt-2 text-[clamp(28px,3.6vw,44px)]">{event.title}</h2>
           {event.tagline && <p className="mt-2 max-w-sm text-[16px] text-white/85">{event.tagline}</p>}
         </div>
       </div>
@@ -191,7 +191,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
         </div>
 
         <div className="mt-auto flex flex-wrap gap-2">
-          <LinkButton href={`/events/${event.slug}`} className="flex-1">
+          <LinkButton href={`/events/${event.slug}`} variant="volt" className="flex-1">
             View event <ArrowUpRight className="size-4" />
           </LinkButton>
           <LinkButton href={`/venues?to=${event.slug}`} variant="secondary">
@@ -530,7 +530,7 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Happening on campus</p>
-          <h2 className="headline mt-1 text-[26px]">Don&apos;t miss these</h2>
+          <h2 className="title-serif mt-2 text-[clamp(38px,4.4vw,60px)]">Don&apos;t miss <em className="text-aurora">these</em></h2>
         </div>
         <LinkButton href="/events" variant="secondary" className="py-2 text-[13px]">
           Browse all <ArrowUpRight className="size-4" />

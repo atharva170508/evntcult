@@ -13,7 +13,8 @@ export function AppShell({ viewer, children }: { viewer: NavViewer | null; child
 
   return (
     <div className="flex min-h-dvh">
-      <Sidebar isOrganizer={!!viewer?.isOrganizer} signedIn={!!viewer} onEnterCode={() => setCodeOpen(true)} />
+      {/* Signed-out visitors get a landing-page top nav instead of the app sidebar. */}
+      {viewer && <Sidebar isOrganizer={!!viewer.isOrganizer} signedIn onEnterCode={() => setCodeOpen(true)} />}
       <div className="min-w-0 flex-1">
         <TopBar viewer={viewer} onEnterCode={() => setCodeOpen(true)} />
         <main className="mx-auto max-w-[1280px] px-4 pb-32 md:pb-16 lg:px-8">{children}</main>

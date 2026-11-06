@@ -50,11 +50,25 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
       )}
     >
       <div className="mx-auto flex h-[72px] max-w-[1280px] items-center gap-3 px-4 lg:px-8">
-        <Link href="/dashboard" className="md:hidden" aria-label="EvntCult home">
+        <Link href="/dashboard" className={cn("flex shrink-0 items-center gap-2.5", viewer && "md:hidden")} aria-label="EvntCult home">
           <Logo />
+          {!viewer && <span className="hidden font-serif text-[26px] leading-none tracking-[-0.02em] sm:inline">EvntCult</span>}
         </Link>
+        {!viewer && (
+          <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+            {[
+              { href: "/events", label: "Discover" },
+              { href: "/calendar", label: "Calendar" },
+              { href: "/venues", label: "Venues" },
+            ].map((l) => (
+              <Link key={l.href} href={l.href} className="rounded-full px-3.5 py-2 text-[14px] font-semibold text-ink-2 transition-colors hover:bg-white/5 hover:text-ink">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+        )}
 
-        <form action="/events" className="flex h-12 min-w-0 flex-1 items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card md:max-w-[640px]">
+        <form action="/events" className={cn("flex h-12 min-w-0 flex-1 items-center", "rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card md:max-w-[640px]", !viewer && "hidden sm:flex lg:ml-auto lg:max-w-[340px]")}>
           <Search className="size-[18px] shrink-0 text-ink-subtle" />
           <input
             ref={inputRef}
