@@ -63,9 +63,16 @@ const config: Config = {
         brand: "0 14px 34px -16px rgba(220,254,98,0.55)",
       },
       keyframes: {
+        /* Soft fade, like a modern editor cursor (not a hard on/off). */
         "caret-blink": {
-          "0%, 49%": { opacity: "1" },
-          "50%, 100%": { opacity: "0" },
+          "0%, 45%": { opacity: "1" },
+          "55%, 92%": { opacity: "0.08" },
+          "100%": { opacity: "1" },
+        },
+        /* Each typed letter glides up into the gap. */
+        "type-in": {
+          "0%": { opacity: "0", transform: "translateY(0.12em) scale(0.92)" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
         },
         "fade-up": {
           "0%": { opacity: "0", transform: "translateY(12px)" },
@@ -93,7 +100,8 @@ const config: Config = {
         },
       },
       animation: {
-        "caret-blink": "caret-blink 1.05s steps(1, end) infinite",
+        "caret-blink": "caret-blink 1.1s ease-in-out infinite",
+        "type-in": "type-in 140ms cubic-bezier(0.22,1,0.36,1) both",
         "fade-up": "fade-up 0.6s cubic-bezier(0.22,1,0.36,1) both",
         "pulse-dot": "pulse_dot 1.6s ease-in-out infinite",
         float: "float 5s ease-in-out infinite",

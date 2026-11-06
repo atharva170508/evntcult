@@ -51,7 +51,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
     >
       <div className="mx-auto flex h-[72px] max-w-[1280px] items-center gap-3 px-4 lg:px-8">
         <Link href="/dashboard" className={cn("flex shrink-0 items-center gap-2.5", viewer && "md:hidden")} aria-label="EvntCult home">
-          <LogoWordmark className="text-[25px] text-ink" />
+          <LogoWordmark motion="type" className="text-[29px] text-ink" />
         </Link>
 
         {/* Search is for signed-in people only: visitors just see the landing page. */}

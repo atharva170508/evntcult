@@ -48,21 +48,21 @@ export function LogoWordmark({ className, motion = "blink" }: { className?: stri
     const alive = () => id === runId.current;
     setTyped("");
     setPressing(false);
-    await wait(700);
+    await wait(600);
     for (const word of SCRIPT) {
       for (const ch of word) {
         if (!alive()) return;
         setPressing(true);
         setTyped((t) => t + ch);
-        await wait(70);
+        await wait(80);
         setPressing(false);
-        await wait(60 + Math.random() * 90);
+        await wait(90 + Math.random() * 80);
       }
       await wait(word === "e" ? 1000 : 1500);
       for (let i = 0; i < word.length; i++) {
         if (!alive()) return;
         setTyped((t) => t.slice(0, -1));
-        await wait(55);
+        await wait(70);
       }
       await wait(320);
     }
@@ -72,6 +72,14 @@ export function LogoWordmark({ className, motion = "blink" }: { className?: stri
   useEffect(() => {
     if (mode !== "type" || !ref.current) return;
     const runs = runId;
+    // Already on screen at load (top bar, sign-in): start now. Otherwise wait until it scrolls in (footer).
+    const r = ref.current.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < window.innerHeight && r.width > 0) {
+      void play();
+      return () => {
+        runs.current++;
+      };
+    }
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -88,22 +96,27 @@ export function LogoWordmark({ className, motion = "blink" }: { className?: stri
     };
   }, [mode, play]);
 
+  // Plain inline text (not flex), so the cursor sits on the letters' baseline like a real text cursor.
   return (
     <span
       ref={ref}
       role="img"
       aria-label="EvntCult"
       onMouseEnter={mode === "type" ? () => void play() : undefined}
-      className={cn("inline-flex items-end whitespace-nowrap font-logo font-extrabold leading-none tracking-[-0.045em]", className)}
+      className={cn("inline-block whitespace-nowrap font-logo font-extrabold leading-none tracking-[-0.045em]", className)}
     >
       <span aria-hidden>ev</span>
-      <span aria-hidden className="inline-flex min-w-[0.2em] items-end justify-center">
-        {typed && <span style={{ color: LOGO_ACCENT }}>{typed}</span>}
+      <span aria-hidden className="inline-block min-w-[0.2em] text-center">
+        {typed.split("").map((ch, i) => (
+          <span key={`${i}-${ch}`} className="inline-block animate-type-in" style={{ color: LOGO_ACCENT }}>
+            {ch}
+          </span>
+        ))}
         <span
           className={cn(
-            "mx-[0.03em] mb-[0.15em] inline-block h-[0.7em] w-[0.075em] origin-bottom rounded-[0.02em] transition-transform duration-75",
+            "mx-[0.035em] inline-block h-[0.74em] w-[0.08em] origin-bottom rounded-[0.03em] align-[-0.02em] transition-transform duration-100 ease-out",
             mode !== "still" && !pressing && !typed && "animate-caret-blink",
-            pressing && "scale-y-[0.86]",
+            pressing && "scale-y-[0.82]",
           )}
           style={{ background: LOGO_ACCENT }}
         />

@@ -16,7 +16,7 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
     <aside className="sticky top-0 hidden print:!hidden h-dvh w-[88px] shrink-0 flex-col border-r border-white/[0.06] bg-surface/60 px-3 py-5 backdrop-blur-xl md:flex xl:w-[236px] xl:px-4">
       <Link href="/dashboard" className="flex items-center gap-2.5 px-2" aria-label="EvntCult home">
         <LogoIcon className="size-9 xl:hidden" />
-        <LogoWordmark className="hidden text-[27px] text-ink xl:inline-flex" />
+        <LogoWordmark motion="type" className="hidden text-[30px] text-ink xl:inline-block" />
       </Link>
 
       {isOrganizer && (
