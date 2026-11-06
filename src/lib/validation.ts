@@ -79,3 +79,25 @@ export const checkinSchema = z
     device_id: z.string().trim().max(64).optional(),
   })
   .strict();
+
+/** POST /api/registrations/:id/payment — organizer reconciles a fee. */
+export const paymentSchema = z.discriminatedUnion("status", [
+  z
+    .object({
+      status: z.literal("paid"),
+      method: z.enum(["cash", "upi"]),
+      /** UPI transaction reference (UTR), usually 12 digits. Optional. */
+      ref: z.string().trim().regex(/^[A-Za-z0-9]{6,35}$/, "UPI reference: 6–35 letters or digits").optional(),
+    })
+    .strict(),
+  z.object({ status: z.literal("unpaid") }).strict(),
+]);
+
+/** POST /api/events/:id/updates — schedule / venue / info update, optionally sent on WhatsApp. */
+export const eventUpdateSchema = z
+  .object({
+    kind: z.enum(["schedule", "venue", "update"]),
+    body: z.string().trim().min(3).max(500),
+    whatsapp: z.boolean().default(false),
+  })
+  .strict();

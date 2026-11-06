@@ -7,7 +7,8 @@
  *  • fetch: GET /api/events/:id/live (WebSocket) → the event's EventLive Durable Object,
  *    after checking the viewer organizes that event. Everything else goes to Next.js.
  *  • scheduled: the cron in wrangler.jsonc (every 5 minutes) expires unconfirmed
- *    waitlist holds and gives freed seats to the next person.
+ *    waitlist holds, gives freed seats to the next person, and queues the WhatsApp
+ *    reminder for events starting within 24 hours (once per student).
  *  • exports the EventLive Durable Object class.
  *
  * Build/deploy is unchanged: `npm run cf:deploy`. To try the cron and WebSockets locally:
@@ -18,6 +19,7 @@
 import { default as handler } from "./.open-next/worker.js";
 import { sweepHolds } from "./src/lib/data/registrations";
 import { gateCounts } from "./src/lib/data/checkins";
+import { queueDayBeforeReminders } from "./src/lib/notify";
 import { readSessionValue, SESSION_COOKIE } from "./src/lib/session";
 
 export { EventLive } from "./src/lib/live/event-live";
@@ -64,10 +66,13 @@ export default {
   },
 
   async scheduled(controller, env, ctx) {
+    const now = new Date(controller.scheduledTime);
     ctx.waitUntil(
-      sweepHolds(env.DB, new Date(controller.scheduledTime)).then((r) =>
-        console.log(`[cron ${controller.cron}] holds expired: ${r.expired}, seats offered: ${r.promoted}`),
-      ),
+      (async () => {
+        const holds = await sweepHolds(env.DB, now);
+        const reminders = await queueDayBeforeReminders(env.DB, now);
+        console.log(`[cron ${controller.cron}] holds expired: ${holds.expired}, seats offered: ${holds.promoted}, reminders queued: ${reminders}`);
+      })(),
     );
   },
 } satisfies ExportedHandler<CloudflareEnv>;

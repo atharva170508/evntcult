@@ -42,6 +42,7 @@ const iso = (d: Date) => d.toISOString();
 const ago = (h: number) => iso(new Date(now - h * HOUR));
 
 const sql: string[] = [
+  "DELETE FROM notifications;",
   "DELETE FROM photo_tags;",
   "DELETE FROM photos;",
   "DELETE FROM audit_log;",
@@ -153,7 +154,7 @@ hoopsRegs.slice(0, 131).forEach((rid, i) => {
 
 // ---------- organizer updates ----------
 const update = (e: E, kind: string, body: string, hoursAgo: number) =>
-  sql.push(`INSERT INTO event_updates VALUES (${[id("upd"), e.id, kind, body, ago(hoursAgo)].map(q).join(", ")});`);
+  sql.push(`INSERT INTO event_updates (id, event_id, kind, body, created_at) VALUES (${[id("upd"), e.id, kind, body, ago(hoursAgo)].map(q).join(", ")});`);
 update(valorant, "schedule", "Check-in moved to 9:30 AM. Brackets go live 30 minutes earlier — bring your own headset.", 0.4);
 update(robowars, "venue", "Pit area is now behind the OAT. Teams, load in through Gate 3.", 3);
 update(neon, "update", "Dress code: anything that glows. Passes are scanned at the door.", 20);

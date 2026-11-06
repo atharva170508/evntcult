@@ -143,7 +143,22 @@ async function getOrganizerPanel(viewer: Viewer, now: Date): Promise<OrganizerPa
 
   const liveRow = hosted.find((h) => h.starts_at <= nowIso && h.ends_at > nowIso);
 
-  // Real clash check: each of my drafts against the published calendar.
+  const clashes = await draftClashes(viewer, now);
+
+  return {
+    live: liveRow
+      ? { id: liveRow.id, title: liveRow.title, capacity: liveRow.capacity, registered: liveRow.taken, checkedIn: liveRow.checked_in }
+      : null,
+    hosted: rows,
+    clashes,
+  };
+}
+
+/** Real clash check: each of my drafts against the published calendar. Shared with /organizer. */
+export async function draftClashes(viewer: Viewer, now = new Date()): Promise<OrganizerPanel["clashes"]> {
+  const nowIso = now.toISOString();
+  const ownerClause = viewer.role === "admin" ? "1 = 1" : "e.organizer_id = ?";
+  const ownerArgs = viewer.role === "admin" ? [] : [viewer.id];
   const drafts = await all<{ id: string; title: string; venue: string; starts_at: string; ends_at: string; category: string }>(
     `SELECT id, title, venue, starts_at, ends_at, category FROM events e WHERE ${ownerClause} AND status = 'draft' AND ends_at > ?`,
     ...ownerArgs,
@@ -175,13 +190,7 @@ async function getOrganizerPanel(viewer: Viewer, now: Date): Promise<OrganizerPa
     );
   }
 
-  return {
-    live: liveRow
-      ? { id: liveRow.id, title: liveRow.title, capacity: liveRow.capacity, registered: liveRow.taken, checkedIn: liveRow.checked_in }
-      : null,
-    hosted: rows,
-    clashes,
-  };
+  return clashes;
 }
 
 /** Signed-out visitors: real public data only (no personal cards). */
