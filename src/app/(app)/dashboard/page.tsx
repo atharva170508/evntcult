@@ -142,13 +142,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 /** What a signed-out visitor sees: the cinematic landing page, built from real campus data. */
 async function PublicLanding() {
   const d = await getPublicDashboard();
-  const next = d.campus[0];
-  let nextQr: string | null = null;
-  if (next) {
-    const h = await headers();
-    const host = h.get("x-forwarded-host") ?? h.get("host");
-    const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
-    if (host) nextQr = await QRCode.toString(`${proto}://${host}/events/${next.slug}`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#08080c", light: "#ffffff" } });
-  }
-  return <PublicHome data={{ ...d, nextQr }} />;
+  // The sample OnePass on the landing page carries a real QR: scanning it opens sign-up.
+  const h = await headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "evntcult.caliper.workers.dev";
+  const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
+  const onePassQr = await QRCode.toString(`${proto}://${host}/signin?mode=signup`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#08080c", light: "#ffffff" } });
+  return <PublicHome data={{ ...d, onePassQr }} />;
 }

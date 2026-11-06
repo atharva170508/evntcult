@@ -28,7 +28,7 @@ export function AppShell({ viewer, children }: { viewer: NavViewer | null; child
       </div>
 
 
-      <MobileTabBar isOrganizer={!!viewer?.isOrganizer} />
+      {viewer && <MobileTabBar isOrganizer={!!viewer.isOrganizer} />}
       <EnterCodeDialog open={codeOpen} onClose={() => setCodeOpen(false)} />
     </div>
   );
