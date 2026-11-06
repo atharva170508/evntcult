@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  html {
+    @apply bg-canvas text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply min-h-dvh bg-canvas font-sans text-[15px] leading-relaxed;
+  }
+  ::selection {
+    background: rgba(91, 63, 255, 0.2);
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand/60 ring-offset-2 ring-offset-canvas;
+  }
+}
+
+@layer components {
+  /* The core card: white, soft border, gentle shadow. */
+  .card {
+    @apply relative rounded-3xl border border-line bg-surface shadow-card;
+  }
+  /* Hover lift for clickable cards. */
+  .lift {
+    @apply transition-[transform,box-shadow,border-color] duration-300 ease-apple hover:-translate-y-0.5 hover:border-line-strong hover:shadow-pop;
+  }
+  .eyebrow {
+    @apply text-[11.5px] font-semibold uppercase tracking-[0.1em] text-ink-subtle;
+  }
+  .headline {
+    @apply font-bold tracking-tighter text-ink;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Ticket perforation: a dashed line with two half-circle cut-outs. */
+  .ticket-cut {
+    @apply relative my-1 h-6;
+  }
+  .ticket-cut::before {
+    content: "";
+    @apply absolute left-5 right-5 top-1/2 border-t-2 border-dashed border-line;
+  }
+  .ticket-cut::after {
+    content: "";
+    @apply pointer-events-none absolute inset-y-0 -left-3 -right-3;
+    background:
+      radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 12px) left / 24px 24px no-repeat,
+      radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 12px) right / 24px 24px no-repeat;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

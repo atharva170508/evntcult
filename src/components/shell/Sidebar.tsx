@@ -1,0 +1,79 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { KeyRound, Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Logo } from "./Logo";
+import { NAV, ORGANIZER_NAV, isActive } from "./nav";
+
+/** App-style left menu for laptops (Unstop / Zoho Backstage idea). Hidden on phones. */
+export function Sidebar({ isOrganizer, onEnterCode }: { isOrganizer: boolean; onEnterCode: () => void }) {
+  const pathname = usePathname();
+  const items = isOrganizer ? [...NAV, ORGANIZER_NAV] : NAV;
+
+  return (
+    <aside className="sticky top-0 hidden h-dvh w-[88px] shrink-0 flex-col border-r border-line bg-surface px-3 py-5 md:flex xl:w-[236px] xl:px-4">
+      <Link href="/dashboard" className="flex items-center gap-2.5 px-2" aria-label="EvntCult home">
+        <Logo />
+        <span className="hidden text-[18px] font-extrabold tracking-tighter xl:inline">EvntCult</span>
+      </Link>
+
+      {isOrganizer && (
+        <Link
+          href="/organizer/events/new"
+          className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-brand py-3 text-[14px] font-semibold text-white shadow-brand transition-colors hover:bg-brand-hover"
+        >
+          <Plus className="size-[18px]" />
+          <span className="hidden xl:inline">Create event</span>
+        </Link>
+      )}
+
+      <nav className="mt-6 flex-1">
+        <p className="eyebrow mb-2 hidden px-3 xl:block">Menu</p>
+        <ul className="space-y-1">
+          {items.map((item) => {
+            const active = isActive(pathname, item.href);
+            const Icon = item.icon;
+            return (
+              <li key={item.href}>
+                {item === ORGANIZER_NAV && <p className="eyebrow mb-2 mt-5 hidden px-3 xl:block">Organize</p>}
+                <Link
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  title={item.label}
+                  className={cn(
+                    "group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[14px] font-semibold transition-colors",
+                    "justify-center xl:justify-start",
+                    active ? "bg-ink text-white" : "text-ink-muted hover:bg-canvas hover:text-ink",
+                  )}
+                >
+                  <Icon className="size-[19px] shrink-0" />
+                  <span className="hidden xl:inline">{item.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <button
+        onClick={onEnterCode}
+        className="group hidden rounded-3xl bg-gradient-to-br from-brand-soft to-[#fff5df] p-4 text-left transition-transform hover:-translate-y-0.5 xl:block"
+      >
+        <span className="grid size-9 place-items-center rounded-xl bg-white text-brand shadow-card">
+          <KeyRound className="size-4" />
+        </span>
+        <p className="mt-3 text-[14px] font-bold leading-tight">Got an event code?</p>
+        <p className="mt-0.5 text-[12.5px] text-ink-muted">Join a private event in one step.</p>
+      </button>
+      <button
+        onClick={onEnterCode}
+        title="Enter event code"
+        className="mx-auto grid size-11 place-items-center rounded-2xl bg-brand-soft text-brand xl:hidden"
+      >
+        <KeyRound className="size-[18px]" />
+      </button>
+    </aside>
+  );
+}

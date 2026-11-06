@@ -1,0 +1,628 @@
+// ─────────────────────────────────────────────────────────────────────────────
+//  EvntCult — relational schema (PostgreSQL)
+//
+//  Conventions
+//  • Money is stored as integer paise (₹1 = 100 paise) — never floats.
+//  • All timestamps are timestamptz (UTC). Format in the UI with Asia/Kolkata.
+//  • Every event-scoped table cascades on Event delete.
+//  • Hard venue-clash protection lives in prisma/sql/001_venue_clash_guard.sql
+//    (a Postgres exclusion constraint Prisma can't express); the app also
+//    runs a friendlier pre-check in src/lib/clash.ts.
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ──────────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  ORGANIZER
+  ADMIN // developers — the only people who can verify organizers
+}
+
+enum OrganizerStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  SUSPENDED
+}
+
+enum EventVisibility {
+  PUBLIC // listed on the campus calendar
+  CODE_ONLY // hidden; viewing + registering requires a valid Event Code
+  UNLISTED // anyone with the link, but not on the calendar
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  LIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum EventCategory {
+  FEST
+  PARTY
+  SPORTS
+  GAMING
+  TECH
+  CULTURAL
+  WORKSHOP
+  TALK
+  OTHER
+}
+
+enum RegistrationStatus {
+  REGISTERED
+  WAITLISTED
+  CANCELLED
+  ATTENDED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  NOT_REQUIRED
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  WAIVED
+}
+
+enum PaymentMethod {
+  UPI_QR
+  UPI_INTENT
+  CASH
+  CARD
+  OTHER
+}
+
+enum Audience {
+  PUBLIC // anyone signed in
+  REGISTERED // only registered attendees
+  ORGANIZERS // event team only
+  HIDDEN
+}
+
+enum AnnouncementKind {
+  INFO
+  SCHEDULE_CHANGE
+  VENUE_CHANGE
+  URGENT
+}
+
+enum ReminderChannel {
+  WHATSAPP
+  EMAIL
+  PUSH
+}
+
+enum ReminderStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  READ
+  FAILED
+  CANCELLED
+}
+
+enum ResourceKind {
+  SLIDES
+  DOCUMENT
+  LINK
+  VIDEO
+  ARCHIVE
+}
+
+enum MediaKind {
+  PHOTO
+  VIDEO
+}
+
+enum SponsorTier {
+  TITLE
+  GOLD
+  SILVER
+  COMMUNITY
+}
+
+// ─── Auth.js core (field names are dictated by @auth/prisma-adapter) ────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+
+  role         Role    @default(USER)
+  phone        String? // E.164, e.g. +919876543210 — used for WhatsApp
+  whatsappOptIn Boolean @default(false)
+  college      String?
+  department   String?
+  rollNumber   String?
+  graduationYear Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accounts         Account[]
+  sessions         Session[]
+  organizerProfile OrganizerProfile? @relation("OrganizerOwner")
+  verifiedOrganizers OrganizerProfile[] @relation("OrganizerVerifier")
+  eventsHosted     Event[]           @relation("EventHost")
+  teamMemberships  EventTeamMember[]
+  registrations    Registration[]
+  checkInsScanned  CheckIn[]         @relation("CheckInScanner")
+  announcements    Announcement[]
+  mediaUploads     MediaAsset[]
+  faceProfile      FaceProfile?
+  photoMatches     PhotoMatch[]
+  reminders        Reminder[]
+  auditLogs        AuditLog[]
+
+  @@index([role])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── Organizer verification (manual, by developers) ────────────────────────
+
+model OrganizerProfile {
+  id           String          @id @default(cuid())
+  userId       String          @unique
+  clubName     String // "Robotics Club", "Cultural Committee"
+  designation  String? // "General Secretary"
+  proofUrl     String? // ID card / faculty letter uploaded at application
+  status       OrganizerStatus @default(PENDING)
+  reviewNotes  String?
+  verifiedAt   DateTime?
+  verifiedById String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user       User  @relation("OrganizerOwner", fields: [userId], references: [id], onDelete: Cascade)
+  verifiedBy User? @relation("OrganizerVerifier", fields: [verifiedById], references: [id], onDelete: SetNull)
+
+  @@index([status])
+}
+
+// ─── Venues & navigator ────────────────────────────────────────────────────
+
+model Venue {
+  id           String  @id @default(cuid())
+  name         String // "Main Auditorium"
+  slug         String  @unique
+  building     String?
+  floor        String?
+  capacity     Int?
+  latitude     Float?
+  longitude    Float?
+  directions   String? // human walking directions from main gate
+  mapImageUrl  String?
+  indoor       Boolean @default(true)
+  amenities    String[] // ["projector","stage","AC","wheelchair-access"]
+  // Minutes of setup/teardown to keep free around bookings (clash buffer).
+  bufferMinutes Int     @default(30)
+  active       Boolean @default(true)
+
+  events Event[]
+
+  @@index([active])
+}
+
+// ─── Events ────────────────────────────────────────────────────────────────
+
+model Event {
+  id          String          @id @default(cuid())
+  slug        String          @unique
+  title       String
+  tagline     String?
+  description String          @db.Text
+  category    EventCategory   @default(OTHER)
+  status      EventStatus     @default(DRAFT)
+  visibility  EventVisibility @default(PUBLIC)
+
+  startsAt DateTime @db.Timestamptz(6)
+  endsAt   DateTime @db.Timestamptz(6)
+  timezone String   @default("Asia/Kolkata")
+
+  venueId       String?
+  venueOverride String? // free-text venue for off-campus events
+
+  capacity        Int?
+  waitlistEnabled Boolean @default(true)
+  registrationOpensAt  DateTime? @db.Timestamptz(6)
+  registrationClosesAt DateTime? @db.Timestamptz(6)
+
+  // Branding / generated collateral
+  coverImageUrl String?
+  flyerUrl      String?
+  inviteTemplate Json? // design tokens for the flyer/invite generator
+  accentColor   String? // hex
+
+  // Fees — payments on hold; stored so the UI and reports are ready.
+  feeAmountPaise Int     @default(0)
+  currency       String  @default("INR")
+  upiVpa         String? // e.g. robotics@okaxis — shown as a UPI QR
+  upiPayeeName   String?
+
+  // Privacy controls
+  attendeeListAudience Audience @default(ORGANIZERS)
+  mediaAudience        Audience @default(REGISTERED)
+  allowFaceSearch      Boolean  @default(false)
+
+  hostId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  host          User              @relation("EventHost", fields: [hostId], references: [id], onDelete: Restrict)
+  venue         Venue?            @relation(fields: [venueId], references: [id], onDelete: SetNull)
+  team          EventTeamMember[]
+  codes         EventCode[]
+  registrations Registration[]
+  schedule      ScheduleItem[]
+  announcements Announcement[]
+  resources     Resource[]
+  media         MediaAsset[]
+  reminders     Reminder[]
+  sponsors      Sponsor[]
+  sponsorReports SponsorReport[]
+  footfall      FootfallSnapshot[]
+
+  @@index([status, startsAt])
+  @@index([venueId, startsAt, endsAt])
+  @@index([hostId])
+  @@index([visibility])
+}
+
+model EventTeamMember {
+  eventId String
+  userId  String
+  // Granular permissions for co-organizers / volunteers.
+  canScan        Boolean @default(true)
+  canEdit        Boolean @default(false)
+  canBroadcast   Boolean @default(false)
+  canViewPayments Boolean @default(false)
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, userId])
+}
+
+/// Google-Classroom-style access code. An event can have several (e.g. one per
+/// class section) so organizers can track which audience joined from where.
+model EventCode {
+  id        String    @id @default(cuid())
+  eventId   String
+  code      String    @unique // 7 chars, unambiguous alphabet, uppercase
+  label     String? // "CSE 3rd year"
+  maxUses   Int?
+  uses      Int       @default(0)
+  expiresAt DateTime?
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+
+  event         Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  registrations Registration[]
+
+  @@index([eventId])
+}
+
+// ─── Single source of truth: registrations, passes, payments, check-ins ────
+
+model Registration {
+  id        String             @id @default(cuid())
+  eventId   String
+  userId    String
+  status    RegistrationStatus @default(REGISTERED)
+  viaCodeId String?
+  // Snapshot of answers to custom registration questions.
+  answers   Json?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  event       Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  viaCode     EventCode?   @relation(fields: [viaCodeId], references: [id], onDelete: SetNull)
+  pass        Pass?
+  payment     Payment?
+  certificate Certificate?
+
+  @@unique([eventId, userId])
+  @@index([eventId, status])
+  @@index([userId])
+}
+
+model Pass {
+  id             String    @id @default(cuid())
+  registrationId String    @unique
+  serial         String    @unique // human-readable, e.g. EC-ROBO-0042
+  token          String    @unique // HMAC-signed payload encoded in the QR
+  issuedAt       DateTime  @default(now())
+  revokedAt      DateTime?
+
+  registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  checkIns     CheckIn[]
+}
+
+model CheckIn {
+  id          String   @id @default(cuid())
+  passId      String
+  scannedById String?
+  gate        String? // "Gate A"
+  direction   String   @default("IN") // IN | OUT — enables live occupancy
+  scannedAt   DateTime @default(now())
+
+  pass      Pass  @relation(fields: [passId], references: [id], onDelete: Cascade)
+  scannedBy User? @relation("CheckInScanner", fields: [scannedById], references: [id], onDelete: SetNull)
+
+  @@index([passId, scannedAt])
+}
+
+/// Minute-level rollups for sponsor ROI charts and peak-footfall analysis.
+model FootfallSnapshot {
+  id        String   @id @default(cuid())
+  eventId   String
+  at        DateTime @db.Timestamptz(6)
+  inside    Int
+  totalIn   Int
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, at])
+}
+
+model Payment {
+  id             String         @id @default(cuid())
+  registrationId String         @unique
+  amountPaise    Int
+  currency       String         @default("INR")
+  status         PaymentStatus  @default(PENDING)
+  method         PaymentMethod?
+  upiTxnRef      String?        @unique // UTR / reference entered or returned
+  providerRef    String?
+  verifiedById   String? // organizer who confirmed a manual UPI/cash payment
+  paidAt         DateTime?
+  notes          String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+}
+
+// ─── Live updates & schedule ───────────────────────────────────────────────
+
+model ScheduleItem {
+  id        String   @id @default(cuid())
+  eventId   String
+  title     String
+  startsAt  DateTime @db.Timestamptz(6)
+  endsAt    DateTime? @db.Timestamptz(6)
+  location  String?
+  sortOrder Int      @default(0)
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, startsAt])
+}
+
+model Announcement {
+  id        String           @id @default(cuid())
+  eventId   String
+  authorId  String
+  kind      AnnouncementKind @default(INFO)
+  title     String
+  body      String           @db.Text
+  pinned    Boolean          @default(false)
+  // Fan out to WhatsApp/email as well as in-app.
+  pushToWhatsApp Boolean     @default(false)
+  createdAt DateTime         @default(now())
+
+  event  Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  author User  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, createdAt])
+}
+
+// ─── Certificates & resources ──────────────────────────────────────────────
+
+model Certificate {
+  id             String   @id @default(cuid())
+  registrationId String   @unique
+  serial         String   @unique // printed on the cert, verifiable at /verify/[serial]
+  kind           String   @default("PARTICIPATION") // PARTICIPATION | WINNER | VOLUNTEER
+  fileUrl        String?
+  issuedAt       DateTime @default(now())
+
+  registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+}
+
+model Resource {
+  id             String       @id @default(cuid())
+  eventId        String
+  title          String
+  kind           ResourceKind @default(LINK)
+  url            String
+  audience       Audience     @default(REGISTERED)
+  availableAfter DateTime? // e.g. unlock slides once the event ends
+  createdAt      DateTime     @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+}
+
+// ─── Photo vault & AI face matching ────────────────────────────────────────
+
+model MediaAsset {
+  id         String    @id @default(cuid())
+  eventId    String
+  uploaderId String?
+  kind       MediaKind @default(PHOTO)
+  url        String
+  thumbUrl   String?
+  width      Int?
+  height     Int?
+  takenAt    DateTime?
+  audience   Audience  @default(REGISTERED)
+  // Face detection pipeline status: PENDING → PROCESSED | FAILED | SKIPPED
+  faceScanStatus String @default("PENDING")
+  createdAt  DateTime  @default(now())
+
+  event    Event        @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  uploader User?        @relation(fields: [uploaderId], references: [id], onDelete: SetNull)
+  matches  PhotoMatch[]
+
+  @@index([eventId, createdAt])
+}
+
+/// Opt-in only. The embedding is derived from a selfie the user uploads; it is
+/// never shown to anyone and is deleted when consent is withdrawn.
+/// For large galleries, migrate `embedding` to pgvector (vector(512)).
+model FaceProfile {
+  userId      String   @id
+  embedding   Bytes
+  model       String // e.g. "arcface-r100@1"
+  consentedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PhotoMatch {
+  id           String   @id @default(cuid())
+  mediaAssetId String
+  userId       String
+  confidence   Float
+  boundingBox  Json? // { x, y, w, h } normalized 0..1
+  confirmed    Boolean? // user said "that's me" / "not me"
+  hiddenByUser Boolean  @default(false) // user asked to hide this photo
+  createdAt    DateTime @default(now())
+
+  mediaAsset MediaAsset @relation(fields: [mediaAssetId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([mediaAssetId, userId])
+  @@index([userId])
+}
+
+// ─── WhatsApp / email reminders ────────────────────────────────────────────
+
+model Reminder {
+  id                String          @id @default(cuid())
+  eventId           String
+  userId            String? // null = broadcast to all registered
+  channel           ReminderChannel @default(WHATSAPP)
+  templateKey       String // approved WhatsApp template name
+  variables         Json?
+  scheduledFor      DateTime        @db.Timestamptz(6)
+  status            ReminderStatus  @default(QUEUED)
+  providerMessageId String?
+  error             String?
+  sentAt            DateTime?
+  createdAt         DateTime        @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, scheduledFor])
+  @@index([eventId])
+}
+
+// ─── Sponsors & ROI ────────────────────────────────────────────────────────
+
+model Sponsor {
+  id         String      @id @default(cuid())
+  eventId    String
+  name       String
+  tier       SponsorTier @default(COMMUNITY)
+  logoUrl    String?
+  website    String?
+  contactEmail String?
+  amountPaise Int?
+
+  event   Event           @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  reports SponsorReport[]
+
+  @@index([eventId])
+}
+
+model SponsorReport {
+  id          String   @id @default(cuid())
+  eventId     String
+  sponsorId   String?
+  // Frozen metrics at generation time: registrations, attendance, peak footfall,
+  // demographics, engagement, media reach — so the deck never changes later.
+  metrics     Json
+  deckUrl     String? // generated PDF/PPTX
+  generatedAt DateTime @default(now())
+
+  event   Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  sponsor Sponsor? @relation(fields: [sponsorId], references: [id], onDelete: SetNull)
+
+  @@index([eventId])
+}
+
+// ─── Audit ─────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String // "organizer.verify", "event.publish", "payment.mark_paid"
+  target    String? // "event:ckx…"
+  meta      Json?
+  createdAt DateTime @default(now())
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([action, createdAt])
+}

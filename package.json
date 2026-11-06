@@ -1,0 +1,66 @@
+{
+  "name": "evntcult",
+  "version": "0.1.0",
+  "private": true,
+  "description": "EvntCult — campus event management, Apple-style dark mode.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy && node scripts/apply-sql.mjs",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "organizer:verify": "tsx scripts/verify-organizer.ts",
+    "postinstall": "prisma generate",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf:preview": "opennextjs-cloudflare build && wrangler dev"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "2.11.1",
+    "@prisma/client": "6.19.3",
+    "clsx": "2.1.1",
+    "lucide-react": "0.577.0",
+    "next": "15.5.29",
+    "next-auth": "5.0.0-beta.29",
+    "qrcode": "1.5.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "server-only": "0.0.1",
+    "tailwind-merge": "3.3.1",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.3.1",
+    "@opennextjs/cloudflare": "^1.20.16",
+    "@types/node": "22.18.0",
+    "@types/qrcode": "1.5.5",
+    "@types/react": "19.1.12",
+    "@types/react-dom": "19.1.9",
+    "autoprefixer": "10.4.21",
+    "eslint": "9.34.0",
+    "eslint-config-next": "15.5.29",
+    "postcss": "8.5.6",
+    "prisma": "6.19.3",
+    "tailwindcss": "3.4.19",
+    "tsx": "4.20.5",
+    "typescript": "5.9.2",
+    "vitest": "3.2.7",
+    "wrangler": "^4.158.0"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.2": true,
+    "prisma@6.19.3": true,
+    "@prisma/client@6.19.3": true,
+    "@prisma/engines@6.19.3": true,
+    "sharp@0.35.5": true,
+    "workerd@1.20261104.1": true
+  }
+}
