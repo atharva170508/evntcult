@@ -31,7 +31,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
   const chip = (active: boolean) =>
     cn(
       "shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold transition-colors",
-      active ? "border-volt bg-volt text-ink-inverse" : "border-line bg-surface text-ink-2 hover:border-ink",
+      active ? "border-volt bg-volt text-ink-inverse" : "border-line bg-surface text-ink-2 hover:border-volt/60",
     );
 
   return (
@@ -44,7 +44,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
         {q.type && <input type="hidden" name="type" value={q.type} />}
         {q.when && <input type="hidden" name="when" value={q.when} />}
         {q.price && <input type="hidden" name="price" value={q.price} />}
-        <button className="rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-ink-inverse">Search</button>
+        <button className="rounded-full bg-volt px-4 py-2 text-[13px] font-semibold text-ink-inverse">Search</button>
       </form>
 
       <div className="space-y-2.5">
@@ -70,7 +70,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
         <div className="card p-10 text-center">
           <p className="text-[17px] font-bold">No events match these filters.</p>
           <p className="mt-1 text-[14px] text-ink-muted">Try another day or type, or clear the search.</p>
-          <Link href="/events" className="mt-4 inline-block rounded-full border border-line px-4 py-2 text-[13px] font-semibold hover:border-ink">Clear filters</Link>
+          <Link href="/events" className="mt-4 inline-block rounded-full border border-line px-4 py-2 text-[13px] font-semibold hover:border-volt/60">Clear filters</Link>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -82,7 +82,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
 
       {nextCursor && (
         <div className="flex justify-center">
-          <Link href={`${href({})}${href({}).includes("?") ? "&" : "?"}cursor=${encodeURIComponent(nextCursor)}`} className="rounded-full border border-line bg-surface px-5 py-2.5 text-[14px] font-semibold hover:border-ink">
+          <Link href={`${href({})}${href({}).includes("?") ? "&" : "?"}cursor=${encodeURIComponent(nextCursor)}`} className="rounded-full border border-line bg-surface px-5 py-2.5 text-[14px] font-semibold hover:border-volt/60">
             Next page →
           </Link>
         </div>

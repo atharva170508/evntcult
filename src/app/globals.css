@@ -14,11 +14,12 @@
     @apply min-h-dvh bg-canvas font-sans text-[15px] leading-relaxed;
   }
   ::selection {
-    background: rgba(124, 102, 255, 0.35);
+    background: rgba(212, 255, 58, 0.3);
   }
-  body {
-    background-image: radial-gradient(60% 40% at 50% -10%, rgba(124, 102, 255, 0.14), transparent 70%);
-    background-repeat: no-repeat;
+  /* Accent words in headings: neon yellow, upright (no serif italics any more). */
+  em {
+    font-style: normal;
+    color: theme("colors.volt.DEFAULT");
   }
   :focus-visible {
     @apply outline-none ring-2 ring-volt ring-offset-2 ring-offset-canvas;
@@ -29,29 +30,23 @@
   /* The core card: smoked glass panel with a hairline top highlight. */
   .card {
     @apply relative rounded-[28px] border border-white/[0.07] bg-surface/80 shadow-card backdrop-blur-xl;
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0) 40%);
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0) 40%);
   }
   /* Frosted glass for things floating over gradients. */
   .glass {
     @apply border border-white/15 bg-white/[0.07] backdrop-blur-xl;
   }
-  /* Huge editorial serif (Instrument Serif), as in luxury event-agency sites. */
-  .title-serif {
-    @apply font-serif font-normal leading-[0.95] tracking-[-0.02em] text-ink;
+  /* Huge, friendly display heading (Outfit, heavy and tight). */
+  .title-xl {
+    @apply font-display font-bold leading-[0.98] tracking-[-0.035em] text-ink;
   }
-  /* Wide uppercase poster shout (Unbounded). */
+  /* Uppercase poster shout. */
   .shout {
-    @apply font-display font-extrabold uppercase leading-[0.92] tracking-[-0.03em];
+    @apply font-display font-extrabold uppercase leading-[0.95] tracking-[-0.025em];
   }
-  /* Brushed-metal fill for the giant footer wordmark. */
+  /* Brushed-aluminium fill for the giant footer wordmark (Apple-ish). */
   .text-metal {
-    background: linear-gradient(180deg, #f2f3f7 0%, #8d93a8 38%, #2a2d3a 52%, #c9cde0 70%, #4a4f63 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .text-aurora {
-    background: linear-gradient(100deg, #a594ff, #6f9bff 45%, #d08cff);
+    background: linear-gradient(180deg, #f2f3f7 0%, #9a9cab 40%, #3a3b44 55%, #d5d6de 75%, #55575f 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -93,6 +88,14 @@
     background:
       radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 12px) left / 24px 24px no-repeat,
       radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 12px) right / 24px 24px no-repeat;
+  }
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #000;
   }
 }
 

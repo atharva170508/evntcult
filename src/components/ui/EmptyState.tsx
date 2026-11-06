@@ -24,7 +24,7 @@ export function EmptyState({
       <p className="text-[15px] font-bold">{title}</p>
       {body && <p className="max-w-xs text-[13px] text-ink-muted">{body}</p>}
       {action && (
-        <Link href={action.href} className="mt-1 rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-ink-inverse hover:bg-ink-2">
+        <Link href={action.href} className="mt-1 rounded-full bg-volt px-4 py-2 text-[13px] font-semibold text-ink-inverse hover:bg-volt-hover">
           {action.label}
         </Link>
       )}

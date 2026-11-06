@@ -22,8 +22,8 @@ export function Countdown({ to, endsAt, compact }: { to: Date; endsAt: Date; com
 
   if (now >= +to && now < +endsAt) {
     return (
-      <p className="inline-flex items-center gap-2 rounded-full bg-live-soft px-3 py-1.5 text-[14px] font-bold text-live">
-        <span className="size-2 rounded-full bg-live animate-pulse-dot" /> Happening now
+      <p className="inline-flex items-center gap-2 rounded-full bg-volt/10 px-3 py-1.5 text-[14px] font-bold text-volt ring-1 ring-volt/30">
+        <span className="size-2 rounded-full bg-volt motion-safe:animate-pulse-dot" aria-hidden /> Happening now
       </p>
     );
   }

@@ -4,10 +4,12 @@ const tones = {
   neutral: "bg-canvas text-ink-2",
   accent: "bg-brand-soft text-brand-ink",
   live: "bg-live-soft text-live",
+  /** Live / happening-now indicators: the neon-yellow accent. */
+  volt: "bg-volt/10 text-volt ring-1 ring-volt/30",
   warn: "bg-warn-soft text-warn",
   danger: "bg-danger-soft text-danger",
   violet: "bg-brand-soft text-brand-ink",
-  dark: "bg-ink text-ink-inverse",
+  dark: "bg-volt text-ink-inverse",
   white: "bg-white/90 text-ink-inverse backdrop-blur",
   outline: "border border-line bg-surface text-ink-2",
 } as const;
@@ -34,7 +36,7 @@ export function Chip({
         className,
       )}
     >
-      {pulse && <span className="size-1.5 rounded-full bg-current animate-pulse-dot" />}
+      {pulse && <span className="size-1.5 rounded-full bg-volt motion-safe:animate-pulse-dot" aria-hidden />}
       {children}
     </span>
   );

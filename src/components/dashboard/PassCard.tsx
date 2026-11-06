@@ -1,5 +1,6 @@
 import QRCode from "qrcode";
-import { Download, Wallet } from "lucide-react";
+import { CalendarPlus } from "lucide-react";
+import { SavePassButton } from "@/components/passes/SavePassButton";
 import type { NextUp } from "@/lib/data/types";
 import { Chip } from "@/components/ui/Chip";
 import { EventArt } from "@/components/ui/EventArt";
@@ -57,13 +58,22 @@ export async function PassCard({ pass }: { pass: NextUp }) {
             <p className="font-bold">{pass.feePaise > 0 ? formatINR(pass.feePaise) : "Free"}</p>
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-2">
-          <button className="inline-flex items-center justify-center gap-1.5 rounded-full border border-line py-2.5 text-[13px] font-semibold transition-colors hover:border-ink">
-            <Download className="size-3.5" /> Save
-          </button>
-          <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-ink py-2.5 text-[13px] font-semibold text-ink-inverse transition-colors hover:bg-ink-2">
-            <Wallet className="size-3.5" /> Add to Wallet
-          </button>
+        <div className="mt-4 grid gap-2">
+          <SavePassButton
+            title={pass.title}
+            dateLabel={fmtDate(pass.startsAt, { weekday: "short", day: "numeric", month: "short" })}
+            timeLabel={fmtTime(pass.startsAt)}
+            venue={pass.venueName ?? ""}
+            passCode={pass.passSerial}
+            qrSvg={svg}
+            className="w-full py-2.5"
+          />
+          <a
+            href={`/api/registrations/${pass.registrationId}/ics`}
+            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-volt py-2.5 text-[13px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover"
+          >
+            <CalendarPlus className="size-3.5" aria-hidden /> Add to calendar
+          </a>
         </div>
       </div>
     </div>

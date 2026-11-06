@@ -39,13 +39,13 @@ export default async function EventPhotosPage({ params }: { params: Promise<{ sl
         {back}
         <section className="card flex flex-col items-start gap-3 p-8">
           <Lock className="size-8 text-ink-subtle" />
-          <h1 className="title-serif text-[32px]">Photos are for people who registered</h1>
+          <h1 className="title-xl text-[32px]">Photos are for people who registered</h1>
           <p className="max-w-md text-[14.5px] text-ink-muted">
             Only this event&apos;s registered attendees and its organizer can see its photos.
             {!viewer && " Sign in with the account you registered with."}
           </p>
           {!viewer && (
-            <Link href={`/signin?next=${encodeURIComponent(`/events/${event.slug}/photos`)}`} className="rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-inverse">Sign in</Link>
+            <Link href={`/signin?next=${encodeURIComponent(`/events/${event.slug}/photos`)}`} className="rounded-full bg-volt px-5 py-2.5 text-[14px] font-semibold text-ink-inverse">Sign in</Link>
           )}
         </section>
       </div>
@@ -85,7 +85,7 @@ export default async function EventPhotosPage({ params }: { params: Promise<{ sl
       {photos.length === 0 ? (
         <section className="card flex flex-col items-start gap-2 p-8">
           <Camera className="size-8 text-ink-subtle" />
-          <h2 className="title-serif text-[32px]">No photos yet</h2>
+          <h2 className="title-xl text-[32px]">No photos yet</h2>
           <p className="text-[14px] text-ink-muted">{access.manage ? "Add the first ones above." : "The organizer hasn't uploaded any photos yet."}</p>
         </section>
       ) : (

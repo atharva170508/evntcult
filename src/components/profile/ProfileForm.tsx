@@ -53,7 +53,7 @@ export function ProfileForm(props: { name: string; phone: string | null; whatsap
         </p>
       )}
       <div className="flex items-center gap-3">
-        <button disabled={busy} className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-inverse hover:bg-ink-2 disabled:opacity-50">
+        <button disabled={busy} className="inline-flex items-center gap-2 rounded-full bg-volt px-5 py-2.5 text-[14px] font-semibold text-ink-inverse hover:bg-volt-hover disabled:opacity-50">
           {busy && <Loader2 className="size-4 animate-spin" aria-hidden />} Save changes
         </button>
         <span role="status" className="text-[13px] font-semibold text-live">

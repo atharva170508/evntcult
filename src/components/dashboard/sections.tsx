@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   AlertTriangle,
   ArrowUpRight,
-  Award,
   BadgeIndianRupee,
   CalendarPlus,
   CalendarRange,
@@ -75,16 +74,16 @@ function calendarLink(e: EventSummary) {
 /* ─── Quick tiles (Humanitix tiles + KonfHub type chips + Meetup icon tabs) ─── */
 
 const TILES = [
-  { href: "/events?when=today", label: "Today", icon: Sun, color: "#fbbf241f", ink: "#fbbf24" },
-  { href: "/events?when=weekend", label: "This weekend", icon: CalendarRange, color: "#a594ff1f", ink: "#a594ff" },
-  { href: "/events?price=free", label: "Free", icon: BadgeIndianRupee, color: "#34d3991f", ink: "#34d399" },
-  { href: "/events?type=GAMING", label: "Gaming", icon: Gamepad2, color: "#fb71851f", ink: "#fb7185" },
-  { href: "/events?type=SPORTS", label: "Sports", icon: Trophy, color: "#7dd3fc1f", ink: "#7dd3fc" },
-  { href: "/events?type=TECH", label: "Tech", icon: Cpu, color: "#a3e6351f", ink: "#a3e635" },
-  { href: "/events?type=CULTURAL", label: "Cultural", icon: Palette, color: "#e879f91f", ink: "#e879f9" },
-  { href: "/events?type=PARTY", label: "Parties", icon: Music2, color: "#fb923c1f", ink: "#fb923c" },
-  { href: "/events?type=WORKSHOP", label: "Workshops", icon: Wrench, color: "#cbd5e11f", ink: "#cbd5e1" },
-  { href: "/events?type=TALK", label: "Talks", icon: Mic2, color: "#a5b4fc1f", ink: "#a5b4fc" },
+  { href: "/events?when=today", label: "Today", icon: Sun },
+  { href: "/events?when=weekend", label: "This weekend", icon: CalendarRange },
+  { href: "/events?price=free", label: "Free", icon: BadgeIndianRupee },
+  { href: "/events?type=GAMING", label: "Gaming", icon: Gamepad2 },
+  { href: "/events?type=SPORTS", label: "Sports", icon: Trophy },
+  { href: "/events?type=TECH", label: "Tech", icon: Cpu },
+  { href: "/events?type=CULTURAL", label: "Cultural", icon: Palette },
+  { href: "/events?type=PARTY", label: "Parties", icon: Music2 },
+  { href: "/events?type=WORKSHOP", label: "Workshops", icon: Wrench },
+  { href: "/events?type=TALK", label: "Talks", icon: Mic2 },
 ];
 
 export function QuickTiles() {
@@ -94,9 +93,9 @@ export function QuickTiles() {
         <Link
           key={t.label}
           href={t.href}
-          className="group flex shrink-0 items-center gap-2.5 rounded-2xl border border-line bg-surface py-2 pl-2 pr-4 text-[13.5px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:border-ink"
+          className="group flex shrink-0 items-center gap-2.5 rounded-2xl border border-line bg-surface py-2 pl-2 pr-4 text-[13.5px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:border-volt/60"
         >
-          <span className="grid size-8 place-items-center rounded-xl" style={{ background: t.color, color: t.ink }}>
+          <span className="grid size-8 place-items-center rounded-xl bg-volt/10 text-volt">
             <t.icon className="size-4" />
           </span>
           {t.label}
@@ -113,27 +112,23 @@ export function StatTile({
   value,
   hint,
   icon: Icon,
-  color = "#a594ff1f",
-  ink = "#a594ff",
   delay = 0,
 }: {
   label: string;
   value: string | number;
   hint?: string;
   icon: React.ComponentType<{ className?: string }>;
-  color?: string;
-  ink?: string;
   delay?: number;
 }) {
   return (
-    <div className="card lift animate-fade-up p-5" style={{ animationDelay: `${delay}ms` }}>
+    <div className="card lift min-w-0 animate-fade-up p-5" style={{ animationDelay: `${delay}ms` }}>
       <div className="flex items-center justify-between">
-        <span className="grid size-10 place-items-center rounded-2xl" style={{ background: color, color: ink }}>
+        <span className="grid size-10 place-items-center rounded-2xl bg-volt/10 text-volt">
           <Icon className="size-[18px]" />
         </span>
         <ArrowUpRight className="size-4 text-ink-subtle" />
       </div>
-      <p className="mt-4 font-serif text-[52px] leading-none tracking-[-0.02em] tabular-nums">{value}</p>
+      <p className="mt-4 truncate font-display text-[30px] font-bold leading-none tracking-[-0.04em] text-volt tabular-nums sm:text-[40px] lg:text-[48px]">{value}</p>
       <p className="mt-1.5 text-[13px] font-semibold text-ink-2">{label}</p>
       {hint && <p className="text-[12px] text-ink-subtle">{hint}</p>}
     </div>
@@ -202,7 +197,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
             target="_blank"
             rel="noreferrer"
             title="Add to Google Calendar"
-            className="grid size-[44px] place-items-center rounded-full border border-line text-ink-2 transition-colors hover:border-ink"
+            className="grid size-[44px] place-items-center rounded-full border border-line text-ink-2 transition-colors hover:border-volt/60"
           >
             <CalendarPlus className="size-[18px]" />
           </a>
@@ -248,10 +243,10 @@ export function OrgKpis({ data }: { data: OrganizerPanel }) {
   const collected = data.hosted.reduce((a, h) => a + h.paid * h.feePaise, 0);
   const pending = data.hosted.reduce((a, h) => a + h.pendingPayments, 0);
   const boxes = [
-    { label: "Registrations", value: registrations.toLocaleString("en-IN"), hint: `across ${data.hosted.length} events`, icon: Users, color: "#a594ff1f", ink: "#a594ff" },
-    { label: "Fees collected", value: formatINR(collected), hint: "from paid passes", icon: BadgeIndianRupee, color: "#34d3991f", ink: "#34d399" },
-    { label: "Checked in now", value: data.live ? data.live.checkedIn : 0, hint: data.live ? data.live.title : "no live event", icon: ScanLine, color: "#7dd3fc1f", ink: "#7dd3fc" },
-    { label: "Payments pending", value: pending, hint: "follow up at the desk", icon: Ticket, color: "#fbbf241f", ink: "#fbbf24" },
+    { label: "Registrations", value: registrations.toLocaleString("en-IN"), hint: `across ${data.hosted.length} events`, icon: Users },
+    { label: "Fees collected", value: formatINR(collected), hint: "from paid passes", icon: BadgeIndianRupee },
+    { label: "Checked in now", value: data.live ? data.live.checkedIn : 0, hint: data.live ? data.live.title : "no live event", icon: ScanLine },
+    { label: "Payments pending", value: pending, hint: "follow up at the desk", icon: Ticket },
   ];
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -361,18 +356,16 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
       <Card eyebrow="Quick actions" title="Run your event" icon={Sparkles} className="lg:col-span-6">
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
           <QuickAction href="/organizer/events/new" icon={Plus} label="New event" primary />
-          <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} color="#7dd3fc1f" ink="#7dd3fc" />
-          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="payments, export" color="#fbbf241f" ink="#fbbf24" />
+          <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} />
+          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="payments, export" />
           <QuickAction
             href={data.live ? `/organizer/events/${data.live.id}` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}` : "/organizer"}
             icon={Megaphone}
             label="Broadcast update"
             hint={data.live?.title ?? data.hosted[0]?.title ?? "pick an event"}
-            color="#a594ff1f"
-            ink="#a594ff"
           />
-          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" hint="reminders queue automatically" color="#4ade801f" ink="#4ade80" />
-          <QuickAction planned icon={Award} label="Issue certificates" />
+          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" hint="reminders queue automatically" />
+          <QuickAction href="/calendar" icon={CalendarRange} label="Calendar" hint="every event, by day" />
         </div>
       </Card>
     </div>
@@ -386,8 +379,6 @@ function QuickAction({
   hint,
   primary,
   planned,
-  color = "#c8ccd81f",
-  ink = "#c8ccd8",
 }: {
   href?: string;
   planned?: boolean;
@@ -395,8 +386,6 @@ function QuickAction({
   label: string;
   hint?: string;
   primary?: boolean;
-  color?: string;
-  ink?: string;
 }) {
   if (planned || !href) {
     return (
@@ -416,18 +405,18 @@ function QuickAction({
       href={href}
       className={cn(
         "group flex flex-col justify-between gap-6 rounded-2xl border p-4 transition-all duration-200 ease-apple hover:-translate-y-0.5 active:scale-[0.98]",
-        primary ? "border-transparent bg-ink text-ink-inverse hover:bg-ink-2" : "border-line bg-surface hover:border-ink",
+        primary ? "border-transparent bg-volt text-ink-inverse hover:bg-volt-hover" : "border-line bg-surface hover:border-volt/60",
       )}
     >
       <span
         className="grid size-9 place-items-center rounded-xl"
-        style={primary ? { background: "rgba(11,12,16,0.12)", color: "#0b0c10" } : { background: color, color: ink }}
+        style={primary ? { background: "rgba(8,8,12,0.12)", color: "#08080c" } : { background: "rgba(212,255,58,0.1)", color: "#d4ff3a" }}
       >
         <Icon className="size-[18px]" />
       </span>
       <div>
         <p className="text-[13.5px] font-bold leading-tight">{label}</p>
-        {hint && <p className={cn("mt-0.5 text-[11.5px]", primary ? "text-white/70" : "text-ink-muted")}>{hint}</p>}
+        {hint && <p className={cn("mt-0.5 text-[11.5px]", primary ? "text-ink-inverse/70" : "text-ink-muted")}>{hint}</p>}
       </div>
     </Link>
   );
@@ -469,24 +458,30 @@ export function Announcements({ items }: { items: AnnouncementItem[] }) {
   );
 }
 
-/* ─── Planned features (honest, disabled) ───────────────────────────────── */
+/* ─── Link cards (Venues, Certificates) ─────────────────────────────────── */
 
-export function PlannedCard({
+export function LinkCard({
+  href,
   eyebrow,
   title,
   icon,
   body,
 }: {
+  href: string;
   eyebrow: string;
   title: string;
   icon: React.ComponentType<{ className?: string }>;
   body: string;
 }) {
   return (
-    <Card eyebrow={eyebrow} title={title} icon={icon} className="h-full border-dashed">
-      <span className="inline-block rounded-full bg-canvas px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-ink-subtle">Planned</span>
-      <p className="mt-3 text-[13.5px] text-ink-muted">{body}</p>
-    </Card>
+    <Link href={href} className="group block h-full rounded-[28px] transition-transform hover:-translate-y-0.5">
+      <Card eyebrow={eyebrow} title={title} icon={icon} className="h-full transition-colors group-hover:border-volt/50">
+        <p className="text-[13.5px] text-ink-muted">{body}</p>
+        <span className="mt-4 inline-flex items-center gap-1 text-[13px] font-bold text-volt">
+          Open <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
+        </span>
+      </Card>
+    </Link>
   );
 }
 
@@ -530,7 +525,7 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Happening on campus</p>
-          <h2 className="title-serif mt-2 text-[clamp(38px,4.4vw,60px)]">Don&apos;t miss <em className="text-aurora">these</em></h2>
+          <h2 className="title-xl mt-2 text-[clamp(38px,4.4vw,60px)]">Don&apos;t miss <em className="text-volt">these</em></h2>
         </div>
         <LinkButton href="/events" variant="secondary" className="py-2 text-[13px]">
           Browse all <ArrowUpRight className="size-4" />
@@ -572,7 +567,7 @@ export function EventCard({ e }: { e: EventSummary }) {
         )}
         <div className="mt-auto flex items-center justify-between gap-2 pt-4">
           <Avatars id={e.id} count={e.registered} size={22} />
-          <span className={cn("rounded-full px-2.5 py-1 text-[12px] font-bold", e.feePaise > 0 ? "bg-ink text-ink-inverse" : "bg-live-soft text-live")}>
+          <span className={cn("rounded-full px-2.5 py-1 text-[12px] font-bold", e.feePaise > 0 ? "bg-volt text-ink-inverse" : "bg-live-soft text-live")}>
             {e.feePaise > 0 ? formatINR(e.feePaise) : "Free"}
           </span>
         </div>
@@ -627,12 +622,12 @@ export function NavigatorTeaser({ next }: { next: NextUp | null }) {
             <rect x="282" y="18" width="100" height="70" rx="10" />
           </g>
           <circle cx="200" cy="52" r="18" fill="#1d3326" />
-          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#7c66ff" strokeWidth="3.5" strokeDasharray="7 6" strokeLinecap="round">
+          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#d4ff3a" strokeWidth="3.5" strokeDasharray="7 6" strokeLinecap="round">
             <animate attributeName="stroke-dashoffset" from="26" to="0" dur="1s" repeatCount="indefinite" />
           </path>
           <circle cx="60" cy="128" r="7" fill="#f2f3f7" stroke="#15171e" strokeWidth="3" />
-          <circle cx="330" cy="54" r="16" fill="#7c66ff" opacity="0.25" />
-          <circle cx="330" cy="54" r="8" fill="#7c66ff" stroke="#15171e" strokeWidth="3" />
+          <circle cx="330" cy="54" r="16" fill="#d4ff3a" opacity="0.2" />
+          <circle cx="330" cy="54" r="8" fill="#d4ff3a" stroke="#121219" strokeWidth="3" />
         </svg>
       </div>
       <p className="mt-4 flex items-start gap-2 text-[13px] font-semibold text-ink-muted">

@@ -3,6 +3,7 @@ import {
   Compass,
   House,
   Images,
+  Award,
   LayoutDashboard,
   MapPinned,
   Ticket,
@@ -22,6 +23,7 @@ export const NAV: NavItem[] = [
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/passes", label: "My passes", icon: Ticket },
   { href: "/vault", label: "Photo Vault", icon: Images },
+  { href: "/certificates", label: "Certificates", icon: Award },
   { href: "/venues", label: "Venues", icon: MapPinned },
 ];
 

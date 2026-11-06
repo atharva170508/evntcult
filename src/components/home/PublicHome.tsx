@@ -53,8 +53,8 @@ function FloatingTicket({ e, spot }: { e: EventSummary; spot: (typeof FLOAT_SPOT
 function Stat({ value, label }: { value: number; label: string }) {
   return (
     <div className="px-4 text-center">
-      <p className="font-serif text-[clamp(40px,5vw,64px)] leading-none text-white">{value.toLocaleString("en-IN")}</p>
-      <p className="mt-2 text-[13px] font-semibold text-white/80">{label}</p>
+      <p className="font-display text-[clamp(40px,5vw,64px)] font-bold leading-none tracking-[-0.03em] text-ink-inverse">{value.toLocaleString("en-IN")}</p>
+      <p className="mt-2 text-[13px] font-semibold text-ink-inverse/75">{label}</p>
     </div>
   );
 }
@@ -76,10 +76,10 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
 
         <div className="relative max-w-4xl">
           <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[12px] font-bold uppercase tracking-[0.16em]">
-            <span className="size-1.5 rounded-full bg-volt motion-safe:animate-pulse-dot" aria-hidden /> Campus events · KKW
+            <span className="size-1.5 rounded-full bg-volt motion-safe:animate-pulse-dot" aria-hidden /> Campus events, live
           </span>
-          <h1 className="mt-6 font-serif text-[clamp(52px,8.6vw,128px)] leading-[0.92] tracking-[-0.025em]">
-            Every campus night, one <em className="text-volt">pass</em> away.
+          <h1 className="mt-6 font-display text-[clamp(48px,8vw,118px)] font-bold leading-[0.95] tracking-[-0.04em]">
+            Every campus night, one <em>pass</em> away.
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-white/85">
             Browse every fest, game night and workshop on campus. Sign up with your college email to register and get a QR pass.
@@ -105,20 +105,19 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
       {/* ── Statement ────────────────────────────────────── */}
       <section className="mx-auto max-w-5xl text-center">
         <p className="eyebrow">How it works on campus</p>
-        <p className="title-serif mt-5 text-[clamp(32px,4.6vw,62px)] leading-[1.06]">
+        <p className="title-xl mt-5 text-[clamp(32px,4.6vw,62px)] leading-[1.06]">
           One place for every fest and game night. Register in a tap, carry{" "}
-          <span className="inline-flex translate-y-[-0.08em] items-center gap-2 rounded-full bg-gradient-to-r from-aurora-1 to-aurora-2 px-4 align-middle font-sans text-[0.42em] font-bold text-white">
+          <span className="inline-flex translate-y-[-0.08em] items-center gap-2 rounded-full bg-volt px-4 align-middle font-sans text-[0.42em] font-bold text-ink-inverse">
             <QrCode className="size-[1em]" aria-hidden /> one QR pass
           </span>{" "}
-          and walk <em className="text-aurora">straight in.</em>
+          and walk <em className="text-volt">straight in.</em>
         </p>
       </section>
 
       {/* ── Live numbers (all real counts) ───────────────── */}
       <section className="relative isolate mx-auto max-w-4xl overflow-hidden rounded-full px-4 py-9 md:py-11" aria-label="Campus numbers">
-        <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-r from-[#8a63ff] via-[#5b6dff] to-[#7c4dff]" />
-        <div aria-hidden className="absolute inset-0 -z-10 opacity-60 blur-2xl" style={{ background: "radial-gradient(50% 120% at 50% 0%, rgba(255,255,255,0.35), transparent 70%)" }} />
-        <div className="grid grid-cols-3 divide-x divide-white/20">
+        <div aria-hidden className="absolute inset-0 -z-10 bg-volt" />
+                <div className="grid grid-cols-3 divide-x divide-ink-inverse/15">
           <Stat value={data.thisWeek} label="Events this week" />
           <Stat value={data.upcoming} label="Upcoming events" />
           <Stat value={data.going} label="Students going" />
@@ -131,7 +130,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
           <div>
             <p className="eyebrow">Happening on campus</p>
             <h2 className="shout mt-3 text-[clamp(34px,5.2vw,72px)]">
-              Book <span className="text-aurora">&</span> explore
+              Book <span className="text-volt">&</span> explore
               <br />
               upcoming <ArrowRight className="inline size-[0.8em] text-volt" aria-hidden /> events
             </h2>
@@ -147,7 +146,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
           <div className="grid gap-5 lg:grid-cols-12">
             {/* Bento: next event with countdown, QR and a volt booking bar (EventX idea). */}
             <article className="card relative overflow-hidden p-6 md:p-8 lg:col-span-7">
-              <div aria-hidden className="absolute -right-24 -top-24 size-72 rounded-full bg-aurora-1/30 blur-3xl" />
+              <div aria-hidden className="absolute -right-24 -top-24 size-72 rounded-full bg-volt/10 blur-3xl" />
               <div className="relative flex flex-wrap items-start justify-between gap-5">
                 <div className="min-w-0 flex-1">
                   <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-volt">Next up</p>
@@ -180,7 +179,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
                 <span>
                   Book your seat · {next.feePaise > 0 ? formatINR(next.feePaise) : "Free"}
                 </span>
-                <span className="grid size-11 place-items-center rounded-full bg-aurora-1 text-white" aria-hidden>
+                <span className="grid size-11 place-items-center rounded-full bg-ink-inverse text-volt" aria-hidden>
                   <ArrowUpRight className="size-5" />
                 </span>
               </Link>
@@ -229,10 +228,10 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
         ].map((s) => (
           <article key={s.n} className="card p-7">
             <div className="flex items-center justify-between">
-              <span className="shout text-aurora text-[44px]">{s.n}</span>
+              <span className="shout text-volt text-[44px]">{s.n}</span>
               <s.icon className="size-6 text-ink-muted" aria-hidden />
             </div>
-            <h3 className="title-serif mt-8 text-[34px]">{s.title}</h3>
+            <h3 className="title-xl mt-8 text-[34px]">{s.title}</h3>
             <p className="mt-2 text-[14.5px] text-ink-muted">{s.body}</p>
           </article>
         ))}
@@ -241,7 +240,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
       {/* ── Closing CTA + giant wordmark ─────────────────── */}
       <section className="space-y-14 pt-4">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-          <h2 className="title-serif max-w-2xl text-[clamp(40px,5.6vw,80px)]">
+          <h2 className="title-xl max-w-2xl text-[clamp(40px,5.6vw,80px)]">
             Ready for your <em className="text-volt">next</em> night out?
           </h2>
           <Link href="/signin?mode=signup" className="inline-flex items-center gap-2 rounded-full bg-volt px-7 py-4 text-[16px] font-bold text-ink-inverse hover:bg-volt-hover">

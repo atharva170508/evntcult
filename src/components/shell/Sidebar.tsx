@@ -13,10 +13,10 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
   const items = isOrganizer ? [...NAV, ORGANIZER_NAV] : NAV;
 
   return (
-    <aside className="sticky top-0 hidden h-dvh w-[88px] shrink-0 flex-col border-r border-white/[0.06] bg-surface/60 px-3 py-5 backdrop-blur-xl md:flex xl:w-[236px] xl:px-4">
+    <aside className="sticky top-0 hidden print:!hidden h-dvh w-[88px] shrink-0 flex-col border-r border-white/[0.06] bg-surface/60 px-3 py-5 backdrop-blur-xl md:flex xl:w-[236px] xl:px-4">
       <Link href="/dashboard" className="flex items-center gap-2.5 px-2" aria-label="EvntCult home">
         <Logo />
-        <span className="hidden font-serif text-[26px] leading-none tracking-[-0.02em] xl:inline">EvntCult</span>
+        <span className="hidden font-brand text-[26px] font-semibold leading-none tracking-[-0.01em] xl:inline">EvntCult</span>
       </Link>
 
       {isOrganizer && (
@@ -45,7 +45,7 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
                   className={cn(
                     "group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[14px] font-semibold transition-colors",
                     "justify-center xl:justify-start",
-                    active ? "bg-gradient-to-r from-aurora-1 to-aurora-2 text-white shadow-brand" : "text-ink-muted hover:bg-white/5 hover:text-ink",
+                    active ? "bg-volt text-ink-inverse shadow-brand" : "text-ink-muted hover:bg-white/5 hover:text-ink",
                   )}
                 >
                   <Icon className="size-[19px] shrink-0" />
@@ -60,7 +60,7 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
       {signedIn ? (<>
       <button
         onClick={onEnterCode}
-        className="group relative isolate hidden overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-aurora-1/40 via-aurora-2/25 to-transparent p-4 text-left transition-transform hover:-translate-y-0.5 xl:block"
+        className="group relative isolate hidden overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-4 hover:border-volt/40 text-left transition-transform hover:-translate-y-0.5 xl:block"
       >
         <span className="grid size-9 place-items-center rounded-xl bg-canvas text-brand-ink shadow-card">
           <KeyRound className="size-4" />

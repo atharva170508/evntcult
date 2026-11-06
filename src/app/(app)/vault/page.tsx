@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Images, ScanFace } from "lucide-react";
+import { Images } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDB } from "@/lib/db";
 import { myGalleries, myTaggedPhotos } from "@/lib/data/photos";
 import { fmtDate } from "@/lib/utils";
-import { PlannedCard } from "@/components/dashboard/sections";
 import { PageHero } from "@/components/brand/PageHero";
 
 export const metadata: Metadata = { title: "Photo Vault" };
@@ -42,7 +41,7 @@ export default async function VaultPage() {
       {byEvent.size === 0 ? (
         <section className="card flex flex-col items-start gap-3 p-8">
           <Images className="size-8 text-ink-subtle" />
-          <h2 className="title-serif text-[32px]">Nothing here yet</h2>
+          <h2 className="title-xl text-[32px]">Nothing here yet</h2>
           <p className="max-w-md text-[14.5px] text-ink-muted">
             Open the photos from an event you went to and tap <b>That&apos;s me</b> on the ones you&apos;re in. They&apos;ll collect here.
           </p>
@@ -52,7 +51,7 @@ export default async function VaultPage() {
           <section key={eventId} className="space-y-3">
             <div className="flex items-end justify-between gap-3">
               <div>
-                <h2 className="title-serif text-[32px]">{g.title}</h2>
+                <h2 className="title-xl text-[32px]">{g.title}</h2>
                 <p className="text-[12.5px] text-ink-muted">{fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })} · {g.ids.length} of you</p>
               </div>
               <Link href={`/events/${g.slug}/photos`} className="text-[13px] font-semibold text-ink underline">All photos</Link>
@@ -71,9 +70,9 @@ export default async function VaultPage() {
         ))
       )}
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4">
         <section className="card p-5">
-          <h2 className="title-serif text-[32px]">Galleries from your events</h2>
+          <h2 className="title-xl text-[32px]">Galleries from your events</h2>
           {galleries.length === 0 ? (
             <p className="mt-2 text-[14px] text-ink-muted">When organizers upload photos from events you registered for, they&apos;ll be listed here.</p>
           ) : (
@@ -87,7 +86,6 @@ export default async function VaultPage() {
             </ul>
           )}
         </section>
-        <PlannedCard eyebrow="Find me automatically" title="Face matching" icon={ScanFace} body="Upload one selfie and EvntCult would suggest photos you appear in. Not built: for now, tag yourself with “That's me”." />
       </div>
     </div>
   );

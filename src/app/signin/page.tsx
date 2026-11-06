@@ -25,10 +25,10 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         <Marquee words={["Register", "Pass", "Scan", "Attend"]} className="absolute inset-x-0 top-[38%] text-[150px] text-white/[0.07]" />
         <div className="relative flex items-center gap-2.5">
           <Logo />
-          <span className="font-serif text-[30px] leading-none tracking-[-0.02em]">EvntCult</span>
+          <span className="font-brand text-[30px] font-semibold leading-none tracking-[-0.01em]">EvntCult</span>
         </div>
         <div className="relative max-w-md">
-          <h2 className="font-serif text-[76px] leading-[0.92] tracking-[-0.025em]">Register. Pass. Scan. <em className="text-volt">Attend.</em></h2>
+          <h2 className="font-display text-[68px] font-bold leading-[0.95] tracking-[-0.04em]">Register. Pass. Scan. <em>Attend.</em></h2>
           <ul className="mt-8 space-y-3 text-[16px] font-semibold text-white/90">
             <li className="flex items-center gap-3">
               <CalendarCheck2 className="size-5" /> Every campus event in one place
@@ -47,9 +47,9 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         <div className="w-full max-w-[400px] animate-fade-up">
           <div className="flex items-center gap-2.5 lg:hidden">
             <Logo />
-            <span className="font-serif text-[28px] leading-none tracking-[-0.02em]">EvntCult</span>
+            <span className="font-brand text-[28px] font-semibold leading-none tracking-[-0.01em]">EvntCult</span>
           </div>
-          <h1 className="title-serif mt-8 text-[52px] lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
+          <h1 className="title-xl mt-8 text-[52px] lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
           <p className="mt-2 text-[15px] text-ink-muted">
             {signup ? "Sign up with your college email to register for events and get passes." : "Use your college email to see your events and passes."}
           </p>

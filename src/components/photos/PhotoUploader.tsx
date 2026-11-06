@@ -93,7 +93,7 @@ export function PhotoUploader({ eventId }: { eventId: string }) {
   const done = items.filter((i) => i.state === "done").length;
   return (
     <div className="space-y-3">
-      <label className={`flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-line p-6 text-center hover:border-ink ${busy ? "pointer-events-none opacity-60" : ""}`}>
+      <label className={`flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-line p-6 text-center hover:border-volt/60 ${busy ? "pointer-events-none opacity-60" : ""}`}>
         <ImagePlus className="size-7 text-ink-subtle" />
         <span className="text-[14.5px] font-semibold">Add photos</span>
         <span className="text-[12.5px] text-ink-muted">JPEG, PNG or WebP · up to 10 MB each · location data is removed</span>
