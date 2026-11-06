@@ -12,6 +12,12 @@ export async function getBucket(): Promise<R2Bucket> {
   return bucket;
 }
 
+/** True once the R2 bucket is bound (see wrangler.jsonc). */
+export async function photoStorageReady(): Promise<boolean> {
+  const { env } = await getCloudflareContext({ async: true });
+  return !!(env as CloudflareEnv).PHOTOS;
+}
+
 /** Run a photos.ts call and turn its errors into API errors. */
 export async function withPhotos<T>(fn: (db: D1Database) => Promise<T>): Promise<T> {
   try {

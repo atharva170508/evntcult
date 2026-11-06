@@ -4,7 +4,7 @@ import path from "node:path";
 import { getPlatformProxy } from "wrangler";
 
 export async function testDatabase() {
-  const proxy = await getPlatformProxy<{ DB: D1Database; PHOTOS: R2Bucket }>({ configPath: path.resolve(__dirname, "../../wrangler.jsonc"), persist: false });
+  const proxy = await getPlatformProxy<{ DB: D1Database; PHOTOS: R2Bucket }>({ configPath: path.resolve(__dirname, "../wrangler.test.jsonc"), persist: false });
   const db = proxy.env.DB;
   const dir = path.resolve(__dirname, "../../migrations");
   for (const file of readdirSync(dir).filter((f) => f.endsWith(".sql")).sort()) {

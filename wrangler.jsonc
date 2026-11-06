@@ -17,8 +17,11 @@
     "bindings": [{ "name": "EVENT_LIVE", "class_name": "EventLive" }]
   },
   "migrations": [{ "tag": "v1-event-live", "new_sqlite_classes": ["EventLive"] }],
-  // Photo Vault originals + thumbnails. Create once: `npx wrangler r2 bucket create evntcult-photos`
-  "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "evntcult-photos" }],
+  // Photo Vault originals + thumbnails. R2 isn't enabled on the Cloudflare account yet, so this
+  // binding is off and uploads show "Photo storage isn't set up yet". To turn photos on:
+  //   1. Enable R2 in the Cloudflare dashboard   2. npx wrangler r2 bucket create evntcult-photos
+  //   3. Uncomment the line below and deploy.
+  // "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "evntcult-photos" }],
   "d1_databases": [
     {
       "binding": "DB",

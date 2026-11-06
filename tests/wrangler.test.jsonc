@@ -1,0 +1,9 @@
+// Bindings for the tests only (local, in memory). Keeps the R2 bucket available to the
+// photo tests even while the real wrangler.jsonc has R2 switched off.
+{
+  "name": "evntcult-tests",
+  "compatibility_date": "2026-09-21",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [{ "binding": "DB", "database_name": "evntcult-test", "database_id": "00000000-0000-0000-0000-000000000000" }],
+  "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "evntcult-photos-test" }]
+}

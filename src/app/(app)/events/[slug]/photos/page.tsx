@@ -9,6 +9,7 @@ import { fmtDate } from "@/lib/utils";
 import { PhotoGrid } from "@/components/photos/PhotoGrid";
 import { PhotoUploader } from "@/components/photos/PhotoUploader";
 import { PageHero } from "@/components/brand/PageHero";
+import { photoStorageReady } from "@/lib/data/photos-api";
 
 export const metadata: Metadata = { title: "Photos" };
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function EventPhotosPage({ params }: { params: Promise<{ sl
   const viewer = await getViewer();
   const db = await getDB();
   const access = await photoAccess(db, viewer, event.id);
+  const storageReady = await photoStorageReady();
   const back = (
     <Link href={`/events/${event.slug}`} className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-muted hover:text-ink">
       <ArrowLeft className="size-4" /> {event.title}
@@ -70,7 +72,13 @@ export default async function EventPhotosPage({ params }: { params: Promise<{ sl
       {access.manage && (
         <section className="card p-5">
           <h2 className="headline mb-3 text-[17px]">Upload photos</h2>
-          <PhotoUploader eventId={event.id} />
+          {storageReady ? (
+            <PhotoUploader eventId={event.id} />
+          ) : (
+            <p className="rounded-2xl border border-dashed border-line-strong p-4 text-[14px] text-ink-muted">
+              Photo storage isn&apos;t set up yet. Uploads open once Cloudflare R2 is turned on for this site.
+            </p>
+          )}
         </section>
       )}
 
