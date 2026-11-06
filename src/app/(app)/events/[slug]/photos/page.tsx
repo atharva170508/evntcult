@@ -8,6 +8,7 @@ import { eventPhotos, photoAccess } from "@/lib/data/photos";
 import { fmtDate } from "@/lib/utils";
 import { PhotoGrid } from "@/components/photos/PhotoGrid";
 import { PhotoUploader } from "@/components/photos/PhotoUploader";
+import { PageHero } from "@/components/brand/PageHero";
 
 export const metadata: Metadata = { title: "Photos" };
 export const dynamic = "force-dynamic";
@@ -36,7 +37,7 @@ export default async function EventPhotosPage({ params }: { params: Promise<{ sl
         {back}
         <section className="card flex flex-col items-start gap-3 p-8">
           <Lock className="size-8 text-ink-subtle" />
-          <h1 className="headline text-[22px]">Photos are for people who registered</h1>
+          <h1 className="title-serif text-[32px]">Photos are for people who registered</h1>
           <p className="max-w-md text-[14.5px] text-ink-muted">
             Only this event&apos;s registered attendees and its organizer can see its photos.
             {!viewer && " Sign in with the account you registered with."}
@@ -55,14 +56,16 @@ export default async function EventPhotosPage({ params }: { params: Promise<{ sl
   return (
     <div className="space-y-5 pt-4 md:pt-6">
       {back}
-      <header>
-        <p className="eyebrow">Photos · {fmtDate(new Date(event.starts_at), { day: "numeric", month: "short", year: "numeric" })}</p>
-        <h1 className="headline mt-1 text-[clamp(28px,4vw,40px)] tracking-tightest">{event.title}</h1>
-        <p className="mt-1 text-[14px] text-ink-muted">
-          <span className="font-mono tabular-nums">{photos.length}</span> photo{photos.length === 1 ? "" : "s"}
-          {access.tag && <> · you&apos;re in <span className="font-mono tabular-nums">{tagged}</span>. Tap <b>That&apos;s me</b> on photos you appear in to save them to your Vault.</>}
-        </p>
-      </header>
+      <PageHero
+        eyebrow={`Photos · ${fmtDate(new Date(event.starts_at), { day: "numeric", month: "short", year: "numeric" })}`}
+        title={event.title}
+        sub={
+          <>
+            <span className="font-mono tabular-nums">{photos.length}</span> photo{photos.length === 1 ? "" : "s"}
+            {access.tag && <> · you&apos;re in <span className="font-mono tabular-nums">{tagged}</span>. Tap <b>That&apos;s me</b> on photos you appear in to save them to your Vault.</>}
+          </>
+        }
+      />
 
       {access.manage && (
         <section className="card p-5">
@@ -74,7 +77,7 @@ export default async function EventPhotosPage({ params }: { params: Promise<{ sl
       {photos.length === 0 ? (
         <section className="card flex flex-col items-start gap-2 p-8">
           <Camera className="size-8 text-ink-subtle" />
-          <h2 className="headline text-[19px]">No photos yet</h2>
+          <h2 className="title-serif text-[32px]">No photos yet</h2>
           <p className="text-[14px] text-ink-muted">{access.manage ? "Add the first ones above." : "The organizer hasn't uploaded any photos yet."}</p>
         </section>
       ) : (

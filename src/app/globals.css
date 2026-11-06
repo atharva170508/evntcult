@@ -16,15 +16,51 @@
   ::selection {
     background: rgba(124, 102, 255, 0.35);
   }
+  body {
+    background-image: radial-gradient(60% 40% at 50% -10%, rgba(124, 102, 255, 0.14), transparent 70%);
+    background-repeat: no-repeat;
+  }
   :focus-visible {
-    @apply outline-none ring-2 ring-sun ring-offset-2 ring-offset-canvas;
+    @apply outline-none ring-2 ring-volt ring-offset-2 ring-offset-canvas;
   }
 }
 
 @layer components {
-  /* The core card: dark panel, hairline border. */
+  /* The core card: smoked glass panel with a hairline top highlight. */
   .card {
-    @apply relative rounded-3xl border border-line bg-surface shadow-card;
+    @apply relative rounded-[28px] border border-white/[0.07] bg-surface/80 shadow-card backdrop-blur-xl;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0) 40%);
+  }
+  /* Frosted glass for things floating over gradients. */
+  .glass {
+    @apply border border-white/15 bg-white/[0.07] backdrop-blur-xl;
+  }
+  /* Huge editorial serif (Instrument Serif), as in luxury event-agency sites. */
+  .title-serif {
+    @apply font-serif font-normal leading-[0.95] tracking-[-0.02em] text-ink;
+  }
+  /* Wide uppercase poster shout (Unbounded). */
+  .shout {
+    @apply font-display font-extrabold uppercase leading-[0.92] tracking-[-0.03em];
+  }
+  /* Brushed-metal fill for the giant footer wordmark. */
+  .text-metal {
+    background: linear-gradient(180deg, #f2f3f7 0%, #8d93a8 38%, #2a2d3a 52%, #c9cde0 70%, #4a4f63 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-aurora {
+    background: linear-gradient(100deg, #a594ff, #6f9bff 45%, #d08cff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* Film grain over gradients, so they look printed rather than flat. */
+  .grain::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   /* Hover lift for clickable cards. */
   .lift {

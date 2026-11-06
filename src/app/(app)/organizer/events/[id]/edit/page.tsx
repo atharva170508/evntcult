@@ -5,6 +5,7 @@ import { first } from "@/lib/db";
 import { istHm, istYmd } from "@/lib/time";
 import type { EventRow } from "@/lib/data/types";
 import { EventForm } from "@/components/events/EventForm";
+import { PageHero } from "@/components/brand/PageHero";
 
 export const metadata: Metadata = { title: "Edit event" };
 export const dynamic = "force-dynamic";
@@ -25,10 +26,7 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
 
   return (
     <div className="mx-auto max-w-3xl space-y-5 pt-4 md:pt-6">
-      <header>
-        <p className="eyebrow">Organizer · {e.status}</p>
-        <h1 className="headline mt-1 text-[clamp(28px,4vw,38px)] tracking-tightest">Edit {e.title}</h1>
-      </header>
+      <PageHero eyebrow={`Organizer · ${e.status}`} title={<>Edit <em>{e.title}</em></>} />
       <EventForm
         mode="edit"
         eventId={e.id}

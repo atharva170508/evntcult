@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { MessageCircle } from "lucide-react";
+import { Wordmark } from "@/components/brand/Wordmark";
 import { EnterCodeDialog } from "./EnterCodeDialog";
 import { MobileTabBar } from "./MobileTabBar";
 import { Sidebar } from "./Sidebar";
@@ -13,12 +14,14 @@ export function AppShell({ viewer, children }: { viewer: NavViewer | null; child
 
   return (
     <div className="flex min-h-dvh">
-      <Sidebar isOrganizer={!!viewer?.isOrganizer} signedIn={!!viewer} onEnterCode={() => setCodeOpen(true)} />
+      {/* Signed-out visitors get a landing-page top nav instead of the app sidebar. */}
+      {viewer && <Sidebar isOrganizer={!!viewer.isOrganizer} signedIn onEnterCode={() => setCodeOpen(true)} />}
       <div className="min-w-0 flex-1">
         <TopBar viewer={viewer} onEnterCode={() => setCodeOpen(true)} />
         <main className="mx-auto max-w-[1280px] px-4 pb-32 md:pb-16 lg:px-8">{children}</main>
-        <footer className="mx-auto max-w-[1280px] px-4 pb-28 text-[12.5px] text-ink-subtle md:pb-10 lg:px-8">
-          <div className="flex flex-wrap justify-between gap-2 border-t border-line pt-6">
+        <footer className="mx-auto max-w-[1280px] px-4 pb-28 pt-10 text-[12.5px] text-ink-subtle md:pb-10 lg:px-8">
+          <Wordmark />
+          <div className="mt-6 flex flex-wrap justify-between gap-2 border-t border-line pt-6">
             <span>EvntCult · Every campus event, one place</span>
             <span>Made for campus life</span>
           </div>

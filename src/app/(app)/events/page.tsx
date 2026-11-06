@@ -6,6 +6,7 @@ import { CATEGORIES } from "@/lib/data/types";
 import { listQuerySchema } from "@/lib/validation";
 import { EventCard } from "@/components/dashboard/sections";
 import { cn } from "@/lib/utils";
+import { PageHero } from "@/components/brand/PageHero";
 
 export const metadata: Metadata = { title: "Discover" };
 export const dynamic = "force-dynamic";
@@ -30,15 +31,12 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
   const chip = (active: boolean) =>
     cn(
       "shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold transition-colors",
-      active ? "border-ink bg-ink text-ink-inverse" : "border-line bg-surface text-ink-2 hover:border-ink",
+      active ? "border-volt bg-volt text-ink-inverse" : "border-line bg-surface text-ink-2 hover:border-ink",
     );
 
   return (
     <div className="space-y-5 pt-4 md:pt-6">
-      <header className="animate-fade-up">
-        <p className="eyebrow">Discover</p>
-        <h1 className="headline mt-1 text-[clamp(30px,4vw,42px)] tracking-tightest">Events on campus</h1>
-      </header>
+      <PageHero eyebrow="Discover" title={<>Events on <em>campus</em></>} sub="Fests, game nights, workshops and talks. Register in a tap." marquee={["Discover", "Gaming", "Sports", "Tech", "Cultural"]} />
 
       <form action="/events" className="flex h-12 items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card md:max-w-xl">
         <Search className="size-[18px] text-ink-subtle" />

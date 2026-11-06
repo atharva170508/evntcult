@@ -10,6 +10,7 @@ import { formatINR } from "@/lib/money";
 import { fmtDate, fmtRange, fmtTime } from "@/lib/utils";
 import { Chip } from "@/components/ui/Chip";
 import { Meter } from "@/components/ui/Meter";
+import { PageHero } from "@/components/brand/PageHero";
 
 export const metadata: Metadata = { title: "Organizer" };
 export const dynamic = "force-dynamic";
@@ -58,15 +59,17 @@ export default async function OrganizerHome() {
 
   return (
     <div className="space-y-6 pt-4 md:pt-6">
-      <header className="flex flex-wrap items-end justify-between gap-3 animate-fade-up">
-        <div>
-          <p className="eyebrow">Organizer</p>
-          <h1 className="headline mt-1 text-[clamp(30px,4vw,42px)] tracking-tightest">Your events</h1>
-        </div>
-        <Link href="/organizer/events/new" className="inline-flex items-center gap-1.5 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-inverse">
-          <CalendarPlus className="size-4" /> New event
-        </Link>
-      </header>
+      <PageHero
+        eyebrow="Organizer"
+        title={<>Your <em>events</em></>}
+        sub="Registrations, payments, updates and the gate, for every event you run."
+        marquee={["Run your event", "Live at the gate"]}
+        actions={
+          <Link href="/organizer/events/new" className="inline-flex items-center gap-1.5 rounded-full bg-volt px-5 py-3 text-[14px] font-bold text-ink-inverse hover:bg-volt-hover">
+            <CalendarPlus className="size-4" aria-hidden /> New event
+          </Link>
+        }
+      />
 
       <div className="grid gap-4 lg:grid-cols-3">
         <section id="whatsapp" className="card p-5">
@@ -108,7 +111,7 @@ export default async function OrganizerHome() {
 
       {upcoming.length === 0 ? (
         <section className="card flex flex-col items-start gap-3 p-8">
-          <h2 className="headline text-[20px]">No upcoming events</h2>
+          <h2 className="title-serif text-[32px]">No upcoming events</h2>
           <p className="text-[14.5px] text-ink-muted">Create one and it shows up here with live registrations and check-ins.</p>
         </section>
       ) : (
@@ -119,7 +122,7 @@ export default async function OrganizerHome() {
 
       {past.length > 0 && (
         <section className="space-y-3">
-          <h2 className="headline text-[20px]">Past events</h2>
+          <h2 className="title-serif text-[32px]">Past events</h2>
           <div className="grid gap-4 md:grid-cols-2">{past.map((e) => <EventRow key={e.id} e={e} />)}</div>
         </section>
       )}

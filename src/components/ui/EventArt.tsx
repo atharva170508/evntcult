@@ -20,7 +20,7 @@ export function EventArt({ accent, className, intensity = 1 }: { accent: string;
   return (
     <div
       aria-hidden
-      className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
+      className={cn("grain pointer-events-none absolute inset-0 overflow-hidden", className)}
       style={{ background: `linear-gradient(135deg, ${a}, ${b})` }}
     >
       <div className="absolute -left-[15%] -top-[35%] h-[90%] w-[70%] rounded-full blur-3xl" style={{ background: c, opacity: 0.55 * intensity }} />

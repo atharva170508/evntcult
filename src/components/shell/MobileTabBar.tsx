@@ -12,7 +12,7 @@ export function MobileTabBar({ isOrganizer }: { isOrganizer: boolean }) {
   const items = [...base, isOrganizer ? ORGANIZER_NAV : NAV.find((n) => n.href === "/vault")!];
 
   return (
-    <nav className="fixed inset-x-3 bottom-3 z-40 rounded-[26px] border border-line bg-surface/95 px-2 py-1.5 shadow-pop backdrop-blur-xl md:hidden">
+    <nav className="fixed inset-x-3 bottom-3 z-40 rounded-full border border-white/10 bg-surface/80 px-2 py-1.5 shadow-pop backdrop-blur-xl md:hidden">
       <ul className="grid grid-cols-5">
         {items.map((item) => {
           const active = isActive(pathname, item.href);
@@ -27,7 +27,7 @@ export function MobileTabBar({ isOrganizer }: { isOrganizer: boolean }) {
                   active ? "text-ink" : "text-ink-subtle",
                 )}
               >
-                <span className={cn("grid h-8 w-12 place-items-center rounded-full transition-colors", active && "bg-ink text-ink-inverse")}>
+                <span className={cn("grid h-8 w-12 place-items-center rounded-full transition-colors", active && "bg-gradient-to-r from-aurora-1 to-aurora-2 text-white")}>
                   <Icon className="size-[18px]" />
                 </span>
                 {item.label.replace("My passes", "Passes")}

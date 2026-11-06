@@ -1,7 +1,9 @@
 import type { Config } from "tailwindcss";
 
 /**
- * EvntCult design tokens — dark "campus poster meets control room" theme.
+ * EvntCult design tokens — dark "cinematic event night" theme (M7 redesign).
+ * References: luxury event-agency sites (huge editorial serif, marquee type),
+ * premium booking platforms (purple→blue aurora gradients, glass cards, volt-lime CTAs).
  * Near-black control-room canvas, bright poster accents (violet + sun yellow).
  * Every text colour here passes WCAG AA (4.5:1) on canvas and surface.
  * `ink.inverse` is the dark text used on light fills (ink pills, brand buttons, white chips).
@@ -14,15 +16,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#0b0c10",
-        surface: "#15171e",
+        canvas: "#08080c",
+        surface: "#121219",
         line: { DEFAULT: "#262a35", strong: "#353a48" },
         ink: {
           DEFAULT: "#f2f3f7",
           2: "#c8ccd8",
           muted: "#9aa0b1",
           subtle: "#7d8396",
-          inverse: "#0b0c10",
+          inverse: "#08080c",
         },
         brand: {
           DEFAULT: "#7c66ff",
@@ -34,10 +36,18 @@ const config: Config = {
         warn: { DEFAULT: "#fbbf24", soft: "#2e230b" },
         danger: { DEFAULT: "#ff6b6e", soft: "#331618" },
         sun: "#ffd25e",
+        /** Neon-lime call-to-action accent (always with dark text). */
+        volt: { DEFAULT: "#d4ff3a", hover: "#e2ff73" },
+        /** Aurora gradient stops: violet → electric blue → magenta. */
+        aurora: { 1: "#7c66ff", 2: "#4f7bff", 3: "#b14dff" },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "Consolas", "monospace"],
+        /** Editorial serif for statements and huge headlines (Instrument Serif). */
+        serif: ["var(--font-serif)", "Georgia", "Times New Roman", "serif"],
+        /** Wide poster grotesk for uppercase shouts (Unbounded). */
+        display: ["var(--font-display)", "var(--font-sans)", "system-ui", "sans-serif"],
       },
       letterSpacing: {
         tightest: "-0.04em",
@@ -64,11 +74,27 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-6px)" },
         },
+        drift: {
+          "0%, 100%": { transform: "translateY(0) rotate(var(--tilt, 0deg))" },
+          "50%": { transform: "translateY(-14px) rotate(var(--tilt, 0deg))" },
+        },
+        marquee: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        aurora: {
+          "0%, 100%": { transform: "translate(0,0) scale(1)" },
+          "50%": { transform: "translate(4%,-6%) scale(1.12)" },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.6s cubic-bezier(0.22,1,0.36,1) both",
         "pulse-dot": "pulse_dot 1.6s ease-in-out infinite",
         float: "float 5s ease-in-out infinite",
+        drift: "drift 7s ease-in-out infinite",
+        marquee: "marquee 38s linear infinite",
+        "spin-slow": "spin 18s linear infinite",
+        aurora: "aurora 14s ease-in-out infinite",
       },
       transitionTimingFunction: {
         apple: "cubic-bezier(0.22, 1, 0.36, 1)",
