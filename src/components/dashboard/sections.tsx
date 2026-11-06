@@ -9,7 +9,6 @@ import {
   Camera,
   CircleAlert,
   Clock,
-  Download,
   FileText,
   Gamepad2,
   Map as MapIcon,

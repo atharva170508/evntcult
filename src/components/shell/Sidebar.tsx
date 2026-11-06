@@ -8,7 +8,7 @@ import { Logo } from "./Logo";
 import { NAV, ORGANIZER_NAV, isActive } from "./nav";
 
 /** App-style left menu for laptops (Unstop / Zoho Backstage idea). Hidden on phones. */
-export function Sidebar({ isOrganizer, onEnterCode }: { isOrganizer: boolean; onEnterCode: () => void }) {
+export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: boolean; signedIn: boolean; onEnterCode: () => void }) {
   const pathname = usePathname();
   const items = isOrganizer ? [...NAV, ORGANIZER_NAV] : NAV;
 
@@ -57,6 +57,7 @@ export function Sidebar({ isOrganizer, onEnterCode }: { isOrganizer: boolean; on
         </ul>
       </nav>
 
+      {signedIn ? (<>
       <button
         onClick={onEnterCode}
         className="group hidden rounded-3xl bg-gradient-to-br from-brand-soft to-[#fff5df] p-4 text-left transition-transform hover:-translate-y-0.5 xl:block"
@@ -74,6 +75,12 @@ export function Sidebar({ isOrganizer, onEnterCode }: { isOrganizer: boolean; on
       >
         <KeyRound className="size-[18px]" />
       </button>
+      </>) : (
+        <Link href="/signin?mode=signup" className="hidden rounded-3xl bg-gradient-to-br from-brand-soft to-[#fff5df] p-4 transition-transform hover:-translate-y-0.5 xl:block">
+          <p className="text-[14px] font-bold leading-tight">New here?</p>
+          <p className="mt-0.5 text-[12.5px] text-ink-muted">Sign up with your college email to register for events.</p>
+        </Link>
+      )}
     </aside>
   );
 }

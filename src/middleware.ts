@@ -2,10 +2,10 @@ import { NextResponse, type NextRequest } from "next/server";
 import { readSessionValue, SESSION_COOKIE } from "@/lib/session";
 
 /**
- * Signed-in check for app pages. Only verifies the cookie signature; roles are checked
- * against the database inside each page / API route.
+ * Personal pages need a session. The dashboard, events and event pages are public.
+ * Only verifies the cookie signature; roles are checked against the database in each page / route.
  */
-const PROTECTED = ["/dashboard", "/calendar", "/events", "/passes", "/vault", "/venues", "/organizer"];
+const PROTECTED = ["/passes", "/vault", "/organizer"];
 
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;

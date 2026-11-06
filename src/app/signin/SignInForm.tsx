@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
-export function SignInForm({ next }: { next: string }) {
+export function SignInForm({ next, signup = false }: { next: string; signup?: boolean }) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [needName, setNeedName] = useState(false);
+  const [needName, setNeedName] = useState(signup);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -70,7 +70,7 @@ export function SignInForm({ next }: { next: string }) {
         className="flex w-full items-center justify-center gap-2 rounded-full bg-ink py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-black disabled:opacity-50"
       >
         {busy && <Loader2 className="size-4 animate-spin" />}
-        {needName ? "Create account" : "Continue"}
+        {needName ? "Create account" : "Log in"}
       </button>
     </form>
   );

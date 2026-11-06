@@ -183,3 +183,30 @@ async function getOrganizerPanel(viewer: Viewer, now: Date): Promise<OrganizerPa
     clashes,
   };
 }
+
+/** Signed-out visitors: real public data only (no personal cards). */
+export async function getPublicDashboard(): Promise<{ campus: ReturnType<typeof toSummary>[]; thisWeek: number; upcoming: number; going: number; calendar: DashboardData["calendar"] }> {
+  const now = new Date();
+  const nowIso = now.toISOString();
+  const weekEnd = new Date(+now + 7 * DAY).toISOString();
+  const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1) - 5.5 * 3_600_000).toISOString();
+  const monthEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1) - 5.5 * 3_600_000).toISOString();
+  const pub = "e.status = 'published' AND e.access = 'public'";
+  const [campus, thisWeek, upcoming, going, monthRows] = await Promise.all([
+    all<EventRowWithCount>(`SELECT e.*, ${SEATS_TAKEN_SQL} AS taken FROM events e WHERE ${pub} AND e.ends_at > ? ORDER BY e.starts_at ASC LIMIT 8`, nowIso),
+    count(`SELECT COUNT(*) AS n FROM events e WHERE ${pub} AND e.ends_at > ? AND e.starts_at < ?`, nowIso, weekEnd),
+    count(`SELECT COUNT(*) AS n FROM events e WHERE ${pub} AND e.ends_at > ?`, nowIso),
+    count(
+      `SELECT COUNT(*) AS n FROM registrations r JOIN events e ON e.id = r.event_id WHERE ${pub} AND e.ends_at > ? AND r.status = 'registered'`,
+      nowIso,
+    ),
+    all<{ starts_at: string }>(`SELECT e.starts_at FROM events e WHERE ${pub} AND e.starts_at >= ? AND e.starts_at < ?`, monthStart, monthEnd),
+  ]);
+  const calendar: DashboardData["calendar"] = {};
+  for (const row of monthRows) {
+    const k = istYmd(new Date(row.starts_at));
+    calendar[k] ??= { campus: 0, mine: 0 };
+    calendar[k].campus++;
+  }
+  return { campus: campus.map(toSummary), thisWeek, upcoming, going, calendar };
+}

@@ -1,16 +1,17 @@
 import { ApiError, handle, parseBody } from "@/lib/api";
-import { requireEventOwner, requireUser } from "@/lib/rbac";
+import { getViewer, requireEventOwner } from "@/lib/rbac";
 import { getEventDetail } from "@/lib/data/events";
 import { updateEvent } from "@/lib/data/event-write";
 import { patchEventSchema } from "@/lib/validation";
 import { passQrPayload } from "@/lib/tokens";
+import { first } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ ref: string }> };
 
 /** GET /api/events/:slug — includes seats_left and my_registration. */
 export const GET = handle(async (req: Request, { params }: Ctx) => {
-  const viewer = await requireUser();
+  const viewer = await getViewer();
   const { ref } = await params;
   const d = await getEventDetail(ref, viewer, new URL(req.url).searchParams.get("code"));
   if (!d) throw new ApiError(404, "not_found", "Event not found.");
@@ -48,8 +49,10 @@ export const GET = handle(async (req: Request, { params }: Ctx) => {
 /** PATCH /api/events/:id — owner only. Capacity can't go below seats already taken. */
 export const PATCH = handle(async (req: Request, { params }: Ctx) => {
   const { ref } = await params;
-  const viewer = await requireEventOwner(ref);
+  const row = await first<{ id: string }>("SELECT id FROM events WHERE id = ? OR slug = ?", ref, ref);
+  if (!row) throw new ApiError(404, "not_found", "Event not found.");
+  const viewer = await requireEventOwner(row.id);
   const input = await parseBody(req, patchEventSchema);
-  const e = await updateEvent(viewer, ref, input);
+  const e = await updateEvent(viewer, row.id, input);
   return Response.json({ event: { id: e.id, slug: e.slug, status: e.status, capacity: e.capacity, access_code: e.access_code } });
 });

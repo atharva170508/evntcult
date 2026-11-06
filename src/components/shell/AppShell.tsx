@@ -8,14 +8,13 @@ import { Sidebar } from "./Sidebar";
 import { TopBar, type NavViewer } from "./TopBar";
 
 /** Sidebar + top bar + phone tabs around every app page. */
-export function AppShell({ viewer, demoBar, children }: { viewer: NavViewer; demoBar?: React.ReactNode; children: React.ReactNode }) {
+export function AppShell({ viewer, children }: { viewer: NavViewer | null; children: React.ReactNode }) {
   const [codeOpen, setCodeOpen] = useState(false);
 
   return (
     <div className="flex min-h-dvh">
-      <Sidebar isOrganizer={viewer.isOrganizer} onEnterCode={() => setCodeOpen(true)} />
+      <Sidebar isOrganizer={!!viewer?.isOrganizer} signedIn={!!viewer} onEnterCode={() => setCodeOpen(true)} />
       <div className="min-w-0 flex-1">
-        {demoBar}
         <TopBar viewer={viewer} onEnterCode={() => setCodeOpen(true)} />
         <main className="mx-auto max-w-[1280px] px-4 pb-32 md:pb-16 lg:px-8">{children}</main>
         <footer className="mx-auto max-w-[1280px] px-4 pb-28 text-[12.5px] text-ink-subtle md:pb-10 lg:px-8">
@@ -40,7 +39,7 @@ export function AppShell({ viewer, demoBar, children }: { viewer: NavViewer; dem
         </span>
       </a>
 
-      <MobileTabBar isOrganizer={viewer.isOrganizer} />
+      <MobileTabBar isOrganizer={!!viewer?.isOrganizer} />
       <EnterCodeDialog open={codeOpen} onClose={() => setCodeOpen(false)} />
     </div>
   );

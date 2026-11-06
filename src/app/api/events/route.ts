@@ -1,5 +1,5 @@
 import { ApiError, handle, parseBody } from "@/lib/api";
-import { requireOrganizer, requireUser } from "@/lib/rbac";
+import { requireOrganizer } from "@/lib/rbac";
 import { listEvents } from "@/lib/data/events";
 import { createEvent } from "@/lib/data/event-write";
 import { createEventSchema, listQuerySchema } from "@/lib/validation";
@@ -8,7 +8,6 @@ export const dynamic = "force-dynamic";
 
 /** GET /api/events?type&when&price&q&cursor */
 export const GET = handle(async (req: Request) => {
-  await requireUser();
   const params = Object.fromEntries(new URL(req.url).searchParams);
   const parsed = listQuerySchema.safeParse(params);
   if (!parsed.success) throw new ApiError(400, "invalid", parsed.error.issues[0]?.message ?? "Invalid filters.");

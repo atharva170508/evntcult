@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { CalendarCheck2, DoorOpen, Images, Map as MapIcon, Award, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
-import { getDashboardData } from "@/lib/data/dashboard";
+import { getDashboardData, getPublicDashboard } from "@/lib/data/dashboard";
+import Link from "next/link";
+import { EventArt } from "@/components/ui/EventArt";
 import { PassCard } from "@/components/dashboard/PassCard";
 import { MiniCalendar } from "@/components/dashboard/MiniCalendar";
 import {
@@ -28,7 +30,8 @@ function greeting() {
 }
 
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ denied?: string }> }) {
-  const viewer = (await getViewer())!; // layout already redirected anonymous users
+  const viewer = await getViewer();
+  if (!viewer) return <PublicHome />;
   const [data, params] = await Promise.all([getDashboardData(viewer), searchParams]);
   const firstName = viewer.name.split(" ")[0];
 
@@ -111,6 +114,43 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <VaultTeaser photosOfYou={data.stats.photosOfYou} />
         <PlannedCard eyebrow="Venue Navigator" title="Campus map & directions" icon={MapIcon} body="Walking directions to every hall, lab and ground. Not built yet." />
         <PlannedCard eyebrow="Certificates" title="Proof of attendance" icon={Award} body="Certificates for events you checked in to. Not built yet." />
+      </section>
+    </div>
+  );
+}
+
+/** What a signed-out visitor sees: real campus events and numbers, plus Log in / Sign up. */
+async function PublicHome() {
+  const d = await getPublicDashboard();
+  return (
+    <div className="space-y-5">
+      <section className="card relative isolate mt-4 overflow-hidden p-7 text-white animate-fade-up md:mt-6 md:p-10">
+        <EventArt accent="violet" />
+        <div className="relative max-w-2xl">
+          <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-white/80">Campus events · KKW</p>
+          <h1 className="mt-2 text-[clamp(34px,5vw,58px)] font-extrabold leading-[1.02] tracking-tightest">Register. Get your pass. Walk in.</h1>
+          <p className="mt-3 max-w-lg text-[17px] text-white/85">Browse every fest, game night and workshop on campus. Sign up with your college email to register and get a QR pass.</p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            <Link href="/signin?mode=signup" className="rounded-full bg-white px-5 py-3 text-[15px] font-semibold text-ink hover:bg-white/90">Sign up</Link>
+            <Link href="/signin" className="rounded-full border border-white/50 px-5 py-3 text-[15px] font-semibold text-white hover:bg-white/10">Log in</Link>
+            <Link href="/events" className="rounded-full px-5 py-3 text-[15px] font-semibold text-white/90 underline-offset-4 hover:underline">Browse events →</Link>
+          </div>
+        </div>
+      </section>
+      <QuickTiles />
+      <div className="grid grid-cols-3 gap-3">
+        <StatTile label="Events this week" value={d.thisWeek} hint="open to everyone" icon={CalendarCheck2} color="#e0f2fe" ink="#0369a1" />
+        <StatTile label="Upcoming events" value={d.upcoming} hint="on campus" icon={Ticket} color="#efebff" ink="#3b22d6" delay={60} />
+        <StatTile label="Students going" value={d.going.toLocaleString("en-IN")} hint="registered so far" icon={Images} color="#ffe4ec" ink="#be123c" delay={120} />
+      </div>
+      <div className="pt-4">
+        <CampusRail events={d.campus} />
+      </div>
+      <section className="grid gap-4 md:grid-cols-2">
+        <div className="card p-6 animate-fade-up">
+          <MiniCalendar data={d.calendar} />
+        </div>
+        <PlannedCard eyebrow="Venue Navigator" title="Campus map & directions" icon={MapIcon} body="Walking directions to every hall, lab and ground. Not built yet." />
       </section>
     </div>
   );

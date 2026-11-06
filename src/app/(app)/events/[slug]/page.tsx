@@ -20,7 +20,7 @@ const LABEL: Record<string, string> = { GAMING: "Gaming", SPORTS: "Sports", TECH
 
 export default async function EventPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ code?: string }> }) {
   const [{ slug }, { code }] = await Promise.all([params, searchParams]);
-  const viewer = (await getViewer())!;
+  const viewer = await getViewer();
   const d = await getEventDetail(slug, viewer, code);
   if (!d) notFound();
 
@@ -75,7 +75,12 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             <Meter value={e.taken} max={e.capacity} className="mt-2 bg-white" />
           </div>
 
-          {d.isOwner ? (
+          {!viewer ? (
+            <div className="space-y-2">
+              <Link href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} className="inline-flex w-full items-center justify-center rounded-full bg-ink py-3.5 text-[15px] font-semibold text-white">Log in to register</Link>
+              <p className="text-center text-[13px] text-ink-muted">New here? <Link href={`/signin?mode=signup&next=${encodeURIComponent(`/events/${e.slug}`)}`} className="font-semibold text-ink underline">Sign up</Link> with your college email.</p>
+            </div>
+          ) : d.isOwner ? (
             <div className="space-y-2">
               <p className="text-[13px] font-semibold text-ink-muted">You organize this event{e.access === "code" && e.access_code ? <> · join code <span className="font-mono font-bold text-ink">{e.access_code}</span></> : null}.</p>
               <div className="flex flex-wrap gap-2">

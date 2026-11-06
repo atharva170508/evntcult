@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Bell, CalendarDays, KeyRound, Search, Shapes } from "lucide-react";
+import { CalendarDays, KeyRound, LogOut, Search, Shapes } from "lucide-react";
 import { cn, initials } from "@/lib/utils";
 import { Logo } from "./Logo";
 
@@ -17,7 +17,11 @@ export interface NavViewer {
  * Top bar: one search box split into "What · When · Category" (Humanitix idea)
  * with a Ctrl+K shortcut (Devfolio idea), plus code, notifications and profile.
  */
-export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer; onEnterCode: () => void }) {
+export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEnterCode: () => void }) {
+  async function logout() {
+    await fetch("/api/auth/session", { method: "DELETE" });
+    window.location.href = "/dashboard";
+  }
   const [scrolled, setScrolled] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -88,30 +92,39 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer; onEnterCode
         </form>
 
         <div className="ml-auto flex items-center gap-2">
-          <button
-            onClick={onEnterCode}
-            className="hidden items-center gap-1.5 rounded-full border border-line bg-surface px-3.5 py-2.5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-ink sm:inline-flex"
-          >
-            <KeyRound className="size-4" /> Enter code
-          </button>
-          <button
-            aria-label="Notifications"
-            className="relative grid size-11 place-items-center rounded-full border border-line bg-surface text-ink-2 transition-colors hover:border-ink"
-          >
-            <Bell className="size-[18px]" />
-            <span className="absolute right-2.5 top-2.5 size-2 rounded-full bg-danger ring-2 ring-surface" />
-          </button>
-          <div
-            className="grid size-11 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-brand to-[#f472b6] text-[13px] font-bold text-white ring-2 ring-white"
-            title={`${viewer.name} · ${viewer.email}`}
-          >
-            {viewer.image ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={viewer.image} alt="" className="size-full object-cover" />
-            ) : (
-              initials(viewer.name)
-            )}
-          </div>
+          {viewer ? (
+            <>
+              <button
+                onClick={onEnterCode}
+                className="hidden items-center gap-1.5 rounded-full border border-line bg-surface px-3.5 py-2.5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-ink sm:inline-flex"
+              >
+                <KeyRound className="size-4" /> Enter code
+              </button>
+              <div
+                className="grid size-11 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-brand to-[#f472b6] text-[13px] font-bold text-white ring-2 ring-white"
+                title={`${viewer.name} · ${viewer.email}`}
+              >
+                {initials(viewer.name)}
+              </div>
+              <button
+                onClick={logout}
+                title="Log out"
+                aria-label="Log out"
+                className="grid size-11 place-items-center rounded-full border border-line bg-surface text-ink-2 transition-colors hover:border-ink"
+              >
+                <LogOut className="size-[18px]" />
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/signin" className="rounded-full border border-line bg-surface px-4 py-2.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink">
+                Log in
+              </Link>
+              <Link href="/signin?mode=signup" className="rounded-full bg-ink px-4 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-black">
+                Sign up
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

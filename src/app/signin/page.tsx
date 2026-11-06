@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CalendarCheck2, QrCode, Users } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
@@ -9,8 +10,9 @@ import { SignInForm } from "./SignInForm";
 export const metadata: Metadata = { title: "Sign in" };
 export const dynamic = "force-dynamic";
 
-export default async function SignInPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
-  const { next: nextParam } = await searchParams;
+export default async function SignInPage({ searchParams }: { searchParams: Promise<{ next?: string; mode?: string }> }) {
+  const { next: nextParam, mode } = await searchParams;
+  const signup = mode === "signup";
   const next = nextParam?.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/dashboard";
   if (await getViewer()) redirect(next);
 
@@ -44,9 +46,19 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
             <Logo />
             <span className="text-[20px] font-extrabold tracking-tighter">EvntCult</span>
           </div>
-          <h1 className="headline mt-8 text-[34px] leading-tight tracking-tightest lg:mt-0">Sign in</h1>
-          <p className="mt-2 text-[15px] text-ink-muted">Use your college email to see your events and passes.</p>
-          <SignInForm next={next} />
+          <h1 className="headline mt-8 text-[34px] leading-tight tracking-tightest lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
+          <p className="mt-2 text-[15px] text-ink-muted">
+            {signup ? "Sign up with your college email to register for events and get passes." : "Use your college email to see your events and passes."}
+          </p>
+          <SignInForm next={next} signup={signup} />
+          <p className="mt-6 text-center text-[14px] text-ink-muted">
+            {signup ? "Already have an account? " : "New here? "}
+            <Link href={`/signin?${signup ? "" : "mode=signup&"}next=${encodeURIComponent(next)}`} className="font-semibold text-ink underline">
+              {signup ? "Log in" : "Sign up"}
+            </Link>
+            {" · "}
+            <Link href="/dashboard" className="font-semibold text-ink underline">Browse without an account</Link>
+          </p>
         </div>
       </div>
     </main>
