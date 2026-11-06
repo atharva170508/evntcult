@@ -45,7 +45,7 @@ export function AddPhoneCard() {
           {error}
         </p>
       )}
-      <button disabled={busy} className="flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-white disabled:opacity-50">
+      <button disabled={busy} className="flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-inverse disabled:opacity-50">
         {busy && <Loader2 className="size-4 animate-spin" />} Save number
       </button>
     </form>

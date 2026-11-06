@@ -7,8 +7,8 @@ const tones = {
   warn: "bg-warn-soft text-warn",
   danger: "bg-danger-soft text-danger",
   violet: "bg-brand-soft text-brand-ink",
-  dark: "bg-ink text-white",
-  white: "bg-white/90 text-ink backdrop-blur",
+  dark: "bg-ink text-ink-inverse",
+  white: "bg-white/90 text-ink-inverse backdrop-blur",
   outline: "border border-line bg-surface text-ink-2",
 } as const;
 

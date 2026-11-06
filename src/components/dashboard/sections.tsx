@@ -40,6 +40,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { Countdown } from "./Countdown";
 import { LiveHeadcount } from "./LiveHeadcount";
 import { formatINR } from "@/lib/money";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { cn, fmtDate, fmtRange, fmtTime, relative } from "@/lib/utils";
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -74,16 +75,16 @@ function calendarLink(e: EventSummary) {
 /* ─── Quick tiles (Humanitix tiles + KonfHub type chips + Meetup icon tabs) ─── */
 
 const TILES = [
-  { href: "/events?when=today", label: "Today", icon: Sun, color: "#fff3df", ink: "#b45309" },
-  { href: "/events?when=weekend", label: "This weekend", icon: CalendarRange, color: "#efebff", ink: "#3b22d6" },
-  { href: "/events?price=free", label: "Free", icon: BadgeIndianRupee, color: "#e2f7ee", ink: "#0b7f4f" },
-  { href: "/events?type=GAMING", label: "Gaming", icon: Gamepad2, color: "#ffe4ec", ink: "#be123c" },
-  { href: "/events?type=SPORTS", label: "Sports", icon: Trophy, color: "#e0f2fe", ink: "#0369a1" },
-  { href: "/events?type=TECH", label: "Tech", icon: Cpu, color: "#ecfccb", ink: "#4d7c0f" },
-  { href: "/events?type=CULTURAL", label: "Cultural", icon: Palette, color: "#fae8ff", ink: "#a21caf" },
-  { href: "/events?type=PARTY", label: "Parties", icon: Music2, color: "#ffedd5", ink: "#c2410c" },
-  { href: "/events?type=WORKSHOP", label: "Workshops", icon: Wrench, color: "#f1f5f9", ink: "#334155" },
-  { href: "/events?type=TALK", label: "Talks", icon: Mic2, color: "#e0e7ff", ink: "#4338ca" },
+  { href: "/events?when=today", label: "Today", icon: Sun, color: "#fbbf241f", ink: "#fbbf24" },
+  { href: "/events?when=weekend", label: "This weekend", icon: CalendarRange, color: "#a594ff1f", ink: "#a594ff" },
+  { href: "/events?price=free", label: "Free", icon: BadgeIndianRupee, color: "#34d3991f", ink: "#34d399" },
+  { href: "/events?type=GAMING", label: "Gaming", icon: Gamepad2, color: "#fb71851f", ink: "#fb7185" },
+  { href: "/events?type=SPORTS", label: "Sports", icon: Trophy, color: "#7dd3fc1f", ink: "#7dd3fc" },
+  { href: "/events?type=TECH", label: "Tech", icon: Cpu, color: "#a3e6351f", ink: "#a3e635" },
+  { href: "/events?type=CULTURAL", label: "Cultural", icon: Palette, color: "#e879f91f", ink: "#e879f9" },
+  { href: "/events?type=PARTY", label: "Parties", icon: Music2, color: "#fb923c1f", ink: "#fb923c" },
+  { href: "/events?type=WORKSHOP", label: "Workshops", icon: Wrench, color: "#cbd5e11f", ink: "#cbd5e1" },
+  { href: "/events?type=TALK", label: "Talks", icon: Mic2, color: "#a5b4fc1f", ink: "#a5b4fc" },
 ];
 
 export function QuickTiles() {
@@ -112,8 +113,8 @@ export function StatTile({
   value,
   hint,
   icon: Icon,
-  color = "#efebff",
-  ink = "#3b22d6",
+  color = "#a594ff1f",
+  ink = "#a594ff",
   delay = 0,
 }: {
   label: string;
@@ -132,7 +133,7 @@ export function StatTile({
         </span>
         <ArrowUpRight className="size-4 text-ink-subtle" />
       </div>
-      <p className="mt-4 text-[32px] font-extrabold leading-none tracking-tighter tabular-nums">{value}</p>
+      <p className="mt-4 font-serif text-[52px] leading-none tracking-[-0.02em] tabular-nums">{value}</p>
       <p className="mt-1.5 text-[13px] font-semibold text-ink-2">{label}</p>
       {hint && <p className="text-[12px] text-ink-subtle">{hint}</p>}
     </div>
@@ -157,7 +158,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
           <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-white/80">
             {fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "long" })}
           </p>
-          <h2 className="mt-1 text-[clamp(32px,4.4vw,50px)] font-extrabold leading-[1.02] tracking-tightest">{event.title}</h2>
+          <h2 className="shout mt-2 text-[clamp(28px,3.6vw,44px)]">{event.title}</h2>
           {event.tagline && <p className="mt-2 max-w-sm text-[16px] text-white/85">{event.tagline}</p>}
         </div>
       </div>
@@ -190,7 +191,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
         </div>
 
         <div className="mt-auto flex flex-wrap gap-2">
-          <LinkButton href={`/events/${event.slug}`} className="flex-1">
+          <LinkButton href={`/events/${event.slug}`} variant="volt" className="flex-1">
             View event <ArrowUpRight className="size-4" />
           </LinkButton>
           <LinkButton href={`/venues?to=${event.slug}`} variant="secondary">
@@ -247,10 +248,10 @@ export function OrgKpis({ data }: { data: OrganizerPanel }) {
   const collected = data.hosted.reduce((a, h) => a + h.paid * h.feePaise, 0);
   const pending = data.hosted.reduce((a, h) => a + h.pendingPayments, 0);
   const boxes = [
-    { label: "Registrations", value: registrations.toLocaleString("en-IN"), hint: `across ${data.hosted.length} events`, icon: Users, color: "#efebff", ink: "#3b22d6" },
-    { label: "Fees collected", value: formatINR(collected), hint: "from paid passes", icon: BadgeIndianRupee, color: "#e2f7ee", ink: "#0b7f4f" },
-    { label: "Checked in now", value: data.live ? data.live.checkedIn : 0, hint: data.live ? data.live.title : "no live event", icon: ScanLine, color: "#e0f2fe", ink: "#0369a1" },
-    { label: "Payments pending", value: pending, hint: "follow up at the desk", icon: Ticket, color: "#fff3df", ink: "#b45309" },
+    { label: "Registrations", value: registrations.toLocaleString("en-IN"), hint: `across ${data.hosted.length} events`, icon: Users, color: "#a594ff1f", ink: "#a594ff" },
+    { label: "Fees collected", value: formatINR(collected), hint: "from paid passes", icon: BadgeIndianRupee, color: "#34d3991f", ink: "#34d399" },
+    { label: "Checked in now", value: data.live ? data.live.checkedIn : 0, hint: data.live ? data.live.title : "no live event", icon: ScanLine, color: "#7dd3fc1f", ink: "#7dd3fc" },
+    { label: "Payments pending", value: pending, hint: "follow up at the desk", icon: Ticket, color: "#fbbf241f", ink: "#fbbf24" },
   ];
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -284,11 +285,14 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
       )}
 
       <Card eyebrow="Your events" title="Registrations & fees" icon={Ticket} className="lg:col-span-7" action={{ label: "Manage", href: "/organizer" }}>
+        {data.hosted.length === 0 && (
+          <EmptyState icon={Ticket} title="No events yet" body="Create your first event and its registrations and fees show up here." action={{ label: "Create event", href: "/organizer/events/new" }} />
+        )}
         <ul className="space-y-2">
           {data.hosted.map((h) => (
             <li key={h.id} className="grid grid-cols-12 items-center gap-3 rounded-2xl bg-canvas p-3">
               <div className="col-span-12 min-w-0 sm:col-span-5">
-                <Link href={`/organizer/events/${h.id}`} className="block truncate text-[14.5px] font-bold hover:text-brand">
+                <Link href={`/organizer/events/${h.id}`} className="block truncate text-[14.5px] font-bold hover:text-brand-ink">
                   {h.title}
                 </Link>
                 <p className="text-[12px] text-ink-muted">
@@ -357,17 +361,17 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
       <Card eyebrow="Quick actions" title="Run your event" icon={Sparkles} className="lg:col-span-6">
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
           <QuickAction href="/organizer/events/new" icon={Plus} label="New event" primary />
-          <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} color="#e0f2fe" ink="#0369a1" />
-          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="payments, export" color="#fff3df" ink="#b45309" />
+          <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} color="#7dd3fc1f" ink="#7dd3fc" />
+          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="payments, export" color="#fbbf241f" ink="#fbbf24" />
           <QuickAction
             href={data.live ? `/organizer/events/${data.live.id}` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}` : "/organizer"}
             icon={Megaphone}
             label="Broadcast update"
             hint={data.live?.title ?? data.hosted[0]?.title ?? "pick an event"}
-            color="#ede9fe"
-            ink="#5b3fff"
+            color="#a594ff1f"
+            ink="#a594ff"
           />
-          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" hint="reminders queue automatically" color="#dcfce7" ink="#15803d" />
+          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" hint="reminders queue automatically" color="#4ade801f" ink="#4ade80" />
           <QuickAction planned icon={Award} label="Issue certificates" />
         </div>
       </Card>
@@ -382,8 +386,8 @@ function QuickAction({
   hint,
   primary,
   planned,
-  color = "#f4f4f7",
-  ink = "#3d3d48",
+  color = "#c8ccd81f",
+  ink = "#c8ccd8",
 }: {
   href?: string;
   planned?: boolean;
@@ -412,12 +416,12 @@ function QuickAction({
       href={href}
       className={cn(
         "group flex flex-col justify-between gap-6 rounded-2xl border p-4 transition-all duration-200 ease-apple hover:-translate-y-0.5 active:scale-[0.98]",
-        primary ? "border-transparent bg-ink text-white hover:bg-black" : "border-line bg-surface hover:border-ink",
+        primary ? "border-transparent bg-ink text-ink-inverse hover:bg-ink-2" : "border-line bg-surface hover:border-ink",
       )}
     >
       <span
         className="grid size-9 place-items-center rounded-xl"
-        style={primary ? { background: "rgba(255,255,255,0.14)", color: "#fff" } : { background: color, color: ink }}
+        style={primary ? { background: "rgba(11,12,16,0.12)", color: "#0b0c10" } : { background: color, color: ink }}
       >
         <Icon className="size-[18px]" />
       </span>
@@ -491,6 +495,7 @@ export function PlannedCard({
 export function UpcomingList({ events }: { events: EventSummary[] }) {
   return (
     <Card eyebrow="Your calendar" title="Coming up" icon={CalendarRange} action={{ label: "Calendar", href: "/calendar" }} className="h-full">
+      {events.length === 0 && <EmptyState icon={CalendarRange} title="Nothing coming up" body="Events you register for appear here." action={{ label: "Find an event", href: "/events" }} />}
       <ul className="space-y-2">
         {events.map((e) => (
           <li key={e.id}>
@@ -525,12 +530,13 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Happening on campus</p>
-          <h2 className="headline mt-1 text-[26px]">Don&apos;t miss these</h2>
+          <h2 className="title-serif mt-2 text-[clamp(38px,4.4vw,60px)]">Don&apos;t miss <em className="text-aurora">these</em></h2>
         </div>
         <LinkButton href="/events" variant="secondary" className="py-2 text-[13px]">
           Browse all <ArrowUpRight className="size-4" />
         </LinkButton>
       </div>
+      {events.length === 0 && <EmptyState icon={CalendarRange} title="No upcoming events on campus" body="When organizers publish events, they show up here." />}
       <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 xl:grid-cols-4">
         {events.map((e) => (
           <EventCard key={e.id} e={e} />
@@ -552,10 +558,10 @@ export function EventCard({ e }: { e: EventSummary }) {
         </div>
       </Link>
       <div className="flex flex-1 flex-col p-4">
-        <p className="text-[12px] font-bold uppercase tracking-[0.06em] text-brand">
+        <p className="text-[12px] font-bold uppercase tracking-[0.06em] text-brand-ink">
           {fmtDate(e.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(e.startsAt)}
         </p>
-        <Link href={`/events/${e.slug}`} className="mt-1 text-[17px] font-extrabold leading-snug tracking-tight hover:text-brand">
+        <Link href={`/events/${e.slug}`} className="mt-1 text-[17px] font-extrabold leading-snug tracking-tight hover:text-brand-ink">
           {e.title}
         </Link>
         {e.tagline && <p className="mt-1 line-clamp-1 text-[13px] text-ink-muted">{e.tagline}</p>}
@@ -566,7 +572,7 @@ export function EventCard({ e }: { e: EventSummary }) {
         )}
         <div className="mt-auto flex items-center justify-between gap-2 pt-4">
           <Avatars id={e.id} count={e.registered} size={22} />
-          <span className={cn("rounded-full px-2.5 py-1 text-[12px] font-bold", e.feePaise > 0 ? "bg-ink text-white" : "bg-live-soft text-live")}>
+          <span className={cn("rounded-full px-2.5 py-1 text-[12px] font-bold", e.feePaise > 0 ? "bg-ink text-ink-inverse" : "bg-live-soft text-live")}>
             {e.feePaise > 0 ? formatINR(e.feePaise) : "Free"}
           </span>
         </div>
@@ -577,20 +583,28 @@ export function EventCard({ e }: { e: EventSummary }) {
 
 /* ─── Vault + navigator teasers ─────────────────────────────────────────── */
 
-export function VaultTeaser({ photosOfYou }: { photosOfYou: number }) {
+export function VaultTeaser({ photosOfYou, preview = [] }: { photosOfYou: number; preview?: string[] }) {
   const tiles = ["violet", "orange", "teal", "pink", "blue", "green"];
   return (
     <Card eyebrow="Photo Vault" title={photosOfYou === 1 ? "1 photo of you" : `${photosOfYou} photos of you`} icon={Camera} action={{ label: "Open", href: "/vault" }} className="h-full">
       <div className="grid grid-cols-3 gap-1.5">
         {tiles.map((t, i) => (
-          <div key={t} className={cn("relative isolate overflow-hidden rounded-2xl", i === 0 ? "col-span-2 row-span-2 aspect-auto" : "aspect-square")}>
-            <EventArt accent={t} intensity={0.8} />
-            <Camera className="absolute bottom-2 right-2 size-3.5 text-white/70" />
+          <div key={t} className={cn("relative isolate overflow-hidden rounded-2xl bg-canvas", i === 0 ? "col-span-2 row-span-2 aspect-auto" : "aspect-square")}>
+            {preview[i] ? (
+              // Real thumbnails of photos I tagged myself in.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={`/api/photos/${preview[i]}?size=thumb`} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />
+            ) : (
+              <>
+                <EventArt accent={t} intensity={0.8} />
+                <Camera className="absolute bottom-2 right-2 size-3.5 text-white/70" />
+              </>
+            )}
           </div>
         ))}
       </div>
       <p className="mt-4 flex items-center gap-2 text-[13px] font-semibold text-ink-muted">
-        <ScanFace className="size-4 text-brand" /> Tap &ldquo;that&apos;s me&rdquo; on event photos to collect yours
+        <ScanFace className="size-4 text-brand-ink" /> Tap &ldquo;that&apos;s me&rdquo; on event photos to collect yours
       </p>
     </Card>
   );
@@ -599,30 +613,30 @@ export function VaultTeaser({ photosOfYou }: { photosOfYou: number }) {
 export function NavigatorTeaser({ next }: { next: NextUp | null }) {
   return (
     <Card eyebrow="Venue Navigator" title={next?.venueName ?? "Find any venue"} icon={MapIcon} action={{ label: "Map", href: "/venues" }} className="h-full">
-      <div className="relative h-[150px] overflow-hidden rounded-2xl bg-[#eef3ea]">
+      <div className="relative h-[150px] overflow-hidden rounded-2xl bg-[#111a16]">
         {/* Stylised campus map placeholder — swap for Mapbox/Leaflet or an SVG campus plan. */}
         <svg viewBox="0 0 400 150" className="absolute inset-0 size-full" preserveAspectRatio="xMidYMid slice" aria-hidden>
-          <g stroke="#ffffff" strokeWidth="10" strokeLinecap="round">
+          <g stroke="#1c2a23" strokeWidth="10" strokeLinecap="round">
             <path d="M0 110 H400" />
             <path d="M130 0 V150" />
             <path d="M260 0 V150" />
           </g>
-          <g fill="#dfe7d8">
+          <g fill="#17241e">
             <rect x="20" y="18" width="90" height="70" rx="10" />
             <rect x="150" y="18" width="92" height="70" rx="10" />
             <rect x="282" y="18" width="100" height="70" rx="10" />
           </g>
-          <circle cx="200" cy="52" r="18" fill="#cfe5c6" />
-          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#5b3fff" strokeWidth="3.5" strokeDasharray="7 6" strokeLinecap="round">
+          <circle cx="200" cy="52" r="18" fill="#1d3326" />
+          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#7c66ff" strokeWidth="3.5" strokeDasharray="7 6" strokeLinecap="round">
             <animate attributeName="stroke-dashoffset" from="26" to="0" dur="1s" repeatCount="indefinite" />
           </path>
-          <circle cx="60" cy="128" r="7" fill="#121218" stroke="#fff" strokeWidth="3" />
-          <circle cx="330" cy="54" r="16" fill="#5b3fff" opacity="0.18" />
-          <circle cx="330" cy="54" r="8" fill="#5b3fff" stroke="#fff" strokeWidth="3" />
+          <circle cx="60" cy="128" r="7" fill="#f2f3f7" stroke="#15171e" strokeWidth="3" />
+          <circle cx="330" cy="54" r="16" fill="#7c66ff" opacity="0.25" />
+          <circle cx="330" cy="54" r="8" fill="#7c66ff" stroke="#15171e" strokeWidth="3" />
         </svg>
       </div>
       <p className="mt-4 flex items-start gap-2 text-[13px] font-semibold text-ink-muted">
-        <Navigation className="mt-0.5 size-4 shrink-0 text-brand" />
+        <Navigation className="mt-0.5 size-4 shrink-0 text-brand-ink" />
         {next?.directions ?? "Search any hall, lab or ground and get walking directions from the main gate."}
       </p>
     </Card>

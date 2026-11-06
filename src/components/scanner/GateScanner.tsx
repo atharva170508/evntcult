@@ -429,7 +429,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         </Link>
         <div className="min-w-0 flex-1">
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60">Gate scanner</p>
-          <h1 className="truncate text-[17px] font-bold">{event.title}</h1>
+          <h1 className="truncate font-serif text-[24px] leading-tight">{event.title}</h1>
         </div>
         <span
           className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-semibold ${online ? "bg-[#0fa968]/20 text-[#5ee0a5]" : "bg-[#f59e0b]/20 text-[#fbbf5a]"}`}
@@ -482,7 +482,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         {verdict && (
           <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
             <Icon className="size-16" strokeWidth={2.2} />
-            <p className="text-[30px] font-extrabold leading-tight">{verdict.title}</p>
+            <p className="shout text-[32px] leading-tight">{verdict.title}</p>
             {"name" in verdict && verdict.name && <p className="text-[20px] font-bold">{verdict.name}</p>}
             {"code" in verdict && verdict.code && <p className="font-mono text-[14px] font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
             {verdict.note && <p className="max-w-xs text-[14px] font-medium opacity-90">{verdict.note}</p>}

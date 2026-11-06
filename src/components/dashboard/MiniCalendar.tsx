@@ -42,7 +42,7 @@ export function MiniCalendar({ data }: { data: Record<string, { campus: number; 
               <span
                 className={cn(
                   "grid size-8 place-items-center rounded-full text-[12.5px] font-semibold tabular-nums transition-colors",
-                  isToday ? "bg-ink text-white" : info?.mine ? "bg-brand-soft text-brand-ink" : info ? "text-ink hover:bg-canvas" : "text-ink-muted",
+                  isToday ? "bg-ink text-ink-inverse" : info?.mine ? "bg-brand-soft text-brand-ink" : info ? "text-ink hover:bg-canvas" : "text-ink-muted",
                 )}
               >
                 {d}

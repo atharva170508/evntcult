@@ -11,6 +11,7 @@ import { fmtDate, fmtRange, fmtTime } from "@/lib/utils";
 import { Chip } from "@/components/ui/Chip";
 import { accentFor } from "@/lib/data/events";
 import { EventArt } from "@/components/ui/EventArt";
+import { PageHero } from "@/components/brand/PageHero";
 
 export const metadata: Metadata = { title: "My passes" };
 export const dynamic = "force-dynamic";
@@ -67,18 +68,14 @@ export default async function PassesPage() {
 
   return (
     <div className="space-y-6 pt-4 md:pt-6">
-      <header className="animate-fade-up">
-        <p className="eyebrow">My passes</p>
-        <h1 className="headline mt-1 text-[clamp(30px,4vw,42px)] tracking-tightest">Your tickets</h1>
-        <p className="mt-1 text-[15px] text-ink-muted">Show the QR code at the gate. Screenshots work too.</p>
-      </header>
+      <PageHero eyebrow="My passes" title={<>Your <em>tickets</em></>} sub="Show the QR code at the gate. Screenshots work too." marquee={["Your pass", "Walk in", "Scan at the gate"]} />
 
       {upcoming.length === 0 ? (
         <section className="card flex flex-col items-start gap-3 p-8">
           <Ticket className="size-8 text-ink-subtle" />
-          <h2 className="headline text-[20px]">No upcoming passes</h2>
+          <h2 className="title-serif text-[32px]">No upcoming passes</h2>
           <p className="text-[14.5px] text-ink-muted">When you register for an event, your pass shows up here.</p>
-          <Link href="/events" className="mt-1 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-white">Find an event</Link>
+          <Link href="/events" className="mt-1 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-inverse">Find an event</Link>
         </section>
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
@@ -90,7 +87,7 @@ export default async function PassesPage() {
 
       {past.length > 0 && (
         <section className="space-y-3">
-          <h2 className="headline text-[20px]">Past events</h2>
+          <h2 className="title-serif text-[32px]">Past events</h2>
           <ul className="card divide-y divide-line">
             {past.map((r) => (
               <li key={r.id} className="flex items-center justify-between gap-3 px-5 py-3.5">

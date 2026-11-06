@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import { CalendarCheck2, DoorOpen, Images, Map as MapIcon, Award, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDashboardData, getPublicDashboard } from "@/lib/data/dashboard";
-import Link from "next/link";
-import { EventArt } from "@/components/ui/EventArt";
+import { headers } from "next/headers";
+import QRCode from "qrcode";
+import { PublicHome } from "@/components/home/PublicHome";
+import { Aurora } from "@/components/brand/Aurora";
+import { Marquee } from "@/components/brand/Marquee";
+import { LinkButton } from "@/components/ui/Button";
 import { PassCard } from "@/components/dashboard/PassCard";
 import { AddPhoneCard } from "@/components/profile/AddPhoneCard";
 import { MiniCalendar } from "@/components/dashboard/MiniCalendar";
@@ -32,7 +36,7 @@ function greeting() {
 
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ denied?: string }> }) {
   const viewer = await getViewer();
-  if (!viewer) return <PublicHome />;
+  if (!viewer) return <PublicLanding />;
   const [data, params] = await Promise.all([getDashboardData(viewer), searchParams]);
   const firstName = viewer.name.split(" ")[0];
 
@@ -45,18 +49,26 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   return (
     <div className="space-y-5">
-      {/* Greeting + quick tiles */}
-      <header className="pt-4 animate-fade-up md:pt-6">
-        <p className="eyebrow">{new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Kolkata" }).format(new Date())}</p>
-        <h1 className="headline mt-1 text-[clamp(30px,4.2vw,44px)] leading-[1.05] tracking-tightest">
-          {greeting()}, {firstName} <span className="inline-block animate-float">👋</span>
-        </h1>
-        <p className="mt-1 text-[16px] font-medium text-ink-muted">{summary}</p>
-        {params.denied === "organizer" && (
-          <p className="mt-3 inline-block rounded-full bg-warn-soft px-4 py-1.5 text-[13px] font-semibold text-warn">
-            The organizer console is only for verified organizers.
-          </p>
-        )}
+      {/* Greeting: cinematic band with huge editorial serif */}
+      <header className="relative isolate mt-3 overflow-hidden rounded-[36px] px-6 py-10 animate-fade-up md:px-12 md:py-14">
+        <Aurora quiet />
+        <Marquee words={["Tonight on campus", "Your passes", "Live at the gate"]} className="absolute inset-x-0 bottom-3 text-[clamp(56px,9vw,128px)] text-white/[0.04]" />
+        <div className="relative">
+          <p className="eyebrow text-ink-2">{new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Kolkata" }).format(new Date())}</p>
+          <h1 className="title-serif mt-3 text-[clamp(44px,6.6vw,100px)]">
+            {greeting()}, <em className="text-aurora">{firstName}</em>
+          </h1>
+          <p className="mt-3 text-[16px] font-medium text-ink-2">{summary}</p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            <LinkButton href="/passes" variant="volt">My passes</LinkButton>
+            <LinkButton href="/events" variant="glass">Discover events</LinkButton>
+          </div>
+          {params.denied === "organizer" && (
+            <p className="mt-4 inline-block rounded-full bg-warn-soft px-4 py-1.5 text-[13px] font-semibold text-warn">
+              The organizer console is only for verified organizers.
+            </p>
+          )}
+        </div>
       </header>
       {!viewer.phone && <AddPhoneCard />}
       <QuickTiles />
@@ -74,10 +86,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label="Registered" value={data.stats.registered} hint="upcoming events" icon={Ticket} color="#efebff" ink="#3b22d6" delay={60} />
-        <StatTile label="This week" value={data.stats.thisWeek} hint="on your calendar" icon={CalendarCheck2} color="#e0f2fe" ink="#0369a1" delay={110} />
-        <StatTile label="Attended" value={data.stats.attended} hint="checked in at the gate" icon={DoorOpen} color="#fff3df" ink="#b45309" delay={160} />
-        <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="in the vault" icon={Images} color="#ffe4ec" ink="#be123c" delay={210} />
+        <StatTile label="Registered" value={data.stats.registered} hint="upcoming events" icon={Ticket} color="#a594ff1f" ink="#a594ff" delay={60} />
+        <StatTile label="This week" value={data.stats.thisWeek} hint="on your calendar" icon={CalendarCheck2} color="#7dd3fc1f" ink="#7dd3fc" delay={110} />
+        <StatTile label="Attended" value={data.stats.attended} hint="checked in at the gate" icon={DoorOpen} color="#fbbf241f" ink="#fbbf24" delay={160} />
+        <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="in the vault" icon={Images} color="#fb71851f" ink="#fb7185" delay={210} />
       </div>
 
       {/* Organizer console */}
@@ -86,7 +98,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           <div className="flex flex-wrap items-end justify-between gap-3 animate-fade-up">
             <div>
               <p className="eyebrow">Organizer</p>
-              <h2 className="headline mt-1 text-[26px]">Your events, at a glance</h2>
+              <h2 className="title-serif mt-2 text-[clamp(38px,4.4vw,60px)]">Your events, <em className="text-aurora">at a glance</em></h2>
             </div>
           </div>
           <OrgKpis data={data.organizer} />
@@ -121,39 +133,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   );
 }
 
-/** What a signed-out visitor sees: real campus events and numbers, plus Log in / Sign up. */
-async function PublicHome() {
+/** What a signed-out visitor sees: the cinematic landing page, built from real campus data. */
+async function PublicLanding() {
   const d = await getPublicDashboard();
-  return (
-    <div className="space-y-5">
-      <section className="card relative isolate mt-4 overflow-hidden p-7 text-white animate-fade-up md:mt-6 md:p-10">
-        <EventArt accent="violet" />
-        <div className="relative max-w-2xl">
-          <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-white/80">Campus events · KKW</p>
-          <h1 className="mt-2 text-[clamp(34px,5vw,58px)] font-extrabold leading-[1.02] tracking-tightest">Register. Get your pass. Walk in.</h1>
-          <p className="mt-3 max-w-lg text-[17px] text-white/85">Browse every fest, game night and workshop on campus. Sign up with your college email to register and get a QR pass.</p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <Link href="/signin?mode=signup" className="rounded-full bg-white px-5 py-3 text-[15px] font-semibold text-ink hover:bg-white/90">Sign up</Link>
-            <Link href="/signin" className="rounded-full border border-white/50 px-5 py-3 text-[15px] font-semibold text-white hover:bg-white/10">Log in</Link>
-            <Link href="/events" className="rounded-full px-5 py-3 text-[15px] font-semibold text-white/90 underline-offset-4 hover:underline">Browse events →</Link>
-          </div>
-        </div>
-      </section>
-      <QuickTiles />
-      <div className="grid grid-cols-3 gap-3">
-        <StatTile label="Events this week" value={d.thisWeek} hint="open to everyone" icon={CalendarCheck2} color="#e0f2fe" ink="#0369a1" />
-        <StatTile label="Upcoming events" value={d.upcoming} hint="on campus" icon={Ticket} color="#efebff" ink="#3b22d6" delay={60} />
-        <StatTile label="Students going" value={d.going.toLocaleString("en-IN")} hint="registered so far" icon={Images} color="#ffe4ec" ink="#be123c" delay={120} />
-      </div>
-      <div className="pt-4">
-        <CampusRail events={d.campus} />
-      </div>
-      <section className="grid gap-4 md:grid-cols-2">
-        <div className="card p-6 animate-fade-up">
-          <MiniCalendar data={d.calendar} />
-        </div>
-        <PlannedCard eyebrow="Venue Navigator" title="Campus map & directions" icon={MapIcon} body="Walking directions to every hall, lab and ground. Not built yet." />
-      </section>
-    </div>
-  );
+  const next = d.campus[0];
+  let nextQr: string | null = null;
+  if (next) {
+    const h = await headers();
+    const host = h.get("x-forwarded-host") ?? h.get("host");
+    const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
+    if (host) nextQr = await QRCode.toString(`${proto}://${host}/events/${next.slug}`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#08080c", light: "#ffffff" } });
+  }
+  return <PublicHome data={{ ...d, nextQr }} />;
 }

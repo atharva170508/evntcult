@@ -42,7 +42,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </Link>
 
       <section className="card grid overflow-hidden animate-fade-up md:grid-cols-[1.1fr_1fr]">
-        <div className="relative isolate flex min-h-[260px] flex-col justify-between p-6 text-white md:min-h-[440px] md:p-8">
+        <div className="relative isolate flex min-h-[300px] flex-col justify-between p-6 text-white md:min-h-[520px] md:p-9">
           <EventArt accent={s.accent} />
           <div className="relative flex flex-wrap gap-2">
             <Chip tone="white">{LABEL[e.category] ?? e.category}</Chip>
@@ -52,8 +52,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           </div>
           <div className="relative">
             <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-white/80">{fmtDate(s.startsAt, { weekday: "long", day: "numeric", month: "long" })}</p>
-            <h1 className="mt-1 text-[clamp(32px,4.6vw,54px)] font-extrabold leading-[1.02] tracking-tightest">{e.title}</h1>
-            {s.tagline && <p className="mt-2 max-w-md text-[16px] text-white/85">{s.tagline}</p>}
+            <h1 className="shout mt-3 text-[clamp(34px,4.6vw,60px)]">{e.title}</h1>
+            {s.tagline && <p className="mt-3 max-w-md font-serif text-[24px] italic leading-snug text-white/90">{s.tagline}</p>}
           </div>
         </div>
 
@@ -77,7 +77,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
 
           {!viewer ? (
             <div className="space-y-2">
-              <Link href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} className="inline-flex w-full items-center justify-center rounded-full bg-ink py-3.5 text-[15px] font-semibold text-white">Log in to register</Link>
+              <Link href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} className="inline-flex w-full items-center justify-center rounded-full bg-volt py-3.5 text-[15px] font-bold text-ink-inverse hover:bg-volt-hover">Log in to register</Link>
               <p className="text-center text-[13px] text-ink-muted">New here? <Link href={`/signin?mode=signup&next=${encodeURIComponent(`/events/${e.slug}`)}`} className="font-semibold text-ink underline">Sign up</Link> with your college email.</p>
             </div>
           ) : d.isOwner ? (
@@ -86,7 +86,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
               <div className="flex flex-wrap gap-2">
                 <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[14px] font-semibold hover:border-ink"><Pencil className="size-4" /> Edit</Link>
                 {e.status === "published" && (
-                  <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-[14px] font-semibold text-white"><ScanLine className="size-4" /> Open gate scanner</Link>
+                  <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-volt px-4 py-2.5 text-[14px] font-bold text-ink-inverse hover:bg-volt-hover"><ScanLine className="size-4" /> Open gate scanner</Link>
                 )}
               </div>
             </div>
@@ -117,9 +117,10 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         </div>
       </section>
 
+
       {e.description && (
         <section className="card p-6 md:p-8">
-          <h2 className="headline text-[18px]">About</h2>
+          <h2 className="title-serif text-[32px]">About</h2>
           <div className="mt-3 space-y-2 whitespace-pre-line text-[15px] leading-relaxed text-ink-2">{e.description}</div>
         </section>
       )}

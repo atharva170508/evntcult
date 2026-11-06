@@ -11,6 +11,7 @@ import { fmtDate, fmtRange, fmtTime, relative } from "@/lib/utils";
 import { Chip } from "@/components/ui/Chip";
 import { UpdateComposer } from "@/components/organizer/UpdateComposer";
 import { PaymentCell } from "@/components/organizer/PaymentCell";
+import { PageHero } from "@/components/brand/PageHero";
 
 export const metadata: Metadata = { title: "Manage event" };
 export const dynamic = "force-dynamic";
@@ -59,20 +60,22 @@ export default async function ManageEventPage({ params, searchParams }: { params
     <div className="space-y-5 pt-4 md:pt-6">
       <Link href="/organizer" className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-muted hover:text-ink"><ArrowLeft className="size-4" /> Your events</Link>
 
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div className="min-w-0">
-          <p className="eyebrow">Manage event · {e.status}</p>
-          <h1 className="headline mt-1 text-[clamp(28px,4vw,40px)] tracking-tightest">{e.title}</h1>
-          <p className="mt-1 text-[14px] text-ink-muted">
+      <PageHero
+        eyebrow={`Manage event · ${e.status}`}
+        title={e.title}
+        sub={
+          <>
             {fmtDate(new Date(e.starts_at), { weekday: "short", day: "numeric", month: "short" })} · {fmtRange(new Date(e.starts_at), new Date(e.ends_at))} · {e.venue}
             {e.access === "code" && e.access_code && <> · code <span className="font-mono font-bold text-ink">{e.access_code}</span></>}
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-[13.5px] font-semibold text-white"><ScanLine className="size-4" /> Gate scanner</Link>}
-          <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[13.5px] font-semibold hover:border-ink"><Pencil className="size-4" /> Edit</Link>
-        </div>
-      </header>
+          </>
+        }
+        actions={
+          <>
+            {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-volt px-4 py-2.5 text-[13.5px] font-bold text-ink-inverse hover:bg-volt-hover"><ScanLine className="size-4" aria-hidden /> Gate scanner</Link>}
+            <Link href={`/organizer/events/${e.id}/edit`} className="glass inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[13.5px] font-semibold hover:bg-white/15"><Pencil className="size-4" aria-hidden /> Edit</Link>
+          </>
+        }
+      />
 
       <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
@@ -90,7 +93,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
       <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
         <section className="card p-5">
-          <h2 className="headline text-[18px]">Post an update</h2>
+          <h2 className="title-serif text-[32px]">Post an update</h2>
           <p className="mb-3 mt-0.5 text-[13px] text-ink-muted">Shows on registered students&apos; dashboards straight away.</p>
           {e.status === "draft" ? (
             <p className="rounded-2xl bg-canvas p-4 text-[14px] font-semibold text-ink-2">Publish the event first, then you can post updates.</p>
@@ -123,12 +126,12 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
       <section className="card overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line p-4">
-          <h2 className="headline text-[18px]">Attendees <span className="font-mono text-[15px] text-ink-muted tabular-nums">({attendees.length}{q ? " found" : ""})</span></h2>
+          <h2 className="title-serif text-[32px]">Attendees <span className="font-mono text-[15px] text-ink-muted tabular-nums">({attendees.length}{q ? " found" : ""})</span></h2>
           <div className="flex flex-wrap items-center gap-2">
             <form className="flex h-10 items-center rounded-full border border-line bg-surface pl-3.5 pr-1">
               <Search className="size-4 text-ink-subtle" />
               <input name="q" defaultValue={q} placeholder="Name, email or pass code" aria-label="Search attendees" className="w-48 bg-transparent px-2 text-[13.5px] focus:outline-none" />
-              <button className="rounded-full bg-ink px-3 py-1.5 text-[12.5px] font-semibold text-white">Search</button>
+              <button className="rounded-full bg-ink px-3 py-1.5 text-[12.5px] font-semibold text-ink-inverse">Search</button>
             </form>
             <a href={`/api/events/${e.id}/attendees?format=csv${q ? `&q=${encodeURIComponent(q)}` : ""}`} className="inline-flex h-10 items-center gap-1.5 rounded-full border border-line px-4 text-[13px] font-semibold hover:border-ink">
               <Download className="size-4" /> CSV

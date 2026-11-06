@@ -2,18 +2,22 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const variants = {
-  /** Dark pill — the main action (Meetup / District style). */
-  primary: "bg-ink text-white hover:bg-black shadow-[0_10px_24px_-12px_rgba(18,18,24,0.6)]",
+  /** Light pill on the dark canvas — the main action. */
+  primary: "bg-ink text-ink-inverse hover:bg-ink-2 shadow-[0_10px_24px_-12px_rgba(0,0,0,0.6)]",
+  /** Neon-lime call to action (event-booking style). */
+  volt: "bg-volt text-ink-inverse font-bold hover:bg-volt-hover shadow-[0_14px_34px_-16px_rgba(212,255,58,0.55)]",
+  /** Frosted glass pill for use over gradients. */
+  glass: "glass text-white hover:bg-white/15",
   /** Brand violet — for "create" / highlight actions. */
-  brand: "bg-brand text-white hover:bg-brand-hover shadow-brand",
+  brand: "bg-brand text-ink-inverse hover:bg-brand-hover shadow-brand",
   /** White pill with a border. */
   secondary: "border border-line bg-surface text-ink hover:border-line-strong hover:bg-canvas",
   /** Soft violet. */
-  soft: "bg-brand-soft text-brand-ink hover:bg-[#e4dcff]",
+  soft: "bg-brand-soft text-brand-ink hover:bg-[#2c2560]",
   /** Text-only link style. */
-  ghost: "text-brand hover:text-brand-hover",
+  ghost: "text-brand-ink hover:text-brand-hover",
   /** White pill for use on posters / dark areas. */
-  light: "bg-white text-ink hover:bg-white/90",
+  light: "bg-white text-ink-inverse hover:bg-white/90",
 } as const;
 
 type Variant = keyof typeof variants;
