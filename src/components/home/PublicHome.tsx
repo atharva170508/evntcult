@@ -1,250 +1,283 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, MapPin, QrCode, ScanLine, Ticket } from "lucide-react";
+import { ArrowRight, BellRing, Camera, Check, Headset, MapPin, ScanLine, Ticket } from "lucide-react";
 import type { EventSummary } from "@/lib/data/types";
 import { Aurora } from "@/components/brand/Aurora";
-import { Marquee } from "@/components/brand/Marquee";
 import { RotatingBadge } from "@/components/brand/RotatingBadge";
+import { Logo } from "@/components/shell/Logo";
 import { EventArt } from "@/components/ui/EventArt";
-import { EmptyState } from "@/components/ui/EmptyState";
 import { Countdown } from "@/components/dashboard/Countdown";
 import { formatINR } from "@/lib/money";
 import { fmtDate, fmtTime } from "@/lib/utils";
+import { PreviewLock } from "./PreviewLock";
 
 export interface PublicHomeData {
   campus: EventSummary[];
   thisWeek: number;
   upcoming: number;
   going: number;
-  /** SVG QR code that opens the next event's page. */
-  nextQr: string | null;
+  /** QR for the sample OnePass: scanning it opens sign-up. */
+  onePassQr: string;
 }
 
-/* Where the floating event tickets sit around the hero headline (desktop only). */
+/**
+ * Shown on the landing page when no events are published yet, so visitors still see what the
+ * dashboard looks like. Clearly labelled as examples and never clickable through to anything.
+ */
+const DAY = 86_400_000;
+function exampleEvents(): EventSummary[] {
+  const base = Date.now();
+  const mk = (i: number, title: string, category: EventSummary["category"], accent: string, venue: string, days: number, hour: number): EventSummary => {
+    const start = new Date(Math.floor(base / DAY) * DAY + days * DAY + (hour - 5.5) * 3_600_000);
+    return { id: `example-${i}`, slug: "", title, category, visibility: "PUBLIC", status: "published", startsAt: start, endsAt: new Date(+start + 3 * 3_600_000), venueName: venue, capacity: null, registered: 0, feePaise: 0, accent };
+  };
+  return [
+    mk(1, "Neon Night", "PARTY", "violet", "Main Auditorium", 2, 19),
+    mk(2, "Hackathon Kickoff", "TECH", "blue", "Computer Lab 4", 3, 10),
+    mk(3, "Inter-college Football", "SPORTS", "orange", "Sports Complex", 4, 16),
+    mk(4, "Garba Night", "CULTURAL", "pink", "Open Air Theatre", 6, 19),
+    mk(5, "Design Sprint", "WORKSHOP", "teal", "Seminar Hall 2", 8, 11),
+  ];
+}
+
+/* Where the preview tickets float around the hero headline (laptops only). */
 const FLOAT_SPOTS = [
-  { className: "left-[4%] top-[14%]", tilt: "-8deg", delay: "0s" },
-  { className: "right-[5%] top-[10%]", tilt: "7deg", delay: "-2s" },
-  { className: "left-[4%] bottom-[10%]", tilt: "5deg", delay: "-4s" },
-  { className: "right-[15%] bottom-[7%]", tilt: "-6deg", delay: "-1s" },
+  { className: "left-[3%] top-[12%]", tilt: "-8deg", delay: "0s" },
+  { className: "right-[4%] top-[9%]", tilt: "7deg", delay: "-2s" },
+  { className: "left-[5%] bottom-[11%]", tilt: "5deg", delay: "-4s" },
 ];
 
-function FloatingTicket({ e, spot }: { e: EventSummary; spot: (typeof FLOAT_SPOTS)[number] }) {
+function PreviewTicket({ e, spot }: { e: EventSummary; spot: (typeof FLOAT_SPOTS)[number] }) {
   return (
-    <Link
-      href={`/events/${e.slug}`}
-      className={`group absolute hidden w-[176px] motion-safe:animate-drift lg:block ${spot.className}`}
-      style={{ ["--tilt" as string]: spot.tilt, animationDelay: spot.delay, transform: `rotate(${spot.tilt})` }}
+    <PreviewLock
+      label={e.title}
+      className={`absolute hidden w-[172px] rounded-2xl motion-safe:animate-drift lg:block ${spot.className}`}
     >
-      <div className="overflow-hidden rounded-2xl border border-white/20 bg-black/30 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.7)] backdrop-blur-md transition-transform duration-500 group-hover:scale-105">
-        <div className="relative h-[96px]">
+      <div style={{ ["--tilt" as string]: spot.tilt, animationDelay: spot.delay, transform: `rotate(${spot.tilt})` }} className="overflow-hidden rounded-2xl border border-white/15 bg-surface/80 shadow-pop backdrop-blur-md transition-transform duration-500 hover:scale-105">
+        <div className="relative h-[86px]">
           <EventArt accent={e.accent} />
-          <span className="absolute left-2 top-2 rounded-full bg-black/45 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-white backdrop-blur">
+          <span className="absolute left-2 top-2 rounded-full bg-black/55 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-white">
             {fmtDate(e.startsAt, { day: "numeric", month: "short" })}
           </span>
         </div>
-        <div className="px-3 py-2.5 text-white">
+        <div className="px-3 py-2.5">
           <p className="line-clamp-1 text-[13px] font-bold">{e.title}</p>
-          <p className="text-[11px] text-white/70">{fmtTime(e.startsAt)}</p>
+          <p className="text-[11px] text-ink-muted">{fmtTime(e.startsAt)}</p>
         </div>
       </div>
-    </Link>
+    </PreviewLock>
   );
 }
 
-function Stat({ value, label }: { value: number; label: string }) {
-  return (
-    <div className="px-4 text-center">
-      <p className="font-display text-[clamp(40px,5vw,64px)] font-bold leading-none tracking-[-0.03em] text-ink-inverse">{value.toLocaleString("en-IN")}</p>
-      <p className="mt-2 text-[13px] font-semibold text-ink-inverse/75">{label}</p>
-    </div>
-  );
-}
+const ONEPASS_STEPS = [
+  { icon: Ticket, title: "Register in a tap", body: "Pick an event, tap Register and your OnePass is ready instantly. Full? Join the waitlist and we hold a seat for you when one opens." },
+  { icon: ScanLine, title: "Fast-track entry", body: "Show the QR at the gate and you're in. Organizers scan it in a second, even when the campus Wi-Fi drops." },
+  { icon: BellRing, title: "Always up to date", body: "Time or venue changed? Updates from the organizer show up right on your dashboard." },
+  { icon: Camera, title: "Relive it after", body: "Your certificate of attendance appears the moment you're scanned in, and you can save the event photos you're in." },
+  { icon: Headset, title: "Contact event support", body: "Message the organizer straight from your pass.", planned: true },
+];
 
-/** What a signed-out visitor sees: a cinematic landing page built only from real campus data. */
+/** What a signed-out visitor sees. Event cards are a preview of the dashboard: they never open an event. */
 export function PublicHome({ data }: { data: PublicHomeData }) {
-  const [next, ...rest] = data.campus;
-  const floaters = data.campus.slice(0, FLOAT_SPOTS.length);
+  const live = data.campus.length > 0;
+  const events = live ? data.campus : exampleEvents();
+  const [next, ...rest] = events;
 
   return (
     <div className="space-y-24 pb-8 md:space-y-32">
-      {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="relative isolate mt-3 flex min-h-[640px] flex-col items-center justify-center overflow-hidden rounded-[36px] px-5 py-20 text-center text-white md:min-h-[86vh] md:rounded-[44px]">
+      {/* ── 1. Hero ────────────────────────────────────── */}
+      <section className="relative isolate mt-3 flex min-h-[620px] flex-col items-center justify-center overflow-hidden rounded-[36px] px-5 py-20 text-center md:min-h-[84vh] md:rounded-[44px]">
         <Aurora />
-        <Marquee words={["Register", "Get your pass", "Walk in", "Relive it"]} className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-[clamp(72px,13vw,190px)] text-white/[0.07]" />
-        {floaters.map((e, i) => (
-          <FloatingTicket key={e.id} e={e} spot={FLOAT_SPOTS[i]} />
+        <div aria-hidden className="absolute left-1/2 top-[18%] -z-10 size-[520px] -translate-x-1/2 rounded-full bg-volt/[0.07] blur-[120px]" />
+        {events.slice(0, FLOAT_SPOTS.length).map((e, i) => (
+          <PreviewTicket key={e.id} e={e} spot={FLOAT_SPOTS[i]} />
         ))}
 
         <div className="relative max-w-4xl">
-          <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[12px] font-bold uppercase tracking-[0.16em]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-[12px] font-bold uppercase tracking-[0.16em] text-ink-2">
             <span className="size-1.5 rounded-full bg-volt motion-safe:animate-pulse-dot" aria-hidden /> Campus events, live
           </span>
-          <h1 className="mt-6 font-display text-[clamp(48px,8vw,118px)] font-bold leading-[0.95] tracking-[-0.04em]">
-            Every campus night, one <em>pass</em> away.
+          <h1 className="mt-7 font-display font-extrabold leading-[0.88] tracking-[-0.055em]">
+            <span className="block text-[clamp(64px,12vw,176px)] text-volt">One pass.</span>
+            <span className="block text-[clamp(36px,6vw,88px)] text-ink">Every campus night.</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-white/85">
-            Browse every fest, game night and workshop on campus. Sign up with your college email to register and get a QR pass.
+          <p className="mx-auto mt-7 max-w-lg text-[17px] leading-relaxed text-ink-2">
+            Register in a tap, walk in with a scan, relive it after. All you need is your college email.
           </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/signin?mode=signup" className="inline-flex items-center gap-2 rounded-full bg-volt px-6 py-3.5 text-[15px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover">
+          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href="/signin?mode=signup"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-volt px-8 py-4 text-[16px] font-bold text-ink-inverse shadow-brand transition-colors hover:bg-volt-hover sm:w-auto"
+            >
               Sign up free <ArrowRight className="size-4" aria-hidden />
             </Link>
-            <Link href="/signin" className="glass rounded-full px-6 py-3.5 text-[15px] font-semibold transition-colors hover:bg-white/15">
+            <Link
+              href="/signin"
+              className="inline-flex w-full items-center justify-center rounded-full border border-white/20 px-8 py-4 text-[16px] font-semibold text-ink transition-colors hover:border-volt/60 sm:w-auto"
+            >
               Log in
-            </Link>
-            <Link href="/events" className="rounded-full px-4 py-3.5 text-[15px] font-semibold text-white/90 underline-offset-4 hover:underline">
-              Browse events →
             </Link>
           </div>
         </div>
 
         <div className="absolute bottom-8 right-8 hidden md:block">
-          <RotatingBadge href="/signin?mode=signup" label="Sign up and get your pass" />
+          <RotatingBadge href="/signin?mode=signup" label="Sign up and get your OnePass" text="GET YOUR ONEPASS • SIGN UP • " />
         </div>
       </section>
 
-      {/* ── Statement ────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl text-center">
-        <p className="eyebrow">How it works on campus</p>
-        <p className="title-xl mt-5 text-[clamp(32px,4.6vw,62px)] leading-[1.06]">
-          One place for every fest and game night. Register in a tap, carry{" "}
-          <span className="inline-flex translate-y-[-0.08em] items-center gap-2 rounded-full bg-volt px-4 align-middle font-sans text-[0.42em] font-bold text-ink-inverse">
-            <QrCode className="size-[1em]" aria-hidden /> one QR pass
-          </span>{" "}
-          and walk <em className="text-volt">straight in.</em>
-        </p>
-      </section>
+      {/* ── 2. OnePass ─────────────────────────────────── */}
+      <section aria-labelledby="onepass-heading" className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+        <div>
+          <p className="eyebrow">Meet your campus ID for events</p>
+          <h2 id="onepass-heading" className="mt-3 font-display text-[clamp(64px,9vw,128px)] font-extrabold leading-[0.9] tracking-[-0.055em]">
+            One<span className="text-volt">Pass</span>
+          </h2>
+          <p className="mt-5 max-w-xl text-[18px] leading-relaxed text-ink-2">
+            One dynamic pass for everything you do at a campus event. No paper tickets, no forms at the door, no hunting for photos later.
+          </p>
 
-      {/* ── Live numbers (all real counts) ───────────────── */}
-      <section className="relative isolate mx-auto max-w-4xl overflow-hidden rounded-full px-4 py-9 md:py-11" aria-label="Campus numbers">
-        <div aria-hidden className="absolute inset-0 -z-10 bg-volt" />
-                <div className="grid grid-cols-3 divide-x divide-ink-inverse/15">
-          <Stat value={data.thisWeek} label="Events this week" />
-          <Stat value={data.upcoming} label="Upcoming events" />
-          <Stat value={data.going} label="Students going" />
-        </div>
-      </section>
-
-      {/* ── Next up + the line-up ────────────────────────── */}
-      <section>
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="eyebrow">Happening on campus</p>
-            <h2 className="shout mt-3 text-[clamp(34px,5.2vw,72px)]">
-              Book <span className="text-volt">&</span> explore
-              <br />
-              upcoming <ArrowRight className="inline size-[0.8em] text-volt" aria-hidden /> events
-            </h2>
-          </div>
-          <Link href="/events" className="glass inline-flex items-center gap-1.5 rounded-full px-5 py-3 text-[14px] font-semibold hover:bg-white/15">
-            Browse all <ArrowUpRight className="size-4" aria-hidden />
-          </Link>
-        </div>
-
-        {!next ? (
-          <EmptyState icon={Ticket} title="No upcoming events on campus" body="When organizers publish events, they show up here." />
-        ) : (
-          <div className="grid gap-5 lg:grid-cols-12">
-            {/* Bento: next event with countdown, QR and a volt booking bar (EventX idea). */}
-            <article className="card relative overflow-hidden p-6 md:p-8 lg:col-span-7">
-              <div aria-hidden className="absolute -right-24 -top-24 size-72 rounded-full bg-volt/10 blur-3xl" />
-              <div className="relative flex flex-wrap items-start justify-between gap-5">
-                <div className="min-w-0 flex-1">
-                  <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-volt">Next up</p>
-                  <h3 className="shout mt-3 text-[clamp(26px,3.4vw,44px)]">{next.title}</h3>
-                  <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-ink-2">
-                    <span>
-                      {fmtDate(next.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(next.startsAt)}
-                    </span>
-                    {next.venueName && (
-                      <span className="inline-flex items-center gap-1">
-                        <MapPin className="size-3.5 text-ink-subtle" aria-hidden /> {next.venueName}
-                      </span>
-                    )}
+          <ol className="mt-10 space-y-3">
+            {ONEPASS_STEPS.map((s, i) => (
+              <li key={s.title} className="card flex gap-4 p-5">
+                <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-volt/10 text-volt" aria-hidden>
+                  <s.icon className="size-5" />
+                </span>
+                <div className="min-w-0">
+                  <p className="flex flex-wrap items-center gap-2 text-[16px] font-bold">
+                    <span className="font-mono text-[12px] text-ink-subtle">0{i + 1}</span> {s.title}
+                    {s.planned && <span className="rounded-full border border-line-strong px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-ink-muted">Planned</span>}
                   </p>
+                  <p className="mt-1 text-[14.5px] text-ink-muted">{s.body}</p>
                 </div>
-                {data.nextQr && (
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="w-[104px] rounded-2xl bg-white p-2.5 [&>svg]:size-full" role="img" aria-label={`QR code that opens ${next.title}`} dangerouslySetInnerHTML={{ __html: data.nextQr }} />
-                    <span className="rounded-full bg-volt/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-volt">Scan to open</span>
-                  </div>
-                )}
-              </div>
-              <div className="relative mt-8">
-                <Countdown to={next.startsAt} endsAt={next.endsAt} />
-              </div>
-              <Link
-                href={`/events/${next.slug}`}
-                className="relative mt-8 flex items-center justify-between gap-3 rounded-full bg-volt py-2 pl-6 pr-2 text-[15px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover"
-              >
-                <span>
-                  Book your seat · {next.feePaise > 0 ? formatINR(next.feePaise) : "Free"}
-                </span>
-                <span className="grid size-11 place-items-center rounded-full bg-ink-inverse text-volt" aria-hidden>
-                  <ArrowUpRight className="size-5" />
-                </span>
-              </Link>
-            </article>
+              </li>
+            ))}
+          </ol>
+        </div>
 
-            {/* The rest of the line-up as black pills on a purple glow (Hosteve idea). */}
-            <div className="relative isolate overflow-hidden rounded-[28px] p-5 md:p-6 lg:col-span-5">
-              <Aurora quiet />
-              <ul className="relative space-y-2.5">
-                {rest.length === 0 && <li className="rounded-full bg-black/60 px-6 py-4 text-[14px] text-ink-muted">More events will appear here soon.</li>}
-                {rest.slice(0, 6).map((e) => (
-                  <li key={e.id}>
-                    <Link
-                      href={`/events/${e.slug}`}
-                      className="group flex items-center gap-4 rounded-full border border-white/[0.08] bg-black/70 py-3 pl-6 pr-3 backdrop-blur transition-colors hover:border-white/25"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-[15px] font-semibold text-white">{e.title}</p>
-                        <p className="text-[12px] text-ink-muted">
-                          {fmtDate(e.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(e.startsAt)}
-                        </p>
-                      </div>
-                      {e.venueName && (
-                        <span className="hidden max-w-[120px] items-center gap-1.5 truncate text-[12px] text-ink-muted sm:flex">
-                          <MapPin className="size-3.5 shrink-0" aria-hidden /> <span className="truncate">{e.venueName}</span>
-                        </span>
-                      )}
-                      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white/10 text-white transition-transform group-hover:rotate-45" aria-hidden>
-                        <ArrowUpRight className="size-4" />
-                      </span>
-                    </Link>
+        {/* The pass itself, as a sample (its QR opens sign-up). */}
+        <div className="relative mx-auto w-full max-w-[400px] lg:sticky lg:top-28">
+          <div aria-hidden className="absolute inset-x-6 top-10 -z-10 h-full rounded-[40px] bg-volt/20 blur-[80px]" />
+          <article aria-label="Sample OnePass" className="overflow-hidden rounded-[32px] border border-white/10 bg-surface shadow-pop">
+            <div className="bg-volt p-6 text-ink-inverse">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-2 font-brand text-[22px] font-semibold leading-none">
+                  <Logo className="size-7" /> OnePass
+                </span>
+                <span className="rounded-full bg-ink-inverse/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">Sample</span>
+              </div>
+              <p className="mt-6 text-[12px] font-bold uppercase tracking-[0.14em] opacity-70">Valid for</p>
+              <p className="font-display text-[30px] font-extrabold leading-tight tracking-[-0.03em]">Every event you join</p>
+            </div>
+            <div className="ticket-cut" />
+            <div className="flex flex-col items-center px-6 pb-6">
+              <div className="w-[200px] rounded-2xl bg-white p-3 [&>svg]:size-full" role="img" aria-label="Sample QR code. Scanning it opens EvntCult sign-up." dangerouslySetInnerHTML={{ __html: data.onePassQr }} />
+              <p className="mt-3 text-[12px] text-ink-muted">Scan to sign up</p>
+              <ul className="mt-6 grid w-full grid-cols-2 gap-2 text-[12.5px] font-semibold">
+                {["Registered", "Checked in", "Certificate", "Photos"].map((s) => (
+                  <li key={s} className="flex items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.03] px-3 py-2.5">
+                    <Check className="size-4 shrink-0 text-volt" aria-hidden /> {s}
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
-        )}
-      </section>
-
-      {/* ── Three steps ──────────────────────────────────── */}
-      <section className="grid gap-4 md:grid-cols-3">
-        {[
-          { n: "01", icon: Ticket, title: "Register", body: "Pick an event and tap Register. Full? Join the waitlist and we hold a seat for you when one opens." },
-          { n: "02", icon: QrCode, title: "Get your pass", body: "Your QR pass lives in My passes, ready for the gate. Add it to your calendar in one tap." },
-          { n: "03", icon: ScanLine, title: "Walk in", body: "Show the QR at the gate. Organizers scan it, even when the campus Wi-Fi drops." },
-        ].map((s) => (
-          <article key={s.n} className="card p-7">
-            <div className="flex items-center justify-between">
-              <span className="shout text-volt text-[44px]">{s.n}</span>
-              <s.icon className="size-6 text-ink-muted" aria-hidden />
-            </div>
-            <h3 className="title-xl mt-8 text-[34px]">{s.title}</h3>
-            <p className="mt-2 text-[14.5px] text-ink-muted">{s.body}</p>
           </article>
-        ))}
+        </div>
       </section>
 
-      {/* ── Closing CTA + giant wordmark ─────────────────── */}
-      <section className="space-y-14 pt-4">
-        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-          <h2 className="title-xl max-w-2xl text-[clamp(40px,5.6vw,80px)]">
-            Ready for your <em className="text-volt">next</em> night out?
-          </h2>
-          <Link href="/signin?mode=signup" className="inline-flex items-center gap-2 rounded-full bg-volt px-7 py-4 text-[16px] font-bold text-ink-inverse hover:bg-volt-hover">
-            Create your account <ArrowRight className="size-4" aria-hidden />
+      {/* ── 3. Live numbers (real counts) ──────────────── */}
+      <section className="relative isolate mx-auto max-w-4xl overflow-hidden rounded-full px-4 py-9 md:py-11" aria-label="Campus numbers">
+        <div aria-hidden className="absolute inset-0 -z-10 bg-volt" />
+        <div className="grid grid-cols-3 divide-x divide-ink-inverse/15">
+          {[
+            { v: data.thisWeek, l: "Events this week" },
+            { v: data.upcoming, l: "Upcoming events" },
+            { v: data.going, l: "Students going" },
+          ].map((s) => (
+            <div key={s.l} className="px-4 text-center">
+              <p className="font-display text-[clamp(36px,5vw,64px)] font-bold leading-none tracking-[-0.03em] text-ink-inverse">{s.v.toLocaleString("en-IN")}</p>
+              <p className="mt-2 text-[13px] font-semibold text-ink-inverse/75">{s.l}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 4. Dashboard preview (look, don't open) ────── */}
+      <section aria-labelledby="preview-heading">
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="eyebrow">{live ? "A peek at your dashboard" : "What your dashboard looks like"}</p>
+            <h2 id="preview-heading" className="shout mt-3 text-[clamp(34px,5.2vw,72px)]">
+              What&apos;s <span className="text-volt">on</span> campus
+            </h2>
+          </div>
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-[13px] font-semibold text-ink-muted">
+            {live ? "Preview · sign up to open events" : "Example events · sign up to see real ones"}
+          </span>
+        </div>
+
+        <div className="grid gap-5 lg:grid-cols-12">
+          <PreviewLock label={next.title} className="rounded-[28px] lg:col-span-7">
+            <article className="card relative h-full overflow-hidden p-6 transition-colors hover:border-volt/40 md:p-8">
+              <div aria-hidden className="absolute -right-24 -top-24 size-72 rounded-full bg-volt/10 blur-3xl" />
+              <p className="relative text-[12px] font-bold uppercase tracking-[0.14em] text-volt">Next up</p>
+              <h3 className="shout relative mt-3 text-[clamp(26px,3.4vw,44px)]">{next.title}</h3>
+              <p className="relative mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] text-ink-2">
+                <span>
+                  {fmtDate(next.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(next.startsAt)}
+                </span>
+                {next.venueName && (
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin className="size-3.5 text-ink-subtle" aria-hidden /> {next.venueName}
+                  </span>
+                )}
+              </p>
+              <div className="relative mt-8">
+                <Countdown to={next.startsAt} endsAt={next.endsAt} />
+              </div>
+              <div className="relative mt-8 flex items-center justify-between gap-3 rounded-full bg-volt py-3.5 pl-6 pr-3 text-[15px] font-bold text-ink-inverse">
+                <span>Book your seat · {next.feePaise > 0 ? formatINR(next.feePaise) : "Free"}</span>
+                <ArrowRight className="size-5" aria-hidden />
+              </div>
+            </article>
+          </PreviewLock>
+
+          <ul className="space-y-2.5 rounded-[28px] border border-white/[0.06] bg-white/[0.02] p-4 md:p-5 lg:col-span-5">
+            {rest.slice(0, 5).map((e) => (
+              <li key={e.id}>
+                <PreviewLock label={e.title} className="rounded-full">
+                  <div className="flex items-center gap-4 rounded-full border border-white/[0.08] bg-surface py-3 pl-6 pr-3 transition-colors hover:border-volt/40">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-[15px] font-semibold">{e.title}</p>
+                      <p className="text-[12px] text-ink-muted">
+                        {fmtDate(e.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(e.startsAt)}
+                      </p>
+                    </div>
+                    {e.venueName && (
+                      <span className="hidden max-w-[130px] items-center gap-1.5 truncate text-[12px] text-ink-muted sm:flex">
+                        <MapPin className="size-3.5 shrink-0" aria-hidden /> <span className="truncate">{e.venueName}</span>
+                      </span>
+                    )}
+                    <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white/[0.06] text-ink-muted" aria-hidden>
+                      <ArrowRight className="size-4" />
+                    </span>
+                  </div>
+                </PreviewLock>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ── 5. Closing call to action ──────────────────── */}
+      <section className="flex flex-col items-start justify-between gap-6 rounded-[36px] border border-white/[0.08] bg-surface p-8 md:flex-row md:items-end md:p-12">
+        <h2 className="title-xl max-w-2xl text-[clamp(40px,5.6vw,80px)]">
+          Get your <em>OnePass</em>.
+        </h2>
+        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+          <Link href="/signin?mode=signup" className="inline-flex items-center justify-center gap-2 rounded-full bg-volt px-7 py-4 text-[16px] font-bold text-ink-inverse hover:bg-volt-hover">
+            Sign up free <ArrowRight className="size-4" aria-hidden />
+          </Link>
+          <Link href="/signin" className="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-4 text-[16px] font-semibold hover:border-volt/60">
+            Log in
           </Link>
         </div>
       </section>
