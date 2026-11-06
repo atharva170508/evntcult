@@ -69,7 +69,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-[13.5px] font-semibold text-white"><ScanLine className="size-4" /> Gate scanner</Link>}
+          {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-[13.5px] font-semibold text-ink-inverse"><ScanLine className="size-4" /> Gate scanner</Link>}
           {e.status !== "draft" && <Link href={`/events/${e.slug}/photos`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[13.5px] font-semibold hover:border-ink"><Camera className="size-4" /> Photos</Link>}
           <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[13.5px] font-semibold hover:border-ink"><Pencil className="size-4" /> Edit</Link>
         </div>
@@ -129,7 +129,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
             <form className="flex h-10 items-center rounded-full border border-line bg-surface pl-3.5 pr-1">
               <Search className="size-4 text-ink-subtle" />
               <input name="q" defaultValue={q} placeholder="Name, email or pass code" aria-label="Search attendees" className="w-48 bg-transparent px-2 text-[13.5px] focus:outline-none" />
-              <button className="rounded-full bg-ink px-3 py-1.5 text-[12.5px] font-semibold text-white">Search</button>
+              <button className="rounded-full bg-ink px-3 py-1.5 text-[12.5px] font-semibold text-ink-inverse">Search</button>
             </form>
             <a href={`/api/events/${e.id}/attendees?format=csv${q ? `&q=${encodeURIComponent(q)}` : ""}`} className="inline-flex h-10 items-center gap-1.5 rounded-full border border-line px-4 text-[13px] font-semibold hover:border-ink">
               <Download className="size-4" /> CSV

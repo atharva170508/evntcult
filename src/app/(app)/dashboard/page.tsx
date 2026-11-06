@@ -74,10 +74,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label="Registered" value={data.stats.registered} hint="upcoming events" icon={Ticket} color="#efebff" ink="#3b22d6" delay={60} />
-        <StatTile label="This week" value={data.stats.thisWeek} hint="on your calendar" icon={CalendarCheck2} color="#e0f2fe" ink="#0369a1" delay={110} />
-        <StatTile label="Attended" value={data.stats.attended} hint="checked in at the gate" icon={DoorOpen} color="#fff3df" ink="#b45309" delay={160} />
-        <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="in the vault" icon={Images} color="#ffe4ec" ink="#be123c" delay={210} />
+        <StatTile label="Registered" value={data.stats.registered} hint="upcoming events" icon={Ticket} color="#a594ff1f" ink="#a594ff" delay={60} />
+        <StatTile label="This week" value={data.stats.thisWeek} hint="on your calendar" icon={CalendarCheck2} color="#7dd3fc1f" ink="#7dd3fc" delay={110} />
+        <StatTile label="Attended" value={data.stats.attended} hint="checked in at the gate" icon={DoorOpen} color="#fbbf241f" ink="#fbbf24" delay={160} />
+        <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="in the vault" icon={Images} color="#fb71851f" ink="#fb7185" delay={210} />
       </div>
 
       {/* Organizer console */}
@@ -133,7 +133,7 @@ async function PublicHome() {
           <h1 className="mt-2 text-[clamp(34px,5vw,58px)] font-extrabold leading-[1.02] tracking-tightest">Register. Get your pass. Walk in.</h1>
           <p className="mt-3 max-w-lg text-[17px] text-white/85">Browse every fest, game night and workshop on campus. Sign up with your college email to register and get a QR pass.</p>
           <div className="mt-6 flex flex-wrap gap-2">
-            <Link href="/signin?mode=signup" className="rounded-full bg-white px-5 py-3 text-[15px] font-semibold text-ink hover:bg-white/90">Sign up</Link>
+            <Link href="/signin?mode=signup" className="rounded-full bg-white px-5 py-3 text-[15px] font-semibold text-ink-inverse hover:bg-white/90">Sign up</Link>
             <Link href="/signin" className="rounded-full border border-white/50 px-5 py-3 text-[15px] font-semibold text-white hover:bg-white/10">Log in</Link>
             <Link href="/events" className="rounded-full px-5 py-3 text-[15px] font-semibold text-white/90 underline-offset-4 hover:underline">Browse events →</Link>
           </div>
@@ -141,9 +141,9 @@ async function PublicHome() {
       </section>
       <QuickTiles />
       <div className="grid grid-cols-3 gap-3">
-        <StatTile label="Events this week" value={d.thisWeek} hint="open to everyone" icon={CalendarCheck2} color="#e0f2fe" ink="#0369a1" />
-        <StatTile label="Upcoming events" value={d.upcoming} hint="on campus" icon={Ticket} color="#efebff" ink="#3b22d6" delay={60} />
-        <StatTile label="Students going" value={d.going.toLocaleString("en-IN")} hint="registered so far" icon={Images} color="#ffe4ec" ink="#be123c" delay={120} />
+        <StatTile label="Events this week" value={d.thisWeek} hint="open to everyone" icon={CalendarCheck2} color="#7dd3fc1f" ink="#7dd3fc" />
+        <StatTile label="Upcoming events" value={d.upcoming} hint="on campus" icon={Ticket} color="#a594ff1f" ink="#a594ff" delay={60} />
+        <StatTile label="Students going" value={d.going.toLocaleString("en-IN")} hint="registered so far" icon={Images} color="#fb71851f" ink="#fb7185" delay={120} />
       </div>
       <div className="pt-4">
         <CampusRail events={d.campus} />

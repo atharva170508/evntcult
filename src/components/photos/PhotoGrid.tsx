@@ -61,7 +61,7 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
         }}
         disabled={busy === id}
         aria-pressed={!!mine[id]}
-        className={`inline-flex items-center gap-1.5 rounded-full font-semibold shadow ${big ? "px-4 py-2 text-[14px]" : "px-2.5 py-1 text-[12px]"} ${mine[id] ? "bg-live text-white" : "bg-white/95 text-ink"}`}
+        className={`inline-flex items-center gap-1.5 rounded-full font-semibold shadow ${big ? "px-4 py-2 text-[14px]" : "px-2.5 py-1 text-[12px]"} ${mine[id] ? "bg-live text-ink-inverse" : "bg-white/95 text-ink-inverse"}`}
       >
         {busy === id ? <Loader2 className="size-3.5 animate-spin" /> : mine[id] ? <UserCheck className="size-3.5" /> : <UserPlus className="size-3.5" />}
         {mine[id] ? "That's me ✓" : "That's me"}
@@ -101,7 +101,7 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
               {tagButton(current.id, true)}
               <a href={`/api/photos/${current.id}`} download className="rounded-full bg-white/10 px-4 py-2 text-[14px] font-semibold">Download</a>
               {canManage && (
-                <button onClick={() => remove(current.id)} disabled={busy === current.id} className="inline-flex items-center gap-1.5 rounded-full bg-[#e5484d] px-4 py-2 text-[14px] font-semibold">
+                <button onClick={() => remove(current.id)} disabled={busy === current.id} className="inline-flex items-center gap-1.5 rounded-full bg-danger px-4 py-2 text-[14px] font-semibold text-ink-inverse">
                   <Trash2 className="size-4" /> Delete
                 </button>
               )}

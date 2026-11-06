@@ -22,7 +22,7 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
       {isOrganizer && (
         <Link
           href="/organizer/events/new"
-          className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-brand py-3 text-[14px] font-semibold text-white shadow-brand transition-colors hover:bg-brand-hover"
+          className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-brand py-3 text-[14px] font-semibold text-ink-inverse shadow-brand transition-colors hover:bg-brand-hover"
         >
           <Plus className="size-[18px]" />
           <span className="hidden xl:inline">Create event</span>
@@ -45,7 +45,7 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
                   className={cn(
                     "group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[14px] font-semibold transition-colors",
                     "justify-center xl:justify-start",
-                    active ? "bg-ink text-white" : "text-ink-muted hover:bg-canvas hover:text-ink",
+                    active ? "bg-ink text-ink-inverse" : "text-ink-muted hover:bg-canvas hover:text-ink",
                   )}
                 >
                   <Icon className="size-[19px] shrink-0" />
@@ -60,9 +60,9 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
       {signedIn ? (<>
       <button
         onClick={onEnterCode}
-        className="group hidden rounded-3xl bg-gradient-to-br from-brand-soft to-[#fff5df] p-4 text-left transition-transform hover:-translate-y-0.5 xl:block"
+        className="group hidden rounded-3xl bg-gradient-to-br from-brand-soft to-warn-soft p-4 text-left transition-transform hover:-translate-y-0.5 xl:block"
       >
-        <span className="grid size-9 place-items-center rounded-xl bg-white text-brand shadow-card">
+        <span className="grid size-9 place-items-center rounded-xl bg-canvas text-brand-ink shadow-card">
           <KeyRound className="size-4" />
         </span>
         <p className="mt-3 text-[14px] font-bold leading-tight">Got an event code?</p>
@@ -71,12 +71,12 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
       <button
         onClick={onEnterCode}
         title="Enter event code"
-        className="mx-auto grid size-11 place-items-center rounded-2xl bg-brand-soft text-brand xl:hidden"
+        className="mx-auto grid size-11 place-items-center rounded-2xl bg-brand-soft text-brand-ink xl:hidden"
       >
         <KeyRound className="size-[18px]" />
       </button>
       </>) : (
-        <Link href="/signin?mode=signup" className="hidden rounded-3xl bg-gradient-to-br from-brand-soft to-[#fff5df] p-4 transition-transform hover:-translate-y-0.5 xl:block">
+        <Link href="/signin?mode=signup" className="hidden rounded-3xl bg-gradient-to-br from-brand-soft to-warn-soft p-4 transition-transform hover:-translate-y-0.5 xl:block">
           <p className="text-[14px] font-bold leading-tight">New here?</p>
           <p className="mt-0.5 text-[12.5px] text-ink-muted">Sign up with your college email to register for events.</p>
         </Link>

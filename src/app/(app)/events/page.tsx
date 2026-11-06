@@ -30,7 +30,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
   const chip = (active: boolean) =>
     cn(
       "shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold transition-colors",
-      active ? "border-ink bg-ink text-white" : "border-line bg-surface text-ink-2 hover:border-ink",
+      active ? "border-ink bg-ink text-ink-inverse" : "border-line bg-surface text-ink-2 hover:border-ink",
     );
 
   return (
@@ -46,7 +46,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
         {q.type && <input type="hidden" name="type" value={q.type} />}
         {q.when && <input type="hidden" name="when" value={q.when} />}
         {q.price && <input type="hidden" name="price" value={q.price} />}
-        <button className="rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-white">Search</button>
+        <button className="rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-ink-inverse">Search</button>
       </form>
 
       <div className="space-y-2.5">

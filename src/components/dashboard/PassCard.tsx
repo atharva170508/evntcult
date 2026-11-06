@@ -61,7 +61,7 @@ export async function PassCard({ pass }: { pass: NextUp }) {
           <button className="inline-flex items-center justify-center gap-1.5 rounded-full border border-line py-2.5 text-[13px] font-semibold transition-colors hover:border-ink">
             <Download className="size-3.5" /> Save
           </button>
-          <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-ink py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-black">
+          <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-ink py-2.5 text-[13px] font-semibold text-ink-inverse transition-colors hover:bg-ink-2">
             <Wallet className="size-3.5" /> Add to Wallet
           </button>
         </div>

@@ -9,7 +9,7 @@ import { GateScanner } from "@/components/scanner/GateScanner";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Gate scanner" };
-export const viewport: Viewport = { themeColor: "#0b0b0f", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#0b0c10", colorScheme: "dark" };
 
 export default async function ScanPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

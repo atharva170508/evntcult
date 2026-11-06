@@ -154,7 +154,7 @@ export function EventForm({ mode, eventId, initial, minCapacity = 1 }: { mode: "
       )}
 
       <div className="flex flex-wrap gap-2 pt-2">
-        <button disabled={busy} className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-[14px] font-semibold text-white disabled:opacity-50">
+        <button disabled={busy} className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-[14px] font-semibold text-ink-inverse disabled:opacity-50">
           {busy && <Loader2 className="size-4 animate-spin" />} {mode === "create" || v.status !== "published" ? "Publish" : "Save changes"}
         </button>
         {(mode === "create" || v.status === "draft") && (

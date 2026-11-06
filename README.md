@@ -139,3 +139,18 @@ npm run cf:deploy
 ```
 
 Builds with OpenNext and deploys with Wrangler (`wrangler.jsonc`, `DEMO_MODE=true`).
+
+## Login codes by email (M6)
+
+Students log in with a 6-digit code sent to their college email. Only a hash of the code is stored. A code expires after 10 minutes and allows 5 tries. Requests are rate-limited: one code per email every 30 seconds, 5 per hour per email, and 20 per hour per network.
+
+Emails go through **Brevo** (free for 300 a day). To switch it on for the live site (Atharva):
+
+1. Make a free Brevo account and verify the sender Gmail under **Senders**.
+2. Create an API key under **SMTP & API → API keys**.
+3. Run `npm run db:migrate:remote` once (this adds `0006_login_codes`).
+4. Then set these two secrets:
+   - `npx wrangler secret put BREVO_API_KEY`
+   - `npx wrangler secret put EMAIL_FROM` (the verified Gmail)
+
+Until both secrets are set, the old email-only login keeps working, and the sign-in page shows the code check as **Planned**. For local testing without Brevo, add `EMAIL_PROVIDER=log` to `.dev.vars`. Codes are then printed in the terminal.

@@ -42,7 +42,7 @@ export default async function EventPhotosPage({ params }: { params: Promise<{ sl
             {!viewer && " Sign in with the account you registered with."}
           </p>
           {!viewer && (
-            <Link href={`/signin?next=${encodeURIComponent(`/events/${event.slug}/photos`)}`} className="rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-white">Sign in</Link>
+            <Link href={`/signin?next=${encodeURIComponent(`/events/${event.slug}/photos`)}`} className="rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-inverse">Sign in</Link>
           )}
         </section>
       </div>

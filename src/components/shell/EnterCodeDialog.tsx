@@ -47,11 +47,11 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
       ref={ref}
       onClose={onClose}
       onClick={(e) => e.target === ref.current && onClose()}
-      className="m-auto w-[min(92vw,420px)] rounded-[28px] border border-line bg-surface p-0 text-ink shadow-pop backdrop:bg-ink/40 backdrop:backdrop-blur-sm open:animate-fade-up"
+      className="m-auto w-[min(92vw,420px)] rounded-[28px] border border-line bg-surface p-0 text-ink shadow-pop backdrop:bg-black/70 backdrop:backdrop-blur-sm open:animate-fade-up"
     >
       <form onSubmit={submit} className="p-7">
         <div className="flex items-start justify-between">
-          <div className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand">
+          <div className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand-ink">
             <KeyRound className="size-5" />
           </div>
           <button type="button" onClick={onClose} aria-label="Close" className="rounded-full p-2 text-ink-subtle hover:bg-canvas hover:text-ink">

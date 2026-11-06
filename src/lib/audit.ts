@@ -12,6 +12,7 @@ export type AuditAction =
   | "event_create"
   | "event_update"
   | "phone_update"
+  | "profile_update"
   // Written by src/lib/data/registrations.ts (it writes with its own db handle so the cron can use it):
   | "hold_offered"
   | "hold_expired"

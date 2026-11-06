@@ -78,7 +78,7 @@ export default async function PassesPage() {
           <Ticket className="size-8 text-ink-subtle" />
           <h2 className="headline text-[20px]">No upcoming passes</h2>
           <p className="text-[14.5px] text-ink-muted">When you register for an event, your pass shows up here.</p>
-          <Link href="/events" className="mt-1 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-white">Find an event</Link>
+          <Link href="/events" className="mt-1 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-inverse">Find an event</Link>
         </section>
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">

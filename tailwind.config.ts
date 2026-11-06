@@ -1,7 +1,10 @@
 import type { Config } from "tailwindcss";
 
 /**
- * EvntCult design tokens — light "campus app" theme.
+ * EvntCult design tokens — dark "campus poster meets control room" theme.
+ * Near-black control-room canvas, bright poster accents (violet + sun yellow).
+ * Every text colour here passes WCAG AA (4.5:1) on canvas and surface.
+ * `ink.inverse` is the dark text used on light fills (ink pills, brand buttons, white chips).
  * Ideas combined from Meetup / District (dark pill buttons, rounded cards),
  * Luma (per-event poster colours), Eventbrite & AllEvents (badges, price labels),
  * Unstop / Zoho Backstage (app sidebar, number boxes).
@@ -11,24 +14,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#f4f4f7",
-        surface: "#ffffff",
-        line: { DEFAULT: "#e8e8ef", strong: "#d8d8e2" },
+        canvas: "#0b0c10",
+        surface: "#15171e",
+        line: { DEFAULT: "#262a35", strong: "#353a48" },
         ink: {
-          DEFAULT: "#121218",
-          2: "#3d3d48",
-          muted: "#6b6b79",
-          subtle: "#9c9ca8",
+          DEFAULT: "#f2f3f7",
+          2: "#c8ccd8",
+          muted: "#9aa0b1",
+          subtle: "#7d8396",
+          inverse: "#0b0c10",
         },
         brand: {
-          DEFAULT: "#5b3fff",
-          hover: "#4a2fee",
-          soft: "#efebff",
-          ink: "#3b22d6",
+          DEFAULT: "#7c66ff",
+          hover: "#9480ff",
+          soft: "#221d45",
+          ink: "#a594ff",
         },
-        live: { DEFAULT: "#0fa968", soft: "#e2f7ee" },
-        warn: { DEFAULT: "#d97b00", soft: "#fff3df" },
-        danger: { DEFAULT: "#e5383b", soft: "#fdeced" },
+        live: { DEFAULT: "#34d399", soft: "#0f2a20" },
+        warn: { DEFAULT: "#fbbf24", soft: "#2e230b" },
+        danger: { DEFAULT: "#ff6b6e", soft: "#331618" },
         sun: "#ffd25e",
       },
       fontFamily: {
@@ -43,9 +47,9 @@ const config: Config = {
         "4xl": "2rem",
       },
       boxShadow: {
-        card: "0 1px 2px rgba(18,18,24,0.04), 0 10px 30px -18px rgba(18,18,24,0.18)",
-        pop: "0 30px 70px -30px rgba(18,18,24,0.45)",
-        brand: "0 12px 30px -12px rgba(91,63,255,0.55)",
+        card: "0 1px 0 rgba(255,255,255,0.03) inset, 0 10px 30px -18px rgba(0,0,0,0.8)",
+        pop: "0 30px 70px -30px rgba(0,0,0,0.9)",
+        brand: "0 12px 30px -12px rgba(124,102,255,0.55)",
       },
       keyframes: {
         "fade-up": {

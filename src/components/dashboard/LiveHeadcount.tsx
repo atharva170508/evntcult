@@ -95,7 +95,7 @@ export function LiveHeadcount({
     <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
       <div className="relative mx-auto size-[156px] shrink-0 sm:mx-0">
         <svg viewBox="0 0 148 148" className="size-full -rotate-90">
-          <circle cx="74" cy="74" r={R} fill="none" stroke="#f0f0f4" strokeWidth="12" />
+          <circle cx="74" cy="74" r={R} fill="none" stroke="#262a35" strokeWidth="12" />
           <circle
             cx="74"
             cy="74"
@@ -110,8 +110,8 @@ export function LiveHeadcount({
           />
           <defs>
             <linearGradient id="hc-grad" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stopColor="#0fa968" />
-              <stop offset="1" stopColor="#5b3fff" />
+              <stop offset="0" stopColor="#34d399" />
+              <stop offset="1" stopColor="#7c66ff" />
             </linearGradient>
           </defs>
         </svg>

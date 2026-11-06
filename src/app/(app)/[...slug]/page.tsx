@@ -24,14 +24,14 @@ export default async function ComingSoon({ params }: { params: Promise<{ slug: s
     <section className="card relative isolate mt-6 flex min-h-[62vh] flex-col justify-end overflow-hidden p-8 text-white animate-fade-up md:p-12">
       <EventArt accent={s.accent} intensity={0.9} />
       <div className="relative max-w-xl">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-[12px] font-bold text-ink">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-[12px] font-bold text-ink-inverse">
           <Sparkles className="size-3.5" /> Planned · not built yet
         </span>
         <h1 className="mt-4 text-[clamp(36px,5vw,56px)] font-extrabold leading-[1.04] tracking-tightest">{s.title}</h1>
         <p className="mt-3 text-[18px] text-white/90">{s.blurb}</p>
         <Link
           href="/dashboard"
-          className="mt-8 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2.5 text-[14px] font-semibold text-ink transition-colors hover:bg-white/90"
+          className="mt-8 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2.5 text-[14px] font-semibold text-ink-inverse transition-colors hover:bg-white/90"
         >
           <ArrowLeft className="size-4" /> Back to home
         </Link>

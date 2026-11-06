@@ -5,6 +5,7 @@ import { CalendarCheck2, QrCode, Users } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { EventArt } from "@/components/ui/EventArt";
 import { Logo } from "@/components/shell/Logo";
+import { codeLoginOn } from "@/lib/email";
 import { SignInForm } from "./SignInForm";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -50,14 +51,14 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           <p className="mt-2 text-[15px] text-ink-muted">
             {signup ? "Sign up with your college email to register for events and get passes." : "Use your college email to see your events and passes."}
           </p>
-          <SignInForm next={next} signup={signup} />
+          <SignInForm next={next} signup={signup} codeLogin={codeLoginOn()} />
           <p className="mt-6 text-center text-[14px] text-ink-muted">
             {signup ? "Already have an account? " : "New here? "}
-            <Link href={`/signin?${signup ? "" : "mode=signup&"}next=${encodeURIComponent(next)}`} className="font-semibold text-ink underline">
+            <Link href={`/signin?${signup ? "" : "mode=signup&"}next=${encodeURIComponent(next)}`} className="font-semibold text-ink underline underline-offset-2">
               {signup ? "Log in" : "Sign up"}
             </Link>
             {" · "}
-            <Link href="/dashboard" className="font-semibold text-ink underline">Browse without an account</Link>
+            <Link href="/dashboard" className="font-semibold text-ink underline underline-offset-2">Browse without an account</Link>
           </p>
         </div>
       </div>

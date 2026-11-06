@@ -27,7 +27,7 @@ export function MobileTabBar({ isOrganizer }: { isOrganizer: boolean }) {
                   active ? "text-ink" : "text-ink-subtle",
                 )}
               >
-                <span className={cn("grid h-8 w-12 place-items-center rounded-full transition-colors", active && "bg-ink text-white")}>
+                <span className={cn("grid h-8 w-12 place-items-center rounded-full transition-colors", active && "bg-ink text-ink-inverse")}>
                   <Icon className="size-[18px]" />
                 </span>
                 {item.label.replace("My passes", "Passes")}

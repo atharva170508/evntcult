@@ -14,13 +14,20 @@ export const GET = handle(async () => {
   return Response.json({ user: { id: v.id, name: v.name, email: v.email, role: v.role, phone: v.phone, whatsapp_opt_in: v.whatsappOptIn } });
 });
 
-const patch = z.object({ phone: phoneSchema, whatsappOptIn: z.boolean() }).strict();
+const patch = z
+  .object({ name: z.string().trim().min(2).max(80).optional(), phone: phoneSchema, whatsappOptIn: z.boolean() })
+  .strict();
 
-/** PATCH /api/me — add or change your mobile number and WhatsApp consent. */
+/** PATCH /api/me — change your name, mobile number and WhatsApp consent (dashboard card and /profile). */
 export const PATCH = handle(async (req: Request) => {
   const v = await requireUser();
-  const { phone, whatsappOptIn } = await parseBody(req, patch);
-  await run("UPDATE users SET phone = ?, whatsapp_opt_in = ?, phone_updated_at = ? WHERE id = ?", phone, whatsappOptIn ? 1 : 0, nowIso(), v.id);
-  await audit(v.id, "phone_update", v.id, { whatsappOptIn });
-  return Response.json({ ok: true, phone, whatsapp_opt_in: whatsappOptIn });
+  const { name, phone, whatsappOptIn } = await parseBody(req, patch);
+  const phoneChanged = phone !== v.phone || whatsappOptIn !== v.whatsappOptIn;
+  await run(
+    "UPDATE users SET name = COALESCE(?, name), phone = ?, whatsapp_opt_in = ?, phone_updated_at = CASE WHEN ? THEN ? ELSE phone_updated_at END WHERE id = ?",
+    name ?? null, phone, whatsappOptIn ? 1 : 0, phoneChanged ? 1 : 0, nowIso(), v.id,
+  );
+  if (phoneChanged) await audit(v.id, "phone_update", v.id, { whatsappOptIn });
+  if (name && name !== v.name) await audit(v.id, "profile_update", v.id, { field: "name" });
+  return Response.json({ ok: true, name: name ?? v.name, phone, whatsapp_opt_in: whatsappOptIn });
 });

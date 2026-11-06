@@ -84,7 +84,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
 
           {!viewer ? (
             <div className="space-y-2">
-              <Link href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} className="inline-flex w-full items-center justify-center rounded-full bg-ink py-3.5 text-[15px] font-semibold text-white">Log in to register</Link>
+              <Link href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} className="inline-flex w-full items-center justify-center rounded-full bg-ink py-3.5 text-[15px] font-semibold text-ink-inverse">Log in to register</Link>
               <p className="text-center text-[13px] text-ink-muted">New here? <Link href={`/signin?mode=signup&next=${encodeURIComponent(`/events/${e.slug}`)}`} className="font-semibold text-ink underline">Sign up</Link> with your college email.</p>
             </div>
           ) : d.isOwner ? (
@@ -93,7 +93,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
               <div className="flex flex-wrap gap-2">
                 <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[14px] font-semibold hover:border-ink"><Pencil className="size-4" /> Edit</Link>
                 {e.status === "published" && (
-                  <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-[14px] font-semibold text-white"><ScanLine className="size-4" /> Open gate scanner</Link>
+                  <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-[14px] font-semibold text-ink-inverse"><ScanLine className="size-4" /> Open gate scanner</Link>
                 )}
               </div>
             </div>

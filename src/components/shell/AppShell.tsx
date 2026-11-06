@@ -30,7 +30,7 @@ export function AppShell({ viewer, children }: { viewer: NavViewer | null; child
         href="https://whatsapp.com/channel/"
         target="_blank"
         rel="noreferrer"
-        className="group fixed bottom-24 right-4 z-30 flex items-center gap-2 rounded-full bg-[#25d366] py-3 pl-3 pr-3 text-[13px] font-bold text-white shadow-pop transition-all hover:pr-4 md:bottom-6 md:right-6"
+        className="group fixed bottom-24 right-4 z-30 flex items-center gap-2 rounded-full bg-[#25d366] py-3 pl-3 pr-3 text-[13px] font-bold text-ink-inverse shadow-pop transition-all hover:pr-4 md:bottom-6 md:right-6"
         aria-label="Get updates on WhatsApp"
       >
         <MessageCircle className="size-5" />
