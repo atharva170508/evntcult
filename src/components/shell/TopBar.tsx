@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { CalendarDays, KeyRound, LogOut, Search, Shapes } from "lucide-react";
 import { cn, initials } from "@/lib/utils";
 import { Logo } from "./Logo";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 export interface NavViewer {
   name: string;
@@ -86,12 +87,13 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
             </select>
           </label>
           <kbd className="mr-1 hidden rounded-md border border-line px-1.5 py-0.5 font-mono text-[11px] text-ink-subtle 2xl:block">Ctrl K</kbd>
-          <button className="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-white transition-colors hover:bg-black" aria-label="Search">
+          <button className="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-ink-contrast transition-colors hover:bg-ink/85" aria-label="Search">
             <Search className="size-4" />
           </button>
         </form>
 
         <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle className="hidden sm:inline-flex" />
           {viewer ? (
             <>
               <button
@@ -101,7 +103,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
                 <KeyRound className="size-4" /> Enter code
               </button>
               <div
-                className="grid size-11 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-brand to-[#f472b6] text-[13px] font-bold text-white ring-2 ring-white"
+                className="grid size-11 place-items-center overflow-hidden rounded-full bg-brand text-[13px] font-bold text-brand-on ring-2 ring-surface"
                 title={`${viewer.name} · ${viewer.email}`}
               >
                 {initials(viewer.name)}
@@ -120,7 +122,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
               <Link href="/signin" className="rounded-full border border-line bg-surface px-4 py-2.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink">
                 Log in
               </Link>
-              <Link href="/signin?mode=signup" className="rounded-full bg-ink px-4 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-black">
+              <Link href="/signin?mode=signup" className="rounded-full bg-ink px-4 py-2.5 text-[13.5px] font-semibold text-ink-contrast transition-colors hover:bg-ink/85">
                 Sign up
               </Link>
             </>

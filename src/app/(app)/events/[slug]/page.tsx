@@ -41,7 +41,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
         <ArrowLeft className="size-4" /> All events
       </Link>
 
-      <section className="card grid overflow-hidden animate-fade-up md:grid-cols-[1.1fr_1fr]">
+      <section className="card grid overflow-hidden md:grid-cols-[1.1fr_1fr]">
         <div className="relative isolate flex min-h-[260px] flex-col justify-between p-6 text-white md:min-h-[440px] md:p-8">
           <EventArt accent={s.accent} />
           <div className="relative flex flex-wrap gap-2">
@@ -51,8 +51,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             {e.status === "cancelled" && <Chip tone="danger">Cancelled</Chip>}
           </div>
           <div className="relative">
-            <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-white/80">{fmtDate(s.startsAt, { weekday: "long", day: "numeric", month: "long" })}</p>
-            <h1 className="mt-1 text-[clamp(32px,4.6vw,54px)] font-extrabold leading-[1.02] tracking-tightest">{e.title}</h1>
+            <p className="font-mono text-[11.5px] font-medium uppercase tracking-[0.14em] text-white/80">{fmtDate(s.startsAt, { weekday: "long", day: "numeric", month: "long" })}</p>
+            <h1 className="mt-1 font-display text-[clamp(32px,4.6vw,54px)] font-bold leading-[0.98] tracking-tightest">{e.title}</h1>
             {s.tagline && <p className="mt-2 max-w-md text-[16px] text-white/85">{s.tagline}</p>}
           </div>
         </div>
@@ -72,12 +72,12 @@ export default async function EventPage({ params, searchParams }: { params: Prom
                 <span className="font-mono tabular-nums">{d.seatsLeft}</span> of <span className="font-mono tabular-nums">{e.capacity}</span> seats left
               </span>
             </div>
-            <Meter value={e.taken} max={e.capacity} className="mt-2 bg-white" />
+            <Meter value={e.taken} max={e.capacity} className="mt-2 bg-surface" />
           </div>
 
           {!viewer ? (
             <div className="space-y-2">
-              <Link href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} className="inline-flex w-full items-center justify-center rounded-full bg-ink py-3.5 text-[15px] font-semibold text-white">Log in to register</Link>
+              <Link href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} className="inline-flex w-full items-center justify-center rounded-full bg-ink py-3.5 text-[15px] font-semibold text-ink-contrast">Log in to register</Link>
               <p className="text-center text-[13px] text-ink-muted">New here? <Link href={`/signin?mode=signup&next=${encodeURIComponent(`/events/${e.slug}`)}`} className="font-semibold text-ink underline">Sign up</Link> with your college email.</p>
             </div>
           ) : d.isOwner ? (
@@ -86,7 +86,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
               <div className="flex flex-wrap gap-2">
                 <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[14px] font-semibold hover:border-ink"><Pencil className="size-4" /> Edit</Link>
                 {e.status === "published" && (
-                  <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-[14px] font-semibold text-white"><ScanLine className="size-4" /> Open gate scanner</Link>
+                  <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-[14px] font-semibold text-ink-contrast"><ScanLine className="size-4" /> Open gate scanner</Link>
                 )}
               </div>
             </div>

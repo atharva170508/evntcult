@@ -40,6 +40,7 @@ import { LinkButton } from "@/components/ui/Button";
 import { Countdown } from "./Countdown";
 import { LiveHeadcount } from "./LiveHeadcount";
 import { formatINR } from "@/lib/money";
+import { AnimatedNumber, Spotlight, Stagger } from "@/components/motion/primitives";
 import { cn, fmtDate, fmtRange, fmtTime, relative } from "@/lib/utils";
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -71,37 +72,47 @@ function calendarLink(e: EventSummary) {
   return `https://calendar.google.com/calendar/render?${p}`;
 }
 
+/** Five tones only (Realtime Colors roles + status), instead of a pastel per tile. */
+export const TONES = {
+  brand: "bg-brand-soft text-brand-ink",
+  accent: "bg-accent-soft text-accent",
+  live: "bg-live-soft text-live",
+  warn: "bg-warn-soft text-warn",
+  neutral: "bg-canvas text-ink-2",
+} as const;
+export type Tone = keyof typeof TONES;
+
 /* ─── Quick tiles (Humanitix tiles + KonfHub type chips + Meetup icon tabs) ─── */
 
-const TILES = [
-  { href: "/events?when=today", label: "Today", icon: Sun, color: "#fff3df", ink: "#b45309" },
-  { href: "/events?when=weekend", label: "This weekend", icon: CalendarRange, color: "#efebff", ink: "#3b22d6" },
-  { href: "/events?price=free", label: "Free", icon: BadgeIndianRupee, color: "#e2f7ee", ink: "#0b7f4f" },
-  { href: "/events?type=GAMING", label: "Gaming", icon: Gamepad2, color: "#ffe4ec", ink: "#be123c" },
-  { href: "/events?type=SPORTS", label: "Sports", icon: Trophy, color: "#e0f2fe", ink: "#0369a1" },
-  { href: "/events?type=TECH", label: "Tech", icon: Cpu, color: "#ecfccb", ink: "#4d7c0f" },
-  { href: "/events?type=CULTURAL", label: "Cultural", icon: Palette, color: "#fae8ff", ink: "#a21caf" },
-  { href: "/events?type=PARTY", label: "Parties", icon: Music2, color: "#ffedd5", ink: "#c2410c" },
-  { href: "/events?type=WORKSHOP", label: "Workshops", icon: Wrench, color: "#f1f5f9", ink: "#334155" },
-  { href: "/events?type=TALK", label: "Talks", icon: Mic2, color: "#e0e7ff", ink: "#4338ca" },
+const TILES: { href: string; label: string; icon: React.ComponentType<{ className?: string }>; tone: Tone }[] = [
+  { href: "/events?when=today", label: "Today", icon: Sun, tone: "accent" },
+  { href: "/events?when=weekend", label: "This weekend", icon: CalendarRange, tone: "brand" },
+  { href: "/events?price=free", label: "Free", icon: BadgeIndianRupee, tone: "live" },
+  { href: "/events?type=GAMING", label: "Gaming", icon: Gamepad2, tone: "neutral" },
+  { href: "/events?type=SPORTS", label: "Sports", icon: Trophy, tone: "neutral" },
+  { href: "/events?type=TECH", label: "Tech", icon: Cpu, tone: "neutral" },
+  { href: "/events?type=CULTURAL", label: "Cultural", icon: Palette, tone: "neutral" },
+  { href: "/events?type=PARTY", label: "Parties", icon: Music2, tone: "neutral" },
+  { href: "/events?type=WORKSHOP", label: "Workshops", icon: Wrench, tone: "neutral" },
+  { href: "/events?type=TALK", label: "Talks", icon: Mic2, tone: "neutral" },
 ];
 
 export function QuickTiles() {
   return (
-    <div className="no-scrollbar -mx-4 flex gap-2.5 overflow-x-auto px-4 pb-1 animate-fade-up lg:mx-0 lg:px-0">
+    <Stagger className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 lg:mx-0 lg:px-0" itemClassName="shrink-0">
       {TILES.map((t) => (
         <Link
           key={t.label}
           href={t.href}
-          className="group flex shrink-0 items-center gap-2.5 rounded-2xl border border-line bg-surface py-2 pl-2 pr-4 text-[13.5px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:border-ink"
+          className="group flex items-center gap-2.5 rounded-2xl border border-line bg-surface py-2 pl-2 pr-4 text-[13.5px] font-semibold transition-[border-color,transform] duration-200 ease-apple hover:-translate-y-0.5 hover:border-line-strong active:scale-[0.98]"
         >
-          <span className="grid size-8 place-items-center rounded-xl" style={{ background: t.color, color: t.ink }}>
+          <span className={cn("grid size-8 place-items-center rounded-xl", TONES[t.tone])}>
             <t.icon className="size-4" />
           </span>
           {t.label}
         </Link>
       ))}
-    </div>
+    </Stagger>
   );
 }
 
@@ -112,30 +123,27 @@ export function StatTile({
   value,
   hint,
   icon: Icon,
-  color = "#efebff",
-  ink = "#3b22d6",
-  delay = 0,
+  tone = "brand",
 }: {
   label: string;
   value: string | number;
   hint?: string;
   icon: React.ComponentType<{ className?: string }>;
-  color?: string;
-  ink?: string;
-  delay?: number;
+  tone?: Tone;
 }) {
   return (
-    <div className="card lift animate-fade-up p-5" style={{ animationDelay: `${delay}ms` }}>
-      <div className="flex items-center justify-between">
-        <span className="grid size-10 place-items-center rounded-2xl" style={{ background: color, color: ink }}>
+    <Spotlight className="card h-full p-5">
+      <div className="relative">
+        <span className={cn("grid size-10 place-items-center rounded-2xl", TONES[tone])}>
           <Icon className="size-[18px]" />
         </span>
-        <ArrowUpRight className="size-4 text-ink-subtle" />
+        <p className="mt-5 font-display text-[34px] font-bold leading-none tracking-tighter">
+          {typeof value === "number" ? <AnimatedNumber value={value} /> : <span className="tabular-nums">{value}</span>}
+        </p>
+        <p className="mt-2 text-[13px] font-semibold text-ink-2">{label}</p>
+        {hint && <p className="text-[12px] text-ink-subtle">{hint}</p>}
       </div>
-      <p className="mt-4 text-[32px] font-extrabold leading-none tracking-tighter tabular-nums">{value}</p>
-      <p className="mt-1.5 text-[13px] font-semibold text-ink-2">{label}</p>
-      {hint && <p className="text-[12px] text-ink-subtle">{hint}</p>}
-    </div>
+    </Spotlight>
   );
 }
 
@@ -144,7 +152,7 @@ export function StatTile({
 export function NextUpHero({ event }: { event: NextUp }) {
   const badge = eventBadge(event);
   return (
-    <section className="card grid overflow-hidden animate-fade-up md:grid-cols-[1.05fr_1fr]">
+    <section className="card grid overflow-hidden md:grid-cols-[1.05fr_1fr]">
       {/* Poster */}
       <div className="relative isolate flex min-h-[260px] flex-col justify-between p-6 text-white md:min-h-[420px] md:p-7">
         <EventArt accent={event.accent} />
@@ -154,10 +162,10 @@ export function NextUpHero({ event }: { event: NextUp }) {
           {event.visibility === "CODE_ONLY" && <Chip tone="white">Private</Chip>}
         </div>
         <div className="relative">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-white/80">
+          <p className="font-mono text-[12px] font-medium uppercase tracking-[0.14em] text-paper/80">
             {fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "long" })}
           </p>
-          <h2 className="mt-1 text-[clamp(32px,4.4vw,50px)] font-extrabold leading-[1.02] tracking-tightest">{event.title}</h2>
+          <h2 className="mt-1 font-display text-[clamp(34px,4.6vw,54px)] font-bold leading-[0.98] tracking-tightest">{event.title}</h2>
           {event.tagline && <p className="mt-2 max-w-sm text-[16px] text-white/85">{event.tagline}</p>}
         </div>
       </div>
@@ -181,7 +189,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
           </div>
           {event.capacity && (
             <>
-              <Meter value={event.registered} max={event.capacity} className="mt-3 bg-white" />
+              <Meter value={event.registered} max={event.capacity} className="mt-3 bg-surface" />
               <p className="mt-1.5 text-[12px] font-semibold text-ink-muted">
                 {Math.max(0, event.capacity - event.registered)} spots left of {event.capacity}
               </p>
@@ -227,10 +235,10 @@ function InfoRow({ icon: Icon, title, sub }: { icon: React.ComponentType<{ class
 
 export function EmptyNextUp() {
   return (
-    <section className="card relative isolate flex min-h-[420px] flex-col items-start justify-end overflow-hidden p-9 text-white animate-fade-up">
+    <section className="card relative isolate flex min-h-[420px] flex-col items-start justify-end overflow-hidden p-9 text-paper">
       <EventArt accent="violet" intensity={0.8} />
       <div className="relative">
-        <h2 className="text-[40px] font-extrabold leading-tight tracking-tightest">Nothing on your calendar.</h2>
+        <h2 className="font-display text-[44px] font-bold leading-[1] tracking-tightest">Nothing on your calendar.</h2>
         <p className="mt-2 text-[17px] text-white/85">Find something worth showing up for.</p>
         <LinkButton href="/events" variant="light" className="mt-6">
           Browse events
@@ -247,17 +255,17 @@ export function OrgKpis({ data }: { data: OrganizerPanel }) {
   const collected = data.hosted.reduce((a, h) => a + h.paid * h.feePaise, 0);
   const pending = data.hosted.reduce((a, h) => a + h.pendingPayments, 0);
   const boxes = [
-    { label: "Registrations", value: registrations.toLocaleString("en-IN"), hint: `across ${data.hosted.length} events`, icon: Users, color: "#efebff", ink: "#3b22d6" },
-    { label: "Fees collected", value: formatINR(collected), hint: "from paid passes", icon: BadgeIndianRupee, color: "#e2f7ee", ink: "#0b7f4f" },
-    { label: "Checked in now", value: data.live ? data.live.checkedIn : 0, hint: data.live ? data.live.title : "no live event", icon: ScanLine, color: "#e0f2fe", ink: "#0369a1" },
-    { label: "Payments pending", value: pending, hint: "follow up at the desk", icon: Ticket, color: "#fff3df", ink: "#b45309" },
+    { label: "Registrations", value: registrations, hint: `across ${data.hosted.length} events`, icon: Users, tone: "brand" as Tone },
+    { label: "Fees collected", value: formatINR(collected), hint: "from paid passes", icon: BadgeIndianRupee, tone: "live" as Tone },
+    { label: "Checked in now", value: data.live ? data.live.checkedIn : 0, hint: data.live ? data.live.title : "no live event", icon: ScanLine, tone: "accent" as Tone },
+    { label: "Payments pending", value: pending, hint: "follow up at the desk", icon: Ticket, tone: "warn" as Tone },
   ];
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      {boxes.map((b, i) => (
-        <StatTile key={b.label} {...b} delay={i * 50} />
+    <Stagger className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      {boxes.map((b) => (
+        <StatTile key={b.label} {...b} />
       ))}
-    </div>
+    </Stagger>
   );
 }
 
@@ -300,7 +308,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
                   <span>{h.registered}</span>
                   <span className="text-ink-subtle">/ {h.capacity ?? "∞"}</span>
                 </div>
-                <Meter value={h.registered} max={h.capacity} className="bg-white" />
+                <Meter value={h.registered} max={h.capacity} className="bg-surface" />
               </div>
               <div className="col-span-5 text-right sm:col-span-3">
                 {h.feePaise > 0 ? (
@@ -357,17 +365,16 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
       <Card eyebrow="Quick actions" title="Run your event" icon={Sparkles} className="lg:col-span-6">
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
           <QuickAction href="/organizer/events/new" icon={Plus} label="New event" primary />
-          <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} color="#e0f2fe" ink="#0369a1" />
-          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="payments, export" color="#fff3df" ink="#b45309" />
+          <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} tone="accent" />
+          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="payments, export" tone="warn" />
           <QuickAction
             href={data.live ? `/organizer/events/${data.live.id}` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}` : "/organizer"}
             icon={Megaphone}
             label="Broadcast update"
             hint={data.live?.title ?? data.hosted[0]?.title ?? "pick an event"}
-            color="#ede9fe"
-            ink="#5b3fff"
+            tone="brand"
           />
-          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" hint="reminders queue automatically" color="#dcfce7" ink="#15803d" />
+          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" hint="reminders queue automatically" tone="live" />
           <QuickAction planned icon={Award} label="Issue certificates" />
         </div>
       </Card>
@@ -382,8 +389,7 @@ function QuickAction({
   hint,
   primary,
   planned,
-  color = "#f4f4f7",
-  ink = "#3d3d48",
+  tone = "neutral",
 }: {
   href?: string;
   planned?: boolean;
@@ -391,8 +397,7 @@ function QuickAction({
   label: string;
   hint?: string;
   primary?: boolean;
-  color?: string;
-  ink?: string;
+  tone?: Tone;
 }) {
   if (planned || !href) {
     return (
@@ -412,18 +417,15 @@ function QuickAction({
       href={href}
       className={cn(
         "group flex flex-col justify-between gap-6 rounded-2xl border p-4 transition-all duration-200 ease-apple hover:-translate-y-0.5 active:scale-[0.98]",
-        primary ? "border-transparent bg-ink text-white hover:bg-black" : "border-line bg-surface hover:border-ink",
+        primary ? "border-transparent bg-ink text-ink-contrast hover:bg-ink/85" : "border-line bg-surface hover:border-ink",
       )}
     >
-      <span
-        className="grid size-9 place-items-center rounded-xl"
-        style={primary ? { background: "rgba(255,255,255,0.14)", color: "#fff" } : { background: color, color: ink }}
-      >
+      <span className={cn("grid size-9 place-items-center rounded-xl", primary ? "bg-ink-contrast/15 text-ink-contrast" : TONES[tone])}>
         <Icon className="size-[18px]" />
       </span>
       <div>
         <p className="text-[13.5px] font-bold leading-tight">{label}</p>
-        {hint && <p className={cn("mt-0.5 text-[11.5px]", primary ? "text-white/70" : "text-ink-muted")}>{hint}</p>}
+        {hint && <p className={cn("mt-0.5 text-[11.5px]", primary ? "text-ink-contrast/70" : "text-ink-muted")}>{hint}</p>}
       </div>
     </Link>
   );
@@ -498,8 +500,8 @@ export function UpcomingList({ events }: { events: EventSummary[] }) {
               <div className="relative isolate grid h-14 w-12 shrink-0 place-items-center overflow-hidden rounded-2xl text-center text-white">
                 <EventArt accent={e.accent} />
                 <div className="relative">
-                  <div className="text-[10px] font-bold uppercase tracking-wider">{fmtDate(e.startsAt, { month: "short" })}</div>
-                  <div className="text-[20px] font-extrabold leading-none tabular-nums">{fmtDate(e.startsAt, { day: "numeric" })}</div>
+                  <div className="font-mono text-[9.5px] font-medium uppercase tracking-[0.12em]">{fmtDate(e.startsAt, { month: "short" })}</div>
+                  <div className="font-display text-[20px] font-bold leading-none tabular-nums">{fmtDate(e.startsAt, { day: "numeric" })}</div>
                 </div>
               </div>
               <div className="min-w-0 flex-1">
@@ -521,7 +523,7 @@ export function UpcomingList({ events }: { events: EventSummary[] }) {
 
 export function CampusRail({ events }: { events: EventSummary[] }) {
   return (
-    <section className="animate-fade-up">
+    <section>
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Happening on campus</p>
@@ -531,11 +533,14 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
           Browse all <ArrowUpRight className="size-4" />
         </LinkButton>
       </div>
-      <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 xl:grid-cols-4">
+      <Stagger
+        className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 xl:grid-cols-4"
+        itemClassName="flex shrink-0 snap-start lg:shrink"
+      >
         {events.map((e) => (
           <EventCard key={e.id} e={e} />
         ))}
-      </div>
+      </Stagger>
     </section>
   );
 }
@@ -543,19 +548,23 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
 export function EventCard({ e }: { e: EventSummary }) {
   const badge = eventBadge(e);
   return (
-    <article className="card lift group flex w-[280px] shrink-0 snap-start flex-col overflow-hidden lg:w-auto">
+    <article className="card lift group flex w-[280px] flex-col overflow-hidden lg:w-full">
       <Link href={`/events/${e.slug}`} className="relative isolate block h-[150px] overflow-hidden">
-        <EventArt accent={e.accent} className="transition-transform duration-700 ease-apple group-hover:scale-105" />
+        <EventArt accent={e.accent} className="transition-transform duration-700 ease-apple group-hover:scale-[1.04]" />
         <div className="relative flex gap-1.5 p-3">
           <Chip tone="white">{CATEGORY_LABEL[e.category]}</Chip>
           {badge && <Chip tone={badge.tone}>{badge.label}</Chip>}
         </div>
+        <div className="absolute bottom-2.5 left-3 font-display text-paper">
+          <span className="text-[40px] font-bold leading-none tracking-tighter tabular-nums">{fmtDate(e.startsAt, { day: "numeric" })}</span>
+          <span className="ml-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-paper/85">{fmtDate(e.startsAt, { month: "short" })}</span>
+        </div>
       </Link>
       <div className="flex flex-1 flex-col p-4">
-        <p className="text-[12px] font-bold uppercase tracking-[0.06em] text-brand">
-          {fmtDate(e.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(e.startsAt)}
+        <p className="font-mono text-[11.5px] font-medium uppercase tracking-[0.1em] text-brand">
+          {fmtDate(e.startsAt, { weekday: "short" })} · {fmtTime(e.startsAt)}
         </p>
-        <Link href={`/events/${e.slug}`} className="mt-1 text-[17px] font-extrabold leading-snug tracking-tight hover:text-brand">
+        <Link href={`/events/${e.slug}`} className="mt-1 font-display text-[18px] font-bold leading-snug tracking-tight transition-colors hover:text-brand">
           {e.title}
         </Link>
         {e.tagline && <p className="mt-1 line-clamp-1 text-[13px] text-ink-muted">{e.tagline}</p>}
@@ -566,7 +575,7 @@ export function EventCard({ e }: { e: EventSummary }) {
         )}
         <div className="mt-auto flex items-center justify-between gap-2 pt-4">
           <Avatars id={e.id} count={e.registered} size={22} />
-          <span className={cn("rounded-full px-2.5 py-1 text-[12px] font-bold", e.feePaise > 0 ? "bg-ink text-white" : "bg-live-soft text-live")}>
+          <span className={cn("rounded-full px-2.5 py-1 text-[12px] font-bold", e.feePaise > 0 ? "bg-ink text-ink-contrast" : "bg-live-soft text-live")}>
             {e.feePaise > 0 ? formatINR(e.feePaise) : "Free"}
           </span>
         </div>
@@ -578,14 +587,19 @@ export function EventCard({ e }: { e: EventSummary }) {
 /* ─── Vault + navigator teasers ─────────────────────────────────────────── */
 
 export function VaultTeaser({ photosOfYou }: { photosOfYou: number }) {
-  const tiles = ["violet", "orange", "teal", "pink", "blue", "green"];
+  const tiles = [0, 1, 2, 3, 4, 5];
   return (
     <Card eyebrow="Photo Vault" title={photosOfYou === 1 ? "1 photo of you" : `${photosOfYou} photos of you`} icon={Camera} action={{ label: "Open", href: "/vault" }} className="h-full">
       <div className="grid grid-cols-3 gap-1.5">
         {tiles.map((t, i) => (
-          <div key={t} className={cn("relative isolate overflow-hidden rounded-2xl", i === 0 ? "col-span-2 row-span-2 aspect-auto" : "aspect-square")}>
-            <EventArt accent={t} intensity={0.8} />
-            <Camera className="absolute bottom-2 right-2 size-3.5 text-white/70" />
+          <div
+            key={t}
+            className={cn(
+              "grid place-items-center rounded-2xl border border-dashed border-line-strong bg-canvas text-ink-subtle",
+              i === 0 ? "col-span-2 row-span-2" : "aspect-square",
+            )}
+          >
+            <Camera className={i === 0 ? "size-6" : "size-3.5"} />
           </div>
         ))}
       </div>
@@ -599,26 +613,26 @@ export function VaultTeaser({ photosOfYou }: { photosOfYou: number }) {
 export function NavigatorTeaser({ next }: { next: NextUp | null }) {
   return (
     <Card eyebrow="Venue Navigator" title={next?.venueName ?? "Find any venue"} icon={MapIcon} action={{ label: "Map", href: "/venues" }} className="h-full">
-      <div className="relative h-[150px] overflow-hidden rounded-2xl bg-[#eef3ea]">
+      <div className="relative h-[150px] overflow-hidden rounded-2xl bg-canvas">
         {/* Stylised campus map placeholder — swap for Mapbox/Leaflet or an SVG campus plan. */}
         <svg viewBox="0 0 400 150" className="absolute inset-0 size-full" preserveAspectRatio="xMidYMid slice" aria-hidden>
-          <g stroke="#ffffff" strokeWidth="10" strokeLinecap="round">
+          <g stroke="rgb(var(--surface))" strokeWidth="10" strokeLinecap="round">
             <path d="M0 110 H400" />
             <path d="M130 0 V150" />
             <path d="M260 0 V150" />
           </g>
-          <g fill="#dfe7d8">
+          <g fill="rgb(var(--line))">
             <rect x="20" y="18" width="90" height="70" rx="10" />
             <rect x="150" y="18" width="92" height="70" rx="10" />
             <rect x="282" y="18" width="100" height="70" rx="10" />
           </g>
-          <circle cx="200" cy="52" r="18" fill="#cfe5c6" />
-          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#5b3fff" strokeWidth="3.5" strokeDasharray="7 6" strokeLinecap="round">
+          <circle cx="200" cy="52" r="18" fill="rgb(var(--live-soft))" />
+          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="rgb(var(--primary))" strokeWidth="3.5" strokeDasharray="7 6" strokeLinecap="round">
             <animate attributeName="stroke-dashoffset" from="26" to="0" dur="1s" repeatCount="indefinite" />
           </path>
-          <circle cx="60" cy="128" r="7" fill="#121218" stroke="#fff" strokeWidth="3" />
-          <circle cx="330" cy="54" r="16" fill="#5b3fff" opacity="0.18" />
-          <circle cx="330" cy="54" r="8" fill="#5b3fff" stroke="#fff" strokeWidth="3" />
+          <circle cx="60" cy="128" r="7" fill="rgb(var(--text))" stroke="rgb(var(--surface))" strokeWidth="3" />
+          <circle cx="330" cy="54" r="16" fill="rgb(var(--primary))" opacity="0.18" />
+          <circle cx="330" cy="54" r="8" fill="rgb(var(--primary))" stroke="rgb(var(--surface))" strokeWidth="3" />
         </svg>
       </div>
       <p className="mt-4 flex items-start gap-2 text-[13px] font-semibold text-ink-muted">
@@ -631,7 +645,7 @@ export function NavigatorTeaser({ next }: { next: NextUp | null }) {
 
 export function UpiPending({ amountPaise }: { amountPaise: number }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-warn-soft p-3.5 text-[13px] font-semibold animate-fade-up">
+    <div className="flex items-center gap-3 rounded-2xl bg-warn-soft p-3.5 text-[13px] font-semibold">
       <Sparkles className="size-4 shrink-0 text-warn" />
       <span className="text-ink-2">{formatINR(amountPaise)} due · UPI payments are coming soon. Pay the organizer at the desk for now.</span>
     </div>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
 import { KeyRound, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "./Logo";
@@ -16,13 +17,13 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
     <aside className="sticky top-0 hidden h-dvh w-[88px] shrink-0 flex-col border-r border-line bg-surface px-3 py-5 md:flex xl:w-[236px] xl:px-4">
       <Link href="/dashboard" className="flex items-center gap-2.5 px-2" aria-label="EvntCult home">
         <Logo />
-        <span className="hidden text-[18px] font-extrabold tracking-tighter xl:inline">EvntCult</span>
+        <span className="hidden font-display text-[19px] font-bold tracking-tighter xl:inline">EvntCult</span>
       </Link>
 
       {isOrganizer && (
         <Link
           href="/organizer/events/new"
-          className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-brand py-3 text-[14px] font-semibold text-white shadow-brand transition-colors hover:bg-brand-hover"
+          className="mt-6 flex items-center justify-center gap-2 rounded-2xl bg-brand py-3 text-[14px] font-semibold text-brand-on shadow-brand transition-colors hover:bg-brand-hover"
         >
           <Plus className="size-[18px]" />
           <span className="hidden xl:inline">Create event</span>
@@ -43,13 +44,14 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
                   aria-current={active ? "page" : undefined}
                   title={item.label}
                   className={cn(
-                    "group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[14px] font-semibold transition-colors",
+                    "group relative flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[14px] font-semibold transition-colors",
                     "justify-center xl:justify-start",
-                    active ? "bg-ink text-white" : "text-ink-muted hover:bg-canvas hover:text-ink",
+                    active ? "text-ink-contrast" : "text-ink-muted hover:bg-canvas hover:text-ink",
                   )}
                 >
-                  <Icon className="size-[19px] shrink-0" />
-                  <span className="hidden xl:inline">{item.label}</span>
+                  {active && <motion.span layoutId="sidebar-active" className="absolute inset-0 rounded-2xl bg-ink" transition={{ type: "spring", bounce: 0.15, duration: 0.45 }} />}
+                  <Icon className="relative size-[19px] shrink-0" />
+                  <span className="relative hidden xl:inline">{item.label}</span>
                 </Link>
               </li>
             );
@@ -60,9 +62,9 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
       {signedIn ? (<>
       <button
         onClick={onEnterCode}
-        className="group hidden rounded-3xl bg-gradient-to-br from-brand-soft to-[#fff5df] p-4 text-left transition-transform hover:-translate-y-0.5 xl:block"
+        className="group hidden rounded-3xl bg-gradient-to-br from-brand-soft to-accent-soft p-4 text-left transition-transform hover:-translate-y-0.5 xl:block"
       >
-        <span className="grid size-9 place-items-center rounded-xl bg-white text-brand shadow-card">
+        <span className="grid size-9 place-items-center rounded-xl bg-surface text-brand shadow-card">
           <KeyRound className="size-4" />
         </span>
         <p className="mt-3 text-[14px] font-bold leading-tight">Got an event code?</p>
@@ -76,7 +78,7 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
         <KeyRound className="size-[18px]" />
       </button>
       </>) : (
-        <Link href="/signin?mode=signup" className="hidden rounded-3xl bg-gradient-to-br from-brand-soft to-[#fff5df] p-4 transition-transform hover:-translate-y-0.5 xl:block">
+        <Link href="/signin?mode=signup" className="hidden rounded-3xl bg-gradient-to-br from-brand-soft to-accent-soft p-4 transition-transform hover:-translate-y-0.5 xl:block">
           <p className="text-[14px] font-bold leading-tight">New here?</p>
           <p className="mt-0.5 text-[12.5px] text-ink-muted">Sign up with your college email to register for events.</p>
         </Link>

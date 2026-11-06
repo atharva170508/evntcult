@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { NAV, ORGANIZER_NAV, isActive } from "./nav";
 
@@ -27,8 +28,9 @@ export function MobileTabBar({ isOrganizer }: { isOrganizer: boolean }) {
                   active ? "text-ink" : "text-ink-subtle",
                 )}
               >
-                <span className={cn("grid h-8 w-12 place-items-center rounded-full transition-colors", active && "bg-ink text-white")}>
-                  <Icon className="size-[18px]" />
+                <span className={cn("relative grid h-8 w-12 place-items-center rounded-full transition-colors", active && "text-ink-contrast")}>
+                  {active && <motion.span layoutId="tab-active" className="absolute inset-0 rounded-full bg-ink" transition={{ type: "spring", bounce: 0.2, duration: 0.45 }} />}
+                  <Icon className="relative size-[18px]" />
                 </span>
                 {item.label.replace("My passes", "Passes")}
               </Link>

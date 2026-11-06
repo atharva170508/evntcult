@@ -67,7 +67,7 @@ export default async function PassesPage() {
 
   return (
     <div className="space-y-6 pt-4 md:pt-6">
-      <header className="animate-fade-up">
+      <header>
         <p className="eyebrow">My passes</p>
         <h1 className="headline mt-1 text-[clamp(30px,4vw,42px)] tracking-tightest">Your tickets</h1>
         <p className="mt-1 text-[15px] text-ink-muted">Show the QR code at the gate. Screenshots work too.</p>
@@ -78,7 +78,7 @@ export default async function PassesPage() {
           <Ticket className="size-8 text-ink-subtle" />
           <h2 className="headline text-[20px]">No upcoming passes</h2>
           <p className="text-[14.5px] text-ink-muted">When you register for an event, your pass shows up here.</p>
-          <Link href="/events" className="mt-1 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-white">Find an event</Link>
+          <Link href="/events" className="mt-1 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-contrast">Find an event</Link>
         </section>
       ) : (
         <div className="grid gap-4 lg:grid-cols-2">
@@ -115,12 +115,12 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
   const cancelled = r.event_status === "cancelled";
 
   return (
-    <article className="card overflow-hidden animate-fade-up">
+    <article className="card overflow-hidden">
       <div className="relative isolate flex items-end justify-between gap-3 p-5 text-white">
         <EventArt accent={accentFor({ id: r.event_id, category: r.category })} />
         <div className="relative min-w-0">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-white/80">{fmtDate(starts, { weekday: "short", day: "numeric", month: "short" })}</p>
-          <h2 className="truncate text-[22px] font-extrabold leading-tight">{r.title}</h2>
+          <p className="font-mono text-[11.5px] font-medium uppercase tracking-[0.14em] text-white/80">{fmtDate(starts, { weekday: "short", day: "numeric", month: "short" })}</p>
+          <h2 className="truncate font-display text-[22px] font-bold leading-tight">{r.title}</h2>
         </div>
         <div className="relative shrink-0">
           {cancelled ? (
@@ -137,7 +137,7 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
 
       <div className="flex gap-5 p-5">
         {r.status === "registered" && qrSvg ? (
-          <div className="w-[132px] shrink-0 rounded-xl border border-line bg-white p-2 [&>svg]:size-full" role="img" aria-label={`QR code for pass ${r.pass_code}`} dangerouslySetInnerHTML={{ __html: qrSvg }} />
+          <div className="w-[132px] shrink-0 rounded-xl border border-line bg-paper p-2 [&>svg]:size-full" role="img" aria-label={`QR code for pass ${r.pass_code}`} dangerouslySetInnerHTML={{ __html: qrSvg }} />
         ) : (
           <div className="grid w-[132px] shrink-0 place-items-center rounded-xl border border-dashed border-line bg-canvas p-3 text-center text-[12px] font-semibold text-ink-muted">
             <Hourglass className="mb-1 size-5" />

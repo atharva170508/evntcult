@@ -5,7 +5,8 @@ import { listEvents } from "@/lib/data/events";
 import { CATEGORIES } from "@/lib/data/types";
 import { listQuerySchema } from "@/lib/validation";
 import { EventCard } from "@/components/dashboard/sections";
-import { cn } from "@/lib/utils";
+import { PillNav } from "@/components/motion/PillNav";
+import { Stagger, TextEffect } from "@/components/motion/primitives";
 
 export const metadata: Metadata = { title: "Discover" };
 export const dynamic = "force-dynamic";
@@ -27,44 +28,36 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
     const s = p.toString();
     return s ? `/events?${s}` : "/events";
   };
-  const chip = (active: boolean) =>
-    cn(
-      "shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold transition-colors",
-      active ? "border-ink bg-ink text-white" : "border-line bg-surface text-ink-2 hover:border-ink",
-    );
+  const types = [{ href: href({ type: undefined }), label: "All types", active: !q.type }, ...CATEGORIES.map((c) => ({ href: href({ type: c }), label: LABEL[c], active: q.type === c }))];
+  const when = [{ href: href({ when: undefined }), label: "Any day", active: !q.when }, ...Object.entries(WHEN).map(([k, v]) => ({ href: href({ when: k }), label: v, active: q.when === k }))];
+  const price = [
+    { href: href({ price: undefined }), label: "Any price", active: !q.price },
+    { href: href({ price: "free" }), label: "Free", active: q.price === "free" },
+    { href: href({ price: "paid" }), label: "Paid", active: q.price === "paid" },
+  ];
 
   return (
     <div className="space-y-5 pt-4 md:pt-6">
-      <header className="animate-fade-up">
+      <header>
         <p className="eyebrow">Discover</p>
-        <h1 className="headline mt-1 text-[clamp(30px,4vw,42px)] tracking-tightest">Events on campus</h1>
+        <TextEffect text="Events on campus" className="headline mt-1.5 text-[clamp(34px,4.6vw,52px)] leading-[1] tracking-tightest" />
       </header>
 
-      <form action="/events" className="flex h-12 items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card md:max-w-xl">
+      <form action="/events" className="flex h-12 items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card transition-[border-color,box-shadow] focus-within:border-brand focus-within:shadow-brand md:max-w-xl">
         <Search className="size-[18px] text-ink-subtle" />
         <input name="q" defaultValue={q.q} placeholder="Search by name, venue…" className="min-w-0 flex-1 bg-transparent px-3 text-[14.5px] focus:outline-none" aria-label="Search events" />
         {q.type && <input type="hidden" name="type" value={q.type} />}
         {q.when && <input type="hidden" name="when" value={q.when} />}
         {q.price && <input type="hidden" name="price" value={q.price} />}
-        <button className="rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-white">Search</button>
+        <button className="rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-ink-contrast transition-transform active:scale-[0.97]">Search</button>
       </form>
 
-      <div className="space-y-2.5">
-        <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
-          <Link href={href({ type: undefined })} className={chip(!q.type)}>All types</Link>
-          {CATEGORIES.map((c) => (
-            <Link key={c} href={href({ type: c })} className={chip(q.type === c)}>{LABEL[c]}</Link>
-          ))}
-        </div>
-        <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
-          <Link href={href({ when: undefined })} className={chip(!q.when)}>Any day</Link>
-          {Object.entries(WHEN).map(([k, v]) => (
-            <Link key={k} href={href({ when: k })} className={chip(q.when === k)}>{v}</Link>
-          ))}
-          <span className="mx-1 w-px shrink-0 bg-line" />
-          <Link href={href({ price: undefined })} className={chip(!q.price)}>Any price</Link>
-          <Link href={href({ price: "free" })} className={chip(q.price === "free")}>Free</Link>
-          <Link href={href({ price: "paid" })} className={chip(q.price === "paid")}>Paid</Link>
+      <div className="space-y-2">
+        <PillNav id="type" label="Event type" items={types} className="lg:mx-0 lg:px-0" />
+        <div className="no-scrollbar -mx-4 flex items-center gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
+          <PillNav id="when" label="When" items={when} className="mx-0 shrink-0 overflow-visible px-0" />
+          <span className="mx-1 h-6 w-px shrink-0 bg-line" aria-hidden />
+          <PillNav id="price" label="Price" items={price} className="mx-0 shrink-0 overflow-visible px-0" />
         </div>
       </div>
 
@@ -75,11 +68,11 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
           <Link href="/events" className="mt-4 inline-block rounded-full border border-line px-4 py-2 text-[13px] font-semibold hover:border-ink">Clear filters</Link>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <Stagger key={JSON.stringify(q)} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" itemClassName="flex [&>article]:w-full">
           {events.map((e) => (
             <EventCard key={e.id} e={e} />
           ))}
-        </div>
+        </Stagger>
       )}
 
       {nextCursor && (

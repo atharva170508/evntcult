@@ -22,10 +22,10 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         <EventArt accent="violet" />
         <div className="relative flex items-center gap-2.5">
           <Logo />
-          <span className="text-[20px] font-extrabold tracking-tighter">EvntCult</span>
+          <span className="font-display text-[20px] font-bold tracking-tighter">EvntCult</span>
         </div>
         <div className="relative max-w-md">
-          <h2 className="text-[48px] font-extrabold leading-[1.02] tracking-tightest">Register. Pass. Scan. Attend.</h2>
+          <h2 className="font-display text-[48px] font-bold leading-[1.02] tracking-tightest">Register. Pass. Scan. Attend.</h2>
           <ul className="mt-8 space-y-3 text-[16px] font-semibold text-white/90">
             <li className="flex items-center gap-3">
               <CalendarCheck2 className="size-5" /> Every campus event in one place
@@ -44,7 +44,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         <div className="w-full max-w-[400px] animate-fade-up">
           <div className="flex items-center gap-2.5 lg:hidden">
             <Logo />
-            <span className="text-[20px] font-extrabold tracking-tighter">EvntCult</span>
+            <span className="font-display text-[20px] font-bold tracking-tighter">EvntCult</span>
           </div>
           <h1 className="headline mt-8 text-[34px] leading-tight tracking-tightest lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
           <p className="mt-2 text-[15px] text-ink-muted">

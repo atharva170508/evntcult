@@ -4,6 +4,7 @@ import { getViewer } from "@/lib/rbac";
 import { getDashboardData, getPublicDashboard } from "@/lib/data/dashboard";
 import Link from "next/link";
 import { EventArt } from "@/components/ui/EventArt";
+import { Magnetic, Reveal, Stagger, TextEffect } from "@/components/motion/primitives";
 import { PassCard } from "@/components/dashboard/PassCard";
 import { AddPhoneCard } from "@/components/profile/AddPhoneCard";
 import { MiniCalendar } from "@/components/dashboard/MiniCalendar";
@@ -46,12 +47,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   return (
     <div className="space-y-5">
       {/* Greeting + quick tiles */}
-      <header className="pt-4 animate-fade-up md:pt-6">
+      <header className="pt-4 md:pt-6">
         <p className="eyebrow">{new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Kolkata" }).format(new Date())}</p>
-        <h1 className="headline mt-1 text-[clamp(30px,4.2vw,44px)] leading-[1.05] tracking-tightest">
-          {greeting()}, {firstName} <span className="inline-block animate-float">👋</span>
-        </h1>
-        <p className="mt-1 text-[16px] font-medium text-ink-muted">{summary}</p>
+        <TextEffect text={`${greeting()}, ${firstName}.`} className="headline mt-1.5 text-[clamp(32px,4.4vw,48px)] leading-[1.02] tracking-tightest" />
+        <Reveal delay={0.15} y={6}>
+          <p className="mt-1.5 text-[16px] font-medium text-ink-muted">{summary}</p>
+        </Reveal>
         {params.denied === "organizer" && (
           <p className="mt-3 inline-block rounded-full bg-warn-soft px-4 py-1.5 text-[13px] font-semibold text-warn">
             The organizer console is only for verified organizers.
@@ -62,28 +63,28 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <QuickTiles />
 
       {/* Next up + pass */}
-      <div className="grid gap-4 lg:grid-cols-12">
+      <Reveal className="grid gap-4 lg:grid-cols-12">
         <div className="lg:col-span-8">{data.nextUp ? <NextUpHero event={data.nextUp} /> : <EmptyNextUp />}</div>
         {data.nextUp && (
           <div className="lg:col-span-4">
             <PassCard pass={data.nextUp} />
           </div>
         )}
-      </div>
+      </Reveal>
       {data.nextUp?.paymentStatus === "PENDING" && <UpiPending amountPaise={data.nextUp.feePaise} />}
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label="Registered" value={data.stats.registered} hint="upcoming events" icon={Ticket} color="#efebff" ink="#3b22d6" delay={60} />
-        <StatTile label="This week" value={data.stats.thisWeek} hint="on your calendar" icon={CalendarCheck2} color="#e0f2fe" ink="#0369a1" delay={110} />
-        <StatTile label="Attended" value={data.stats.attended} hint="checked in at the gate" icon={DoorOpen} color="#fff3df" ink="#b45309" delay={160} />
-        <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="in the vault" icon={Images} color="#ffe4ec" ink="#be123c" delay={210} />
-      </div>
+      <Stagger className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatTile label="Registered" value={data.stats.registered} hint="upcoming events" icon={Ticket} tone="brand" />
+        <StatTile label="This week" value={data.stats.thisWeek} hint="on your calendar" icon={CalendarCheck2} tone="accent" />
+        <StatTile label="Attended" value={data.stats.attended} hint="checked in at the gate" icon={DoorOpen} tone="live" />
+        <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="in the vault" icon={Images} tone="neutral" />
+      </Stagger>
 
       {/* Organizer console */}
       {data.organizer && (
         <section className="space-y-4 pt-6">
-          <div className="flex flex-wrap items-end justify-between gap-3 animate-fade-up">
+          <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="eyebrow">Organizer</p>
               <h2 className="headline mt-1 text-[26px]">Your events, at a glance</h2>
@@ -100,23 +101,19 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       </div>
 
       {/* Personal */}
-      <section className="grid gap-4 pt-2 lg:grid-cols-12">
-        <div className="lg:col-span-5">
-          <Announcements items={data.announcements} />
-        </div>
-        <div className="lg:col-span-4">
-          <UpcomingList events={data.upcoming} />
-        </div>
-        <div className="card p-6 animate-fade-up lg:col-span-3">
+      <Stagger className="grid gap-4 pt-2 lg:grid-cols-12" itemClassName="lg:[&:nth-child(1)]:col-span-5 lg:[&:nth-child(2)]:col-span-4 lg:[&:nth-child(3)]:col-span-3">
+        <Announcements items={data.announcements} />
+        <UpcomingList events={data.upcoming} />
+        <div className="card h-full p-6">
           <MiniCalendar data={data.calendar} />
         </div>
-      </section>
+      </Stagger>
 
-      <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <Stagger className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <VaultTeaser photosOfYou={data.stats.photosOfYou} />
         <PlannedCard eyebrow="Venue Navigator" title="Campus map & directions" icon={MapIcon} body="Walking directions to every hall, lab and ground. Not built yet." />
         <PlannedCard eyebrow="Certificates" title="Proof of attendance" icon={Award} body="Certificates for events you checked in to. Not built yet." />
-      </section>
+      </Stagger>
     </div>
   );
 }
@@ -126,30 +123,42 @@ async function PublicHome() {
   const d = await getPublicDashboard();
   return (
     <div className="space-y-5">
-      <section className="card relative isolate mt-4 overflow-hidden p-7 text-white animate-fade-up md:mt-6 md:p-10">
+      <section className="card relative isolate mt-4 overflow-hidden border-0 p-7 text-paper md:mt-6 md:p-12">
         <EventArt accent="violet" />
         <div className="relative max-w-2xl">
-          <p className="text-[12px] font-bold uppercase tracking-[0.14em] text-white/80">Campus events · KKW</p>
-          <h1 className="mt-2 text-[clamp(34px,5vw,58px)] font-extrabold leading-[1.02] tracking-tightest">Register. Get your pass. Walk in.</h1>
-          <p className="mt-3 max-w-lg text-[17px] text-white/85">Browse every fest, game night and workshop on campus. Sign up with your college email to register and get a QR pass.</p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <Link href="/signin?mode=signup" className="rounded-full bg-white px-5 py-3 text-[15px] font-semibold text-ink hover:bg-white/90">Sign up</Link>
-            <Link href="/signin" className="rounded-full border border-white/50 px-5 py-3 text-[15px] font-semibold text-white hover:bg-white/10">Log in</Link>
-            <Link href="/events" className="rounded-full px-5 py-3 text-[15px] font-semibold text-white/90 underline-offset-4 hover:underline">Browse events →</Link>
-          </div>
+          <p className="font-mono text-[11.5px] font-medium uppercase tracking-[0.16em] text-paper/80">Campus events · KKW</p>
+          <TextEffect text="Register. Get your pass. Walk in." className="mt-3 font-display text-[clamp(40px,6vw,76px)] font-bold leading-[0.95] tracking-tightest" delay={0.1} />
+          <Reveal delay={0.35} y={8}>
+            <p className="mt-4 max-w-lg text-[17px] leading-relaxed text-paper/85">
+              Every fest, game night and workshop on campus in one place. Sign up with your college email to register and get a QR pass.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-2">
+              <Magnetic>
+                <Link href="/signin?mode=signup" className="rounded-full bg-paper px-6 py-3.5 text-[15px] font-semibold text-night transition-transform active:scale-[0.97]">
+                  Sign up free
+                </Link>
+              </Magnetic>
+              <Link href="/signin" className="rounded-full border border-paper/45 px-6 py-3.5 text-[15px] font-semibold text-paper transition-colors hover:bg-paper/10">
+                Log in
+              </Link>
+              <Link href="/events" className="group px-3 py-3.5 text-[15px] font-semibold text-paper/90">
+                Browse events <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
       <QuickTiles />
-      <div className="grid grid-cols-3 gap-3">
-        <StatTile label="Events this week" value={d.thisWeek} hint="open to everyone" icon={CalendarCheck2} color="#e0f2fe" ink="#0369a1" />
-        <StatTile label="Upcoming events" value={d.upcoming} hint="on campus" icon={Ticket} color="#efebff" ink="#3b22d6" delay={60} />
-        <StatTile label="Students going" value={d.going.toLocaleString("en-IN")} hint="registered so far" icon={Images} color="#ffe4ec" ink="#be123c" delay={120} />
-      </div>
+      <Stagger className="grid grid-cols-3 gap-3">
+        <StatTile label="Events this week" value={d.thisWeek} hint="open to everyone" icon={CalendarCheck2} tone="accent" />
+        <StatTile label="Upcoming events" value={d.upcoming} hint="on campus" icon={Ticket} tone="brand" />
+        <StatTile label="Students going" value={d.going} hint="registered so far" icon={Images} tone="live" />
+      </Stagger>
       <div className="pt-4">
         <CampusRail events={d.campus} />
       </div>
       <section className="grid gap-4 md:grid-cols-2">
-        <div className="card p-6 animate-fade-up">
+        <div className="card p-6">
           <MiniCalendar data={d.calendar} />
         </div>
         <PlannedCard eyebrow="Venue Navigator" title="Campus map & directions" icon={MapIcon} body="Walking directions to every hall, lab and ground. Not built yet." />

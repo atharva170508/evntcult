@@ -58,12 +58,12 @@ export default async function OrganizerHome() {
 
   return (
     <div className="space-y-6 pt-4 md:pt-6">
-      <header className="flex flex-wrap items-end justify-between gap-3 animate-fade-up">
+      <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="eyebrow">Organizer</p>
           <h1 className="headline mt-1 text-[clamp(30px,4vw,42px)] tracking-tightest">Your events</h1>
         </div>
-        <Link href="/organizer/events/new" className="inline-flex items-center gap-1.5 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-white">
+        <Link href="/organizer/events/new" className="inline-flex items-center gap-1.5 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-contrast">
           <CalendarPlus className="size-4" /> New event
         </Link>
       </header>
@@ -157,7 +157,7 @@ function EventRow({ e }: { e: MyEvent }) {
       </dl>
 
       <div className="flex flex-wrap gap-2">
-        <Link href={`/organizer/events/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-white"><Users className="size-4" /> Attendees & updates</Link>
+        <Link href={`/organizer/events/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-ink px-4 py-2 text-[13px] font-semibold text-ink-contrast"><Users className="size-4" /> Attendees & updates</Link>
         {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-[13px] font-semibold hover:border-ink"><ScanLine className="size-4" /> Scanner</Link>}
         <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[13px] font-semibold text-ink-muted hover:text-ink"><Pencil className="size-4" /> Edit</Link>
       </div>

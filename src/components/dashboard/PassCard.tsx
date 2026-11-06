@@ -5,6 +5,7 @@ import { Chip } from "@/components/ui/Chip";
 import { EventArt } from "@/components/ui/EventArt";
 import { formatINR } from "@/lib/money";
 import { fmtDate, fmtTime } from "@/lib/utils";
+import { Tilt } from "@/components/motion/primitives";
 
 const payTone = { PAID: "live", PENDING: "warn", FAILED: "danger", REFUNDED: "neutral", WAIVED: "neutral", NOT_REQUIRED: "neutral" } as const;
 const payLabel = { PAID: "Paid", PENDING: "Payment pending", FAILED: "Payment failed", REFUNDED: "Refunded", WAIVED: "Fee waived", NOT_REQUIRED: "Free entry" } as const;
@@ -15,26 +16,27 @@ export async function PassCard({ pass }: { pass: NextUp }) {
     type: "svg",
     margin: 0,
     errorCorrectionLevel: "M",
-    color: { dark: "#121218", light: "#ffffff" },
+    color: { dark: "#0d0c14", light: "#ffffff" },
   });
 
   return (
-    <div className="card flex h-full flex-col overflow-hidden animate-fade-up" style={{ animationDelay: "80ms" }}>
+    <Tilt className="h-full">
+    <div className="card flex h-full flex-col overflow-hidden">
       <div className="relative isolate h-[92px] overflow-hidden">
         <EventArt accent={pass.accent} />
-        <div className="relative flex h-full flex-col justify-between p-4 text-white">
+        <div className="relative flex h-full flex-col justify-between p-4 text-paper">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/85">Your pass</span>
-            <Chip tone={payTone[pass.paymentStatus]} className="ring-1 ring-white/40">
+            <span className="font-mono text-[10.5px] font-medium uppercase tracking-[0.16em] text-paper/85">Your pass</span>
+            <Chip tone={payTone[pass.paymentStatus]} className="ring-1 ring-paper/40">
               {payLabel[pass.paymentStatus]}
             </Chip>
           </div>
-          <p className="truncate text-[16px] font-bold tracking-tight">{pass.title}</p>
+          <p className="truncate font-display text-[17px] font-bold tracking-tight">{pass.title}</p>
         </div>
       </div>
 
       <div className="flex flex-1 flex-col px-5 pt-5">
-        <div className="mx-auto w-full max-w-[176px] rounded-2xl border border-line bg-white p-3">
+        <div className="mx-auto w-full max-w-[176px] rounded-2xl border border-line bg-paper p-3">
           <div className="aspect-square w-full [&>svg]:size-full" dangerouslySetInnerHTML={{ __html: svg }} />
         </div>
         <p className="mt-3 text-center font-mono text-[13px] font-semibold tracking-[0.14em] text-ink-2">{pass.passSerial}</p>
@@ -61,11 +63,12 @@ export async function PassCard({ pass }: { pass: NextUp }) {
           <button className="inline-flex items-center justify-center gap-1.5 rounded-full border border-line py-2.5 text-[13px] font-semibold transition-colors hover:border-ink">
             <Download className="size-3.5" /> Save
           </button>
-          <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-ink py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-black">
+          <button className="inline-flex items-center justify-center gap-1.5 rounded-full bg-ink py-2.5 text-[13px] font-semibold text-ink-contrast transition-colors hover:bg-ink/85">
             <Wallet className="size-3.5" /> Add to Wallet
           </button>
         </div>
       </div>
     </div>
+    </Tilt>
   );
 }

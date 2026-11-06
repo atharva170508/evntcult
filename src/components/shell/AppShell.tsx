@@ -6,6 +6,7 @@ import { EnterCodeDialog } from "./EnterCodeDialog";
 import { MobileTabBar } from "./MobileTabBar";
 import { Sidebar } from "./Sidebar";
 import { TopBar, type NavViewer } from "./TopBar";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 /** Sidebar + top bar + phone tabs around every app page. */
 export function AppShell({ viewer, children }: { viewer: NavViewer | null; children: React.ReactNode }) {
@@ -18,9 +19,9 @@ export function AppShell({ viewer, children }: { viewer: NavViewer | null; child
         <TopBar viewer={viewer} onEnterCode={() => setCodeOpen(true)} />
         <main className="mx-auto max-w-[1280px] px-4 pb-32 md:pb-16 lg:px-8">{children}</main>
         <footer className="mx-auto max-w-[1280px] px-4 pb-28 text-[12.5px] text-ink-subtle md:pb-10 lg:px-8">
-          <div className="flex flex-wrap justify-between gap-2 border-t border-line pt-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6">
             <span>EvntCult · Every campus event, one place</span>
-            <span>Made for campus life</span>
+            <ThemeToggle />
           </div>
         </footer>
       </div>

@@ -71,7 +71,7 @@ export function SignInForm({ next, signup = false }: { next: string; signup?: bo
       )}
       <button
         disabled={busy}
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-ink py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-black disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-ink py-3.5 text-[15px] font-semibold text-ink-contrast transition-colors hover:bg-ink/85 disabled:opacity-50"
       >
         {busy && <Loader2 className="size-4 animate-spin" />}
         {needName ? "Create account" : "Log in"}

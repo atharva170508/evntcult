@@ -3,17 +3,17 @@ import { cn } from "@/lib/utils";
 
 const variants = {
   /** Dark pill — the main action (Meetup / District style). */
-  primary: "bg-ink text-white hover:bg-black shadow-[0_10px_24px_-12px_rgba(18,18,24,0.6)]",
+  primary: "bg-ink text-ink-contrast hover:bg-ink/85",
   /** Brand violet — for "create" / highlight actions. */
-  brand: "bg-brand text-white hover:bg-brand-hover shadow-brand",
+  brand: "bg-brand text-brand-on hover:bg-brand-hover shadow-brand",
   /** White pill with a border. */
   secondary: "border border-line bg-surface text-ink hover:border-line-strong hover:bg-canvas",
   /** Soft violet. */
-  soft: "bg-brand-soft text-brand-ink hover:bg-[#e4dcff]",
+  soft: "bg-brand-soft text-brand-ink hover:bg-brand/20",
   /** Text-only link style. */
   ghost: "text-brand hover:text-brand-hover",
   /** White pill for use on posters / dark areas. */
-  light: "bg-white text-ink hover:bg-white/90",
+  light: "bg-paper text-night hover:bg-paper/90",
 } as const;
 
 type Variant = keyof typeof variants;

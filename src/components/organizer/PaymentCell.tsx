@@ -62,7 +62,7 @@ export function PaymentCell({ regId, paid, method, refCode }: { regId: string; p
       {how === "upi" && (
         <input value={ref} onChange={(e) => setRef(e.target.value)} placeholder="UPI ref (optional)" aria-label="UPI reference (optional)" maxLength={35} className="w-36 rounded-full border border-line bg-surface px-3 py-1 font-mono text-[12px]" />
       )}
-      <button disabled={busy} className="inline-flex items-center gap-1 rounded-full bg-ink px-3 py-1 text-[12px] font-semibold text-white disabled:opacity-50">
+      <button disabled={busy} className="inline-flex items-center gap-1 rounded-full bg-ink px-3 py-1 text-[12px] font-semibold text-ink-contrast disabled:opacity-50">
         {busy && <Loader2 className="size-3 animate-spin" />} Save
       </button>
       <button type="button" onClick={() => setOpen(false)} className="text-[12px] font-semibold text-ink-muted">Cancel</button>

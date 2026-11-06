@@ -1,37 +1,102 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Generated poster for events without an uploaded image (Luma-style: each
- * event gets its own colours). Vivid base gradient + soft orbs + a light
- * dot pattern. Replace with coverImageUrl when set.
+ * Generated poster for events without an uploaded image.
+ *
+ * Styled like a printed campus poster rather than a gradient blob: one flat ink
+ * colour, one bold geometric shape in a second colour, a thin rule grid, and paper
+ * grain on top. Each accent has its own shape so cards are recognisable at a glance.
+ * Posters are vivid in both themes, so text on them uses `paper`, never `ink`.
  */
-const palettes: Record<string, [string, string, string]> = {
-  blue: ["#3b82f6", "#6d5dfc", "#7dd3fc"],
-  violet: ["#7c3aed", "#5b3fff", "#f472b6"],
-  orange: ["#f97316", "#ef4444", "#fbbf24"],
-  teal: ["#0ea5a4", "#22c55e", "#38bdf8"],
-  pink: ["#ec4899", "#8b5cf6", "#fb923c"],
-  green: ["#16a34a", "#0ea5a4", "#facc15"],
-  red: ["#e11d48", "#f97316", "#7c3aed"],
+type Poster = { base: string; shape: string; line: string; kind: "sun" | "rings" | "stripes" | "half" | "grid" | "arch" | "dots" };
+
+const POSTERS: Record<string, Poster> = {
+  violet: { base: "#4f3cf0", shape: "#ff8ad8", line: "#ffffff", kind: "sun" },
+  blue: { base: "#1f3bd6", shape: "#7fd3ff", line: "#ffffff", kind: "rings" },
+  orange: { base: "#ff5a36", shape: "#ffd043", line: "#2a0f06", kind: "half" },
+  teal: { base: "#0d7d74", shape: "#b9f36b", line: "#ffffff", kind: "stripes" },
+  pink: { base: "#d92a72", shape: "#ffb36b", line: "#ffffff", kind: "arch" },
+  green: { base: "#11603d", shape: "#e6ff6b", line: "#ffffff", kind: "grid" },
+  red: { base: "#c81f33", shape: "#ffd2b0", line: "#ffffff", kind: "dots" },
 };
 
+function Shape({ p }: { p: Poster }) {
+  const s = p.shape;
+  switch (p.kind) {
+    case "sun":
+      return (
+        <>
+          <circle cx="78" cy="34" r="30" fill={s} />
+          {Array.from({ length: 12 }, (_, i) => (
+            <rect key={i} x="77" y="-10" width="2" height="14" fill={s} transform={`rotate(${i * 30} 78 34)`} />
+          ))}
+        </>
+      );
+    case "rings":
+      return (
+        <g fill="none" stroke={s} strokeWidth="5">
+          {[14, 26, 38, 50].map((r) => (
+            <circle key={r} cx="86" cy="22" r={r} />
+          ))}
+        </g>
+      );
+    case "half":
+      return <path d="M40 100 A 40 40 0 0 1 120 100 Z" fill={s} transform="translate(-4 -30)" />;
+    case "stripes":
+      return (
+        <g fill={s}>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <rect key={i} x={52 + i * 11} y="-20" width="5" height="140" transform="rotate(24 80 50)" />
+          ))}
+        </g>
+      );
+    case "arch":
+      return <path d="M58 100 V52 A 26 26 0 0 1 110 52 V100 Z" fill={s} transform="translate(0 -18)" />;
+    case "grid":
+      return (
+        <g fill={s}>
+          {Array.from({ length: 16 }, (_, i) => (
+            <rect key={i} x={60 + (i % 4) * 11} y={8 + Math.floor(i / 4) * 11} width="7" height="7" rx="1.5" />
+          ))}
+        </g>
+      );
+    case "dots":
+      return (
+        <g fill={s}>
+          {Array.from({ length: 20 }, (_, i) => (
+            <circle key={i} cx={58 + (i % 5) * 10} cy={10 + Math.floor(i / 5) * 10} r={2 + ((i * 7) % 4)} />
+          ))}
+        </g>
+      );
+  }
+}
+
 export function EventArt({ accent, className, intensity = 1 }: { accent: string; className?: string; intensity?: number }) {
-  const [a, b, c] = palettes[accent] ?? palettes.blue;
+  const p = POSTERS[accent] ?? POSTERS.violet;
   return (
-    <div
-      aria-hidden
-      className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}
-      style={{ background: `linear-gradient(135deg, ${a}, ${b})` }}
-    >
-      <div className="absolute -left-[15%] -top-[35%] h-[90%] w-[70%] rounded-full blur-3xl" style={{ background: c, opacity: 0.55 * intensity }} />
-      <div className="absolute -bottom-[45%] -right-[10%] h-[90%] w-[70%] rounded-full blur-3xl" style={{ background: a, opacity: 0.6 * intensity }} />
+    <div aria-hidden className={cn("grain pointer-events-none absolute inset-0 overflow-hidden", className)} style={{ background: p.base }}>
+      {/* Thin print grid across the whole poster. */}
       <div
-        className="absolute inset-0 opacity-[0.16]"
-        style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1.2px)", backgroundSize: "14px 14px" }}
+        className="absolute inset-0"
+        style={{
+          opacity: 0.1 * intensity,
+          backgroundImage: `linear-gradient(${p.line} 1px, transparent 1px), linear-gradient(90deg, ${p.line} 1px, transparent 1px)`,
+          backgroundSize: "56px 56px",
+          backgroundPosition: "-1px -1px",
+        }}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
+      {/* The shape lives in a square box pinned top-right, so it never sits under the title. */}
+      <svg
+        viewBox="34 -26 100 100"
+        className="absolute -right-[6%] -top-[12%] aspect-square h-[115%] max-h-[300px] max-w-[52%]"
+        style={{ opacity: intensity }}
+      >
+        <Shape p={p} />
+      </svg>
+      {/* Keeps white text readable at the bottom of tall posters. */}
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/35 to-transparent" />
     </div>
   );
 }
 
-export const accentHex = (accent: string) => (palettes[accent] ?? palettes.blue)[0];
+export const accentHex = (accent: string) => (POSTERS[accent] ?? POSTERS.violet).base;

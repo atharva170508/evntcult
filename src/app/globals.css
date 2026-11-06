@@ -2,19 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Palette — Realtime Colors roles (text / background / primary / secondary / accent),
+ * stored as "R G B" so Tailwind opacity modifiers work (bg-brand/20).
+ * Light: warm paper + ink-violet + poster orange.  Dark: near-black + lifted violet.
+ * Contrast checked: text on background ≥ 15:1, text-muted ≥ 4.5:1, on-primary ≥ 4.5:1.
+ */
 @layer base {
   :root {
     color-scheme: light;
+    --text: 20 18 31;
+    --text-2: 58 55 72;
+    --text-muted: 99 96 114;
+    --text-subtle: 141 138 154;
+    --background: 246 245 241;
+    --surface: 255 255 255;
+    --surface-2: 250 249 246;
+    --line: 229 226 219;
+    --line-strong: 210 206 197;
+    --primary: 79 60 240;
+    --primary-hover: 64 46 222;
+    --primary-ink: 55 36 196;
+    --on-primary: 255 255 255;
+    --secondary: 236 233 255;
+    --accent: 255 90 54;
+    --accent-soft: 255 236 228;
+    --on-accent: 255 255 255;
+    --live: 10 138 84;
+    --live-soft: 222 244 233;
+    --warn: 178 98 0;
+    --warn-soft: 255 241 217;
+    --danger: 208 38 48;
+    --danger-soft: 253 233 234;
+    --sun: 255 205 64;
+    --shadow-card: 0 1px 2px rgb(20 18 31 / 0.04), 0 12px 32px -20px rgb(20 18 31 / 0.22);
+    --shadow-pop: 0 28px 64px -28px rgb(20 18 31 / 0.45);
+    --shadow-brand: 0 12px 28px -12px rgb(79 60 240 / 0.55);
   }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --text: 238 237 245;
+    --text-2: 206 204 220;
+    --text-muted: 158 155 176;
+    --text-subtle: 116 113 134;
+    --background: 11 10 16;
+    --surface: 20 19 28;
+    --surface-2: 26 25 36;
+    --line: 39 37 52;
+    --line-strong: 58 55 76;
+    --primary: 146 130 255;
+    --primary-hover: 168 155 255;
+    --primary-ink: 190 181 255;
+    --on-primary: 13 11 26;
+    --secondary: 33 28 64;
+    --accent: 255 114 80;
+    --accent-soft: 56 26 19;
+    --on-accent: 20 10 6;
+    --live: 61 214 148;
+    --live-soft: 13 46 33;
+    --warn: 250 178 66;
+    --warn-soft: 50 35 12;
+    --danger: 255 105 110;
+    --danger-soft: 58 19 23;
+    --sun: 255 214 102;
+    --shadow-card: 0 0 0 1px rgb(255 255 255 / 0.02);
+    --shadow-pop: 0 30px 70px -30px rgb(0 0 0 / 0.8);
+    --shadow-brand: 0 12px 32px -14px rgb(146 130 255 / 0.5);
+  }
+
   html {
     @apply bg-canvas text-ink antialiased;
     text-rendering: optimizeLegibility;
+    font-feature-settings: "ss01", "cv11";
   }
   body {
     @apply min-h-dvh bg-canvas font-sans text-[15px] leading-relaxed;
   }
   ::selection {
-    background: rgba(91, 63, 255, 0.2);
+    background: rgb(var(--primary) / 0.22);
   }
   :focus-visible {
     @apply outline-none ring-2 ring-brand/60 ring-offset-2 ring-offset-canvas;
@@ -22,7 +88,7 @@
 }
 
 @layer components {
-  /* The core card: white, soft border, gentle shadow. */
+  /* The core card. */
   .card {
     @apply relative rounded-3xl border border-line bg-surface shadow-card;
   }
@@ -31,16 +97,22 @@
     @apply transition-[transform,box-shadow,border-color] duration-300 ease-apple hover:-translate-y-0.5 hover:border-line-strong hover:shadow-pop;
   }
   .eyebrow {
-    @apply text-[11.5px] font-semibold uppercase tracking-[0.1em] text-ink-subtle;
+    @apply font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-ink-subtle;
   }
   .headline {
-    @apply font-bold tracking-tighter text-ink;
+    @apply font-display font-bold tracking-tighter text-ink;
   }
   .no-scrollbar {
     scrollbar-width: none;
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+  /* Printed-paper grain, used on posters. */
+  .grain::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 opacity-[0.22] mix-blend-overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
   /* Ticket perforation: a dashed line with two half-circle cut-outs. */
   .ticket-cut {
@@ -54,8 +126,8 @@
     content: "";
     @apply pointer-events-none absolute inset-y-0 -left-3 -right-3;
     background:
-      radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 12px) left / 24px 24px no-repeat,
-      radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 12px) right / 24px 24px no-repeat;
+      radial-gradient(circle at 12px 50%, rgb(var(--background)) 11px, transparent 12px) left / 24px 24px no-repeat,
+      radial-gradient(circle at 12px 50%, rgb(var(--background)) 11px, transparent 12px) right / 24px 24px no-repeat;
   }
 }
 

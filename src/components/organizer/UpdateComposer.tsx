@@ -48,7 +48,7 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
       <fieldset className="flex flex-wrap gap-2">
         <legend className="sr-only">Type of update</legend>
         {KINDS.map((k) => (
-          <label key={k.value} className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-[13px] font-semibold ${kind === k.value ? "border-ink bg-ink text-white" : "border-line hover:border-ink"}`}>
+          <label key={k.value} className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-[13px] font-semibold ${kind === k.value ? "border-ink bg-ink text-ink-contrast" : "border-line hover:border-ink"}`}>
             <input type="radio" name="kind" value={k.value} checked={kind === k.value} onChange={() => pickKind(k.value)} className="sr-only" />
             {k.label}
           </label>
@@ -75,7 +75,7 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
         </span>
       </label>
       {msg && <p role="status" className={`rounded-2xl px-3.5 py-2.5 text-[13px] font-semibold ${msg.ok ? "bg-live-soft text-live" : "bg-danger-soft text-danger"}`}>{msg.text}</p>}
-      <button disabled={busy || body.trim().length < 3} className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-white disabled:opacity-50">
+      <button disabled={busy || body.trim().length < 3} className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-ink-contrast disabled:opacity-50">
         {busy ? <Loader2 className="size-4 animate-spin" /> : <Megaphone className="size-4" />} Post update
       </button>
     </form>

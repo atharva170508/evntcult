@@ -16,7 +16,7 @@ interface CardProps {
 /** White rounded card with an optional icon, eyebrow, title and "See all" link. */
 export function Card({ eyebrow, title, icon: Icon, action, className, bodyClassName, children, style }: CardProps) {
   return (
-    <section className={cn("card flex flex-col overflow-hidden animate-fade-up", className)} style={style}>
+    <section className={cn("card flex flex-col overflow-hidden", className)} style={style}>
       {(eyebrow || title || action) && (
         <header className="flex items-center justify-between gap-4 px-6 pt-6">
           <div className="flex min-w-0 items-center gap-3">
