@@ -42,6 +42,7 @@ const iso = (d: Date) => d.toISOString();
 const ago = (h: number) => iso(new Date(now - h * HOUR));
 
 const sql: string[] = [
+  "DELETE FROM notifications;",
   "DELETE FROM photo_tags;",
   "DELETE FROM photos;",
   "DELETE FROM audit_log;",
@@ -71,7 +72,7 @@ for (let i = 0; i < 1600; i++) {
   const f = pick(FIRST), l = pick(LAST);
   attendees.push(addUser(`${f} ${l}`, `${f.toLowerCase()}.${l.toLowerCase()}${i}@college.edu`));
 }
-for (const u of users) sql.push(`INSERT INTO users VALUES (${q(u.id)}, ${q(u.email)}, ${q(u.name)}, ${q(u.role)}, ${q(ago(24 * 60))});`);
+for (const u of users) sql.push(`INSERT INTO users (id, email, name, role, created_at) VALUES (${q(u.id)}, ${q(u.email)}, ${q(u.name)}, ${q(u.role)}, ${q(ago(24 * 60))});`);
 
 // ---------- events ----------
 type E = { id: string; slug: string; title: string; price: number; capacity: number; start: Date; end: Date; status: string };
@@ -153,7 +154,7 @@ hoopsRegs.slice(0, 131).forEach((rid, i) => {
 
 // ---------- organizer updates ----------
 const update = (e: E, kind: string, body: string, hoursAgo: number) =>
-  sql.push(`INSERT INTO event_updates VALUES (${[id("upd"), e.id, kind, body, ago(hoursAgo)].map(q).join(", ")});`);
+  sql.push(`INSERT INTO event_updates (id, event_id, kind, body, created_at) VALUES (${[id("upd"), e.id, kind, body, ago(hoursAgo)].map(q).join(", ")});`);
 update(valorant, "schedule", "Check-in moved to 9:30 AM. Brackets go live 30 minutes earlier — bring your own headset.", 0.4);
 update(robowars, "venue", "Pit area is now behind the OAT. Teams, load in through Gate 3.", 3);
 update(neon, "update", "Dress code: anything that glows. Passes are scanned at the door.", 20);

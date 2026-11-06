@@ -53,3 +53,51 @@ export const listQuerySchema = z.object({
 export type ListQuery = z.infer<typeof listQuerySchema>;
 
 export const unlockSchema = z.object({ code: z.string().trim().min(4).max(20) }).strict();
+
+/** POST /api/events/:ref/register — `waitlist: true` = "yes, put me on the waitlist if it's full". */
+export const registerSchema = z
+  .object({
+    waitlist: z.boolean().default(false),
+    code: z.string().trim().max(20).optional(),
+  })
+  .strict();
+
+/** Bodies that must be empty JSON objects ({}). */
+export const emptySchema = z.object({}).strict();
+
+/** POST /api/checkins — one scan from a gate scanner (live or synced from the offline queue). */
+export const checkinSchema = z
+  .object({
+    event_id: z.string().trim().min(1).max(64),
+    pass_token: z.string().trim().min(1).max(200),
+    /** The scanner's own id for this scan (UUID). Makes retries safe. */
+    client_scan_id: z.string().trim().min(8).max(64),
+    /** The volunteer collected the fee for an unpaid pass and tapped "Admit". */
+    accept_unpaid: z.boolean().default(false),
+    /** When the scan happened, for scans synced after the network came back. */
+    scanned_at: z.string().datetime().optional(),
+    device_id: z.string().trim().max(64).optional(),
+  })
+  .strict();
+
+/** POST /api/registrations/:id/payment — organizer reconciles a fee. */
+export const paymentSchema = z.discriminatedUnion("status", [
+  z
+    .object({
+      status: z.literal("paid"),
+      method: z.enum(["cash", "upi"]),
+      /** UPI transaction reference (UTR), usually 12 digits. Optional. */
+      ref: z.string().trim().regex(/^[A-Za-z0-9]{6,35}$/, "UPI reference: 6–35 letters or digits").optional(),
+    })
+    .strict(),
+  z.object({ status: z.literal("unpaid") }).strict(),
+]);
+
+/** POST /api/events/:id/updates — schedule / venue / info update, optionally sent on WhatsApp. */
+export const eventUpdateSchema = z
+  .object({
+    kind: z.enum(["schedule", "venue", "update"]),
+    body: z.string().trim().min(3).max(500),
+    whatsapp: z.boolean().default(false),
+  })
+  .strict();
