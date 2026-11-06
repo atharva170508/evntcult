@@ -12,7 +12,6 @@ import {
   Download,
   FileText,
   Gamepad2,
-  Heart,
   Map as MapIcon,
   MapPin,
   Megaphone,
@@ -24,7 +23,6 @@ import {
   Plus,
   ScanFace,
   ScanLine,
-  Share2,
   Sparkles,
   Sun,
   Ticket,
@@ -536,7 +534,7 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
   );
 }
 
-function EventCard({ e }: { e: EventSummary }) {
+export function EventCard({ e }: { e: EventSummary }) {
   const badge = eventBadge(e);
   return (
     <article className="card lift group flex w-[280px] shrink-0 snap-start flex-col overflow-hidden lg:w-auto">
@@ -565,14 +563,6 @@ function EventCard({ e }: { e: EventSummary }) {
           <span className={cn("rounded-full px-2.5 py-1 text-[12px] font-bold", e.feePaise > 0 ? "bg-ink text-white" : "bg-live-soft text-live")}>
             {e.feePaise > 0 ? formatINR(e.feePaise) : "Free"}
           </span>
-        </div>
-        <div className="mt-3 flex gap-2 border-t border-line pt-3">
-          <button className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-1.5 text-[12.5px] font-semibold text-ink-2 transition-colors hover:bg-canvas">
-            <Heart className="size-3.5" /> Interested
-          </button>
-          <button className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-1.5 text-[12.5px] font-semibold text-ink-2 transition-colors hover:bg-canvas">
-            <Share2 className="size-3.5" /> Share
-          </button>
         </div>
       </div>
     </article>

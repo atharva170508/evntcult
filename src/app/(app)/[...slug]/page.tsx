@@ -25,7 +25,7 @@ export default async function ComingSoon({ params }: { params: Promise<{ slug: s
       <EventArt accent={s.accent} intensity={0.9} />
       <div className="relative max-w-xl">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-[12px] font-bold text-ink">
-          <Sparkles className="size-3.5" /> Coming in the next build
+          <Sparkles className="size-3.5" /> Planned · not built yet
         </span>
         <h1 className="mt-4 text-[clamp(36px,5vw,56px)] font-extrabold leading-[1.04] tracking-tightest">{s.title}</h1>
         <p className="mt-3 text-[18px] text-white/90">{s.blurb}</p>

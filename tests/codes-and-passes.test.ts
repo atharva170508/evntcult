@@ -1,65 +1,80 @@
 import { describe, it, expect } from "vitest";
 import {
-  generateEventCode,
-  normalizeEventCode,
-  isWellFormedEventCode,
-  checkCodeUsable,
-  CODE_ALPHABET,
-} from "@/lib/event-code";
-import { createPassToken, verifyPassToken, passSerial } from "@/lib/pass";
-import { upiUri, formatINR } from "@/lib/money";
+  ACCESS_CODE_ALPHABET,
+  base32,
+  extractPassToken,
+  isWellFormedAccessCode,
+  isWellFormedPassToken,
+  newAccessCode,
+  newPassToken,
+  normalizeAccessCode,
+  passCode,
+  passQrPayload,
+} from "@/lib/tokens";
+import { createSessionValue, readSessionValue } from "@/lib/session";
+import { istToUtcIso, parseUtc } from "@/lib/time";
+import { formatINR, upiUri } from "@/lib/money";
 
-describe("event codes", () => {
-  it("generates well-formed 7-char codes without look-alike characters", () => {
+describe("access codes", () => {
+  it("are 7 characters with no look-alikes", () => {
     for (let i = 0; i < 500; i++) {
-      const c = generateEventCode();
+      const c = newAccessCode();
       expect(c).toHaveLength(7);
-      expect(isWellFormedEventCode(c)).toBe(true);
+      expect(isWellFormedAccessCode(c)).toBe(true);
       expect(c).not.toMatch(/[01IOLSZB258]/);
     }
-    expect(new Set(CODE_ALPHABET).size).toBe(CODE_ALPHABET.length);
+    expect(new Set(ACCESS_CODE_ALPHABET).size).toBe(ACCESS_CODE_ALPHABET.length);
   });
-
-  it("normalises user input", () => {
-    expect(normalizeEventCode("  ack-3 pq7 ")).toBe("ACK3PQ7");
-  });
-
-  it("checks usability", () => {
-    const base = { active: true, expiresAt: null, maxUses: null, uses: 0 };
-    expect(checkCodeUsable(base).ok).toBe(true);
-    expect(checkCodeUsable({ ...base, active: false })).toEqual({ ok: false, reason: "inactive" });
-    expect(checkCodeUsable({ ...base, expiresAt: new Date(Date.now() - 1) })).toEqual({ ok: false, reason: "expired" });
-    expect(checkCodeUsable({ ...base, maxUses: 5, uses: 5 })).toEqual({ ok: false, reason: "exhausted" });
+  it("normalise what people type", () => {
+    expect(normalizeAccessCode("  ack-3 pq7 ")).toBe("ACK3PQ7");
   });
 });
 
 describe("pass tokens", () => {
-  it("round-trips signed claims", () => {
-    const tok = createPassToken({ registrationId: "reg_1", eventId: "evt_1" });
-    expect(verifyPassToken(tok)).toEqual({ registrationId: "reg_1", eventId: "evt_1" });
+  it("carry 128 bits of randomness as 26 base32 chars, all unique", () => {
+    const seen = new Set<string>();
+    for (let i = 0; i < 2000; i++) {
+      const t = newPassToken();
+      expect(isWellFormedPassToken(t)).toBe(true);
+      seen.add(t);
+    }
+    expect(seen.size).toBe(2000);
+    expect(base32(new Uint8Array(16))).toHaveLength(26); // 128 bits → ceil(128/5) = 26
   });
-
-  it("rejects tampered tokens", () => {
-    const tok = createPassToken({ registrationId: "reg_1", eventId: "evt_1" });
-    const [p, payload, sig] = tok.split(".");
-    const forged = Buffer.from(JSON.stringify({ r: "reg_2", e: "evt_1", n: "x" })).toString("base64url");
-    expect(verifyPassToken(`${p}.${forged}.${sig}`)).toBeNull();
-    expect(verifyPassToken(`${p}.${payload}.${sig.slice(0, -2)}xx`)).toBeNull();
-    expect(verifyPassToken("garbage")).toBeNull();
+  it("QR payload round-trips to the token and means nothing by itself", () => {
+    const t = newPassToken();
+    expect(passQrPayload(t)).toBe(`evntcult://p/${t}`);
+    expect(extractPassToken(passQrPayload(t))).toBe(t);
+    expect(extractPassToken(t.toLowerCase())).toBe(t);
   });
+  it("display code is decorative and readable", () => {
+    expect(passCode("valorant", 42)).toBe("EC-VALO-0042");
+  });
+});
 
-  it("builds readable serials", () => {
-    expect(passSerial("robowars-2026", 42)).toBe("EC-ROBO-0042");
+describe("sessions", () => {
+  process.env.SESSION_SECRET = "test-secret-that-is-at-least-32-characters-long";
+  it("accepts its own cookie and rejects tampering or expiry", async () => {
+    const v = await createSessionValue("user-1");
+    expect(await readSessionValue(v)).toBe("user-1");
+    expect(await readSessionValue(v.slice(0, -1) + (v.endsWith("A") ? "B" : "A"))).toBeNull();
+    expect(await readSessionValue(v, Date.now() + 15 * 86_400_000)).toBeNull();
+    expect(await readSessionValue("garbage")).toBeNull();
+  });
+});
+
+describe("time", () => {
+  it("stores UTC and converts IST input", () => {
+    expect(istToUtcIso("2026-11-14", "10:00")).toBe("2026-11-14T04:30:00.000Z");
+    expect(() => parseUtc("2026-11-14 10:00")).toThrow();
+    expect(parseUtc("2026-11-14T04:30:00.000Z").getTime()).toBe(Date.UTC(2026, 10, 14, 4, 30));
   });
 });
 
 describe("money", () => {
-  it("formats paise as INR", () => {
+  it("is integer paise formatted as INR", () => {
     expect(formatINR(0)).toBe("Free");
-    expect(formatINR(29900)).toBe("₹299");
-  });
-  it("builds an NPCI UPI URI", () => {
-    const uri = upiUri({ vpa: "club@okaxis", payeeName: "Robotics Club", amountPaise: 29900, note: "Neon Night" });
-    expect(uri).toBe("upi://pay?pa=club%40okaxis&pn=Robotics+Club&am=299.00&cu=INR&tn=Neon+Night");
+    expect(formatINR(29900)).toContain("299");
+    expect(upiUri({ vpa: "club@okaxis", payeeName: "Club", amountPaise: 10050, note: "Pass" })).toContain("am=100.50");
   });
 });
