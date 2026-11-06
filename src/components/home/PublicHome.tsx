@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { ArrowRight, BellRing, Camera, Check, Headset, MapPin, ScanLine, Ticket } from "lucide-react";
+import { ArrowRight, BellRing, CalendarCheck2, Camera, Check, Headset, LayoutGrid, MapPin, Radio, ScanLine, ShieldCheck, Ticket } from "lucide-react";
 import type { EventSummary } from "@/lib/data/types";
 import { Aurora } from "@/components/brand/Aurora";
 import { RotatingBadge } from "@/components/brand/RotatingBadge";
-import { Logo } from "@/components/shell/Logo";
+import { LogoWordmark } from "@/components/brand/MissingE";
 import { EventArt } from "@/components/ui/EventArt";
 import { Countdown } from "@/components/dashboard/Countdown";
 import { formatINR } from "@/lib/money";
@@ -93,16 +93,30 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
         ))}
 
         <div className="relative max-w-4xl">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-[12px] font-bold uppercase tracking-[0.16em] text-ink-2">
-            <span className="size-1.5 rounded-full bg-volt motion-safe:animate-pulse-dot" aria-hidden /> Campus events, live
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-[13px] font-semibold text-ink-2">
+            Welcome to <LogoWordmark className="text-[17px] text-ink" motion="blink" />
           </span>
-          <h1 className="mt-7 font-display font-extrabold leading-[0.88] tracking-[-0.055em]">
-            <span className="block text-[clamp(64px,12vw,176px)] text-volt">One pass.</span>
-            <span className="block text-[clamp(36px,6vw,88px)] text-ink">Every campus night.</span>
+          <h1 className="mt-7 font-display font-extrabold leading-[0.9] tracking-[-0.05em]">
+            <span className="block text-[clamp(44px,8.4vw,124px)] text-ink">Every campus event.</span>{" "}
+            <span className="block text-[clamp(56px,10.5vw,156px)] text-volt">One place.</span>
           </h1>
-          <p className="mx-auto mt-7 max-w-lg text-[17px] leading-relaxed text-ink-2">
-            Register in a tap, walk in with a scan, relive it after. All you need is your college email.
+          <p className="mx-auto mt-7 max-w-2xl text-[17.5px] leading-relaxed text-ink-2">
+            EvntCult brings every fest, game night and workshop on campus together. Your calendar fills itself, organizers&apos; updates reach you live,
+            clash detection keeps events from colliding, and <span className="font-semibold text-ink">OnePass</span> gets you in with one tap.
           </p>
+          <ul className="mx-auto mt-7 flex max-w-3xl flex-wrap justify-center gap-2" aria-label="What EvntCult does">
+            {[
+              { icon: LayoutGrid, label: "All events, one place" },
+              { icon: CalendarCheck2, label: "Calendar that fills itself" },
+              { icon: Radio, label: "Live updates" },
+              { icon: ShieldCheck, label: "Clash detection" },
+              { icon: Ticket, label: "OnePass entry" },
+            ].map((f) => (
+              <li key={f.label} className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-2 text-[13px] font-semibold text-ink-2">
+                <f.icon className="size-4 text-volt" aria-hidden /> {f.label}
+              </li>
+            ))}
+          </ul>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               href="/signin?mode=signup"
@@ -120,19 +134,19 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
         </div>
 
         <div className="absolute bottom-8 right-8 hidden md:block">
-          <RotatingBadge href="/signin?mode=signup" label="Sign up and get your OnePass" text="GET YOUR ONEPASS • SIGN UP • " />
+          <RotatingBadge href="/signin?mode=signup" label="Sign up for EvntCult" text="JOIN EVNTCULT • SIGN UP • " />
         </div>
       </section>
 
       {/* ── 2. OnePass ─────────────────────────────────── */}
       <section aria-labelledby="onepass-heading" className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
         <div>
-          <p className="eyebrow">Meet your campus ID for events</p>
+          <p className="eyebrow">Our flagship · your identity for campus events</p>
           <h2 id="onepass-heading" className="mt-3 font-display text-[clamp(64px,9vw,128px)] font-extrabold leading-[0.9] tracking-[-0.055em]">
             One<span className="text-volt">Pass</span>
           </h2>
           <p className="mt-5 max-w-xl text-[18px] leading-relaxed text-ink-2">
-            One dynamic pass for everything you do at a campus event. No paper tickets, no forms at the door, no hunting for photos later.
+            One dynamic pass that makes going to campus events effortless: check-in at the gate, live updates and, soon, event support, all from a single tap. No paper tickets, no forms at the door, no hunting for photos later.
           </p>
 
           <ol className="mt-10 space-y-3">
@@ -159,9 +173,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
           <article aria-label="Sample OnePass" className="overflow-hidden rounded-[32px] border border-white/10 bg-surface shadow-pop">
             <div className="bg-volt p-6 text-ink-inverse">
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 font-brand text-[22px] font-semibold leading-none">
-                  <Logo className="size-7" /> OnePass
-                </span>
+                <span className="font-display text-[24px] font-extrabold leading-none tracking-[-0.03em]">OnePass</span>
                 <span className="rounded-full bg-ink-inverse/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">Sample</span>
               </div>
               <p className="mt-6 text-[12px] font-bold uppercase tracking-[0.14em] opacity-70">Valid for</p>
@@ -269,12 +281,12 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
 
       {/* ── 5. Closing call to action ──────────────────── */}
       <section className="flex flex-col items-start justify-between gap-6 rounded-[36px] border border-white/[0.08] bg-surface p-8 md:flex-row md:items-end md:p-12">
-        <h2 className="title-xl max-w-2xl text-[clamp(40px,5.6vw,80px)]">
-          Get your <em>OnePass</em>.
+        <h2 className="title-xl max-w-3xl text-[clamp(40px,5.6vw,80px)]">
+          Never miss what&apos;s happening on campus. <em>Join EvntCult today.</em>
         </h2>
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-          <Link href="/signin?mode=signup" className="inline-flex items-center justify-center gap-2 rounded-full bg-volt px-7 py-4 text-[16px] font-bold text-ink-inverse hover:bg-volt-hover">
-            Sign up free <ArrowRight className="size-4" aria-hidden />
+          <Link href="/signin?mode=signup" className="inline-flex items-center justify-center gap-2 rounded-full bg-volt px-7 py-4 text-[16px] font-bold text-ink-inverse shadow-brand hover:bg-volt-hover">
+            Get started <ArrowRight className="size-4" aria-hidden />
           </Link>
           <Link href="/signin" className="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-4 text-[16px] font-semibold hover:border-volt/60">
             Log in
