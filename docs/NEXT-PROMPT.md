@@ -15,6 +15,13 @@ You are continuing **EvntCult**, a campus event management app. M0 and M1 are do
 - Pass tokens: 128-bit base32. The QR payload is `evntcult://p/<token>` (`src/lib/tokens.ts`).
 - Seed: `npm run seed` (local), `npm run seed:remote`. Deploy: `npm run cf:deploy` (stop any `next dev` first, because they share `.next`).
 - Public browsing is on: `/dashboard`, `/events` and event pages work signed out. Only `/passes`, `/vault` and `/organizer` are protected (`src/middleware.ts`).
+- Mobile numbers: sign-up asks for an Indian mobile number, stored as `+91XXXXXXXXXX` in `users.phone` (migration 0003). The WhatsApp consent tick is stored in `users.whatsapp_opt_in`.
+  - The helpers are in `src/lib/phone.ts`.
+  - `GET` and `PATCH /api/me` read and update the number.
+  - Users without a number see `AddPhoneCard` on the dashboard.
+  - `viewer.phone` and `viewer.whatsappOptIn` come from `getViewer()`.
+- First run on a new machine: `npm install`, copy `.env.example` to `.env` and `.dev.vars` with a 32+ character SESSION_SECRET, then `npm run db:migrate`, `npm run seed` and `npm run dev`.
+- Known gap: login is email-only with no check, so anyone can type someone else's email. Don't fix it during M2–M5. It's listed under M6.
 
 ## Rules
 - **Every number is a query.** No hard-coded counts and no fake data.
@@ -48,6 +55,12 @@ You are continuing **EvntCult**, a campus event management app. M0 and M1 are do
 - An `/organizer` home with my events, counts, check-ins and the clash warnings already computed in `src/lib/data/dashboard.ts`.
 - An attendee table with search, a CSV export, and a "mark paid" button (payment reconcile). Every change writes to `audit_log` (`src/lib/audit.ts`).
 - Post event updates (schedule / venue / info) into `event_updates`. They already show on dashboards.
+- **WhatsApp notifications** (for the event's registered users with `whatsapp_opt_in = 1` only):
+  - Build a `notify()` layer with an outbox table: `notifications(id, user_id, event_id, channel, template, payload, status queued|sent|failed, error, created_at, sent_at)`.
+  - Event updates, waitlist holds and the day-before reminder (from the cron) all queue messages through it.
+  - Sending goes through the WhatsApp Cloud API (Meta) or a provider. **Ask me which provider before adding it.** Keep the API token in `wrangler secret put`. Messages must use pre-approved templates.
+  - Until a provider is connected, the queue fills, and the organizer screen shows "WhatsApp sending: not connected" and the number queued. Don't pretend messages were sent.
+  - Never show other students' phone numbers to organizers, and leave them out of the CSV, unless I say otherwise.
 - Turn the Planned quick actions in `src/components/dashboard/sections.tsx` into real ones only where they are actually built.
 
 ## M5 — Photo Vault (upload + self-tag only)
@@ -58,6 +71,10 @@ You are continuing **EvntCult**, a campus event management app. M0 and M1 are do
 ## M6 — Polish + dark theme
 - Apply the brief's dark "campus poster meets control room" tokens across the whole app in `tailwind.config`: **colours and type only, keep the layouts**.
 - Add empty states, loading states, mobile checks and accessibility checks (focus rings, labels, contrast).
+- **Real login check:** add a one-time 6-digit code sent to the email (or to WhatsApp once a provider is set up).
+  - Store only a hash of the code, expire it after 10 minutes, allow at most 5 tries, and rate-limit requests.
+  - Propose the email provider to me first.
+- A small `/profile` page to change your name, number and WhatsApp consent.
 - Then do a final `npm run seed:remote` (if asked) and `npm run cf:deploy`, and check the live site.
 
 Start with **M2 only**. Read the files named above first, then tell me your plan in a few lines before writing code.
