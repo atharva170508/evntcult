@@ -13,7 +13,7 @@ interface CardProps {
   style?: React.CSSProperties;
 }
 
-/** White rounded card with an optional icon, eyebrow, title and "See all" link. */
+/** Glass card with an optional icon, eyebrow, title and "See all" link. */
 export function Card({ eyebrow, title, icon: Icon, action, className, bodyClassName, children, style }: CardProps) {
   return (
     <section className={cn("card flex flex-col overflow-hidden animate-fade-up", className)} style={style}>
@@ -21,13 +21,13 @@ export function Card({ eyebrow, title, icon: Icon, action, className, bodyClassN
         <header className="flex items-center justify-between gap-4 px-6 pt-6">
           <div className="flex min-w-0 items-center gap-3">
             {Icon && (
-              <span className="grid size-10 shrink-0 place-items-center rounded-2xl bg-canvas text-ink-2">
+              <span className="grid size-10 shrink-0 place-items-center rounded-2xl border border-white/10 bg-gradient-to-br from-aurora-1/30 to-aurora-2/10 text-brand-ink">
                 <Icon className="size-[18px]" />
               </span>
             )}
             <div className="min-w-0">
               {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-              {title && <h2 className="headline truncate text-[18px] leading-tight">{title}</h2>}
+              {title && <h2 className="truncate font-serif text-[26px] leading-[1.05] tracking-[-0.01em] text-ink">{title}</h2>}
             </div>
           </div>
           {action && (

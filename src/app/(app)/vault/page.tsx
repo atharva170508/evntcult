@@ -7,6 +7,7 @@ import { getDB } from "@/lib/db";
 import { myGalleries, myTaggedPhotos } from "@/lib/data/photos";
 import { fmtDate } from "@/lib/utils";
 import { PlannedCard } from "@/components/dashboard/sections";
+import { PageHero } from "@/components/brand/PageHero";
 
 export const metadata: Metadata = { title: "Photo Vault" };
 export const dynamic = "force-dynamic";
@@ -27,18 +28,21 @@ export default async function VaultPage() {
 
   return (
     <div className="space-y-6 pt-4 md:pt-6">
-      <header className="animate-fade-up">
-        <p className="eyebrow">Photo Vault</p>
-        <h1 className="headline mt-1 text-[clamp(30px,4vw,42px)] tracking-tightest">Photos of you</h1>
-        <p className="mt-1 text-[15px] text-ink-muted">
-          <span className="font-mono tabular-nums">{tagged.length}</span> photo{tagged.length === 1 ? "" : "s"} you&apos;ve tagged yourself in. Only you see your tags.
-        </p>
-      </header>
+      <PageHero
+        eyebrow="Photo Vault"
+        title={<>Photos <em>of you</em></>}
+        sub={
+          <>
+            <span className="font-mono tabular-nums">{tagged.length}</span> photo{tagged.length === 1 ? "" : "s"} you&apos;ve tagged yourself in. Only you see your tags.
+          </>
+        }
+        marquee={["Relive it", "Photo Vault"]}
+      />
 
       {byEvent.size === 0 ? (
         <section className="card flex flex-col items-start gap-3 p-8">
           <Images className="size-8 text-ink-subtle" />
-          <h2 className="headline text-[20px]">Nothing here yet</h2>
+          <h2 className="title-serif text-[32px]">Nothing here yet</h2>
           <p className="max-w-md text-[14.5px] text-ink-muted">
             Open the photos from an event you went to and tap <b>That&apos;s me</b> on the ones you&apos;re in. They&apos;ll collect here.
           </p>
@@ -48,7 +52,7 @@ export default async function VaultPage() {
           <section key={eventId} className="space-y-3">
             <div className="flex items-end justify-between gap-3">
               <div>
-                <h2 className="headline text-[19px]">{g.title}</h2>
+                <h2 className="title-serif text-[32px]">{g.title}</h2>
                 <p className="text-[12.5px] text-ink-muted">{fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })} · {g.ids.length} of you</p>
               </div>
               <Link href={`/events/${g.slug}/photos`} className="text-[13px] font-semibold text-ink underline">All photos</Link>
@@ -69,7 +73,7 @@ export default async function VaultPage() {
 
       <div className="grid gap-4 md:grid-cols-2">
         <section className="card p-5">
-          <h2 className="headline text-[17px]">Galleries from your events</h2>
+          <h2 className="title-serif text-[32px]">Galleries from your events</h2>
           {galleries.length === 0 ? (
             <p className="mt-2 text-[14px] text-ink-muted">When organizers upload photos from events you registered for, they&apos;ll be listed here.</p>
           ) : (

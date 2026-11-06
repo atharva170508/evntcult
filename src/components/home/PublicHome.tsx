@@ -4,7 +4,6 @@ import type { EventSummary } from "@/lib/data/types";
 import { Aurora } from "@/components/brand/Aurora";
 import { Marquee } from "@/components/brand/Marquee";
 import { RotatingBadge } from "@/components/brand/RotatingBadge";
-import { Wordmark } from "@/components/brand/Wordmark";
 import { EventArt } from "@/components/ui/EventArt";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Countdown } from "@/components/dashboard/Countdown";
@@ -249,7 +248,6 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
             Create your account <ArrowRight className="size-4" aria-hidden />
           </Link>
         </div>
-        <Wordmark />
       </section>
     </div>
   );

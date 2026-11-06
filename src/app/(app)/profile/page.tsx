@@ -4,6 +4,7 @@ import { BadgeCheck, Mail } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { codeLoginOn } from "@/lib/email";
 import { ProfileForm } from "@/components/profile/ProfileForm";
+import { PageHero } from "@/components/brand/PageHero";
 
 export const metadata: Metadata = { title: "Your profile" };
 export const dynamic = "force-dynamic";
@@ -15,9 +16,8 @@ export default async function ProfilePage() {
   if (!viewer) redirect("/signin?next=/profile");
 
   return (
-    <div className="mx-auto mt-6 max-w-xl animate-fade-up">
-      <p className="eyebrow">Account</p>
-      <h1 className="headline mt-1 text-[32px] leading-tight">Your profile</h1>
+    <div className="mx-auto max-w-2xl animate-fade-up">
+      <PageHero eyebrow="Account" title={<>Your <em>profile</em></>} />
 
       <div className="card mt-6 flex flex-wrap items-center gap-3 p-5">
         <span className="grid size-10 place-items-center rounded-xl bg-brand-soft text-brand-ink" aria-hidden>
