@@ -64,3 +64,18 @@ export const registerSchema = z
 
 /** Bodies that must be empty JSON objects ({}). */
 export const emptySchema = z.object({}).strict();
+
+/** POST /api/checkins — one scan from a gate scanner (live or synced from the offline queue). */
+export const checkinSchema = z
+  .object({
+    event_id: z.string().trim().min(1).max(64),
+    pass_token: z.string().trim().min(1).max(200),
+    /** The scanner's own id for this scan (UUID). Makes retries safe. */
+    client_scan_id: z.string().trim().min(8).max(64),
+    /** The volunteer collected the fee for an unpaid pass and tapped "Admit". */
+    accept_unpaid: z.boolean().default(false),
+    /** When the scan happened, for scans synced after the network came back. */
+    scanned_at: z.string().datetime().optional(),
+    device_id: z.string().trim().max(64).optional(),
+  })
+  .strict();
