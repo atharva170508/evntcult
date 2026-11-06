@@ -110,7 +110,7 @@ export function LiveHeadcount({
           />
           <defs>
             <linearGradient id="hc-grad" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stopColor="#d4ff3a" />
+              <stop offset="0" stopColor="#dcfe62" />
               <stop offset="1" stopColor="#a8d61c" />
             </linearGradient>
           </defs>

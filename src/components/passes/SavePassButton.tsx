@@ -57,7 +57,7 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
       // Card
       ctx.fillStyle = "#08080c";
       ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = "#d4ff3a";
+      ctx.fillStyle = "#dcfe62";
       ctx.beginPath();
       ctx.roundRect(PAD - 24, PAD - 24, W - 2 * (PAD - 24), 360, 48);
       ctx.fill();

@@ -410,7 +410,7 @@ function QuickAction({
     >
       <span
         className="grid size-9 place-items-center rounded-xl"
-        style={primary ? { background: "rgba(8,8,12,0.12)", color: "#08080c" } : { background: "rgba(212,255,58,0.1)", color: "#d4ff3a" }}
+        style={primary ? { background: "rgba(8,8,12,0.12)", color: "#08080c" } : { background: "rgba(220,254,98,0.1)", color: "#dcfe62" }}
       >
         <Icon className="size-[18px]" />
       </span>
@@ -622,12 +622,12 @@ export function NavigatorTeaser({ next }: { next: NextUp | null }) {
             <rect x="282" y="18" width="100" height="70" rx="10" />
           </g>
           <circle cx="200" cy="52" r="18" fill="#1d3326" />
-          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#d4ff3a" strokeWidth="3.5" strokeDasharray="7 6" strokeLinecap="round">
+          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#dcfe62" strokeWidth="3.5" strokeDasharray="7 6" strokeLinecap="round">
             <animate attributeName="stroke-dashoffset" from="26" to="0" dur="1s" repeatCount="indefinite" />
           </path>
           <circle cx="60" cy="128" r="7" fill="#f2f3f7" stroke="#15171e" strokeWidth="3" />
-          <circle cx="330" cy="54" r="16" fill="#d4ff3a" opacity="0.2" />
-          <circle cx="330" cy="54" r="8" fill="#d4ff3a" stroke="#121219" strokeWidth="3" />
+          <circle cx="330" cy="54" r="16" fill="#dcfe62" opacity="0.2" />
+          <circle cx="330" cy="54" r="8" fill="#dcfe62" stroke="#121219" strokeWidth="3" />
         </svg>
       </div>
       <p className="mt-4 flex items-start gap-2 text-[13px] font-semibold text-ink-muted">

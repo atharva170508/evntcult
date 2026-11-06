@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { KeyRound, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Logo } from "./Logo";
+import { LogoIcon, LogoWordmark } from "@/components/brand/MissingE";
 import { NAV, ORGANIZER_NAV, isActive } from "./nav";
 
 /** App-style left menu for laptops (Unstop / Zoho Backstage idea). Hidden on phones. */
@@ -15,14 +15,14 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
   return (
     <aside className="sticky top-0 hidden print:!hidden h-dvh w-[88px] shrink-0 flex-col border-r border-white/[0.06] bg-surface/60 px-3 py-5 backdrop-blur-xl md:flex xl:w-[236px] xl:px-4">
       <Link href="/dashboard" className="flex items-center gap-2.5 px-2" aria-label="EvntCult home">
-        <Logo />
-        <span className="hidden font-brand text-[26px] font-semibold leading-none tracking-[-0.01em] xl:inline">EvntCult</span>
+        <LogoIcon className="size-9 xl:hidden" />
+        <LogoWordmark className="hidden text-[27px] text-ink xl:inline-flex" />
       </Link>
 
       {isOrganizer && (
         <Link
           href="/organizer/events/new"
-          className="mt-6 flex items-center justify-center gap-2 rounded-full bg-volt py-3 text-[14px] font-bold text-ink-inverse shadow-[0_14px_34px_-16px_rgba(212,255,58,0.55)] transition-colors hover:bg-volt-hover"
+          className="mt-6 flex items-center justify-center gap-2 rounded-full bg-volt py-3 text-[14px] font-bold text-ink-inverse shadow-[0_14px_34px_-16px_rgba(220,254,98,0.55)] transition-colors hover:bg-volt-hover"
         >
           <Plus className="size-[18px]" />
           <span className="hidden xl:inline">Create event</span>

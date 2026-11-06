@@ -14,7 +14,7 @@
     @apply min-h-dvh bg-canvas font-sans text-[15px] leading-relaxed;
   }
   ::selection {
-    background: rgba(212, 255, 58, 0.3);
+    background: rgba(220, 254, 98, 0.3);
   }
   /* Accent words in headings: neon yellow, upright (no serif italics any more). */
   em {

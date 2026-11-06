@@ -5,7 +5,7 @@ import { CalendarCheck2, QrCode, Users } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { Aurora } from "@/components/brand/Aurora";
 import { Marquee } from "@/components/brand/Marquee";
-import { Logo } from "@/components/shell/Logo";
+import { LogoWordmark } from "@/components/brand/MissingE";
 import { codeLoginOn } from "@/lib/email";
 import { SignInForm } from "./SignInForm";
 
@@ -24,8 +24,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         <Aurora />
         <Marquee words={["Register", "Pass", "Scan", "Attend"]} className="absolute inset-x-0 top-[38%] text-[150px] text-white/[0.07]" />
         <div className="relative flex items-center gap-2.5">
-          <Logo />
-          <span className="font-brand text-[30px] font-semibold leading-none tracking-[-0.01em]">EvntCult</span>
+          <LogoWordmark motion="type" className="text-[34px] text-white" />
         </div>
         <div className="relative max-w-md">
           <h2 className="font-display text-[68px] font-bold leading-[0.95] tracking-[-0.04em]">Register. Pass. Scan. <em>Attend.</em></h2>
@@ -46,8 +45,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
       <div className="grid place-items-center px-5 py-12">
         <div className="w-full max-w-[400px] animate-fade-up">
           <div className="flex items-center gap-2.5 lg:hidden">
-            <Logo />
-            <span className="font-brand text-[28px] font-semibold leading-none tracking-[-0.01em]">EvntCult</span>
+            <LogoWordmark motion="type" className="text-[30px] text-ink" />
           </div>
           <h1 className="title-xl mt-8 text-[52px] lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
           <p className="mt-2 text-[15px] text-ink-muted">

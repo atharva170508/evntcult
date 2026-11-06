@@ -6,7 +6,7 @@ import { getViewer } from "@/lib/rbac";
 import { getDB } from "@/lib/db";
 import { certificateFor } from "@/lib/data/certificates";
 import { fmtDate, fmtTime } from "@/lib/utils";
-import { Logo } from "@/components/shell/Logo";
+import { LogoWordmark } from "@/components/brand/MissingE";
 import { PrintButton } from "@/components/certificates/PrintButton";
 
 export const metadata: Metadata = { title: "Certificate of attendance" };
@@ -34,8 +34,7 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
       >
         <div className="absolute inset-x-0 top-0 h-2 bg-volt print:bg-black" aria-hidden />
         <div className="flex items-center justify-center gap-2.5">
-          <Logo className="size-10" />
-          <span className="font-brand text-[28px] font-semibold leading-none">EvntCult</span>
+          <LogoWordmark motion="still" className="text-[32px] text-ink print:text-black" />
         </div>
         <p className="mt-10 text-[12.5px] font-bold uppercase tracking-[0.22em] text-volt print:text-black">Certificate of attendance</p>
         <p className="mt-6 text-[15px] text-ink-muted print:text-black">This certifies that</p>

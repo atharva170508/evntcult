@@ -28,21 +28,23 @@ const config: Config = {
           inverse: "#08080c",
         },
         brand: {
-          DEFAULT: "#d4ff3a",
-          hover: "#e2ff73",
+          DEFAULT: "#dcfe62",
+          hover: "#e8ff8c",
           soft: "#1d2109",
-          ink: "#d4ff3a",
+          ink: "#dcfe62",
         },
         live: { DEFAULT: "#34d399", soft: "#0f2a20" },
         warn: { DEFAULT: "#fbbf24", soft: "#2e230b" },
         danger: { DEFAULT: "#ff6b6e", soft: "#331618" },
         sun: "#ffd25e",
         /** Neon-lime call-to-action accent (always with dark text). */
-        volt: { DEFAULT: "#d4ff3a", hover: "#e2ff73" },
+        volt: { DEFAULT: "#dcfe62", hover: "#e8ff8c" },
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "Consolas", "monospace"],
+        /** Logo wordmark only (Bricolage Grotesque 800). */
+        logo: ["var(--font-logo)", "var(--font-sans)", "system-ui", "sans-serif"],
         /** Big headings: the same friendly sans, used heavy and tight. */
         display: ["var(--font-sans)", "system-ui", "-apple-system", "sans-serif"],
         /** The EvntCult logotype only (Fredoka, rounded). */
@@ -58,9 +60,13 @@ const config: Config = {
       boxShadow: {
         card: "0 1px 0 rgba(255,255,255,0.03) inset, 0 10px 30px -18px rgba(0,0,0,0.8)",
         pop: "0 30px 70px -30px rgba(0,0,0,0.9)",
-        brand: "0 14px 34px -16px rgba(212,255,58,0.55)",
+        brand: "0 14px 34px -16px rgba(220,254,98,0.55)",
       },
       keyframes: {
+        "caret-blink": {
+          "0%, 49%": { opacity: "1" },
+          "50%, 100%": { opacity: "0" },
+        },
         "fade-up": {
           "0%": { opacity: "0", transform: "translateY(12px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
@@ -87,6 +93,7 @@ const config: Config = {
         },
       },
       animation: {
+        "caret-blink": "caret-blink 1.05s steps(1, end) infinite",
         "fade-up": "fade-up 0.6s cubic-bezier(0.22,1,0.36,1) both",
         "pulse-dot": "pulse_dot 1.6s ease-in-out infinite",
         float: "float 5s ease-in-out infinite",

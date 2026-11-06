@@ -5,7 +5,7 @@ const variants = {
   /** Neon-yellow pill — the main action. */
   primary: "bg-volt text-ink-inverse hover:bg-volt-hover shadow-[0_10px_24px_-12px_rgba(0,0,0,0.6)]",
   /** Neon-lime call to action (event-booking style). */
-  volt: "bg-volt text-ink-inverse font-bold hover:bg-volt-hover shadow-[0_14px_34px_-16px_rgba(212,255,58,0.55)]",
+  volt: "bg-volt text-ink-inverse font-bold hover:bg-volt-hover shadow-[0_14px_34px_-16px_rgba(220,254,98,0.55)]",
   /** Frosted glass pill for use over gradients. */
   glass: "glass text-white hover:bg-white/15",
   /** Brand violet — for "create" / highlight actions. */
