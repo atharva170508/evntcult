@@ -10,6 +10,7 @@
  *
  *   npm run seed           → local D1   (clears and re-seeds)
  *   npm run seed:remote    → production D1
+ *   To remove the sample data again: scripts/sample-data/README.md
  */
 import { writeFileSync } from "node:fs";
 
