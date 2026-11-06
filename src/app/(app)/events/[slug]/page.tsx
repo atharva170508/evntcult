@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import QRCode from "qrcode";
-import { ArrowLeft, CalendarDays, Clock, MapPin, Pencil, ScanLine, Ticket, Users } from "lucide-react";
+import { ArrowLeft, Camera, CalendarDays, ChevronRight, Clock, MapPin, Pencil, ScanLine, Ticket, Users } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getEventDetail, toSummary } from "@/lib/data/events";
 import { passQrPayload } from "@/lib/tokens";
@@ -12,6 +12,8 @@ import { EventArt } from "@/components/ui/EventArt";
 import { Chip } from "@/components/ui/Chip";
 import { Meter } from "@/components/ui/Meter";
 import { RegisterPanel } from "@/components/events/RegisterPanel";
+import { photoAccess } from "@/lib/data/photos";
+import { getDB } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Event" };
@@ -34,6 +36,11 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       : null;
 
   const waitlistPosition = reg?.status === "waitlisted" ? await waitlistPos(e.id, reg.id) : null;
+  const db = await getDB();
+  const photos = await photoAccess(db, viewer, e.id);
+  const photoCount = photos.view
+    ? ((await db.prepare("SELECT COUNT(*) AS n FROM photos WHERE event_id = ?").bind(e.id).first<{ n: number }>())?.n ?? 0)
+    : 0;
 
   return (
     <div className="space-y-5 pt-4 md:pt-6">
@@ -116,6 +123,20 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           )}
         </div>
       </section>
+
+      {photos.view && (photoCount > 0 || photos.manage) && (
+        <Link href={`/events/${e.slug}/photos`} className="card flex items-center gap-4 p-5 hover:border-ink">
+          <span className="grid size-11 place-items-center rounded-2xl bg-canvas"><Camera className="size-5" /></span>
+          <span className="flex-1">
+            <span className="block text-[16px] font-bold">Photos</span>
+            <span className="block text-[13px] text-ink-muted">
+              {photoCount ? `${photoCount} photo${photoCount === 1 ? "" : "s"}` : "No photos yet"}
+              {photos.manage ? " · add photos" : " · tag yourself to save them to your Vault"}
+            </span>
+          </span>
+          <ChevronRight className="size-5 text-ink-subtle" />
+        </Link>
+      )}
 
       {e.description && (
         <section className="card p-6 md:p-8">

@@ -1,10 +1,10 @@
-/** A fresh in-memory D1 database (wrangler's getPlatformProxy) with every migration applied. */
+/** A fresh in-memory D1 database (wrangler's getPlatformProxy) with every migration applied, plus a local R2 bucket. */
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { getPlatformProxy } from "wrangler";
 
 export async function testDatabase() {
-  const proxy = await getPlatformProxy<{ DB: D1Database }>({ configPath: path.resolve(__dirname, "../../wrangler.jsonc"), persist: false });
+  const proxy = await getPlatformProxy<{ DB: D1Database; PHOTOS: R2Bucket }>({ configPath: path.resolve(__dirname, "../../wrangler.jsonc"), persist: false });
   const db = proxy.env.DB;
   const dir = path.resolve(__dirname, "../../migrations");
   for (const file of readdirSync(dir).filter((f) => f.endsWith(".sql")).sort()) {
@@ -17,5 +17,5 @@ export async function testDatabase() {
       .filter(Boolean);
     await db.batch(statements.map((s) => db.prepare(s)));
   }
-  return { db, dispose: () => proxy.dispose() };
+  return { db, photos: proxy.env.PHOTOS, dispose: () => proxy.dispose() };
 }

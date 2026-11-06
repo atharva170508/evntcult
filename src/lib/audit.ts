@@ -15,7 +15,10 @@ export type AuditAction =
   // Written by src/lib/data/registrations.ts (it writes with its own db handle so the cron can use it):
   | "hold_offered"
   | "hold_expired"
-  | "waitlist_confirm";
+  | "waitlist_confirm"
+  // Written by src/lib/data/photos.ts:
+  | "photo_upload"
+  | "photo_delete";
 
 /** Append-only audit trail. */
 export async function audit(actorId: string | null, action: AuditAction, targetId: string | null, meta?: Record<string, unknown>) {

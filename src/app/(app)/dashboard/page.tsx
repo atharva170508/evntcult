@@ -113,7 +113,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <VaultTeaser photosOfYou={data.stats.photosOfYou} />
+        <VaultTeaser photosOfYou={data.stats.photosOfYou} preview={data.vaultPreview} />
         <PlannedCard eyebrow="Venue Navigator" title="Campus map & directions" icon={MapIcon} body="Walking directions to every hall, lab and ground. Not built yet." />
         <PlannedCard eyebrow="Certificates" title="Proof of attendance" icon={Award} body="Certificates for events you checked in to. Not built yet." />
       </section>

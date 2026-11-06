@@ -52,7 +52,11 @@ export async function getDashboardData(viewer: Viewer): Promise<DashboardData> {
       `SELECT COUNT(*) AS n FROM checkins c JOIN registrations r ON r.id = c.registration_id WHERE r.user_id = ?`,
       viewer.id,
     ),
-    count(`SELECT COUNT(*) AS n FROM photo_tags WHERE user_id = ?`, viewer.id),
+    count(
+      `SELECT COUNT(*) AS n FROM photo_tags t JOIN photos p ON p.id = t.photo_id
+        WHERE t.user_id = ?1 AND EXISTS (SELECT 1 FROM registrations r WHERE r.event_id = p.event_id AND r.user_id = ?1 AND r.status = 'registered')`,
+      viewer.id,
+    ),
     all<{ starts_at: string; mine: number }>(
       `SELECT e.starts_at,
               EXISTS (SELECT 1 FROM registrations r WHERE r.event_id = e.id AND r.user_id = ? AND r.status = 'registered') AS mine
@@ -65,6 +69,18 @@ export async function getDashboardData(viewer: Viewer): Promise<DashboardData> {
       viewer.id,
     ),
   ]);
+
+  // A few real thumbnails for the dashboard's Vault card (same rule as the Vault page).
+  const vaultPreview = photosOfYou
+    ? (
+        await all<{ id: string }>(
+          `SELECT p.id FROM photo_tags t JOIN photos p ON p.id = t.photo_id
+            WHERE t.user_id = ?1 AND EXISTS (SELECT 1 FROM registrations r WHERE r.event_id = p.event_id AND r.user_id = ?1 AND r.status = 'registered')
+            ORDER BY t.created_at DESC LIMIT 6`,
+          viewer.id,
+        )
+      ).map((r) => r.id)
+    : [];
 
   const upcoming = mine.map(toSummary);
   const first = mine[0];
@@ -94,6 +110,7 @@ export async function getDashboardData(viewer: Viewer): Promise<DashboardData> {
       photosOfYou,
     },
     nextUp,
+    vaultPreview,
     upcoming,
     campus: campus.map(toSummary),
     announcements: updates.map((u) => ({

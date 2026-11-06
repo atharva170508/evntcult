@@ -17,6 +17,8 @@
     "bindings": [{ "name": "EVENT_LIVE", "class_name": "EventLive" }]
   },
   "migrations": [{ "tag": "v1-event-live", "new_sqlite_classes": ["EventLive"] }],
+  // Photo Vault originals + thumbnails. Create once: `npx wrangler r2 bucket create evntcult-photos`
+  "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "evntcult-photos" }],
   "d1_databases": [
     {
       "binding": "DB",
