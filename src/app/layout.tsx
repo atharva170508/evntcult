@@ -26,6 +26,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* Sets data-theme before first paint, so there's no light flash in dark mode. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+        {/* Without JavaScript, show everything that would have animated in. */}
+        <noscript>
+          <style>{`[style*="opacity:0"],[style*="opacity: 0"]{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+        </noscript>
       </head>
       <body>
         <MotionProvider>{children}</MotionProvider>
