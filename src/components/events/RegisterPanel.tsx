@@ -26,7 +26,7 @@ export function RegisterPanel(props: {
   pricePaise: number;
   registration: Reg | null;
   qrSvg: string | null;
-  /** false until the registration API ships (M2): show passes read-only, no fake buttons. */
+  /** Registration API is live (M2). Pass false to show passes read-only. */
   actionsLive?: boolean;
 }) {
   const router = useRouter();
@@ -65,7 +65,7 @@ export function RegisterPanel(props: {
   }
 
   const r = props.registration;
-  const live = props.actionsLive ?? false;
+  const live = props.actionsLive ?? true;
   const err = error && (
     <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
       {error}

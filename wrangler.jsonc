@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "evntcult",
-  "main": ".open-next/worker.js",
+  "main": "worker.ts", // wraps .open-next/worker.js and adds the cron handler
   "compatibility_date": "2026-09-21",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
@@ -9,6 +9,8 @@
     "binding": "ASSETS"
   },
   "observability": { "enabled": true },
+  // Every 5 minutes: expire unconfirmed waitlist holds and offer freed seats to the next person (worker.ts).
+  "triggers": { "crons": ["*/5 * * * *"] },
   "d1_databases": [
     {
       "binding": "DB",
