@@ -71,7 +71,7 @@ for (let i = 0; i < 1600; i++) {
   const f = pick(FIRST), l = pick(LAST);
   attendees.push(addUser(`${f} ${l}`, `${f.toLowerCase()}.${l.toLowerCase()}${i}@college.edu`));
 }
-for (const u of users) sql.push(`INSERT INTO users VALUES (${q(u.id)}, ${q(u.email)}, ${q(u.name)}, ${q(u.role)}, ${q(ago(24 * 60))});`);
+for (const u of users) sql.push(`INSERT INTO users (id, email, name, role, created_at) VALUES (${q(u.id)}, ${q(u.email)}, ${q(u.name)}, ${q(u.role)}, ${q(ago(24 * 60))});`);
 
 // ---------- events ----------
 type E = { id: string; slug: string; title: string; price: number; capacity: number; start: Date; end: Date; status: string };

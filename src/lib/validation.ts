@@ -53,3 +53,14 @@ export const listQuerySchema = z.object({
 export type ListQuery = z.infer<typeof listQuerySchema>;
 
 export const unlockSchema = z.object({ code: z.string().trim().min(4).max(20) }).strict();
+
+/** POST /api/events/:ref/register — `waitlist: true` = "yes, put me on the waitlist if it's full". */
+export const registerSchema = z
+  .object({
+    waitlist: z.boolean().default(false),
+    code: z.string().trim().max(20).optional(),
+  })
+  .strict();
+
+/** Bodies that must be empty JSON objects ({}). */
+export const emptySchema = z.object({}).strict();

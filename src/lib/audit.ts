@@ -3,7 +3,19 @@ import { run } from "@/lib/db";
 import { newId } from "@/lib/tokens";
 import { nowIso } from "@/lib/time";
 
-export type AuditAction = "register" | "cancel" | "capacity_change" | "checkin" | "payment" | "event_create" | "event_update" | "phone_update";
+export type AuditAction =
+  | "register"
+  | "cancel"
+  | "capacity_change"
+  | "checkin"
+  | "payment"
+  | "event_create"
+  | "event_update"
+  | "phone_update"
+  // Written by src/lib/data/registrations.ts (it writes with its own db handle so the cron can use it):
+  | "hold_offered"
+  | "hold_expired"
+  | "waitlist_confirm";
 
 /** Append-only audit trail. */
 export async function audit(actorId: string | null, action: AuditAction, targetId: string | null, meta?: Record<string, unknown>) {
