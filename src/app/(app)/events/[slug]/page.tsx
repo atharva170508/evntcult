@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import QRCode from "qrcode";
-import { ArrowLeft, Camera, CalendarDays, ChevronRight, Clock, MapPin, Pencil, ScanLine, Ticket, Users } from "lucide-react";
+import { ArrowLeft, Camera, CalendarDays, ChevronRight, Clock, MapPin, Pencil, ScanLine, Ticket, Users, Video } from "lucide-react";
+import { UNLIMITED_CAPACITY } from "@/lib/validation";
 import { getViewer } from "@/lib/rbac";
 import { getEventDetail, toSummary } from "@/lib/data/events";
 import { passQrPayload } from "@/lib/tokens";
@@ -51,6 +52,13 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       <section className="card grid overflow-hidden animate-fade-up md:grid-cols-[1.1fr_1fr]">
         <div className="relative isolate flex min-h-[300px] flex-col justify-between p-6 text-white md:min-h-[520px] md:p-9">
           <EventArt accent={s.accent} />
+          {e.banner_url && (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={e.banner_url} alt="" className="absolute inset-0 -z-0 size-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30" aria-hidden />
+            </>
+          )}
           <div className="relative flex flex-wrap gap-2">
             <Chip tone="white">{LABEL[e.category] ?? e.category}</Chip>
             {e.access === "code" && <Chip tone="dark">Private · code only</Chip>}
@@ -68,18 +76,49 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <ul className="space-y-3 text-[15px]">
             <li className="flex items-center gap-3"><CalendarDays className="size-5 text-ink-subtle" /> {fmtDate(s.startsAt, { weekday: "short", day: "numeric", month: "short", year: "numeric" })}</li>
             <li className="flex items-center gap-3"><Clock className="size-5 text-ink-subtle" /> {fmtRange(s.startsAt, s.endsAt)} <span className="text-[12px] text-ink-subtle">IST</span></li>
-            <li className="flex items-center gap-3"><MapPin className="size-5 text-ink-subtle" /> {e.venue}</li>
-            <li className="flex items-center gap-3"><Ticket className="size-5 text-ink-subtle" /> {e.price_paise ? `${formatINR(e.price_paise)} · pay at the desk` : "Free entry"}</li>
+            {e.event_type === "virtual" ? (
+              <li className="flex items-center gap-3">
+                <Video className="size-5 text-ink-subtle" /> Online
+                {e.meeting_url && (d.isOwner || reg?.status === "registered") ? (
+                  <a href={e.meeting_url} target="_blank" rel="noreferrer" className="font-semibold text-volt underline-offset-4 hover:underline">Join link</a>
+                ) : (
+                  <span className="text-[13px] text-ink-subtle">· link shown on your pass</span>
+                )}
+              </li>
+            ) : (
+              <li className="flex items-center gap-3"><MapPin className="size-5 text-ink-subtle" /> {e.venue}</li>
+            )}
+            <li className="flex items-center gap-3">
+              <Ticket className="size-5 text-ink-subtle" />
+              {e.price_paise ? (
+                <span>
+                  {formatINR(e.price_paise)}
+                  {e.organizer_upi_id ? (
+                    <span className="text-ink-muted"> · pay by UPI to <span className="font-mono text-ink">{e.organizer_upi_id}</span></span>
+                  ) : (
+                    <span className="text-ink-muted"> · pay at the desk</span>
+                  )}
+                </span>
+              ) : (
+                "Free entry"
+              )}
+            </li>
           </ul>
 
           <div className="rounded-2xl bg-canvas p-4">
             <div className="flex items-center justify-between text-[13px] font-semibold">
               <span className="flex items-center gap-1.5"><Users className="size-4 text-ink-subtle" /> <span className="font-mono tabular-nums">{e.taken}</span> going</span>
               <span className={d.seatsLeft === 0 ? "text-danger" : "text-ink-2"}>
-                <span className="font-mono tabular-nums">{d.seatsLeft}</span> of <span className="font-mono tabular-nums">{e.capacity}</span> seats left
+                {e.capacity >= UNLIMITED_CAPACITY ? (
+                  "No limit"
+                ) : (
+                  <>
+                    <span className="font-mono tabular-nums">{d.seatsLeft}</span> of <span className="font-mono tabular-nums">{e.capacity}</span> seats left
+                  </>
+                )}
               </span>
             </div>
-            <Meter value={e.taken} max={e.capacity} className="mt-2 bg-white" />
+            {e.capacity < UNLIMITED_CAPACITY && <Meter value={e.taken} max={e.capacity} className="mt-2 bg-white" />}
           </div>
 
           {!viewer ? (

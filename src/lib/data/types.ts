@@ -26,6 +26,13 @@ export interface EventRow {
   organizer_id: string;
   banner_key: string | null;
   created_at: string;
+  /** Added by migration 0008 (Host an Event). */
+  event_type: "in_person" | "virtual";
+  meeting_url: string | null;
+  tagline: string | null;
+  organizer_upi_id: string | null;
+  drive_folder_url: string | null;
+  banner_url: string | null;
 }
 
 export interface EventSummary {

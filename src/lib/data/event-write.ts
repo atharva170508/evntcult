@@ -8,7 +8,8 @@ import { bufferFor } from "@/lib/venues";
 import { newAccessCode, newId } from "@/lib/tokens";
 import { istHm, istToUtcIso, istYmd, nowIso } from "@/lib/time";
 import type { Viewer } from "@/lib/rbac";
-import type { createEventSchema, patchEventSchema } from "@/lib/validation";
+import { parseDriveLink } from "@/lib/googleDrive";
+import { UNLIMITED_CAPACITY, type HostEventInput, type createEventSchema, type patchEventSchema } from "@/lib/validation";
 import type { EventRow } from "./types";
 
 type CreateInput = z.infer<typeof createEventSchema>;
@@ -159,4 +160,60 @@ export async function updateEvent(viewer: Viewer, eventId: string, input: PatchI
   if (next.capacity !== cur.capacity) await audit(viewer.id, "capacity_change", eventId, { from: cur.capacity, to: next.capacity });
   await audit(viewer.id, "event_update", eventId, { fields: Object.keys(input).filter((k) => k !== "acknowledgeSoftClashes") });
   return (await first<EventRow>("SELECT * FROM events WHERE id = ?", eventId))!;
+}
+
+/** Venue used for virtual events. Two online events never "double-book" a room. */
+export const ONLINE_VENUE = "Online";
+
+/**
+ * "Host an Event" modal: one screen, published straight away.
+ * Same rules as the full form (organizers only, unique slug, venue clash checks, IST times),
+ * plus the new fields from migration 0008.
+ */
+export async function createHostedEvent(viewer: Viewer, input: HostEventInput): Promise<EventRow> {
+  const startsAt = istToUtcIso(input.date, input.time);
+  if (new Date(startsAt) <= new Date()) throw new ApiError(400, "invalid", "Pick a date and time in the future.");
+  const endsAt = new Date(+new Date(startsAt) + input.durationMinutes * 60_000).toISOString();
+
+  const virtual = input.eventType === "virtual";
+  const venue = virtual ? ONLINE_VENUE : input.location;
+
+  let drive: string | null = null;
+  if (input.driveFolderUrl) {
+    const link = parseDriveLink(input.driveFolderUrl);
+    if (!link.ok || link.kind !== "folder")
+      throw new ApiError(400, "invalid_drive_link", "That isn't a Google Drive folder link. Open the folder in Drive and copy its link (…/drive/folders/…).");
+    drive = `https://drive.google.com/drive/folders/${link.id}`;
+  }
+
+  // Online events can't clash on a room; they can still clash on the crowd (same category, same time).
+  const clashes = (await clashesFor({ venue, startsAt, endsAt, category: input.category })).filter((c) => !(virtual && c.severity === "hard"));
+  assertPublishable(clashes, input.acknowledgeSoftClashes);
+
+  const id = newId();
+  const slug = await uniqueSlug(input.title);
+  await run(
+    `INSERT INTO events (id, slug, title, description, category, venue, starts_at, ends_at, capacity, price_paise, status, access, access_code,
+                         organizer_id, banner_key, created_at, event_type, meeting_url, tagline, organizer_upi_id, drive_folder_url, banner_url)
+     VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, 'published', 'public', NULL, ?, NULL, ?, ?, ?, ?, ?, ?, ?)`,
+    id,
+    slug,
+    input.title,
+    input.category,
+    venue,
+    startsAt,
+    endsAt,
+    input.capacity ?? UNLIMITED_CAPACITY,
+    input.isFree ? 0 : Math.round((input.ticketPrice ?? 0) * 100),
+    viewer.id,
+    nowIso(),
+    input.eventType,
+    virtual ? input.location : null,
+    input.tagline || null,
+    input.isFree ? null : (input.upiId ?? null),
+    drive,
+    input.bannerUrl ?? null,
+  );
+  await audit(viewer.id, "event_create", id, { slug, publish: true, via: "host_modal" });
+  return (await first<EventRow>("SELECT * FROM events WHERE id = ?", id))!;
 }

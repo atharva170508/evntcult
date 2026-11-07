@@ -30,7 +30,7 @@ export function toSummary(e: EventRowWithCount): EventSummary {
     id: e.id,
     slug: e.slug,
     title: e.title,
-    tagline: firstLine(e.description),
+    tagline: e.tagline?.trim() || firstLine(e.description),
     category: e.category,
     visibility: e.access === "code" ? "CODE_ONLY" : "PUBLIC",
     status: e.status,
@@ -162,5 +162,8 @@ export async function getEventDetail(ref: string, viewer: Viewer | null, code?: 
     if (!ok) return null;
   }
 
+  // Online events: the join link is only for the organizer and people holding a pass.
+  // Strip it here so it can't leak into any page or client component for everyone else.
+  if (!isOwner && myRegistration?.status !== "registered") event.meeting_url = null;
   return { event, seatsLeft: Math.max(0, event.capacity - event.taken), myRegistration, isOwner };
 }

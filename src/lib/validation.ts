@@ -101,3 +101,59 @@ export const eventUpdateSchema = z
     whatsapp: z.boolean().default(false),
   })
   .strict();
+
+/** "No limit" on the Host modal is stored as this many seats, so the seat counting stays the same. */
+export const UNLIMITED_CAPACITY = 100_000;
+
+/** UPI IDs look like name@bank (handle: letters, digits, dot, dash, underscore). */
+const upiId = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .regex(/^[a-z0-9._-]{2,256}@[a-z][a-z0-9]{1,63}$/, "Enter a UPI ID like name@bank.");
+
+const httpsUrl = (label: string) =>
+  z
+    .string()
+    .trim()
+    .max(500)
+    .url(`Enter a full ${label} link starting with https://`)
+    .refine((u) => u.startsWith("https://"), `The ${label} link must start with https://`);
+
+/** POST /api/events/create — the one-screen "Host an Event" modal. Times are IST. */
+export const hostEventSchema = z
+  .object({
+    title: z.string().trim().min(3, "Give your event a name (at least 3 characters).").max(120),
+    tagline: z.string().trim().max(140).optional(),
+    category: z.enum(CATEGORIES),
+    date: ymd,
+    time: hm,
+    /** How long it runs; ends the same night or after midnight. */
+    durationMinutes: z.number().int().min(15).max(24 * 60).default(120),
+    eventType: z.enum(["in_person", "virtual"]),
+    /** Venue name for in-person, meeting link for virtual. */
+    location: z.string().trim().min(2, "Add where it happens.").max(500),
+    isFree: z.boolean().default(true),
+    /** Rupees, only when paid. */
+    ticketPrice: z.number().min(1).max(10_000).optional(),
+    upiId: upiId.optional(),
+    /** Empty = no limit. */
+    capacity: z.number().int().min(1).max(UNLIMITED_CAPACITY).nullable().default(null),
+    driveFolderUrl: z.string().trim().max(500).optional(),
+    bannerUrl: httpsUrl("image").optional(),
+    acknowledgeSoftClashes: z.boolean().default(false),
+  })
+  .strict()
+  .superRefine((v, ctx) => {
+    if (v.eventType === "virtual") {
+      const ok = httpsUrl("meeting").safeParse(v.location);
+      if (!ok.success) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["location"], message: "Paste the meeting link (https://…) for a virtual event." });
+    } else if (v.location.length > 120) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["location"], message: "Keep the venue name under 120 characters." });
+    }
+    if (!v.isFree) {
+      if (!v.ticketPrice) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["ticketPrice"], message: "Set a ticket price for a paid pass." });
+      if (!v.upiId) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["upiId"], message: "Add the UPI ID where attendees pay you." });
+    }
+  });
+export type HostEventInput = z.infer<typeof hostEventSchema>;
