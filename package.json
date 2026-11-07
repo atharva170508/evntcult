@@ -19,7 +19,8 @@
     "db:migrate:remote": "wrangler d1 migrations apply evntcult-db --remote",
     "seed": "tsx scripts/seed.ts && wrangler d1 execute evntcult-db --local --file seed.sql --yes",
     "seed:remote": "tsx scripts/seed.ts && wrangler d1 execute evntcult-db --remote --file seed.sql --yes",
-    "photos:index": "tsx --env-file=.dev.vars scripts/index-drive-album.ts"
+    "photos:index": "tsx --env-file=.dev.vars scripts/index-drive-album.ts",
+    "photos:check": "tsx --env-file=.dev.vars scripts/check-selfie.ts"
   },
   "dependencies": {
     "clsx": "2.1.1",
