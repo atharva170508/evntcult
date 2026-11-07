@@ -132,6 +132,15 @@ describe("findMatches", () => {
     expect(out[1].thumbnailUrl).toBe(driveThumbnailUrl(FILE)); // unsafe URL replaced by Drive's thumbnail
   });
 
+  it("sends new sb_secret_ keys only in the apikey header", async () => {
+    const fetchMock = vi.fn(async () => Response.json([]));
+    vi.stubGlobal("fetch", fetchMock);
+    await findMatches({ url: cfg.url, key: "sb_secret_abc123" }, { eventId: "e1", embedding: normalizeEmbedding(Array(128).fill(1))!, threshold: 0.93 });
+    const headers = (fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1].headers as Record<string, string>;
+    expect(headers.apikey).toBe("sb_secret_abc123");
+    expect(headers.Authorization).toBeUndefined();
+  });
+
   it("turns Supabase failures into SupabaseError", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response("paused", { status: 503 })));
     await expect(findMatches(cfg, { eventId: "e1", embedding: normalizeEmbedding(Array(128).fill(1))!, threshold: 0.93 })).rejects.toBeInstanceOf(SupabaseError);
