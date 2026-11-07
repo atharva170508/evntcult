@@ -4,7 +4,9 @@
   "private": true,
   "description": "EvntCult — campus event management, Apple-style dark mode.",
   "scripts": {
+    "predev": "node scripts/copy-face-models.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/copy-face-models.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -16,7 +18,8 @@
     "db:migrate": "wrangler d1 migrations apply evntcult-db --local",
     "db:migrate:remote": "wrangler d1 migrations apply evntcult-db --remote",
     "seed": "tsx scripts/seed.ts && wrangler d1 execute evntcult-db --local --file seed.sql --yes",
-    "seed:remote": "tsx scripts/seed.ts && wrangler d1 execute evntcult-db --remote --file seed.sql --yes"
+    "seed:remote": "tsx scripts/seed.ts && wrangler d1 execute evntcult-db --remote --file seed.sql --yes",
+    "photos:index": "tsx --env-file=.dev.vars scripts/index-drive-album.ts"
   },
   "dependencies": {
     "clsx": "2.1.1",
@@ -33,13 +36,17 @@
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
     "@opennextjs/cloudflare": "^1.20.16",
+    "@tensorflow/tfjs": "4.22.0",
+    "@tensorflow/tfjs-backend-wasm": "4.22.0",
     "@types/node": "22.18.0",
     "@types/qrcode": "1.5.5",
     "@types/react": "19.1.12",
     "@types/react-dom": "19.1.9",
+    "@vladmandic/face-api": "1.7.15",
     "autoprefixer": "10.4.21",
     "eslint": "9.34.0",
     "eslint-config-next": "15.5.29",
+    "jpeg-js": "0.4.4",
     "postcss": "8.5.6",
     "tailwindcss": "3.4.19",
     "tsx": "4.20.5",

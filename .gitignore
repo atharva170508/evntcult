@@ -11,3 +11,6 @@ coverage
 .wrangler
 .dev.vars
 seed.sql
+
+# Copied from node_modules by scripts/copy-face-models.mjs
+public/models/face-api
