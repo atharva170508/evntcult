@@ -19,6 +19,7 @@
 import { default as handler } from "./.open-next/worker.js";
 import { sweepHolds } from "./src/lib/data/registrations";
 import { purgeOldCodes } from "./src/lib/data/login-codes";
+import { purgeFaceSearchLog } from "./src/lib/data/face-search";
 import { gateCounts } from "./src/lib/data/checkins";
 import { queueDayBeforeReminders } from "./src/lib/notify";
 import { readSessionValue, SESSION_COOKIE } from "./src/lib/session";
@@ -73,6 +74,7 @@ export default {
         const holds = await sweepHolds(env.DB, now);
         const reminders = await queueDayBeforeReminders(env.DB, now);
         await purgeOldCodes(env.DB, now);
+        await purgeFaceSearchLog(env.DB, now);
         console.log(`[cron ${controller.cron}] holds expired: ${holds.expired}, seats offered: ${holds.promoted}, reminders queued: ${reminders}`);
       })(),
     );
