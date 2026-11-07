@@ -30,6 +30,7 @@ export function initFaces(): Promise<void> {
     await faceapi.nets.ssdMobilenetv1.loadFromDisk(MODELS);
     await faceapi.nets.faceLandmark68Net.loadFromDisk(MODELS);
     await faceapi.nets.faceRecognitionNet.loadFromDisk(MODELS);
+    await faceapi.nets.tinyFaceDetector.loadFromDisk(MODELS);
   })();
   return ready;
 }
@@ -52,7 +53,7 @@ function isJpeg(b: Uint8Array) {
 }
 
 /** Decode a JPEG, find faces, embed them, and make the thumbnail. */
-export async function analyzePhoto(bytes: Uint8Array): Promise<AnalyzedPhoto> {
+export async function analyzePhoto(bytes: Uint8Array, opts: { minConfidence?: number } = {}): Promise<AnalyzedPhoto> {
   await initFaces();
   if (!isJpeg(bytes)) throw new UnsupportedImageError("not a JPEG (export the album as JPEG; RAW/HEIC/PNG aren't supported)");
   const img = jpeg.decode(bytes, { useTArray: true, formatAsRGBA: false, maxMemoryUsageInMB: 1536, maxResolutionInMP: 120 });
@@ -67,10 +68,12 @@ export async function analyzePhoto(bytes: Uint8Array): Promise<AnalyzedPhoto> {
     const detectInput = tf.tidy(() => (detectSize[0] === img.height ? full.clone() : tf.cast(tf.image.resizeBilinear(full, detectSize), "int32"))) as tf.Tensor3D;
     let found;
     try {
-      found = await faceapi
-        .detectAllFaces(detectInput as unknown as faceapi.TNetInput, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5, maxResults: 200 }))
-        .withFaceLandmarks()
-        .withFaceDescriptors();
+      const run = (o: faceapi.SsdMobilenetv1Options | faceapi.TinyFaceDetectorOptions) =>
+        faceapi.detectAllFaces(detectInput as unknown as faceapi.TNetInput, o).withFaceLandmarks().withFaceDescriptors();
+      found = await run(new faceapi.SsdMobilenetv1Options({ minConfidence: opts.minConfidence ?? 0.5, maxResults: 200 }));
+      // SSD often misses one big face filling the frame (close-ups, phone portraits); the tiny
+      // detector (the one the website uses for selfies) catches those.
+      if (found.length === 0) found = await run(new faceapi.TinyFaceDetectorOptions({ inputSize: 416, scoreThreshold: 0.5 }));
     } finally {
       detectInput.dispose();
     }
@@ -99,5 +102,34 @@ export async function analyzePhoto(bytes: Uint8Array): Promise<AnalyzedPhoto> {
     return { width: img.width, height: img.height, faces, skippedSmall, thumbnail };
   } finally {
     full.dispose();
+  }
+}
+
+/**
+ * Embed a selfie exactly like the website does (src/lib/face/browser.ts): image scaled to 1024 px,
+ * tiny detector at 320 then 224, then SSD as a last resort; the biggest face wins.
+ * (SSD alone often misses faces that fill the frame, which selfies do.)
+ */
+export async function embedSelfieLikeBrowser(bytes: Uint8Array): Promise<{ embedding: number[]; faces: number } | null> {
+  await initFaces();
+  if (!isJpeg(bytes)) throw new UnsupportedImageError("not a JPEG");
+  const img = jpeg.decode(bytes, { useTArray: true, formatAsRGBA: false, maxMemoryUsageInMB: 1536, maxResolutionInMP: 120 });
+  const s = Math.min(1, 1024 / Math.max(img.width, img.height));
+  const input = tf.tidy(() => {
+    const full = tf.tensor3d(img.data, [img.height, img.width, 3], "int32");
+    return (s === 1 ? full : tf.cast(tf.image.resizeBilinear(full, [Math.round(img.height * s), Math.round(img.width * s)]), "int32")) as tf.Tensor3D;
+  });
+  try {
+    const run = (o: faceapi.TinyFaceDetectorOptions | faceapi.SsdMobilenetv1Options) =>
+      faceapi.detectAllFaces(input as unknown as faceapi.TNetInput, o).withFaceLandmarks().withFaceDescriptors();
+    let found = await run(new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.4 }));
+    if (!found.length) found = await run(new faceapi.TinyFaceDetectorOptions({ inputSize: 224, scoreThreshold: 0.3 }));
+    if (!found.length) found = await run(new faceapi.SsdMobilenetv1Options({ minConfidence: 0.4 }));
+    if (!found.length) return null;
+    const biggest = found.reduce((a, b) => (b.detection.box.area > a.detection.box.area ? b : a));
+    const embedding = normalizeEmbedding(biggest.descriptor);
+    return embedding ? { embedding, faces: found.length } : null;
+  } finally {
+    input.dispose();
   }
 }
