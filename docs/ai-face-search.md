@@ -19,14 +19,15 @@ and keeps nothing except a timestamp for the rate limit (6 searches/minute, 40/h
 1. **Supabase project (free, no card):**
    - Sign up at https://supabase.com and create a project. Pick the Mumbai region if it's offered.
    - Open **SQL Editor**, paste `supabase/migrations/20261107000000_face_search.sql` and click **Run**. Running it again later is safe.
-   - From **Project Settings → API**, copy the **Project URL** and the **service_role** key. The service_role key is a secret: never put it in front-end code or commit it.
+   - Copy the **Project URL**: Project Settings → Data API (or the project's home page).
+   - Copy a **secret key**: Project Settings → **API Keys** → **Secret keys**. It starts with `sb_secret_`; create one if none exists. The older **service_role** key under **Legacy API Keys** also works, but Supabase is retiring legacy keys. The secret key is a password to your whole database: never put it in front-end code, paste it in chat or commit it.
 2. **Google API key (free, no billing):**
    - Go to https://console.cloud.google.com, create a project, then **APIs & Services → Library** and enable **Google Drive API**.
    - Under **Credentials → Create credentials → API key**, create a key. Restrict it to the Drive API.
 3. **Local secrets.** Add these lines to `.dev.vars`. It's already git-ignored.
    ```
    SUPABASE_URL=https://<project>.supabase.co
-   SUPABASE_SERVICE_ROLE_KEY=<service_role key>
+   SUPABASE_SERVICE_ROLE_KEY=<sb_secret_… key>
    GOOGLE_API_KEY=<API key>
    ```
 4. **Live site secrets.** Run each of these from `~/Projects/evntcult` with `CLOUDFLARE_ACCOUNT_ID` set:

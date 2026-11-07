@@ -5,7 +5,8 @@
  *
  * Config (Cloudflare secrets in production, .dev.vars locally):
  *   SUPABASE_URL               https://<project>.supabase.co
- *   SUPABASE_SERVICE_ROLE_KEY  Project Settings → API → service_role
+ *   SUPABASE_SERVICE_ROLE_KEY  Project Settings → API Keys → Secret key ("sb_secret_…"),
+ *                              or the older "service_role" key under Legacy API Keys. Both work.
  */
 export interface SupabaseConfig {
   url: string;
@@ -19,6 +20,15 @@ export function supabaseConfig(env: Env = process.env as Env): SupabaseConfig | 
   const key = env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (!url || !key || !/^https:\/\/[a-z0-9-]+\.supabase\.(co|in)$/.test(url)) return null;
   return { url, key };
+}
+
+/**
+ * New-style secret keys ("sb_secret_…") go in the apikey header only: Supabase rejects them
+ * in Authorization: Bearer because they aren't JWTs. Legacy service_role keys are JWTs and
+ * are sent in both headers, as before.
+ */
+export function authHeaders(key: string): Record<string, string> {
+  return key.startsWith("sb_") ? { apikey: key } : { apikey: key, Authorization: `Bearer ${key}` };
 }
 
 export class SupabaseError extends Error {
@@ -37,7 +47,7 @@ export async function supabaseFetch(cfg: SupabaseConfig, path: string, init: Req
   try {
     res = await fetch(`${cfg.url}${path}`, {
       ...rest,
-      headers: { apikey: cfg.key, Authorization: `Bearer ${cfg.key}`, ...headers },
+      headers: { ...authHeaders(cfg.key), ...headers },
       signal: AbortSignal.timeout(timeoutMs),
     });
   } catch (e) {
