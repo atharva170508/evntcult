@@ -19,7 +19,8 @@ export type AuditAction =
   | "waitlist_confirm"
   // Written by src/lib/data/photos.ts:
   | "photo_upload"
-  | "photo_delete";
+  | "photo_delete"
+  | "role_change";
 
 /** Append-only audit trail. */
 export async function audit(actorId: string | null, action: AuditAction, targetId: string | null, meta?: Record<string, unknown>) {

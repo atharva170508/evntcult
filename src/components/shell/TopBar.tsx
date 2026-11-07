@@ -97,7 +97,7 @@ export function TopBar({ viewer, onEnterCode, onHost }: { viewer: NavViewer | nu
         <div className="ml-auto flex items-center gap-2">
           {viewer ? (
             <>
-              {viewer.isOrganizer && onHost && (
+              {onHost && (
                 <button
                   onClick={onHost}
                   className="inline-flex items-center gap-1.5 rounded-full bg-volt px-3.5 py-2.5 text-[13px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover md:hidden"

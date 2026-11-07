@@ -52,6 +52,7 @@ export function AppShell({ viewer, children }: { viewer: NavViewer | null; child
           onCreated={({ slug }) => {
             setHostOpen(false);
             router.push(`/e/${slug}`);
+            router.refresh(); // you may have just become an organizer: reload the menu
           }}
         />
       )}

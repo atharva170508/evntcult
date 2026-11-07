@@ -21,7 +21,7 @@ import { VENUES } from "@/lib/venues";
 
 /**
  * "Host an Event": one screen, no wizard (Luma / Partiful style).
- * Saves through POST /api/events/create into the same events table as everything else,
+ * Open to anyone logged in. Saves through POST /api/events/create into the same events table as everything else,
  * so passes, registration, the gate scanner and Face Search all work with it.
  */
 
@@ -153,8 +153,6 @@ export function HostEventModal({ open, onClose, onCreated }: { open: boolean; on
         setSoftClash(data.error!.message.replace(/ Tick "publish anyway" to continue\.$/, ""));
       } else if (code === "unauthenticated") {
         setError("Log in first to host an event.");
-      } else if (code === "forbidden") {
-        setError("Only verified organizers can host events right now. Ask your club lead or an admin to verify your account.");
       } else {
         // zod messages arrive as "field: message"; show just the message.
         setError((data.error?.message ?? "Couldn't publish. Try again.").replace(/^[a-zA-Z]+: /, ""));

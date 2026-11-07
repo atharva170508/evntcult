@@ -19,7 +19,7 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode, onHost }: { isOrga
         <LogoWordmark motion="type" className="hidden text-[30px] text-ink xl:inline-block" />
       </Link>
 
-      {isOrganizer && (
+      {signedIn && onHost && (
         <button
           type="button"
           onClick={onHost}
