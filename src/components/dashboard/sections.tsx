@@ -287,7 +287,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
           {data.hosted.map((h) => (
             <li key={h.id} className="grid grid-cols-12 items-center gap-3 rounded-2xl bg-canvas p-3">
               <div className="col-span-12 min-w-0 sm:col-span-5">
-                <Link href={`/organizer/events/${h.id}`} className="block truncate text-[14.5px] font-bold hover:text-brand-ink">
+                <Link href={`/organizer/events/${h.id}/manage`} className="block truncate text-[14.5px] font-bold hover:text-brand-ink">
                   {h.title}
                 </Link>
                 <p className="text-[12px] text-ink-muted">
@@ -359,7 +359,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
           <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} />
           <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="payments, export" />
           <QuickAction
-            href={data.live ? `/organizer/events/${data.live.id}` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}` : "/organizer"}
+            href={data.live ? `/organizer/events/${data.live.id}/manage` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}/manage` : "/organizer"}
             icon={Megaphone}
             label="Broadcast update"
             hint={data.live?.title ?? data.hosted[0]?.title ?? "pick an event"}

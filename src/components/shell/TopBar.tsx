@@ -17,7 +17,7 @@ export interface NavViewer {
  * Top bar: one search box split into "What · When · Category" (Humanitix idea)
  * with a Ctrl+K shortcut (Devfolio idea), plus code, notifications and profile.
  */
-export function TopBar({ viewer, onEnterCode, onHost }: { viewer: NavViewer | null; onEnterCode: () => void; onHost?: () => void }) {
+export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEnterCode: () => void }) {
   async function logout() {
     await fetch("/api/auth/session", { method: "DELETE" });
     window.location.href = "/dashboard";
@@ -97,14 +97,12 @@ export function TopBar({ viewer, onEnterCode, onHost }: { viewer: NavViewer | nu
         <div className="ml-auto flex items-center gap-2">
           {viewer ? (
             <>
-              {onHost && (
-                <button
-                  onClick={onHost}
+              <Link
+                href="/organizer/events/new"
                   className="inline-flex items-center gap-1.5 rounded-full bg-volt px-3.5 py-2.5 text-[13px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover md:hidden"
                 >
                   <Plus className="size-4" /> Host
-                </button>
-              )}
+                </Link>
               <button
                 onClick={onEnterCode}
                 className="hidden items-center gap-1.5 rounded-full border border-line bg-surface px-3.5 py-2.5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-volt/60 sm:inline-flex"

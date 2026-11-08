@@ -1,10 +1,10 @@
 import { ApiError, handle, parseBody } from "@/lib/api";
-import { getViewer, requireEventOwner } from "@/lib/rbac";
+import { getViewer } from "@/lib/rbac";
 import { getEventDetail } from "@/lib/data/events";
-import { updateEvent } from "@/lib/data/event-write";
-import { patchEventSchema } from "@/lib/validation";
+import { saveEvent } from "@/lib/data/organizer-events";
+import { orgHandle, ownedEvent, type RefCtx } from "@/lib/organizer/route";
+import { saveEventSchema } from "@/lib/validation";
 import { passQrPayload } from "@/lib/tokens";
-import { first } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ ref: string }> };
@@ -46,13 +46,9 @@ export const GET = handle(async (req: Request, { params }: Ctx) => {
   });
 });
 
-/** PATCH /api/events/:id — owner only. Capacity can't go below seats already taken. */
-export const PATCH = handle(async (req: Request, { params }: Ctx) => {
-  const { ref } = await params;
-  const row = await first<{ id: string }>("SELECT id FROM events WHERE id = ? OR slug = ?", ref, ref);
-  if (!row) throw new ApiError(404, "not_found", "Event not found.");
-  const viewer = await requireEventOwner(row.id);
-  const input = await parseBody(req, patchEventSchema);
-  const e = await updateEvent(viewer, row.id, input);
-  return Response.json({ event: { id: e.id, slug: e.slug, status: e.status, capacity: e.capacity, access_code: e.access_code } });
+/** PATCH /api/events/:id: partial save with the version the client last saw. 409 on conflict. */
+export const PATCH = orgHandle(async (req: Request, ctx: RefCtx) => {
+  const { id, viewer, db } = await ownedEvent(ctx);
+  const { version, ...fields } = await parseBody(req, saveEventSchema);
+  return Response.json(await saveEvent(db, viewer, id, version, fields));
 });

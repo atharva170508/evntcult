@@ -22,7 +22,7 @@ const PAGE = 100;
 export default async function ManageEventPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ q?: string; all?: string }> }) {
   const [{ id }, { q, all: showAll }] = await Promise.all([params, searchParams]);
   const viewer = await getViewer();
-  if (!viewer) redirect(`/signin?next=/organizer/events/${encodeURIComponent(id)}`);
+  if (!viewer) redirect(`/signin?next=/organizer/events/${encodeURIComponent(id)}/manage`);
   if (!viewer.verifiedOrganizer) redirect("/dashboard");
   if (!(await canManageEvent(viewer, id))) notFound();
 
@@ -73,7 +73,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
           <>
             {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-volt px-4 py-2.5 text-[13.5px] font-bold text-ink-inverse hover:bg-volt-hover"><ScanLine className="size-4" aria-hidden /> Gate scanner</Link>}
             {e.status !== "draft" && <Link href={`/events/${e.slug}/photos`} className="glass inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[13.5px] font-semibold hover:bg-white/15"><Camera className="size-4" aria-hidden /> Photos</Link>}
-            <Link href={`/organizer/events/${e.id}/edit`} className="glass inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[13.5px] font-semibold hover:bg-white/15"><Pencil className="size-4" aria-hidden /> Edit</Link>
+            <Link href={`/organizer/events/${e.id}`} className="glass inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[13.5px] font-semibold hover:bg-white/15"><Pencil className="size-4" aria-hidden /> Edit</Link>
           </>
         }
       />

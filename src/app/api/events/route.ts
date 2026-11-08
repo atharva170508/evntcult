@@ -1,14 +1,25 @@
 import { ApiError, handle, parseBody } from "@/lib/api";
-import { requireOrganizer } from "@/lib/rbac";
+import { getDB } from "@/lib/db";
+import { requireUser } from "@/lib/rbac";
 import { listEvents } from "@/lib/data/events";
-import { createEvent } from "@/lib/data/event-write";
-import { createEventSchema, listQuerySchema } from "@/lib/validation";
+import { calendarWindow, createDraft } from "@/lib/data/organizer-events";
+import { orgHandle } from "@/lib/organizer/route";
+import { createDraftSchema, listQuerySchema, windowQuerySchema } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
 
-/** GET /api/events?type&when&price&q&cursor */
+/**
+ * GET /api/events?type&when&price&q&cursor: public upcoming events.
+ * GET /api/events?from&to: the signed-in organizer's calendar window.
+ */
 export const GET = handle(async (req: Request) => {
   const params = Object.fromEntries(new URL(req.url).searchParams);
+  if (params.from || params.to) {
+    const w = windowQuerySchema.safeParse(params);
+    if (!w.success) throw new ApiError(400, "invalid", "from and to must be ISO timestamps.");
+    const viewer = await requireUser();
+    return Response.json(await calendarWindow(await getDB(), viewer.id, w.data.from, w.data.to), { headers: { "Cache-Control": "private, no-store" } });
+  }
   const parsed = listQuerySchema.safeParse(params);
   if (!parsed.success) throw new ApiError(400, "invalid", parsed.error.issues[0]?.message ?? "Invalid filters.");
   const { events, nextCursor } = await listEvents(parsed.data);
@@ -30,10 +41,10 @@ export const GET = handle(async (req: Request) => {
   });
 });
 
-/** POST /api/events — organizers only. */
-export const POST = handle(async (req: Request) => {
-  const viewer = await requireOrganizer();
-  const input = await parseBody(req, createEventSchema);
-  const e = await createEvent(viewer, input);
-  return Response.json({ event: { id: e.id, slug: e.slug, status: e.status, access_code: e.access_code } }, { status: 201 });
+/** POST /api/events: create a draft. Anyone logged in can host. */
+export const POST = orgHandle(async (req: Request) => {
+  const viewer = await requireUser();
+  const input = await parseBody(req, createDraftSchema);
+  const draft = await createDraft(await getDB(), viewer, input);
+  return Response.json(draft, { status: 201 });
 });

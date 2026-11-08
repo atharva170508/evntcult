@@ -8,7 +8,7 @@ import { LogoIcon, LogoWordmark } from "@/components/brand/MissingE";
 import { NAV, ORGANIZER_NAV, isActive } from "./nav";
 
 /** App-style left menu for laptops (Unstop / Zoho Backstage idea). Hidden on phones. */
-export function Sidebar({ isOrganizer, signedIn, onEnterCode, onHost }: { isOrganizer: boolean; signedIn: boolean; onEnterCode: () => void; onHost?: () => void }) {
+export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: boolean; signedIn: boolean; onEnterCode: () => void }) {
   const pathname = usePathname();
   const items = isOrganizer ? [...NAV, ORGANIZER_NAV] : NAV;
 
@@ -19,15 +19,14 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode, onHost }: { isOrga
         <LogoWordmark motion="type" className="hidden text-[30px] text-ink xl:inline-block" />
       </Link>
 
-      {signedIn && onHost && (
-        <button
-          type="button"
-          onClick={onHost}
+      {signedIn && (
+        <Link
+          href="/organizer/events/new"
           className="mt-6 flex items-center justify-center gap-2 rounded-full bg-volt py-3 text-[14px] font-bold text-ink-inverse shadow-[0_14px_34px_-16px_rgba(220,254,98,0.55)] transition-colors hover:bg-volt-hover"
         >
           <Plus className="size-[18px]" />
           <span className="hidden xl:inline">Host an event</span>
-        </button>
+        </Link>
       )}
 
       <nav className="mt-6 flex-1">

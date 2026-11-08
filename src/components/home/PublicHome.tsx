@@ -131,7 +131,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
               Log in
             </Link>
             <Link
-              href={`/signin?next=${encodeURIComponent("/dashboard?host=1")}`}
+              href={`/signin?next=${encodeURIComponent("/organizer/events/new")}`}
               className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-[16px] font-semibold text-ink-2 transition-colors hover:text-volt sm:w-auto"
             >
               Host an event <ArrowRight className="size-4" aria-hidden />

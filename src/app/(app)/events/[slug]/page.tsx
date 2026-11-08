@@ -129,7 +129,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             <div className="space-y-2">
               <p className="text-[13px] font-semibold text-ink-muted">You organize this event{e.access === "code" && e.access_code ? <> · join code <span className="font-mono font-bold text-ink">{e.access_code}</span></> : null}.</p>
               <div className="flex flex-wrap gap-2">
-                <Link href={`/organizer/events/${e.id}/edit`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[14px] font-semibold hover:border-volt/60"><Pencil className="size-4" /> Edit</Link>
+                <Link href={`/organizer/events/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2.5 text-[14px] font-semibold hover:border-volt/60"><Pencil className="size-4" /> Edit</Link>
                 {e.status === "published" && (
                   <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-volt px-4 py-2.5 text-[14px] font-bold text-ink-inverse hover:bg-volt-hover"><ScanLine className="size-4" /> Open gate scanner</Link>
                 )}

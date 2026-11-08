@@ -1,46 +1,9 @@
 import { z } from "zod";
 import { CATEGORIES } from "@/lib/data/types";
+import { UPI_PATTERN, isValidCustomCode } from "@/lib/organizer/shared";
 
 const ymd = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD");
 const hm = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Use HH:MM (24-hour)");
-
-/** POST /api/events — times are entered in IST and stored as UTC. */
-export const createEventSchema = z
-  .object({
-    title: z.string().trim().min(3).max(120),
-    description: z.string().trim().max(5000).optional(),
-    category: z.enum(CATEGORIES),
-    venue: z.string().trim().min(2).max(120),
-    date: ymd,
-    startTime: hm,
-    endTime: hm,
-    capacity: z.number().int().positive().max(100_000),
-    pricePaise: z.number().int().min(0).max(10_000_00).default(0),
-    access: z.enum(["public", "code"]).default("public"),
-    publish: z.boolean().default(false),
-    /** Soft clashes (same crowd, same time) need an explicit OK. Hard clashes can't be overridden. */
-    acknowledgeSoftClashes: z.boolean().default(false),
-  })
-  .strict()
-  .refine((v) => v.endTime > v.startTime, { message: "End time must be after start time.", path: ["endTime"] });
-
-/** PATCH /api/events/:id — every field optional. */
-export const patchEventSchema = z
-  .object({
-    title: z.string().trim().min(3).max(120).optional(),
-    description: z.string().trim().max(5000).optional(),
-    category: z.enum(CATEGORIES).optional(),
-    venue: z.string().trim().min(2).max(120).optional(),
-    date: ymd.optional(),
-    startTime: hm.optional(),
-    endTime: hm.optional(),
-    capacity: z.number().int().positive().max(100_000).optional(),
-    pricePaise: z.number().int().min(0).max(10_000_00).optional(),
-    access: z.enum(["public", "code"]).optional(),
-    status: z.enum(["draft", "published", "closed", "cancelled"]).optional(),
-    acknowledgeSoftClashes: z.boolean().default(false),
-  })
-  .strict();
 
 /** GET /api/events and the /events page. */
 export const listQuerySchema = z.object({
@@ -102,58 +65,41 @@ export const eventUpdateSchema = z
   })
   .strict();
 
-/** "No limit" on the Host modal is stored as this many seats, so the seat counting stays the same. */
-export const UNLIMITED_CAPACITY = 100_000;
+const upi = z.string().trim().toLowerCase().regex(UPI_PATTERN, "Enter a UPI ID like name@bank.");
 
-/** UPI IDs look like name@bank (handle: letters, digits, dot, dash, underscore). */
-const upiId = z
-  .string()
-  .trim()
-  .toLowerCase()
-  .regex(/^[a-z0-9._-]{2,256}@[a-z][a-z0-9]{1,63}$/, "Enter a UPI ID like name@bank.");
-
-const httpsUrl = (label: string) =>
-  z
+/** Everything the organizer editor can send. All optional: anything left out keeps its value. */
+const eventFields = {
+  title: z.string().trim().min(1, "Give your event a name.").max(60),
+  slug: z.string().trim().min(1).max(60).regex(/^[a-z0-9-]+$/, "Use lowercase letters, numbers and hyphens.").optional(),
+  tagline: z.string().trim().max(140).nullable().optional(),
+  description: z.string().trim().max(5000).nullable().optional(),
+  category: z.enum(CATEGORIES).nullable().optional(),
+  venue: z.string().trim().max(160).nullable().optional(),
+  venueStatus: z.enum(["confirmed", "tba", "online"]).optional(),
+  date: ymd.optional(),
+  time: hm.optional(),
+  durationMinutes: z.number().int().min(15).max(14 * 24 * 60).optional(),
+  capacity: z.number().int().min(1).max(1_000_000).nullable().optional(),
+  pricePaise: z.number().int().min(0).max(10_000_000).optional(),
+  payoutUpi: upi.nullable().optional(),
+  access: z.enum(["public", "code"]).optional(),
+  accessCode: z
     .string()
     .trim()
-    .max(500)
-    .url(`Enter a full ${label} link starting with https://`)
-    .refine((u) => u.startsWith("https://"), `The ${label} link must start with https://`);
+    .refine(isValidCustomCode, "Use 4 to 20 letters or numbers.")
+    .nullable()
+    .optional(),
+};
 
-/** POST /api/events/create — the one-screen "Host an Event" modal. Times are IST. */
-export const hostEventSchema = z
-  .object({
-    title: z.string().trim().min(3, "Give your event a name (at least 3 characters).").max(120),
-    tagline: z.string().trim().max(140).optional(),
-    category: z.enum(CATEGORIES),
-    date: ymd,
-    time: hm,
-    /** How long it runs; ends the same night or after midnight. */
-    durationMinutes: z.number().int().min(15).max(24 * 60).default(120),
-    eventType: z.enum(["in_person", "virtual"]),
-    /** Venue name for in-person, meeting link for virtual. */
-    location: z.string().trim().min(2, "Add where it happens.").max(500),
-    isFree: z.boolean().default(true),
-    /** Rupees, only when paid. */
-    ticketPrice: z.number().min(1).max(10_000).optional(),
-    upiId: upiId.optional(),
-    /** Empty = no limit. */
-    capacity: z.number().int().min(1).max(UNLIMITED_CAPACITY).nullable().default(null),
-    driveFolderUrl: z.string().trim().max(500).optional(),
-    bannerUrl: httpsUrl("image").optional(),
-    acknowledgeSoftClashes: z.boolean().default(false),
-  })
-  .strict()
-  .superRefine((v, ctx) => {
-    if (v.eventType === "virtual") {
-      const ok = httpsUrl("meeting").safeParse(v.location);
-      if (!ok.success) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["location"], message: "Paste the meeting link (https://…) for a virtual event." });
-    } else if (v.location.length > 120) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["location"], message: "Keep the venue name under 120 characters." });
-    }
-    if (!v.isFree) {
-      if (!v.ticketPrice) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["ticketPrice"], message: "Set a ticket price for a paid pass." });
-      if (!v.upiId) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["upiId"], message: "Add the UPI ID where attendees pay you." });
-    }
-  });
-export type HostEventInput = z.infer<typeof hostEventSchema>;
+/** POST /api/events: the first save of a new event. */
+export const createDraftSchema = z.object(eventFields).strict();
+
+/** PATCH /api/events/:id: autosave. `version` is what the client last saw. */
+export const saveEventSchema = z
+  .object({ ...eventFields, title: eventFields.title.optional(), version: z.number().int().min(1) })
+  .strict();
+
+export const versionSchema = z.object({ version: z.number().int().min(1), acknowledgeSoftClashes: z.boolean().optional() }).strict();
+
+/** GET /api/events?from&to: the organizer's calendar window. */
+export const windowQuerySchema = z.object({ from: z.string().datetime(), to: z.string().datetime() });
