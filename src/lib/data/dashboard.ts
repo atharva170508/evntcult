@@ -177,14 +177,14 @@ export async function draftClashes(viewer: Viewer, now = new Date()): Promise<Or
   const ownerClause = viewer.role === "admin" ? "1 = 1" : "e.organizer_id = ?";
   const ownerArgs = viewer.role === "admin" ? [] : [viewer.id];
   const drafts = await all<{ id: string; title: string; venue: string; starts_at: string; ends_at: string; category: string }>(
-    `SELECT id, title, venue, starts_at, ends_at, category FROM events e WHERE ${ownerClause} AND status = 'draft' AND ends_at > ?`,
+    `SELECT id, title, venue, starts_at, ends_at, category FROM events e WHERE ${ownerClause} AND status = 'draft' AND ends_at > ? AND venue IS NOT NULL AND category IS NOT NULL`,
     ...ownerArgs,
     nowIso,
   );
   let clashes: OrganizerPanel["clashes"] = [];
   if (drafts.length) {
     const published = await all<{ id: string; title: string; venue: string; starts_at: string; ends_at: string; status: string; category: string; capacity: number }>(
-      `SELECT id, title, venue, starts_at, ends_at, status, category, capacity FROM events WHERE status = 'published' AND ends_at > ?`,
+      `SELECT id, title, venue, starts_at, ends_at, status, category, capacity FROM events WHERE status = 'published' AND ends_at > ? AND venue IS NOT NULL`,
       nowIso,
     );
     const existing = published.map((p) => ({

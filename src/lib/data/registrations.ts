@@ -27,7 +27,7 @@ export type RegStatus = "registered" | "waitlisted" | "cancelled";
 export interface EventForRegistration {
   id: string;
   slug: string;
-  capacity: number;
+  capacity: number | null;
   status: string;
   starts_at: string;
   ends_at: string;
@@ -129,7 +129,7 @@ async function upsertRegistration(
   now: Date,
 ): Promise<number> {
   const capacity = withCapacityCheck
-    ? "AND (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id AND r.status IN ('registered','waitlisted')) < e.capacity"
+    ? "AND (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id AND r.status IN ('registered','waitlisted')) < COALESCE(e.capacity, 1e18)"
     : "";
   // The display number continues across every event that shares this 4-letter prefix
   // (robowars / robotics both give "EC-ROBO-"), so codes are unique by construction.
@@ -215,7 +215,7 @@ export async function promoteWaitlist(db: D1Database, eventId: string, now = new
   const event = await db
     .prepare("SELECT id, slug, title, capacity, status, starts_at, ends_at FROM events WHERE id = ?")
     .bind(eventId)
-    .first<{ id: string; slug: string; title: string; capacity: number; status: string; starts_at: string; ends_at: string }>();
+    .first<{ id: string; slug: string; title: string; capacity: number | null; status: string; starts_at: string; ends_at: string }>();
   if (!event || event.status !== "published" || Date.parse(event.ends_at) <= now.getTime()) return [];
 
   const promoted: RegistrationRow[] = [];
@@ -235,7 +235,7 @@ export async function promoteWaitlist(db: D1Database, eventId: string, now = new
           WHERE id = ? AND status = 'waitlisted' AND hold_expires_at IS NULL
             AND (SELECT COUNT(*) FROM registrations r
                   WHERE r.event_id = ? AND (r.status = 'registered' OR (r.status = 'waitlisted' AND r.hold_expires_at IS NOT NULL)))
-                < (SELECT capacity FROM events WHERE id = ?)`,
+                < COALESCE((SELECT capacity FROM events WHERE id = ?), 1e18)`,
       )
       .bind(holdExpiry(now, event.starts_at, event.ends_at), head.id, eventId, eventId)
       .run();

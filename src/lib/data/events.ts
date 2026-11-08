@@ -16,8 +16,8 @@ const CATEGORY_ACCENT: Record<string, string> = {
 };
 
 /** Stable poster colour per event. */
-export const accentFor = (e: { id: string; category: string }) =>
-  CATEGORY_ACCENT[e.category] ?? ACCENTS[[...e.id].reduce((s, c) => s + c.charCodeAt(0), 0) % ACCENTS.length];
+export const accentFor = (e: { id: string; category: string | null }) =>
+  CATEGORY_ACCENT[e.category ?? ""] ?? ACCENTS[[...e.id].reduce((s, c) => s + c.charCodeAt(0), 0) % ACCENTS.length];
 
 /** Seats taken = registered + waitlisted holds (the same count the atomic insert uses). */
 export const SEATS_TAKEN_SQL =
@@ -31,7 +31,7 @@ export function toSummary(e: EventRowWithCount): EventSummary {
     slug: e.slug,
     title: e.title,
     tagline: e.tagline?.trim() || firstLine(e.description),
-    category: e.category,
+    category: e.category ?? "TALK", // only a draft can have none yet
     visibility: e.access === "code" ? "CODE_ONLY" : "PUBLIC",
     status: e.status,
     startsAt: new Date(e.starts_at),
@@ -131,7 +131,8 @@ export interface MyRegistration {
 
 export interface EventDetail {
   event: EventRowWithCount;
-  seatsLeft: number;
+  /** Null = unlimited. */
+  seatsLeft: number | null;
   myRegistration: MyRegistration | null;
   isOwner: boolean;
 }
@@ -165,5 +166,7 @@ export async function getEventDetail(ref: string, viewer: Viewer | null, code?: 
   // Online events: the join link is only for the organizer and people holding a pass.
   // Strip it here so it can't leak into any page or client component for everyone else.
   if (!isOwner && myRegistration?.status !== "registered") event.meeting_url = null;
-  return { event, seatsLeft: Math.max(0, event.capacity - event.taken), myRegistration, isOwner };
+  // seatsLeft null = unlimited; never compare it as a number.
+  const seatsLeft = event.capacity === null ? null : Math.max(0, event.capacity - event.taken);
+  return { event, seatsLeft, myRegistration, isOwner };
 }

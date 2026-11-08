@@ -14,11 +14,14 @@ export interface EventRow {
   slug: string;
   title: string;
   description: string | null;
-  category: EventCategory;
-  venue: string;
+  /** Null only on drafts: not picked yet. */
+  category: EventCategory | null;
+  /** Null when the venue is TBA or the event is online. */
+  venue: string | null;
   starts_at: string;
   ends_at: string;
-  capacity: number;
+  /** Null = unlimited. */
+  capacity: number | null;
   price_paise: number;
   status: EventStatus;
   access: EventAccess;
@@ -33,6 +36,12 @@ export interface EventRow {
   organizer_upi_id: string | null;
   drive_folder_url: string | null;
   banner_url: string | null;
+  /** Added by migrations 0009/0010 (organizer dashboard). */
+  version: number;
+  venue_status: "confirmed" | "tba" | "online";
+  timezone: string;
+  updated_at: string;
+  published_at: string | null;
 }
 
 export interface EventSummary {
@@ -84,7 +93,7 @@ export interface HostedEvent {
 }
 
 export interface OrganizerPanel {
-  live: { id: string; title: string; capacity: number; registered: number; checkedIn: number } | null;
+  live: { id: string; title: string; capacity: number | null; registered: number; checkedIn: number } | null;
   hosted: HostedEvent[];
   clashes: (Clash & { forEvent: string })[];
 }

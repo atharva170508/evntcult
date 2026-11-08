@@ -38,9 +38,10 @@ async function uniqueSlug(title: string) {
 }
 
 /** Clashes of a slot against published events (hard = same venue incl. buffer, soft = same crowd). */
-export async function clashesFor(slot: { id?: string; venue: string; startsAt: string; endsAt: string; category: string }): Promise<Clash[]> {
+/** A TBA or online venue (null) can never double-book a room. */
+export async function clashesFor(slot: { id?: string; venue: string | null; startsAt: string; endsAt: string; category: string | null }): Promise<Clash[]> {
   const DAY = 86_400_000;
-  const rows = await all<{ id: string; title: string; venue: string; starts_at: string; ends_at: string; category: string; capacity: number }>(
+  const rows = await all<{ id: string; title: string; venue: string | null; starts_at: string; ends_at: string; category: string | null; capacity: number | null }>(
     `SELECT id, title, venue, starts_at, ends_at, category, capacity FROM events
       WHERE status = 'published' AND id != ? AND starts_at < ? AND ends_at > ?`,
     slot.id ?? "",
@@ -48,18 +49,18 @@ export async function clashesFor(slot: { id?: string; venue: string; startsAt: s
     new Date(+new Date(slot.startsAt) - DAY).toISOString(),
   );
   return detectClashes(
-    { id: slot.id, venueId: slot.venue, startsAt: new Date(slot.startsAt), endsAt: new Date(slot.endsAt), category: slot.category },
+    { id: slot.id, venueId: slot.venue ?? "(no venue yet)", startsAt: new Date(slot.startsAt), endsAt: new Date(slot.endsAt), category: slot.category ?? "" },
     rows.map((r) => ({
       id: r.id,
       title: r.title,
-      venueId: r.venue,
-      venueName: r.venue,
+      venueId: r.venue ?? `(no venue ${r.id})`,
+      venueName: r.venue ?? "TBA",
       startsAt: new Date(r.starts_at),
       endsAt: new Date(r.ends_at),
       status: "PUBLISHED",
-      category: r.category,
+      category: r.category ?? "",
       capacity: r.capacity,
-      bufferMinutes: bufferFor(r.venue),
+      bufferMinutes: r.venue ? bufferFor(r.venue) : 0,
     })),
   );
 }
@@ -78,10 +79,11 @@ export async function createEvent(viewer: Viewer, input: CreateInput): Promise<E
   if (input.publish) assertPublishable(await clashesFor({ venue: input.venue, startsAt, endsAt, category: input.category }), input.acknowledgeSoftClashes);
 
   const id = newId();
+  const now = nowIso();
   const slug = await uniqueSlug(input.title);
   await run(
-    `INSERT INTO events (id, slug, title, description, category, venue, starts_at, ends_at, capacity, price_paise, status, access, access_code, organizer_id, banner_key, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?)`,
+    `INSERT INTO events (id, slug, title, description, category, venue, starts_at, ends_at, capacity, price_paise, status, access, access_code, organizer_id, banner_key, created_at, updated_at, published_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)`,
     id,
     slug,
     input.title,
@@ -96,7 +98,9 @@ export async function createEvent(viewer: Viewer, input: CreateInput): Promise<E
     input.access,
     input.access === "code" ? newAccessCode() : null,
     viewer.id,
-    nowIso(),
+    now,
+    now,
+    input.publish ? now : null,
   );
   await audit(viewer.id, "event_create", id, { slug, publish: input.publish });
   return (await first<EventRow>("SELECT * FROM events WHERE id = ?", id))!;
@@ -116,7 +120,8 @@ export async function updateEvent(viewer: Viewer, eventId: string, input: PatchI
     description: input.description ?? cur.description,
     category: input.category ?? cur.category,
     venue: input.venue ?? cur.venue,
-    capacity: input.capacity ?? cur.capacity,
+    // The older full form can only send a number; its maximum means "no limit".
+    capacity: input.capacity === UNLIMITED_CAPACITY ? null : (input.capacity ?? cur.capacity),
     price_paise: input.pricePaise ?? cur.price_paise,
     access: input.access ?? cur.access,
     status: input.status ?? cur.status,
@@ -130,9 +135,10 @@ export async function updateEvent(viewer: Viewer, eventId: string, input: PatchI
   // Capacity can't go below seats already taken — checked atomically in the UPDATE itself.
   const changed = await run(
     `UPDATE events SET title = ?, description = ?, category = ?, venue = ?, starts_at = ?, ends_at = ?, capacity = ?, price_paise = ?,
-            access = ?, access_code = CASE WHEN ? = 'code' THEN COALESCE(access_code, ?) ELSE NULL END, status = ?
+            access = ?, access_code = CASE WHEN ? = 'code' THEN COALESCE(access_code, ?) ELSE NULL END, status = ?,
+            version = version + 1, updated_at = ?, published_at = CASE WHEN ? = 'published' THEN COALESCE(published_at, ?) ELSE published_at END
       WHERE id = ?
-        AND ? >= (SELECT COUNT(*) FROM registrations WHERE event_id = ? AND status IN ('registered','waitlisted'))`,
+        AND COALESCE(?, 1e18) >= (SELECT COUNT(*) FROM registrations WHERE event_id = ? AND status IN ('registered','waitlisted'))`,
     next.title,
     next.description,
     next.category,
@@ -145,6 +151,9 @@ export async function updateEvent(viewer: Viewer, eventId: string, input: PatchI
     next.access,
     newAccessCode(),
     next.status,
+    nowIso(),
+    next.status,
+    nowIso(),
     eventId,
     next.capacity,
     eventId,
@@ -194,8 +203,9 @@ export async function createHostedEvent(viewer: Viewer, input: HostEventInput): 
   const slug = await uniqueSlug(input.title);
   await run(
     `INSERT INTO events (id, slug, title, description, category, venue, starts_at, ends_at, capacity, price_paise, status, access, access_code,
-                         organizer_id, banner_key, created_at, event_type, meeting_url, tagline, organizer_upi_id, drive_folder_url, banner_url)
-     VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, 'published', 'public', NULL, ?, NULL, ?, ?, ?, ?, ?, ?, ?)`,
+                         organizer_id, banner_key, created_at, event_type, meeting_url, tagline, organizer_upi_id, drive_folder_url, banner_url,
+                         venue_status, updated_at, published_at)
+     VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, 'published', 'public', NULL, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     id,
     slug,
     input.title,
@@ -203,7 +213,7 @@ export async function createHostedEvent(viewer: Viewer, input: HostEventInput): 
     venue,
     startsAt,
     endsAt,
-    input.capacity ?? UNLIMITED_CAPACITY,
+    input.capacity,
     input.isFree ? 0 : Math.round((input.ticketPrice ?? 0) * 100),
     viewer.id,
     nowIso(),
@@ -213,6 +223,9 @@ export async function createHostedEvent(viewer: Viewer, input: HostEventInput): 
     input.isFree ? null : (input.upiId ?? null),
     drive,
     input.bannerUrl ?? null,
+    virtual ? "online" : "confirmed",
+    nowIso(),
+    nowIso(),
   );
   await audit(viewer.id, "event_create", id, { slug, publish: true, via: "host_modal" });
   return (await first<EventRow>("SELECT * FROM events WHERE id = ?", id))!;

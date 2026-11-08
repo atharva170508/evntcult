@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { UNLIMITED_CAPACITY } from "@/lib/validation";
 import { notFound, redirect } from "next/navigation";
 import { canManageEvent, getViewer } from "@/lib/rbac";
 import { first } from "@/lib/db";
@@ -34,12 +35,12 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
         initial={{
           title: e.title,
           description: e.description ?? "",
-          category: e.category,
-          venue: e.venue,
+          category: e.category ?? "TALK",
+          venue: e.venue ?? "",
           date: istYmd(start),
           startTime: istHm(start),
           endTime: istHm(end),
-          capacity: e.capacity,
+          capacity: e.capacity ?? UNLIMITED_CAPACITY,
           priceRupees: e.price_paise / 100,
           access: e.access,
           status: e.status,

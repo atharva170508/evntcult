@@ -80,7 +80,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
       <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
-          ["Registered", `${s.registered} / ${e.capacity}`],
+          ["Registered", e.capacity === null ? `${s.registered}` : `${s.registered} / ${e.capacity}`],
           ["Waitlist", String(s.waitlisted)],
           ["Checked in", String(s.checkedIn)],
           paidEvent ? ["Fees collected", `${formatINR(s.paid * e.price_paise)} · ${s.unpaid} unpaid`] : ["Entry", "Free"],

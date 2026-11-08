@@ -55,7 +55,7 @@ const istDay = (iso: string) => new Date(Date.parse(iso) + IST_OFFSET_MS).toISOS
 export async function monthEvents(db: D1Database, opts: { viewerId: string | null; start: Date; end: Date; onlyMine?: boolean }): Promise<CalendarEvent[]> {
   const rows = await db
     .prepare(
-      `SELECT e.id, e.slug, e.title, e.category, e.venue, e.starts_at, e.ends_at, e.status, e.access, e.price_paise,
+      `SELECT e.id, e.slug, e.title, COALESCE(e.category, 'TALK') AS category, COALESCE(e.venue, 'TBA') AS venue, e.starts_at, e.ends_at, e.status, e.access, e.price_paise,
               (e.organizer_id = ?1) AS hosting,
               (SELECT r.status FROM registrations r
                 WHERE r.event_id = e.id AND r.user_id = ?1 AND r.status IN ('registered','waitlisted')) AS my_status

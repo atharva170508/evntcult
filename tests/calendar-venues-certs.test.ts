@@ -23,10 +23,10 @@ beforeAll(async () => {
   const ev = (id: string, title: string, start: string, end: string, status: string, access: string, venue = "Seminar Hall 2") =>
     db
       .prepare(
-        `INSERT INTO events (id, slug, title, category, venue, starts_at, ends_at, capacity, price_paise, status, access, organizer_id, created_at)
-         VALUES (?, ?, ?, 'TECH', ?, ?, ?, 50, 0, ?, ?, 'org', ?)`,
+        `INSERT INTO events (id, slug, title, category, venue, starts_at, ends_at, capacity, price_paise, status, access, access_code, organizer_id, created_at)
+         VALUES (?, ?, ?, 'TECH', ?, ?, ?, 50, 0, ?, ?, ?, 'org', ?)`,
       )
-      .bind(id, id, title, venue, start, end, status, access, at);
+      .bind(id, id, title, venue, start, end, status, access, access === 'code' ? `CODE${id}` : null, at);
   await db.batch([
     ev("pub", "Public Talk", "2026-11-20T12:30:00.000Z", "2026-11-20T14:30:00.000Z", "published", "public"),
     ev("priv", "Private Jam", "2026-11-21T12:30:00.000Z", "2026-11-21T14:30:00.000Z", "published", "code"),

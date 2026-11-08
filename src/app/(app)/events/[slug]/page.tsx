@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import QRCode from "qrcode";
 import { ArrowLeft, Camera, CalendarDays, ChevronRight, Clock, MapPin, Pencil, ScanLine, Ticket, Users, Video } from "lucide-react";
-import { UNLIMITED_CAPACITY } from "@/lib/validation";
 import { getViewer } from "@/lib/rbac";
 import { getEventDetail, toSummary } from "@/lib/data/events";
 import { passQrPayload } from "@/lib/tokens";
@@ -60,7 +59,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             </>
           )}
           <div className="relative flex flex-wrap gap-2">
-            <Chip tone="white">{LABEL[e.category] ?? e.category}</Chip>
+            <Chip tone="white">{e.category ? (LABEL[e.category] ?? e.category) : "No category yet"}</Chip>
             {e.access === "code" && <Chip tone="dark">Private · code only</Chip>}
             {e.status === "draft" && <Chip tone="warn">Draft · only you can see this</Chip>}
             {e.status === "cancelled" && <Chip tone="danger">Cancelled</Chip>}
@@ -109,7 +108,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             <div className="flex items-center justify-between text-[13px] font-semibold">
               <span className="flex items-center gap-1.5"><Users className="size-4 text-ink-subtle" /> <span className="font-mono tabular-nums">{e.taken}</span> going</span>
               <span className={d.seatsLeft === 0 ? "text-danger" : "text-ink-2"}>
-                {e.capacity >= UNLIMITED_CAPACITY ? (
+                {e.capacity === null ? (
                   "No limit"
                 ) : (
                   <>
@@ -118,7 +117,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
                 )}
               </span>
             </div>
-            {e.capacity < UNLIMITED_CAPACITY && <Meter value={e.taken} max={e.capacity} className="mt-2 bg-white" />}
+            {e.capacity !== null && <Meter value={e.taken} max={e.capacity} className="mt-2 bg-white" />}
           </div>
 
           {!viewer ? (

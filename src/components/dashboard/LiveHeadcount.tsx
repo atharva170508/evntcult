@@ -18,7 +18,7 @@ export function LiveHeadcount({
 }: {
   eventId: string;
   title: string;
-  capacity: number;
+  capacity: number | null;
   registered: number;
   initial: number;
 }) {
@@ -136,7 +136,7 @@ export function LiveHeadcount({
         <div className="grid grid-cols-3 gap-2 text-center">
           {[
             ["Registered", registered],
-            ["Capacity", capacity],
+            ["Capacity", capacity ?? "No limit"],
             ["Yet to arrive", yet],
           ].map(([l, v]) => (
             <div key={l} className="rounded-2xl bg-canvas px-2 py-2.5">

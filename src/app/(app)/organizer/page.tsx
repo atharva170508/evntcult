@@ -23,7 +23,7 @@ interface MyEvent {
   starts_at: string;
   ends_at: string;
   venue: string;
-  capacity: number;
+  capacity: number | null;
   price_paise: number;
   registered: number;
   waitlisted: number;
@@ -148,7 +148,7 @@ function EventRow({ e }: { e: MyEvent }) {
       <div>
         <div className="mb-1 flex justify-between text-[12.5px] font-semibold">
           <span><span className="font-mono tabular-nums">{e.registered}</span> registered{e.waitlisted > 0 && <> · <span className="font-mono tabular-nums">{e.waitlisted}</span> waiting</>}</span>
-          <span className="text-ink-muted">of <span className="font-mono tabular-nums">{e.capacity}</span></span>
+          <span className="text-ink-muted">{e.capacity === null ? "no limit" : <>of <span className="font-mono tabular-nums">{e.capacity}</span></>}</span>
         </div>
         <Meter value={e.registered} max={e.capacity} />
       </div>

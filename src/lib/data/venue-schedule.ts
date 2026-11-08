@@ -18,7 +18,7 @@ export async function upcomingByVenue(db: D1Database, opts: { viewerId: string |
     .prepare(
       `SELECT e.id, e.slug, e.title, e.venue, e.starts_at, e.ends_at
          FROM events e
-        WHERE e.ends_at > ?2 AND e.status = 'published'
+        WHERE e.ends_at > ?2 AND e.status = 'published' AND e.venue IS NOT NULL
           AND (e.access = 'public' OR e.organizer_id = ?1
                OR EXISTS (SELECT 1 FROM registrations r WHERE r.event_id = e.id AND r.user_id = ?1 AND r.status IN ('registered','waitlisted')))
         ORDER BY e.starts_at ASC

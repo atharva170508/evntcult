@@ -23,7 +23,7 @@ export const GET = handle(async (req: Request) => {
       starts_at: e.startsAt.toISOString(),
       ends_at: e.endsAt.toISOString(),
       capacity: e.capacity,
-      seats_left: Math.max(0, (e.capacity ?? 0) - e.registered),
+      seats_left: e.capacity === null ? null : Math.max(0, e.capacity - e.registered),
       price_paise: e.feePaise,
     })),
     next_cursor: nextCursor,
