@@ -59,7 +59,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             </>
           )}
           <div className="relative flex flex-wrap gap-2">
-            <Chip tone="white">{e.category ? (LABEL[e.category] ?? e.category) : "No category yet"}</Chip>
+            <Chip tone="white">{e.category ? (LABEL[e.category] ?? e.category) : "Event"}</Chip>
             {e.access === "code" && <Chip tone="dark">Private · code only</Chip>}
             {e.status === "draft" && <Chip tone="warn">Draft · only you can see this</Chip>}
             {e.status === "cancelled" && <Chip tone="danger">Cancelled</Chip>}
@@ -85,7 +85,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
                 )}
               </li>
             ) : (
-              <li className="flex items-center gap-3"><MapPin className="size-5 text-ink-subtle" /> {e.venue}</li>
+              <li className="flex items-center gap-3"><MapPin className="size-5 text-ink-subtle" /> {e.venue ?? "Venue TBA"}</li>
             )}
             <li className="flex items-center gap-3">
               <Ticket className="size-5 text-ink-subtle" />

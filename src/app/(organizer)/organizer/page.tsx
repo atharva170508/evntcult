@@ -26,7 +26,7 @@ function Row({ e, draft }: { e: HomeEvent; draft?: boolean }) {
         {e.title}
       </Link>
       <span className="o-meta o-hide-sm" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-        {draft ? (missing.length ? `needs ${missing.join(", ")}` : "ready to publish") : e.venue_status === "tba" ? "Venue TBA" : e.venue}
+        {draft ? (missing.length ? `needs ${missing.join(", ")}` : "") : e.venue_status === "tba" ? "Venue TBA" : e.venue}
       </span>
       <span className="o-hide-sm">{draft ? <span className="o-pill">DRAFT</span> : <Seats e={e} />}</span>
       <div className="o-actions">
@@ -83,7 +83,7 @@ export default async function OrganizerHome() {
         <h1 className="o-title">Your events</h1>
         {events.length === 0 ? (
           <div style={{ borderTop: "1px solid var(--hair)", marginTop: 24, paddingTop: 18 }}>
-            <p style={{ fontSize: 15, margin: "0 0 12px" }}>Nothing hosted yet. An event takes about a minute.</p>
+            <p style={{ fontSize: 15, margin: "0 0 12px" }}>No events yet.</p>
             <Link className="o-btn o-btn-primary" href="/organizer/events/new">
               Create event
             </Link>

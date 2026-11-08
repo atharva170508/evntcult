@@ -142,7 +142,9 @@ export async function saveEvent(db: D1Database, owner: Owner, id: string, versio
   };
 
   if (cur.status === "published") {
-    const missing = missingForPublish({ ...cur, title: next.title, category: next.category, venue: next.venue, venue_status: next.venueStatus, description: next.description, price_paise: next.price, organizer_upi_id: next.upi, access, access_code: code });
+    // Only what this edit newly breaks. Older events can predate these rules and must stay editable.
+    const before = missingForPublish(cur);
+    const missing = missingForPublish({ ...cur, title: next.title, category: next.category, venue: next.venue, venue_status: next.venueStatus, description: next.description, price_paise: next.price, organizer_upi_id: next.upi, access, access_code: code }).filter((m) => !before.includes(m));
     if (missing.length) throw new OrganizerError(422, "incomplete", "A published event needs these filled in.", { missing });
     const slotMoved = startsAt !== cur.starts_at || endsAt !== cur.ends_at || next.venue !== cur.venue;
     if (slotMoved && next.venue) {
@@ -212,6 +214,7 @@ export async function publishEvent(db: D1Database, owner: Owner, id: string, ver
   if (!cur) throw new OrganizerError(404, "not_found", "Event not found.");
   const missing: PublishField[] = missingForPublish(cur);
   if (missing.length) throw new OrganizerError(422, "incomplete", "Fill these in to publish.", { missing });
+  if (Date.parse(cur.ends_at) <= now.getTime()) throw new OrganizerError(422, "ended", "This event is already over. Pick a later date to publish it.");
 
   const online = cur.venue_status !== "confirmed";
   const clashes = (await clashesFor(db, { id, venue: online ? null : cur.venue, startsAt: cur.starts_at, endsAt: cur.ends_at, category: cur.category })).filter((c) => !(online && c.severity === "hard"));
@@ -222,7 +225,9 @@ export async function publishEvent(db: D1Database, owner: Owner, id: string, ver
 
   const iso = now.toISOString();
   const res = await db
-    .prepare("UPDATE events SET status='published', published_at=?3, updated_at=?3, version=version+1 WHERE id=?1 AND version=?2 AND status='draft' RETURNING version, slug")
+    .prepare(
+      "UPDATE events SET status='published', published_at=?3, updated_at=?3, version=version+1, venue_status = CASE WHEN venue_status = 'confirmed' AND (venue IS NULL OR TRIM(venue) = '') THEN 'tba' ELSE venue_status END WHERE id=?1 AND version=?2 AND status='draft' RETURNING version, slug",
+    )
     .bind(id, version, iso)
     .first<{ version: number; slug: string }>();
   if (!res) throw new OrganizerError(409, "version_conflict", "This event changed somewhere else. Reload to get the latest.");

@@ -44,7 +44,7 @@ export default async function PassesPage() {
 
   const rows = await all<PassRow>(
     `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.hold_expires_at, r.created_at,
-            e.id AS event_id, e.slug, e.title, e.category, e.venue, e.starts_at, e.ends_at, e.price_paise, e.status AS event_status,
+            e.id AS event_id, e.slug, e.title, e.category, COALESCE(e.venue, 'Venue TBA') AS venue, e.starts_at, e.ends_at, e.price_paise, e.status AS event_status,
             (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id) AS checked_in_at,
             CASE WHEN r.status = 'waitlisted' THEN
               (SELECT COUNT(*) FROM registrations w WHERE w.event_id = r.event_id AND w.status = 'waitlisted'

@@ -27,7 +27,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
   if (!(await canManageEvent(viewer, id))) notFound();
 
   const e = await first<{ id: string; slug: string; title: string; status: string; venue: string; starts_at: string; ends_at: string; capacity: number; price_paise: number; access: string; access_code: string | null }>(
-    "SELECT id, slug, title, status, venue, starts_at, ends_at, capacity, price_paise, access, access_code FROM events WHERE id = ?",
+    "SELECT id, slug, title, status, COALESCE(venue, 'Venue TBA') AS venue, starts_at, ends_at, capacity, price_paise, access, access_code FROM events WHERE id = ?",
     id,
   );
   if (!e) notFound();

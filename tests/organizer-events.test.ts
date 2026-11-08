@@ -92,7 +92,7 @@ describe("autosave", () => {
 describe("publish", () => {
   it("returns exactly what's missing", async () => {
     const d = await createDraft(db, org, { title: "Bare", date: "2026-12-25", venue: null, pricePaise: 5000, access: "public" }, now);
-    await expect(publishEvent(db, org, d.id, 1, {}, now)).rejects.toMatchObject({ status: 422, extra: { missing: ["category", "venue", "description", "payout"] } });
+    await expect(publishEvent(db, org, d.id, 1, {}, now)).rejects.toMatchObject({ status: 422, extra: { missing: ["payout"] } });
   });
   it("TBA needs no venue, and free needs no UPI", async () => {
     const d = await draft({ venue: null, venueStatus: "tba" });
@@ -122,6 +122,44 @@ describe("publish", () => {
     const d = await draft({ access: "code", accessCode: "dupme1", tagline: "Keep me" });
     const c = await duplicateEvent(db, org, d.id, now);
     expect(await row(c.id)).toMatchObject({ status: "draft", version: 1, tagline: "Keep me", access: "public", access_code: null });
+  });
+});
+
+describe("older published events", () => {
+  const legacy = async () => {
+    const d = await draft();
+    const p = await publishEvent(db, org, d.id, 1, {}, now);
+    // As on the live site: paid, no UPI, short About, made before these rules existed.
+    await db.prepare("UPDATE events SET price_paise = 10000, organizer_upi_id = NULL, description = 'Short' WHERE id = ?").bind(d.id).run();
+    return { id: d.id, version: p.version };
+  };
+  it("stay editable even though they'd fail publish today", async () => {
+    const e = await legacy();
+    expect((await saveEvent(db, org, e.id, e.version, { tagline: "Edited" }, now)).version).toBe(e.version + 1);
+  });
+  it("can be moved to another day", async () => {
+    const e = await legacy();
+    await expect(saveEvent(db, org, e.id, e.version, { date: "2026-12-30" }, now)).resolves.toBeTruthy();
+  });
+  it("still can't have something required newly removed", async () => {
+    const d = await draft({ pricePaise: 5000, payoutUpi: "club@okaxis" });
+    const p = await publishEvent(db, org, d.id, 1, {}, now);
+    await expect(saveEvent(db, org, d.id, p.version, { payoutUpi: null }, now)).rejects.toMatchObject({ status: 422, extra: { missing: ["payout"] } });
+  });
+});
+
+describe("the bare minimum", () => {
+  it("a name alone can go live, with the venue shown as TBA", async () => {
+    const d = await createDraft(db, org, { title: "Just a name", date: "2026-12-29", venue: null }, now);
+    await publishEvent(db, org, d.id, 1, {}, now);
+    expect(await row(d.id)).toMatchObject({ status: "published", category: null, description: null, venue: null, venue_status: "tba" });
+  });
+});
+
+describe("publishing the past", () => {
+  it("refuses an event that has already ended", async () => {
+    const d = await draft({ date: "2026-10-01" });
+    await expect(publishEvent(db, org, d.id, 1, {}, now)).rejects.toMatchObject({ status: 422, code: "ended" });
   });
 });
 
@@ -169,7 +207,8 @@ describe("pure rules", () => {
     const base = { title: "T", category: "TECH", venue: "V", venue_status: "confirmed", description: ABOUT, price_paise: 0, organizer_upi_id: null, access: "public", access_code: null };
     expect(missingForPublish(base)).toEqual([]);
     expect(missingForPublish({ ...base, access: "code" })).toEqual(["code"]);
-    expect(missingForPublish({ ...base, description: "short" })).toEqual(["description"]);
+    expect(missingForPublish({ ...base, description: null, category: null, venue: null })).toEqual([]);
+    expect(missingForPublish({ ...base, price_paise: 100 })).toEqual(["payout"]);
   });
   it("5 events in a day: 2 chips and +3 more", () => {
     const list = [1, 2, 3, 4, 5].map((i) => ev(`e${i}`, `2026-11-10T0${i}:00:00.000Z`, `2026-11-10T0${i}:30:00.000Z`));

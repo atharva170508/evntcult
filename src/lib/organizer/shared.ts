@@ -64,13 +64,10 @@ export interface PublishCheck {
   access_code: string | null;
 }
 
-/** Everything still blocking publish. An empty list means it can go live. */
+/** Only what an event truly can't go live without. Category, venue and About can come later. */
 export function missingForPublish(e: PublishCheck): PublishField[] {
   const missing: PublishField[] = [];
   if (!e.title?.trim()) missing.push("name");
-  if (!e.category) missing.push("category");
-  if (e.venue_status === "confirmed" && !e.venue?.trim()) missing.push("venue");
-  if ((e.description?.trim().length ?? 0) < 40) missing.push("description");
   if (e.price_paise > 0 && !e.organizer_upi_id) missing.push("payout");
   if (e.access === "code" && !e.access_code) missing.push("code");
   return missing;

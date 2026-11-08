@@ -8,9 +8,9 @@ import { CalendarView } from "@/components/organizer-ui/CalendarView";
 export const metadata: Metadata = { title: "Calendar" };
 export const dynamic = "force-dynamic";
 
-export default async function CalendarPage({ searchParams }: { searchParams: Promise<{ m?: string }> }) {
+export default async function CalendarPage({ searchParams }: { searchParams: Promise<{ m?: string; v?: string }> }) {
   const viewer = (await getViewer())!;
-  const { m } = await searchParams;
+  const { m, v } = await searchParams;
   const today = istDate(new Date());
   const month = /^\d{4}-(0[1-9]|1[0-2])$/.test(m ?? "") ? m! : today.slice(0, 7);
   const [y, mo] = month.split("-").map(Number);
@@ -29,5 +29,5 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
   ]);
   const drafts = details.results.map((d) => ({ id: d.id, title: d.title, starts_at: d.starts_at, missing: missingForPublish(d).map((x) => MISSING_LABEL[x]) }));
 
-  return <CalendarView key={month} month={month} today={today} events={events} clashes={clashes} drafts={drafts} week={week.events.filter((e) => e.status !== "draft").slice(0, 5)} />;
+  return <CalendarView initialView={v === "month" || v === "agenda" ? v : null} month={month} today={today} events={events} clashes={clashes} drafts={drafts} week={week.events.filter((e) => e.status !== "draft").slice(0, 5)} />;
 }

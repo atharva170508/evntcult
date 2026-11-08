@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, Segmented, Toast, apiJson, type ToastState } from "./primitives";
 import { dayKey, isMultiDay, istTime, layoutMonth, ticketDate, type CalendarEvent } from "@/lib/organizer/shared";
 
 interface Props {
+  initialView: "month" | "agenda" | null;
   month: string;
   today: string;
   events: CalendarEvent[];
@@ -42,42 +43,20 @@ function Chip({ e, onDrag }: { e: CalendarEvent; onDrag: (ev: CalendarEvent) => 
   );
 }
 
-export function CalendarView({ month, today, events, clashes, drafts, week }: Props) {
+export function CalendarView({ initialView, month, today, events, clashes, drafts, week }: Props) {
   const router = useRouter();
   const [y, m] = month.split("-").map(Number);
   const [filter, setFilter] = useState<Filter>("all");
   const [venue, setVenue] = useState("");
   const [q, setQ] = useState("");
-  const [view, setView] = useState<"month" | "agenda">(() => (events.length < 12 ? "agenda" : "month"));
+  const [view, setView] = useState<"month" | "agenda">(() => initialView ?? (events.length < 12 ? "agenda" : "month"));
+  const [loading, startNav] = useTransition();
   const [narrow, setNarrow] = useState(false);
   const [popover, setPopover] = useState<{ date: string; items: CalendarEvent[]; x: number; y: number } | null>(null);
   const [overCell, setOverCell] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
   const dragging = useRef<CalendarEvent | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-
-  // Restore the view and filters when the month changes.
-  useEffect(() => {
-    try {
-      const s = JSON.parse(sessionStorage.getItem("o-cal") ?? "null");
-      if (s) {
-        setFilter(s.filter);
-        setVenue(s.venue);
-        setView(s.view);
-      }
-    } catch {}
-  }, []);
-  const restored = useRef(false);
-  useEffect(() => {
-    // The first run still has the defaults; saving them would wipe what was just restored.
-    if (!restored.current) {
-      restored.current = true;
-      return;
-    }
-    try {
-      sessionStorage.setItem("o-cal", JSON.stringify({ filter, venue, view }));
-    } catch {}
-  }, [filter, venue, view]);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 640px)");
@@ -89,9 +68,17 @@ export function CalendarView({ month, today, events, clashes, drafts, week }: Pr
 
   const go = (delta: number) => {
     const d = new Date(Date.UTC(y, m - 1 + delta, 1));
-    router.push(`/organizer/calendar?m=${d.toISOString().slice(0, 7)}`);
+    openMonth(d.toISOString().slice(0, 7));
   };
-  const goToday = () => router.push(`/organizer/calendar?m=${today.slice(0, 7)}`);
+  const openMonth = (target: string) => {
+    setPopover(null);
+    startNav(() => router.push(`/organizer/calendar?m=${target}&v=${view}`));
+  };
+  const goToday = () => openMonth(today.slice(0, 7));
+  const pickView = (v: "month" | "agenda") => {
+    setView(v);
+    window.history.replaceState(null, "", `/organizer/calendar?m=${month}&v=${v}`);
+  };
 
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
@@ -108,7 +95,7 @@ export function CalendarView({ month, today, events, clashes, drafts, week }: Pr
     window.addEventListener("keydown", on);
     return () => window.removeEventListener("keydown", on);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [month]);
+  }, [month, view]);
 
   const venues = useMemo(() => [...new Set(events.map((e) => e.venue).filter(Boolean) as string[])].sort(), [events]);
   const shown = useMemo(
@@ -180,7 +167,7 @@ export function CalendarView({ month, today, events, clashes, drafts, week }: Pr
                   {MONTHS[m - 1]} <span>{y}</span>
                 </div>
                 <div className="o-meta" style={{ fontSize: 10, color: "var(--dim)", marginTop: 5 }}>
-                  {events.length} events · {draftCount} drafts · times in IST
+                  {loading ? "loading" : `${events.length} events · ${draftCount} drafts · times in IST`}
                 </div>
               </div>
               <span className="o-spacer" />
@@ -199,7 +186,7 @@ export function CalendarView({ month, today, events, clashes, drafts, week }: Pr
                     ["month", "Month"],
                     ["agenda", "Agenda"],
                   ]}
-                  onChange={setView}
+                  onChange={pickView}
                 />
               )}
             </div>
@@ -388,7 +375,7 @@ export function CalendarView({ month, today, events, clashes, drafts, week }: Pr
                 className="o-rail-row o-kv"
                 onClick={() => {
                   setFilter("published");
-                  setView("agenda");
+                  pickView("agenda");
                 }}
               >
                 <span>Sold out</span>

@@ -191,6 +191,12 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
     return ok;
   }, [payload]);
 
+  // Back/forward can show a cached copy of this page. Ask the server once; a newer version remounts us.
+  useEffect(() => {
+    if (initial) router.refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Autosave, 1200ms after the last change.
   useEffect(() => {
     if (!dirtyRef.current) return;
@@ -228,7 +234,8 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
   );
   const priceMissing = f.paid && !(pricePaise > 0);
   const codeBlocked = f.access === "code" && (codeFree === false || (!!code && !isValidCustomCode(code)));
-  const blockers = [...missing.map((m) => MISSING_LABEL[m]), ...(priceMissing ? ["price"] : []), ...(codeBlocked ? ["join code"] : [])];
+  const over = /^\d{4}-\d{2}-\d{2}$/.test(f.date) && /^\d{2}:\d{2}$/.test(f.time) && Date.parse(istToIso(f.date, f.time)) + f.durationMinutes * 60_000 <= Date.now();
+  const blockers = [...missing.map((m) => MISSING_LABEL[m]), ...(priceMissing ? ["price"] : []), ...(codeBlocked ? ["join code"] : []), ...(over ? ["a later date"] : [])];
 
   async function publish(ack = false) {
     setPublishing(true);
@@ -289,6 +296,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
           {statusLine}
         </span>
         <span className="o-spacer" />
+        {status !== "published" && blockers.length > 0 && <span className="o-reason">needs {blockers.join(", ")}</span>}
         {id && status === "published" && <Button onClick={unpublish}>Unpublish</Button>}
         {id && <Button onClick={duplicate}>Duplicate</Button>}
         {id && (
@@ -313,6 +321,25 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
           <button className="o-link" onClick={() => window.location.reload()}>
             Reload
           </button>
+        </div>
+      )}
+
+      {softClash && status !== "published" && (
+        <div className="o-banner" role="alert">
+          {softClash}
+          <button className="o-link" disabled={publishing} onClick={() => publish(true)}>
+            Publish anyway
+          </button>
+        </div>
+      )}
+      {publishError && (
+        <div className="o-banner" role="alert">
+          {publishError}
+        </div>
+      )}
+      {save === "failed" && saveError && (
+        <div className="o-banner" role="alert">
+          Not saved. {saveError}
         </div>
       )}
 
@@ -357,7 +384,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
               >
                 {(a) => <input {...a} className="o-input" autoFocus={!initial} maxLength={60} value={f.title} onChange={(e) => set("title", e.target.value)} onBlur={() => blur("title")} />}
               </Field>
-              <Field label="Tagline">{(a) => <input {...a} className="o-input" maxLength={140} placeholder="One line for the ticket" value={f.tagline} onChange={(e) => set("tagline", e.target.value)} />}</Field>
+              <Field label="Tagline">{(a) => <input {...a} className="o-input" maxLength={140} value={f.tagline} onChange={(e) => set("tagline", e.target.value)} />}</Field>
               <div className="o-row">
                 <span className="o-label">Category</span>
                 <div className="o-chips" role="radiogroup" aria-label="Category">
@@ -430,16 +457,13 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                       Add a venue
                     </button>
                   ) : f.venueStatus === "confirmed" ? (
-                    <>
-                      Not booked yet?{" "}
-                      <button type="button" className="o-link" style={{ fontSize: 10 }} onClick={() => set("venueStatus", "tba")}>
-                        Mark as TBA
-                      </button>
-                    </>
+                    <button type="button" className="o-link" style={{ fontSize: 10 }} onClick={() => set("venueStatus", "tba")}>
+                      Mark as TBA
+                    </button>
                   ) : null
                 }
               >
-                {(a) => <input {...a} className="o-input" disabled={f.venueStatus === "tba"} maxLength={160} placeholder={f.venueStatus === "tba" ? "TBA" : "Back gate lawn, Koramangala"} value={f.venueStatus === "tba" ? "" : f.venue} onChange={(e) => set("venue", e.target.value)} />}
+                {(a) => <input {...a} className="o-input" disabled={f.venueStatus === "tba"} maxLength={160} placeholder={f.venueStatus === "tba" ? "TBA" : undefined} value={f.venueStatus === "tba" ? "" : f.venue} onChange={(e) => set("venue", e.target.value)} />}
               </Field>
             </Section>
 
@@ -449,7 +473,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                   About
                 </label>
                 <textarea id="about" className="o-area" style={{ maxWidth: 440 }} value={f.description} onChange={(e) => set("description", e.target.value)} />
-                <div className="o-hint">{save === "saving" ? "saving" : saveError ? `not saved. ${saveError}` : ago ? `autosaved ${ago}` : `${f.description.trim().length} of 40 characters to publish`}</div>
+                <div className="o-hint">{save === "saving" ? "saving" : ago ? `autosaved ${ago}` : null}</div>
               </div>
             </Section>
 
@@ -483,7 +507,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                   </Field>
                 </>
               )}
-              <Field label="Capacity" error={errors.capacity} hint={cap === null ? "no limit" : undefined}>
+              <Field label="Capacity" error={errors.capacity}>
                 {(a) => <input {...a} className="o-input o-mono" style={{ width: 120 }} inputMode="numeric" placeholder="no limit" value={f.capacity} onChange={(e) => set("capacity", e.target.value.replace(/\D/g, "").slice(0, 7))} onBlur={() => blur("capacity")} />}
               </Field>
             </Section>
@@ -504,7 +528,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                 </div>
               </div>
               {f.access === "code" && (
-                <Field label="Join code" error={errors.code ?? (codeFree === false ? "That code is taken. Try another." : null)} hint={code ? `${host}/c/${code.toLowerCase()}` : "a code is generated on save if left blank"}>
+                <Field label="Join code" error={errors.code ?? (codeFree === false ? "That code is taken. Try another." : null)} hint={code ? `${host}/c/${code.toLowerCase()}` : undefined}>
                   {(a) => (
                     <div className="o-inline">
                       <input {...a} className="o-input o-mono" maxLength={20} value={f.accessCode} onChange={(e) => set("accessCode", e.target.value)} onBlur={() => blur("code")} />
@@ -525,26 +549,9 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
 
             {status !== "published" && (
               <div style={{ borderTop: "1px solid var(--hair)", paddingTop: 14 }}>
-                {softClash ? (
-                  <div>
-                    <p style={{ fontSize: 12, margin: "0 0 8px", color: "var(--warn)" }}>{softClash}</p>
-                    <Button onClick={() => publish(true)}>Publish anyway</Button>
-                  </div>
-                ) : (
-                  <>
-                    <p className="o-reason" style={{ margin: "0 0 8px" }}>
-                      {blockers.length ? `needs ${blockers.join(", ")}` : status === "draft" ? "Draft. Not visible to anyone yet." : "ready to publish"}
-                    </p>
-                    {publishError && (
-                      <p className="o-err" role="alert">
-                        {publishError}
-                      </p>
-                    )}
-                    <Button variant="primary" disabled={blockers.length > 0 || publishing || save === "conflict"} onClick={() => publish(false)}>
-                      {publishing ? "Publishing" : "Publish"}
-                    </Button>
-                  </>
-                )}
+                <Button variant="primary" disabled={blockers.length > 0 || publishing || save === "conflict"} onClick={() => publish(false)}>
+                  {publishing ? "Publishing" : "Publish"}
+                </Button>
               </div>
             )}
           </div>

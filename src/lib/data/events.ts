@@ -31,7 +31,7 @@ export function toSummary(e: EventRowWithCount): EventSummary {
     slug: e.slug,
     title: e.title,
     tagline: e.tagline?.trim() || firstLine(e.description),
-    category: e.category ?? "TALK", // only a draft can have none yet
+    category: e.category ?? ("OTHER" as EventRow["category"] & string), // category is optional; shows as "Event"
     visibility: e.access === "code" ? "CODE_ONLY" : "PUBLIC",
     status: e.status,
     startsAt: new Date(e.starts_at),
