@@ -50,7 +50,7 @@ function PreviewTicket({ e, spot }: { e: EventSummary; spot: (typeof FLOAT_SPOTS
 
 const ONEPASS_STEPS = [
   { icon: Ticket, title: "Register in a tap", body: "Pick an event, tap Register and your OnePass is ready instantly. Full? Join the waitlist and we hold a seat for you when one opens." },
-  { icon: ScanLine, title: "Fast-track entry", body: "Show the QR at the gate and you're in. Organizers scan it in a second, even when the campus Wi-Fi drops." },
+  { icon: ScanLine, title: "Fast-track entry", body: "Show the QR at the gate and you're in. Organizers scan it in a second, even when the Wi-Fi drops." },
   { icon: BellRing, title: "Always up to date", body: "Time or venue changed? Updates from the organizer show up right on your dashboard." },
   { icon: Camera, title: "Relive it after", body: "Your certificate of attendance appears the moment you're scanned in, and you can save the event photos you're in." },
   { icon: Headset, title: "Contact event support", body: "Message the organizer straight from your pass.", planned: true },
@@ -76,11 +76,11 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
             Welcome to <LogoWordmark className="text-[17px] text-ink" motion="blink" />
           </span>
           <h1 className="mt-7 font-display font-extrabold leading-[0.9] tracking-[-0.05em]">
-            <span className="block text-[clamp(44px,8.4vw,124px)] text-ink">Every campus event.</span>{" "}
+            <span className="block text-[clamp(44px,8.4vw,124px)] text-ink">Every event.</span>{" "}
             <span className="block text-[clamp(56px,10.5vw,156px)] text-volt">One place.</span>
           </h1>
           <p className="mx-auto mt-7 max-w-2xl text-[17.5px] leading-relaxed text-ink-2">
-            EvntCult brings every fest, game night and workshop on campus together. Your calendar fills itself, organizers&apos; updates reach you live,
+            EvntCult brings every fest, game night and workshop together. Your calendar fills itself, organizers&apos; updates reach you live,
             clash detection keeps events from colliding, and <span className="font-semibold text-ink">OnePass</span> gets you in with one tap.
           </p>
           <ul className="mx-auto mt-7 flex max-w-3xl flex-wrap justify-center gap-2" aria-label="What EvntCult does">
@@ -126,12 +126,12 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
       {/* ── 2. OnePass ─────────────────────────────────── */}
       <section aria-labelledby="onepass-heading" className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
         <div>
-          <p className="eyebrow">Our flagship · your identity for campus events</p>
+          <p className="eyebrow">Our flagship · your identity for events</p>
           <h2 id="onepass-heading" className="mt-3 font-display text-[clamp(64px,9vw,128px)] font-extrabold leading-[0.9] tracking-[-0.055em]">
             One<span className="text-volt">Pass</span>
           </h2>
           <p className="mt-5 max-w-xl text-[18px] leading-relaxed text-ink-2">
-            One dynamic pass that makes going to campus events effortless: check-in at the gate, live updates and, soon, event support, all from a single tap. No paper tickets, no forms at the door, no hunting for photos later.
+            One dynamic pass that makes going to events effortless: check-in at the gate, live updates and, soon, event support, all from a single tap. No paper tickets, no forms at the door, no hunting for photos later.
           </p>
 
           <ol className="mt-10 space-y-3">
@@ -181,13 +181,13 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
       </section>
 
       {/* ── 3. Live numbers (real counts) ──────────────── */}
-      <section className="relative isolate mx-auto max-w-4xl overflow-hidden rounded-full px-4 py-9 md:py-11" aria-label="Campus numbers">
+      <section className="relative isolate mx-auto max-w-4xl overflow-hidden rounded-full px-4 py-9 md:py-11" aria-label="Numbers">
         <div aria-hidden className="absolute inset-0 -z-10 bg-volt" />
         <div className="grid grid-cols-3 divide-x divide-ink-inverse/15">
           {[
             { v: data.thisWeek, l: "Events this week" },
             { v: data.upcoming, l: "Upcoming events" },
-            { v: data.going, l: "Students going" },
+            { v: data.going, l: "People going" },
           ].map((s) => (
             <div key={s.l} className="px-4 text-center">
               <p className="font-display text-[clamp(36px,5vw,64px)] font-bold leading-none tracking-[-0.03em] text-ink-inverse">{s.v.toLocaleString("en-IN")}</p>
@@ -204,7 +204,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
           <div>
             <p className="eyebrow">A peek at your dashboard</p>
             <h2 id="preview-heading" className="shout mt-3 text-[clamp(34px,5.2vw,72px)]">
-              What&apos;s <span className="text-volt">on</span> campus
+              What&apos;s <span className="text-volt">on</span>
             </h2>
           </div>
           <span className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-[13px] font-semibold text-ink-muted">
@@ -269,7 +269,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
       {/* ── 5. Closing call to action ──────────────────── */}
       <section className="flex flex-col items-start justify-between gap-6 rounded-[36px] border border-white/[0.08] bg-surface p-8 md:flex-row md:items-end md:p-12">
         <h2 className="title-xl max-w-3xl text-[clamp(40px,5.6vw,80px)]">
-          Never miss what&apos;s happening on campus. <em>Join EvntCult today.</em>
+          Never miss what&apos;s happening. <em>Join EvntCult today.</em>
         </h2>
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
           <Link href="/signin?mode=signup" className="inline-flex items-center justify-center gap-2 rounded-full bg-volt px-7 py-4 text-[16px] font-bold text-ink-inverse shadow-brand hover:bg-volt-hover">

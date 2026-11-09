@@ -130,14 +130,14 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
     <form onSubmit={submit} className="mt-7 space-y-3">
       {step === "email" ? (
         <label className="block">
-          <span className="text-[13px] font-semibold text-ink-2">College email</span>
+          <span className="text-[13px] font-semibold text-ink-2">Email</span>
           <input
             type="email"
             required
             autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@college.edu"
+            placeholder="you@email.com"
             className={inputCls}
           />
         </label>

@@ -7,7 +7,7 @@ import { getViewer } from "@/lib/rbac";
 import { getEventDetail, toSummary } from "@/lib/data/events";
 import { passQrPayload } from "@/lib/tokens";
 import { formatINR, upiUri } from "@/lib/money";
-import { linkLabel } from "@/lib/organizer/shared";
+import { directionsUrl, linkLabel } from "@/lib/organizer/shared";
 import { fmtDate, fmtRange, fmtTime } from "@/lib/utils";
 import { EventArt } from "@/components/ui/EventArt";
 import { Chip } from "@/components/ui/Chip";
@@ -92,7 +92,13 @@ export default async function EventPage({ params, searchParams }: { params: Prom
                 )}
               </li>
             ) : (
-              <li className="flex items-center gap-3"><MapPin className="size-5 text-ink-subtle" /> {e.venue ?? "Venue TBA"}</li>
+              <li className="flex items-center gap-3"><MapPin className="size-5 text-ink-subtle" /> {e.venue ?? "Venue TBA"}
+                {e.venue && e.venue_status === "confirmed" && (
+                  <a href={directionsUrl({ venue: e.venue, venue_place_id: e.venue_place_id, venue_lat: e.venue_lat, venue_lng: e.venue_lng })} target="_blank" rel="noopener" className="text-[11px] text-ink-muted hover:underline">
+                    Directions
+                  </a>
+                )}
+              </li>
             )}
             {e.link_url && (
               <li className="pl-8">
@@ -137,7 +143,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           {!viewer ? (
             <div className="space-y-2">
               <Link href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} className="inline-flex w-full items-center justify-center rounded-full bg-volt py-3.5 text-[15px] font-bold text-ink-inverse hover:bg-volt-hover">Log in to register</Link>
-              <p className="text-center text-[13px] text-ink-muted">New here? <Link href={`/signin?mode=signup&next=${encodeURIComponent(`/events/${e.slug}`)}`} className="font-semibold text-ink underline">Sign up</Link> with your college email.</p>
+              <p className="text-center text-[13px] text-ink-muted">New here? <Link href={`/signin?mode=signup&next=${encodeURIComponent(`/events/${e.slug}`)}`} className="font-semibold text-ink underline">Sign up</Link> with your email.</p>
             </div>
           ) : d.isOwner ? (
             <div className="space-y-2">

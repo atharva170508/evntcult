@@ -52,7 +52,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {/* Greeting: cinematic band with huge editorial serif */}
       <header className="relative isolate mt-3 overflow-hidden rounded-[36px] px-6 py-10 animate-fade-up md:px-12 md:py-14">
         <Aurora quiet />
-        <Marquee words={["Tonight on campus", "Your passes", "Live at the gate"]} className="absolute inset-x-0 bottom-3 text-[clamp(56px,9vw,128px)] text-white/[0.04]" />
+        <Marquee words={["Tonight near you", "Your passes", "Live at the gate"]} className="absolute inset-x-0 bottom-3 text-[clamp(56px,9vw,128px)] text-white/[0.04]" />
         <div className="relative">
           <p className="eyebrow text-ink-2">{new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Kolkata" }).format(new Date())}</p>
           <h1 className="title-xl mt-3 text-[clamp(44px,6.6vw,100px)]">
@@ -126,7 +126,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <VaultTeaser photosOfYou={data.stats.photosOfYou} preview={data.vaultPreview} />
-        <LinkCard href="/venues" eyebrow="Venues" title="Find your way" icon={MapIcon} body="Every venue on campus, what's on there next, and directions." />
+        <LinkCard href="/venues" eyebrow="Venues" title="Find your way" icon={MapIcon} body="Every venue, what's on there next, and directions." />
         <LinkCard
           href="/certificates"
           eyebrow="Certificates"

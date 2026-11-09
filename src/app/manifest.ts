@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "EvntCult",
     short_name: "EvntCult",
-    description: "Every campus event, one place.",
+    description: "Every event, one place.",
     start_url: "/dashboard",
     display: "standalone",
     background_color: "#08080c",

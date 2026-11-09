@@ -22,7 +22,7 @@ export function MiniCalendar({ data }: { data: Record<string, { campus: number; 
             <span className="size-1.5 rounded-full bg-brand" /> Yours
           </span>
           <span className="flex items-center gap-1">
-            <span className="size-1.5 rounded-full bg-ink-subtle" /> Campus
+            <span className="size-1.5 rounded-full bg-ink-subtle" /> All events
           </span>
         </div>
       </div>

@@ -23,7 +23,7 @@ export function assertDomainAllowed(email: string) {
     .split(",")
     .map((d) => d.trim().toLowerCase())
     .filter(Boolean);
-  if (list.length > 0 && !list.includes(email.split("@")[1] ?? "")) throw new ApiError(403, "domain_not_allowed", "Use your college email address.");
+  if (list.length > 0 && !list.includes(email.split("@")[1] ?? "")) throw new ApiError(403, "domain_not_allowed", "That email domain isn't allowed.");
 }
 
 export async function findUserId(email: string) {

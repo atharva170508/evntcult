@@ -9,7 +9,7 @@ const brand = Fredoka({ subsets: ["latin"], weight: ["500", "600", "700"], varia
 
 export const metadata: Metadata = {
   title: { default: "EvntCult", template: "%s · EvntCult" },
-  description: "Every campus event, one place. Discover, register, check in, relive.",
+  description: "Every event, one place. Discover, register, check in, relive.",
   appleWebApp: { capable: true, title: "EvntCult", statusBarStyle: "black-translucent" },
 };
 

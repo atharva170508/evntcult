@@ -52,7 +52,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
       <PageHero
         eyebrow="Calendar"
         title={<>{monthName.split(" ")[0]} <em>{monthName.split(" ")[1]}</em></>}
-        sub={`${events.length} event${events.length === 1 ? "" : "s"} ${onlyMine ? "you're going to or hosting" : "on campus"} this month (IST).`}
+        sub={`${events.length} event${events.length === 1 ? "" : "s"} ${onlyMine ? "you're going to or hosting" : "happening"} this month (IST).`}
         actions={
           <>
             <Link href={href(range.prev)} className={navBtn} aria-label="Previous month"><ChevronLeft className="size-4" aria-hidden /> Prev</Link>
@@ -65,7 +65,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
       {viewer && (
         <nav aria-label="Which events" className="flex gap-2">
           {[
-            { view: undefined, text: "All campus events" },
+            { view: undefined, text: "All events" },
             { view: "mine", text: "Only mine" },
           ].map((t) => {
             const active = (t.view === "mine") === onlyMine;
@@ -133,7 +133,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
           <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-sm bg-volt" /> Going</span>
           <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-sm border border-volt/60 bg-volt/10" /> Waitlist</span>
           <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-sm border border-volt/40" /> Hosting</span>
-          <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-sm border border-line bg-white/[0.04]" /> Campus</span>
+          <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-sm border border-line bg-white/[0.04]" /> All events</span>
         </p>
       </section>
 

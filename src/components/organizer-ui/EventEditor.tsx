@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, Field, Odometer, Section, Segmented, Toast, apiJson, useAgo, type ToastState } from "./primitives";
 import { Ticket } from "./Ticket";
+import { VenueInput } from "./VenueInput";
 import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, isValidLink, LINK_ERROR, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
 
 export interface EditorInitial {
@@ -16,6 +17,10 @@ export interface EditorInitial {
   tagline: string;
   description: string;
   linkUrl: string;
+  venuePlaceId: string | null;
+  venueLat: number | null;
+  venueLng: number | null;
+  venueAddress: string | null;
   category: string | null;
   venue: string;
   venueStatus: "confirmed" | "tba" | "online";
@@ -37,18 +42,25 @@ interface Props {
   today: string;
   lastVenue: string | null;
   defaultUpi: string | null;
+  /** Google browser key. Without it the venue is a plain text box. */
+  placesKey: string | null;
 }
 
 const PRESETS = [60, 120, 180, 240, 360] as const;
+const NO_PLACE = { venuePlaceId: null, venueLat: null, venueLng: null, venueAddress: null };
 type Save = "idle" | "saving" | "saved" | "failed" | "conflict";
 
-export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Props) {
+export function EventEditor({ initial, host, today, lastVenue, defaultUpi, placesKey }: Props) {
   const router = useRouter();
   const [f, setF] = useState(() => ({
     title: initial?.title ?? "",
     tagline: initial?.tagline ?? "",
     description: initial?.description ?? "",
     linkUrl: initial?.linkUrl ?? "",
+    venuePlaceId: initial?.venuePlaceId ?? null,
+    venueLat: initial?.venueLat ?? null,
+    venueLng: initial?.venueLng ?? null,
+    venueAddress: initial?.venueAddress ?? null,
     category: initial?.category ?? (null as string | null),
     venue: initial?.venue ?? lastVenue ?? "",
     venueStatus: initial?.venueStatus ?? ("confirmed" as "confirmed" | "tba" | "online"),
@@ -66,6 +78,12 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
   const set = <K extends keyof typeof f>(k: K, v: (typeof f)[K]) => {
     dirtyRef.current = true;
     setF((p) => ({ ...p, [k]: v }));
+  };
+
+  /** The venue and its map details always change together. */
+  const setVenue = (venue: string, place: { venuePlaceId: string | null; venueLat: number | null; venueLng: number | null; venueAddress: string | null }) => {
+    dirtyRef.current = true;
+    setF((p) => ({ ...p, venue, ...place }));
   };
 
   const [id, setId] = useState(initial?.id ?? null);
@@ -123,6 +141,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
       ...(!v.linkUrl.trim() ? { linkUrl: null } : isValidLink(v.linkUrl.trim()) ? { linkUrl: v.linkUrl.trim() } : {}),
       category: v.category,
       venue: v.venueStatus === "tba" ? null : v.venue.trim() || null,
+      ...(v.venueStatus === "confirmed" && v.venuePlaceId ? { venuePlaceId: v.venuePlaceId, venueLat: v.venueLat, venueLng: v.venueLng, venueAddress: v.venueAddress } : NO_PLACE),
       venueStatus: v.venueStatus,
       date: v.date,
       time: v.time,
@@ -479,13 +498,24 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                       Add a venue
                     </button>
                   ) : f.venueStatus === "confirmed" ? (
-                    <button type="button" className="o-link" style={{ fontSize: 10 }} onClick={() => set("venueStatus", "tba")}>
-                      Mark as TBA
-                    </button>
+                    <>
+                      {f.venuePlaceId && <div style={{ marginBottom: 4 }}>Matched: {f.venueAddress ?? f.venue}</div>}
+                      <button type="button" className="o-link" style={{ fontSize: 10 }} onClick={() => set("venueStatus", "tba")}>
+                        Mark as TBA
+                      </button>
+                    </>
                   ) : null
                 }
               >
-                {(a) => <input {...a} className="o-input" disabled={f.venueStatus === "tba"} maxLength={160} placeholder={f.venueStatus === "tba" ? "TBA" : undefined} value={f.venueStatus === "tba" ? "" : f.venue} onChange={(e) => set("venue", e.target.value)} />}
+                {(a) => (
+                  <VenueInput
+                    apiKey={f.venueStatus === "tba" ? null : placesKey}
+                    value={f.venueStatus === "tba" ? "" : f.venue}
+                    onText={(v) => setVenue(v, NO_PLACE)}
+                    onPick={(p) => setVenue(p.venue, { venuePlaceId: p.placeId, venueLat: p.lat, venueLng: p.lng, venueAddress: p.address })}
+                    inputProps={{ ...a, className: "o-input", disabled: f.venueStatus === "tba", maxLength: 160, placeholder: f.venueStatus === "tba" ? "TBA" : undefined }}
+                  />
+                )}
               </Field>
             </Section>
             </div>

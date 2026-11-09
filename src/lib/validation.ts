@@ -94,6 +94,10 @@ const eventFields = {
   pricePaise: z.number().int().min(0).max(10_000_000).optional(),
   payoutUpi: upi.nullable().optional(),
   access: z.enum(["public", "code"]).optional(),
+  venuePlaceId: z.string().trim().regex(/^[\w-]{1,300}$/).nullable().optional(),
+  venueLat: z.number().min(-90).max(90).nullable().optional(),
+  venueLng: z.number().min(-180).max(180).nullable().optional(),
+  venueAddress: z.string().trim().max(300).nullable().optional(),
   linkUrl: z.string().trim().refine(isValidLink, LINK_ERROR).nullable().optional(),
   accessCode: z
     .string()

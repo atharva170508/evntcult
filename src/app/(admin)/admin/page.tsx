@@ -34,7 +34,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
   const peak = Math.max(1, ...signups.map((d) => d.n));
   const health: [string, string, boolean][] = [
-    ["Student login", codeLoginOn() ? "Email code on" : "No verification", codeLoginOn()],
+    ["User login", codeLoginOn() ? "Email code on" : "No verification", codeLoginOn()],
     ["WhatsApp", whatsappConnected() ? "Connected" : "Not connected", whatsappConnected()],
     ["Messages waiting", String(outbox.queued), true],
     ["Messages failed", String(outbox.failed), outbox.failed === 0],
@@ -67,7 +67,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             <div className="a-scroll">
               <table className="a-table">
                 <thead>
-                  <tr><th>Student</th><th>Event</th><th>Organizer</th><th>UPI ID</th><th>Submitted</th><th className="n">Amount</th></tr>
+                  <tr><th>Attendee</th><th>Event</th><th>Organizer</th><th>UPI ID</th><th>Submitted</th><th className="n">Amount</th></tr>
                 </thead>
                 <tbody>
                   {stuck.map((p) => (
@@ -145,7 +145,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                   <td className="n">{e.registered}</td>
                   <td className="n">{inr(e.collected)}</td>
                   <td className="n">
-                    {e.status === "published" && <OwnerAction kind="take_down" id={e.id} label="Take down" ask={`Take down ${e.title}? Students will see it as cancelled.`} />}
+                    {e.status === "published" && <OwnerAction kind="take_down" id={e.id} label="Take down" ask={`Take down ${e.title}? Attendees will see it as cancelled.`} />}
                     {e.status === "cancelled" && <OwnerAction kind="restore" id={e.id} label="Restore" ask={`Put ${e.title} back online?`} />}
                   </td>
                 </tr>

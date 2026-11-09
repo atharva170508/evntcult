@@ -22,8 +22,8 @@ export function AppShell({ viewer, children }: { viewer: NavViewer | null; child
         <footer className="print:hidden mx-auto max-w-[1280px] px-4 pb-28 pt-10 text-[12.5px] text-ink-subtle md:pb-10 lg:px-8">
           <Wordmark />
           <div className="mt-6 flex flex-wrap justify-between gap-2 border-t border-line pt-6">
-            <span>EvntCult · Every campus event, one place</span>
-            <span>Made for campus life</span>
+            <span>EvntCult · Every event, one place</span>
+            <span>Made by Atharva, Nakul and Abhay ♥</span>
           </div>
           <Link href="/get-app" className="mt-2 inline-block font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">Get the app</Link>
         </footer>

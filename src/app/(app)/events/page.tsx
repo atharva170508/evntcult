@@ -36,7 +36,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="space-y-5 pt-4 md:pt-6">
-      <PageHero eyebrow="Discover" title={<>Events on <em>campus</em></>} sub="Fests, game nights, workshops and talks. Register in a tap." marquee={["Discover", "Gaming", "Sports", "Tech", "Cultural"]} />
+      <PageHero eyebrow="Discover" title={<>Events <em>near you</em></>} sub="Fests, game nights, workshops and talks. Register in a tap." marquee={["Discover", "Gaming", "Sports", "Tech", "Cultural"]} />
 
       <form action="/events" className="flex h-12 items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card transition-colors focus-within:border-volt/70 md:max-w-xl">
         <Search className="size-[18px] text-ink-subtle" />

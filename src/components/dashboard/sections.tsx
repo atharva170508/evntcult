@@ -10,7 +10,6 @@ import {
   Clock,
   FileText,
   Gamepad2,
-  Map as MapIcon,
   MapPin,
   Megaphone,
   MessageCircle,
@@ -327,7 +326,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
         className="lg:col-span-6"
       >
         {data.clashes.length === 0 ? (
-          <p className="text-[14px] text-ink-muted">Your drafts don&apos;t overlap any booked venue or major campus event.</p>
+          <p className="text-[14px] text-ink-muted">Your drafts don&apos;t overlap any booked venue or major event.</p>
         ) : (
           <ul className="space-y-2.5">
             {[...hard, ...soft].map((c, i) => (
@@ -524,14 +523,14 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
     <section className="animate-fade-up">
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">Happening on campus</p>
+          <p className="eyebrow">Happening soon</p>
           <h2 className="title-xl mt-2 text-[clamp(38px,4.4vw,60px)]">Don&apos;t miss <em className="text-volt">these</em></h2>
         </div>
         <LinkButton href="/events" variant="secondary" className="py-2 text-[13px]">
           Browse all <ArrowUpRight className="size-4" />
         </LinkButton>
       </div>
-      {events.length === 0 && <EmptyState icon={CalendarRange} title="No upcoming events on campus" body="When organizers publish events, they show up here." />}
+      {events.length === 0 && <EmptyState icon={CalendarRange} title="No upcoming events" body="When organizers publish events, they show up here." />}
       <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 xl:grid-cols-4">
         {events.map((e) => (
           <EventCard key={e.id} e={e} />
@@ -600,39 +599,6 @@ export function VaultTeaser({ photosOfYou, preview = [] }: { photosOfYou: number
       </div>
       <p className="mt-4 flex items-center gap-2 text-[13px] font-semibold text-ink-muted">
         <ScanFace className="size-4 text-brand-ink" /> Tap &ldquo;that&apos;s me&rdquo; on event photos to collect yours
-      </p>
-    </Card>
-  );
-}
-
-export function NavigatorTeaser({ next }: { next: NextUp | null }) {
-  return (
-    <Card eyebrow="Venue Navigator" title={next?.venueName ?? "Find any venue"} icon={MapIcon} action={{ label: "Map", href: "/venues" }} className="h-full">
-      <div className="relative h-[150px] overflow-hidden rounded-2xl bg-[#111a16]">
-        {/* Stylised campus map placeholder — swap for Mapbox/Leaflet or an SVG campus plan. */}
-        <svg viewBox="0 0 400 150" className="absolute inset-0 size-full" preserveAspectRatio="xMidYMid slice" aria-hidden>
-          <g stroke="#1c2a23" strokeWidth="10" strokeLinecap="round">
-            <path d="M0 110 H400" />
-            <path d="M130 0 V150" />
-            <path d="M260 0 V150" />
-          </g>
-          <g fill="#17241e">
-            <rect x="20" y="18" width="90" height="70" rx="10" />
-            <rect x="150" y="18" width="92" height="70" rx="10" />
-            <rect x="282" y="18" width="100" height="70" rx="10" />
-          </g>
-          <circle cx="200" cy="52" r="18" fill="#1d3326" />
-          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#dcfe62" strokeWidth="3.5" strokeDasharray="7 6" strokeLinecap="round">
-            <animate attributeName="stroke-dashoffset" from="26" to="0" dur="1s" repeatCount="indefinite" />
-          </path>
-          <circle cx="60" cy="128" r="7" fill="#f2f3f7" stroke="#15171e" strokeWidth="3" />
-          <circle cx="330" cy="54" r="16" fill="#dcfe62" opacity="0.2" />
-          <circle cx="330" cy="54" r="8" fill="#dcfe62" stroke="#121219" strokeWidth="3" />
-        </svg>
-      </div>
-      <p className="mt-4 flex items-start gap-2 text-[13px] font-semibold text-ink-muted">
-        <Navigation className="mt-0.5 size-4 shrink-0 text-brand-ink" />
-        {next?.directions ?? "Search any hall, lab or ground and get walking directions from the main gate."}
       </p>
     </Card>
   );

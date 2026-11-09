@@ -18,6 +18,28 @@ export const LINK_ERROR = "Start the link with https://";
 export const isValidLink = (v: string) => v.length <= 300 && /^https?:\/\/[^\s]+$/i.test(v);
 export const linkLabel = (v: string) => v.replace(/^https?:\/\//i, "").replace(/\/$/, "");
 
+/* Google Maps links. Universal api=1 URLs: the Maps app on phones, the site on desktop. */
+interface MapTarget {
+  venue: string;
+  venue_place_id?: string | null;
+  venue_lat?: number | null;
+  venue_lng?: number | null;
+}
+
+export function mapsUrl(e: MapTarget): string {
+  const q = encodeURIComponent(e.venue);
+  if (e.venue_place_id) return `https://www.google.com/maps/search/?api=1&query=${q}&query_place_id=${encodeURIComponent(e.venue_place_id)}`;
+  if (e.venue_lat != null && e.venue_lng != null) return `https://www.google.com/maps/search/?api=1&query=${e.venue_lat},${e.venue_lng}`;
+  return `https://www.google.com/maps/search/?api=1&query=${q}`;
+}
+
+/** Turn-by-turn to a matched place. A venue that is only text has no exact destination, so it opens a search. */
+export function directionsUrl(e: MapTarget): string {
+  if (!e.venue_place_id) return mapsUrl(e);
+  const destination = e.venue_lat != null && e.venue_lng != null ? `${e.venue_lat},${e.venue_lng}` : encodeURIComponent(e.venue);
+  return `https://www.google.com/maps/dir/?api=1&destination=${destination}&destination_place_id=${encodeURIComponent(e.venue_place_id)}`;
+}
+
 /** Custom join codes: 4 to 20 letters or digits, stored upper-case. */
 export const normalizeCode = (v: string) => v.trim().toUpperCase().replace(/[\s-]/g, "");
 export const isValidCustomCode = (v: string) => /^[A-Z0-9]{4,20}$/.test(normalizeCode(v));

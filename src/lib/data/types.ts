@@ -37,6 +37,10 @@ export interface EventRow {
   drive_folder_url: string | null;
   banner_url: string | null;
   link_url: string | null;
+  venue_place_id: string | null;
+  venue_lat: number | null;
+  venue_lng: number | null;
+  venue_address: string | null;
   /** Added by migrations 0009/0010 (organizer dashboard). */
   version: number;
   venue_status: "confirmed" | "tba" | "online";

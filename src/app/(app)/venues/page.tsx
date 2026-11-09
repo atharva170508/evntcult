@@ -4,6 +4,7 @@ import { ArrowUpRight, MapPin, MapPinOff, Navigation, Users } from "lucide-react
 import { getViewer } from "@/lib/rbac";
 import { getDB } from "@/lib/db";
 import { VENUES, directionsUrl, type VenueInfo } from "@/lib/venues";
+import { mapsUrl } from "@/lib/organizer/shared";
 import { upcomingByVenue } from "@/lib/data/venue-schedule";
 import { cn, fmtDate, fmtTime } from "@/lib/utils";
 import { PageHero } from "@/components/brand/PageHero";
@@ -12,7 +13,7 @@ import { Chip } from "@/components/ui/Chip";
 export const metadata: Metadata = { title: "Venues" };
 export const dynamic = "force-dynamic";
 
-/** Every campus venue with what's on there next, and directions where the location has been added. */
+/** Every venue with what's on there next, and directions where the location has been added. */
 export default async function VenuesPage({ searchParams }: { searchParams: Promise<{ to?: string }> }) {
   const [viewer, { to }] = await Promise.all([getViewer(), searchParams]);
   const byVenue = await upcomingByVenue(await getDB(), { viewerId: viewer?.id ?? null });
@@ -25,26 +26,20 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
   const venues: VenueInfo[] = [...VENUES];
   for (const name of byVenue.keys()) if (!venues.some((v) => v.name === name)) venues.push({ name, capacity: 0, bufferMinutes: 30 });
   if (target) venues.sort((a, b) => Number(b.name === target) - Number(a.name === target));
-  const mapped = venues.filter((v) => directionsUrl(v)).length;
 
   return (
     <div className="space-y-5">
       <PageHero
         eyebrow="Venues"
         title={<>Find your <em>way</em></>}
-        sub={`${venues.length} venues · ${mapped} with directions. Tap a venue's event to open it.`}
+        sub={`${venues.length} venues. Tap a venue's event to open it.`}
       />
 
-      {mapped < venues.length && (
-        <p className="rounded-2xl border border-dashed border-line-strong px-4 py-3 text-[13px] text-ink-muted">
-          Some venues don&apos;t have a map location yet, so they show no Directions button. Organizers can add them in <code className="font-mono text-ink-2">src/lib/venues.ts</code>.
-        </p>
-      )}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {venues.map((v) => {
           const list = byVenue.get(v.name) ?? [];
-          const url = directionsUrl(v);
+          const url = directionsUrl(v) ?? mapsUrl({ venue: v.name });
           const live = list.find((e) => e.live);
           const highlighted = v.name === target;
           return (

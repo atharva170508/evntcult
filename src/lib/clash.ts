@@ -128,7 +128,7 @@ export function detectClashes(
         overlapMinutes: overlap,
         reason: sameCategory
           ? `Overlaps a similar ${ev.category?.toLowerCase()} event — you may split the crowd.`
-          : `Overlaps a large campus event (${ev.capacity ?? "300+"} expected).`,
+          : `Overlaps a large event (${ev.capacity ?? "300+"} expected).`,
       });
     }
   }

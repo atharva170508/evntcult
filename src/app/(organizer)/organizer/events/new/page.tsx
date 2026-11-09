@@ -19,5 +19,5 @@ export default async function NewEventPage() {
   const viewer = (await getViewer())!;
   const db = await getDB();
   const [venue, upi, host] = await Promise.all([lastVenue(db, viewer.id), defaultPayoutUpi(db, viewer.id), siteHost()]);
-  return <EventEditor initial={null} host={host} today={defaultDate()} lastVenue={venue} defaultUpi={upi} />;
+  return <EventEditor initial={null} host={host} today={defaultDate()} lastVenue={venue} defaultUpi={upi} placesKey={process.env.PLACES_API_KEY || null} />;
 }

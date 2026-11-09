@@ -30,7 +30,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           <h2 className="font-display text-[68px] font-bold leading-[0.95] tracking-[-0.04em]">Register. Pass. Scan. <em>Attend.</em></h2>
           <ul className="mt-8 space-y-3 text-[16px] font-semibold text-white/90">
             <li className="flex items-center gap-3">
-              <CalendarCheck2 className="size-5" /> Every campus event in one place
+              <CalendarCheck2 className="size-5" /> Every event in one place
             </li>
             <li className="flex items-center gap-3">
               <QrCode className="size-5" /> One QR pass at the gate
@@ -49,7 +49,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           </div>
           <h1 className="title-xl mt-8 text-[52px] lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
           <p className="mt-2 text-[15px] text-ink-muted">
-            {signup ? "Sign up with your college email to register for events and get passes." : "Use your college email to see your events and passes."}
+            {signup ? "Sign up with your email to register for events and get passes." : "Use your email to see your events and passes."}
           </p>
           <SignInForm next={next} signup={signup} codeLogin={codeLoginOn()} />
           <p className="mt-6 text-center text-[14px] text-ink-muted">

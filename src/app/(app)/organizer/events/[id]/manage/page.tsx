@@ -101,7 +101,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
       <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
         <section className="card p-5">
           <h2 className="title-xl text-[32px]">Post an update</h2>
-          <p className="mb-3 mt-0.5 text-[13px] text-ink-muted">Shows on registered students&apos; dashboards straight away.</p>
+          <p className="mb-3 mt-0.5 text-[13px] text-ink-muted">Shows on registered people&apos;s dashboards straight away.</p>
           {e.status === "draft" ? (
             <p className="rounded-2xl bg-canvas p-4 text-[14px] font-semibold text-ink-2">Publish the event first, then you can post updates.</p>
           ) : (
@@ -113,7 +113,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
           <h2 className="flex items-center gap-2 text-[16px] font-bold"><MessageCircle className="size-4 text-ink-subtle" /> WhatsApp for this event</h2>
           <p className={`mt-2 text-[14px] font-semibold ${connected ? "text-live" : "text-warn"}`}>WhatsApp sending: {connected ? "connected" : "not connected"}</p>
           <p className="mt-1 text-[13.5px] text-ink-2">
-            <span className="font-mono font-bold tabular-nums">{outbox.queued}</span> queued · <span className="font-mono tabular-nums">{outbox.sent}</span> sent · <span className="font-mono tabular-nums">{optedIn}</span> registered students opted in
+            <span className="font-mono font-bold tabular-nums">{outbox.queued}</span> queued · <span className="font-mono tabular-nums">{outbox.sent}</span> sent · <span className="font-mono tabular-nums">{optedIn}</span> registered people opted in
           </p>
           <h3 className="mt-4 text-[13px] font-bold uppercase tracking-[0.08em] text-ink-subtle">Recent updates</h3>
           {updates.length === 0 ? (
