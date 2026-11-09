@@ -36,6 +36,7 @@ export interface EventRow {
   organizer_upi_id: string | null;
   drive_folder_url: string | null;
   banner_url: string | null;
+  link_url: string | null;
   /** Added by migrations 0009/0010 (organizer dashboard). */
   version: number;
   venue_status: "confirmed" | "tba" | "online";

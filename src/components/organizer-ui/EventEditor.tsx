@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, Field, Odometer, Section, Segmented, Toast, apiJson, useAgo, type ToastState } from "./primitives";
 import { Ticket } from "./Ticket";
-import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
+import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, isValidLink, LINK_ERROR, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
 
 export interface EditorInitial {
   id: string;
@@ -15,6 +15,7 @@ export interface EditorInitial {
   title: string;
   tagline: string;
   description: string;
+  linkUrl: string;
   category: string | null;
   venue: string;
   venueStatus: "confirmed" | "tba" | "online";
@@ -47,6 +48,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
     title: initial?.title ?? "",
     tagline: initial?.tagline ?? "",
     description: initial?.description ?? "",
+    linkUrl: initial?.linkUrl ?? "",
     category: initial?.category ?? (null as string | null),
     venue: initial?.venue ?? lastVenue ?? "",
     venueStatus: initial?.venueStatus ?? ("confirmed" as "confirmed" | "tba" | "online"),
@@ -105,6 +107,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
     upi: touched.upi && f.paid && upi && !isValidUpi(upi) ? "That isn't a UPI ID. It looks like name@bank." : null,
     price: touched.price && f.paid && !(pricePaise > 0) ? "Enter a price above zero." : null,
     capacity: touched.capacity && f.capacity !== "" && !(Number(f.capacity) > 0) ? "Capacity must be 1 or more, or blank for no limit." : null,
+    link: touched.link && f.linkUrl.trim() && !isValidLink(f.linkUrl.trim()) ? LINK_ERROR : null,
     code: fieldError.code ?? (touched.code && code && !isValidCustomCode(code) ? "Use 4 to 20 letters or numbers." : null),
   };
 
@@ -117,6 +120,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
       ...(slugRef.current ? { slug: slugRef.current } : {}),
       tagline: v.tagline.trim() || null,
       description: v.description.trim() || null,
+      ...(!v.linkUrl.trim() ? { linkUrl: null } : isValidLink(v.linkUrl.trim()) ? { linkUrl: v.linkUrl.trim() } : {}),
       category: v.category,
       venue: v.venueStatus === "tba" ? null : v.venue.trim() || null,
       venueStatus: v.venueStatus,
@@ -474,6 +478,30 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                 </label>
                 <textarea id="about" className="o-area" style={{ maxWidth: 440 }} value={f.description} onChange={(e) => set("description", e.target.value)} />
                 <div className="o-hint">{save === "saving" ? "saving" : ago ? `autosaved ${ago}` : null}</div>
+                <label className="o-label" style={{ display: "block", padding: "14px 0 6px" }} htmlFor="event-link">
+                  Link
+                </label>
+                <input
+                  id="event-link"
+                  className="o-input o-mono"
+                  style={{ maxWidth: 440 }}
+                  placeholder="https://instagram.com/yourclub"
+                  autoCapitalize="none"
+                  inputMode="url"
+                  maxLength={300}
+                  aria-invalid={!!errors.link}
+                  aria-describedby={errors.link ? "event-link-err" : undefined}
+                  value={f.linkUrl}
+                  onChange={(e) => set("linkUrl", e.target.value)}
+                  onBlur={() => blur("link")}
+                />
+                {errors.link ? (
+                  <p className="o-err" id="event-link-err" role="alert">
+                    {errors.link}
+                  </p>
+                ) : (
+                  <div className="o-hint">Shown on the event page.</div>
+                )}
               </div>
             </Section>
 

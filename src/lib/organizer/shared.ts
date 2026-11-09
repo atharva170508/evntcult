@@ -13,6 +13,11 @@ export const ORGANIZER_CATEGORIES = [
 export const UPI_PATTERN = /^[a-z0-9._-]{2,256}@[a-z][a-z0-9]{1,63}$/;
 export const isValidUpi = (v: string) => UPI_PATTERN.test(v.trim().toLowerCase());
 
+/** The optional event link: http or https only, so a script link can never be saved. */
+export const LINK_ERROR = "Start the link with https://";
+export const isValidLink = (v: string) => v.length <= 300 && /^https?:\/\/[^\s]+$/i.test(v);
+export const linkLabel = (v: string) => v.replace(/^https?:\/\//i, "").replace(/\/$/, "");
+
 /** Custom join codes: 4 to 20 letters or digits, stored upper-case. */
 export const normalizeCode = (v: string) => v.trim().toUpperCase().replace(/[\s-]/g, "");
 export const isValidCustomCode = (v: string) => /^[A-Z0-9]{4,20}$/.test(normalizeCode(v));

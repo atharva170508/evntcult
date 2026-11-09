@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { CATEGORIES } from "@/lib/data/types";
-import { UPI_PATTERN, isValidCustomCode } from "@/lib/organizer/shared";
+import { UPI_PATTERN, isValidCustomCode, isValidLink, LINK_ERROR } from "@/lib/organizer/shared";
 
 const ymd = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD");
 const hm = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Use HH:MM (24-hour)");
@@ -94,6 +94,7 @@ const eventFields = {
   pricePaise: z.number().int().min(0).max(10_000_000).optional(),
   payoutUpi: upi.nullable().optional(),
   access: z.enum(["public", "code"]).optional(),
+  linkUrl: z.string().trim().refine(isValidLink, LINK_ERROR).nullable().optional(),
   accessCode: z
     .string()
     .trim()

@@ -44,6 +44,7 @@ export interface EventFields {
   payoutUpi?: string | null;
   access?: "public" | "code";
   accessCode?: string | null;
+  linkUrl?: string | null;
 }
 
 const SEATS = "(SELECT COUNT(*) FROM registrations r WHERE r.event_id = events.id AND r.status IN ('registered','waitlisted'))";
@@ -94,10 +95,10 @@ export async function createDraft(db: D1Database, owner: Owner, input: EventFiel
     await db
       .prepare(
         `INSERT INTO events (id, slug, organizer_id, title, tagline, description, category, venue, venue_status, starts_at, ends_at, capacity,
-                             price_paise, organizer_upi_id, access, access_code, status, version, created_at, updated_at)
-         VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,'draft',1,?17,?17)`,
+                             price_paise, organizer_upi_id, access, access_code, link_url, status, version, created_at, updated_at)
+         VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?18,'draft',1,?17,?17)`,
       )
-      .bind(id, slug, owner.id, input.title, input.tagline ?? null, input.description ?? null, input.category ?? null, venue, input.venueStatus ?? "confirmed", startsAt, endsAt, capacity, input.pricePaise ?? 0, input.payoutUpi ?? null, access, code, iso)
+      .bind(id, slug, owner.id, input.title, input.tagline ?? null, input.description ?? null, input.category ?? null, venue, input.venueStatus ?? "confirmed", startsAt, endsAt, capacity, input.pricePaise ?? 0, input.payoutUpi ?? null, access, code, iso, input.linkUrl ?? null)
       .run();
   } catch (e) {
     if (isUnique(e, "access_code")) throw new OrganizerError(409, "code_taken", "That code is taken. Try another.");
@@ -139,6 +140,7 @@ export async function saveEvent(db: D1Database, owner: Owner, id: string, versio
     capacity: pick(input.capacity, cur.capacity),
     price: input.pricePaise ?? cur.price_paise,
     upi: pick(input.payoutUpi, cur.organizer_upi_id),
+    link: pick(input.linkUrl, cur.link_url),
   };
 
   if (cur.status === "published") {
@@ -154,17 +156,17 @@ export async function saveEvent(db: D1Database, owner: Owner, id: string, versio
   }
 
   const iso = now.toISOString();
-  const ownerClause = owner.role === "admin" ? "" : "AND organizer_id = ?18";
+  const ownerClause = owner.role === "admin" ? "" : "AND organizer_id = ?19";
   let row: { version: number } | null;
   try {
     const stmt = db.prepare(
       `UPDATE events
           SET title=?2, slug=?3, tagline=?4, description=?5, category=?6, venue=?7, venue_status=?8, starts_at=?9, ends_at=?10, capacity=?11,
-              price_paise=?12, organizer_upi_id=?13, access=?14, access_code=?15, updated_at=?16, version=version+1
+              price_paise=?12, organizer_upi_id=?13, access=?14, access_code=?15, updated_at=?16, link_url=?18, version=version+1
         WHERE id=?1 AND version=?17 AND COALESCE(?11, 1e18) >= ${SEATS} ${ownerClause}
         RETURNING version`,
     );
-    const args = [id, next.title, next.slug, next.tagline, next.description, next.category, next.venue, next.venueStatus, startsAt, endsAt, next.capacity, next.price, next.upi, access, code, iso, version];
+    const args = [id, next.title, next.slug, next.tagline, next.description, next.category, next.venue, next.venueStatus, startsAt, endsAt, next.capacity, next.price, next.upi, access, code, iso, version, next.link];
     row = await (owner.role === "admin" ? stmt.bind(...args) : stmt.bind(...args, owner.id)).first<{ version: number }>();
   } catch (e) {
     if (isUnique(e, "access_code")) throw new OrganizerError(409, "code_taken", "That code is taken. Try another.");
@@ -259,9 +261,9 @@ export async function duplicateEvent(db: D1Database, owner: Owner, id: string, n
   await db
     .prepare(
       `INSERT INTO events (id, slug, organizer_id, title, tagline, description, category, venue, venue_status, starts_at, ends_at, capacity, price_paise, organizer_upi_id,
-                           access, access_code, status, version, created_at, updated_at, event_type, meeting_url, banner_url, drive_folder_url)
+                           access, access_code, status, version, created_at, updated_at, event_type, meeting_url, banner_url, drive_folder_url, link_url)
        SELECT ?1, ?2, ?3, ?4, tagline, description, category, venue, venue_status, starts_at, ends_at, capacity, price_paise, organizer_upi_id,
-              'public', NULL, 'draft', 1, ?5, ?5, event_type, meeting_url, banner_url, NULL
+              'public', NULL, 'draft', 1, ?5, ?5, event_type, meeting_url, banner_url, NULL, link_url
          FROM events WHERE id = ?6`,
     )
     .bind(newEventId, slug, owner.id, title, iso, id)

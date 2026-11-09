@@ -33,6 +33,7 @@ export function toEditorInitial(e: EventRow & { taken: number }): EditorInitial 
     status: e.status,
     title: e.title,
     tagline: e.tagline ?? "",
+    linkUrl: e.link_url ?? "",
     description: e.description ?? "",
     category: e.category,
     venue: e.venue ?? "",

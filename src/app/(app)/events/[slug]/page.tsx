@@ -7,6 +7,7 @@ import { getViewer } from "@/lib/rbac";
 import { getEventDetail, toSummary } from "@/lib/data/events";
 import { passQrPayload } from "@/lib/tokens";
 import { formatINR, upiUri } from "@/lib/money";
+import { linkLabel } from "@/lib/organizer/shared";
 import { fmtDate, fmtRange, fmtTime } from "@/lib/utils";
 import { EventArt } from "@/components/ui/EventArt";
 import { Chip } from "@/components/ui/Chip";
@@ -92,6 +93,13 @@ export default async function EventPage({ params, searchParams }: { params: Prom
               </li>
             ) : (
               <li className="flex items-center gap-3"><MapPin className="size-5 text-ink-subtle" /> {e.venue ?? "Venue TBA"}</li>
+            )}
+            {e.link_url && (
+              <li className="pl-8">
+                <a href={e.link_url} target="_blank" rel="noopener noreferrer" className="break-all font-mono text-[11px] text-ink-muted hover:underline">
+                  {linkLabel(e.link_url)}
+                </a>
+              </li>
             )}
             <li className="flex items-center gap-3">
               <Ticket className="size-5 text-ink-subtle" />
