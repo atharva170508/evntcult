@@ -106,6 +106,28 @@ export function isMultiDay(e: Pick<CalendarEvent, "starts_at" | "ends_at">): boo
   return dayKey(e.starts_at) < istDate(end);
 }
 
+export const seatsLabel = (e: Pick<CalendarEvent, "capacity" | "taken">) => (e.capacity === null ? "Unlimited" : `${e.taken} / ${e.capacity}`);
+export const isSoldOut = (e: Pick<CalendarEvent, "capacity" | "taken">) => e.capacity !== null && e.taken >= e.capacity;
+export const isLiveNow = (e: Pick<CalendarEvent, "status" | "starts_at" | "ends_at">, now = Date.now()) => e.status === "published" && Date.parse(e.starts_at) <= now && Date.parse(e.ends_at) > now;
+
+const lastDay = (e: Pick<CalendarEvent, "ends_at">) => new Date(Date.parse(e.ends_at) - 1).toISOString();
+
+/** Calendar days an event touches, counted the same way as its bar on the grid. */
+export function spanDays(e: Pick<CalendarEvent, "starts_at" | "ends_at">): number {
+  return Math.round((Date.parse(dayKey(lastDay(e))) - Date.parse(dayKey(e.starts_at))) / 86_400_000) + 1;
+}
+
+/** "NOV 20-22", or "NOV 30-DEC 2" when it crosses a month. */
+export function spanRange(e: Pick<CalendarEvent, "starts_at" | "ends_at">): string {
+  const parts = (iso: string) => {
+    const t = ticketDate(iso);
+    return { day: Number(t.slice(4, 6)), month: t.slice(7) };
+  };
+  const a = parts(e.starts_at);
+  const b = parts(lastDay(e));
+  return a.month === b.month ? `${a.month} ${a.day}-${b.day}` : `${a.month} ${a.day}-${b.month} ${b.day}`;
+}
+
 function addDays(ymd: string, n: number): string {
   const d = new Date(`${ymd}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() + n);

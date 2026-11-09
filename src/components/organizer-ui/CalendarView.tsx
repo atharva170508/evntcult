@@ -4,46 +4,36 @@ import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, Segmented, Toast, apiJson, type ToastState } from "./primitives";
+import { Agenda } from "./Agenda";
+import { MonthGrid } from "./MonthGrid";
+import { Rail, type RailClash, type RailDraft } from "./Rail";
 import { dayKey, isMultiDay, istTime, layoutMonth, ticketDate, type CalendarEvent } from "@/lib/organizer/shared";
 
 interface Props {
   initialView: "month" | "agenda" | null;
   month: string;
   today: string;
+  initials: string;
   events: CalendarEvent[];
-  clashes: { eventId: string; title: string; other: string; venue: string | null; severity: string }[];
-  drafts: { id: string; title: string; starts_at: string; missing: string[] }[];
+  clashes: RailClash[];
+  drafts: RailDraft[];
   week: CalendarEvent[];
 }
 
 type Filter = "all" | "published" | "draft";
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const DOW = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+const DAY_MOVES: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
 
-const seats = (e: CalendarEvent) => (e.capacity === null ? `${e.taken} going` : `${e.taken} / ${e.capacity}`);
-const soldOut = (e: CalendarEvent) => e.capacity !== null && e.taken >= e.capacity;
-const isLive = (e: CalendarEvent) => e.status === "published" && Date.parse(e.starts_at) <= Date.now() && Date.parse(e.ends_at) > Date.now();
-
-function Chip({ e, onDrag }: { e: CalendarEvent; onDrag: (ev: CalendarEvent) => void }) {
-  return (
-    <Link href={`/organizer/events/${e.id}`} className={`o-ev ${e.status === "draft" ? "draft" : ""}`} draggable onDragStart={() => onDrag(e)} title={e.title}>
-      <span className="o-ev-time">
-        {isLive(e) && <span className="o-dot" aria-label="Live now" />}
-        {istTime(new Date(e.starts_at))}
-        {e.clash && (
-          <span className="o-clash" aria-label="Clash">
-            !
-          </span>
-        )}
-      </span>
-      <span className="o-ev-title" style={{ display: "block" }}>
-        {e.title}
-      </span>
-    </Link>
-  );
+function addDay(date: string, n: number) {
+  const d = new Date(`${date}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
 }
 
-export function CalendarView({ initialView, month, today, events, clashes, drafts, week }: Props) {
+/** Does this event run on this calendar day (IST)? */
+const onDay = (e: CalendarEvent, date: string) => dayKey(e.starts_at) <= date && dayKey(new Date(Date.parse(e.ends_at) - 1).toISOString()) >= date;
+
+export function CalendarView({ initialView, month, today, initials, events, clashes, drafts, week }: Props) {
   const router = useRouter();
   const [y, m] = month.split("-").map(Number);
   const [filter, setFilter] = useState<Filter>("all");
@@ -54,6 +44,7 @@ export function CalendarView({ initialView, month, today, events, clashes, draft
   const [narrow, setNarrow] = useState(false);
   const [popover, setPopover] = useState<{ date: string; items: CalendarEvent[]; x: number; y: number } | null>(null);
   const [overCell, setOverCell] = useState<string | null>(null);
+  const [cursor, setCursor] = useState<string | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
   const dragging = useRef<CalendarEvent | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -66,36 +57,22 @@ export function CalendarView({ initialView, month, today, events, clashes, draft
     return () => mq.removeEventListener("change", on);
   }, []);
 
-  const go = (delta: number) => {
-    const d = new Date(Date.UTC(y, m - 1 + delta, 1));
-    openMonth(d.toISOString().slice(0, 7));
-  };
   const openMonth = (target: string) => {
     setPopover(null);
-    startNav(() => router.push(`/organizer/calendar?m=${target}&v=${view}`));
+    if (target !== month) startNav(() => router.push(`/organizer/calendar?m=${target}&v=${view}`));
   };
-  const goToday = () => openMonth(today.slice(0, 7));
+  const go = (delta: number) => {
+    setCursor(null);
+    openMonth(new Date(Date.UTC(y, m - 1 + delta, 1)).toISOString().slice(0, 7));
+  };
+  const goToday = () => {
+    setCursor(today);
+    openMonth(today.slice(0, 7));
+  };
   const pickView = (v: "month" | "agenda") => {
     setView(v);
     window.history.replaceState(null, "", `/organizer/calendar?m=${month}&v=${v}`);
   };
-
-  useEffect(() => {
-    const on = (e: KeyboardEvent) => {
-      const t = e.target as HTMLElement;
-      if (/INPUT|SELECT|TEXTAREA/.test(t.tagName)) return;
-      if (e.key === "ArrowLeft") go(-1);
-      else if (e.key === "ArrowRight") go(1);
-      else if (e.key.toLowerCase() === "t") goToday();
-      else if (e.key === "/") {
-        e.preventDefault();
-        searchRef.current?.focus();
-      } else if (e.key === "Escape") setPopover(null);
-    };
-    window.addEventListener("keydown", on);
-    return () => window.removeEventListener("keydown", on);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [month, view]);
 
   const venues = useMemo(() => [...new Set(events.map((e) => e.venue).filter(Boolean) as string[])].sort(), [events]);
   const shown = useMemo(
@@ -111,6 +88,63 @@ export function CalendarView({ initialView, month, today, events, clashes, draft
   const published = events.filter((e) => e.status !== "draft").length;
   const draftCount = events.length - published;
   const weeks = useMemo(() => layoutMonth(y, m - 1, shown), [y, m, shown]);
+  const showAgenda = narrow || view === "agenda";
+  const byDay = useMemo(() => {
+    const days = new Map<string, CalendarEvent[]>();
+    for (const e of shown.filter((x) => !isMultiDay(x))) {
+      const k = dayKey(e.starts_at);
+      if (k.startsWith(month)) days.set(k, [...(days.get(k) ?? []), e]);
+    }
+    return [...days.entries()].sort(([a], [b]) => a.localeCompare(b));
+  }, [shown, month]);
+  const multi = shown.filter(isMultiDay);
+
+  useEffect(() => {
+    const moveCursor = (key: string) => {
+      if (showAgenda) {
+        const dates = byDay.map(([d]) => d);
+        if (dates.length === 0) return;
+        if (!cursor || !dates.includes(cursor)) return setCursor(dates.find((d) => d >= today) ?? dates[0]);
+        const next = dates[dates.indexOf(cursor) + (key === "ArrowLeft" || key === "ArrowUp" ? -1 : 1)];
+        if (next) setCursor(next);
+        return;
+      }
+      if (!cursor) return setCursor(today.startsWith(month) ? today : `${month}-01`);
+      const next = addDay(cursor, DAY_MOVES[key]);
+      setCursor(next);
+      if (!next.startsWith(month)) openMonth(next.slice(0, 7));
+    };
+
+    const openCursor = () => {
+      if (!cursor) return;
+      const items = showAgenda ? (byDay.find(([d]) => d === cursor)?.[1] ?? []) : shown.filter((e) => onDay(e, cursor));
+      if (items.length === 1) router.push(`/organizer/events/${items[0].id}`);
+      else if (items.length > 1) {
+        const box = document.querySelector(`[data-date="${cursor}"]`)?.getBoundingClientRect();
+        setPopover({ date: cursor, items, x: Math.min(box?.left ?? 200, window.innerWidth - 280), y: Math.min(box?.bottom ?? 200, window.innerHeight - 260) });
+      }
+    };
+
+    const on = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const t = e.target as HTMLElement;
+      if (/INPUT|SELECT|TEXTAREA/.test(t.tagName)) return;
+      if (e.key in DAY_MOVES) {
+        e.preventDefault();
+        moveCursor(e.key);
+      } else if (e.key === "Enter") {
+        if (/^(A|BUTTON)$/.test(t.tagName)) return; // let the focused control do its own thing
+        openCursor();
+      } else if (e.key.toLowerCase() === "t") goToday();
+      else if (e.key === "/") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      } else if (e.key === "Escape") setPopover(null);
+    };
+    window.addEventListener("keydown", on);
+    return () => window.removeEventListener("keydown", on);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [month, view, narrow, cursor, shown, byDay, showAgenda]);
 
   async function move(e: CalendarEvent, date: string, version: number): Promise<number | null> {
     const r = await apiJson<{ version: number }>(`/api/events/${e.id}`, "PATCH", { version, date });
@@ -133,19 +167,6 @@ export function CalendarView({ initialView, month, today, events, clashes, draft
     if (v !== null) setToast({ message: `Moved to ${ticketDate(`${date}T12:00:00+05:30`)}`, action: { label: "Undo", run: () => void move(e, from, v) } });
   }
 
-  const showAgenda = narrow || view === "agenda";
-  const byDay = useMemo(() => {
-    const single = shown.filter((e) => !isMultiDay(e));
-    const days = new Map<string, CalendarEvent[]>();
-    for (const e of single) {
-      const k = dayKey(e.starts_at);
-      if (k.startsWith(month)) days.set(k, [...(days.get(k) ?? []), e]);
-    }
-    return [...days.entries()].sort(([a], [b]) => a.localeCompare(b));
-  }, [shown, month]);
-  const multi = shown.filter(isMultiDay);
-  const next = events.find((e) => e.status !== "draft" && Date.parse(e.ends_at) > Date.now());
-
   return (
     <>
       <header className="o-top">
@@ -155,7 +176,10 @@ export function CalendarView({ initialView, month, today, events, clashes, draft
         <input ref={searchRef} aria-label="Search events" className="o-input" style={{ height: 26, maxWidth: 220, fontSize: 12 }} placeholder="Search  /" value={q} onChange={(e) => setQ(e.target.value)} />
         <span className="o-spacer" />
         <Link className="o-btn o-btn-primary" href="/organizer/events/new">
-          Create event
+          New event
+        </Link>
+        <Link className="o-avatar" href="/profile" aria-label="Your profile">
+          {initials}
         </Link>
       </header>
       <div className="o-page">
@@ -166,8 +190,8 @@ export function CalendarView({ initialView, month, today, events, clashes, draft
                 <div className="o-cal-title">
                   {MONTHS[m - 1]} <span>{y}</span>
                 </div>
-                <div className="o-meta" style={{ fontSize: 10, color: "var(--dim)", marginTop: 5 }}>
-                  {loading ? "loading" : `${events.length} events · ${draftCount} drafts · times in IST`}
+                <div className="o-meta" style={{ fontSize: 10, color: "var(--dim)", marginTop: 5, height: 14 }}>
+                  {loading ? <span className="o-skel" /> : `${events.length} events · ${draftCount} drafts · times in IST`}
                 </div>
               </div>
               <span className="o-spacer" />
@@ -214,183 +238,33 @@ export function CalendarView({ initialView, month, today, events, clashes, draft
             </div>
 
             {showAgenda ? (
-              <div>
-                {shown.length === 0 && <p className="o-meta" style={{ borderTop: "1px solid var(--hair)", paddingTop: 14 }}>Nothing this month.</p>}
-                {multi.map((e) => (
-                  <div key={e.id} style={{ borderTop: "1px solid var(--hair)", padding: "10px 0" }}>
-                    <Link href={`/organizer/events/${e.id}`} className="o-agenda-bar">
-                      <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        {e.title.toUpperCase()} · {Math.round((Date.parse(e.ends_at) - Date.parse(e.starts_at)) / 86_400_000) || 1} days{e.venue ? ` · ${e.venue}` : ""}
-                      </span>
-                      <span className="o-mono" style={{ fontSize: 10, whiteSpace: "nowrap" }}>
-                        {ticketDate(e.starts_at).slice(4)} to {ticketDate(new Date(Date.parse(e.ends_at) - 1).toISOString()).slice(4)}
-                      </span>
-                    </Link>
-                  </div>
-                ))}
-                {byDay.map(([date, list]) => {
-                  const label = ticketDate(`${date}T12:00:00+05:30`);
-                  return (
-                    <div className="o-agenda-day" key={date}>
-                      <div>
-                        <div className={`o-agenda-wd ${date === today ? "today" : ""}`}>{label.slice(0, 3)}</div>
-                        <div className="o-agenda-num">{Number(date.slice(8))}</div>
-                      </div>
-                      <div>
-                        {list.map((e) => (
-                          <Link key={e.id} href={`/organizer/events/${e.id}`} className="o-agenda-row">
-                            <span className="o-agenda-time">
-                              {isLive(e) && <span className="o-dot" aria-label="Live now" />}
-                              {istTime(new Date(e.starts_at))}
-                            </span>
-                            <span className={`t ${e.status === "draft" ? "d" : ""}`}>
-                              {e.title} {e.clash && <span className="o-clash">!</span>}
-                            </span>
-                            <span className="o-agenda-venue">{e.venue ?? "TBA"}</span>
-                            <span className="o-agenda-cap" style={soldOut(e) ? { color: "var(--warn)" } : undefined}>
-                              {e.status === "draft" ? <span className="o-pill">DRAFT</span> : seats(e)}
-                            </span>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <Agenda multi={multi} byDay={byDay} today={today} cursor={cursor} empty={shown.length === 0} />
             ) : (
-              <div className="o-grid" role="grid" aria-label={`${MONTHS[m - 1]} ${y}`}>
-                <div className="o-dow">
-                  {DOW.map((d) => (
-                    <div key={d}>{d}</div>
-                  ))}
-                </div>
-                {weeks.map((w, i) => (
-                  <div className="o-week" key={i}>
-                    {w.cells.map((c) => {
-                      const hasBar = w.bars.some((b) => w.cells.indexOf(c) >= b.startCol && w.cells.indexOf(c) < b.startCol + b.span);
-                      return (
-                        <div
-                          key={c.date}
-                          role="gridcell"
-                          className={`o-cell ${c.inMonth ? "" : "out"} ${overCell === c.date ? "drop" : ""}`}
-                          onDragOver={(e) => {
-                            if (!c.inMonth) return;
-                            e.preventDefault();
-                            setOverCell(c.date);
-                          }}
-                          onDragLeave={() => setOverCell((x) => (x === c.date ? null : x))}
-                          onDrop={() => void drop(c.date)}
-                        >
-                          <div className={`o-daynum ${c.date === today ? "today" : ""}`}>{c.day}</div>
-                          <div style={hasBar ? { marginTop: -2 } : undefined}>
-                            {c.chips.slice(0, hasBar ? 1 : 2).map((e) => (
-                              <Chip key={e.id} e={e} onDrag={(x) => (dragging.current = x)} />
-                            ))}
-                            {(() => {
-                              const more = c.more + (hasBar ? Math.max(0, c.chips.length - 1) : 0);
-                              return more > 0 ? (
-                                <button className="o-more" onClick={(ev) => setPopover({ date: c.date, items: c.all, x: Math.min(ev.clientX, window.innerWidth - 280), y: Math.min(ev.clientY, window.innerHeight - 260) })}>
-                                  +{more} more
-                                </button>
-                              ) : null;
-                            })()}
-                          </div>
-                        </div>
-                      );
-                    })}
-                    {w.bars.map((b) => (
-                      <Link
-                        key={b.event.id}
-                        href={`/organizer/events/${b.event.id}`}
-                        className="o-bar"
-                        style={{ left: `calc(${(b.startCol / 7) * 100}% + 26px)`, width: `calc(${(b.span / 7) * 100}% - 30px)` }}
-                        aria-label={b.event.title}
-                      >
-                        {b.continuation ? "" : b.event.title}
-                      </Link>
-                    ))}
-                  </div>
-                ))}
-              </div>
+              <MonthGrid
+                label={`${MONTHS[m - 1]} ${y}`}
+                weeks={weeks}
+                today={today}
+                cursor={cursor}
+                overCell={overCell}
+                onDrag={(e) => (dragging.current = e)}
+                onOver={setOverCell}
+                onDrop={(d) => void drop(d)}
+                onMore={(c, x, py) => setPopover({ date: c.date, items: c.all, x: Math.min(x, window.innerWidth - 280), y: Math.min(py, window.innerHeight - 260) })}
+              />
             )}
           </div>
 
-          <aside className="o-rail" aria-label="This month">
-            {clashes.length > 0 && (
-              <section>
-                <h3>Clashes</h3>
-                {clashes.map((c, i) => (
-                  <Link key={i} className="o-rail-row" href={`/organizer/events/${c.eventId}`}>
-                    <span className="o-clash">! </span>
-                    {c.title} and {c.other}
-                    <span className="o-rail-sub">{c.venue}</span>
-                    <span className="o-rail-go">Resolve →</span>
-                  </Link>
-                ))}
-              </section>
-            )}
-            {drafts.length > 0 && (
-              <section>
-                <h3>Drafts</h3>
-                {drafts.map((d) => (
-                  <Link key={d.id} className="o-rail-row" href={`/organizer/events/${d.id}`}>
-                    ○ {d.title}
-                    <span className="o-rail-sub">
-                      {ticketDate(d.starts_at)}
-                      {d.missing.length ? ` · needs ${d.missing.join(", ")}` : " · ready"}
-                    </span>
-                    <span className="o-rail-go">Finish setup →</span>
-                  </Link>
-                ))}
-              </section>
-            )}
-            {week.length > 0 && (
-              <section>
-                <h3>This week</h3>
-                {week.map((e) => (
-                  <Link key={e.id} className="o-rail-row" href={`/organizer/events/${e.id}`}>
-                    {e.title}
-                    <span className="o-rail-sub">
-                      {ticketDate(e.starts_at).slice(0, 3)} {istTime(new Date(e.starts_at))} · {seats(e)}
-                    </span>
-                  </Link>
-                ))}
-              </section>
-            )}
-            <section>
-              <h3>Month at a glance</h3>
-              <button className="o-rail-row o-kv" onClick={() => setFilter("all")}>
-                <span>Events</span>
-                <span className="o-mono">{events.length}</span>
-              </button>
-              <button className="o-rail-row o-kv" onClick={() => setFilter("published")}>
-                <span>Published</span>
-                <span className="o-mono">{published}</span>
-              </button>
-              <button className="o-rail-row o-kv" onClick={() => setFilter("draft")}>
-                <span>Drafts</span>
-                <span className="o-mono">{draftCount}</span>
-              </button>
-              <button
-                className="o-rail-row o-kv"
-                onClick={() => {
-                  setFilter("published");
-                  pickView("agenda");
-                }}
-              >
-                <span>Sold out</span>
-                <span className="o-mono">{events.filter(soldOut).length}</span>
-              </button>
-              {next && (
-                <Link className="o-rail-row o-kv" href={`/organizer/events/${next.id}`}>
-                  <span>Next</span>
-                  <span className="o-mono" style={{ fontSize: 11 }}>
-                    {next.title.slice(0, 22)}
-                  </span>
-                </Link>
-              )}
-            </section>
-          </aside>
+          <Rail
+            events={events}
+            clashes={clashes}
+            drafts={drafts}
+            week={week}
+            onFilter={setFilter}
+            onSoldOut={() => {
+              setFilter("published");
+              pickView("agenda");
+            }}
+          />
         </div>
       </div>
 

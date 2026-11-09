@@ -29,5 +29,5 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
   ]);
   const drafts = details.results.map((d) => ({ id: d.id, title: d.title, starts_at: d.starts_at, missing: missingForPublish(d).map((x) => MISSING_LABEL[x]) }));
 
-  return <CalendarView initialView={v === "month" || v === "agenda" ? v : null} month={month} today={today} events={events} clashes={clashes} drafts={drafts} week={week.events.filter((e) => e.status !== "draft").slice(0, 5)} />;
+  return <CalendarView initials={viewer.name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]!.toUpperCase()).join("") || "?"} initialView={v === "month" || v === "agenda" ? v : null} month={month} today={today} events={events} clashes={clashes} drafts={drafts} week={week.events.filter((e) => e.status !== "draft").slice(0, 5)} />;
 }
