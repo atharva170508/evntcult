@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BellRing, CalendarCheck2, Camera, Check, Headset, LayoutGrid, MapPin, Radio, ScanLine, ShieldCheck, Ticket } from "lucide-react";
+import { ArrowRight, BellRing, CalendarCheck2, Camera, Check, LayoutGrid, MapPin, Radio, ScanLine, ShieldCheck, Ticket } from "lucide-react";
 import type { EventSummary } from "@/lib/data/types";
 import { Aurora } from "@/components/brand/Aurora";
 import { RotatingBadge } from "@/components/brand/RotatingBadge";
@@ -53,7 +53,6 @@ const ONEPASS_STEPS = [
   { icon: ScanLine, title: "Fast-track entry", body: "Show the QR at the gate and you're in. Organizers scan it in a second, even when the Wi-Fi drops." },
   { icon: BellRing, title: "Always up to date", body: "Time or venue changed? Updates from the organizer show up right on your dashboard." },
   { icon: Camera, title: "Relive it after", body: "Your certificate of attendance appears the moment you're scanned in, and you can save the event photos you're in." },
-  { icon: Headset, title: "Contact event support", body: "Message the organizer straight from your pass.", planned: true },
 ];
 
 /** What a signed-out visitor sees. Event cards are a preview of the dashboard: they never open an event. */
@@ -131,7 +130,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
             One<span className="text-volt">Pass</span>
           </h2>
           <p className="mt-5 max-w-xl text-[18px] leading-relaxed text-ink-2">
-            One dynamic pass that makes going to events effortless: check-in at the gate, live updates and, soon, event support, all from a single tap. No paper tickets, no forms at the door, no hunting for photos later.
+            One dynamic pass that makes going to events effortless: check-in at the gate, live updates, all from a single tap. No paper tickets, no forms at the door, no hunting for photos later.
           </p>
 
           <ol className="mt-10 space-y-3">
@@ -143,7 +142,6 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
                 <div className="min-w-0">
                   <p className="flex flex-wrap items-center gap-2 text-[16px] font-bold">
                     <span className="font-mono text-[12px] text-ink-subtle">0{i + 1}</span> {s.title}
-                    {s.planned && <span className="rounded-full border border-line-strong px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-ink-muted">Planned</span>}
                   </p>
                   <p className="mt-1 text-[14.5px] text-ink-muted">{s.body}</p>
                 </div>

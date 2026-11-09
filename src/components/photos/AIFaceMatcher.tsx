@@ -87,7 +87,7 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
               Find every photo <em>you&apos;re in</em>
             </h2>
             <p className="mt-2 max-w-xl text-[14.5px] text-ink-muted">
-              Take a selfie and we&apos;ll find you in the photos from {eventTitle}. Your face is read on your own phone. Only a set of numbers is used to search, and nothing is saved.
+              Take a selfie and we&apos;ll find you in the photos from {eventTitle}.
             </p>
 
             <label className="mt-5 flex max-w-xl cursor-pointer items-start gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3.5 text-[13.5px] text-ink-2">
@@ -151,7 +151,6 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
               {phase.matches.length === 0
                 ? "No photos of you yet. Try a clearer selfie, or check back after the photographers add more."
                 : `Found you in ${phase.matches.length} photo${phase.matches.length === 1 ? "" : "s"}.`}
-              {phase.faces > 1 && <span className="font-normal text-ink-muted"> We used the biggest face in your photo.</span>}
             </p>
           )}
         </div>

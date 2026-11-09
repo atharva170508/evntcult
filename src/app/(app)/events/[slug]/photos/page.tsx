@@ -67,7 +67,7 @@ export default async function EventPhotosPage({ params, searchParams }: { params
         sub={
           <>
             <span className="font-mono tabular-nums">{photos.length}</span> photo{photos.length === 1 ? "" : "s"}
-            {access.tag && <> · you&apos;re in <span className="font-mono tabular-nums">{tagged}</span>. Tap <b>That&apos;s me</b> on photos you appear in to save them to your Vault.</>}
+            {access.tag && <> · you&apos;re in <span className="font-mono tabular-nums">{tagged}</span></>}
           </>
         }
       />

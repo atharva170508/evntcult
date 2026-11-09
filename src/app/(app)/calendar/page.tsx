@@ -52,7 +52,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
       <PageHero
         eyebrow="Calendar"
         title={<>{monthName.split(" ")[0]} <em>{monthName.split(" ")[1]}</em></>}
-        sub={`${events.length} event${events.length === 1 ? "" : "s"} ${onlyMine ? "you're going to or hosting" : "happening"} this month (IST).`}
+        sub={`${events.length} event${events.length === 1 ? "" : "s"} ${onlyMine ? "you're going to or hosting" : "happening"} this month`}
         actions={
           <>
             <Link href={href(range.prev)} className={navBtn} aria-label="Previous month"><ChevronLeft className="size-4" aria-hidden /> Prev</Link>

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { BadgeCheck, Mail } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
-import { codeLoginOn } from "@/lib/email";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { PageHero } from "@/components/brand/PageHero";
 
@@ -33,13 +32,6 @@ export default async function ProfilePage() {
       </div>
 
       <ProfileForm name={viewer.name} phone={viewer.phone} whatsappOptIn={viewer.whatsappOptIn} />
-
-      <p className="mt-4 text-[12.5px] text-ink-muted">
-        {codeLoginOn()
-          ? "You log in with a 6-digit code we email you each time."
-          : "Logging in with an emailed 6-digit code is Planned. It switches on once the email service is set up."}{" "}
-        Organizers never see your number. It&apos;s only used for WhatsApp reminders if you turn them on.
-      </p>
     </div>
   );
 }

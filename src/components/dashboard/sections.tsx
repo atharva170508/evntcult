@@ -161,7 +161,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
       <div className="flex flex-col gap-5 p-6 md:p-7">
         <div className="space-y-3">
           <InfoRow icon={Clock} title={fmtRange(event.startsAt, event.endsAt)} sub={fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "short" })} />
-          {event.venueName && <InfoRow icon={MapPin} title={event.venueName} sub="Tap Directions for the walking route" />}
+          {event.venueName && <InfoRow icon={MapPin} title={event.venueName} />}
         </div>
 
         <div>
@@ -226,7 +226,6 @@ export function EmptyNextUp() {
       <EventArt accent="violet" intensity={0.8} />
       <div className="relative">
         <h2 className="text-[40px] font-extrabold leading-tight tracking-tightest">Nothing on your calendar.</h2>
-        <p className="mt-2 text-[17px] text-white/85">Find something worth showing up for.</p>
         <LinkButton href="/events" variant="light" className="mt-6">
           Browse events
         </LinkButton>
@@ -274,13 +273,13 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
         </Card>
       ) : (
         <Card eyebrow="Live now" title="No event running" icon={ScanLine} className="lg:col-span-5">
-          <p className="text-[14px] text-ink-muted">When one of your events starts, live check-ins appear here.</p>
+          <p className="text-[14px] text-ink-muted">No live events.</p>
         </Card>
       )}
 
       <Card eyebrow="Your events" title="Registrations & fees" icon={Ticket} className="lg:col-span-7" action={{ label: "Manage", href: "/organizer" }}>
         {data.hosted.length === 0 && (
-          <EmptyState icon={Ticket} title="No events yet" body="Create your first event and its registrations and fees show up here." action={{ label: "Create event", href: "/organizer/events/new" }} />
+          <EmptyState icon={Ticket} title="No events yet" action={{ label: "Create event", href: "/organizer/events/new" }} />
         )}
         <ul className="space-y-2">
           {data.hosted.map((h) => (
@@ -326,7 +325,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
         className="lg:col-span-6"
       >
         {data.clashes.length === 0 ? (
-          <p className="text-[14px] text-ink-muted">Your drafts don&apos;t overlap any booked venue or major event.</p>
+          <p className="text-[14px] text-ink-muted">No clashes.</p>
         ) : (
           <ul className="space-y-2.5">
             {[...hard, ...soft].map((c, i) => (
@@ -356,15 +355,15 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
         <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
           <QuickAction href="/organizer/events/new" icon={Plus} label="New event" primary />
           <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} />
-          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="payments, export" />
+          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" />
           <QuickAction
             href={data.live ? `/organizer/events/${data.live.id}/manage` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}/manage` : "/organizer"}
             icon={Megaphone}
             label="Broadcast update"
             hint={data.live?.title ?? data.hosted[0]?.title ?? "pick an event"}
           />
-          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" hint="reminders queue automatically" />
-          <QuickAction href="/calendar" icon={CalendarRange} label="Calendar" hint="every event, by day" />
+          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" />
+          <QuickAction href="/calendar" icon={CalendarRange} label="Calendar" />
         </div>
       </Card>
     </div>
@@ -430,7 +429,7 @@ export function Announcements({ items }: { items: AnnouncementItem[] }) {
   return (
     <Card eyebrow="Live updates" title="From your organizers" icon={Megaphone} className="h-full">
       {items.length === 0 ? (
-        <p className="text-[14px] text-ink-muted">Updates from events you&apos;ve joined will show up here.</p>
+        <p className="text-[14px] text-ink-muted">No updates yet.</p>
       ) : (
         <ol className="relative space-y-5 before:absolute before:bottom-1 before:left-[6px] before:top-1 before:w-0.5 before:rounded-full before:bg-line">
           {items.map((a, i) => (
@@ -489,7 +488,7 @@ export function LinkCard({
 export function UpcomingList({ events }: { events: EventSummary[] }) {
   return (
     <Card eyebrow="Your calendar" title="Coming up" icon={CalendarRange} action={{ label: "Calendar", href: "/calendar" }} className="h-full">
-      {events.length === 0 && <EmptyState icon={CalendarRange} title="Nothing coming up" body="Events you register for appear here." action={{ label: "Find an event", href: "/events" }} />}
+      {events.length === 0 && <EmptyState icon={CalendarRange} title="Nothing coming up" action={{ label: "Find an event", href: "/events" }} />}
       <ul className="space-y-2">
         {events.map((e) => (
           <li key={e.id}>
@@ -530,7 +529,7 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
           Browse all <ArrowUpRight className="size-4" />
         </LinkButton>
       </div>
-      {events.length === 0 && <EmptyState icon={CalendarRange} title="No upcoming events" body="When organizers publish events, they show up here." />}
+      {events.length === 0 && <EmptyState icon={CalendarRange} title="No upcoming events" />}
       <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 xl:grid-cols-4">
         {events.map((e) => (
           <EventCard key={e.id} e={e} />

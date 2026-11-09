@@ -36,7 +36,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
 
   return (
     <div className="space-y-5 pt-4 md:pt-6">
-      <PageHero eyebrow="Discover" title={<>Events <em>near you</em></>} sub="Fests, game nights, workshops and talks. Register in a tap." marquee={["Discover", "Gaming", "Sports", "Tech", "Cultural"]} />
+      <PageHero eyebrow="Discover" title={<>Events <em>near you</em></>} marquee={["Discover", "Gaming", "Sports", "Tech", "Cultural"]} />
 
       <form action="/events" className="flex h-12 items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card transition-colors focus-within:border-volt/70 md:max-w-xl">
         <Search className="size-[18px] text-ink-subtle" />
@@ -69,7 +69,6 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
       {events.length === 0 ? (
         <div className="card p-10 text-center">
           <p className="text-[17px] font-bold">No events match these filters.</p>
-          <p className="mt-1 text-[14px] text-ink-muted">Try another day or type, or clear the search.</p>
           <Link href="/events" className="mt-4 inline-block rounded-full border border-line px-4 py-2 text-[13px] font-semibold hover:border-volt/60">Clear filters</Link>
         </div>
       ) : (

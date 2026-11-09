@@ -112,6 +112,10 @@ describe("venues", () => {
 });
 
 describe("certificates", () => {
+  beforeAll(async () => {
+    await db.prepare("INSERT INTO certificates (id, registration_id, event_id, public_code, issued_at) SELECT 'r3', registration_id, event_id, 'TESTCODE', scanned_at FROM checkins WHERE registration_id = 'r3'").run();
+  });
+
   it("exist only for registrations that were checked in", async () => {
     expect((await myCertificates(db, "stu")).map((c) => c.id)).toEqual(["r3"]);
     expect(await myCertificates(db, "other")).toEqual([]);

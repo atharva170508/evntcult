@@ -32,7 +32,7 @@ export default async function VaultPage() {
         title={<>Photos <em>of you</em></>}
         sub={
           <>
-            <span className="font-mono tabular-nums">{tagged.length}</span> photo{tagged.length === 1 ? "" : "s"} you&apos;ve tagged yourself in. Only you see your tags.
+            <span className="font-mono tabular-nums">{tagged.length}</span> photo{tagged.length === 1 ? "" : "s"}
           </>
         }
         marquee={["Relive it", "Photo Vault"]}
@@ -42,9 +42,6 @@ export default async function VaultPage() {
         <section className="card flex flex-col items-start gap-3 p-8">
           <Images className="size-8 text-ink-subtle" />
           <h2 className="title-xl text-[32px]">Nothing here yet</h2>
-          <p className="max-w-md text-[14.5px] text-ink-muted">
-            Open the photos from an event you went to and tap <b>That&apos;s me</b> on the ones you&apos;re in. They&apos;ll collect here.
-          </p>
         </section>
       ) : (
         [...byEvent.entries()].map(([eventId, g]) => (
@@ -74,7 +71,7 @@ export default async function VaultPage() {
         <section className="card p-5">
           <h2 className="title-xl text-[32px]">Galleries from your events</h2>
           {galleries.length === 0 ? (
-            <p className="mt-2 text-[14px] text-ink-muted">When organizers upload photos from events you registered for, they&apos;ll be listed here.</p>
+            <p className="mt-2 text-[14px] text-ink-muted">None yet.</p>
           ) : (
             <ul className="mt-2 divide-y divide-line">
               {galleries.map((g) => (

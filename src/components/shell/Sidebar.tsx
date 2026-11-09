@@ -66,7 +66,6 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
           <KeyRound className="size-4" />
         </span>
         <p className="mt-3 text-[14px] font-bold leading-tight">Got an event code?</p>
-        <p className="mt-0.5 text-[12.5px] text-ink-muted">Join a private event in one step.</p>
       </button>
       <button
         onClick={onEnterCode}
@@ -78,7 +77,6 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
       </>) : (
         <Link href="/signin?mode=signup" className="hidden rounded-3xl bg-gradient-to-br from-brand-soft to-warn-soft p-4 transition-transform hover:-translate-y-0.5 xl:block">
           <p className="text-[14px] font-bold leading-tight">New here?</p>
-          <p className="mt-0.5 text-[12.5px] text-ink-muted">Sign up with your email to register for events.</p>
         </Link>
       )}
     </aside>

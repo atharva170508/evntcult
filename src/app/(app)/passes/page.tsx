@@ -24,6 +24,7 @@ interface PassRow {
   pass_token: string;
   payment_status: "paid" | "unpaid";
   upi_utr: string | null;
+  cert_id: string | null;
   organizer_upi_id: string | null;
   hold_expires_at: string | null;
   created_at: string;
@@ -48,6 +49,7 @@ export default async function PassesPage() {
     `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.upi_utr, r.hold_expires_at, r.created_at, e.organizer_upi_id,
             e.id AS event_id, e.slug, e.title, e.category, COALESCE(e.venue, 'Venue TBA') AS venue, e.starts_at, e.ends_at, e.price_paise, e.status AS event_status,
             (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id) AS checked_in_at,
+            (SELECT ct.id FROM certificates ct WHERE ct.registration_id = r.id AND ct.revoked_at IS NULL ORDER BY ct.kind = 'participation' LIMIT 1) AS cert_id,
             CASE WHEN r.status = 'waitlisted' THEN
               (SELECT COUNT(*) FROM registrations w WHERE w.event_id = r.event_id AND w.status = 'waitlisted'
                   AND (w.created_at < r.created_at OR (w.created_at = r.created_at AND w.id <= r.id)))
@@ -71,13 +73,13 @@ export default async function PassesPage() {
 
   return (
     <div className="space-y-6 pt-4 md:pt-6">
-      <PageHero eyebrow="My passes" title={<>Your <em>tickets</em></>} sub="Show the QR code at the gate. Screenshots work too." marquee={["Your pass", "Walk in", "Scan at the gate"]} />
+      <PageHero eyebrow="My passes" title={<>Your <em>tickets</em></>} marquee={["Your pass", "Walk in", "Scan at the gate"]} />
 
       {upcoming.length === 0 ? (
         <section className="card flex flex-col items-start gap-3 p-8">
           <Ticket className="size-8 text-ink-subtle" />
           <h2 className="title-xl text-[32px]">No upcoming passes</h2>
-          <p className="text-[14.5px] text-ink-muted">When you register for an event, your pass shows up here.</p>
+          <p className="text-[14.5px] text-ink-muted">No passes yet.</p>
           <Link href="/events" className="mt-1 rounded-full bg-volt px-5 py-2.5 text-[14px] font-semibold text-ink-inverse">Find an event</Link>
         </section>
       ) : (
@@ -98,11 +100,11 @@ export default async function PassesPage() {
                   <Link href={`/events/${r.slug}`} className="block truncate text-[14.5px] font-semibold hover:underline">{r.title}</Link>
                   <p className="text-[12.5px] text-ink-muted">{fmtDate(new Date(r.starts_at), { day: "numeric", month: "short", year: "numeric" })} · {r.venue}</p>
                 </div>
-                {r.checked_in_at ? (
-                  <Link href={`/certificates/${r.id}`} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-volt/40 bg-volt/10 px-3 py-1.5 text-[12.5px] font-bold text-volt hover:bg-volt hover:text-ink-inverse">
-                    <Award className="size-3.5" aria-hidden /> Certificate
+                {r.cert_id ? (
+                  <Link href={`/certificates/${r.cert_id}`} className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-volt/40 bg-volt/10 px-3 py-1.5 text-[12.5px] font-bold text-volt hover:bg-volt hover:text-ink-inverse">
+                    <Award className="size-3.5" aria-hidden /> Download certificate
                   </Link>
-                ) : <Chip>{r.status === "waitlisted" ? "Didn't get a seat" : "Not checked in"}</Chip>}
+                ) : <Chip>{r.status === "waitlisted" ? "Didn't get a seat" : r.checked_in_at ? "Checked in" : "Not checked in"}</Chip>}
               </li>
             ))}
           </ul>
@@ -157,6 +159,9 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
           {r.checked_in_at && (
             <p className="flex items-center gap-1.5 font-semibold text-live"><CheckCircle2 className="size-4" /> Checked in at {fmtTime(new Date(r.checked_in_at))}</p>
           )}
+          {r.cert_id && (
+            <Link href={`/certificates/${r.cert_id}`} className="font-semibold text-volt underline-offset-4 hover:underline">Download certificate</Link>
+          )}
           {r.status === "registered" && r.price_paise > 0 && (
             <p className={r.payment_status === "paid" ? "font-semibold text-live" : "font-semibold text-warn"}>
               {r.payment_status === "paid" ? "Paid" : r.upi_utr ? "Payment being checked" : `Unpaid · ${formatINR(r.price_paise)}${r.organizer_upi_id ? "" : " at the desk"}`}
@@ -168,9 +173,7 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
                 A seat is held for you until {fmtTime(new Date(r.hold_expires_at))}.{" "}
                 <Link href={`/events/${r.slug}`} className="underline">Confirm it</Link>
               </p>
-            ) : (
-              <p className="text-ink-muted">If someone cancels, you&apos;ll get a seat to confirm.</p>
-            ))}
+            ) : null)}
 
           <div className="flex flex-wrap gap-2 pt-1">
             <a href={`/api/registrations/${r.id}/ics`} className="inline-flex items-center gap-1.5 rounded-full border border-line px-3.5 py-2 text-[13px] font-semibold hover:border-volt/60">

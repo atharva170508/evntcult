@@ -91,7 +91,6 @@ export function RegisterPanel(props: {
                 {r.paid ? "Paid" : props.upi ? (props.upi.utr ? "Payment being checked" : `Unpaid · ${formatINR(props.pricePaise)}`) : `Unpaid · ${formatINR(props.pricePaise)} at the desk`}
               </p>
             )}
-            <p className="text-[12.5px] text-ink-muted">Show the QR at the gate.</p>
           </div>
         </div>
         {props.upi && props.open && !r.checkedInAt && <UpiPay {...props.upi} />}
@@ -115,9 +114,7 @@ export function RegisterPanel(props: {
           <p className="flex items-center gap-1.5 text-[14px] font-bold text-warn"><Hourglass className="size-4" /> On the waitlist{r.waitlistPosition ? ` · #${r.waitlistPosition}` : ""}</p>
           {r.holdExpiresAt ? (
             <p className="mt-1 text-[13px] text-ink-2">A seat opened up for you! Confirm before <b>{r.holdExpiresAt}</b> or it goes to the next person.</p>
-          ) : (
-            <p className="mt-1 text-[13px] text-ink-2">If someone cancels, you&apos;ll get a seat to confirm.</p>
-          )}
+          ) : null}
         </div>
         {err}
         {live && <div className="flex flex-wrap gap-2">

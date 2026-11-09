@@ -36,7 +36,6 @@ export function AddPhoneCard() {
         </span>
         <div>
           <h2 className="headline text-[16px]">Add your mobile number</h2>
-          <p className="text-[13px] text-ink-muted">So you can get event reminders on WhatsApp.</p>
         </div>
       </div>
       <PhoneFields phone={phone} setPhone={setPhone} optIn={optIn} setOptIn={setOptIn} />

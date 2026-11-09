@@ -48,9 +48,6 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
             <LogoWordmark motion="type" className="text-[30px] text-ink" />
           </div>
           <h1 className="title-xl mt-8 text-[52px] lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
-          <p className="mt-2 text-[15px] text-ink-muted">
-            {signup ? "Sign up with your email to register for events and get passes." : "Use your email to see your events and passes."}
-          </p>
           <SignInForm next={next} signup={signup} codeLogin={codeLoginOn()} />
           <p className="mt-6 text-center text-[14px] text-ink-muted">
             {signup ? "Already have an account? " : "New here? "}

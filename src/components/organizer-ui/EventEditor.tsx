@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button, Field, Odometer, Section, Segmented, Toast, apiJson, useAgo, type ToastState } from "./primitives";
 import { Ticket } from "./Ticket";
 import { VenueInput } from "./VenueInput";
+import { MerchSetup } from "./MerchSetup";
 import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, isValidLink, LINK_ERROR, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
 
 export interface EditorInitial {
@@ -549,12 +550,10 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                   onChange={(e) => set("linkUrl", e.target.value)}
                   onBlur={() => blur("link")}
                 />
-                {errors.link ? (
+                {errors.link && (
                   <p className="o-err" id="event-link-err" role="alert">
                     {errors.link}
                   </p>
-                ) : (
-                  <div className="o-hint">Shown on the event page.</div>
                 )}
                 </div>
               </div>
@@ -633,6 +632,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
               )}
             </Section>
 
+          {id && <MerchSetup eventId={id} />}
           </div>
 
           <div className="o-sticky">

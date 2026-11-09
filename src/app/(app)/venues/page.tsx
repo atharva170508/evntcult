@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, MapPin, MapPinOff, Navigation, Users } from "lucide-react";
+import { ArrowUpRight, MapPinOff, Navigation, Users } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDB } from "@/lib/db";
 import { VENUES, directionsUrl, type VenueInfo } from "@/lib/venues";
@@ -32,7 +32,7 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
       <PageHero
         eyebrow="Venues"
         title={<>Find your <em>way</em></>}
-        sub={`${venues.length} venues. Tap a venue's event to open it.`}
+        sub={`${venues.length} venues`}
       />
 
 
@@ -90,9 +90,6 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
         })}
       </div>
 
-      <p className="flex items-center gap-1.5 text-[12.5px] text-ink-subtle">
-        <MapPin className="size-3.5" aria-hidden /> Directions open Google Maps in a new tab.
-      </p>
     </div>
   );
 }

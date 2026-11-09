@@ -38,9 +38,17 @@ interface Counts {
   registered: number;
 }
 
+interface MerchLine {
+  id: string;
+  label: string;
+  left: number | null;
+  claimedAt: string | null;
+  note?: string;
+}
+
 type Verdict =
-  | { color: "green"; title: string; name?: string; code?: string; note?: string }
-  | { color: "amber"; title: string; name?: string; code?: string; note?: string; collect?: { amountPaise: number; scan: QueuedScan } }
+  | { color: "green"; title: string; name?: string; code?: string; note?: string; merch?: MerchLine[]; token?: string }
+  | { color: "amber"; title: string; name?: string; code?: string; note?: string; collect?: { amountPaise: number; scan: QueuedScan }; merch?: MerchLine[]; token?: string }
   | { color: "red"; title: string; note?: string };
 
 interface ServerVerdict {
@@ -52,7 +60,25 @@ interface ServerVerdict {
   claimedUtr?: string | null;
   message?: string;
   counts?: Counts;
+  merch?: MerchLine[];
 }
+
+const CLAIM_QUEUE = "evntcult-merch-queue";
+type QueuedClaim = { token: string; item_id: string; client_claim_id: string; claimed_at: string };
+const readClaims = (): QueuedClaim[] => {
+  try {
+    return JSON.parse(localStorage.getItem(CLAIM_QUEUE) ?? "[]") as QueuedClaim[];
+  } catch {
+    return [];
+  }
+};
+const writeClaims = (q: QueuedClaim[]) => {
+  try {
+    localStorage.setItem(CLAIM_QUEUE, JSON.stringify(q));
+  } catch {
+    // storage full or blocked: the claim stays on screen only
+  }
+};
 
 const SAME_CODE_PAUSE_MS = 3000;
 const GREEN_AUTO_DISMISS_MS = 1600;
@@ -78,9 +104,9 @@ function beep(ok: boolean) {
 function toVerdict(v: ServerVerdict, scan: QueuedScan, pricePaise: number): Verdict {
   switch (v.result) {
     case "admitted":
-      return { color: "green", title: "Admitted", name: v.name, code: v.passCode };
+      return { color: "green", title: "Admitted", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token };
     case "already_in":
-      return { color: "amber", title: "Already checked in", name: v.name, code: v.passCode, note: v.scannedAt ? `First scanned at ${fmtTime(new Date(v.scannedAt))}` : undefined };
+      return { color: "amber", title: "Already checked in", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token, note: v.scannedAt ? `First scanned at ${fmtTime(new Date(v.scannedAt))}` : undefined };
     case "unpaid":
       return { color: "amber", title: `Collect ${formatINR(v.amountPaise ?? pricePaise)}`, name: v.name, code: v.passCode, note: v.claimedUtr ? `Says paid by UPI, ID ${v.claimedUtr}. Not confirmed yet.` : "Not paid yet. Take the fee, then admit.", collect: { amountPaise: v.amountPaise ?? pricePaise, scan } };
     default:
@@ -96,6 +122,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
   const lastCodeRef = useRef<{ text: string; at: number } | null>(null);
   const guestRef = useRef<Map<string, ManifestEntry>>(new Map());
   const seenRef = useRef<Set<string>>(new Set()); // hashes admitted offline on this phone
+  const merchRef = useRef<{ id: string; label: string; left: number | null }[]>([]);
 
   const [camera, setCamera] = useState<"off" | "starting" | "on" | "error">("off");
   const [cameraError, setCameraError] = useState<string | null>(null);
@@ -116,6 +143,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
   const applyGuestList = useCallback((m: Manifest) => {
     guestRef.current = new Map(m.entries.map((e) => [e.h, e]));
+    merchRef.current = m.merch ?? [];
     setGuestList({ size: m.entries.length, savedAt: m.generatedAt });
   }, []);
 
@@ -274,7 +302,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
   const show = useCallback((v: Verdict) => {
     setVerdict(v);
     beep(v.color === "green");
-    if (v.color === "green") setTimeout(() => setVerdict((cur) => (cur === v ? null : cur)), GREEN_AUTO_DISMISS_MS);
+    if (v.color === "green" && !v.merch?.length) setTimeout(() => setVerdict((cur) => (cur === v ? null : cur)), GREEN_AUTO_DISMISS_MS);
   }, []);
 
   /** Decide without the server, from the saved guest list. */
@@ -284,7 +312,8 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       const entry = guestRef.current.get(h);
       if (!guestRef.current.size) return { color: "red", title: "Can't check offline", note: "The guest list hasn't been saved on this phone yet. Connect once to download it." };
       if (!entry) return { color: "red", title: "Not on the guest list", note: "Not a pass for this event (checked offline)." };
-      if (entry.in || seenRef.current.has(h)) return { color: "amber", title: "Already checked in", name: entry.name, code: entry.code, note: entry.in ? `First scanned at ${fmtTime(new Date(entry.in))}` : "Scanned on this phone earlier." };
+      const offlineMerch = merchRef.current.map((i) => ({ ...i, claimedAt: entry.m?.[i.id] ?? null }));
+      if (entry.in || seenRef.current.has(h)) return { color: "amber", title: "Already checked in", name: entry.name, code: entry.code, merch: offlineMerch, token: scan.pass_token, note: entry.in ? `First scanned at ${fmtTime(new Date(entry.in))}` : "Scanned on this phone earlier." };
       if (entry.unpaid && !scan.accept_unpaid) {
         return { color: "amber", title: `Collect ${formatINR(event.pricePaise)}`, name: entry.name, code: entry.code, note: "Not paid yet. Take the fee, then admit.", collect: { amountPaise: event.pricePaise, scan } };
       }
@@ -292,7 +321,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       seenRef.current.add(h);
       await refreshQueued();
       navigator.serviceWorker?.ready.then((reg) => (reg as ServiceWorkerRegistration & { sync?: { register(tag: string): Promise<void> } }).sync?.register("evntcult-scans")).catch(() => undefined);
-      return { color: "green", title: "Admitted", name: entry.name, code: entry.code, note: "Saved offline. It will sync when you're back online." };
+      return { color: "green", title: "Admitted", name: entry.name, code: entry.code, merch: offlineMerch, token: scan.pass_token, note: "Saved offline. It will sync when you're back online." };
     },
     [event.pricePaise, refreshQueued],
   );
@@ -405,6 +434,54 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
   useEffect(() => () => streamRef.current?.getTracks().forEach((t) => t.stop()), []);
 
+  /* ── Goodies ───────────────────────────────────────────────────────── */
+
+  const flushClaims = useCallback(async () => {
+    const queue = readClaims();
+    for (const claim of queue) {
+      try {
+        const res = await fetch("/api/merch/claim", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(claim) });
+        if (res.status === 401 || res.status === 403) return;
+        writeClaims(readClaims().filter((c) => c.client_claim_id !== claim.client_claim_id));
+      } catch {
+        return; // still offline
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    void flushClaims();
+    window.addEventListener("online", flushClaims);
+    const t = setInterval(flushClaims, 20_000);
+    return () => {
+      window.removeEventListener("online", flushClaims);
+      clearInterval(t);
+    };
+  }, [flushClaims]);
+
+  const updateLine = (id: string, patch: Partial<MerchLine>) =>
+    setVerdict((v) => (v && v.color !== "red" && v.merch ? ({ ...v, merch: v.merch.map((l) => (l.id === id ? { ...l, ...patch } : l)) } as Verdict) : v));
+
+  const give = async (line: MerchLine, token: string) => {
+    const claim: QueuedClaim = { token, item_id: line.id, client_claim_id: crypto.randomUUID(), claimed_at: new Date().toISOString() };
+    try {
+      const res = await fetch("/api/merch/claim", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(claim) });
+      if (res.status === 401 || res.status === 403) return updateLine(line.id, { note: "Sign in again to give this." });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const r = (await res.json()) as { result: string; claimedAt?: string; left?: number | null; message?: string; claimed?: number };
+      if (r.result === "claimed") updateLine(line.id, { claimedAt: r.claimedAt ?? claim.claimed_at, left: r.left ?? null, note: undefined });
+      else if (r.result === "already_claimed") updateLine(line.id, { claimedAt: r.claimedAt ?? null, note: `Already collected at ${fmtTime(new Date(r.claimedAt ?? claim.claimed_at))}` });
+      else if (r.result === "sold_out") updateLine(line.id, { left: 0, note: `${r.message} · ${r.claimed ?? 0} given` });
+      else updateLine(line.id, { note: r.message });
+    } catch {
+      writeClaims([...readClaims(), claim]);
+      const h = await sha256Hex(extractPassToken(token));
+      const entry = guestRef.current.get(h);
+      if (entry) entry.m = { ...entry.m, [line.id]: claim.claimed_at };
+      updateLine(line.id, { claimedAt: claim.claimed_at, note: "Saved offline" });
+    }
+  };
+
   /* ── Unpaid: the volunteer collected the fee ───────────────────────── */
 
   const admitUnpaid = async () => {
@@ -481,12 +558,30 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         )}
 
         {verdict && (
-          <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 p-6 text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
+          <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-y-auto p-6 text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
             <Icon className="size-16" strokeWidth={2.2} />
             <p className="shout text-[32px] leading-tight">{verdict.title}</p>
             {"name" in verdict && verdict.name && <p className="text-[20px] font-bold">{verdict.name}</p>}
             {"code" in verdict && verdict.code && <p className="font-mono text-[14px] font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
             {verdict.note && <p className="max-w-xs text-[14px] font-medium opacity-90">{verdict.note}</p>}
+
+            {verdict.color !== "red" && verdict.token && !!verdict.merch?.length && (
+              <ul className="w-full max-w-xs space-y-2 text-left text-[14px]" aria-label="Goodies">
+                {verdict.merch.map((line) => (
+                  <li key={line.id} className="flex items-center justify-between gap-3 rounded-2xl bg-black/25 px-3 py-2">
+                    <span className="min-w-0">
+                      <span className="block truncate font-bold">{line.label}</span>
+                      <span className="block text-[12px] opacity-85">{line.note ?? (line.claimedAt ? `claimed ${fmtTime(new Date(line.claimedAt))}` : line.left === 0 ? "none left" : "not claimed")}</span>
+                    </span>
+                    {!line.claimedAt && line.left !== 0 && (
+                      <button onClick={() => give(line, verdict.token!)} className="shrink-0 rounded-full bg-white px-4 py-1.5 text-[13px] font-bold text-black">
+                        Give
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
 
             {verdict.color === "amber" && verdict.collect ? (
               <div className="mt-2 flex w-full max-w-xs flex-col gap-2">
@@ -498,7 +593,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
                 </button>
               </div>
             ) : (
-              verdict.color !== "green" && (
+              (verdict.color !== "green" || !!verdict.merch?.length) && (
                 <button onClick={() => setVerdict(null)} className="mt-2 rounded-full bg-black/25 px-6 py-3 text-[15px] font-bold">
                   Scan next
                 </button>
