@@ -25,6 +25,27 @@ export const codeLoginOn = (env?: EmailEnv) => emailMode(env) !== "off";
 
 export class EmailError extends Error {}
 
+/** Tables and inline styles only: email apps ignore most modern CSS. */
+export function loginCodeHtml(code: string): string {
+  const mono = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace";
+  const sans = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+  return `<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark"><title>Your EvntCult code</title></head>
+<body style="margin:0;padding:0;background:#08080c">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${code} is your EvntCult code</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#08080c" style="background:#08080c"><tr><td align="center" style="padding:48px 16px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:440px">
+<tr><td style="font-family:${sans};font-size:26px;font-weight:800;letter-spacing:-1px;color:#f2f3f7;padding:0 0 32px">ev<span style="color:#dcfe62">|</span>ntcult</td></tr>
+<tr><td bgcolor="#dcfe62" align="center" style="background:#dcfe62;border-radius:16px;padding:36px 12px">
+<div style="font-family:${sans};font-size:13px;font-weight:600;color:#08080c;padding:0 0 12px">Your login code</div>
+<div style="font-family:${mono};font-size:44px;line-height:1;font-weight:700;letter-spacing:10px;margin-right:-10px;color:#08080c">${code}</div>
+</td></tr>
+<tr><td align="center" style="font-family:${sans};font-size:14px;color:#a6a9b5;padding:24px 0 0">It expires in 10 minutes.</td></tr>
+</table>
+</td></tr></table>
+</body></html>`;
+}
+
 export async function sendLoginCode(email: string, code: string, env: EmailEnv = process.env as EmailEnv): Promise<void> {
   const mode = emailMode(env);
   if (mode === "log") {
@@ -33,11 +54,8 @@ export async function sendLoginCode(email: string, code: string, env: EmailEnv =
   }
   if (mode !== "brevo") throw new EmailError("Email sending isn't set up.");
 
-  const text = `Your EvntCult login code is ${code}\n\nIt works for 10 minutes. If you didn't ask for it, you can ignore this email.`;
-  const html = `<div style="font-family:system-ui,sans-serif;font-size:15px;color:#121218">
-<p>Your EvntCult login code is</p>
-<p style="font-size:32px;font-weight:800;letter-spacing:6px;margin:8px 0">${code}</p>
-<p style="color:#6b6b79">It works for 10 minutes. If you didn't ask for it, you can ignore this email.</p></div>`;
+  const text = `Your EvntCult login code is ${code}\n\nIt expires in 10 minutes.`;
+  const html = loginCodeHtml(code);
 
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
