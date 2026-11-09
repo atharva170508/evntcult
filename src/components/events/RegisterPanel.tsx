@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CheckCircle2, Clock, Hourglass, Loader2, Ticket, XCircle } from "lucide-react";
 import { formatINR } from "@/lib/money";
 import { UpiPay, type UpiPayProps } from "@/components/events/UpiPay";
+import type { Question } from "@/lib/data/questions";
 
 interface Reg {
   id: string;
@@ -28,6 +29,7 @@ export function RegisterPanel(props: {
   registration: Reg | null;
   qrSvg: string | null;
   hasUpi?: boolean;
+  questions?: Question[];
   /** Set while this student still has to pay by UPI. */
   upi?: UpiPayProps | null;
   /** Registration API is live (M2). Pass false to show passes read-only. */
@@ -37,6 +39,7 @@ export function RegisterPanel(props: {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fullOffer, setFullOffer] = useState<number | null>(null);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
 
   async function call(url: string, init: RequestInit) {
     setBusy(true);
@@ -52,7 +55,7 @@ export function RegisterPanel(props: {
   }
 
   async function register(waitlist = false) {
-    const data = await call(`/api/events/${props.slug}/register`, { method: "POST", body: JSON.stringify({ waitlist, ...(props.code ? { code: props.code } : {}) }) });
+    const data = await call(`/api/events/${props.slug}/register`, { method: "POST", body: JSON.stringify({ waitlist, answers, ...(props.code ? { code: props.code } : {}) }) });
     if (!data) return;
     if (data.full) setFullOffer(data.waitlist_position ?? 1);
     else router.refresh();
@@ -69,6 +72,29 @@ export function RegisterPanel(props: {
   }
 
   const r = props.registration;
+  const fieldCls = "mt-1.5 w-full rounded-2xl border border-line bg-surface px-4 py-3 text-[15px] focus:outline-none";
+  const questionFields = !!props.questions?.length && (
+    <div className="space-y-3">
+      {props.questions.map((q) => (
+        <label key={q.id} className="block">
+          <span className="text-[13px] font-semibold text-ink-2">
+            {q.label}
+            {q.required ? " *" : ""}
+          </span>
+          {q.kind === "choice" ? (
+            <select required={q.required} value={answers[q.id] ?? ""} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} className={fieldCls}>
+              <option value="">Choose</option>
+              {q.options.map((o) => (
+                <option key={o} value={o}>{o}</option>
+              ))}
+            </select>
+          ) : (
+            <input maxLength={500} value={answers[q.id] ?? ""} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} className={fieldCls} />
+          )}
+        </label>
+      ))}
+    </div>
+  );
   const live = props.actionsLive ?? true;
   const err = error && (
     <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
@@ -153,6 +179,7 @@ export function RegisterPanel(props: {
         <p className="rounded-2xl bg-danger-soft p-4 text-[14px] font-semibold text-danger">
           Full · every seat is taken{fullOffer !== null ? `. You'd be #${fullOffer} on the waitlist.` : "."}
         </p>
+        {questionFields}
         {err}
         <button onClick={() => register(true)} disabled={busy} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-volt py-3.5 text-[15px] font-semibold text-ink-inverse disabled:opacity-50">
           {busy && <Loader2 className="size-4 animate-spin" />} Join the waitlist
@@ -163,6 +190,7 @@ export function RegisterPanel(props: {
 
   return (
     <div className="space-y-3">
+      {questionFields}
       {err}
       <button onClick={() => register(false)} disabled={busy} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-volt py-3.5 text-[15px] font-semibold text-ink-inverse shadow-[0_10px_24px_-12px_rgba(0,0,0,0.6)] disabled:opacity-50">
         {busy && <Loader2 className="size-4 animate-spin" />} Register{props.pricePaise > 0 ? ` · ${formatINR(props.pricePaise)}${props.hasUpi ? "" : " at the desk"}` : " · free"}

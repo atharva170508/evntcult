@@ -22,7 +22,7 @@ const SCHEDULED = ["event_reminder", "event_soon", "payment_pending"];
 const ist = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", ...o });
 const fmtDate = (iso: string) => ist({ weekday: "short", day: "numeric", month: "short" }).format(new Date(iso));
 const fmtTime = (iso: string) => ist({ hour: "numeric", minute: "2-digit", hour12: true }).format(new Date(iso));
-const fmtDateTime = (iso: string) => `${fmtDate(iso)}, ${fmtTime(iso)}`;
+export const fmtDateTime = (iso: string) => `${fmtDate(iso)}, ${fmtTime(iso)}`;
 const gateTime = (iso: string) => fmtTime(new Date(Date.parse(iso) - 30 * 60_000).toISOString());
 const rupees = (paise: number) => `Rs ${(paise / 100).toFixed(paise % 100 ? 2 : 0)}`;
 

@@ -60,7 +60,7 @@ export async function notifyRegistered<T extends TemplateName>(
   return res.meta.changes ?? 0;
 }
 
-/** Queue one message to one student (if they opted in). Returns true if queued. */
+/** Queue one message to one person. The sender checks WhatsApp consent; the bell shows it regardless. */
 export async function notifyUser<T extends TemplateName>(
   db: D1Database,
   userId: string,
@@ -74,7 +74,7 @@ export async function notifyUser<T extends TemplateName>(
     .prepare(
       `INSERT INTO notifications (id, user_id, event_id, channel, template, payload, status, created_at, scheduled_for, dedupe_key)
        SELECT ?1, u.id, ?2, 'whatsapp', ?3, ?4, 'queued', ?5, ?5, ?6 FROM users u
-        WHERE u.id = ?7 AND u.whatsapp_opt_in = 1 AND u.phone IS NOT NULL
+        WHERE u.id = ?7
        ON CONFLICT (dedupe_key) DO NOTHING`,
     )
     .bind(newId(), eventId, template, clean(payload), now.toISOString(), dedupeKey, userId)

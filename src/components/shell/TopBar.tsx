@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { CalendarDays, KeyRound, LogOut, Plus, Search, Shapes } from "lucide-react";
 import { cn, initials } from "@/lib/utils";
 import { LogoWordmark } from "@/components/brand/MissingE";
+import { NotificationBell } from "./NotificationBell";
 
 export interface NavViewer {
   name: string;
@@ -97,9 +98,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
         <div className="ml-auto flex items-center gap-2">
           {viewer ? (
             <>
-              <Link href="/events" aria-label="Search events" className="grid size-10 place-items-center rounded-full border border-line bg-surface text-ink-2 sm:hidden">
-                <Search className="size-[18px]" />
-              </Link>
+              <NotificationBell />
               <Link
                 href="/organizer/events/new"
                   className="inline-flex items-center gap-1.5 rounded-full bg-volt px-3.5 py-2.5 text-[13px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover md:hidden"

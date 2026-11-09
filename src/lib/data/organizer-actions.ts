@@ -178,8 +178,8 @@ const ist = (iso: string | null) =>
   iso ? new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short", hour12: true }).format(new Date(iso)) : "";
 
 /** Attendee CSV (opens in Excel / Google Sheets). No phone numbers. */
-export function attendeesCsv(rows: AttendeeRow[], pricePaise: number): string {
-  const header = ["Name", "Email", "Pass code", "Status", "Checked in (IST)", ...(pricePaise > 0 ? ["Payment", "Method", "UPI reference", "Paid at (IST)"] : []), "Registered (IST)"];
+export function attendeesCsv(rows: AttendeeRow[], pricePaise: number, extra?: { questions: { id: string; label: string }[]; answers: Map<string, Record<string, string>> }): string {
+  const header = ["Name", "Email", "Pass code", "Status", "Checked in (IST)", ...(pricePaise > 0 ? ["Payment", "Method", "UPI reference", "Paid at (IST)"] : []), "Registered (IST)", ...(extra?.questions.map((q) => q.label) ?? [])];
   const lines = rows.map((r) =>
     [
       r.name,
@@ -189,6 +189,7 @@ export function attendeesCsv(rows: AttendeeRow[], pricePaise: number): string {
       ist(r.checked_in_at),
       ...(pricePaise > 0 ? [r.payment_status === "paid" ? "Paid" : r.upi_utr ? "To verify" : "Unpaid", r.payment_method ?? "", r.payment_ref ?? r.upi_utr ?? "", ist(r.paid_at)] : []),
       ist(r.registered_at),
+      ...(extra?.questions.map((q) => extra.answers.get(r.id)?.[q.id] ?? "") ?? []),
     ]
       .map(csvCell)
       .join(","),

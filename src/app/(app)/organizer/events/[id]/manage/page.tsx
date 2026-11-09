@@ -9,6 +9,7 @@ import { istLabel, whatsappConnected } from "@/lib/notify";
 import { MAX_PER_EVENT, waPanel } from "@/lib/whatsapp";
 import { WaTestButton } from "@/components/organizer/WaTestButton";
 import { eventCertificates } from "@/lib/data/certificates";
+import { eventAnswers, listQuestions } from "@/lib/data/questions";
 import { listMerch, merchCollected } from "@/lib/data/merch";
 import { AttendeeCert, CertPanel } from "@/components/organizer/CertControls";
 import { formatINR } from "@/lib/money";
@@ -39,7 +40,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
   if (!e) notFound();
 
   const db = await getDB();
-  const [stats, attendees, updates, outbox, optedIn, certs, merch, collected] = await Promise.all([
+  const [stats, attendees, updates, outbox, optedIn, certs, merch, collected, questions, answers] = await Promise.all([
     first<{ registered: number; waitlisted: number; checked_in: number; paid: number; unpaid: number; to_verify: number }>(
       `SELECT SUM(r.status = 'registered') AS registered, SUM(r.status = 'waitlisted') AS waitlisted,
               (SELECT COUNT(*) FROM checkins c WHERE c.event_id = ?1) AS checked_in,
@@ -60,6 +61,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
     eventCertificates(db, id),
     listMerch(db, id),
     merchCollected(db, id),
+    listQuestions(db, id),
+    eventAnswers(db, id),
   ]);
   const s = { registered: stats?.registered ?? 0, waitlisted: stats?.waitlisted ?? 0, checkedIn: stats?.checked_in ?? 0, paid: stats?.paid ?? 0, unpaid: stats?.unpaid ?? 0, toVerify: stats?.to_verify ?? 0 };
   const paidEvent = e.price_paise > 0;
@@ -225,6 +228,9 @@ export default async function ManageEventPage({ params, searchParams }: { params
                     <td className="px-4 py-2.5">
                       <p className="font-semibold">{a.name}</p>
                       <p className="text-[12px] text-ink-muted">{a.email}</p>
+                      {questions.filter((q) => answers.get(a.id)?.[q.id]).map((q) => (
+                        <p key={q.id} className="text-[12px] text-ink-2">{q.label}: {answers.get(a.id)?.[q.id]}</p>
+                      ))}
                     </td>
                     <td className="px-4 py-2.5 font-mono text-[12.5px]">{a.pass_code}</td>
                     <td className="px-4 py-2.5">

@@ -15,6 +15,10 @@ import { Meter } from "@/components/ui/Meter";
 import { RegisterPanel } from "@/components/events/RegisterPanel";
 import { photoAccess } from "@/lib/data/photos";
 import { getDB } from "@/lib/db";
+import { siteHost } from "@/lib/organizer/page-data";
+import { listQuestions } from "@/lib/data/questions";
+import { ShareEvent } from "@/components/events/ShareEvent";
+import { WhatsAppPrompt } from "@/components/events/WhatsAppPrompt";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Event" };
@@ -45,6 +49,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const waitlistPosition = reg?.status === "waitlisted" ? await waitlistPos(e.id, reg.id) : null;
   const db = await getDB();
   const photos = await photoAccess(db, viewer, e.id);
+  const [questions, host] = await Promise.all([listQuestions(db, e.id), siteHost()]);
+  const shareUrl = `${host.startsWith("localhost") ? "http" : "https"}://${host}/e/${e.slug}`;
   const photoCount = photos.view
     ? ((await db.prepare("SELECT COUNT(*) AS n FROM photos WHERE event_id = ?").bind(e.id).first<{ n: number }>())?.n ?? 0)
     : 0;
@@ -178,9 +184,13 @@ export default async function EventPage({ params, searchParams }: { params: Prom
               }
               qrSvg={qrSvg}
               hasUpi={!!e.organizer_upi_id}
+              questions={questions}
               upi={upiUrl && upiQr && reg ? { regId: reg.id, pricePaise: e.price_paise, vpa: e.organizer_upi_id!, uri: upiUrl, qrSvg: upiQr, utr: reg.upi_utr, rejected: !!reg.upi_rejected_at } : null}
             />
           )}
+
+          {viewer && reg && reg.status !== "cancelled" && viewer.phone && !viewer.whatsappOptIn && <WhatsAppPrompt phone={viewer.phone} />}
+          {e.status === "published" && e.access === "public" && <ShareEvent url={shareUrl} title={e.title} />}
         </div>
       </section>
 

@@ -79,8 +79,8 @@ describe("WhatsApp outbox", { timeout: 30_000 }, () => {
     expect(JSON.parse(hold.payload)).toMatchObject({ event_title: "Neon Night", link: "/events/neon-night" });
   });
 
-  it("notifyUser skips people who didn't opt in, and never queues the same key twice", async () => {
-    expect(await notifyUser(db, "b", "ev1", "waitlist_offer", { event_title: "x", confirm_by: "y", link: "z" }, "test:b", T0)).toBe(false);
+  it("notifyUser queues for anyone, and never queues the same key twice", async () => {
+    expect(await notifyUser(db, "b", "ev1", "waitlist_offer", { event_title: "x", confirm_by: "y", link: "z" }, "test:b", T0)).toBe(true);
     expect(await notifyUser(db, "e", "ev1", "waitlist_offer", { event_title: "x", confirm_by: "y", link: "z" }, "test:e", T0)).toBe(true);
     expect(await notifyUser(db, "e", "ev1", "waitlist_offer", { event_title: "x", confirm_by: "y", link: "z" }, "test:e", T0)).toBe(false);
   });
