@@ -282,7 +282,21 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
     else setToast({ message: r.data.error?.message ?? "Couldn't duplicate." });
   }
 
-  const statusLine = save === "saving" ? "saving" : save === "conflict" || save === "failed" ? "not saved" : status === "published" ? "published" : status === "draft" ? "draft" : "new";
+  const pill = status === "published" ? "PUBLISHED" : status === "closed" || status === "cancelled" ? "CLOSED" : "DRAFT";
+  const goTo = (section: string) => {
+    const el = document.getElementById(section);
+    el?.scrollIntoView({ block: "start" });
+    el?.querySelector<HTMLElement>("input:not(:disabled), textarea, button")?.focus({ preventScroll: true });
+  };
+  const checklist: [string, boolean, string][] = [
+    ["Name", !!f.title.trim(), "sec-event"],
+    ["Date and time", /^\d{4}-\d{2}-\d{2}$/.test(f.date) && /^\d{2}:\d{2}$/.test(f.time), "sec-schedule"],
+    ["Category", !!f.category, "sec-event"],
+    ["Venue", f.venueStatus !== "confirmed" || !!f.venue.trim(), "sec-schedule"],
+    ["About", !!f.description.trim(), "sec-details"],
+    ["Tickets", !f.paid || (pricePaise > 0 && isValidUpi(upi)), "sec-tickets"],
+  ];
+  const canPublish = blockers.length === 0 && !publishing && save !== "conflict";
 
   const taken = initial?.taken ?? 0;
   const cap = f.capacity === "" ? null : Number(f.capacity) || null;
@@ -296,12 +310,13 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
         <div className="o-crumb">
           <Link href="/organizer">Events</Link> / <b>{f.title.trim() || "New event"}</b>
         </div>
-        <span className="o-status" role="status">
-          {statusLine}
-        </span>
         <span className="o-spacer" />
-        {status !== "published" && blockers.length > 0 && <span className="o-reason">needs {blockers.join(", ")}</span>}
-        {id && status === "published" && <Button onClick={unpublish}>Unpublish</Button>}
+        {status !== "published" && blockers.length > 0 && <span className="o-reason o-narrow-only">needs {blockers.join(", ")}</span>}
+        {id && status === "published" && (
+          <button type="button" className="o-text-btn" onClick={unpublish}>
+            Unpublish
+          </button>
+        )}
         {id && <Button onClick={duplicate}>Duplicate</Button>}
         {id && (
           <Link className="o-btn" href={`/organizer/events/${id}/manage`}>
@@ -313,7 +328,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
             Share
           </Link>
         ) : (
-          <Button variant="primary" disabled={blockers.length > 0 || publishing || save === "conflict"} onClick={() => publish(false)}>
+          <Button variant="primary" className="o-narrow-only" disabled={!canPublish} onClick={() => publish(false)}>
             {publishing ? "Publishing" : "Publish"}
           </Button>
         )}
@@ -348,12 +363,13 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
       )}
 
       <div className="o-page">
+        <div className="o-edit-head">
+          <h1>{f.title.trim() || "New event"}</h1>
+          <span className="o-status-pill">{pill}</span>
+        </div>
         <div className="o-form-grid">
-          <div>
-            <h1 className="o-title" style={{ marginBottom: 22 }}>
-              {status === "published" ? "Edit event" : initial ? "Finish your event" : "Create an event"}
-            </h1>
-
+          <div className="o-form-col">
+            <div id="sec-event">
             <Section n="01" label="Event">
               <Field
                 label="Name"
@@ -391,7 +407,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
               <Field label="Tagline">{(a) => <input {...a} className="o-input" maxLength={140} value={f.tagline} onChange={(e) => set("tagline", e.target.value)} />}</Field>
               <div className="o-row">
                 <span className="o-label">Category</span>
-                <div className="o-chips" role="radiogroup" aria-label="Category">
+                <div className="o-chips o-cat" role="radiogroup" aria-label="Category">
                   {ORGANIZER_CATEGORIES.map(([v, l]) => (
                     <button key={v} type="button" role="radio" aria-checked={f.category === v} className="o-chip" onClick={() => set("category", v)}>
                       {l}
@@ -400,7 +416,9 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                 </div>
               </div>
             </Section>
+            </div>
 
+            <div id="sec-schedule">
             <Section n="02" label="Schedule">
               <Field label="Starts">
                 {(a) => (
@@ -449,7 +467,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                       />
                     )}
                     <span className="o-spacer" />
-                    <span className="o-meta">{validDate ? <Odometer value={endsLabel(f.date, f.time, f.durationMinutes)} /> : "ends —"}</span>
+                    {validDate && <span className="o-meta"><Odometer value={endsLabel(f.date, f.time, f.durationMinutes)} /></span>}
                   </div>
                 </div>
               </div>
@@ -470,21 +488,27 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                 {(a) => <input {...a} className="o-input" disabled={f.venueStatus === "tba"} maxLength={160} placeholder={f.venueStatus === "tba" ? "TBA" : undefined} value={f.venueStatus === "tba" ? "" : f.venue} onChange={(e) => set("venue", e.target.value)} />}
               </Field>
             </Section>
+            </div>
 
+            <div id="sec-details">
             <Section n="03" label="Details">
-              <div>
-                <label className="o-label" style={{ display: "block", padding: "0 0 6px" }} htmlFor="about">
+              <div className="o-row">
+                <label className="o-label" htmlFor="about">
                   About
                 </label>
-                <textarea id="about" className="o-area" style={{ maxWidth: 440 }} value={f.description} onChange={(e) => set("description", e.target.value)} />
-                <div className="o-hint">{save === "saving" ? "saving" : ago ? `autosaved ${ago}` : null}</div>
-                <label className="o-label" style={{ display: "block", padding: "14px 0 6px" }} htmlFor="event-link">
+                <div>
+                  <textarea id="about" className="o-area" value={f.description} onChange={(e) => set("description", e.target.value)} />
+                  <div className="o-hint">{save === "saving" ? "saving" : save === "failed" || save === "conflict" ? "not saved" : ago ? `autosaved ${ago}` : null}</div>
+                </div>
+              </div>
+              <div className="o-row">
+                <label className="o-label" htmlFor="event-link">
                   Link
                 </label>
+                <div>
                 <input
                   id="event-link"
                   className="o-input o-mono"
-                  style={{ maxWidth: 440 }}
                   placeholder="https://instagram.com/yourclub"
                   autoCapitalize="none"
                   inputMode="url"
@@ -502,9 +526,12 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                 ) : (
                   <div className="o-hint">Shown on the event page.</div>
                 )}
+                </div>
               </div>
             </Section>
+            </div>
 
+            <div id="sec-tickets">
             <Section n="04" label="Tickets">
               <div className="o-row">
                 <span className="o-label">Type</span>
@@ -539,6 +566,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
                 {(a) => <input {...a} className="o-input o-mono" style={{ width: 120 }} inputMode="numeric" placeholder="no limit" value={f.capacity} onChange={(e) => set("capacity", e.target.value.replace(/\D/g, "").slice(0, 7))} onBlur={() => blur("capacity")} />}
               </Field>
             </Section>
+            </div>
 
             <Section n="05" label="Access">
               <div className="o-row">
@@ -575,13 +603,6 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
               )}
             </Section>
 
-            {status !== "published" && (
-              <div style={{ borderTop: "1px solid var(--hair)", paddingTop: 14 }}>
-                <Button variant="primary" disabled={blockers.length > 0 || publishing || save === "conflict"} onClick={() => publish(false)}>
-                  {publishing ? "Publishing" : "Publish"}
-                </Button>
-              </div>
-            )}
           </div>
 
           <div className="o-sticky">
@@ -594,9 +615,40 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi }: Pro
               tagline={f.tagline}
               qrValue={id ? `${host.startsWith("localhost") ? "http" : "https"}://${host}/e/${slug}` : null}
               passCode={previewSlug ? `EC-${previewSlug.replace(/[^a-z0-9]/gi, "").slice(0, 4).toUpperCase()}-${String(taken + 1).padStart(4, "0")}` : null}
-              priceLabel={f.paid && pricePaise > 0 ? `₹${Math.round(pricePaise / 100)}` : f.paid ? "—" : "FREE"}
-              seatsLabel={cap === null ? `${taken} going, no limit` : `${Math.max(0, cap - taken)} of ${cap} left`}
+              priceLabel={f.paid && pricePaise > 0 ? `₹${Math.round(pricePaise / 100)}` : f.paid ? "PAID" : "FREE"}
+              seatsLabel={cap === null ? "Unlimited" : `${Math.max(0, cap - taken)} / ${cap}`}
             />
+            <section className="o-check" aria-label="Ready to publish">
+              <div className="o-check-head">
+                <span className="o-section-label">Ready to publish</span>
+                <span className="o-meta">{checklist.filter(([, ok]) => ok).length} / {checklist.length}</span>
+              </div>
+              {checklist.map(([label, ok, section]) => (
+                <div className="o-check-row" key={label}>
+                  <span className={ok ? "" : "todo"}>{label}</span>
+                  {!ok && (
+                    <button type="button" className="o-check-add" onClick={() => goTo(section)}>
+                      Add →
+                    </button>
+                  )}
+                </div>
+              ))}
+            </section>
+            {status !== "published" && blockers.length > 0 && <p className="o-reason o-col-reason">needs {blockers.join(", ")}</p>}
+            {id ? (
+              <a className="o-btn o-wide" href={`/events/${slug}`} target="_blank" rel="noopener noreferrer">
+                Preview as attendee
+              </a>
+            ) : (
+              <Button className="o-wide" disabled>
+                Preview as attendee
+              </Button>
+            )}
+            {status !== "published" && (
+              <Button variant="primary" className="o-wide" disabled={!canPublish} onClick={() => publish(false)}>
+                {publishing ? "Publishing" : "Publish"}
+              </Button>
+            )}
           </div>
         </div>
       </div>

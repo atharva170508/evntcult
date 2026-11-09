@@ -18,9 +18,9 @@ export interface TicketProps {
   seatsLabel: string;
 }
 
-const dash = (v: string | null | undefined) => (v && v.trim() ? v : "—");
+const has = (v: string | null | undefined): v is string => !!v && v.trim() !== "";
 
-/** The one physical object on the page. Everything on it comes from props; empty renders a dash. */
+/** The one physical object on the page. Everything on it comes from props; empty renders nothing. */
 export function Ticket(p: TicketProps) {
   const [qr, setQr] = useState<string | null>(null);
   useEffect(() => {
@@ -38,28 +38,29 @@ export function Ticket(p: TicketProps) {
   return (
     <div className="o-ticket" role="group" aria-label="Pass preview">
       <div className="o-ticket-left">
-        <div className="o-ticket-cat">{dash(p.category?.toUpperCase())}</div>
-        <div className="o-ticket-title">{dash(p.title)}</div>
-        <div className="o-ticket-rule" />
-        <div className="o-ticket-meta">
-          <span>{dash(p.dateLabel)}</span>
-          <span>{p.time ? `${p.time} IST` : "—"}</span>
-        </div>
-        <div className="o-ticket-venue">{dash(p.venue)}</div>
-        <div className="o-ticket-tag">{dash(p.tagline)}</div>
+        {has(p.category) && <div className="o-ticket-cat">{p.category.toUpperCase()}</div>}
+        {has(p.title) && <div className="o-ticket-title">{p.title}</div>}
+        {(has(p.dateLabel) || has(p.time)) && (
+          <div className="o-ticket-meta">
+            {has(p.dateLabel) && <span>{p.dateLabel}</span>}
+            {has(p.time) && <span>{p.time} IST</span>}
+          </div>
+        )}
+        {has(p.venue) && <div className="o-ticket-venue">{p.venue}</div>}
+        {has(p.tagline) && <div className="o-ticket-tag">{p.tagline}</div>}
       </div>
       <div className="o-ticket-right">
         <div className="o-qr" aria-label={qr ? "QR code" : "QR code appears after the first save"}>
-          {qr ? <span style={{ display: "block", width: "100%", height: "100%" }} dangerouslySetInnerHTML={{ __html: qr }} /> : "—"}
+          {qr ? <span style={{ display: "block", width: "100%", height: "100%" }} dangerouslySetInnerHTML={{ __html: qr }} /> : null}
         </div>
-        <div className="o-ticket-code">{dash(p.passCode)}</div>
+        {has(p.passCode) && <div className="o-ticket-code">{p.passCode}</div>}
         <div className="o-ticket-price">
           <Odometer value={p.priceLabel} />
         </div>
         <div className="o-ticket-left-seats">{p.seatsLabel}</div>
       </div>
-      <svg className="o-ticket-perf" aria-hidden width="1" height="312">
-        <line x1="0.5" y1="9" x2="0.5" y2="303" stroke="#3A3A44" strokeDasharray="7 7" />
+      <svg className="o-ticket-perf" aria-hidden width="1" height="208">
+        <line x1="0.5" y1="9" x2="0.5" y2="199" stroke="#3A3A44" strokeDasharray="7 7" />
       </svg>
       <span className="o-notch" aria-hidden style={{ top: -10 }} />
       <span className="o-notch" aria-hidden style={{ bottom: -10 }} />

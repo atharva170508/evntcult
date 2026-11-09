@@ -71,7 +71,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
               qrValue={link}
               passCode={`EC-${e.slug.replace(/[^a-z0-9]/gi, "").slice(0, 4).toUpperCase()}-${String(e.taken + 1).padStart(4, "0")}`}
               priceLabel={e.price_paise ? `₹${Math.round(e.price_paise / 100)}` : "FREE"}
-              seatsLabel={e.capacity === null ? `${e.taken} going, no limit` : `${Math.max(0, e.capacity - e.taken)} of ${e.capacity} left`}
+              seatsLabel={e.capacity === null ? "Unlimited" : `${Math.max(0, e.capacity - e.taken)} / ${e.capacity}`}
             />
           </div>
         </div>
