@@ -25,22 +25,24 @@ export const codeLoginOn = (env?: EmailEnv) => emailMode(env) !== "off";
 
 export class EmailError extends Error {}
 
-/** Tables and inline styles only: email apps ignore most modern CSS. */
+/** A note from a person on brand paper: dark masthead, and the code marked up with a highlighter. */
 export function loginCodeHtml(code: string): string {
-  const mono = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace";
-  const sans = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+  const shown = `${code.slice(0, 3)} ${code.slice(3)}`;
+  const font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+  const line = `font-family:${font};font-size:15px;line-height:1.55;color:#2a2a2e;margin:0 0 16px`;
   return `<!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><meta name="supported-color-schemes" content="dark"><title>Your EvntCult code</title></head>
-<body style="margin:0;padding:0;background:#08080c">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0">${code} is your EvntCult code</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#08080c" style="background:#08080c"><tr><td align="center" style="padding:48px 16px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:440px">
-<tr><td style="font-family:${sans};font-size:26px;font-weight:800;letter-spacing:-1px;color:#f2f3f7;padding:0 0 32px">ev<span style="color:#dcfe62">|</span>ntcult</td></tr>
-<tr><td bgcolor="#dcfe62" align="center" style="background:#dcfe62;border-radius:16px;padding:36px 12px">
-<div style="font-family:${sans};font-size:13px;font-weight:600;color:#08080c;padding:0 0 12px">Your login code</div>
-<div style="font-family:${mono};font-size:44px;line-height:1;font-weight:700;letter-spacing:10px;margin-right:-10px;color:#08080c">${code}</div>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light only"><title>Your EvntCult code</title></head>
+<body style="margin:0;padding:0;background:#efeee8">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#efeee8" style="background:#efeee8"><tr><td align="center" style="padding:32px 16px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;border-radius:14px;overflow:hidden">
+<tr><td bgcolor="#08080c" style="background:#08080c;padding:20px 28px;font-family:${font};font-size:22px;font-weight:800;letter-spacing:-0.8px;color:#f2f3f7">ev<span style="color:#dcfe62">|</span>ntcult</td></tr>
+<tr><td bgcolor="#ffffff" style="background:#ffffff;padding:28px">
+<p style="${line}">Hey,</p>
+<p style="${line}">Here's your code to log in:</p>
+<p style="margin:0 0 20px"><span style="display:inline-block;background:#dcfe62;border-radius:6px;padding:8px 14px;font-family:${font};font-size:30px;line-height:1.2;font-weight:700;letter-spacing:1px;color:#08080c">${shown}</span></p>
+<p style="${line}">It works for the next 10 minutes. If this wasn't you, just ignore this email and nothing changes.</p>
+<p style="${line};margin-bottom:0">See you at the next one,<br><b style="color:#08080c">Atharva, Nakul and Abhay</b></p>
 </td></tr>
-<tr><td align="center" style="font-family:${sans};font-size:14px;color:#a6a9b5;padding:24px 0 0">It expires in 10 minutes.</td></tr>
 </table>
 </td></tr></table>
 </body></html>`;
@@ -54,7 +56,7 @@ export async function sendLoginCode(email: string, code: string, env: EmailEnv =
   }
   if (mode !== "brevo") throw new EmailError("Email sending isn't set up.");
 
-  const text = `Your EvntCult login code is ${code}\n\nIt expires in 10 minutes.`;
+  const text = `Hey,\n\nHere's your code to log in to EvntCult:\n\n${code.slice(0, 3)} ${code.slice(3)}\n\nIt works for the next 10 minutes. If this wasn't you, just ignore this email and nothing changes.\n\nSee you at the next one,\nAtharva, Nakul and Abhay`;
   const html = loginCodeHtml(code);
 
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -63,7 +65,7 @@ export async function sendLoginCode(email: string, code: string, env: EmailEnv =
     body: JSON.stringify({
       sender: { name: "EvntCult", email: env.EMAIL_FROM },
       to: [{ email }],
-      subject: `${code} is your EvntCult login code`,
+      subject: `Your EvntCult code: ${code}`,
       textContent: text,
       htmlContent: html,
     }),
