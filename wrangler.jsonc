@@ -9,8 +9,8 @@
     "binding": "ASSETS"
   },
   "observability": { "enabled": true },
-  // Every 5 minutes: expire unconfirmed waitlist holds and offer freed seats to the next person (worker.ts).
-  "triggers": { "crons": ["*/5 * * * *"] },
+  // Every minute: send WhatsApp. Every 5th minute: expire unconfirmed waitlist holds and offer freed seats to the next person (worker.ts).
+  "triggers": { "crons": ["* * * * *"] },
   // Live gate count: one EventLive Durable Object per event (src/lib/live/event-live.ts),
   // exported from worker.ts. SQLite-backed Durable Objects work on the Workers Free plan.
   "durable_objects": {

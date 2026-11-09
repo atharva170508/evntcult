@@ -16,6 +16,7 @@
  */
 import { newId, newPassToken } from "@/lib/tokens";
 import { istLabel, notifyUser } from "@/lib/notify";
+import { enqueueOne } from "@/lib/whatsapp";
 
 export const HOLD_MS = 2 * 60 * 60 * 1000; // 2 hours to confirm a held seat…
 export const MIN_HOLD_MS = 20 * 60 * 1000; // …but never less than 20 minutes,
@@ -179,6 +180,7 @@ export async function register(
   if ((await upsertRegistration(db, event, userId, "registered", true, now)) === 1) {
     const reg = (await findMine(db, event.id, userId))!;
     await audit(db, userId, "register", reg.id, { event_id: event.id, status: "registered" }, now);
+    await enqueueOne(db, userId, event.id, "pass_confirmed", `pass_confirmed:${reg.id}`, now);
     return { kind: "registered", registration: reg };
   }
 
@@ -249,7 +251,7 @@ export async function promoteWaitlist(db: D1Database, eventId: string, now = new
       db,
       held.user_id,
       eventId,
-      "seat_hold",
+      "waitlist_offer",
       { event_title: event.title, confirm_by: istLabel(held.hold_expires_at!), link: `/events/${event.slug}` },
       `hold:${held.id}:${held.hold_expires_at}`,
       now,

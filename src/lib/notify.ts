@@ -6,8 +6,7 @@
  *  • Messages must use pre-approved WhatsApp templates, so we store a template name plus its
  *    variables (payload) — never free text, and never a phone number.
  *  • Each message has a dedupe_key, so the cron and retries can't queue it twice.
- *  • Nothing is sent yet: no provider is connected (WHATSAPP_PROVIDER is unset). The queue
- *    fills, and the organizer screens say "WhatsApp sending: not connected" with the count.
+ *  • src/lib/whatsapp.ts sends what is queued here.
  *
  * Takes the D1 database as an argument (no "server-only"), so the cron in worker.ts can use it.
  */
@@ -17,18 +16,16 @@ import { newId } from "@/lib/tokens";
 export const TEMPLATES = {
   /** "Update for {{1}}: {{2}}" */
   event_update: { variables: ["event_title", "message"] },
-  /** "A seat opened up for {{1}}! Confirm by {{2}}: {{3}}" */
-  seat_hold: { variables: ["event_title", "confirm_by", "link"] },
-  /** "Reminder: {{1}} starts {{2}} at {{3}}. Your pass: {{4}}" */
-  event_reminder: { variables: ["event_title", "starts", "venue", "pass_code"] },
+  /** "A seat opened up for {{1}}! Confirm by {{2}}." */
+  waitlist_offer: { variables: ["event_title", "confirm_by", "link"] },
 } as const;
 
 export type TemplateName = keyof typeof TEMPLATES;
 export type Payload<T extends TemplateName> = Record<(typeof TEMPLATES)[T]["variables"][number], string>;
 
-/** Is a WhatsApp provider connected? Not yet — see M4 notes in the README. */
-export function whatsappConnected(env: { WHATSAPP_PROVIDER?: string } = process.env as { WHATSAPP_PROVIDER?: string }): boolean {
-  return !!env.WHATSAPP_PROVIDER;
+/** Are the Meta secrets set? Without them messages stop at dry run. */
+export function whatsappConnected(env: { WA_TOKEN?: string; WA_PHONE_NUMBER_ID?: string } = process.env as { WA_TOKEN?: string; WA_PHONE_NUMBER_ID?: string }): boolean {
+  return !!env.WA_TOKEN && !!env.WA_PHONE_NUMBER_ID;
 }
 
 /** Template variables are short single lines (WhatsApp rejects newlines/tabs and very long values). */
@@ -53,9 +50,9 @@ export async function notifyRegistered<T extends TemplateName>(
 ): Promise<number> {
   const res = await db
     .prepare(
-      `INSERT INTO notifications (id, user_id, event_id, channel, template, payload, status, created_at, dedupe_key)
-       SELECT lower(hex(randomblob(16))), u.id, r.event_id, 'whatsapp', ?, ?, 'queued', ?, ? || ':' || u.id
-       ${REGISTERED_OPTED_IN}
+      `INSERT INTO notifications (id, user_id, event_id, channel, template, payload, status, created_at, scheduled_for, dedupe_key)
+       SELECT lower(hex(randomblob(16))), u.id, r.event_id, 'whatsapp', ?1, ?2, 'queued', ?3, ?3, ?4 || ':' || u.id
+       ${REGISTERED_OPTED_IN.replace("r.event_id = ?", "r.event_id = ?5")}
        ON CONFLICT (dedupe_key) DO NOTHING`,
     )
     .bind(template, clean(payload), now.toISOString(), dedupePrefix, eventId)
@@ -75,9 +72,9 @@ export async function notifyUser<T extends TemplateName>(
 ): Promise<boolean> {
   const res = await db
     .prepare(
-      `INSERT INTO notifications (id, user_id, event_id, channel, template, payload, status, created_at, dedupe_key)
-       SELECT ?, u.id, ?, 'whatsapp', ?, ?, 'queued', ?, ? FROM users u
-        WHERE u.id = ? AND u.whatsapp_opt_in = 1 AND u.phone IS NOT NULL
+      `INSERT INTO notifications (id, user_id, event_id, channel, template, payload, status, created_at, scheduled_for, dedupe_key)
+       SELECT ?1, u.id, ?2, 'whatsapp', ?3, ?4, 'queued', ?5, ?5, ?6 FROM users u
+        WHERE u.id = ?7 AND u.whatsapp_opt_in = 1 AND u.phone IS NOT NULL
        ON CONFLICT (dedupe_key) DO NOTHING`,
     )
     .bind(newId(), eventId, template, clean(payload), now.toISOString(), dedupeKey, userId)
@@ -88,36 +85,6 @@ export async function notifyUser<T extends TemplateName>(
 /** "Sat 21 Nov, 7:30 pm" in IST, for template variables. */
 export function istLabel(iso: string): string {
   return new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit", hour12: true }).format(new Date(iso));
-}
-
-/**
- * Cron: queue the day-before reminder for every published event starting in the next 24 hours.
- * Runs every 5 minutes; dedupe keys make it once per student per event, and students who
- * register later in that window still get one on the next run.
- */
-export async function queueDayBeforeReminders(db: D1Database, now = new Date()): Promise<number> {
-  const events = await db
-    .prepare("SELECT id, title, venue, starts_at FROM events WHERE status = 'published' AND starts_at > ? AND starts_at <= ?")
-    .bind(now.toISOString(), new Date(now.getTime() + 24 * 3_600_000).toISOString())
-    .all<{ id: string; title: string; venue: string; starts_at: string }>();
-
-  let queued = 0;
-  for (const e of events.results ?? []) {
-    // pass_code differs per person, so this one is inserted per registration.
-    const res = await db
-      .prepare(
-        `INSERT INTO notifications (id, user_id, event_id, channel, template, payload, status, created_at, dedupe_key)
-         SELECT lower(hex(randomblob(16))), u.id, r.event_id, 'whatsapp', 'event_reminder',
-                json_object('event_title', ?, 'starts', ?, 'venue', ?, 'pass_code', r.pass_code),
-                'queued', ?, 'reminder:' || r.event_id || ':' || u.id
-         ${REGISTERED_OPTED_IN}
-         ON CONFLICT (dedupe_key) DO NOTHING`,
-      )
-      .bind(e.title, istLabel(e.starts_at), e.venue, now.toISOString(), e.id)
-      .run();
-    queued += res.meta.changes ?? 0;
-  }
-  return queued;
 }
 
 /** Outbox numbers for the organizer screens. */

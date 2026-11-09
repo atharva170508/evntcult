@@ -6,6 +6,7 @@
  */
 import { newId } from "@/lib/tokens";
 import { csvCell } from "@/lib/data/organizer-actions";
+import { enqueueSchedule, onCancelled } from "@/lib/whatsapp";
 
 export const ADMIN_EMAIL = "evntcult@gmail.com";
 export const MAX_MISSES = 5;
@@ -150,6 +151,10 @@ export async function ownerAction(db: D1Database, kind: OwnerActionKind, id: str
   };
   const res = await statements[kind].run();
   if ((res.meta.changes ?? 0) === 0) throw new AdminError(409, "no_change", "That was already done, or it no longer exists.");
+  if (kind === "take_down") {
+    const ev = await db.prepare("SELECT starts_at FROM events WHERE id = ?").bind(id).first<{ starts_at: string }>();
+    if (ev) await onCancelled(db, id, ev.starts_at, now);
+  } else if (kind === "restore") await enqueueSchedule(db, id, now);
   await db.prepare("INSERT INTO audit_log (id, actor_id, action, target_id, meta, created_at) VALUES (?, NULL, ?, ?, ?, ?)").bind(newId(), `owner_${kind}`, id, JSON.stringify({ by: "owner" }), at).run();
 }
 

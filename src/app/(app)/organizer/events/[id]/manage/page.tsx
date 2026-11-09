@@ -5,7 +5,9 @@ import { ArrowLeft, Camera, Download, MessageCircle, Pencil, ScanLine, Search } 
 import { canManageEvent, getViewer } from "@/lib/rbac";
 import { all, count, first, getDB } from "@/lib/db";
 import { listAttendees } from "@/lib/data/organizer-actions";
-import { outboxCounts, whatsappConnected } from "@/lib/notify";
+import { istLabel, whatsappConnected } from "@/lib/notify";
+import { MAX_PER_EVENT, waPanel } from "@/lib/whatsapp";
+import { WaTestButton } from "@/components/organizer/WaTestButton";
 import { eventCertificates } from "@/lib/data/certificates";
 import { listMerch, merchCollected } from "@/lib/data/merch";
 import { AttendeeCert, CertPanel } from "@/components/organizer/CertControls";
@@ -19,6 +21,7 @@ import { PageHero } from "@/components/brand/PageHero";
 export const metadata: Metadata = { title: "Manage event" };
 export const dynamic = "force-dynamic";
 
+const WA_LABEL: Record<string, string> = { event_reminder: "reminder", event_soon: "gate opens", payment_pending: "payment nudge", event_updated: "update", event_cancelled: "cancelled" };
 const UPDATE_LABEL: Record<string, string> = { schedule: "Schedule change", venue: "Venue change", update: "Update" };
 const PAGE = 100;
 
@@ -48,7 +51,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
     ),
     listAttendees(db, id, q),
     all<{ id: string; kind: string; body: string; created_at: string; notified: number }>("SELECT id, kind, body, created_at, notified FROM event_updates WHERE event_id = ? ORDER BY created_at DESC LIMIT 10", id),
-    outboxCounts(db, [id]),
+    waPanel(db, id),
     count(
       `SELECT COUNT(*) AS n FROM registrations r JOIN users u ON u.id = r.user_id
         WHERE r.event_id = ? AND r.status = 'registered' AND u.whatsapp_opt_in = 1 AND u.phone IS NOT NULL`,
@@ -115,11 +118,35 @@ export default async function ManageEventPage({ params, searchParams }: { params
         </section>
 
         <section className="card p-5">
-          <h2 className="flex items-center gap-2 text-[16px] font-bold"><MessageCircle className="size-4 text-ink-subtle" /> WhatsApp for this event</h2>
-          <p className={`mt-2 text-[14px] font-semibold ${connected ? "text-live" : "text-warn"}`}>WhatsApp sending: {connected ? "connected" : "not connected"}</p>
-          <p className="mt-1 text-[13.5px] text-ink-2">
-            <span className="font-mono font-bold tabular-nums">{outbox.queued}</span> queued · <span className="font-mono tabular-nums">{outbox.sent}</span> sent · <span className="font-mono tabular-nums">{optedIn}</span> registered people opted in
-          </p>
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="flex items-center gap-2 text-[16px] font-bold"><MessageCircle className="size-4 text-ink-subtle" /> WhatsApp</h2>
+            <span className="font-mono text-[13px] tabular-nums">{outbox.optedIn} opted in</span>
+          </div>
+          <ul className="mt-3 divide-y divide-line text-[13.5px]">
+            {outbox.next.map((n) => (
+              <li key={n.at + n.template} className="flex justify-between gap-3 py-2">
+                <span className="font-mono text-[12.5px]">{istLabel(n.at)}</span>
+                <span className="text-ink-muted">{WA_LABEL[n.template] ?? n.template.replace(/_/g, " ")}</span>
+              </li>
+            ))}
+            <li className="flex justify-between gap-3 py-2">
+              <span>Sent this event</span>
+              <span className="font-mono tabular-nums">{outbox.mostSentToOne} of {MAX_PER_EVENT} allowed</span>
+            </li>
+            {outbox.dryRun > 0 && (
+              <li className="flex justify-between gap-3 py-2">
+                <span>Dry run</span>
+                <span className="font-mono tabular-nums">{outbox.dryRun} messages</span>
+              </li>
+            )}
+            {outbox.failed > 0 && (
+              <li className="flex justify-between gap-3 py-2 text-danger">
+                <span>Failed</span>
+                <span className="font-mono tabular-nums">{outbox.failed}</span>
+              </li>
+            )}
+          </ul>
+          <WaTestButton eventId={e.id} />
           <h3 className="mt-4 text-[13px] font-bold uppercase tracking-[0.08em] text-ink-subtle">Recent updates</h3>
           {updates.length === 0 ? (
             <p className="mt-1 text-[13.5px] text-ink-muted">None yet.</p>

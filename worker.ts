@@ -6,7 +6,7 @@
  *
  *  • fetch: GET /api/events/:id/live (WebSocket) → the event's EventLive Durable Object,
  *    after checking the viewer organizes that event. Everything else goes to Next.js.
- *  • scheduled: the cron in wrangler.jsonc (every 5 minutes) expires unconfirmed
+ *  • scheduled: the cron in wrangler.jsonc (every minute for WhatsApp, every 5th for the rest) expires unconfirmed
  *    waitlist holds, gives freed seats to the next person, and queues the WhatsApp
  *    reminder for events starting within 24 hours (once per student).
  *  • exports the EventLive Durable Object class.
@@ -21,7 +21,7 @@ import { sweepHolds } from "./src/lib/data/registrations";
 import { purgeOldCodes } from "./src/lib/data/login-codes";
 import { purgeFaceSearchLog } from "./src/lib/data/face-search";
 import { gateCounts } from "./src/lib/data/checkins";
-import { queueDayBeforeReminders } from "./src/lib/notify";
+import { enqueueUpcoming, flush, type WaEnv } from "./src/lib/whatsapp";
 import { readSessionValue, SESSION_COOKIE } from "./src/lib/session";
 
 export { EventLive } from "./src/lib/live/event-live";
@@ -71,11 +71,16 @@ export default {
     const now = new Date(controller.scheduledTime);
     ctx.waitUntil(
       (async () => {
-        const holds = await sweepHolds(env.DB, now);
-        const reminders = await queueDayBeforeReminders(env.DB, now);
-        await purgeOldCodes(env.DB, now);
-        await purgeFaceSearchLog(env.DB, now);
-        console.log(`[cron ${controller.cron}] holds expired: ${holds.expired}, seats offered: ${holds.promoted}, reminders queued: ${reminders}`);
+        const sent = await flush(env.DB, env as unknown as WaEnv, now);
+        // Everything else only needs doing every 5 minutes.
+        if (Math.floor(controller.scheduledTime / 60_000) % 5 === 0) {
+          const holds = await sweepHolds(env.DB, now);
+          await enqueueUpcoming(env.DB, now);
+          await purgeOldCodes(env.DB, now);
+          await purgeFaceSearchLog(env.DB, now);
+          console.log(`[cron] holds expired: ${holds.expired}, seats offered: ${holds.promoted}`);
+        }
+        if (sent.sent + sent.dry + sent.skipped + sent.failed > 0) console.log(`[wa] sent ${sent.sent}, dry ${sent.dry}, skipped ${sent.skipped}, failed ${sent.failed}`);
       })(),
     );
   },

@@ -41,8 +41,8 @@ export async function createUser(email: string, d: { name?: string; phone?: stri
   const id = newId();
   const now = nowIso();
   await run(
-    "INSERT INTO users (id, email, name, role, created_at, phone, whatsapp_opt_in, phone_updated_at) VALUES (?, ?, ?, 'attendee', ?, ?, ?, ?)",
-    id, email, d.name, now, d.phone, d.whatsappOptIn ? 1 : 0, now,
+    "INSERT INTO users (id, email, name, role, created_at, phone, whatsapp_opt_in, phone_updated_at, wa_opt_in_at) VALUES (?, ?, ?, 'attendee', ?, ?, ?, ?, ?)",
+    id, email, d.name, now, d.phone, d.whatsappOptIn ? 1 : 0, now, d.whatsappOptIn ? now : null,
   );
   return id;
 }

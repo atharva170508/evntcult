@@ -1,7 +1,7 @@
 /** M4: WhatsApp outbox, payment reconcile, event updates, attendee list and CSV (real local D1). */
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { testDatabase } from "./helpers/d1";
-import { outboxCounts, queueDayBeforeReminders, notifyUser } from "@/lib/notify";
+import { outboxCounts, notifyUser } from "@/lib/notify";
 import { attendeesCsv, csvCell, listAttendees, postEventUpdate, setPayment } from "@/lib/data/organizer-actions";
 import { cancel, register, type EventForRegistration } from "@/lib/data/registrations";
 
@@ -71,30 +71,18 @@ describe("WhatsApp outbox", { timeout: 30_000 }, () => {
     expect(row?.notified).toBe(0);
   });
 
-  it("the day-before reminder is queued once per student, even though the cron runs every 5 minutes", async () => {
-    expect(await queueDayBeforeReminders(db, T0)).toBe(1);
-    expect(await queueDayBeforeReminders(db, new Date(T0.getTime() + 5 * 60_000))).toBe(0);
-    const rem = (await outbox()).find((n) => n.template === "event_reminder")!;
-    expect(rem.dedupe_key).toBe("reminder:ev1:a");
-    expect(JSON.parse(rem.payload)).toMatchObject({ event_title: "Neon Night", venue: "Main Auditorium", starts: expect.stringContaining("7:30"), pass_code: expect.stringMatching(/^EC-NEON-\d{4}$/) });
-  });
-
-  it("events more than 24 hours away get no reminder yet", async () => {
-    expect(await queueDayBeforeReminders(db, new Date("2026-11-19T06:00:00.000Z"))).toBe(0);
-  });
-
-  it("a waitlist hold queues a seat_hold message for the person who got the seat", async () => {
+  it("a waitlist hold queues a waitlist_offer message for the person who got the seat", async () => {
     const asha = await db.prepare("SELECT id FROM registrations WHERE user_id = 'a'").first<{ id: string }>();
     await cancel(db, asha!.id, "a", T0); // d (=HYPERLINK…) is first on the waitlist and opted in
-    const hold = (await outbox()).find((n) => n.template === "seat_hold")!;
+    const hold = (await outbox()).find((n) => n.template === "waitlist_offer")!;
     expect(hold.user_id).toBe("d");
     expect(JSON.parse(hold.payload)).toMatchObject({ event_title: "Neon Night", link: "/events/neon-night" });
   });
 
   it("notifyUser skips people who didn't opt in, and never queues the same key twice", async () => {
-    expect(await notifyUser(db, "b", "ev1", "seat_hold", { event_title: "x", confirm_by: "y", link: "z" }, "test:b", T0)).toBe(false);
-    expect(await notifyUser(db, "e", "ev1", "seat_hold", { event_title: "x", confirm_by: "y", link: "z" }, "test:e", T0)).toBe(true);
-    expect(await notifyUser(db, "e", "ev1", "seat_hold", { event_title: "x", confirm_by: "y", link: "z" }, "test:e", T0)).toBe(false);
+    expect(await notifyUser(db, "b", "ev1", "waitlist_offer", { event_title: "x", confirm_by: "y", link: "z" }, "test:b", T0)).toBe(false);
+    expect(await notifyUser(db, "e", "ev1", "waitlist_offer", { event_title: "x", confirm_by: "y", link: "z" }, "test:e", T0)).toBe(true);
+    expect(await notifyUser(db, "e", "ev1", "waitlist_offer", { event_title: "x", confirm_by: "y", link: "z" }, "test:e", T0)).toBe(false);
   });
 
   it("counts what's waiting in the outbox", async () => {

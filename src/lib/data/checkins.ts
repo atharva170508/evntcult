@@ -11,6 +11,7 @@
  */
 import { extractPassToken, isWellFormedPassToken, newId } from "@/lib/tokens";
 import { issueOnCheckIn } from "@/lib/data/certificates";
+import { enqueueCheckedIn } from "@/lib/whatsapp";
 
 export type ScanColor = "green" | "amber" | "red";
 
@@ -119,6 +120,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
       .bind(newId(), input.actorId ?? null, pass.reg_id, JSON.stringify({ event_id: input.eventId, client_scan_id: input.clientScanId, ...(unpaid ? { unpaid_admitted: true } : {}) }), now.toISOString())
       .run();
     await issueOnCheckIn(db, pass.reg_id, input.eventId, now);
+    await enqueueCheckedIn(db, pass.reg_id, now);
     return { result: "admitted", color: "green", name: pass.name, passCode: pass.pass_code, scannedAt, replay: false };
   }
 

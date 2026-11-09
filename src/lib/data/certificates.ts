@@ -5,6 +5,7 @@
  */
 import { newId } from "@/lib/tokens";
 import { ActionError } from "@/lib/data/organizer-actions";
+import { enqueueCertificateReady } from "@/lib/whatsapp";
 
 export const CERT_KINDS = ["participation", "winner", "volunteer", "speaker"] as const;
 export type CertKind = (typeof CERT_KINDS)[number];
@@ -146,6 +147,7 @@ export async function issueBulk(db: D1Database, eventId: string, actorId: string
   const ids = (rows.results ?? []).map((r) => r.id);
   for (let i = 0; i < ids.length; i += 50) await db.batch(ids.slice(i, i + 50).map((id) => insertCert(db, id, eventId, "participation", now.toISOString())));
   await audit(db, actorId, "certificates_issue", eventId, { issued: ids.length }, now);
+  if (ids.length) await enqueueCertificateReady(db, eventId, now);
   return { issued: ids.length };
 }
 

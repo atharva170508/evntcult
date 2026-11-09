@@ -6,6 +6,7 @@
  * 409, which is how two open tabs are caught. D1 has no interactive transactions, so each
  * guard sits inside the one SQL statement that needs it.
  */
+import { enqueueSchedule, onMaterialChange } from "@/lib/whatsapp";
 import { detectClashes, type Clash } from "@/lib/clash";
 import { bufferFor } from "@/lib/venues";
 import { newAccessCode, newId } from "@/lib/tokens";
@@ -181,6 +182,7 @@ export async function saveEvent(db: D1Database, owner: Owner, id: string, versio
     if (isUnique(e, "slug")) throw new OrganizerError(409, "slug_taken", "That link is taken. Try another.");
     throw e;
   }
+  if (row && cur.status === "published" && (startsAt !== cur.starts_at || endsAt !== cur.ends_at || next.venue !== cur.venue)) await onMaterialChange(db, id, startsAt, now);
   if (!row) {
     const now2 = await getRow(db, id);
     if (now2 && now2.version !== version) throw new OrganizerError(409, "version_conflict", "This event changed somewhere else. Reload to get the latest.", { version: now2.version });
@@ -242,6 +244,7 @@ export async function publishEvent(db: D1Database, owner: Owner, id: string, ver
     .first<{ version: number; slug: string }>();
   if (!res) throw new OrganizerError(409, "version_conflict", "This event changed somewhere else. Reload to get the latest.");
   await audit(db, owner.id, "event_publish", id, { version: res.version }, now);
+  await enqueueSchedule(db, id, now);
   return res;
 }
 
