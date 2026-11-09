@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getDB } from "@/lib/db";
 import { getViewer } from "@/lib/rbac";
+import { formatINR } from "@/lib/money";
 import { organizerEvents, type HomeEvent } from "@/lib/data/organizer-events";
 import { MISSING_LABEL, istTime, missingForPublish, ticketDate } from "@/lib/organizer/shared";
 import { DuplicateButton } from "@/components/organizer-ui/EventActions";
@@ -59,7 +60,17 @@ function List({ title, count, children }: { title: string; count: number; childr
 
 export default async function OrganizerHome() {
   const viewer = (await getViewer())!;
-  const events = await organizerEvents(await getDB(), viewer.id);
+  const db = await getDB();
+  const events = await organizerEvents(db, viewer.id);
+  const money = await db
+    .prepare(
+      `SELECT COALESCE(SUM(CASE WHEN r.payment_status = 'paid' THEN e.price_paise END), 0) AS collected,
+              COALESCE(SUM(CASE WHEN r.payment_status = 'unpaid' AND r.upi_utr IS NOT NULL THEN e.price_paise END), 0) AS to_verify
+         FROM registrations r JOIN events e ON e.id = r.event_id
+        WHERE e.organizer_id = ? AND r.status = 'registered' AND e.price_paise > 0`,
+    )
+    .bind(viewer.id)
+    .first<{ collected: number; to_verify: number }>();
   const nowIso = new Date().toISOString();
   const drafts = events.filter((e) => e.status === "draft");
   const upcoming = events.filter((e) => e.status === "published" && e.ends_at > nowIso);
@@ -81,6 +92,12 @@ export default async function OrganizerHome() {
       </header>
       <div className="o-page" style={{ maxWidth: 1100 }}>
         <h1 className="o-title">Your events</h1>
+        {money && money.collected + money.to_verify > 0 && (
+          <p className="o-meta" style={{ marginTop: 6 }}>
+            Collected {money.collected ? formatINR(money.collected) : "₹0"}
+            {money.to_verify > 0 && ` · To verify ${formatINR(money.to_verify)}`}
+          </p>
+        )}
         {events.length === 0 ? (
           <div style={{ borderTop: "1px solid var(--hair)", marginTop: 24, paddingTop: 18 }}>
             <p style={{ fontSize: 15, margin: "0 0 12px" }}>No events yet.</p>

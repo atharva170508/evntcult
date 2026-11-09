@@ -49,6 +49,7 @@ interface ServerVerdict {
   passCode?: string;
   scannedAt?: string;
   amountPaise?: number;
+  claimedUtr?: string | null;
   message?: string;
   counts?: Counts;
 }
@@ -81,7 +82,7 @@ function toVerdict(v: ServerVerdict, scan: QueuedScan, pricePaise: number): Verd
     case "already_in":
       return { color: "amber", title: "Already checked in", name: v.name, code: v.passCode, note: v.scannedAt ? `First scanned at ${fmtTime(new Date(v.scannedAt))}` : undefined };
     case "unpaid":
-      return { color: "amber", title: `Collect ${formatINR(v.amountPaise ?? pricePaise)}`, name: v.name, code: v.passCode, note: "Not paid yet. Take the fee, then admit.", collect: { amountPaise: v.amountPaise ?? pricePaise, scan } };
+      return { color: "amber", title: `Collect ${formatINR(v.amountPaise ?? pricePaise)}`, name: v.name, code: v.passCode, note: v.claimedUtr ? `Says paid by UPI, ID ${v.claimedUtr}. Not confirmed yet.` : "Not paid yet. Take the fee, then admit.", collect: { amountPaise: v.amountPaise ?? pricePaise, scan } };
     default:
       return { color: "red", title: "Not valid", note: v.message };
   }

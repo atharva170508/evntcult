@@ -34,11 +34,12 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
   const db = await getDB();
   const [stats, attendees, updates, outbox, optedIn] = await Promise.all([
-    first<{ registered: number; waitlisted: number; checked_in: number; paid: number; unpaid: number }>(
+    first<{ registered: number; waitlisted: number; checked_in: number; paid: number; unpaid: number; to_verify: number }>(
       `SELECT SUM(r.status = 'registered') AS registered, SUM(r.status = 'waitlisted') AS waitlisted,
               (SELECT COUNT(*) FROM checkins c WHERE c.event_id = ?1) AS checked_in,
               SUM(r.status = 'registered' AND r.payment_status = 'paid') AS paid,
-              SUM(r.status = 'registered' AND r.payment_status = 'unpaid') AS unpaid
+              SUM(r.status = 'registered' AND r.payment_status = 'unpaid') AS unpaid,
+              SUM(r.status = 'registered' AND r.payment_status = 'unpaid' AND r.upi_utr IS NOT NULL) AS to_verify
          FROM registrations r WHERE r.event_id = ?1`,
       id,
     ),
@@ -51,7 +52,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
       id,
     ),
   ]);
-  const s = { registered: stats?.registered ?? 0, waitlisted: stats?.waitlisted ?? 0, checkedIn: stats?.checked_in ?? 0, paid: stats?.paid ?? 0, unpaid: stats?.unpaid ?? 0 };
+  const s = { registered: stats?.registered ?? 0, waitlisted: stats?.waitlisted ?? 0, checkedIn: stats?.checked_in ?? 0, paid: stats?.paid ?? 0, unpaid: stats?.unpaid ?? 0, toVerify: stats?.to_verify ?? 0 };
   const paidEvent = e.price_paise > 0;
   const connected = whatsappConnected();
   const shown = showAll ? attendees : attendees.slice(0, PAGE);
@@ -78,12 +79,17 @@ export default async function ManageEventPage({ params, searchParams }: { params
         }
       />
 
-      <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <dl className={`grid grid-cols-2 gap-3 sm:grid-cols-4 ${paidEvent ? "lg:grid-cols-5" : ""}`}>
         {[
           ["Registered", e.capacity === null ? `${s.registered}` : `${s.registered} / ${e.capacity}`],
           ["Waitlist", String(s.waitlisted)],
           ["Checked in", String(s.checkedIn)],
-          paidEvent ? ["Fees collected", `${formatINR(s.paid * e.price_paise)} · ${s.unpaid} unpaid`] : ["Entry", "Free"],
+          ...(paidEvent
+            ? [
+                ["Collected", s.paid ? formatINR(s.paid * e.price_paise) : "₹0"],
+                ["To verify", `${s.toVerify} · ${s.unpaid - s.toVerify} unpaid`],
+              ]
+            : [["Entry", "Free"]]),
         ].map(([label, value]) => (
           <div key={label} className="card p-4">
             <dt className="text-[12px] font-semibold text-ink-subtle">{label}</dt>
@@ -168,7 +174,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
                     <td className="px-4 py-2.5">{a.checked_in_at ? <span className="font-semibold text-live">{fmtTime(new Date(a.checked_in_at))}</span> : <span className="text-ink-subtle">—</span>}</td>
                     {paidEvent && (
                       <td className="px-4 py-2.5">
-                        {a.status === "registered" ? <PaymentCell regId={a.id} paid={a.payment_status === "paid"} method={a.payment_method} refCode={a.payment_ref} /> : <span className="text-ink-subtle">—</span>}
+                        {a.status === "registered" ? <PaymentCell regId={a.id} paid={a.payment_status === "paid"} method={a.payment_method} refCode={a.payment_ref} utr={a.upi_utr} /> : <span className="text-ink-subtle">—</span>}
                       </td>
                     )}
                   </tr>

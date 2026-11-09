@@ -6,7 +6,7 @@ import { ArrowLeft, Camera, CalendarDays, ChevronRight, Clock, MapPin, Pencil, S
 import { getViewer } from "@/lib/rbac";
 import { getEventDetail, toSummary } from "@/lib/data/events";
 import { passQrPayload } from "@/lib/tokens";
-import { formatINR } from "@/lib/money";
+import { formatINR, upiUri } from "@/lib/money";
 import { fmtDate, fmtRange, fmtTime } from "@/lib/utils";
 import { EventArt } from "@/components/ui/EventArt";
 import { Chip } from "@/components/ui/Chip";
@@ -34,6 +34,12 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     reg?.status === "registered"
       ? await QRCode.toString(passQrPayload(reg.pass_token), { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#0b0b0f", light: "#ffffff" } })
       : null;
+
+  const upiUrl =
+    reg?.status === "registered" && e.price_paise > 0 && reg.payment_status !== "paid" && e.organizer_upi_id
+      ? upiUri({ vpa: e.organizer_upi_id, payeeName: e.title, amountPaise: e.price_paise, note: reg.pass_code })
+      : null;
+  const upiQr = upiUrl ? await QRCode.toString(upiUrl, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#0b0b0f", light: "#ffffff" } }) : null;
 
   const waitlistPosition = reg?.status === "waitlisted" ? await waitlistPos(e.id, reg.id) : null;
   const db = await getDB();
@@ -157,6 +163,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
                   : null
               }
               qrSvg={qrSvg}
+              hasUpi={!!e.organizer_upi_id}
+              upi={upiUrl && upiQr && reg ? { regId: reg.id, pricePaise: e.price_paise, vpa: e.organizer_upi_id!, uri: upiUrl, qrSvg: upiQr, utr: reg.upi_utr, rejected: !!reg.upi_rejected_at } : null}
             />
           )}
         </div>

@@ -16,7 +16,7 @@ export type ScanColor = "green" | "amber" | "red";
 export type ScanResult =
   | { result: "admitted"; color: "green"; name: string; passCode: string; scannedAt: string; replay: boolean }
   | { result: "already_in"; color: "amber"; name: string; passCode: string; scannedAt: string }
-  | { result: "unpaid"; color: "amber"; name: string; passCode: string; amountPaise: number }
+  | { result: "unpaid"; color: "amber"; name: string; passCode: string; amountPaise: number; claimedUtr: string | null }
   | { result: "invalid"; color: "red"; reason: InvalidReason; message: string };
 
 export type InvalidReason = "unknown" | "other_event" | "cancelled" | "waitlisted" | "event_closed";
@@ -44,6 +44,7 @@ interface PassLookup {
   name: string;
   price_paise: number;
   event_title: string;
+  upi_utr: string | null;
 }
 
 const invalid = (reason: InvalidReason, message: string): ScanResult => ({ result: "invalid", color: "red", reason, message });
@@ -76,7 +77,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
   if (!isWellFormedPassToken(token)) return invalid("unknown", "Not an EvntCult pass.");
   const pass = await db
     .prepare(
-      `SELECT r.id AS reg_id, r.event_id, r.status, r.payment_status, r.pass_code, u.name, e.price_paise, e.title AS event_title
+      `SELECT r.id AS reg_id, r.event_id, r.status, r.payment_status, r.pass_code, u.name, e.price_paise, e.title AS event_title, r.upi_utr
          FROM registrations r JOIN users u ON u.id = r.user_id JOIN events e ON e.id = r.event_id
         WHERE r.pass_token = ?`,
     )
@@ -97,7 +98,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
   // 4. Paid event, not paid yet: the volunteer collects the fee, then taps Admit (acceptUnpaid).
   const unpaid = pass.price_paise > 0 && pass.payment_status !== "paid";
   if (unpaid && !input.acceptUnpaid) {
-    return { result: "unpaid", color: "amber", name: pass.name, passCode: pass.pass_code, amountPaise: pass.price_paise };
+    return { result: "unpaid", color: "amber", name: pass.name, passCode: pass.pass_code, amountPaise: pass.price_paise, claimedUtr: pass.upi_utr };
   }
 
   // 5. Admit. One statement; the UNIQUE constraints make a second scan a no-op.

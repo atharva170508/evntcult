@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2, Clock, Hourglass, Loader2, Ticket, XCircle } from "lucide-react";
 import { formatINR } from "@/lib/money";
+import { UpiPay, type UpiPayProps } from "@/components/events/UpiPay";
 
 interface Reg {
   id: string;
@@ -26,6 +27,9 @@ export function RegisterPanel(props: {
   pricePaise: number;
   registration: Reg | null;
   qrSvg: string | null;
+  hasUpi?: boolean;
+  /** Set while this student still has to pay by UPI. */
+  upi?: UpiPayProps | null;
   /** Registration API is live (M2). Pass false to show passes read-only. */
   actionsLive?: boolean;
 }) {
@@ -84,12 +88,13 @@ export function RegisterPanel(props: {
             <p className="font-mono text-[15px] font-bold tracking-[0.1em]">{r.passCode}</p>
             {props.pricePaise > 0 && (
               <p className={r.paid ? "text-[13px] font-semibold text-live" : "text-[13px] font-semibold text-warn"}>
-                {r.paid ? "Paid" : `Unpaid · ${formatINR(props.pricePaise)} at the desk`}
+                {r.paid ? "Paid" : props.upi ? (props.upi.utr ? "Payment being checked" : `Unpaid · ${formatINR(props.pricePaise)}`) : `Unpaid · ${formatINR(props.pricePaise)} at the desk`}
               </p>
             )}
             <p className="text-[12.5px] text-ink-muted">Show the QR at the gate.</p>
           </div>
         </div>
+        {props.upi && props.open && !r.checkedInAt && <UpiPay {...props.upi} />}
         {err}
         <div className="flex flex-wrap gap-2">
           <Link href="/passes" className="inline-flex items-center gap-1.5 rounded-full bg-volt px-4 py-2.5 text-[14px] font-semibold text-ink-inverse"><Ticket className="size-4" /> My passes</Link>
@@ -163,7 +168,7 @@ export function RegisterPanel(props: {
     <div className="space-y-3">
       {err}
       <button onClick={() => register(false)} disabled={busy} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-volt py-3.5 text-[15px] font-semibold text-ink-inverse shadow-[0_10px_24px_-12px_rgba(0,0,0,0.6)] disabled:opacity-50">
-        {busy && <Loader2 className="size-4 animate-spin" />} Register{props.pricePaise > 0 ? ` · ${formatINR(props.pricePaise)} at the desk` : " · free"}
+        {busy && <Loader2 className="size-4 animate-spin" />} Register{props.pricePaise > 0 ? ` · ${formatINR(props.pricePaise)}${props.hasUpi ? "" : " at the desk"}` : " · free"}
       </button>
     </div>
   );

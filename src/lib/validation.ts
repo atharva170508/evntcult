@@ -54,7 +54,18 @@ export const paymentSchema = z.discriminatedUnion("status", [
     })
     .strict(),
   z.object({ status: z.literal("unpaid") }).strict(),
+  z.object({ status: z.literal("rejected") }).strict(),
 ]);
+
+/** POST /api/registrations/:id/upi — the student hands in their UPI transaction ID. */
+export const upiClaimSchema = z
+  .object({
+    utr: z
+      .string()
+      .transform((v) => v.replace(/\s/g, ""))
+      .pipe(z.string().regex(/^\d{12}$/, "Enter the 12-digit transaction ID.")),
+  })
+  .strict();
 
 /** POST /api/events/:id/updates — schedule / venue / info update, optionally sent on WhatsApp. */
 export const eventUpdateSchema = z

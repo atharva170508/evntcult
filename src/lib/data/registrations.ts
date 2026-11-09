@@ -145,7 +145,8 @@ async function upsertRegistration(
         WHERE e.id = ?7 AND e.status = 'published' AND e.ends_at > ?6 ${capacity}
        ON CONFLICT (event_id, user_id) DO UPDATE SET
               status = excluded.status, pass_token = excluded.pass_token, payment_status = 'unpaid',
-              hold_expires_at = NULL, cancelled_at = NULL, created_at = excluded.created_at
+              hold_expires_at = NULL, cancelled_at = NULL, created_at = excluded.created_at,
+              upi_utr = NULL, upi_claimed_at = NULL, upi_rejected_at = NULL
         WHERE registrations.status = 'cancelled'`,
     )
     .bind(newId(), userId, status, passCodePrefix(event.slug), newPassToken(), iso(now), event.id)

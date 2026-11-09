@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 /** Mark paid (Cash / UPI + optional reference) or undo. Every change is audited on the server. */
-export function PaymentCell({ regId, paid, method, refCode }: { regId: string; paid: boolean; method: string | null; refCode: string | null }) {
+export function PaymentCell({ regId, paid, method, refCode, utr }: { regId: string; paid: boolean; method: string | null; refCode: string | null; utr?: string | null }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [how, setHow] = useState<"cash" | "upi">("cash");
@@ -34,6 +34,22 @@ export function PaymentCell({ regId, paid, method, refCode }: { regId: string; p
           Undo
         </button>
         {err && <span role="alert" className="text-[12px] text-danger">{err}</span>}
+      </div>
+    );
+  }
+
+  if (utr && !open) {
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="rounded-full bg-warn-soft px-2.5 py-1 text-[12px] font-bold text-warn">To verify</span>
+        <span className="font-mono text-[12px]">{utr}</span>
+        <button onClick={() => send({ status: "paid", method: "upi" })} disabled={busy} className="rounded-full bg-volt px-3 py-1 text-[12px] font-semibold text-ink-inverse disabled:opacity-50">
+          Received
+        </button>
+        <button onClick={() => send({ status: "rejected" })} disabled={busy} className="rounded-full border border-line px-3 py-1 text-[12px] font-semibold hover:border-danger hover:text-danger disabled:opacity-50">
+          Not received
+        </button>
+        {err && <span role="alert" className="w-full text-[12px] text-danger">{err}</span>}
       </div>
     );
   }

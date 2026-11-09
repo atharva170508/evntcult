@@ -23,6 +23,8 @@ interface PassRow {
   pass_code: string;
   pass_token: string;
   payment_status: "paid" | "unpaid";
+  upi_utr: string | null;
+  organizer_upi_id: string | null;
   hold_expires_at: string | null;
   created_at: string;
   event_id: string;
@@ -43,7 +45,7 @@ export default async function PassesPage() {
   if (!viewer) redirect("/signin?next=/passes");
 
   const rows = await all<PassRow>(
-    `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.hold_expires_at, r.created_at,
+    `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.upi_utr, r.hold_expires_at, r.created_at, e.organizer_upi_id,
             e.id AS event_id, e.slug, e.title, e.category, COALESCE(e.venue, 'Venue TBA') AS venue, e.starts_at, e.ends_at, e.price_paise, e.status AS event_status,
             (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id) AS checked_in_at,
             CASE WHEN r.status = 'waitlisted' THEN
@@ -157,7 +159,7 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
           )}
           {r.status === "registered" && r.price_paise > 0 && (
             <p className={r.payment_status === "paid" ? "font-semibold text-live" : "font-semibold text-warn"}>
-              {r.payment_status === "paid" ? "Paid" : `Unpaid · ${formatINR(r.price_paise)} at the desk`}
+              {r.payment_status === "paid" ? "Paid" : r.upi_utr ? "Payment being checked" : `Unpaid · ${formatINR(r.price_paise)}${r.organizer_upi_id ? "" : " at the desk"}`}
             </p>
           )}
           {r.status === "waitlisted" &&

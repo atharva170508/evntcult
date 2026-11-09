@@ -46,7 +46,7 @@ export async function setPayment(db: D1Database, regId: string, actorId: string,
 
   if (change.status === "paid") {
     await db
-      .prepare("UPDATE registrations SET payment_status = 'paid', payment_method = ?, payment_ref = ?, paid_at = ?, paid_by = ? WHERE id = ?")
+      .prepare("UPDATE registrations SET payment_status = 'paid', payment_method = ?1, payment_ref = CASE WHEN ?1 = 'upi' THEN COALESCE(?2, upi_utr) ELSE ?2 END, paid_at = ?3, paid_by = ?4, upi_rejected_at = NULL WHERE id = ?5")
       .bind(change.method, change.ref ?? null, now.toISOString(), actorId, regId)
       .run();
   } else {
@@ -57,6 +57,43 @@ export async function setPayment(db: D1Database, regId: string, actorId: string,
   }
   await audit(db, actorId, "payment", regId, { event_id: reg.event_id, from: reg.payment_status, to: change.status, ...(change.status === "paid" ? { method: change.method, ref: change.ref ?? null } : {}) }, now);
   return { id: regId, payment_status: change.status };
+}
+
+/** The student says they paid by UPI. Stays unpaid until the organizer confirms. */
+export async function claimUpiPayment(db: D1Database, regId: string, userId: string, utr: string, now = new Date()) {
+  const reg = await db
+    .prepare("SELECT r.user_id, r.event_id, r.status, r.payment_status, e.price_paise, e.organizer_upi_id FROM registrations r JOIN events e ON e.id = r.event_id WHERE r.id = ?")
+    .bind(regId)
+    .first<{ user_id: string; event_id: string; status: string; payment_status: string; price_paise: number; organizer_upi_id: string | null }>();
+  if (!reg || reg.user_id !== userId) throw new ActionError(404, "not_found", "Registration not found.");
+  if (reg.status !== "registered") throw new ActionError(409, "not_registered", "You don't have a seat for this event.");
+  if (reg.price_paise === 0 || !reg.organizer_upi_id) throw new ActionError(409, "no_upi", "This event doesn't take UPI payments.");
+  if (reg.payment_status === "paid") throw new ActionError(409, "already_paid", "This pass is already paid.");
+
+  const used = () => new ActionError(409, "utr_used", "This transaction ID has already been used.");
+  const taken = await db.prepare("SELECT 1 AS x FROM registrations WHERE id <> ?1 AND (upi_utr = ?2 OR payment_ref = ?2) LIMIT 1").bind(regId, utr).first();
+  if (taken) throw used();
+  try {
+    await db
+      .prepare("UPDATE registrations SET upi_utr = ?, upi_claimed_at = ?, upi_rejected_at = NULL WHERE id = ? AND status = 'registered' AND payment_status = 'unpaid'")
+      .bind(utr, now.toISOString(), regId)
+      .run();
+  } catch (err) {
+    if (/UNIQUE/i.test(String(err))) throw used(); // two people submitted the same ID at once
+    throw err;
+  }
+  await audit(db, userId, "upi_claim", regId, { event_id: reg.event_id, utr }, now);
+}
+
+/** The organizer couldn't find this payment. Frees the ID and lets the student try again. */
+export async function rejectUpiClaim(db: D1Database, regId: string, actorId: string, now = new Date()) {
+  const res = await db
+    .prepare("UPDATE registrations SET upi_utr = NULL, upi_claimed_at = NULL, upi_rejected_at = ? WHERE id = ? AND payment_status = 'unpaid' AND upi_utr IS NOT NULL RETURNING event_id")
+    .bind(now.toISOString(), regId)
+    .first<{ event_id: string }>();
+  if (!res) throw new ActionError(409, "no_claim", "There's no payment to check on this registration.");
+  await audit(db, actorId, "upi_reject", regId, { event_id: res.event_id }, now);
+  return { id: regId, payment_status: "unpaid" as const };
 }
 
 /* ─── Event updates ─────────────────────────────────────────────────────── */
@@ -97,6 +134,7 @@ export interface AttendeeRow {
   payment_status: "paid" | "unpaid";
   payment_method: string | null;
   payment_ref: string | null;
+  upi_utr: string | null;
   paid_at: string | null;
   registered_at: string;
   checked_in_at: string | null;
@@ -112,12 +150,12 @@ export async function listAttendees(db: D1Database, eventId: string, q?: string 
   const like = search ? `%${search.replace(/[\\%_]/g, (m) => `\\${m}`)}%` : null;
   const rows = await db
     .prepare(
-      `SELECT r.id, u.name, u.email, r.status, r.pass_code, r.payment_status, r.payment_method, r.payment_ref, r.paid_at,
+      `SELECT r.id, u.name, u.email, r.status, r.pass_code, r.payment_status, r.payment_method, r.payment_ref, r.upi_utr, r.paid_at,
               r.created_at AS registered_at, c.scanned_at AS checked_in_at, r.hold_expires_at
          FROM registrations r JOIN users u ON u.id = r.user_id LEFT JOIN checkins c ON c.registration_id = r.id
         WHERE r.event_id = ? AND r.status IN ('registered','waitlisted')
-          ${like ? "AND (u.name LIKE ?2 ESCAPE '\\' OR u.email LIKE ?2 ESCAPE '\\' OR r.pass_code LIKE ?2 ESCAPE '\\')" : ""}
-        ORDER BY r.status = 'waitlisted', r.created_at DESC`,
+          ${like ? "AND (u.name LIKE ?2 ESCAPE '\\' OR u.email LIKE ?2 ESCAPE '\\' OR r.pass_code LIKE ?2 ESCAPE '\\' OR r.upi_utr LIKE ?2 ESCAPE '\\')" : ""}
+        ORDER BY r.status = 'waitlisted', (r.payment_status = 'unpaid' AND r.upi_utr IS NOT NULL) DESC, r.created_at DESC`,
     )
     .bind(...(like ? [eventId, like] : [eventId]))
     .all<AttendeeRow>();
@@ -149,7 +187,7 @@ export function attendeesCsv(rows: AttendeeRow[], pricePaise: number): string {
       r.pass_code,
       r.status === "waitlisted" ? (r.hold_expires_at ? "Waitlist (seat held)" : "Waitlist") : "Registered",
       ist(r.checked_in_at),
-      ...(pricePaise > 0 ? [r.payment_status === "paid" ? "Paid" : "Unpaid", r.payment_method ?? "", r.payment_ref ?? "", ist(r.paid_at)] : []),
+      ...(pricePaise > 0 ? [r.payment_status === "paid" ? "Paid" : r.upi_utr ? "To verify" : "Unpaid", r.payment_method ?? "", r.payment_ref ?? r.upi_utr ?? "", ist(r.paid_at)] : []),
       ist(r.registered_at),
     ]
       .map(csvCell)
