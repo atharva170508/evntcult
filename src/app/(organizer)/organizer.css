@@ -38,6 +38,7 @@
 .o-btn:active { transform: scale(.985); filter: brightness(1.04); }
 .o-btn:disabled { color: var(--dim); cursor: not-allowed; border-color: var(--hair-2); }
 .o-btn-primary { background: var(--accent); color: var(--ink); border-color: var(--accent); font-weight: 600; }
+.o-root a.o-btn-primary { color: var(--ink); }
 .o-btn-primary:hover { border-color: var(--accent); }
 .o-btn-primary:disabled { background: #2c2c35; border-color: #2c2c35; color: #a4a4ae; }
 .o-link { background: none; border: 0; padding: 0; color: var(--muted); font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
@@ -184,9 +185,6 @@
 @media (prefers-reduced-motion: reduce) { .o-root *, .o-toast { transition-duration: 1ms !important; animation-duration: 1ms !important; } }
 @media (min-width: 781px) { .o-page:has(> .o-cal) { padding-bottom: 20px; } }
 
-.a-gate { max-width: 320px; margin: 16vh auto 0; padding: 0 16px; }
-.a-form { display: grid; gap: 6px; margin-top: 22px; }
-.a-submit { margin-top: 12px; height: 34px; }
 .a-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--hair); }
 .a-stats div { padding: 12px 0 14px; border-bottom: 1px solid var(--hair-2); }
 .a-stats dt { font-size: 12px; color: var(--muted); }

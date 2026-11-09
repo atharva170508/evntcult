@@ -1,21 +1,21 @@
 import { z } from "zod";
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { getDB } from "@/lib/db";
-import { ADMIN_OTP_KEY } from "@/lib/data/admin";
-import { LoginCodeError, verifyCode } from "@/lib/data/login-codes";
+import { AdminError, checkAdminGate } from "@/lib/data/admin";
+import { clientIp } from "@/lib/auth-shared";
 import { adminCookieHeader, clearAdminCookieHeader, createAdminValue } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
-const body = z.object({ otp: z.string().trim().regex(/^\d{6}$/, "Enter the 6-digit code.") }).strict();
+const body = z.object({ email: z.string().max(200), code: z.string().max(200) }).strict();
 
-/** POST /api/admin/session — owner step 2: the emailed code opens the panel. */
+/** POST /api/admin/session — the owner email and secret code open the panel. */
 export const POST = handle(async (req: Request) => {
-  const { otp } = await parseBody(req, body);
+  const input = await parseBody(req, body);
   try {
-    await verifyCode(await getDB(), { email: ADMIN_OTP_KEY, code: otp, secret: process.env.SESSION_SECRET ?? "" });
+    await checkAdminGate(await getDB(), { ...input, expected: process.env.ADMIN_SECRET_CODE, ip: clientIp(req) });
   } catch (e) {
-    if (e instanceof LoginCodeError) throw new ApiError(e.status, e.code, e.message);
+    if (e instanceof AdminError) throw new ApiError(e.status, e.code, e.message);
     throw e;
   }
   const res = Response.json({ ok: true });

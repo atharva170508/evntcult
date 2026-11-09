@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 import { useState } from "react";
 import { Wordmark } from "@/components/brand/Wordmark";
@@ -24,6 +25,7 @@ export function AppShell({ viewer, children }: { viewer: NavViewer | null; child
             <span>EvntCult · Every campus event, one place</span>
             <span>Made for campus life</span>
           </div>
+          <Link href="/get-app" className="mt-2 inline-block font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">Get the app</Link>
         </footer>
       </div>
 

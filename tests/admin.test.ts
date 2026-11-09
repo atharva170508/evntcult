@@ -1,8 +1,7 @@
 /** Owner panel: the secret-code step, the panel cookie, and the overview numbers. */
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { testDatabase } from "./helpers/d1";
-import { ADMIN_EMAIL, ADMIN_OTP_KEY, MAX_MISSES, adminExport, adminOverview, checkAdminGate, ownerAction } from "@/lib/data/admin";
-import { issueCode, verifyCode } from "@/lib/data/login-codes";
+import { ADMIN_EMAIL, MAX_MISSES, adminExport, adminOverview, checkAdminGate, ownerAction } from "@/lib/data/admin";
 import { createAdminValue, createSessionValue, readAdminValue } from "@/lib/session";
 
 let db: D1Database;
@@ -38,13 +37,6 @@ describe("owner gate", () => {
   it("stays shut if the secret isn't set", async () => {
     await expect(checkAdminGate(db, { email: ADMIN_EMAIL, code: "", expected: undefined, ip: "5.5.5.5", now })).rejects.toMatchObject({ status: 503 });
     await expect(checkAdminGate(db, { email: ADMIN_EMAIL, code: "undefined", expected: "", ip: "5.5.5.5", now })).rejects.toMatchObject({ status: 503 });
-  });
-
-  it("an owner code doesn't work as a student's code", async () => {
-    const secret = process.env.SESSION_SECRET!;
-    const { code } = await issueCode(db, { email: ADMIN_OTP_KEY, ip: "6.6.6.6", secret, now });
-    await expect(verifyCode(db, { email: ADMIN_EMAIL, code, secret, now })).rejects.toMatchObject({ code: "no_code" });
-    await expect(verifyCode(db, { email: ADMIN_OTP_KEY, code, secret, now })).resolves.toBeUndefined();
   });
 });
 

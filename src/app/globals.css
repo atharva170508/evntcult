@@ -24,6 +24,33 @@
   :focus-visible {
     @apply outline-none ring-2 ring-volt ring-offset-2 ring-offset-canvas;
   }
+  /* Text boxes show focus through their own border, or their rounded wrapper, not a square ring. */
+  input:not([type="checkbox"]):not([type="radio"]):focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply outline-none ring-0 ring-offset-0;
+  }
+  input:not([type="checkbox"]):not([type="radio"]):focus,
+  textarea:focus,
+  select:focus {
+    border-color: rgb(220 254 98 / 0.7);
+  }
+  /* Browser autofill must not paint a white box on the dark theme. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: currentColor;
+    caret-color: currentColor;
+    transition: background-color 99999s ease-out;
+  }
+  /* Phones zoom the whole page when a text box is smaller than 16px. */
+  @media (pointer: coarse) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+  }
 }
 
 @layer components {

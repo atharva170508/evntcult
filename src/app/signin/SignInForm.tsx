@@ -6,8 +6,11 @@ import { PhoneFields } from "@/components/profile/PhoneFields";
 
 type ApiErr = { error?: { code: string; message: string } };
 
+/** This address never logs in as a student: it opens the owner code popup. The server checks the code. */
+const OWNER_EMAIL = "evntcult@gmail.com";
+
 const inputCls =
-  "mt-1.5 w-full rounded-2xl border border-line bg-surface px-4 py-3.5 text-[15px] placeholder:text-ink-subtle focus:border-brand focus:outline-none focus-visible:ring-2 focus-visible:ring-sun";
+  "mt-1.5 w-full rounded-2xl border border-line bg-surface px-4 py-3.5 text-[15px] placeholder:text-ink-subtle focus:outline-none";
 
 /**
  * Sign in / sign up.
@@ -25,6 +28,9 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
   const [resendIn, setResendIn] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ownerOpen, setOwnerOpen] = useState(false);
+  const [ownerCode, setOwnerCode] = useState("");
+  const [ownerError, setOwnerError] = useState<string | null>(null);
 
   useEffect(() => {
     if (resendIn <= 0) return;
@@ -61,8 +67,23 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
     setResendIn(data.resendAfterSec ?? 30);
   }
 
+  async function submitOwner(e: React.FormEvent) {
+    e.preventDefault();
+    setOwnerError(null);
+    const { res, data } = await post("/api/admin/session", { email, code: ownerCode });
+    if (res.ok) return void (window.location.href = "/admin");
+    setOwnerCode("");
+    setOwnerError(data.error?.message ?? "That didn't work. Try again.");
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (email.trim().toLowerCase() === OWNER_EMAIL) {
+      setError(null);
+      setOwnerError(null);
+      setOwnerOpen(true);
+      return;
+    }
     if (!codeLogin) {
       const { res, data } = await post("/api/auth/session", { email, ...details() });
       if (res.ok) return void (window.location.href = next);
@@ -75,6 +96,37 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
   }
 
   return (
+    <>
+    {ownerOpen && (
+      <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4" role="dialog" aria-modal="true" aria-labelledby="owner-title">
+        <form onSubmit={submitOwner} className="w-full max-w-sm space-y-3 rounded-3xl border border-line bg-surface p-6">
+          <h2 id="owner-title" className="text-[20px] font-bold">Owner code</h2>
+          <input
+            type="password"
+            required
+            autoFocus
+            autoComplete="off"
+            aria-labelledby="owner-title"
+            value={ownerCode}
+            onChange={(e) => setOwnerCode(e.target.value)}
+            className={inputCls}
+          />
+          {ownerError && (
+            <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
+              {ownerError}
+            </p>
+          )}
+          <div className="flex gap-2">
+            <button type="button" onClick={() => setOwnerOpen(false)} className="flex-1 rounded-full border border-line py-3 text-[14px] font-semibold">
+              Cancel
+            </button>
+            <button disabled={busy || !ownerCode} className="flex flex-1 items-center justify-center gap-2 rounded-full bg-volt py-3 text-[14px] font-bold text-ink-inverse disabled:opacity-50">
+              {busy && <Loader2 className="size-4 animate-spin" aria-hidden />} Open
+            </button>
+          </div>
+        </form>
+      </div>
+    )}
     <form onSubmit={submit} className="mt-7 space-y-3">
       {step === "email" ? (
         <label className="block">
@@ -149,13 +201,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
           </button>
         </div>
       )}
-
-      {!codeLogin && (
-        <p className="rounded-2xl border border-dashed border-line-strong px-3.5 py-2.5 text-[12.5px] text-ink-muted">
-          <span className="mr-1.5 rounded-full bg-warn-soft px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-warn">Planned</span>
-          Email code check isn&apos;t switched on yet, so anyone who types your email can log in as you.
-        </p>
-      )}
     </form>
+    </>
   );
 }

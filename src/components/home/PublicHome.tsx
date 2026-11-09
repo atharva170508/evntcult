@@ -278,6 +278,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
           <Link href="/signin" className="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-4 text-[16px] font-semibold hover:border-volt/60">
             Log in
           </Link>
+          <Link href="/get-app" className="inline-flex items-center justify-center rounded-full border border-white/20 px-7 py-4 text-[16px] font-semibold hover:border-volt/60">Get the app</Link>
         </div>
       </section>
     </div>

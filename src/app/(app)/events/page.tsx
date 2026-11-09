@@ -38,7 +38,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
     <div className="space-y-5 pt-4 md:pt-6">
       <PageHero eyebrow="Discover" title={<>Events on <em>campus</em></>} sub="Fests, game nights, workshops and talks. Register in a tap." marquee={["Discover", "Gaming", "Sports", "Tech", "Cultural"]} />
 
-      <form action="/events" className="flex h-12 items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card md:max-w-xl">
+      <form action="/events" className="flex h-12 items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card transition-colors focus-within:border-volt/70 md:max-w-xl">
         <Search className="size-[18px] text-ink-subtle" />
         <input name="q" defaultValue={q.q} placeholder="Search by name, venue…" className="min-w-0 flex-1 bg-transparent px-3 text-[14.5px] focus:outline-none" aria-label="Search events" />
         {q.type && <input type="hidden" name="type" value={q.type} />}

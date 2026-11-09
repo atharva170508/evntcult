@@ -2,14 +2,12 @@
  * Owner panel: the secret-code check and the numbers shown inside.
  * Takes the D1 database as an argument (no "server-only") so tests can use it directly.
  *
- * Owners sign in separately from students: email + secret code, then a one-time code by email.
- * The one-time code reuses login_codes under its own key, so it can't mix with a student login.
+ * Owners sign in separately from students: the owner email on the login page, then the secret code.
  */
 import { newId } from "@/lib/tokens";
 import { csvCell } from "@/lib/data/organizer-actions";
 
 export const ADMIN_EMAIL = "evntcult@gmail.com";
-export const ADMIN_OTP_KEY = `admin:${ADMIN_EMAIL}`;
 export const MAX_MISSES = 5;
 const MISS_WINDOW_MS = 15 * 60_000;
 

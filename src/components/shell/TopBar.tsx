@@ -56,7 +56,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
 
         {/* Search is for signed-in people only: visitors just see the landing page. */}
         {viewer && (
-        <form action="/events" className="flex h-12 min-w-0 flex-1 items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card md:max-w-[640px]">
+        <form action="/events" className="hidden h-12 min-w-0 flex-1 sm:flex items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card transition-colors focus-within:border-volt/70 md:max-w-[640px]">
             <Search className="size-[18px] shrink-0 text-ink-subtle" />
             <input
               ref={inputRef}
@@ -97,6 +97,9 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
         <div className="ml-auto flex items-center gap-2">
           {viewer ? (
             <>
+              <Link href="/events" aria-label="Search events" className="grid size-10 place-items-center rounded-full border border-line bg-surface text-ink-2 sm:hidden">
+                <Search className="size-[18px]" />
+              </Link>
               <Link
                 href="/organizer/events/new"
                   className="inline-flex items-center gap-1.5 rounded-full bg-volt px-3.5 py-2.5 text-[13px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover md:hidden"
@@ -111,7 +114,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
               </button>
               <Link
                 href="/profile"
-                className="grid size-11 place-items-center overflow-hidden rounded-full bg-volt text-[13px] font-bold text-ink-inverse ring-2 ring-canvas"
+                className="grid size-10 place-items-center overflow-hidden rounded-full bg-volt sm:size-11 text-[13px] font-bold text-ink-inverse ring-2 ring-canvas"
                 title={`${viewer.name} · ${viewer.email}`}
                 aria-label={`Your profile (${viewer.name})`}
               >
@@ -121,7 +124,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
                 onClick={logout}
                 title="Log out"
                 aria-label="Log out"
-                className="grid size-11 place-items-center rounded-full border border-line bg-surface text-ink-2 transition-colors hover:border-volt/60"
+                className="grid size-10 place-items-center rounded-full border border-line bg-surface text-ink-2 transition-colors hover:border-volt/60 sm:size-11"
               >
                 <LogOut className="size-[18px]" />
               </button>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { getDB } from "@/lib/db";
 import { formatINR } from "@/lib/money";
 import { ADMIN_COOKIE, readAdminValue } from "@/lib/session";
@@ -7,7 +8,7 @@ import { adminOverview } from "@/lib/data/admin";
 import { istTime, ticketDate } from "@/lib/organizer/shared";
 import { codeLoginOn } from "@/lib/email";
 import { whatsappConnected } from "@/lib/notify";
-import { AdminGate, AdminLock, OwnerAction } from "@/components/organizer-ui/AdminGate";
+import { AdminLock, OwnerAction } from "@/components/organizer-ui/AdminGate";
 
 export const metadata: Metadata = { title: "Owners", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -16,7 +17,7 @@ const inr = (p: number) => (p ? formatINR(p) : "₹0");
 const when = (iso: string) => `${ticketDate(iso).slice(4)} ${istTime(new Date(iso))}`;
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-  if (!(await readAdminValue((await cookies()).get(ADMIN_COOKIE)?.value))) return <AdminGate />;
+  if (!(await readAdminValue((await cookies()).get(ADMIN_COOKIE)?.value))) redirect("/signin");
 
   const { q } = await searchParams;
   const { stats: s, events, users, activity, stuck, organizers, signups, outbox } = await adminOverview(await getDB(), q);

@@ -135,7 +135,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line p-4">
           <h2 className="title-xl text-[32px]">Attendees <span className="font-mono text-[15px] text-ink-muted tabular-nums">({attendees.length}{q ? " found" : ""})</span></h2>
           <div className="flex flex-wrap items-center gap-2">
-            <form className="flex h-10 items-center rounded-full border border-line bg-surface pl-3.5 pr-1">
+            <form className="flex h-10 items-center rounded-full border border-line bg-surface pl-3.5 pr-1 transition-colors focus-within:border-volt/70">
               <Search className="size-4 text-ink-subtle" />
               <input name="q" defaultValue={q} placeholder="Name, email or pass code" aria-label="Search attendees" className="w-48 bg-transparent px-2 text-[13.5px] focus:outline-none" />
               <button className="rounded-full bg-volt px-3 py-1.5 text-[12.5px] font-semibold text-ink-inverse">Search</button>

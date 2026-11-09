@@ -1,3 +1,4 @@
+import { ADMIN_EMAIL } from "@/lib/data/admin";
 import "server-only";
 import { z } from "zod";
 import { first, run } from "@/lib/db";
@@ -17,6 +18,7 @@ export const signupFields = {
 };
 
 export function assertDomainAllowed(email: string) {
+  if (email.trim().toLowerCase() === ADMIN_EMAIL) throw new ApiError(403, "owner_email", "This email can only open the owner panel.");
   const list = (process.env.ALLOWED_EMAIL_DOMAINS ?? "")
     .split(",")
     .map((d) => d.trim().toLowerCase())
