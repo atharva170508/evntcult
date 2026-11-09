@@ -19,26 +19,6 @@ export interface PublicHomeData {
   onePassQr: string;
 }
 
-/**
- * Shown on the landing page when no events are published yet, so visitors still see what the
- * dashboard looks like. Clearly labelled as examples and never clickable through to anything.
- */
-const DAY = 86_400_000;
-function exampleEvents(): EventSummary[] {
-  const base = Date.now();
-  const mk = (i: number, title: string, category: EventSummary["category"], accent: string, venue: string, days: number, hour: number): EventSummary => {
-    const start = new Date(Math.floor(base / DAY) * DAY + days * DAY + (hour - 5.5) * 3_600_000);
-    return { id: `example-${i}`, slug: "", title, category, visibility: "PUBLIC", status: "published", startsAt: start, endsAt: new Date(+start + 3 * 3_600_000), venueName: venue, capacity: null, registered: 0, feePaise: 0, accent };
-  };
-  return [
-    mk(1, "Neon Night", "PARTY", "violet", "Main Auditorium", 2, 19),
-    mk(2, "Hackathon Kickoff", "TECH", "blue", "Computer Lab 4", 3, 10),
-    mk(3, "Inter-college Football", "SPORTS", "orange", "Sports Complex", 4, 16),
-    mk(4, "Garba Night", "CULTURAL", "pink", "Open Air Theatre", 6, 19),
-    mk(5, "Design Sprint", "WORKSHOP", "teal", "Seminar Hall 2", 8, 11),
-  ];
-}
-
 /* Where the preview tickets float around the hero headline (laptops only). */
 const FLOAT_SPOTS = [
   { className: "left-[3%] top-[12%]", tilt: "-8deg", delay: "0s" },
@@ -78,8 +58,7 @@ const ONEPASS_STEPS = [
 
 /** What a signed-out visitor sees. Event cards are a preview of the dashboard: they never open an event. */
 export function PublicHome({ data }: { data: PublicHomeData }) {
-  const live = data.campus.length > 0;
-  const events = live ? data.campus : exampleEvents();
+  const events = data.campus;
   const [next, ...rest] = events;
 
   return (
@@ -219,16 +198,17 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
       </section>
 
       {/* ── 4. Dashboard preview (look, don't open) ────── */}
+      {next && (
       <section aria-labelledby="preview-heading">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow">{live ? "A peek at your dashboard" : "What your dashboard looks like"}</p>
+            <p className="eyebrow">A peek at your dashboard</p>
             <h2 id="preview-heading" className="shout mt-3 text-[clamp(34px,5.2vw,72px)]">
               What&apos;s <span className="text-volt">on</span> campus
             </h2>
           </div>
           <span className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-[13px] font-semibold text-ink-muted">
-            {live ? "Preview · sign up to open events" : "Example events · sign up to see real ones"}
+            Preview · sign up to open events
           </span>
         </div>
 
@@ -284,6 +264,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
           </ul>
         </div>
       </section>
+      )}
 
       {/* ── 5. Closing call to action ──────────────────── */}
       <section className="flex flex-col items-start justify-between gap-6 rounded-[36px] border border-white/[0.08] bg-surface p-8 md:flex-row md:items-end md:p-12">
