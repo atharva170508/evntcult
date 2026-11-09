@@ -642,7 +642,7 @@ export function UpiPending({ amountPaise }: { amountPaise: number }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl bg-warn-soft p-3.5 text-[13px] font-semibold animate-fade-up">
       <Sparkles className="size-4 shrink-0 text-warn" />
-      <span className="text-ink-2">{formatINR(amountPaise)} due · UPI payments are coming soon. Pay the organizer at the desk for now.</span>
+      <span className="text-ink-2">{formatINR(amountPaise)} due · Pay on the event page.</span>
     </div>
   );
 }

@@ -24,7 +24,7 @@ export async function getViewer(): Promise<Viewer | null> {
   const uid = await readSessionValue((await cookies()).get(SESSION_COOKIE)?.value);
   if (!uid) return null;
   const u = await first<{ id: string; name: string; email: string; role: Role; phone: string | null; whatsapp_opt_in: number }>(
-    "SELECT id, name, email, role, phone, whatsapp_opt_in FROM users WHERE id = ?",
+    "SELECT id, name, email, role, phone, whatsapp_opt_in FROM users WHERE id = ? AND blocked_at IS NULL",
     uid,
   );
   if (!u) return null;

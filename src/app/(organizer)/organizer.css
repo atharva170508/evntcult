@@ -183,3 +183,29 @@
 }
 @media (prefers-reduced-motion: reduce) { .o-root *, .o-toast { transition-duration: 1ms !important; animation-duration: 1ms !important; } }
 @media (min-width: 781px) { .o-page:has(> .o-cal) { padding-bottom: 20px; } }
+
+.a-gate { max-width: 320px; margin: 16vh auto 0; padding: 0 16px; }
+.a-form { display: grid; gap: 6px; margin-top: 22px; }
+.a-submit { margin-top: 12px; height: 34px; }
+.a-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--hair); }
+.a-stats div { padding: 12px 0 14px; border-bottom: 1px solid var(--hair-2); }
+.a-stats dt { font-size: 12px; color: var(--muted); }
+.a-stats dd { margin: 2px 0 0; font-family: var(--font-display); font-size: 26px; font-weight: 600; }
+.a-head { margin: 34px 0 10px; }
+.a-users { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.a-scroll { overflow-x: auto; }
+.a-table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 13px; }
+.a-table th { text-align: left; font-size: 12px; font-weight: 400; color: var(--muted); padding: 6px 12px 6px 0; }
+.a-table td { border-top: 1px solid var(--hair-2); padding: 7px 12px 7px 0; }
+.a-table .m { font-family: var(--font-mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+.a-table .n { text-align: right; font-family: var(--font-mono); font-size: 12px; padding-right: 0; }
+.a-act { height: 22px; font-size: 11px; padding: 0 8px; }
+.a-two { display: grid; grid-template-columns: minmax(0, 1fr) 300px; column-gap: 40px; }
+.a-bars { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 4px; align-items: end; height: 108px; border-bottom: 1px solid var(--hair); }
+.a-bars div { display: flex; flex-direction: column; justify-content: flex-end; align-items: stretch; height: 100%; text-align: center; }
+.a-bars i { display: block; background: #2c2c35; min-height: 1px; }
+.a-n, .a-d { font-family: var(--font-mono); font-size: 10px; color: var(--muted); line-height: 16px; }
+.a-kv { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; padding: 7px 0; border-top: 1px solid var(--hair-2); }
+.a-kv span:last-child { font-family: var(--font-mono); font-size: 12px; }
+@media (max-width: 780px) { .a-two { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) { .a-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

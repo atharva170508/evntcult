@@ -103,16 +103,10 @@ export default async function EventPhotosPage({ params, searchParams }: { params
         )
       ) : (
         <>
-      {access.manage && (
+      {access.manage && storageReady && (
         <section className="card p-5">
           <h2 className="headline mb-3 text-[17px]">Upload photos</h2>
-          {storageReady ? (
-            <PhotoUploader eventId={event.id} />
-          ) : (
-            <p className="rounded-2xl border border-dashed border-line-strong p-4 text-[14px] text-ink-muted">
-              Photo storage isn&apos;t set up yet. Uploads open once Cloudflare R2 is turned on for this site.
-            </p>
-          )}
+          <PhotoUploader eventId={event.id} />
         </section>
       )}
 
