@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { CalendarDays, KeyRound, LogOut, Plus, Search, Shapes } from "lucide-react";
 import { cn, initials } from "@/lib/utils";
-import { LogoWordmark } from "@/components/brand/MissingE";
+import { LogoMark, LogoWordmark } from "@/components/brand/MissingE";
 import { NotificationBell } from "./NotificationBell";
 
 export interface NavViewer {
@@ -52,6 +52,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
     >
       <div className="mx-auto flex h-[72px] max-w-[1280px] items-center gap-3 px-4 lg:px-8">
         <Link href="/dashboard" className={cn("flex shrink-0 items-center gap-2.5", viewer && "md:hidden")} aria-label="EvntCult home">
+          <LogoMark className="size-8 text-ink" />
           <LogoWordmark motion="type" className="text-[29px] text-ink" />
         </Link>
 

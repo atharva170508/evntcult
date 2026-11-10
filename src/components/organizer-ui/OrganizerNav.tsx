@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { LogoIcon } from "@/components/brand/MissingE";
 
 const NAV = [
   { href: "/organizer", label: "Home", exact: true },
@@ -14,7 +15,7 @@ export function OrganizerNav() {
   return (
     <nav className="o-side" aria-label="Organizer">
       <Link href="/organizer" className="o-logo" aria-label="EvntCult organizer home">
-        E
+        <LogoIcon className="size-[30px]" />
       </Link>
       {NAV.map((n) => {
         const current = (n.exact ? path === n.href : path.startsWith(n.href)) ? "page" : undefined;
