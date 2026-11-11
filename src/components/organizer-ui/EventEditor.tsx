@@ -501,9 +501,12 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                   ) : f.venueStatus === "confirmed" ? (
                     <>
                       {f.venuePlaceId && <div className="mb-1">Matched: {f.venueAddress ?? f.venue}</div>}
-                      <button type="button" className="o-link text-caption" onClick={() => set("venueStatus", "tba")}>
-                        Mark as TBA
-                      </button>
+                      <span className="text-caption">
+                        Not booked yet?{" "}
+                        <button type="button" className="o-link text-caption" onClick={() => set("venueStatus", "tba")}>
+                          Mark as TBA
+                        </button>
+                      </span>
                     </>
                   ) : null
                 }

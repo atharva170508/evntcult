@@ -168,7 +168,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                 {list.map((e) => (
                   <li key={e.id} className="grid grid-cols-[72px_minmax(0,1fr)] items-center gap-x-4 gap-y-1 py-1 md:grid-cols-[72px_minmax(0,1fr)_minmax(0,200px)_auto]">
                     <span className="font-mono text-label tabular-nums text-ink-muted">{fmtTime(new Date(e.startsAt))}</span>
-                    <Link href={`/events/${e.slug}`} className={cn("min-w-0 truncate text-body font-semibold hover:underline", e.status === "cancelled" && "line-through opacity-60")}>
+                    <Link href={`/events/${e.slug}`} className={cn("min-w-0 min-h-6 truncate py-0.5 text-body font-semibold hover:underline", e.status === "cancelled" && "line-through opacity-60")}>
                       {e.title}
                     </Link>
                     <span className="col-start-2 truncate font-mono text-label text-ink-muted md:col-start-auto">{e.venue}</span>

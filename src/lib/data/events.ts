@@ -152,7 +152,7 @@ export async function getEventDetail(ref: string, viewer: Viewer | null, code?: 
   const myRegistration = viewer
     ? await first<MyRegistration>(
         `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.hold_expires_at, r.upi_utr, r.upi_rejected_at,
-                (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id) AS checked_in_at
+                (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id AND c.undone_at IS NULL) AS checked_in_at
            FROM registrations r WHERE r.event_id = ? AND r.user_id = ?`,
         event.id,
         viewer.id,

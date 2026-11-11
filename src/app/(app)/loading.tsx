@@ -1,17 +1,19 @@
-/** Shown while an app page loads its data: grey placeholder blocks in the page's shape. */
+/** §14/§15 loading: placeholder blocks in the page's shape, shown only after 300ms (see .after-300ms). */
 export default function Loading() {
-  const block = "rounded-lg border border-line bg-surface";
+  const block = "rounded-md border border-line bg-surface";
   return (
-    <div className="mt-6 space-y-4" aria-busy="true" aria-live="polite">
-      <span className="sr-only">Loading…</span>
-      <div className="h-9 w-56 rounded-md bg-surface" />
+    <div className="after-300ms mt-8 flex flex-col gap-4" aria-busy="true">
+      <span className="sr-only" role="status">
+        Loading…
+      </span>
+      <div className="h-10 w-56 rounded-sm bg-surface" />
       <div className="grid gap-4 lg:grid-cols-12">
-        <div className={`${block} h-[260px] lg:col-span-8`} />
-        <div className={`${block} h-[260px] lg:col-span-4`} />
+        <div className={`${block} h-52 lg:col-span-8`} />
+        <div className={`${block} h-52 lg:col-span-4`} />
       </div>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[0, 1, 2, 3].map((i) => (
-          <div key={i} className={`${block} h-[104px]`} />
+          <div key={i} className={`${block} h-24`} />
         ))}
       </div>
     </div>

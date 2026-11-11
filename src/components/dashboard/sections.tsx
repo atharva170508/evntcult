@@ -195,7 +195,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
             {data.live ? "Live at the gate" : "No event running"}
           </h3>
           {data.live && (
-            <Link href={`/organizer/scan/${data.live.id}`} className="text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+            <Link href={`/organizer/scan/${data.live.id}`} className="inline-flex min-h-6 items-center text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
               Open scanner ›
             </Link>
           )}
@@ -214,7 +214,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
           <h3 id="hosted-h" className="text-title">
             Registrations and fees
           </h3>
-          <Link href="/organizer" className="text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+          <Link href="/organizer" className="inline-flex min-h-6 items-center text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
             Manage ›
           </Link>
         </div>
@@ -229,7 +229,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
                 key: "t",
                 header: "Event",
                 cell: (h) => (
-                  <Link href={`/organizer/events/${h.id}/manage`} className="block max-w-[220px] truncate font-semibold hover:underline">
+                  <Link href={`/organizer/events/${h.id}/manage`} className="block max-w-[220px] min-h-6 truncate py-0.5 font-semibold hover:underline">
                     {h.title}
                   </Link>
                 ),
@@ -356,7 +356,7 @@ export function UpcomingList({ events }: { events: EventSummary[] }) {
         <h3 id="up-h" className="text-title">
           Coming up
         </h3>
-        <Link href="/calendar" className="text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+        <Link href="/calendar" className="inline-flex min-h-6 items-center text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
           Calendar ›
         </Link>
       </div>
@@ -396,7 +396,7 @@ export function CampusRail({ events, n = "04" }: { events: EventSummary[]; n?: s
         n={n}
         title="Happening soon"
         action={
-          <Link href="/events" className="text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+          <Link href="/events" className="inline-flex min-h-6 items-center text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
             Browse all ›
           </Link>
         }

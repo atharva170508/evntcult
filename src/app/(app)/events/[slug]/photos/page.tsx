@@ -31,7 +31,7 @@ export default async function EventPhotosPage({ params, searchParams }: { params
   const access = await photoAccess(db, viewer, event.id);
   const storageReady = await photoStorageReady();
   const back = (
-    <Link href={`/events/${event.slug}`} className="inline-flex items-center gap-2 text-body-sm font-semibold text-ink-muted hover:text-ink">
+    <Link href={`/events/${event.slug}`} className="inline-flex min-h-11 items-center gap-2 text-body-sm text-ink-muted hover:text-ink">
       <span aria-hidden>←</span> {event.title}
     </Link>
   );

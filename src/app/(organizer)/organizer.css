@@ -218,3 +218,7 @@
 .a-kv span:last-child { font-family: var(--font-mono); font-size: var(--fs-label); }
 @media (max-width: 780px) { .a-two { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 640px) { .a-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* §15 targets: small text controls still get the 24px floor. */
+.o-link, .o-check-add, .o-text-btn, .o-crumb a { min-height: 24px; min-width: 24px; display: inline-flex; align-items: center; justify-content: center; }
+.o-list-row .o-t { line-height: 24px; }

@@ -9,7 +9,9 @@ export default async function OrganizerLayout({ children }: { children: React.Re
   return (
     <div className="o-root">
       <OrganizerNav />
-      <div className="o-main">{children}</div>
+      <main id="main" tabIndex={-1} className="o-main">
+        {children}
+      </main>
     </div>
   );
 }

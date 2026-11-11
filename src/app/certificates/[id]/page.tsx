@@ -35,7 +35,7 @@ export default async function CertificatePage({ params }: Props) {
   const qr = await QRCode.toString(`${scheme}://${host}/verify/${c.publicCode}`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: TOKENS.accentInk, light: TOKENS.qrGround } });
 
   return (
-    <main className="cert-page">
+    <main id="main" tabIndex={-1} className="cert-page">
       <div className="cert-actions">
         <PrintButton />
       </div>

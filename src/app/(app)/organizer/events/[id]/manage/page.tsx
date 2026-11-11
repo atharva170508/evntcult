@@ -43,7 +43,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
   const [stats, attendees, updates, outbox, optedIn, certs, merch, collected, questions, answers] = await Promise.all([
     first<{ registered: number; waitlisted: number; checked_in: number; paid: number; unpaid: number; to_verify: number }>(
       `SELECT SUM(r.status = 'registered') AS registered, SUM(r.status = 'waitlisted') AS waitlisted,
-              (SELECT COUNT(*) FROM checkins c WHERE c.event_id = ?1) AS checked_in,
+              (SELECT COUNT(*) FROM checkins c WHERE c.event_id = ?1 AND c.undone_at IS NULL) AS checked_in,
               SUM(r.status = 'registered' AND r.payment_status = 'paid') AS paid,
               SUM(r.status = 'registered' AND r.payment_status = 'unpaid') AS unpaid,
               SUM(r.status = 'registered' AND r.payment_status = 'unpaid' AND r.upi_utr IS NOT NULL) AS to_verify
@@ -71,7 +71,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
   return (
     <div className="flex flex-col gap-8 pt-6">
-      <Link href="/organizer" className="inline-flex w-fit items-center gap-2 text-body-sm text-ink-muted hover:text-ink">
+      <Link href="/organizer" className="inline-flex min-h-11 w-fit items-center gap-2 text-body-sm text-ink-muted hover:text-ink">
         <span aria-hidden>←</span> Your events
       </Link>
 

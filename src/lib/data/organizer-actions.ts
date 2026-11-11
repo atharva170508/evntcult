@@ -152,7 +152,7 @@ export async function listAttendees(db: D1Database, eventId: string, q?: string 
     .prepare(
       `SELECT r.id, u.name, u.email, r.status, r.pass_code, r.payment_status, r.payment_method, r.payment_ref, r.upi_utr, r.paid_at,
               r.created_at AS registered_at, c.scanned_at AS checked_in_at, r.hold_expires_at
-         FROM registrations r JOIN users u ON u.id = r.user_id LEFT JOIN checkins c ON c.registration_id = r.id
+         FROM registrations r JOIN users u ON u.id = r.user_id LEFT JOIN checkins c ON c.registration_id = r.id AND c.undone_at IS NULL
         WHERE r.event_id = ? AND r.status IN ('registered','waitlisted')
           ${like ? "AND (u.name LIKE ?2 ESCAPE '\\' OR u.email LIKE ?2 ESCAPE '\\' OR r.pass_code LIKE ?2 ESCAPE '\\' OR r.upi_utr LIKE ?2 ESCAPE '\\')" : ""}
         ORDER BY r.status = 'waitlisted', (r.payment_status = 'unpaid' AND r.upi_utr IS NOT NULL) DESC, r.created_at DESC`,

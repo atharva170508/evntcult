@@ -49,7 +49,7 @@ export default async function PassesPage() {
   const rows = await all<PassRow>(
     `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.upi_utr, r.hold_expires_at, r.created_at, e.organizer_upi_id,
             e.id AS event_id, e.slug, e.title, e.category, COALESCE(e.venue, 'Venue TBA') AS venue, e.starts_at, e.ends_at, e.price_paise, e.status AS event_status,
-            (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id) AS checked_in_at,
+            (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id AND c.undone_at IS NULL) AS checked_in_at,
             (SELECT ct.id FROM certificates ct WHERE ct.registration_id = r.id AND ct.revoked_at IS NULL ORDER BY ct.kind = 'participation' LIMIT 1) AS cert_id,
             CASE WHEN r.status = 'waitlisted' THEN
               (SELECT COUNT(*) FROM registrations w WHERE w.event_id = r.event_id AND w.status = 'waitlisted'
@@ -95,7 +95,7 @@ export default async function PassesPage() {
             {past.map((r) => (
               <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-line py-3">
                 <div className="min-w-0">
-                  <Link href={`/events/${r.slug}`} className="block truncate text-body font-semibold hover:underline">
+                  <Link href={`/events/${r.slug}`} className="block min-h-6 truncate py-0.5 text-body font-semibold hover:underline">
                     {r.title}
                   </Link>
                   <p className="font-mono text-label text-ink-muted">

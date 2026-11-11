@@ -16,7 +16,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
   if (await getViewer()) redirect(next);
 
   return (
-    <main className="grid min-h-dvh lg:grid-cols-2">
+    <main id="main" tabIndex={-1} className="grid min-h-dvh lg:grid-cols-2">
       <div className="hidden flex-col justify-between border-r border-line bg-surface p-12 lg:flex">
         <LogoWordmark className="text-heading text-ink" />
         <div className="max-w-md">

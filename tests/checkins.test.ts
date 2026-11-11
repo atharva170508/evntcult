@@ -163,3 +163,42 @@ describe("check-in body", () => {
     expect(checkinSchema.safeParse({ ...base, pass_token: "X", registration_id: "r1" }).success).toBe(false);
   });
 });
+
+describe("undo keeps the record (§11: nothing deleted)", { timeout: 30_000 }, () => {
+  it("undo marks the check-in, the count drops, and re-admitting brings it back as one row", async () => {
+    const { undoCheckIn } = await import("@/lib/data/certificates");
+    await db.prepare("DELETE FROM checkins WHERE registration_id = 'r1'").run();
+    await checkIn(db, { eventId: "free", registrationId: "r1", clientScanId: scanId(), now: T0 });
+    const before = (await gateCounts(db, "free")).checkedIn;
+
+    await undoCheckIn(db, "r1", "org", T0);
+    const row = await db.prepare("SELECT undone_at, undone_by FROM checkins WHERE registration_id = 'r1'").first<{ undone_at: string | null; undone_by: string | null }>();
+    expect(row).toMatchObject({ undone_at: T0.toISOString(), undone_by: "org" });
+    expect((await gateCounts(db, "free")).checkedIn).toBe(before - 1);
+    expect((await buildManifest(db, "free", T0))!.entries.find((e) => e.r === "r1")!.in).toBeNull();
+    await expect(undoCheckIn(db, "r1", "org", T0)).rejects.toThrow(); // already undone
+
+    const again = await checkIn(db, { eventId: "free", passToken: tok("asha"), clientScanId: scanId(), now: T0 });
+    expect(again).toMatchObject({ result: "admitted", replay: false });
+    const rows = await db.prepare("SELECT COUNT(*) AS n, MAX(undone_at) AS u FROM checkins WHERE registration_id = 'r1'").first<{ n: number; u: string | null }>();
+    expect(rows).toEqual({ n: 1, u: null });
+    expect((await gateCounts(db, "free")).checkedIn).toBe(before);
+    const audit = await db.prepare("SELECT COUNT(*) AS n FROM audit_log WHERE action = 'checkin_undo' AND target_id = 'r1'").first<{ n: number }>();
+    expect(audit?.n).toBeGreaterThanOrEqual(1);
+  });
+
+  it("every query that reads check-ins skips undone ones", async () => {
+    const { readFileSync, readdirSync, statSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const root = join(__dirname, "..", "src");
+    const walk = (d: string): string[] => readdirSync(d).flatMap((f) => (statSync(join(d, f)).isDirectory() ? walk(join(d, f)) : /\.tsx?$/.test(f) ? [join(d, f)] : []));
+    const misses: string[] = [];
+    for (const file of walk(root)) {
+      const text = readFileSync(file, "utf8");
+      for (const m of text.matchAll(/(["`])((?:(?!\1)[\s\S])*?\b(?:FROM|JOIN|UPDATE)\s+checkins\b(?:(?!\1)[\s\S])*?)\1/g)) {
+        if (!/undone_at/.test(m[2])) misses.push(`${file.slice(root.length)}: ${m[2].replace(/\s+/g, " ").slice(0, 90)}`);
+      }
+    }
+    expect(misses).toEqual([]);
+  });
+});

@@ -17,11 +17,11 @@ export function AppShell({ viewer, children }: { viewer: NavViewer | null; child
       {viewer && <Sidebar isOrganizer={!!viewer.isOrganizer} signedIn onEnterCode={() => setCodeOpen(true)} />}
       <div className="min-w-0 flex-1">
         <TopBar viewer={viewer} onEnterCode={() => setCodeOpen(true)} />
-        <main className="mx-auto max-w-app px-4 pb-24 lg:px-8 lg:pb-16">{children}</main>
+        <main id="main" tabIndex={-1} className="mx-auto max-w-app px-4 pb-24 lg:px-8 lg:pb-16">{children}</main>
         <footer className="mx-auto flex max-w-app flex-wrap justify-between gap-2 border-t border-line px-4 pb-24 pt-6 text-label text-ink-subtle print:hidden lg:px-8 lg:pb-8">
           <span>EvntCult · Every event, one place</span>
           <span className="flex gap-4">
-            <Link href="/get-app" className="underline-offset-4 hover:text-ink hover:underline">
+            <Link href="/get-app" className="inline-flex min-h-6 items-center underline-offset-4 hover:text-ink hover:underline">
               Get the app
             </Link>
             <span>Made by Atharva, Nakul and Abhay</span>

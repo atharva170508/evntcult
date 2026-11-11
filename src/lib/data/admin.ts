@@ -76,7 +76,7 @@ export async function adminOverview(db: D1Database, q?: string | null, now = new
                 (SELECT COUNT(*) FROM events WHERE status = 'published') AS published,
                 (SELECT COUNT(*) FROM events WHERE status = 'draft') AS drafts,
                 (SELECT COUNT(*) FROM registrations WHERE status = 'registered') AS registrations,
-                (SELECT COUNT(*) FROM checkins) AS checkins,
+                (SELECT COUNT(*) FROM checkins WHERE undone_at IS NULL) AS checkins,
                 (SELECT COALESCE(SUM(e.price_paise), 0) FROM registrations r JOIN events e ON e.id = r.event_id WHERE r.status = 'registered' AND r.payment_status = 'paid') AS collected,
                 (SELECT COALESCE(SUM(e.price_paise), 0) FROM registrations r JOIN events e ON e.id = r.event_id WHERE r.status = 'registered' AND r.payment_status = 'unpaid' AND r.upi_utr IS NOT NULL) AS toVerify`,
       )
