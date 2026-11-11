@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle2, Clock, Hourglass, Loader2, Ticket, XCircle } from "lucide-react";
 import { formatINR } from "@/lib/money";
 import { UpiPay, type UpiPayProps } from "@/components/events/UpiPay";
 import type { Question } from "@/lib/data/questions";
@@ -72,12 +71,12 @@ export function RegisterPanel(props: {
   }
 
   const r = props.registration;
-  const fieldCls = "mt-2 w-full rounded-md border border-line bg-surface px-4 py-3 text-body focus:outline-none";
+  const fieldCls = "mt-2 w-full rounded-md border border-line bg-surface px-4 py-3 text-body";
   const questionFields = !!props.questions?.length && (
     <div className="space-y-3">
       {props.questions.map((q) => (
         <label key={q.id} className="block">
-          <span className="text-body-sm font-semibold text-ink-2">
+          <span className="text-label text-ink-muted">
             {q.label}
             {q.required ? " *" : ""}
           </span>
@@ -97,7 +96,7 @@ export function RegisterPanel(props: {
   );
   const live = props.actionsLive ?? true;
   const err = error && (
-    <p role="alert" className="rounded-md bg-danger-soft px-4 py-3 text-body-sm font-semibold text-danger">
+    <p role="alert" className="border-l-2 border-bad bg-surface px-4 py-3 text-body-sm font-semibold text-danger">
       {error}
     </p>
   );
@@ -106,10 +105,10 @@ export function RegisterPanel(props: {
     return (
       <div className="space-y-3">
         <div className="flex items-start gap-4 rounded-md border border-line p-4">
-          {props.qrSvg && <div className="w-[120px] shrink-0 rounded-md bg-white p-2 [&>svg]:size-full" dangerouslySetInnerHTML={{ __html: props.qrSvg }} />}
+          {props.qrSvg && <div className="w-[120px] shrink-0 rounded-sm bg-qr p-2 [&>svg]:size-full" dangerouslySetInnerHTML={{ __html: props.qrSvg }} />}
           <div className="min-w-0 space-y-2">
             <p className="flex items-center gap-2 text-body font-semibold text-live">
-              <CheckCircle2 className="size-4" /> {r.checkedInAt ? `Checked in at ${r.checkedInAt}` : "You're registered"}
+               {r.checkedInAt ? `Checked in at ${r.checkedInAt}` : "You're registered"}
             </p>
             <p className="font-mono text-body font-semibold tracking-[0.1em]">{r.passCode}</p>
             {props.pricePaise > 0 && (
@@ -122,10 +121,10 @@ export function RegisterPanel(props: {
         {props.upi && props.open && !r.checkedInAt && <UpiPay {...props.upi} />}
         {err}
         <div className="flex flex-wrap gap-2">
-          <Link href="/passes" className="inline-flex items-center gap-2 rounded-full bg-volt px-4 py-3 text-body font-semibold text-ink-inverse"><Ticket className="size-4" /> My passes</Link>
+          <Link href="/passes" className="press inline-flex items-center gap-2 rounded-md bg-accent px-4 h-10 text-body font-semibold text-ink-inverse hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]"> My passes</Link>
           {live && !r.checkedInAt && props.open && (
-            <button onClick={cancel} disabled={busy} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-body font-semibold hover:border-danger hover:text-danger disabled:opacity-50">
-              <XCircle className="size-4" /> Cancel registration
+            <button onClick={cancel} disabled={busy} className="press inline-flex items-center gap-2 rounded-none border border-bad px-4 h-10 text-body font-semibold hover:bg-bad/10 disabled:opacity-50">
+               Cancel registration
             </button>
           )}
         </div>
@@ -136,20 +135,20 @@ export function RegisterPanel(props: {
   if (r?.status === "waitlisted") {
     return (
       <div className="space-y-3">
-        <div className="rounded-md bg-warn-soft p-4">
-          <p className="flex items-center gap-2 text-body font-semibold text-warn"><Hourglass className="size-4" /> On the waitlist{r.waitlistPosition ? ` · #${r.waitlistPosition}` : ""}</p>
+        <div className="border-l-2 border-warn bg-surface p-4">
+          <p className="flex items-center gap-2 text-body font-semibold text-warn"> On the waitlist{r.waitlistPosition ? ` · #${r.waitlistPosition}` : ""}</p>
           {r.holdExpiresAt ? (
-            <p className="mt-1 text-body-sm text-ink-2">A seat opened up for you! Confirm before <b>{r.holdExpiresAt}</b> or it goes to the next person.</p>
+            <p className="mt-1 text-body-sm text-ink-2">A seat opened up for you. Confirm before <b>{r.holdExpiresAt}</b> or it goes to the next person.</p>
           ) : null}
         </div>
         {err}
         {live && <div className="flex flex-wrap gap-2">
           {r.holdExpiresAt && (
-            <button onClick={confirmHold} disabled={busy} className="inline-flex items-center gap-2 rounded-full bg-volt px-6 py-3 text-body font-semibold text-ink-inverse disabled:opacity-50">
-              {busy ? <Loader2 className="size-4 animate-spin" /> : <CheckCircle2 className="size-4" />} Confirm my seat
+            <button onClick={confirmHold} disabled={busy} className="press inline-flex items-center gap-2 rounded-md bg-accent px-6 h-10 text-body font-semibold text-ink-inverse disabled:opacity-50 hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">
+              Confirm my seat
             </button>
           )}
-          <button onClick={cancel} disabled={busy} className="rounded-full border border-line px-4 py-3 text-body font-semibold hover:border-danger hover:text-danger disabled:opacity-50">
+          <button onClick={cancel} disabled={busy} className="press inline-flex items-center justify-center rounded-none border border-bad px-4 h-10 text-body font-semibold hover:bg-bad/10 disabled:opacity-50">
             Leave waitlist
           </button>
         </div>}
@@ -160,7 +159,7 @@ export function RegisterPanel(props: {
   if (!live) {
     return (
       <p className="flex items-center gap-2 rounded-md border border-dashed border-line p-4 text-body font-semibold text-ink-muted">
-        <Clock className="size-4" /> {props.open ? "Online registration opens in the next build." : props.closedReason ?? "Registration is closed."}
+         {props.open ? "Online registration opens in the next build." : props.closedReason ?? "Registration is closed."}
       </p>
     );
   }
@@ -168,7 +167,7 @@ export function RegisterPanel(props: {
   if (!props.open) {
     return (
       <p className="flex items-center gap-2 rounded-md bg-canvas p-4 text-body font-semibold text-ink-2">
-        <Clock className="size-4" /> {props.closedReason ?? "Registration is closed."}
+         {props.closedReason ?? "Registration is closed."}
       </p>
     );
   }
@@ -176,13 +175,13 @@ export function RegisterPanel(props: {
   if (props.full || fullOffer !== null) {
     return (
       <div className="space-y-3">
-        <p className="rounded-md bg-danger-soft p-4 text-body font-semibold text-danger">
+        <p className="border-l-2 border-bad bg-surface p-4 text-body font-semibold text-danger">
           Full · every seat is taken{fullOffer !== null ? `. You'd be #${fullOffer} on the waitlist.` : "."}
         </p>
         {questionFields}
         {err}
-        <button onClick={() => register(true)} disabled={busy} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-volt py-4 text-body font-semibold text-ink-inverse disabled:opacity-50">
-          {busy && <Loader2 className="size-4 animate-spin" />} Join the waitlist
+        <button onClick={() => register(true)} disabled={busy} className="press inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent h-12 text-body font-semibold text-ink-inverse disabled:opacity-50 hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">
+          Join the waitlist
         </button>
       </div>
     );
@@ -192,8 +191,8 @@ export function RegisterPanel(props: {
     <div className="space-y-3">
       {questionFields}
       {err}
-      <button onClick={() => register(false)} disabled={busy} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-volt py-4 text-body font-semibold text-ink-inverse disabled:opacity-50">
-        {busy && <Loader2 className="size-4 animate-spin" />} Register{props.pricePaise > 0 ? ` · ${formatINR(props.pricePaise)}${props.hasUpi ? "" : " at the desk"}` : " · free"}
+      <button onClick={() => register(false)} disabled={busy} className="press inline-flex w-full items-center justify-center gap-2 rounded-md bg-accent h-12 text-body font-semibold text-ink-inverse disabled:opacity-50 hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">
+        Register{props.pricePaise > 0 ? ` · ${formatINR(props.pricePaise)}${props.hasUpi ? "" : " at the desk"}` : " · free"}
       </button>
     </div>
   );

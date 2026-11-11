@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft, Camera, Download, MessageCircle, Pencil, ScanLine, Search } from "lucide-react";
 import { canManageEvent, getViewer } from "@/lib/rbac";
 import { all, count, first, getDB } from "@/lib/db";
 import { listAttendees } from "@/lib/data/organizer-actions";
@@ -71,7 +70,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
   return (
     <div className="space-y-6 pt-4 md:pt-6">
-      <Link href="/organizer" className="inline-flex items-center gap-2 text-body-sm font-semibold text-ink-muted hover:text-ink"><ArrowLeft className="size-4" /> Your events</Link>
+      <Link href="/organizer" className="inline-flex items-center gap-2 text-body-sm font-semibold text-ink-muted hover:text-ink"><span aria-hidden>←</span> Your events</Link>
 
       <PageHero
         eyebrow={`Manage event · ${e.status}`}
@@ -84,9 +83,9 @@ export default async function ManageEventPage({ params, searchParams }: { params
         }
         actions={
           <>
-            {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-2 rounded-full bg-volt px-4 py-3 text-body-sm font-semibold text-ink-inverse hover:bg-volt-hover"><ScanLine className="size-4" aria-hidden /> Gate scanner</Link>}
-            {e.status !== "draft" && <Link href={`/events/${e.slug}/photos`} className="glass inline-flex items-center gap-2 rounded-full px-4 py-3 text-body-sm font-semibold hover:bg-white/15"><Camera className="size-4" aria-hidden /> Photos</Link>}
-            <Link href={`/organizer/events/${e.id}`} className="glass inline-flex items-center gap-2 rounded-full px-4 py-3 text-body-sm font-semibold hover:bg-white/15"><Pencil className="size-4" aria-hidden /> Edit</Link>
+            {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="press inline-flex items-center gap-2 rounded-md bg-accent px-4 h-10 text-body-sm font-semibold text-ink-inverse hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]"> Gate scanner</Link>}
+            {e.status !== "draft" && <Link href={`/events/${e.slug}/photos`} className="press border border-line-strong inline-flex items-center gap-2 rounded-md px-4 h-10 text-body-sm font-semibold hover:bg-white/15"> Photos</Link>}
+            <Link href={`/organizer/events/${e.id}`} className="press border border-line-strong inline-flex items-center gap-2 rounded-md px-4 h-10 text-body-sm font-semibold hover:bg-white/15"> Edit</Link>
           </>
         }
       />
@@ -112,7 +111,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
       <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
         <section className="card p-6">
-          <h2 className="title-xl text-display">Post an update</h2>
+          <h2 className="text-heading">Post an update</h2>
           {e.status === "draft" ? (
             <p className="rounded-md bg-canvas p-4 text-body font-semibold text-ink-2">Publish the event first, then you can post updates.</p>
           ) : (
@@ -122,7 +121,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
         <section className="card p-6">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="flex items-center gap-2 text-body font-semibold"><MessageCircle className="size-4 text-ink-subtle" /> WhatsApp</h2>
+            <h2 className="flex items-center gap-2 text-body font-semibold"> WhatsApp</h2>
             <span className="font-mono text-body-sm tabular-nums">{outbox.optedIn} opted in</span>
           </div>
           <ul className="mt-3 divide-y divide-line text-body-sm">
@@ -167,15 +166,15 @@ export default async function ManageEventPage({ params, searchParams }: { params
       </div>
 
       <section className="card p-6">
-        <h2 className="title-xl mb-3 text-display">Certificates</h2>
+        <h2 className="mb-3 text-heading">Certificates</h2>
         <CertPanel eventId={e.id} issued={certs.filter((c) => c.kind === "participation").length} checkedIn={s.checkedIn} enabled={e.certificates_enabled === 1} />
       </section>
 
       {merch.length > 0 && (
         <section className="card p-6">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <h2 className="title-xl text-display">Merch</h2>
-            <a href={`/api/events/${e.id}/merch/claims.csv`} className="inline-flex h-10 items-center gap-2 rounded-full border border-line px-4 text-body-sm font-semibold hover:border-volt/60"><Download className="size-4" /> CSV</a>
+            <h2 className="text-heading">Merch</h2>
+            <a href={`/api/events/${e.id}/merch/claims.csv`} className="inline-flex h-10 items-center gap-2 rounded-full border border-line px-4 text-body-sm font-semibold hover:border-line-strong"> CSV</a>
           </div>
           <ul className="divide-y divide-line font-mono text-body-sm">
             {merch.map((m) => (
@@ -194,15 +193,15 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
       <section className="card overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line p-4">
-          <h2 className="title-xl text-display">Attendees <span className="font-mono text-body text-ink-muted tabular-nums">({attendees.length}{q ? " found" : ""})</span></h2>
+          <h2 className="text-heading">Attendees <span className="font-mono text-body text-ink-muted tabular-nums">({attendees.length}{q ? " found" : ""})</span></h2>
           <div className="flex flex-wrap items-center gap-2">
-            <form className="flex h-10 items-center rounded-full border border-line bg-surface pl-4 pr-1 transition-colors focus-within:border-volt/70">
-              <Search className="size-4 text-ink-subtle" />
-              <input name="q" defaultValue={q} placeholder="Name, email or pass code" aria-label="Search attendees" className="w-48 bg-transparent px-2 text-body-sm focus:outline-none" />
-              <button className="rounded-full bg-volt px-3 py-2 text-label font-semibold text-ink-inverse">Search</button>
+            <form className="flex h-10 items-center rounded-full border border-line bg-surface pl-4 pr-1 transition-colors focus-within:border-accent">
+              
+              <input name="q" defaultValue={q} placeholder="Name, email or pass code" aria-label="Search attendees" className="w-48 bg-transparent px-2 text-body-sm" />
+              <button className="press inline-flex items-center justify-center rounded-sm bg-accent px-3 h-8 text-label font-semibold text-ink-inverse hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">Search</button>
             </form>
-            <a href={`/api/events/${e.id}/attendees?format=csv${q ? `&q=${encodeURIComponent(q)}` : ""}`} className="inline-flex h-10 items-center gap-2 rounded-full border border-line px-4 text-body-sm font-semibold hover:border-volt/60">
-              <Download className="size-4" /> CSV
+            <a href={`/api/events/${e.id}/attendees?format=csv${q ? `&q=${encodeURIComponent(q)}` : ""}`} className="inline-flex h-10 items-center gap-2 rounded-full border border-line px-4 text-body-sm font-semibold hover:border-line-strong">
+               CSV
             </a>
           </div>
         </div>

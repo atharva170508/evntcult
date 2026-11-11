@@ -1,67 +1,39 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { KeyRound, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { Modal } from "@/components/ui/Modal";
+import { fieldClass } from "@/components/ui/Input";
 import { cn } from "@/lib/utils";
 
-/** Google-Classroom-style "join with a code" sheet. */
+/** Join a private event with its code. Uses the shared modal: focus trapped, Esc returns focus. */
 export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const ref = useRef<HTMLDialogElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const [code, setCode] = useState("");
   const [state, setState] = useState<{ status: "idle" | "loading" | "error" | "ok"; message?: string }>({ status: "idle" });
 
-  useEffect(() => {
-    const d = ref.current;
-    if (!d) return;
-    if (open && !d.open) {
-      d.showModal();
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
-    if (!open && d.open) d.close();
-  }, [open]);
-
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setState({ status: "loading" });
-    const res = await fetch("/api/events/unlock", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code }),
-    });
+    const res = await fetch("/api/events/unlock", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code }) });
     const data = (await res.json().catch(() => ({}))) as { error?: { message?: string }; event?: { title: string; slug: string } };
-    if (!res.ok || !data.event) return setState({ status: "error", message: data.error?.message ?? "Something went wrong." });
+    if (!res.ok || !data.event) return setState({ status: "error", message: data.error?.message ?? "That didn't work. Check the code and try again." });
     const ev = data.event;
-    setState({ status: "ok", message: `Unlocked ${ev.title}` });
-    setTimeout(() => {
-      onClose();
-      router.push(`/events/${ev.slug}?code=${encodeURIComponent(code)}`);
-    }, 700);
+    setState({ status: "ok", message: `Found ${ev.title}.` });
+    onClose();
+    router.push(`/events/${ev.slug}?code=${encodeURIComponent(code)}`);
   }
 
   return (
-    <dialog
-      ref={ref}
-      onClose={onClose}
-      onClick={(e) => e.target === ref.current && onClose()}
-      className="m-auto w-[min(92vw,420px)] rounded-lg border border-line bg-surface p-0 text-ink backdrop:bg-black/70"
-    >
-      <form onSubmit={submit} className="p-8">
-        <div className="flex items-start justify-between">
-          <div className="grid size-12 place-items-center rounded-md bg-brand-soft text-brand-ink">
-            <KeyRound className="size-5" />
-          </div>
-          <button type="button" onClick={onClose} aria-label="Close" className="rounded-full p-2 text-ink-subtle hover:bg-canvas hover:text-ink">
-            <X className="size-4" />
-          </button>
-        </div>
-        <h2 className="headline mt-6 text-heading">Join with a code</h2>
-
+    <Modal open={open} onClose={onClose} title="Join with a code">
+      <form onSubmit={submit} className="flex flex-col gap-3">
+        <label htmlFor="event-code" className="text-label text-ink-muted">
+          Event code
+        </label>
         <input
-          ref={inputRef}
+          id="event-code"
+          autoFocus
           value={code}
           onChange={(e) => {
             setCode(e.target.value.toUpperCase());
@@ -70,28 +42,18 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
           maxLength={9}
           autoComplete="off"
           spellCheck={false}
-          placeholder="ACK3PQ7"
-          aria-label="Event code"
-          className={cn(
- "mt-6 w-full rounded-md border-2 bg-canvas px-4 py-4 text-center font-mono text-heading font-semibold tracking-[0.12em] text-ink placeholder:text-ink-subtle/50 transition-colors focus:outline-none",
-            state.status === "error" ? "border-danger/60" : "border-transparent focus:border-brand",
-          )}
+          placeholder="e.g. ACK3PQ7"
+          aria-invalid={state.status === "error"}
+          aria-describedby="event-code-msg"
+          className={cn(fieldClass, "h-12 font-mono tracking-[0.12em]")}
         />
-        <p
-          className={cn(
- "mt-2 h-5 text-center text-body-sm font-semibold",
-            state.status === "error" ? "text-danger" : state.status === "ok" ? "text-live" : "text-transparent",
-          )}
-          role="status"
-        >
-          {state.message ?? "—"}
+        <p id="event-code-msg" role="status" className={cn("min-h-5 text-label", state.status === "error" ? "text-bad" : "text-ink-muted")}>
+          {state.message ?? "Ask the organizer for the 7-character code."}
         </p>
-
-        <Button type="submit" className="mt-3 w-full py-4" disabled={code.replace(/[\s-]/g, "").length < 7 || state.status === "loading"}>
-          {state.status === "loading" && <Loader2 className="size-4 animate-spin" />}
+        <Button type="submit" size="lg" className="w-full" loading={state.status === "loading"} disabled={code.replace(/[\s-]/g, "").length < 7}>
           Continue
         </Button>
       </form>
-    </dialog>
+    </Modal>
   );
 }

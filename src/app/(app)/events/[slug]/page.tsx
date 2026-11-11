@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import QRCode from "qrcode";
-import { ArrowLeft, Camera, CalendarDays, ChevronRight, Clock, MapPin, Pencil, ScanLine, Ticket, Users, Video } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getEventDetail, toSummary } from "@/lib/data/events";
 import { passQrPayload } from "@/lib/tokens";
 import { formatINR, upiUri } from "@/lib/money";
 import { directionsUrl, linkLabel } from "@/lib/organizer/shared";
 import { fmtDate, fmtRange, fmtTime } from "@/lib/utils";
-import { EventArt } from "@/components/ui/EventArt";
+import { LinkButton } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { Meter } from "@/components/ui/Meter";
 import { RegisterPanel } from "@/components/events/RegisterPanel";
@@ -56,110 +55,165 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     ? ((await db.prepare("SELECT COUNT(*) AS n FROM photos WHERE event_id = ?").bind(e.id).first<{ n: number }>())?.n ?? 0)
     : 0;
 
+  const Row = ({ k, children }: { k: string; children: React.ReactNode }) => (
+    <div className="grid grid-cols-[96px_minmax(0,1fr)] gap-4 border-b border-line py-3">
+      <dt className="text-label leading-6 text-ink-muted">{k}</dt>
+      <dd className="min-w-0 text-body">{children}</dd>
+    </div>
+  );
+
   return (
-    <div className="space-y-6 pt-4 md:pt-6">
-      <Link href="/events" className="inline-flex items-center gap-2 text-body-sm font-semibold text-ink-muted hover:text-ink">
-        <ArrowLeft className="size-4" /> All events
+    <div className="flex flex-col gap-12 pt-6">
+      <Link href="/events" className="inline-flex w-fit items-center gap-2 text-body-sm text-ink-muted hover:text-ink">
+        <span aria-hidden>←</span> All events
       </Link>
 
-      <section className="card grid overflow-hidden md:grid-cols-[1.1fr_1fr]">
-        <div className="relative isolate flex min-h-[300px] flex-col justify-between p-6 text-white md:min-h-[520px] md:p-8">
-          <EventArt accent={s.accent} />
-          {e.banner_url && (
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={e.banner_url} alt="" className="absolute inset-0 -z-0 size-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30" aria-hidden />
-            </>
-          )}
-          <div className="relative flex flex-wrap gap-2">
-            <Chip tone="white">{e.category ? (LABEL[e.category] ?? e.category) : "Event"}</Chip>
-            {e.access === "code" && <Chip tone="dark">Private · code only</Chip>}
-            {e.status === "draft" && <Chip tone="warn">Draft · only you can see this</Chip>}
-            {e.status === "cancelled" && <Chip tone="danger">Cancelled</Chip>}
-          </div>
-          <div className="relative">
-            <p className="text-body-sm font-semibold uppercase tracking-[0.1em] text-white/80">{fmtDate(s.startsAt, { weekday: "long", day: "numeric", month: "long" })}</p>
-            <h1 className="shout mt-3 text-display">{e.title}</h1>
-            {s.tagline && <p className="mt-3 max-w-md text-title font-medium leading-snug text-white/90">{s.tagline}</p>}
-          </div>
+      <header className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="font-mono text-caption uppercase tracking-[0.08em] text-ink-muted">{e.category ? (LABEL[e.category] ?? e.category) : "Event"}</span>
+          {e.access === "code" && <Chip>Private · code only</Chip>}
+          {e.status === "draft" && <Chip tone="warn">Draft · only you can see this</Chip>}
+          {e.status === "cancelled" && <Chip tone="danger">Cancelled</Chip>}
         </div>
+        <h1 className="max-w-[20ch] font-display text-display uppercase">{e.title}</h1>
+        {s.tagline && <p className="max-w-prose text-body text-ink-muted">{s.tagline}</p>}
+        <p className="font-mono text-body-sm">
+          {fmtDate(s.startsAt, { weekday: "long", day: "numeric", month: "long" })} · {fmtRange(s.startsAt, s.endsAt)} IST
+        </p>
+      </header>
 
-        <div className="flex flex-col gap-6 p-6 md:p-8">
-          <ul className="space-y-3 text-body">
-            <li className="flex items-center gap-3"><CalendarDays className="size-5 text-ink-subtle" /> {fmtDate(s.startsAt, { weekday: "short", day: "numeric", month: "short", year: "numeric" })}</li>
-            <li className="flex items-center gap-3"><Clock className="size-5 text-ink-subtle" /> {fmtRange(s.startsAt, s.endsAt)} <span className="text-label text-ink-subtle">IST</span></li>
+      {e.banner_url && (
+        // A real uploaded banner, shown as itself — nothing drawn over it.
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={e.banner_url} alt="" className="aspect-[3/1] w-full rounded-md border border-line object-cover" />
+      )}
+
+      <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_400px]">
+        <div className="flex min-w-0 flex-col gap-12">
+          <dl className="border-t border-line">
+            <Row k="Date">
+              <span className="font-mono">{fmtDate(s.startsAt, { weekday: "short", day: "numeric", month: "short", year: "numeric" })}</span>
+            </Row>
+            <Row k="Time">
+              <span className="font-mono">{fmtRange(s.startsAt, s.endsAt)} IST</span>
+            </Row>
             {e.event_type === "virtual" ? (
-              <li className="flex items-center gap-3">
-                <Video className="size-5 text-ink-subtle" /> Online
+              <Row k="Where">
+                Online{" "}
                 {e.meeting_url && (d.isOwner || reg?.status === "registered") ? (
-                  <a href={e.meeting_url} target="_blank" rel="noreferrer" className="font-semibold text-volt underline-offset-4 hover:underline">Join link</a>
+                  <a href={e.meeting_url} target="_blank" rel="noreferrer" className="font-semibold underline underline-offset-4">
+                    Join link
+                  </a>
                 ) : (
-                  <span className="text-body-sm text-ink-subtle">· link shown on your pass</span>
+                  <span className="text-ink-muted">· the link is on your pass</span>
                 )}
-              </li>
+              </Row>
             ) : (
-              <li className="flex items-center gap-3"><MapPin className="size-5 text-ink-subtle" /> {e.venue ?? "Venue TBA"}
+              <Row k="Where">
+                {e.venue ?? "Venue TBA"}
                 {e.venue && e.venue_status === "confirmed" && (
-                  <a href={directionsUrl({ venue: e.venue, venue_place_id: e.venue_place_id, venue_lat: e.venue_lat, venue_lng: e.venue_lng })} target="_blank" rel="noopener" className="text-caption text-ink-muted hover:underline">
-                    Directions
+                  <a
+                    href={directionsUrl({ venue: e.venue, venue_place_id: e.venue_place_id, venue_lat: e.venue_lat, venue_lng: e.venue_lng })}
+                    target="_blank"
+                    rel="noopener"
+                    className="ml-3 text-label text-ink-muted underline underline-offset-4 hover:text-ink"
+                  >
+                    Directions ›
                   </a>
                 )}
-              </li>
+              </Row>
             )}
             {e.link_url && (
-              <li className="pl-8">
-                <a href={e.link_url} target="_blank" rel="noopener noreferrer" className="break-all font-mono text-caption text-ink-muted hover:underline">
+              <Row k="Link">
+                <a href={e.link_url} target="_blank" rel="noopener noreferrer" className="break-all font-mono text-body-sm underline underline-offset-4">
                   {linkLabel(e.link_url)}
                 </a>
-              </li>
+              </Row>
             )}
-            <li className="flex items-center gap-3">
-              <Ticket className="size-5 text-ink-subtle" />
+            <Row k="Price">
               {e.price_paise ? (
-                <span>
-                  {formatINR(e.price_paise)}
-                  {e.organizer_upi_id ? (
-                    <span className="text-ink-muted"> · pay by UPI to <span className="font-mono text-ink">{e.organizer_upi_id}</span></span>
-                  ) : (
-                    <span className="text-ink-muted"> · pay at the desk</span>
-                  )}
-                </span>
+                <>
+                  <span className="font-mono">{formatINR(e.price_paise)}</span>
+                  <span className="text-ink-muted">
+                    {e.organizer_upi_id ? (
+                      <>
+                        {" "}
+                        · UPI to <span className="font-mono text-ink">{e.organizer_upi_id}</span>
+                      </>
+                    ) : (
+                      " · pay at the desk"
+                    )}
+                  </span>
+                </>
               ) : (
-                "Free entry"
+                "Free"
               )}
-            </li>
-          </ul>
-
-          <div className="rounded-md bg-canvas p-4">
-            <div className="flex items-center justify-between text-body-sm font-semibold">
-              <span className="flex items-center gap-2"><Users className="size-4 text-ink-subtle" /> <span className="font-mono tabular-nums">{e.taken}</span> going</span>
-              <span className={d.seatsLeft === 0 ? "text-danger" : "text-ink-2"}>
-                {e.capacity === null ? (
-                  "No limit"
-                ) : (
-                  <>
-                    <span className="font-mono tabular-nums">{d.seatsLeft}</span> of <span className="font-mono tabular-nums">{e.capacity}</span> seats left
-                  </>
-                )}
+            </Row>
+            <Row k="Seats">
+              <span className="font-mono">
+                {e.taken} going
+                {e.capacity !== null && <span className={d.seatsLeft === 0 ? "text-bad" : "text-ink-muted"}> · {d.seatsLeft === 0 ? "full" : `${d.seatsLeft} of ${e.capacity} left`}</span>}
               </span>
-            </div>
-            {e.capacity !== null && <Meter value={e.taken} max={e.capacity} className="mt-2 bg-white" />}
-          </div>
+              {e.capacity !== null && <Meter value={e.taken} max={e.capacity} className="mt-2 max-w-60" />}
+            </Row>
+          </dl>
 
+          {e.description && (
+            <section aria-labelledby="about-h">
+              <h2 id="about-h" className="text-heading">
+                About
+              </h2>
+              <div className="mt-3 max-w-prose whitespace-pre-line text-body text-ink-muted">{e.description}</div>
+            </section>
+          )}
+
+          {photos.view && (photoCount > 0 || photos.manage) && (
+            <Link href={`/events/${e.slug}/photos`} className="card lift flex items-center justify-between gap-4 p-4 sm:p-6">
+              <span>
+                <span className="block text-title">Photos</span>
+                <span className="block text-body-sm text-ink-muted">
+                  {photoCount ? `${photoCount} photo${photoCount === 1 ? "" : "s"}` : "No photos yet"}
+                  {photos.manage ? " · add photos" : " · tag yourself to save them to your Vault"}
+                </span>
+              </span>
+              <span aria-hidden className="text-ink-subtle">
+                ›
+              </span>
+            </Link>
+          )}
+        </div>
+
+        <aside className="flex flex-col gap-6 lg:sticky lg:top-20">
           {!viewer ? (
-            <div className="space-y-2">
-              <Link href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} className="inline-flex w-full items-center justify-center rounded-full bg-volt py-4 text-body font-semibold text-ink-inverse hover:bg-volt-hover">Log in to register</Link>
-              <p className="text-center text-body-sm text-ink-muted">New here? <Link href={`/signin?mode=signup&next=${encodeURIComponent(`/events/${e.slug}`)}`} className="font-semibold text-ink underline">Sign up</Link> with your email.</p>
+            <div className="flex flex-col gap-3">
+              <LinkButton href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} size="lg" className="w-full">
+                Log in to register
+              </LinkButton>
+              <p className="text-body-sm text-ink-muted">
+                New here?{" "}
+                <Link href={`/signin?mode=signup&next=${encodeURIComponent(`/events/${e.slug}`)}`} className="font-semibold text-ink underline underline-offset-4">
+                  Sign up
+                </Link>{" "}
+                with your email.
+              </p>
             </div>
           ) : d.isOwner ? (
-            <div className="space-y-2">
-              <p className="text-body-sm font-semibold text-ink-muted">You organize this event{e.access === "code" && e.access_code ? <> · join code <span className="font-mono font-semibold text-ink">{e.access_code}</span></> : null}.</p>
+            <div className="flex flex-col gap-3">
+              <p className="text-body-sm text-ink-muted">
+                You organize this event
+                {e.access === "code" && e.access_code ? (
+                  <>
+                    {" "}
+                    · join code <span className="font-mono text-ink">{e.access_code}</span>
+                  </>
+                ) : null}
+                .
+              </p>
               <div className="flex flex-wrap gap-2">
-                <Link href={`/organizer/events/${e.id}`} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-3 text-body font-semibold hover:border-volt/60"><Pencil className="size-4" /> Edit</Link>
-                {e.status === "published" && (
-                  <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-2 rounded-full bg-volt px-4 py-3 text-body font-semibold text-ink-inverse hover:bg-volt-hover"><ScanLine className="size-4" /> Open gate scanner</Link>
-                )}
+                {e.status === "published" && <LinkButton href={`/organizer/scan/${e.id}`}>Open gate scanner</LinkButton>}
+                <LinkButton href={`/organizer/events/${e.id}`} variant="secondary">
+                  Edit
+                </LinkButton>
               </div>
             </div>
           ) : (
@@ -192,29 +246,8 @@ export default async function EventPage({ params, searchParams }: { params: Prom
 
           {viewer && reg && reg.status !== "cancelled" && viewer.phone && !viewer.whatsappOptIn && <WhatsAppPrompt phone={viewer.phone} />}
           {e.status === "published" && e.access === "public" && <ShareEvent url={shareUrl} title={e.title} />}
-        </div>
-      </section>
-
-      {photos.view && (photoCount > 0 || photos.manage) && (
-        <Link href={`/events/${e.slug}/photos`} className="card flex items-center gap-4 p-6 hover:border-volt/60">
-          <span className="grid size-11 place-items-center rounded-md bg-canvas"><Camera className="size-5" /></span>
-          <span className="flex-1">
-            <span className="block text-body font-semibold">Photos</span>
-            <span className="block text-body-sm text-ink-muted">
-              {photoCount ? `${photoCount} photo${photoCount === 1 ? "" : "s"}` : "No photos yet"}
-              {photos.manage ? " · add photos" : " · tag yourself to save them to your Vault"}
-            </span>
-          </span>
-          <ChevronRight className="size-5 text-ink-subtle" />
-        </Link>
-      )}
-
-      {e.description && (
-        <section className="card p-6 md:p-8">
-          <h2 className="title-xl text-display">About</h2>
-          <div className="mt-3 space-y-2 whitespace-pre-line text-body leading-relaxed text-ink-2">{e.description}</div>
-        </section>
-      )}
+        </aside>
+      </div>
     </div>
   );
 }

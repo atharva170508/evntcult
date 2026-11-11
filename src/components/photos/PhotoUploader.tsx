@@ -9,7 +9,6 @@
  */
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, ImagePlus, Loader2, XCircle } from "lucide-react";
 import { PHOTO_MATTE } from "@/styles/tokens";
 
 const MAX_SIDE = 2560;
@@ -94,8 +93,8 @@ export function PhotoUploader({ eventId }: { eventId: string }) {
   const done = items.filter((i) => i.state === "done").length;
   return (
     <div className="space-y-3">
-      <label className={`flex cursor-pointer flex-col items-center gap-2 rounded-md border-2 border-dashed border-line p-6 text-center hover:border-volt/60 ${busy ? "pointer-events-none opacity-60" : ""}`}>
-        <ImagePlus className="size-7 text-ink-subtle" />
+      <label className={`flex cursor-pointer flex-col items-center gap-2 rounded-md border-2 border-dashed border-line p-6 text-center hover:border-line-strong ${busy ? "pointer-events-none opacity-60" : ""}`}>
+        
         <span className="text-body font-semibold">Add photos</span>
         <span className="text-label text-ink-muted">JPEG, PNG or WebP · up to 10 MB each · location data is removed</span>
         <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" multiple className="sr-only" onChange={(e) => upload(e.target.files)} disabled={busy} />
@@ -106,7 +105,7 @@ export function PhotoUploader({ eventId }: { eventId: string }) {
           <ul className="max-h-48 space-y-1 overflow-y-auto text-label">
             {items.map((it, i) => (
               <li key={i} className="flex items-center gap-2">
-                {it.state === "done" ? <CheckCircle2 className="size-4 shrink-0 text-live" /> : it.state === "error" ? <XCircle className="size-4 shrink-0 text-danger" /> : it.state === "working" ? <Loader2 className="size-4 shrink-0 animate-spin" /> : <span className="size-4 shrink-0" />}
+                {it.state === "done" ? null  : it.state === "error" ? null  : it.state === "working" ? null  : <span className="size-4 shrink-0" />}
                 <span className="min-w-0 flex-1 truncate">{it.name}</span>
                 {it.error && <span className="shrink-0 text-danger">{it.error}</span>}
               </li>

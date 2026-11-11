@@ -15,9 +15,9 @@ export function PhoneFields({
   return (
     <>
       <label className="block">
-        <span className="text-body-sm font-semibold text-ink-2">Mobile number</span>
-        <div className="mt-2 flex items-center rounded-md border border-line bg-surface focus-within:border-brand">
-          <span className="pl-4 pr-2 text-body font-semibold text-ink-muted">+91</span>
+        <span className="text-label text-ink-muted">Mobile number</span>
+        <div className="mt-2 flex h-12 items-center rounded-sm border border-line-strong bg-surface focus-within:border-accent md:h-10">
+          <span className="pl-3 pr-2 font-mono text-body-sm text-ink-muted">+91</span>
           <input
             type="tel"
             required
@@ -27,12 +27,12 @@ export function PhoneFields({
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="98765 43210"
-            className="w-full rounded-r-md bg-transparent py-4 pr-4 text-body placeholder:text-ink-subtle focus:outline-none"
+            className="h-full w-full bg-transparent pr-3 font-mono text-body placeholder:text-ink-subtle focus-visible:!border-0 focus-visible:!shadow-none"
           />
         </div>
       </label>
-      <label className="flex items-start gap-3 text-body-sm text-ink-2">
-        <input type="checkbox" checked={optIn} onChange={(e) => setOptIn(e.target.checked)} className="mt-0.5 size-4 accent-brand" />
+      <label className="flex min-h-11 items-start gap-3 text-body-sm text-ink-muted">
+        <input type="checkbox" checked={optIn} onChange={(e) => setOptIn(e.target.checked)} className="mt-0.5 size-4 accent-[var(--accent)]" />
         <span>Send me event reminders and pass updates on WhatsApp.</span>
       </label>
     </>

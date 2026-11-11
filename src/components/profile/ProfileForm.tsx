@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Loader2 } from "lucide-react";
 import { PhoneFields } from "./PhoneFields";
+import { Button } from "@/components/ui/Button";
 
 /** /profile: change your name, mobile number and WhatsApp consent. */
 export function ProfileForm(props: { name: string; phone: string | null; whatsappOptIn: boolean }) {
@@ -33,9 +33,9 @@ export function ProfileForm(props: { name: string; phone: string | null; whatsap
   }
 
   return (
-    <form onSubmit={save} className="card mt-4 space-y-4 p-6">
+    <form onSubmit={save} className="mt-8 flex flex-col gap-6">
       <label className="block">
-        <span className="text-body-sm font-semibold text-ink-2">Your name</span>
+        <span className="text-label text-ink-muted">Your name</span>
         <input
           required
           minLength={2}
@@ -43,25 +43,21 @@ export function ProfileForm(props: { name: string; phone: string | null; whatsap
           autoComplete="name"
           value={name}
           onChange={(e) => { setName(e.target.value); setSaved(false); }}
-          className="mt-2 w-full rounded-md border border-line bg-surface px-4 py-4 text-body focus:border-brand focus:outline-none"
+          className="mt-2 w-full rounded-sm border border-line-strong bg-surface px-3 h-12 md:h-10 text-body text-ink placeholder:text-ink-subtle"
         />
       </label>
       <PhoneFields phone={phone} setPhone={(v) => { setPhone(v); setSaved(false); }} optIn={optIn} setOptIn={(v) => { setOptIn(v); setSaved(false); }} />
       {error && (
-        <p role="alert" className="rounded-md bg-danger-soft px-4 py-3 text-body-sm font-semibold text-danger">
+        <p role="alert" className="border-l-2 border-bad bg-surface px-4 py-3 text-body-sm">
           {error}
         </p>
       )}
       <div className="flex items-center gap-3">
-        <button disabled={busy} className="inline-flex items-center gap-2 rounded-full bg-volt px-6 py-3 text-body font-semibold text-ink-inverse hover:bg-volt-hover disabled:opacity-50">
-          {busy && <Loader2 className="size-4 animate-spin" aria-hidden />} Save changes
-        </button>
-        <span role="status" className="text-body-sm font-semibold text-live">
-          {saved && (
-            <span className="inline-flex items-center gap-1">
-              <Check className="size-4" aria-hidden /> Saved
-            </span>
-          )}
+        <Button type="submit" loading={busy}>
+          Save changes
+        </Button>
+        <span role="status" className="text-body-sm text-ok">
+          {saved && "Saved."}
         </span>
       </div>
     </form>

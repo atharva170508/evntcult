@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { CalendarCheck2, QrCode, Users } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
-import { Aurora } from "@/components/brand/Aurora";
-import { Marquee } from "@/components/brand/Marquee";
 import { LogoWordmark } from "@/components/brand/MissingE";
 import { codeLoginOn } from "@/lib/email";
 import { SignInForm } from "./SignInForm";
@@ -20,42 +17,36 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
 
   return (
     <main className="grid min-h-dvh lg:grid-cols-2">
-      <div className="relative isolate m-3 hidden flex-col justify-between overflow-hidden rounded-lg p-12 text-white lg:flex">
-        <Aurora />
-        <Marquee words={["Register", "Pass", "Scan", "Attend"]} className="absolute inset-x-0 top-[38%] text-display text-white/[0.07]" />
-        <div className="relative flex items-center gap-3">
-          <LogoWordmark motion="type" className="text-display text-white" />
-        </div>
-        <div className="relative max-w-md">
-          <h2 className="font-display text-display font-semibold leading-none">Register. Pass. Scan. <em>Attend.</em></h2>
-          <ul className="mt-8 space-y-3 text-body font-semibold text-white/90">
-            <li className="flex items-center gap-3">
-              <CalendarCheck2 className="size-5" /> Every event in one place
-            </li>
-            <li className="flex items-center gap-3">
-              <QrCode className="size-5" /> One QR pass at the gate
-            </li>
-            <li className="flex items-center gap-3">
-              <Users className="size-5" /> Proof you were actually there
-            </li>
-          </ul>
+      <div className="hidden flex-col justify-between border-r border-line bg-surface p-12 lg:flex">
+        <LogoWordmark className="text-heading text-ink" />
+        <div className="max-w-md">
+          <h2 className="font-display text-display">Every other tool tracks who said they&apos;d come. This one tracks who walked in.</h2>
+          <ol className="mt-8 border-t border-line font-mono text-body-sm">
+            {["Register", "Get your pass", "Get scanned at the gate", "Get your certificate"].map((s, i) => (
+              <li key={s} className="flex gap-4 border-b border-line py-3">
+                <span className="text-ink-subtle">0{i + 1}</span>
+                {s}
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
 
-      <div className="grid place-items-center px-6 py-12">
+      <div className="grid place-items-center px-4 py-12 sm:px-6">
         <div className="w-full max-w-[400px]">
-          <div className="flex items-center gap-3 lg:hidden">
-            <LogoWordmark motion="type" className="text-display text-ink" />
-          </div>
-          <h1 className="title-xl mt-8 text-display lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
+          <LogoWordmark className="text-heading text-ink lg:hidden" />
+          <h1 className="title-xl mt-8 lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
           <SignInForm next={next} signup={signup} codeLogin={codeLoginOn()} />
-          <p className="mt-6 text-center text-body text-ink-muted">
+          <p className="mt-6 text-body text-ink-muted">
             {signup ? "Already have an account? " : "New here? "}
-            <Link href={`/signin?${signup ? "" : "mode=signup&"}next=${encodeURIComponent(next)}`} className="font-semibold text-ink underline underline-offset-2">
+            <Link href={`/signin?${signup ? "" : "mode=signup&"}next=${encodeURIComponent(next)}`} className="font-semibold text-ink underline underline-offset-4">
               {signup ? "Log in" : "Sign up"}
             </Link>
-            {" · "}
-            <Link href="/dashboard" className="font-semibold text-ink underline underline-offset-2">Browse without an account</Link>
+          </p>
+          <p className="mt-2 text-body text-ink-muted">
+            <Link href="/dashboard" className="underline underline-offset-4 hover:text-ink">
+              Look around first
+            </Link>
           </p>
         </div>
       </div>

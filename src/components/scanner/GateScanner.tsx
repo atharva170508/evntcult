@@ -15,7 +15,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import jsQR from "jsqr";
-import { AlertTriangle, ArrowLeft, Camera, CheckCircle2, CloudOff, Loader2, RefreshCw, Wifi, XCircle } from "lucide-react";
 import type { Manifest, ManifestEntry } from "@/lib/data/checkins";
 import { extractPassToken } from "@/lib/tokens";
 import { formatINR } from "@/lib/money";
@@ -497,13 +496,12 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
   const pct = counts.registered ? Math.min(100, Math.round((counts.checkedIn / counts.registered) * 100)) : 0;
   const colors = { green: "bg-ok text-ink-inverse", amber: "bg-warn text-ink-inverse", red: "bg-bad" } as const;
-  const Icon = verdict?.color === "green" ? CheckCircle2 : verdict?.color === "amber" ? AlertTriangle : XCircle;
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-lg flex-col gap-4 px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))]">
       <header className="flex items-center gap-3">
         <Link href={`/events/${event.slug}`} aria-label="Back to the event" className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10">
-          <ArrowLeft className="size-5" />
+          <span aria-hidden>←</span>
         </Link>
         <div className="min-w-0 flex-1">
           <p className="text-caption font-semibold uppercase tracking-[0.12em] text-white/60">Gate scanner</p>
@@ -513,8 +511,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
           className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3 py-1 text-label font-semibold ${online ? "bg-ok/20 text-ok" : "bg-warn/20 text-warn"}`}
           role="status"
         >
-          {online ? <Wifi className="size-3.5" /> : <CloudOff className="size-3.5" />}
-          {online ? "Online" : "Offline"}
+                    {online ? "Online" : "Offline"}
           {queued > 0 && ` · ${queued} to sync`}
         </span>
       </header>
@@ -548,18 +545,16 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
         {camera !== "on" && !verdict && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
-            <Camera className="size-10 text-white/60" />
+            
             {cameraError ? <p className="text-body text-ink">{cameraError}</p> : <p className="text-body text-white/70">Point the camera at a pass QR code.</p>}
-            <button onClick={startCamera} disabled={camera === "starting"} className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-body font-semibold text-black disabled:opacity-60">
-              {camera === "starting" ? <Loader2 className="size-4 animate-spin" /> : <Camera className="size-4" />}
-              {camera === "error" ? "Try again" : "Start camera"}
+            <button onClick={startCamera} disabled={camera === "starting"} className="press inline-flex items-center gap-2 rounded-md bg-surface-2 px-6 h-10 text-body font-semibold text-ink disabled:opacity-60">
+                            {camera === "error" ? "Try again" : "Start camera"}
             </button>
           </div>
         )}
 
         {verdict && (
           <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-y-auto p-6 text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
-            <Icon className="size-16" strokeWidth={2.2} />
             <p className="shout text-display leading-tight">{verdict.title}</p>
             {"name" in verdict && verdict.name && <p className="text-title font-semibold">{verdict.name}</p>}
             {"code" in verdict && verdict.code && <p className="font-mono text-body font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
@@ -574,7 +569,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
                       <span className="block text-label opacity-85">{line.note ?? (line.claimedAt ? `claimed ${fmtTime(new Date(line.claimedAt))}` : line.left === 0 ? "none left" : "not claimed")}</span>
                     </span>
                     {!line.claimedAt && line.left !== 0 && (
-                      <button onClick={() => give(line, verdict.token!)} className="shrink-0 rounded-full bg-white px-4 py-2 text-body-sm font-semibold text-black">
+                      <button onClick={() => give(line, verdict.token!)} className="press inline-flex items-center justify-center shrink-0 rounded-sm bg-surface-2 px-4 h-8 text-body-sm font-semibold text-ink">
                         Give
                       </button>
                     )}
@@ -585,10 +580,10 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
             {verdict.color === "amber" && verdict.collect ? (
               <div className="mt-2 flex w-full max-w-xs flex-col gap-2">
-                <button onClick={admitUnpaid} className="rounded-full bg-accent-ink py-4 text-body font-semibold text-white">
+                <button onClick={admitUnpaid} className="press inline-flex items-center justify-center rounded-md bg-accent-ink h-12 text-body font-semibold text-white hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">
                   Collected {formatINR(verdict.collect.amountPaise)} · Admit
                 </button>
-                <button onClick={() => setVerdict(null)} className="rounded-full border-2 border-accent-ink/40 py-3 text-body font-semibold">
+                <button onClick={() => setVerdict(null)} className="press inline-flex items-center justify-center rounded-md border-2 border-accent-ink/40 h-10 text-body font-semibold">
                   Don&apos;t admit
                 </button>
               </div>
@@ -607,7 +602,9 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         {guestList ? (
           <p className="flex items-center justify-between gap-2">
             <span>Guest list saved for offline use · {guestList.size} passes · {fmtTime(new Date(guestList.savedAt))}</span>
-            <button onClick={refreshGuestList} aria-label="Refresh the saved guest list" className="rounded-full p-2 hover:bg-white/10"><RefreshCw className="size-3.5" /></button>
+            <button onClick={refreshGuestList} className="press h-8 rounded-sm px-2 text-label text-ink-muted hover:text-ink">
+            Refresh list
+          </button>
           </p>
         ) : (
           <p>Saving the guest list for offline use…</p>
@@ -624,7 +621,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
                 <span className={`size-2.5 shrink-0 rounded-full ${r.color === "green" ? "bg-ok" : r.color === "amber" ? "bg-warn" : "bg-bad"}`} aria-hidden />
                 <span className="sr-only">{r.color === "green" ? "Admitted:" : r.color === "amber" ? "Warning:" : "Refused:"}</span>
                 <span className="min-w-0 flex-1 truncate">{r.text}</span>
-                {r.offline && <CloudOff className="size-3.5 text-white/40" aria-label="scanned offline" />}
+                {r.offline && null }
                 <time className="shrink-0 font-mono text-label text-white/40">{fmtTime(r.at)}</time>
               </li>
             ))}

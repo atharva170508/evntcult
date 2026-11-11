@@ -19,8 +19,6 @@ function files(dir: string, out: string[] = []) {
 }
 const source = files(join(root, "src")).map((p) => ({ path: p.slice(root.length + 1), text: readFileSync(p, "utf8") }));
 
-/** Files still being reworked in the next milestone (identity pass). Shrinks to empty. */
-const PENDING_IDENTITY = new Set(["src/components/ui/EventArt.tsx", "src/components/brand/Aurora.tsx"]);
 
 describe("tokens", () => {
   it("the TypeScript twin matches tokens.css exactly", () => {
@@ -31,7 +29,7 @@ describe("tokens", () => {
 
   it("no raw hex colour outside the token files", () => {
     const offenders = source
-      .filter((f) => !/src\/styles\/tokens\.(css|ts)$/.test(f.path) && !PENDING_IDENTITY.has(f.path))
+      .filter((f) => !/src\/styles\/tokens\.(css|ts)$/.test(f.path))
       .flatMap((f) => [...f.text.matchAll(/(?<![\w&])#[0-9a-fA-F]{6}\b|(?<![\w&{])#[0-9a-fA-F]{3}\b(?![\w-])/g)].map((m) => `${f.path}: ${m[0]}`))
       .filter((s) => !/PHOTO_MATTE/.test(s));
     expect(offenders).toEqual([]);
@@ -51,6 +49,28 @@ describe("tokens", () => {
       [...f.text.matchAll(/\b(shadow-(?:card|pop|brand|lg|xl|2xl|\[[^\]]+\])|animate-(?:fade-up|pulse|marquee|drift|float|aurora|spin-slow|caret-blink|type-in)|backdrop-blur)/g)].map((m) => `${f.path}: ${m[0]}`),
     );
     expect(bad).toEqual([]);
+  });
+});
+
+describe("identity (§3, §18)", () => {
+  const tsx = source.filter((f) => f.path.endsWith(".tsx"));
+  const find = (re: RegExp) => tsx.flatMap((f) => [...f.text.matchAll(re)].map((m) => `${f.path}: ${m[0]}`));
+
+  it("no icons: no icon library anywhere", () => {
+    expect(source.filter((f) => f.text.includes("lucide-react")).map((f) => f.path)).toEqual([]);
+    expect(readFileSync(join(root, "package.json"), "utf8")).not.toContain("lucide-react");
+  });
+  it("no gradients, blur or glow", () => {
+    expect(find(/\b(bg-gradient-[a-z-]+|blur-(?:sm|md|lg|xl|2xl|3xl|\[[^\]]+\])|backdrop-blur[a-z-]*)\b/g)).toEqual([]);
+  });
+  it("nothing grows or lifts on hover (motion only from the user's press)", () => {
+    expect(find(/\b(?:group-)?hover:(?:scale-[^\s"`]+|-?translate-[xy]-[^\s"`]+)/g)).toEqual([]);
+  });
+  it("focus is never removed (§2 law 9)", () => {
+    expect(find(/\boutline-none\b/g)).toEqual([]);
+  });
+  it("no pill-shaped buttons: buttons use the 4/6px radius (§8)", () => {
+    expect(find(/<(?:button|a|Link)\b[^>]*className="[^"]*rounded-full[^"]*\b(?:h-(?:8|10|12)|py-[234])\b[^"]*"/g)).toEqual([]);
   });
 });
 

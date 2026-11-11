@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-/** Month-at-a-glance. Violet dot = you're registered; grey dot = campus event. */
+/** Month at a glance. Today = accent circle on the number. Yours = bold with a dot; other events = a dot. */
 export function MiniCalendar({ data }: { data: Record<string, { campus: number; mine: number }> }) {
   const tz = "Asia/Kolkata";
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: tz }).format(new Date());
@@ -15,18 +15,11 @@ export function MiniCalendar({ data }: { data: Record<string, { campus: number; 
 
   return (
     <div>
-      <div className="mb-3 flex items-baseline justify-between">
-        <p className="text-body font-semibold">{monthName}</p>
-        <div className="flex items-center gap-3 text-caption font-semibold text-ink-subtle">
-          <span className="flex items-center gap-1">
-            <span className="size-1.5 rounded-full bg-brand" /> Yours
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="size-1.5 rounded-full bg-ink-subtle" /> All events
-          </span>
-        </div>
+      <div className="mb-3 flex flex-col gap-1">
+        <p className="text-title">{monthName}</p>
+        <p className="font-mono text-caption text-ink-subtle">● yours · ○ others</p>
       </div>
-      <div className="grid grid-cols-7 gap-y-1 text-center text-caption font-semibold text-ink-subtle">
+      <div className="grid grid-cols-7 gap-y-1 text-center font-mono text-caption text-ink-subtle">
         {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
           <div key={i} className="pb-1">
             {d}
@@ -41,15 +34,15 @@ export function MiniCalendar({ data }: { data: Record<string, { campus: number; 
             <div key={i} className="flex flex-col items-center py-1">
               <span
                 className={cn(
- "grid size-8 place-items-center rounded-full text-label font-semibold tabular-nums transition-colors",
-                  isToday ? "bg-volt text-ink-inverse" : info?.mine ? "bg-brand-soft text-brand-ink" : info ? "text-ink hover:bg-canvas" : "text-ink-muted",
+                  "grid size-8 place-items-center rounded-full font-mono text-label tabular-nums",
+                  isToday ? "bg-accent text-accent-ink" : info?.mine ? "font-semibold text-ink" : info ? "text-ink" : "text-ink-subtle",
                 )}
               >
                 {d}
               </span>
-              <span className="mt-0.5 flex h-1 gap-1">
-                {info?.mine ? <span className="size-1 rounded-full bg-brand" /> : null}
-                {info && info.campus > info.mine ? <span className="size-1 rounded-full bg-ink-subtle" /> : null}
+              <span className="mt-0.5 flex h-1 gap-1" aria-hidden>
+                {info?.mine ? <span className="size-1 rounded-full bg-ink" /> : null}
+                {info && info.campus > info.mine ? <span className="size-1 rounded-full border border-ink-subtle" /> : null}
               </span>
             </div>
           );

@@ -26,11 +26,11 @@ export function CertPanel({ eventId, issued, checkedIn, enabled }: { eventId: st
   return (
     <div className="flex flex-wrap items-center gap-3">
       <span className="text-body"><b className="font-mono tabular-nums">{issued}</b> issued · <span className="font-mono tabular-nums">{checkedIn}</span> checked in</span>
-      <button disabled={busy} onClick={() => run(`/api/events/${eventId}/certificates/issue`)} className="rounded-full bg-volt px-4 py-2 text-body-sm font-semibold text-ink-inverse disabled:opacity-50">
+      <button disabled={busy} onClick={() => run(`/api/events/${eventId}/certificates/issue`)} className="press inline-flex items-center justify-center rounded-sm bg-accent px-4 h-8 text-body-sm font-semibold text-ink-inverse disabled:opacity-50 hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">
         Issue certificates
       </button>
       <label className="flex items-center gap-2 text-body-sm">
-        <input type="checkbox" checked={enabled} disabled={busy} onChange={(e) => run(`/api/events/${eventId}/certificates`, { enabled: e.target.checked })} className="size-4 accent-brand" />
+        <input type="checkbox" checked={enabled} disabled={busy} onChange={(e) => run(`/api/events/${eventId}/certificates`, { enabled: e.target.checked })} className="size-4 accent-[var(--accent)]" />
         Issue at check-in
       </label>
       {note && <span role="status" className="text-body-sm text-ink-muted">{note}</span>}

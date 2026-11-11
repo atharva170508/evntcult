@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import QRCode from "qrcode";
-import { Award, CalendarPlus, CheckCircle2, Clock, Hourglass, MapPin, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { all } from "@/lib/db";
 import { passQrPayload } from "@/lib/tokens";
 import { formatINR } from "@/lib/money";
 import { fmtDate, fmtRange, fmtTime } from "@/lib/utils";
 import { Chip } from "@/components/ui/Chip";
-import { accentFor } from "@/lib/data/events";
-import { EventArt } from "@/components/ui/EventArt";
+import { Ticket } from "@/components/ui/Ticket";
+import { LinkButton, buttonClass } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { PageHero } from "@/components/brand/PageHero";
 import { SavePassButton } from "@/components/passes/SavePassButton";
 import { TOKENS } from "@/styles/tokens";
@@ -73,18 +73,13 @@ export default async function PassesPage() {
   }
 
   return (
-    <div className="space-y-6 pt-4 md:pt-6">
-      <PageHero eyebrow="My passes" title={<>Your <em>tickets</em></>} marquee={["Your pass", "Walk in", "Scan at the gate"]} />
+    <div className="flex flex-col gap-12">
+      <PageHero eyebrow="My passes" title="Your passes" sub={upcoming.length ? `${upcoming.length} upcoming` : undefined} />
 
       {upcoming.length === 0 ? (
-        <section className="card flex flex-col items-start gap-3 p-8">
-          <Ticket className="size-8 text-ink-subtle" />
-          <h2 className="title-xl text-display">No upcoming passes</h2>
-          <p className="text-body text-ink-muted">No passes yet.</p>
-          <Link href="/events" className="mt-1 rounded-full bg-volt px-6 py-3 text-body font-semibold text-ink-inverse">Find an event</Link>
-        </section>
+        <EmptyState title="No upcoming passes." body="Register for an event and its pass appears here." action={{ label: "Find an event", href: "/events" }} />
       ) : (
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-12 2xl:grid-cols-2">
           {upcoming.map((r) => (
             <PassCard key={r.id} r={r} qrSvg={qr.get(r.id) ?? null} />
           ))}
@@ -92,20 +87,28 @@ export default async function PassesPage() {
       )}
 
       {past.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="title-xl text-display">Past events</h2>
-          <ul className="card divide-y divide-line">
+        <section aria-labelledby="past-h">
+          <h2 id="past-h" className="border-b border-line pb-3 text-heading">
+            Past events
+          </h2>
+          <ul>
             {past.map((r) => (
-              <li key={r.id} className="flex items-center justify-between gap-3 px-6 py-4">
+              <li key={r.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-line py-3">
                 <div className="min-w-0">
-                  <Link href={`/events/${r.slug}`} className="block truncate text-body font-semibold hover:underline">{r.title}</Link>
-                  <p className="text-label text-ink-muted">{fmtDate(new Date(r.starts_at), { day: "numeric", month: "short", year: "numeric" })} · {r.venue}</p>
+                  <Link href={`/events/${r.slug}`} className="block truncate text-body font-semibold hover:underline">
+                    {r.title}
+                  </Link>
+                  <p className="font-mono text-label text-ink-muted">
+                    {fmtDate(new Date(r.starts_at), { day: "numeric", month: "short", year: "numeric" })} · {r.venue}
+                  </p>
                 </div>
                 {r.cert_id ? (
-                  <Link href={`/certificates/${r.cert_id}`} className="inline-flex shrink-0 items-center gap-2 rounded-full border border-volt/40 bg-volt/10 px-3 py-2 text-label font-semibold text-volt hover:bg-volt hover:text-ink-inverse">
-                    <Award className="size-3.5" aria-hidden /> Download certificate
-                  </Link>
-                ) : <Chip>{r.status === "waitlisted" ? "Didn't get a seat" : r.checked_in_at ? "Checked in" : "Not checked in"}</Chip>}
+                  <LinkButton href={`/certificates/${r.cert_id}`} size="sm" variant="secondary">
+                    Certificate
+                  </LinkButton>
+                ) : (
+                  <Chip>{r.status === "waitlisted" ? "Didn't get a seat" : r.checked_in_at ? "Checked in" : "Not checked in"}</Chip>
+                )}
               </li>
             ))}
           </ul>
@@ -115,84 +118,82 @@ export default async function PassesPage() {
   );
 }
 
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+
+/** One pass: the ticket itself, then what's true about it and what you can do. */
 function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
   const starts = new Date(r.starts_at);
   const ends = new Date(r.ends_at);
   const live = Date.parse(r.starts_at) <= Date.now();
   const cancelled = r.event_status === "cancelled";
+  const seat = r.status === "registered" && !cancelled;
 
   return (
-    <article className="card overflow-hidden">
-      <div className="relative isolate flex items-end justify-between gap-3 p-6 text-white">
-        <EventArt accent={accentFor({ id: r.event_id, category: r.category })} />
-        <div className="relative min-w-0">
-          <p className="text-label font-semibold uppercase tracking-[0.1em] text-white/80">{fmtDate(starts, { weekday: "short", day: "numeric", month: "short" })}</p>
-          <h2 className="truncate text-heading font-semibold leading-tight">{r.title}</h2>
-        </div>
-        <div className="relative shrink-0">
-          {cancelled ? (
-            <Chip tone="danger">Event cancelled</Chip>
-          ) : r.status === "waitlisted" ? (
-            <Chip tone="warn">Waitlist{r.waitlist_position ? ` · #${r.waitlist_position}` : ""}</Chip>
-          ) : live ? (
-            <Chip tone="volt" pulse>Happening now</Chip>
-          ) : (
-            <Chip tone="white">Confirmed</Chip>
-          )}
-        </div>
-      </div>
-
-      <div className="flex gap-6 p-6">
-        {r.status === "registered" && qrSvg ? (
-          <div className="w-[132px] shrink-0 rounded-md border border-line bg-white p-2 [&>svg]:size-full" role="img" aria-label={`QR code for pass ${r.pass_code}`} dangerouslySetInnerHTML={{ __html: qrSvg }} />
+    <article className="flex min-w-0 flex-col gap-4">
+      <Ticket
+        label={`Pass for ${r.title}`}
+        category={cap(r.category)}
+        title={r.title}
+        dateLabel={fmtDate(starts, { weekday: "short", day: "numeric", month: "short" })}
+        time={fmtTime(starts)}
+        venue={r.venue}
+        tagline={seat ? null : cancelled ? "Event cancelled — no entry" : "Your QR appears when you get a seat"}
+        qrValue={null}
+        qrSvg={seat ? qrSvg : null}
+        passCode={seat ? r.pass_code : null}
+        priceLabel={r.price_paise > 0 ? formatINR(r.price_paise) : "Free"}
+        seatsLabel={fmtRange(starts, ends)}
+      />
+      <div className="flex flex-wrap items-center gap-2">
+        {cancelled ? (
+          <Chip tone="danger">Event cancelled</Chip>
+        ) : r.status === "waitlisted" ? (
+          <Chip tone="warn">Waitlist{r.waitlist_position ? ` · #${r.waitlist_position}` : ""}</Chip>
+        ) : live ? (
+          <Chip tone="live" pulse>
+            Happening now
+          </Chip>
         ) : (
-          <div className="grid w-[132px] shrink-0 place-items-center rounded-md border border-dashed border-line bg-canvas p-3 text-center text-label font-semibold text-ink-muted">
-            <Hourglass className="mb-1 size-5" />
-            {cancelled ? "No entry" : "QR appears when you get a seat"}
-          </div>
+          <Chip>Confirmed</Chip>
         )}
-
-        <div className="min-w-0 flex-1 space-y-2 text-body-sm">
-          {r.status === "registered" && <p className="font-mono text-body font-semibold tracking-[0.1em]">{r.pass_code}</p>}
-          <p className="flex items-center gap-2 text-ink-2"><Clock className="size-4 text-ink-subtle" /> {fmtRange(starts, ends)} <span className="text-caption text-ink-subtle">IST</span></p>
-          <p className="flex items-center gap-2 text-ink-2"><MapPin className="size-4 text-ink-subtle" /> {r.venue}</p>
-
-          {r.checked_in_at && (
-            <p className="flex items-center gap-2 font-semibold text-live"><CheckCircle2 className="size-4" /> Checked in at {fmtTime(new Date(r.checked_in_at))}</p>
-          )}
-          {r.cert_id && (
-            <Link href={`/certificates/${r.cert_id}`} className="font-semibold text-volt underline-offset-4 hover:underline">Download certificate</Link>
-          )}
-          {r.status === "registered" && r.price_paise > 0 && (
-            <p className={r.payment_status === "paid" ? "font-semibold text-live" : "font-semibold text-warn"}>
-              {r.payment_status === "paid" ? "Paid" : r.upi_utr ? "Payment being checked" : `Unpaid · ${formatINR(r.price_paise)}${r.organizer_upi_id ? "" : " at the desk"}`}
-            </p>
-          )}
-          {r.status === "waitlisted" &&
-            (r.hold_expires_at ? (
-              <p className="rounded-md bg-warn-soft px-3 py-2 font-semibold text-warn">
-                A seat is held for you until {fmtTime(new Date(r.hold_expires_at))}.{" "}
-                <Link href={`/events/${r.slug}`} className="underline">Confirm it</Link>
-              </p>
-            ) : null)}
-
-          <div className="flex flex-wrap gap-2 pt-1">
-            <a href={`/api/registrations/${r.id}/ics`} className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-body-sm font-semibold hover:border-volt/60">
-              <CalendarPlus className="size-4" /> Add to calendar
-            </a>
-            {r.status === "registered" && qrSvg && (
-              <SavePassButton
-                title={r.title}
-                dateLabel={fmtDate(starts, { weekday: "short", day: "numeric", month: "short" })}
-                timeLabel={fmtRange(starts, ends)}
-                venue={r.venue}
-                passCode={r.pass_code}
-                qrSvg={qrSvg}
-              />
-            )}
-            <Link href={`/events/${r.slug}`} className="inline-flex items-center rounded-full px-3 py-2 text-body-sm font-semibold text-ink-muted hover:text-ink">View event</Link>
-          </div>
-        </div>
+        {r.checked_in_at && <Chip tone="live">Checked in {fmtTime(new Date(r.checked_in_at))}</Chip>}
+        {r.status === "registered" && r.price_paise > 0 && (
+          <Chip tone={r.payment_status === "paid" ? "live" : "warn"}>
+            {r.payment_status === "paid" ? "Paid" : r.upi_utr ? "Payment being checked" : `Unpaid · ${formatINR(r.price_paise)}${r.organizer_upi_id ? "" : " at the desk"}`}
+          </Chip>
+        )}
+      </div>
+      {r.status === "waitlisted" && r.hold_expires_at && (
+        <p className="border-l-2 border-warn pl-3 text-body-sm">
+          A seat is held for you until <span className="font-mono">{fmtTime(new Date(r.hold_expires_at))}</span>.{" "}
+          <Link href={`/events/${r.slug}`} className="font-semibold underline underline-offset-4">
+            Confirm it
+          </Link>
+        </p>
+      )}
+      <div className="flex flex-wrap gap-2">
+        <LinkButton href={`/events/${r.slug}`} size="sm" variant="secondary">
+          View event
+        </LinkButton>
+        <a href={`/api/registrations/${r.id}/ics`} className={buttonClass("secondary", "sm")}>
+          Add to calendar
+        </a>
+        {seat && qrSvg && (
+          <SavePassButton
+            title={r.title}
+            dateLabel={fmtDate(starts, { weekday: "short", day: "numeric", month: "short" })}
+            timeLabel={fmtRange(starts, ends)}
+            venue={r.venue}
+            passCode={r.pass_code}
+            qrSvg={qrSvg}
+            className="h-8 rounded-sm px-3 text-label"
+          />
+        )}
+        {r.cert_id && (
+          <LinkButton href={`/certificates/${r.cert_id}`} size="sm" variant="ghost">
+            Certificate ›
+          </LinkButton>
+        )}
       </div>
     </article>
   );

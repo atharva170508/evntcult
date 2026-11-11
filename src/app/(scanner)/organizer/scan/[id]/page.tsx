@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowLeft, ShieldAlert } from "lucide-react";
 import { canManageEvent, getViewer } from "@/lib/rbac";
 import { first, getDB } from "@/lib/db";
 import { gateCounts } from "@/lib/data/checkins";
@@ -25,10 +24,10 @@ export default async function ScanPage({ params }: { params: Promise<{ id: strin
   if (!event || !(await canManageEvent(viewer, event.id))) {
     return (
       <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
-        <ShieldAlert className="size-10 text-bad" />
+        
         <h1 className="font-display text-display font-semibold leading-tight">Only this event&apos;s organizer can scan passes.</h1>
         <p className="text-body text-white/70">If you&apos;re helping at the gate, ask the organizer to scan, or to sign in on this phone.</p>
-        <Link href="/dashboard" className="inline-flex items-center gap-2 text-body font-semibold text-white/80 underline"><ArrowLeft className="size-4" /> Dashboard</Link>
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-body font-semibold text-white/80 underline"><span aria-hidden>←</span> Dashboard</Link>
       </main>
     );
   }

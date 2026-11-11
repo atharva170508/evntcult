@@ -1,47 +1,17 @@
 import Link from "next/link";
-import {
-  AlertTriangle,
-  ArrowUpRight,
-  BadgeIndianRupee,
-  CalendarPlus,
-  CalendarRange,
-  Camera,
-  CircleAlert,
-  Clock,
-  FileText,
-  Gamepad2,
-  MapPin,
-  Megaphone,
-  MessageCircle,
-  Mic2,
-  Music2,
-  Navigation,
-  Palette,
-  Plus,
-  ScanFace,
-  ScanLine,
-  Sparkles,
-  Sun,
-  Ticket,
-  Trophy,
-  Users,
-  Wrench,
-  Cpu,
-} from "lucide-react";
 import type { AnnouncementItem, EventSummary, NextUp, OrganizerPanel } from "@/lib/data/types";
-import { Card } from "@/components/ui/Card";
 import { Chip, type ChipTone } from "@/components/ui/Chip";
-import { EventArt } from "@/components/ui/EventArt";
 import { Meter } from "@/components/ui/Meter";
-import { Avatars } from "@/components/ui/Avatars";
 import { LinkButton } from "@/components/ui/Button";
+import { Table } from "@/components/ui/Table";
+import { Ticket } from "@/components/ui/Ticket";
 import { Countdown } from "./Countdown";
 import { LiveHeadcount } from "./LiveHeadcount";
 import { formatINR } from "@/lib/money";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn, fmtDate, fmtRange, fmtTime, relative } from "@/lib/utils";
 
-const CATEGORY_LABEL: Record<string, string> = {
+export const CATEGORY_LABEL: Record<string, string> = {
   FEST: "Fest",
   PARTY: "Party",
   SPORTS: "Sports",
@@ -53,185 +23,148 @@ const CATEGORY_LABEL: Record<string, string> = {
   OTHER: "Event",
 };
 
-/** Eventbrite-style status badge: Sold out / Almost full / Today / Free. */
+/** Status words: Sold out / Almost full / Today / Tomorrow. Always words, never colour alone. */
 function eventBadge(e: EventSummary): { label: string; tone: ChipTone } | null {
   if (e.capacity !== null && e.registered >= e.capacity) return { label: "Sold out", tone: "danger" };
   if (e.capacity !== null && e.registered / e.capacity >= 0.85) return { label: "Almost full", tone: "warn" };
   const hours = (+e.startsAt - Date.now()) / 3_600_000;
-  if (hours > 0 && hours < 24) return { label: "Today", tone: "accent" };
-  if (hours >= 24 && hours < 48) return { label: "Tomorrow", tone: "accent" };
+  if (hours > 0 && hours < 24) return { label: "Today", tone: "neutral" };
+  if (hours >= 24 && hours < 48) return { label: "Tomorrow", tone: "neutral" };
   return null;
 }
 
-/** Google Calendar "add event" link (AllEvents "Add to Calendar" idea). */
-function calendarLink(e: EventSummary) {
-  const f = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
-  const p = new URLSearchParams({ action: "TEMPLATE", text: e.title, dates: `${f(e.startsAt)}/${f(e.endsAt)}`, location: e.venueName ?? "" });
-  return `https://calendar.google.com/calendar/render?${p}`;
+/** A section head with editorial numbering (§3): 01, 02, 03 in mono. */
+export function SectionHead({ n, title, action }: { n: string; title: string; action?: React.ReactNode }) {
+  return (
+    <div className="mb-6 flex items-end justify-between gap-4 border-b border-line pb-3">
+      <div className="flex items-baseline gap-3">
+        <span className="font-mono text-caption text-ink-subtle">{n}</span>
+        <h2 className="text-heading">{title}</h2>
+      </div>
+      {action}
+    </div>
+  );
 }
 
-/* ─── Quick tiles (Humanitix tiles + KonfHub type chips + Meetup icon tabs) ─── */
+/* ─── Filter links ───────────────────────────────────────────────────────── */
 
-const TILES = [
-  { href: "/events?when=today", label: "Today", icon: Sun },
-  { href: "/events?when=weekend", label: "This weekend", icon: CalendarRange },
-  { href: "/events?price=free", label: "Free", icon: BadgeIndianRupee },
-  { href: "/events?type=GAMING", label: "Gaming", icon: Gamepad2 },
-  { href: "/events?type=SPORTS", label: "Sports", icon: Trophy },
-  { href: "/events?type=TECH", label: "Tech", icon: Cpu },
-  { href: "/events?type=CULTURAL", label: "Cultural", icon: Palette },
-  { href: "/events?type=PARTY", label: "Parties", icon: Music2 },
-  { href: "/events?type=WORKSHOP", label: "Workshops", icon: Wrench },
-  { href: "/events?type=TALK", label: "Talks", icon: Mic2 },
+const FILTERS = [
+  { href: "/events?when=today", label: "Today" },
+  { href: "/events?when=weekend", label: "This weekend" },
+  { href: "/events?price=free", label: "Free" },
+  { href: "/events?type=GAMING", label: "Gaming" },
+  { href: "/events?type=SPORTS", label: "Sports" },
+  { href: "/events?type=TECH", label: "Tech" },
+  { href: "/events?type=CULTURAL", label: "Cultural" },
+  { href: "/events?type=PARTY", label: "Parties" },
+  { href: "/events?type=WORKSHOP", label: "Workshops" },
+  { href: "/events?type=TALK", label: "Talks" },
 ];
 
 export function QuickTiles() {
   return (
-    <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-1 lg:mx-0 lg:px-0">
-      {TILES.map((t) => (
-        <Link
-          key={t.label}
-          href={t.href}
-          className="group flex shrink-0 items-center gap-3 rounded-md border border-line bg-surface py-2 pl-2 pr-4 text-body-sm font-semibold transition duration-standard hover:-translate-y-0.5 hover:border-volt/60"
-        >
-          <span className="grid size-8 place-items-center rounded-md bg-volt/10 text-volt">
-            <t.icon className="size-4" />
-          </span>
+    <nav aria-label="Browse by" className="no-scrollbar flex gap-2 overflow-x-auto">
+      {FILTERS.map((t) => (
+        <Link key={t.label} href={t.href} className="press inline-flex h-8 shrink-0 items-center rounded-sm border border-line px-3 text-label text-ink-muted hover:border-line-strong hover:text-ink">
           {t.label}
         </Link>
       ))}
-    </div>
+    </nav>
   );
 }
 
-/* ─── Stats (Zoho Backstage number boxes) ─────────────────────────────── */
+/* ─── Numbers: one hairline row, mono figures ───────────────────────────── */
 
-export function StatTile({
-  label,
-  value,
-  hint,
-  icon: Icon,
-  delay = 0,
-}: {
-  label: string;
-  value: string | number;
-  hint?: string;
-  icon: React.ComponentType<{ className?: string }>;
-  delay?: number;
-}) {
+export function StatRow({ items }: { items: { label: string; value: string | number; hint?: string; href?: string }[] }) {
   return (
-    <div className="card lift min-w-0 p-6" style={{ animationDelay: `${delay}ms` }}>
-      <div className="flex items-center justify-between">
-        <span className="grid size-10 place-items-center rounded-md bg-volt/10 text-volt">
-          <Icon className="size-[18px]" />
-        </span>
-        <ArrowUpRight className="size-4 text-ink-subtle" />
-      </div>
-      <p className="mt-4 truncate font-display text-display font-semibold leading-none text-volt tabular-nums sm:text-display lg:text-display">{value}</p>
-      <p className="mt-2 text-body-sm font-semibold text-ink-2">{label}</p>
-      {hint && <p className="text-label text-ink-subtle">{hint}</p>}
-    </div>
+    <dl className="grid grid-cols-2 border-t border-line lg:grid-cols-4">
+      {items.map((s) => {
+        const body = (
+          <>
+            <dt className="text-label text-ink-muted">{s.label}</dt>
+            <dd className="mt-1 font-mono text-heading font-medium tabular-nums text-ink">{s.value}</dd>
+            {s.hint && <dd className="truncate text-label text-ink-subtle">{s.hint}</dd>}
+          </>
+        );
+        return (
+          <div key={s.label} className="min-w-0 border-b border-line py-4 pr-4 [&:nth-child(odd)]:border-r lg:border-r lg:pl-4 lg:first:pl-0 lg:last:border-r-0 [&:nth-child(even)]:pl-4">
+            {s.href ? (
+              <Link href={s.href} className="block hover:[&_dt]:text-ink">
+                {body}
+              </Link>
+            ) : (
+              body
+            )}
+          </div>
+        );
+      })}
+    </dl>
   );
 }
 
-/* ─── Next up hero (Luma two-column event page + Unstop countdown) ──────── */
+/* ─── Next up: the pass itself ──────────────────────────────────────────── */
 
-export function NextUpHero({ event }: { event: NextUp }) {
+const payLabel = { PAID: "Paid", PENDING: "Payment pending", FAILED: "Payment failed", REFUNDED: "Refunded", WAIVED: "Fee waived", NOT_REQUIRED: "Free entry" } as const;
+const payTone = { PAID: "live", PENDING: "warn", FAILED: "danger", REFUNDED: "neutral", WAIVED: "neutral", NOT_REQUIRED: "neutral" } as const;
+
+export function NextUpHero({ event, saveButton }: { event: NextUp; saveButton?: React.ReactNode }) {
   const badge = eventBadge(event);
   return (
-    <section className="card grid overflow-hidden md:grid-cols-[1.05fr_1fr]">
-      {/* Poster */}
-      <div className="relative isolate flex min-h-[260px] flex-col justify-between p-6 text-white md:min-h-[420px] md:p-8">
-        <EventArt accent={event.accent} />
-        <div className="relative flex flex-wrap items-center gap-2">
-          <Chip tone="dark">Next up</Chip>
-          <Chip tone="white">{CATEGORY_LABEL[event.category]}</Chip>
-          {event.visibility === "CODE_ONLY" && <Chip tone="white">Private</Chip>}
+    <div className="grid gap-8 lg:grid-cols-[520px_minmax(0,1fr)]">
+      <Ticket
+        category={CATEGORY_LABEL[event.category]}
+        title={event.title}
+        dateLabel={fmtDate(event.startsAt, { weekday: "short", day: "numeric", month: "short" })}
+        time={fmtTime(event.startsAt)}
+        venue={event.venueName}
+        tagline={event.tagline ?? null}
+        qrValue={event.passToken}
+        passCode={event.passSerial}
+        priceLabel={event.feePaise > 0 ? formatINR(event.feePaise) : "Free"}
+        seatsLabel={event.capacity ? `${event.registered} / ${event.capacity}` : `${event.registered} going`}
+      />
+      <div className="flex min-w-0 flex-col gap-6">
+        <div className="flex flex-wrap gap-2">
+          <Chip tone={payTone[event.paymentStatus]}>{payLabel[event.paymentStatus]}</Chip>
+          {event.visibility === "CODE_ONLY" && <Chip>Private</Chip>}
+          {badge && <Chip tone={badge.tone}>{badge.label}</Chip>}
         </div>
-        <div className="relative">
-          <p className="text-body-sm font-semibold uppercase tracking-[0.1em] text-white/80">
-            {fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "long" })}
-          </p>
-          <h2 className="shout mt-2 text-display">{event.title}</h2>
-          {event.tagline && <p className="mt-2 max-w-sm text-body text-white/85">{event.tagline}</p>}
-        </div>
-      </div>
-
-      {/* Details */}
-      <div className="flex flex-col gap-6 p-6 md:p-8">
-        <div className="space-y-3">
-          <InfoRow icon={Clock} title={fmtRange(event.startsAt, event.endsAt)} sub={fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "short" })} />
-          {event.venueName && <InfoRow icon={MapPin} title={event.venueName} />}
-        </div>
-
-        <div>
-          <p className="eyebrow mb-2">Starts in</p>
-          <Countdown to={event.startsAt} endsAt={event.endsAt} />
-        </div>
-
-        <div className="rounded-md bg-canvas p-4">
-          <div className="flex items-center justify-between gap-3">
-            <Avatars id={event.id} count={event.registered} />
-            {badge && <Chip tone={badge.tone}>{badge.label}</Chip>}
-          </div>
+        <dl className="grid grid-cols-[96px_minmax(0,1fr)] gap-y-2 text-body">
+          <dt className="text-label leading-[21px] text-ink-muted">When</dt>
+          <dd className="font-mono text-body-sm">
+            {fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "short" })} · {fmtRange(event.startsAt, event.endsAt)}
+          </dd>
+          <dt className="text-label leading-[21px] text-ink-muted">Starts in</dt>
+          <dd>
+            <Countdown to={event.startsAt} endsAt={event.endsAt} />
+          </dd>
           {event.capacity && (
             <>
-              <Meter value={event.registered} max={event.capacity} className="mt-3 bg-white" />
-              <p className="mt-2 text-label font-semibold text-ink-muted">
-                {Math.max(0, event.capacity - event.registered)} spots left of {event.capacity}
-              </p>
+              <dt className="text-label leading-[21px] text-ink-muted">Seats</dt>
+              <dd>
+                <Meter value={event.registered} max={event.capacity} className="mt-2 max-w-60" />
+                <p className="mt-1 font-mono text-label text-ink-muted">{Math.max(0, event.capacity - event.registered)} left</p>
+              </dd>
             </>
           )}
-        </div>
-
-        <div className="mt-auto flex flex-wrap gap-2">
-          <LinkButton href={`/events/${event.slug}`} variant="volt" className="flex-1">
-            View event <ArrowUpRight className="size-4" />
-          </LinkButton>
-          <LinkButton href={`/venues?to=${event.slug}`} variant="secondary">
-            <Navigation className="size-4" /> Directions
-          </LinkButton>
-          <a
-            href={calendarLink(event)}
-            target="_blank"
-            rel="noreferrer"
-            title="Add to Google Calendar"
-            className="grid size-[44px] place-items-center rounded-full border border-line text-ink-2 transition-colors hover:border-volt/60"
-          >
-            <CalendarPlus className="size-[18px]" />
+        </dl>
+        <div className="flex flex-wrap gap-2">
+          <LinkButton href={`/events/${event.slug}`}>View event</LinkButton>
+          <a href={`/api/registrations/${event.registrationId}/ics`} className="press inline-flex h-10 items-center rounded-md border border-line-strong px-4 text-body font-semibold hover:bg-white/[0.04]">
+            Add to calendar
           </a>
+          {saveButton}
+          <LinkButton href={`/venues?to=${event.slug}`} variant="ghost">
+            Directions
+          </LinkButton>
         </div>
-      </div>
-    </section>
-  );
-}
-
-function InfoRow({ icon: Icon, title, sub }: { icon: React.ComponentType<{ className?: string }>; title: string; sub?: string }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="grid size-11 shrink-0 place-items-center rounded-md border border-line">
-        <Icon className="size-[18px] text-ink-2" />
-      </span>
-      <div className="min-w-0">
-        <p className="truncate text-body font-semibold">{title}</p>
-        {sub && <p className="truncate text-label text-ink-muted">{sub}</p>}
       </div>
     </div>
   );
 }
 
 export function EmptyNextUp() {
-  return (
-    <section className="card relative isolate flex min-h-[420px] flex-col items-start justify-end overflow-hidden p-8 text-white">
-      <EventArt accent="violet" intensity={0.8} />
-      <div className="relative">
-        <h2 className="text-display font-semibold leading-tight">Nothing on your calendar.</h2>
-        <LinkButton href="/events" variant="light" className="mt-6">
-          Browse events
-        </LinkButton>
-      </div>
-    </section>
-  );
+  return <EmptyState title="Nothing on your calendar." body="Register for an event and its pass shows up here." action={{ label: "Discover events", href: "/events" }} />;
 }
 
 /* ─── Organizer ─────────────────────────────────────────────────────────── */
@@ -240,374 +173,306 @@ export function OrgKpis({ data }: { data: OrganizerPanel }) {
   const registrations = data.hosted.reduce((a, h) => a + h.registered, 0);
   const collected = data.hosted.reduce((a, h) => a + h.paid * h.feePaise, 0);
   const pending = data.hosted.reduce((a, h) => a + h.pendingPayments, 0);
-  const boxes = [
-    { label: "Registrations", value: registrations.toLocaleString("en-IN"), hint: `across ${data.hosted.length} events`, icon: Users },
-    { label: "Fees collected", value: formatINR(collected), hint: "from paid passes", icon: BadgeIndianRupee },
-    { label: "Checked in now", value: data.live ? data.live.checkedIn : 0, hint: data.live ? data.live.title : "no live event", icon: ScanLine },
-    { label: "Payments pending", value: pending, hint: "follow up at the desk", icon: Ticket },
-  ];
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      {boxes.map((b, i) => (
-        <StatTile key={b.label} {...b} delay={i * 50} />
-      ))}
-    </div>
+    <StatRow
+      items={[
+        { label: "Registrations", value: registrations.toLocaleString("en-IN"), hint: `across ${data.hosted.length} events` },
+        { label: "Fees confirmed", value: formatINR(collected), hint: "from paid passes" },
+        { label: "Checked in now", value: data.live ? data.live.checkedIn : 0, hint: data.live ? data.live.title : "no live event" },
+        { label: "Payments to confirm", value: pending, hint: "UPI claims waiting" },
+      ]}
+    />
   );
 }
 
 export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
-  const hard = data.clashes.filter((c) => c.severity === "hard");
-  const soft = data.clashes.filter((c) => c.severity === "soft");
-
+  const clashes = [...data.clashes.filter((c) => c.severity === "hard"), ...data.clashes.filter((c) => c.severity === "soft")];
   return (
-    <div className="grid gap-4 lg:grid-cols-12">
-      {data.live ? (
-        <Card eyebrow="Live now" title="Gate headcount" icon={ScanLine} className="lg:col-span-5" action={{ label: "Open scanner", href: `/organizer/scan/${data.live.id}` }}>
-          <LiveHeadcount
-            eventId={data.live.id}
-            title={data.live.title}
-            capacity={data.live.capacity}
-            registered={data.live.registered}
-            initial={data.live.checkedIn}
+    <div className="grid gap-x-12 gap-y-8 lg:grid-cols-12">
+      <section className="lg:col-span-5" aria-labelledby="live-h">
+        <div className="flex items-baseline justify-between gap-3">
+          <h3 id="live-h" className="text-title">
+            {data.live ? "Live at the gate" : "No event running"}
+          </h3>
+          {data.live && (
+            <Link href={`/organizer/scan/${data.live.id}`} className="text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+              Open scanner ›
+            </Link>
+          )}
+        </div>
+        <div className="mt-4">
+          {data.live ? (
+            <LiveHeadcount eventId={data.live.id} title={data.live.title} capacity={data.live.capacity} registered={data.live.registered} initial={data.live.checkedIn} />
+          ) : (
+            <p className="text-body text-ink-muted">When one of your events starts, its headcount shows here.</p>
+          )}
+        </div>
+      </section>
+
+      <section className="min-w-0 lg:col-span-7" aria-labelledby="hosted-h">
+        <div className="flex items-baseline justify-between gap-3">
+          <h3 id="hosted-h" className="text-title">
+            Registrations and fees
+          </h3>
+          <Link href="/organizer" className="text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+            Manage ›
+          </Link>
+        </div>
+        <div className="mt-4">
+          <Table
+            caption="Your events"
+            rows={data.hosted}
+            rowKey={(h) => h.id}
+            empty={{ sentence: "You haven't hosted an event yet.", action: <LinkButton href="/organizer/events/new" size="sm" variant="secondary">Create event</LinkButton> }}
+            columns={[
+              {
+                key: "t",
+                header: "Event",
+                cell: (h) => (
+                  <Link href={`/organizer/events/${h.id}/manage`} className="block max-w-[220px] truncate font-semibold hover:underline">
+                    {h.title}
+                  </Link>
+                ),
+              },
+              { key: "d", header: "When", cell: (h) => <span className="font-mono text-label text-ink-muted">{fmtDate(h.startsAt, { day: "numeric", month: "short" })} {fmtTime(h.startsAt)}</span> },
+              { key: "r", header: "Seats", numeric: true, cell: (h) => `${h.registered} / ${h.capacity ?? "∞"}` },
+              {
+                key: "f",
+                header: "Fees",
+                numeric: true,
+                cell: (h) => (h.feePaise > 0 ? <span>{formatINR(h.paid * h.feePaise)}{h.pendingPayments > 0 && <span className="ml-2 text-warn">{h.pendingPayments} to confirm</span>}</span> : <span className="text-ink-muted">Free</span>),
+              },
+            ]}
           />
-        </Card>
-      ) : (
-        <Card eyebrow="Live now" title="No event running" icon={ScanLine} className="lg:col-span-5">
-          <p className="text-body text-ink-muted">No live events.</p>
-        </Card>
-      )}
+        </div>
+      </section>
 
-      <Card eyebrow="Your events" title="Registrations & fees" icon={Ticket} className="lg:col-span-7" action={{ label: "Manage", href: "/organizer" }}>
-        {data.hosted.length === 0 && (
-          <EmptyState icon={Ticket} title="No events yet" action={{ label: "Create event", href: "/organizer/events/new" }} />
-        )}
-        <ul className="space-y-2">
-          {data.hosted.map((h) => (
-            <li key={h.id} className="grid grid-cols-12 items-center gap-3 rounded-md bg-canvas p-3">
-              <div className="col-span-12 min-w-0 sm:col-span-5">
-                <Link href={`/organizer/events/${h.id}/manage`} className="block truncate text-body font-semibold hover:text-brand-ink">
-                  {h.title}
-                </Link>
-                <p className="text-label text-ink-muted">
-                  {fmtDate(h.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(h.startsAt)}
-                </p>
-              </div>
-              <div className="col-span-7 sm:col-span-4">
-                <div className="mb-1 flex justify-between text-label font-semibold tabular-nums">
-                  <span>{h.registered}</span>
-                  <span className="text-ink-subtle">/ {h.capacity ?? "∞"}</span>
-                </div>
-                <Meter value={h.registered} max={h.capacity} className="bg-white" />
-              </div>
-              <div className="col-span-5 text-right sm:col-span-3">
-                {h.feePaise > 0 ? (
-                  <>
-                    <p className="text-body-sm font-semibold tabular-nums">{formatINR(h.paid * h.feePaise)}</p>
-                    {h.pendingPayments > 0 ? (
-                      <p className="text-caption font-semibold text-warn">{h.pendingPayments} pending</p>
-                    ) : (
-                      <p className="text-caption text-ink-subtle">all settled</p>
-                    )}
-                  </>
-                ) : (
-                  <Chip tone="live">Free</Chip>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </Card>
-
-      <Card
-        eyebrow="Schedule check"
-        title={data.clashes.length ? `${data.clashes.length} clash${data.clashes.length > 1 ? "es" : ""} in your drafts` : "No clashes"}
-        icon={AlertTriangle}
-        className="lg:col-span-6"
-      >
-        {data.clashes.length === 0 ? (
-          <p className="text-body text-ink-muted">No clashes.</p>
+      <section className="lg:col-span-7" aria-labelledby="clash-h">
+        <h3 id="clash-h" className="text-title">
+          {clashes.length ? `${clashes.length} clash${clashes.length > 1 ? "es" : ""} in your drafts` : "No clashes"}
+        </h3>
+        {clashes.length === 0 ? (
+          <p className="mt-2 text-body text-ink-muted">None of your drafts overlap another event at the same venue.</p>
         ) : (
-          <ul className="space-y-3">
-            {[...hard, ...soft].map((c, i) => (
-              <li key={i} className={cn("flex gap-3 rounded-md p-4", c.severity === "hard" ? "bg-danger-soft" : "bg-warn-soft")}>
-                {c.severity === "hard" ? (
-                  <CircleAlert className="mt-0.5 size-[18px] shrink-0 text-danger" />
-                ) : (
-                  <AlertTriangle className="mt-0.5 size-[18px] shrink-0 text-warn" />
-                )}
-                <div className="min-w-0">
-                  <p className="text-body font-semibold">
-                    {c.forEvent} <span className="font-medium text-ink-muted">vs</span> {c.title}
-                  </p>
-                  <p className="mt-0.5 text-body-sm text-ink-2">{c.reason}</p>
-                  <p className="mt-1 text-label font-semibold text-ink-muted">
-                    {fmtDate(c.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtRange(c.startsAt, c.endsAt)}
-                    {c.severity === "hard" ? " · Blocks publishing" : " · Warning only"}
-                  </p>
-                </div>
+          <ul className="mt-4 border-t border-line">
+            {clashes.map((c, i) => (
+              <li key={i} className="border-b border-line py-3">
+                <p className="text-body">
+                  <span className="font-semibold">{c.forEvent}</span> <span className="text-ink-muted">and</span> <span className="font-semibold">{c.title}</span>
+                  <span className={cn("ml-2 font-mono text-label", c.severity === "hard" ? "text-bad" : "text-warn")}>{c.severity === "hard" ? "! blocks publishing" : "! warning"}</span>
+                </p>
+                <p className="mt-1 text-body-sm text-ink-muted">{c.reason}</p>
+                <p className="mt-1 font-mono text-label text-ink-subtle">
+                  {fmtDate(c.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtRange(c.startsAt, c.endsAt)}
+                </p>
               </li>
             ))}
           </ul>
         )}
-      </Card>
+      </section>
 
-      <Card eyebrow="Quick actions" title="Run your event" icon={Sparkles} className="lg:col-span-6">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <QuickAction href="/organizer/events/new" icon={Plus} label="New event" primary />
-          <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} />
-          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" />
-          <QuickAction
-            href={data.live ? `/organizer/events/${data.live.id}/manage` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}/manage` : "/organizer"}
-            icon={Megaphone}
-            label="Broadcast update"
-            hint={data.live?.title ?? data.hosted[0]?.title ?? "pick an event"}
-          />
-          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" />
-          <QuickAction href="/calendar" icon={CalendarRange} label="Calendar" />
-        </div>
-      </Card>
+      <section className="lg:col-span-5" aria-labelledby="actions-h">
+        <h3 id="actions-h" className="text-title">
+          Run your event
+        </h3>
+        <ul className="mt-4 border-t border-line">
+          {[
+            { href: "/organizer/events/new", label: "New event" },
+            { href: data.live ? `/organizer/scan/${data.live.id}` : "/organizer", label: "Scan passes", hint: data.live?.title ?? "pick an event" },
+            { href: "/organizer", label: "Guests and CSV" },
+            {
+              href: data.live ? `/organizer/events/${data.live.id}/manage` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}/manage` : "/organizer",
+              label: "Post an update",
+              hint: data.live?.title ?? data.hosted[0]?.title,
+            },
+            { href: "/organizer#whatsapp", label: "WhatsApp reminders" },
+            { href: "/organizer/calendar", label: "Calendar" },
+          ].map((a) => (
+            <li key={a.label} className="border-b border-line">
+              <Link href={a.href} className="flex h-11 items-center justify-between gap-3 text-body hover:bg-white/[0.03]">
+                <span>{a.label}</span>
+                <span className="flex min-w-0 items-center gap-2 text-label text-ink-subtle">
+                  {a.hint && <span className="truncate">{a.hint}</span>}
+                  <span aria-hidden>›</span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }
 
-function QuickAction({
-  href,
-  icon: Icon,
-  label,
-  hint,
-  primary,
-  planned,
-}: {
-  href?: string;
-  planned?: boolean;
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  hint?: string;
-  primary?: boolean;
-}) {
-  if (planned || !href) {
-    return (
-      <div aria-disabled="true" className="flex cursor-not-allowed flex-col justify-between gap-6 rounded-md border border-dashed border-line p-4 opacity-60">
-        <span className="grid size-9 place-items-center rounded-md bg-canvas text-ink-subtle">
-          <Icon className="size-[18px]" />
-        </span>
-        <div>
-          <p className="text-body-sm font-semibold leading-tight">{label}</p>
-          <p className="mt-0.5 text-caption font-semibold uppercase tracking-[0.08em] text-ink-subtle">Planned</p>
-        </div>
-      </div>
-    );
-  }
-  return (
-    <Link
-      href={href}
-      className={cn(
- "group flex flex-col justify-between gap-6 rounded-md border p-4 transition duration-standard ease-standard hover:-translate-y-0.5 active:scale-[0.98]",
-        primary ? "border-transparent bg-volt text-ink-inverse hover:bg-volt-hover" : "border-line bg-surface hover:border-volt/60",
-      )}
-    >
-      <span
-        className="grid size-9 place-items-center rounded-md"
-        style={primary ? { background: "color-mix(in srgb, var(--accent-ink) 12%, transparent)", color: "var(--accent-ink)" } : { background: "color-mix(in srgb, var(--accent) 10%, transparent)", color: "var(--accent)" }}
-      >
-        <Icon className="size-[18px]" />
-      </span>
-      <div>
-        <p className="text-body-sm font-semibold leading-tight">{label}</p>
-        {hint && <p className={cn("mt-0.5 text-caption", primary ? "text-ink-inverse/70" : "text-ink-muted")}>{hint}</p>}
-      </div>
-    </Link>
-  );
-}
+/* ─── Updates from organizers ───────────────────────────────────────────── */
 
-/* ─── Announcements (Luma timeline) ─────────────────────────────────────── */
-
-const kindTone: Record<string, ChipTone> = { INFO: "neutral", SCHEDULE_CHANGE: "accent", VENUE_CHANGE: "violet", URGENT: "danger" };
 const kindLabel: Record<string, string> = { INFO: "Update", SCHEDULE_CHANGE: "Schedule", VENUE_CHANGE: "Venue", URGENT: "Urgent" };
 
 export function Announcements({ items }: { items: AnnouncementItem[] }) {
   return (
-    <Card eyebrow="Live updates" title="From your organizers" icon={Megaphone} className="h-full">
+    <section aria-labelledby="ann-h">
+      <h3 id="ann-h" className="text-title">
+        From your organizers
+      </h3>
       {items.length === 0 ? (
-        <p className="text-body text-ink-muted">No updates yet.</p>
+        <p className="mt-2 text-body text-ink-muted">No updates yet.</p>
       ) : (
-        <ol className="relative space-y-6 before:absolute before:bottom-1 before:left-[6px] before:top-1 before:w-0.5 before:rounded-full before:bg-line">
-          {items.map((a, i) => (
-            <li key={a.id} className="relative pl-8">
-              <span className={cn("absolute left-0 top-1 size-[14px] rounded-full border-[3px] border-surface", i === 0 ? "bg-danger" : "bg-line-strong")} />
-              <div className="flex flex-wrap items-center gap-2">
-                {i === 0 && (
-                  <Chip tone="danger" pulse>
-                    New
-                  </Chip>
-                )}
-                <Chip tone={kindTone[a.kind]}>{kindLabel[a.kind]}</Chip>
-                <span className="text-label font-semibold text-ink-subtle">
-                  {a.eventTitle} · {relative(a.createdAt)}
-                </span>
-              </div>
-              <p className="mt-2 text-body font-semibold leading-snug">{a.title}</p>
-              <p className="mt-0.5 text-body-sm text-ink-muted">{a.body}</p>
+        <ol className="mt-4 border-t border-line">
+          {items.map((a) => (
+            <li key={a.id} className="border-b border-line py-3">
+              <p className="flex flex-wrap items-center gap-2 font-mono text-label text-ink-subtle">
+                <Chip>{kindLabel[a.kind]}</Chip>
+                {a.eventTitle} · {relative(a.createdAt)}
+              </p>
+              <p className="mt-2 text-body font-semibold">{a.title}</p>
+              <p className="mt-1 max-w-prose text-body-sm text-ink-muted">{a.body}</p>
             </li>
           ))}
         </ol>
       )}
-    </Card>
-  );
-}
-
-/* ─── Link cards (Venues, Certificates) ─────────────────────────────────── */
-
-export function LinkCard({
-  href,
-  eyebrow,
-  title,
-  icon,
-  body,
-}: {
-  href: string;
-  eyebrow: string;
-  title: string;
-  icon: React.ComponentType<{ className?: string }>;
-  body: string;
-}) {
-  return (
-    <Link href={href} className="group block h-full rounded-lg transition-transform hover:-translate-y-0.5">
-      <Card eyebrow={eyebrow} title={title} icon={icon} className="h-full transition-colors group-hover:border-volt/50">
-        <p className="text-body-sm text-ink-muted">{body}</p>
-        <span className="mt-4 inline-flex items-center gap-1 text-body-sm font-semibold text-volt">
-          Open <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
-        </span>
-      </Card>
-    </Link>
-  );
-}
-
-/* ─── Upcoming list (mine) ──────────────────────────────────────────────── */
-
-export function UpcomingList({ events }: { events: EventSummary[] }) {
-  return (
-    <Card eyebrow="Your calendar" title="Coming up" icon={CalendarRange} action={{ label: "Calendar", href: "/calendar" }} className="h-full">
-      {events.length === 0 && <EmptyState icon={CalendarRange} title="Nothing coming up" action={{ label: "Find an event", href: "/events" }} />}
-      <ul className="space-y-2">
-        {events.map((e) => (
-          <li key={e.id}>
-            <Link href={`/events/${e.slug}`} className="group flex items-center gap-4 rounded-md p-2 transition-colors hover:bg-canvas">
-              <div className="relative isolate grid h-14 w-12 shrink-0 place-items-center overflow-hidden rounded-md text-center text-white">
-                <EventArt accent={e.accent} />
-                <div className="relative">
-                  <div className="text-caption font-semibold uppercase tracking-[0.08em]">{fmtDate(e.startsAt, { month: "short" })}</div>
-                  <div className="text-title font-semibold leading-none tabular-nums">{fmtDate(e.startsAt, { day: "numeric" })}</div>
-                </div>
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-body font-semibold">{e.title}</p>
-                <p className="truncate text-label text-ink-muted">
-                  {fmtTime(e.startsAt)} · {e.venueName}
-                </p>
-              </div>
-              <ArrowUpRight className="size-4 text-ink-subtle transition-transform duration-standard group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </Card>
-  );
-}
-
-/* ─── Campus events (Eventbrite / AllEvents cards) ──────────────────────── */
-
-export function CampusRail({ events }: { events: EventSummary[] }) {
-  return (
-    <section className="">
-      <div className="mb-4 flex items-end justify-between gap-4">
-        <div>
-          <p className="eyebrow">Happening soon</p>
-          <h2 className="title-xl mt-2 text-display">Don&apos;t miss <em className="text-volt">these</em></h2>
-        </div>
-        <LinkButton href="/events" variant="secondary" className="py-2 text-body-sm">
-          Browse all <ArrowUpRight className="size-4" />
-        </LinkButton>
-      </div>
-      {events.length === 0 && <EmptyState icon={CalendarRange} title="No upcoming events" />}
-      <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-3 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 xl:grid-cols-4">
-        {events.map((e) => (
-          <EventCard key={e.id} e={e} />
-        ))}
-      </div>
     </section>
   );
 }
 
+/* ─── Link rows (Venues, Certificates, Vault) ───────────────────────────── */
+
+export function LinkCard({ href, eyebrow, title, body }: { href: string; eyebrow: string; title: string; icon?: unknown; body: string }) {
+  return (
+    <Link href={href} className="card lift group flex h-full flex-col p-4 sm:p-6">
+      <p className="eyebrow">{eyebrow}</p>
+      <p className="mt-1 text-title">{title}</p>
+      <p className="mt-2 text-body-sm text-ink-muted">{body}</p>
+      <span className="mt-auto pt-4 text-label text-ink-muted group-hover:text-ink">Open ›</span>
+    </Link>
+  );
+}
+
+/* ─── Coming up (mine) ──────────────────────────────────────────────────── */
+
+export function UpcomingList({ events }: { events: EventSummary[] }) {
+  return (
+    <section aria-labelledby="up-h">
+      <div className="flex items-baseline justify-between">
+        <h3 id="up-h" className="text-title">
+          Coming up
+        </h3>
+        <Link href="/calendar" className="text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+          Calendar ›
+        </Link>
+      </div>
+      {events.length === 0 ? (
+        <p className="mt-2 text-body text-ink-muted">Nothing booked. Events you register for appear here.</p>
+      ) : (
+        <ul className="mt-4 border-t border-line">
+          {events.map((e) => (
+            <li key={e.id} className="border-b border-line">
+              <Link href={`/events/${e.slug}`} className="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 py-3 hover:bg-white/[0.03]">
+                <span className="font-mono text-label text-ink-muted">{fmtDate(e.startsAt, { day: "numeric", month: "short" })}</span>
+                <span className="min-w-0">
+                  <span className="block truncate text-body font-semibold">{e.title}</span>
+                  <span className="block truncate font-mono text-label text-ink-subtle">
+                    {fmtTime(e.startsAt)}
+                    {e.venueName ? ` · ${e.venueName}` : ""}
+                  </span>
+                </span>
+                <span aria-hidden className="text-ink-subtle">
+                  ›
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+/* ─── Campus events ─────────────────────────────────────────────────────── */
+
+export function CampusRail({ events, n = "04" }: { events: EventSummary[]; n?: string }) {
+  return (
+    <section>
+      <SectionHead
+        n={n}
+        title="Happening soon"
+        action={
+          <Link href="/events" className="text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+            Browse all ›
+          </Link>
+        }
+      />
+      {events.length === 0 ? (
+        <EmptyState title="No upcoming events." body="When anyone publishes an event, it appears here." />
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {events.map((e) => (
+            <EventCard key={e.id} e={e} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+/**
+ * An event as a ticket face (§3): perforation, notches, mono data. Flat — no art, no accent
+ * (the accent is saved for the one thing that matters on the screen).
+ */
 export function EventCard({ e }: { e: EventSummary }) {
   const badge = eventBadge(e);
   return (
-    <article className="card lift group flex w-[280px] shrink-0 snap-start flex-col overflow-hidden lg:w-auto">
-      <Link href={`/events/${e.slug}`} className="relative isolate block h-[150px] overflow-hidden">
-        <EventArt accent={e.accent} className="transition-transform duration-large ease-standard group-hover:scale-105" />
-        <div className="relative flex gap-2 p-3">
-          <Chip tone="white">{CATEGORY_LABEL[e.category]}</Chip>
+    <article className="group relative flex min-w-0 flex-col rounded-md border border-line bg-ticket transition-colors duration-micro hover:border-line-strong">
+      <div className="flex flex-1 flex-col p-4">
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-mono text-caption uppercase tracking-[0.08em] text-ink-muted">{CATEGORY_LABEL[e.category]}</span>
           {badge && <Chip tone={badge.tone}>{badge.label}</Chip>}
         </div>
-      </Link>
-      <div className="flex flex-1 flex-col p-4">
-        <p className="text-label font-semibold uppercase tracking-[0.06em] text-brand-ink">
+        <h3 className="mt-2 line-clamp-2 font-display text-title uppercase">
+          <Link href={`/events/${e.slug}`} className="after:absolute after:inset-0 after:content-['']">
+            {e.title}
+          </Link>
+        </h3>
+        <p className="mt-2 font-mono text-caption">
           {fmtDate(e.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(e.startsAt)}
         </p>
-        <Link href={`/events/${e.slug}`} className="mt-1 text-title font-semibold leading-snug hover:text-brand-ink">
-          {e.title}
-        </Link>
-        {e.tagline && <p className="mt-1 line-clamp-1 text-body-sm text-ink-muted">{e.tagline}</p>}
-        {e.venueName && (
-          <p className="mt-2 flex items-center gap-1 text-label font-semibold text-ink-2">
-            <MapPin className="size-3.5 text-ink-subtle" /> {e.venueName}
-          </p>
-        )}
-        <div className="mt-auto flex items-center justify-between gap-2 pt-4">
-          <Avatars id={e.id} count={e.registered} size={22} />
-          <span className={cn("rounded-full px-3 py-1 text-label font-semibold", e.feePaise > 0 ? "bg-volt text-ink-inverse" : "bg-live-soft text-live")}>
-            {e.feePaise > 0 ? formatINR(e.feePaise) : "Free"}
-          </span>
-        </div>
+        {e.venueName && <p className="mt-1 truncate font-mono text-caption text-ink-muted">{e.venueName}</p>}
+      </div>
+      <div className="ticket-cut !my-0" aria-hidden />
+      <div className="flex items-center justify-between gap-2 px-4 pb-4 font-mono text-caption">
+        <span className="text-ink-muted">{e.capacity ? `${e.registered} / ${e.capacity}` : `${e.registered} going`}</span>
+        <span className="text-label text-ink">{e.feePaise > 0 ? formatINR(e.feePaise) : "Free"}</span>
       </div>
     </article>
   );
 }
 
-/* ─── Vault + navigator teasers ─────────────────────────────────────────── */
+/* ─── Vault ─────────────────────────────────────────────────────────────── */
 
+/** Only real thumbnails. With none, a sentence and the way to get some. */
 export function VaultTeaser({ photosOfYou, preview = [] }: { photosOfYou: number; preview?: string[] }) {
-  const tiles = ["violet", "orange", "teal", "pink", "blue", "green"];
   return (
-    <Card eyebrow="Photo Vault" title={photosOfYou === 1 ? "1 photo of you" : `${photosOfYou} photos of you`} icon={Camera} action={{ label: "Open", href: "/vault" }} className="h-full">
-      <div className="grid grid-cols-3 gap-2">
-        {tiles.map((t, i) => (
-          <div key={t} className={cn("relative isolate overflow-hidden rounded-md bg-canvas", i === 0 ? "col-span-2 row-span-2 aspect-auto" : "aspect-square")}>
-            {preview[i] ? (
-              // Real thumbnails of photos I tagged myself in.
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={`/api/photos/${preview[i]}?size=thumb`} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />
-            ) : (
-              <>
-                <EventArt accent={t} intensity={0.8} />
-                <Camera className="absolute bottom-2 right-2 size-3.5 text-white/70" />
-              </>
-            )}
-          </div>
-        ))}
-      </div>
-      <p className="mt-4 flex items-center gap-2 text-body-sm font-semibold text-ink-muted">
-        <ScanFace className="size-4 text-brand-ink" /> Tap &ldquo;that&apos;s me&rdquo; on event photos to collect yours
-      </p>
-    </Card>
+    <Link href="/vault" className="card lift group flex h-full flex-col p-4 sm:p-6">
+      <p className="eyebrow">Photo Vault</p>
+      <p className="mt-1 text-title">{photosOfYou === 1 ? "1 photo of you" : `${photosOfYou} photos of you`}</p>
+      {preview.length > 0 ? (
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          {preview.slice(0, 3).map((id) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img key={id} src={`/api/photos/${id}?size=thumb`} alt="" loading="lazy" className="aspect-square w-full rounded-sm object-cover" />
+          ))}
+        </div>
+      ) : (
+        <p className="mt-2 text-body-sm text-ink-muted">Tap &ldquo;That&apos;s me&rdquo; on event photos to collect yours here.</p>
+      )}
+      <span className="mt-auto pt-4 text-label text-ink-muted group-hover:text-ink">Open ›</span>
+    </Link>
   );
 }
 
 export function UpiPending({ amountPaise }: { amountPaise: number }) {
   return (
-    <div className="flex items-center gap-3 rounded-md bg-warn-soft p-4 text-body-sm font-semibold">
-      <Sparkles className="size-4 shrink-0 text-warn" />
-      <span className="text-ink-2">{formatINR(amountPaise)} due · Pay on the event page.</span>
-    </div>
+    <p className="border-l-2 border-warn bg-surface px-4 py-3 text-body-sm">
+      <span className="font-semibold text-warn">Payment pending</span> <span className="font-mono">{formatINR(amountPaise)}</span> due. Pay on the event page.
+    </p>
   );
 }

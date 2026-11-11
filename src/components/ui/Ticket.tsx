@@ -14,19 +14,24 @@ export interface TicketProps {
   tagline: string | null;
   /** What the QR opens. Null until the event exists. */
   qrValue: string | null;
+  /** A QR already drawn on the server; skips drawing it in the browser. */
+  qrSvg?: string | null;
   passCode: string | null;
   priceLabel: string;
   seatsLabel: string;
+  /** Accessible name for the whole ticket. */
+  label?: string;
 }
 
 const has = (v: string | null | undefined): v is string => !!v && v.trim() !== "";
 
 /** The one physical object on the page. Everything on it comes from props; empty renders nothing. */
 export function Ticket(p: TicketProps) {
-  const [qr, setQr] = useState<string | null>(null);
+  const [drawn, setQr] = useState<string | null>(null);
+  const qr = p.qrSvg ?? drawn;
   useEffect(() => {
     let live = true;
-    if (!p.qrValue) {
+    if (p.qrSvg || !p.qrValue) {
       setQr(null);
       return;
     }
@@ -34,10 +39,10 @@ export function Ticket(p: TicketProps) {
     return () => {
       live = false;
     };
-  }, [p.qrValue]);
+  }, [p.qrValue, p.qrSvg]);
 
   return (
-    <div className="o-ticket" role="group" aria-label="Pass preview">
+    <div className="o-ticket" role="group" aria-label={p.label ?? "Pass preview"}>
       <div className="o-ticket-left">
         {has(p.category) && <div className="o-ticket-cat">{p.category.toUpperCase()}</div>}
         {has(p.title) && <div className="o-ticket-title">{p.title}</div>}
@@ -51,7 +56,7 @@ export function Ticket(p: TicketProps) {
         {has(p.tagline) && <div className="o-ticket-tag">{p.tagline}</div>}
       </div>
       <div className="o-ticket-right">
-        <div className="o-qr" aria-label={qr ? "QR code" : "QR code appears after the first save"}>
+        <div className="o-qr" role="img" aria-label={qr ? `QR code${p.passCode ? ` for pass ${p.passCode}` : ""}` : "No QR code yet"}>
           {qr ? <span style={{ display: "block", width: "100%", height: "100%" }} dangerouslySetInnerHTML={{ __html: qr }} /> : null}
         </div>
         {has(p.passCode) && <div className="o-ticket-code">{p.passCode}</div>}

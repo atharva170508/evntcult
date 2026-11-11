@@ -5,32 +5,28 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { NAV, ORGANIZER_NAV, isActive } from "./nav";
 
-/** App-style bottom tabs on phones (District idea). */
+/** §6 phone bar: 48 tall plus the safe area, words only. The current tab is underlined and heavier. */
 export function MobileTabBar({ isOrganizer }: { isOrganizer: boolean }) {
   const pathname = usePathname();
   const base = NAV.filter((n) => ["/dashboard", "/events", "/passes", "/calendar"].includes(n.href));
   const items = [...base, isOrganizer ? ORGANIZER_NAV : NAV.find((n) => n.href === "/vault")!];
 
   return (
-    <nav className="print:hidden fixed inset-x-3 bottom-3 z-40 rounded-full border border-white/10 bg-surface/80 px-2 py-2 md:hidden">
-      <ul className="grid grid-cols-5">
+    <nav aria-label="Main" className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-canvas pb-[env(safe-area-inset-bottom)] print:hidden lg:hidden">
+      <ul className="grid h-12 grid-cols-5">
         {items.map((item) => {
           const active = isActive(pathname, item.href);
-          const Icon = item.icon;
           return (
-            <li key={item.href}>
+            <li key={item.href} className="flex">
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
- "flex flex-col items-center gap-1 rounded-md py-2 text-caption font-semibold transition-colors",
-                  active ? "text-ink" : "text-ink-subtle",
+                  "flex flex-1 items-center justify-center border-t-2 text-label",
+                  active ? "border-accent font-semibold text-ink" : "border-transparent text-ink-muted",
                 )}
               >
-                <span className={cn("grid h-8 w-12 place-items-center rounded-full transition-colors", active && "bg-volt text-ink-inverse")}>
-                  <Icon className="size-[18px]" />
-                </span>
-                {item.label.replace("My passes", "Passes")}
+                {item.short ?? item.label}
               </Link>
             </li>
           );

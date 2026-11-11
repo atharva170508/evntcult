@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Megaphone } from "lucide-react";
 
 const KINDS = [
   { value: "schedule", label: "Schedule change", whatsapp: true },
@@ -48,7 +47,7 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
       <fieldset className="flex flex-wrap gap-2">
         <legend className="sr-only">Type of update</legend>
         {KINDS.map((k) => (
-          <label key={k.value} className={`cursor-pointer rounded-full border px-4 py-2 text-body-sm font-semibold ${kind === k.value ? "border-volt bg-volt text-ink-inverse" : "border-line hover:border-volt"}`}>
+          <label key={k.value} className={`cursor-pointer rounded-full border px-4 py-2 text-body-sm font-semibold ${kind === k.value ? "border-volt bg-volt text-ink-inverse" : "border-line hover:border-line-strong"}`}>
             <input type="radio" name="kind" value={k.value} checked={kind === k.value} onChange={() => pickKind(k.value)} className="sr-only" />
             {k.label}
           </label>
@@ -64,19 +63,19 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
           maxLength={500}
           rows={3}
           placeholder={kind === "venue" ? "e.g. Moved to Hall B. Enter through Gate 3." : kind === "schedule" ? "e.g. Doors now open at 6:30 pm." : "e.g. Bring a photo ID."}
-          className="w-full rounded-md border border-line bg-surface px-4 py-3 text-body focus:border-ink focus:outline-none"
+          className="w-full rounded-sm border border-line-strong bg-surface px-3 h-12 md:h-10 text-body text-ink placeholder:text-ink-subtle"
         />
       </label>
       <label className="flex items-start gap-3 text-body-sm">
-        <input type="checkbox" checked={whatsapp} onChange={(e) => setWhatsapp(e.target.checked)} className="mt-0.5 size-4 accent-brand" />
+        <input type="checkbox" checked={whatsapp} onChange={(e) => setWhatsapp(e.target.checked)} className="mt-0.5 size-4 accent-[var(--accent)]" />
         <span>
           Also send on WhatsApp to the <b className="font-mono tabular-nums">{optedIn}</b> registered {optedIn === 1 ? "person" : "people"} who opted in
           {!connected && <span className="text-ink-muted"> (queued until WhatsApp is connected)</span>}
         </span>
       </label>
       {msg && <p role="status" className={`rounded-md px-4 py-3 text-body-sm font-semibold ${msg.ok ? "bg-live-soft text-live" : "bg-danger-soft text-danger"}`}>{msg.text}</p>}
-      <button disabled={busy || body.trim().length < 3} className="inline-flex items-center gap-2 rounded-full bg-volt px-6 py-3 text-body font-semibold text-ink-inverse disabled:opacity-50">
-        {busy ? <Loader2 className="size-4 animate-spin" /> : <Megaphone className="size-4" />} Post update
+      <button disabled={busy || body.trim().length < 3} className="press inline-flex items-center gap-2 rounded-md bg-accent px-6 h-10 text-body font-semibold text-ink-inverse disabled:opacity-50 hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">
+        Post update
       </button>
     </form>
   );

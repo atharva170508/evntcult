@@ -1,15 +1,15 @@
 import Link from "next/link";
+import { buttonClass } from "@/components/ui/Button";
 
 export default function NotFound() {
   return (
-    <main className="grid min-h-dvh place-items-center px-6">
-      <div className="text-center">
-        <p className="shout text-volt text-display">404</p>
-        <h1 className="title-xl mt-2 text-display">This page doesn&apos;t <em className="text-volt">exist</em></h1>
-        <Link href="/dashboard" className="mt-8 inline-flex rounded-full bg-volt px-6 py-4 text-body font-semibold text-ink-inverse hover:bg-volt-hover">
-          Back to home
-        </Link>
-      </div>
+    <main className="mx-auto flex min-h-dvh max-w-prose flex-col justify-center px-4">
+      <p className="eyebrow">404</p>
+      <h1 className="title-xl mt-2">This page doesn&apos;t exist.</h1>
+      <p className="mt-2 text-body text-ink-muted">The link may be old, or the event may have been unpublished.</p>
+      <Link href="/dashboard" className={buttonClass("secondary", "md", "mt-8 w-fit")}>
+        <span aria-hidden>←</span> Back to home
+      </Link>
     </main>
   );
 }

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Search } from "lucide-react";
 import { listEvents } from "@/lib/data/events";
 import { CATEGORIES } from "@/lib/data/types";
 import { listQuerySchema } from "@/lib/validation";
 import { EventCard } from "@/components/dashboard/sections";
 import { cn } from "@/lib/utils";
 import { PageHero } from "@/components/brand/PageHero";
+import { buttonClass } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export const metadata: Metadata = { title: "Discover" };
 export const dynamic = "force-dynamic";
@@ -30,31 +31,30 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
   };
   const chip = (active: boolean) =>
     cn(
-      "shrink-0 rounded-full border px-4 py-2 text-body-sm font-semibold transition-colors",
-      active ? "border-volt bg-volt text-ink-inverse" : "border-line bg-surface text-ink-2 hover:border-volt/60",
+      "press inline-flex h-8 shrink-0 items-center justify-center rounded-sm border px-3 text-label",
+      active ? "border-line-strong bg-surface-2 font-semibold text-ink" : "border-line text-ink-muted hover:border-line-strong hover:text-ink",
     );
 
   return (
-    <div className="space-y-6 pt-4 md:pt-6">
-      <PageHero eyebrow="Discover" title={<>Events <em>near you</em></>} marquee={["Discover", "Gaming", "Sports", "Tech", "Cultural"]} />
+    <div className="flex flex-col gap-6">
+      <PageHero eyebrow="Discover" title="Events near you" sub={`${events.length}${nextCursor ? "+" : ""} event${events.length === 1 ? "" : "s"}`} />
 
-      <form action="/events" className="flex h-12 items-center rounded-full border border-line bg-surface pl-4 pr-2 transition-colors focus-within:border-volt/70 md:max-w-xl">
-        <Search className="size-[18px] text-ink-subtle" />
-        <input name="q" defaultValue={q.q} placeholder="Search by name, venue…" className="min-w-0 flex-1 bg-transparent px-3 text-body focus:outline-none" aria-label="Search events" />
+      <form action="/events" role="search" className="flex h-12 items-center gap-1 rounded-sm border border-line-strong bg-surface pl-1 pr-1 focus-within:border-accent md:h-10 md:max-w-xl">
+        <input name="q" defaultValue={q.q} placeholder="Search by name, venue…" className="min-w-0 flex-1 bg-transparent px-2 text-body focus-visible:!border-0 focus-visible:!shadow-none" aria-label="Search events" />
         {q.type && <input type="hidden" name="type" value={q.type} />}
         {q.when && <input type="hidden" name="when" value={q.when} />}
         {q.price && <input type="hidden" name="price" value={q.price} />}
-        <button className="rounded-full bg-volt px-4 py-2 text-body-sm font-semibold text-ink-inverse">Search</button>
+        <button className="press inline-flex items-center justify-center rounded-sm bg-accent px-4 h-8 text-body-sm font-semibold text-ink-inverse hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">Search</button>
       </form>
 
       <div className="space-y-3">
-        <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
+        <div className="no-scrollbar flex gap-2 overflow-x-auto">
           <Link href={href({ type: undefined })} className={chip(!q.type)}>All types</Link>
           {CATEGORIES.map((c) => (
             <Link key={c} href={href({ type: c })} className={chip(q.type === c)}>{LABEL[c]}</Link>
           ))}
         </div>
-        <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
+        <div className="no-scrollbar flex gap-2 overflow-x-auto">
           <Link href={href({ when: undefined })} className={chip(!q.when)}>Any day</Link>
           {Object.entries(WHEN).map(([k, v]) => (
             <Link key={k} href={href({ when: k })} className={chip(q.when === k)}>{v}</Link>
@@ -67,12 +67,9 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
       </div>
 
       {events.length === 0 ? (
-        <div className="card p-12 text-center">
-          <p className="text-title font-semibold">No events match these filters.</p>
-          <Link href="/events" className="mt-4 inline-block rounded-full border border-line px-4 py-2 text-body-sm font-semibold hover:border-volt/60">Clear filters</Link>
-        </div>
+        <EmptyState title="No events match these filters." action={{ label: "Clear filters", href: "/events" }} />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {events.map((e) => (
             <EventCard key={e.id} e={e} />
           ))}
@@ -81,8 +78,8 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
 
       {nextCursor && (
         <div className="flex justify-center">
-          <Link href={`${href({})}${href({}).includes("?") ? "&" : "?"}cursor=${encodeURIComponent(nextCursor)}`} className="rounded-full border border-line bg-surface px-6 py-3 text-body font-semibold hover:border-volt/60">
-            Next page →
+          <Link href={`${href({})}${href({}).includes("?") ? "&" : "?"}cursor=${encodeURIComponent(nextCursor)}`} className={buttonClass("secondary")}>
+            Next page ›
           </Link>
         </div>
       )}
