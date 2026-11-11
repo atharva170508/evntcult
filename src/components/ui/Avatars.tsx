@@ -16,9 +16,9 @@ export function Avatars({
   onDark?: boolean;
 }) {
   return (
-    <div className={cn("flex items-center gap-1.5", className)}>
+    <div className={cn("flex items-center gap-2", className)}>
       <Users className={cn("size-4", onDark ? "text-white/80" : "text-ink-subtle")} />
-      <span className={cn("font-mono text-[12.5px] font-semibold tabular-nums", onDark ? "text-white" : "text-ink-2")}>
+      <span className={cn("font-mono text-label font-semibold tabular-nums", onDark ? "text-white" : "text-ink-2")}>
         {count.toLocaleString("en-IN")} <span className={cn("font-sans", onDark ? "text-white/75" : "text-ink-muted")}>{label}</span>
       </span>
     </div>

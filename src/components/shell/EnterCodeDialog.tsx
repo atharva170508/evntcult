@@ -47,18 +47,18 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
       ref={ref}
       onClose={onClose}
       onClick={(e) => e.target === ref.current && onClose()}
-      className="m-auto w-[min(92vw,420px)] rounded-[28px] border border-line bg-surface p-0 text-ink shadow-pop backdrop:bg-black/70 backdrop:backdrop-blur-sm open:animate-fade-up"
+      className="m-auto w-[min(92vw,420px)] rounded-lg border border-line bg-surface p-0 text-ink backdrop:bg-black/70"
     >
-      <form onSubmit={submit} className="p-7">
+      <form onSubmit={submit} className="p-8">
         <div className="flex items-start justify-between">
-          <div className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand-ink">
+          <div className="grid size-12 place-items-center rounded-md bg-brand-soft text-brand-ink">
             <KeyRound className="size-5" />
           </div>
           <button type="button" onClick={onClose} aria-label="Close" className="rounded-full p-2 text-ink-subtle hover:bg-canvas hover:text-ink">
             <X className="size-4" />
           </button>
         </div>
-        <h2 className="headline mt-5 text-[24px]">Join with a code</h2>
+        <h2 className="headline mt-6 text-heading">Join with a code</h2>
 
         <input
           ref={inputRef}
@@ -73,13 +73,13 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
           placeholder="ACK3PQ7"
           aria-label="Event code"
           className={cn(
-            "mt-6 w-full rounded-2xl border-2 bg-canvas px-4 py-3.5 text-center font-mono text-[22px] font-bold tracking-[0.35em] text-ink placeholder:text-ink-subtle/50 transition-colors focus:outline-none",
+ "mt-6 w-full rounded-md border-2 bg-canvas px-4 py-4 text-center font-mono text-heading font-semibold tracking-[0.12em] text-ink placeholder:text-ink-subtle/50 transition-colors focus:outline-none",
             state.status === "error" ? "border-danger/60" : "border-transparent focus:border-brand",
           )}
         />
         <p
           className={cn(
-            "mt-2 h-5 text-center text-[13px] font-semibold",
+ "mt-2 h-5 text-center text-body-sm font-semibold",
             state.status === "error" ? "text-danger" : state.status === "ok" ? "text-live" : "text-transparent",
           )}
           role="status"
@@ -87,7 +87,7 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
           {state.message ?? "—"}
         </p>
 
-        <Button type="submit" className="mt-3 w-full py-3.5" disabled={code.replace(/[\s-]/g, "").length < 7 || state.status === "loading"}>
+        <Button type="submit" className="mt-3 w-full py-4" disabled={code.replace(/[\s-]/g, "").length < 7 || state.status === "loading"}>
           {state.status === "loading" && <Loader2 className="size-4 animate-spin" />}
           Continue
         </Button>

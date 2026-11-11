@@ -16,8 +16,8 @@ export function MiniCalendar({ data }: { data: Record<string, { campus: number; 
   return (
     <div>
       <div className="mb-3 flex items-baseline justify-between">
-        <p className="text-[16px] font-bold tracking-tight">{monthName}</p>
-        <div className="flex items-center gap-3 text-[11px] font-semibold text-ink-subtle">
+        <p className="text-body font-semibold">{monthName}</p>
+        <div className="flex items-center gap-3 text-caption font-semibold text-ink-subtle">
           <span className="flex items-center gap-1">
             <span className="size-1.5 rounded-full bg-brand" /> Yours
           </span>
@@ -26,7 +26,7 @@ export function MiniCalendar({ data }: { data: Record<string, { campus: number; 
           </span>
         </div>
       </div>
-      <div className="grid grid-cols-7 gap-y-1 text-center text-[11px] font-semibold text-ink-subtle">
+      <div className="grid grid-cols-7 gap-y-1 text-center text-caption font-semibold text-ink-subtle">
         {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
           <div key={i} className="pb-1">
             {d}
@@ -38,16 +38,16 @@ export function MiniCalendar({ data }: { data: Record<string, { campus: number; 
           const info = data[key];
           const isToday = key === today;
           return (
-            <div key={i} className="flex flex-col items-center py-0.5">
+            <div key={i} className="flex flex-col items-center py-1">
               <span
                 className={cn(
-                  "grid size-8 place-items-center rounded-full text-[12.5px] font-semibold tabular-nums transition-colors",
+ "grid size-8 place-items-center rounded-full text-label font-semibold tabular-nums transition-colors",
                   isToday ? "bg-volt text-ink-inverse" : info?.mine ? "bg-brand-soft text-brand-ink" : info ? "text-ink hover:bg-canvas" : "text-ink-muted",
                 )}
               >
                 {d}
               </span>
-              <span className="mt-0.5 flex h-1 gap-0.5">
+              <span className="mt-0.5 flex h-1 gap-1">
                 {info?.mine ? <span className="size-1 rounded-full bg-brand" /> : null}
                 {info && info.campus > info.mine ? <span className="size-1 rounded-full bg-ink-subtle" /> : null}
               </span>

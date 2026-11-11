@@ -48,7 +48,7 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
       <fieldset className="flex flex-wrap gap-2">
         <legend className="sr-only">Type of update</legend>
         {KINDS.map((k) => (
-          <label key={k.value} className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-[13px] font-semibold ${kind === k.value ? "border-volt bg-volt text-ink-inverse" : "border-line hover:border-volt"}`}>
+          <label key={k.value} className={`cursor-pointer rounded-full border px-4 py-2 text-body-sm font-semibold ${kind === k.value ? "border-volt bg-volt text-ink-inverse" : "border-line hover:border-volt"}`}>
             <input type="radio" name="kind" value={k.value} checked={kind === k.value} onChange={() => pickKind(k.value)} className="sr-only" />
             {k.label}
           </label>
@@ -64,18 +64,18 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
           maxLength={500}
           rows={3}
           placeholder={kind === "venue" ? "e.g. Moved to Hall B. Enter through Gate 3." : kind === "schedule" ? "e.g. Doors now open at 6:30 pm." : "e.g. Bring a photo ID."}
-          className="w-full rounded-2xl border border-line bg-surface px-4 py-3 text-[14.5px] focus:border-ink focus:outline-none"
+          className="w-full rounded-md border border-line bg-surface px-4 py-3 text-body focus:border-ink focus:outline-none"
         />
       </label>
-      <label className="flex items-start gap-2.5 text-[13.5px]">
+      <label className="flex items-start gap-3 text-body-sm">
         <input type="checkbox" checked={whatsapp} onChange={(e) => setWhatsapp(e.target.checked)} className="mt-0.5 size-4 accent-brand" />
         <span>
           Also send on WhatsApp to the <b className="font-mono tabular-nums">{optedIn}</b> registered {optedIn === 1 ? "person" : "people"} who opted in
           {!connected && <span className="text-ink-muted"> (queued until WhatsApp is connected)</span>}
         </span>
       </label>
-      {msg && <p role="status" className={`rounded-2xl px-3.5 py-2.5 text-[13px] font-semibold ${msg.ok ? "bg-live-soft text-live" : "bg-danger-soft text-danger"}`}>{msg.text}</p>}
-      <button disabled={busy || body.trim().length < 3} className="inline-flex items-center gap-2 rounded-full bg-volt px-5 py-2.5 text-[14px] font-semibold text-ink-inverse disabled:opacity-50">
+      {msg && <p role="status" className={`rounded-md px-4 py-3 text-body-sm font-semibold ${msg.ok ? "bg-live-soft text-live" : "bg-danger-soft text-danger"}`}>{msg.text}</p>}
+      <button disabled={busy || body.trim().length < 3} className="inline-flex items-center gap-2 rounded-full bg-volt px-6 py-3 text-body font-semibold text-ink-inverse disabled:opacity-50">
         {busy ? <Loader2 className="size-4 animate-spin" /> : <Megaphone className="size-4" />} Post update
       </button>
     </form>

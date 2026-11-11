@@ -7,11 +7,11 @@ export const metadata: Metadata = { title: "Get the app" };
 
 export default function GetAppPage() {
   return (
-    <main className="mx-auto min-h-dvh max-w-[760px] px-4 py-8 md:py-14">
+    <main className="mx-auto min-h-dvh max-w-[760px] px-4 py-8 md:py-16">
       <Link href="/dashboard" aria-label="EvntCult home">
-        <LogoWordmark className="text-[29px] text-ink" />
+        <LogoWordmark className="text-display text-ink" />
       </Link>
-      <h1 className="title-xl mt-10 mb-8 text-[clamp(40px,7vw,64px)]">Get the app</h1>
+      <h1 className="title-xl mt-12 mb-8 text-display">Get the app</h1>
       <InstallApp />
     </main>
   );

@@ -5,7 +5,7 @@ export function Marquee({ words, className }: { words: string[]; className?: str
   const run = words.map((w) => `${w} · `).join("");
   return (
     <div aria-hidden className={cn("pointer-events-none select-none overflow-hidden whitespace-nowrap", className)}>
-      <div className="inline-flex motion-safe:animate-marquee">
+      <div className="inline-flex">
         <span className="shout pr-8">{run}</span>
         <span className="shout pr-8">{run}</span>
       </div>

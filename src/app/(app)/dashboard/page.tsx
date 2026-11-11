@@ -25,6 +25,7 @@ import {
   UpiPending,
   VaultTeaser,
 } from "@/components/dashboard/sections";
+import { TOKENS } from "@/styles/tokens";
 
 export const metadata: Metadata = { title: "Home" };
 export const dynamic = "force-dynamic";
@@ -48,23 +49,23 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     .join(" · ");
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {/* Greeting: cinematic band with huge editorial serif */}
-      <header className="relative isolate mt-3 overflow-hidden rounded-[36px] px-6 py-10 animate-fade-up md:px-12 md:py-14">
+      <header className="relative isolate mt-3 overflow-hidden rounded-lg px-6 py-12 md:px-12 md:py-16">
         <Aurora quiet />
-        <Marquee words={["Tonight near you", "Your passes", "Live at the gate"]} className="absolute inset-x-0 bottom-3 text-[clamp(56px,9vw,128px)] text-white/[0.04]" />
+        <Marquee words={["Tonight near you", "Your passes", "Live at the gate"]} className="absolute inset-x-0 bottom-3 text-display text-white/[0.04]" />
         <div className="relative">
           <p className="eyebrow text-ink-2">{new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Kolkata" }).format(new Date())}</p>
-          <h1 className="title-xl mt-3 text-[clamp(44px,6.6vw,100px)]">
+          <h1 className="title-xl mt-3 text-display">
             {greeting()}, <em className="text-volt">{firstName}</em>
           </h1>
-          <p className="mt-3 text-[16px] font-medium text-ink-2">{summary}</p>
+          <p className="mt-3 text-body font-medium text-ink-2">{summary}</p>
           <div className="mt-6 flex flex-wrap gap-2">
             <LinkButton href="/passes" variant="volt">My passes</LinkButton>
             <LinkButton href="/events" variant="glass">Discover events</LinkButton>
           </div>
           {params.denied === "organizer" && (
-            <p className="mt-4 inline-block rounded-full bg-warn-soft px-4 py-1.5 text-[13px] font-semibold text-warn">
+            <p className="mt-4 inline-block rounded-full bg-warn-soft px-4 py-2 text-body-sm font-semibold text-warn">
               The organizer console is only for verified organizers.
             </p>
           )}
@@ -95,10 +96,10 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {/* Organizer console */}
       {data.organizer && (
         <section className="space-y-4 pt-6">
-          <div className="flex flex-wrap items-end justify-between gap-3 animate-fade-up">
+          <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="eyebrow">Organizer</p>
-              <h2 className="title-xl mt-2 text-[clamp(38px,4.4vw,60px)]">Your events, <em className="text-volt">at a glance</em></h2>
+              <h2 className="title-xl mt-2 text-display">Your events, <em className="text-volt">at a glance</em></h2>
             </div>
           </div>
           <OrgKpis data={data.organizer} />
@@ -119,7 +120,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         <div className="lg:col-span-4">
           <UpcomingList events={data.upcoming} />
         </div>
-        <div className="card p-6 animate-fade-up lg:col-span-3">
+        <div className="card p-6 lg:col-span-3">
           <MiniCalendar data={data.calendar} />
         </div>
       </section>
@@ -146,6 +147,6 @@ async function PublicLanding() {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "evntcult.caliper.workers.dev";
   const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const onePassQr = await QRCode.toString(`${proto}://${host}/signin?mode=signup`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#08080c", light: "#ffffff" } });
+  const onePassQr = await QRCode.toString(`${proto}://${host}/signin?mode=signup`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: TOKENS.accentInk, light: TOKENS.qrGround } });
   return <PublicHome data={{ ...d, onePassQr }} />;
 }

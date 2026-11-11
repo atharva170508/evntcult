@@ -30,24 +30,24 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
   };
   const chip = (active: boolean) =>
     cn(
-      "shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-semibold transition-colors",
+      "shrink-0 rounded-full border px-4 py-2 text-body-sm font-semibold transition-colors",
       active ? "border-volt bg-volt text-ink-inverse" : "border-line bg-surface text-ink-2 hover:border-volt/60",
     );
 
   return (
-    <div className="space-y-5 pt-4 md:pt-6">
+    <div className="space-y-6 pt-4 md:pt-6">
       <PageHero eyebrow="Discover" title={<>Events <em>near you</em></>} marquee={["Discover", "Gaming", "Sports", "Tech", "Cultural"]} />
 
-      <form action="/events" className="flex h-12 items-center rounded-full border border-line bg-surface pl-4 pr-1.5 shadow-card transition-colors focus-within:border-volt/70 md:max-w-xl">
+      <form action="/events" className="flex h-12 items-center rounded-full border border-line bg-surface pl-4 pr-2 transition-colors focus-within:border-volt/70 md:max-w-xl">
         <Search className="size-[18px] text-ink-subtle" />
-        <input name="q" defaultValue={q.q} placeholder="Search by name, venue…" className="min-w-0 flex-1 bg-transparent px-3 text-[14.5px] focus:outline-none" aria-label="Search events" />
+        <input name="q" defaultValue={q.q} placeholder="Search by name, venue…" className="min-w-0 flex-1 bg-transparent px-3 text-body focus:outline-none" aria-label="Search events" />
         {q.type && <input type="hidden" name="type" value={q.type} />}
         {q.when && <input type="hidden" name="when" value={q.when} />}
         {q.price && <input type="hidden" name="price" value={q.price} />}
-        <button className="rounded-full bg-volt px-4 py-2 text-[13px] font-semibold text-ink-inverse">Search</button>
+        <button className="rounded-full bg-volt px-4 py-2 text-body-sm font-semibold text-ink-inverse">Search</button>
       </form>
 
-      <div className="space-y-2.5">
+      <div className="space-y-3">
         <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:px-0">
           <Link href={href({ type: undefined })} className={chip(!q.type)}>All types</Link>
           {CATEGORIES.map((c) => (
@@ -67,9 +67,9 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
       </div>
 
       {events.length === 0 ? (
-        <div className="card p-10 text-center">
-          <p className="text-[17px] font-bold">No events match these filters.</p>
-          <Link href="/events" className="mt-4 inline-block rounded-full border border-line px-4 py-2 text-[13px] font-semibold hover:border-volt/60">Clear filters</Link>
+        <div className="card p-12 text-center">
+          <p className="text-title font-semibold">No events match these filters.</p>
+          <Link href="/events" className="mt-4 inline-block rounded-full border border-line px-4 py-2 text-body-sm font-semibold hover:border-volt/60">Clear filters</Link>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -81,7 +81,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
 
       {nextCursor && (
         <div className="flex justify-center">
-          <Link href={`${href({})}${href({}).includes("?") ? "&" : "?"}cursor=${encodeURIComponent(nextCursor)}`} className="rounded-full border border-line bg-surface px-5 py-2.5 text-[14px] font-semibold hover:border-volt/60">
+          <Link href={`${href({})}${href({}).includes("?") ? "&" : "?"}cursor=${encodeURIComponent(nextCursor)}`} className="rounded-full border border-line bg-surface px-6 py-3 text-body font-semibold hover:border-volt/60">
             Next page →
           </Link>
         </div>

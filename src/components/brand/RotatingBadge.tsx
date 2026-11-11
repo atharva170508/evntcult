@@ -4,12 +4,12 @@ import { ArrowUpRight } from "lucide-react";
 /** Circular "GET YOUR PASS" sticker that slowly spins (EventX "Book a seat" idea). */
 export function RotatingBadge({ href, label, text = "GET YOUR PASS • WALK IN • " }: { href: string; label: string; text?: string }) {
   return (
-    <Link href={href} aria-label={label} className="group relative grid size-[132px] shrink-0 place-items-center rounded-full bg-volt text-ink-inverse shadow-[0_20px_60px_-20px_rgba(220,254,98,0.6)] transition-transform hover:scale-105">
-      <svg viewBox="0 0 132 132" className="absolute inset-0 size-full motion-safe:animate-spin-slow" aria-hidden>
+    <Link href={href} aria-label={label} className="group relative grid size-[132px] shrink-0 place-items-center rounded-full bg-volt text-ink-inverse transition-transform hover:scale-105">
+      <svg viewBox="0 0 132 132" className="absolute inset-0 size-full" aria-hidden>
         <defs>
-          <path id="badge-circle" d="M66,66 m-48,0 a48,48 0 1,1 96,0 a48,48 0 1,1 -96,0" />
+          <path id="badge-circle" d="M66,66 m-32,0 a48,48 0 1,1 96,0 a48,48 0 1,1 -96,0" />
         </defs>
-        <text className="fill-current font-display text-[11.5px] font-bold uppercase tracking-[0.14em]">
+        <text className="fill-current font-display text-caption font-semibold uppercase tracking-[0.12em]">
           <textPath href="#badge-circle" textLength="296" lengthAdjust="spacing">{text}</textPath>
         </text>
       </svg>

@@ -25,20 +25,12 @@ export function LiveHeadcount({
   const [count, setCount] = useState(initial);
   const [registered, setRegistered] = useState(initialRegistered);
   const [mode, setMode] = useState<"connecting" | "live" | "polling">("connecting");
-  const [bump, setBump] = useState(false);
 
   useEffect(() => {
     const apply = (d: { checkedIn?: number; registered?: number }) => {
       if (typeof d.registered === "number") setRegistered(d.registered);
       if (typeof d.checkedIn !== "number") return;
-      const next = d.checkedIn;
-      setCount((prev) => {
-        if (next !== prev) {
-          setBump(true);
-          setTimeout(() => setBump(false), 400);
-        }
-        return next;
-      });
+      setCount(d.checkedIn);
     };
 
     let ws: WebSocket | null = null;
@@ -92,38 +84,30 @@ export function LiveHeadcount({
   const yet = Math.max(0, registered - count);
 
   return (
-    <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
       <div className="relative mx-auto size-[156px] shrink-0 sm:mx-0">
         <svg viewBox="0 0 148 148" className="size-full -rotate-90">
-          <circle cx="74" cy="74" r={R} fill="none" stroke="#262a35" strokeWidth="12" />
+          <circle cx="74" cy="74" r={R} fill="none" style={{ stroke: "var(--hair)" }} strokeWidth="12" />
           <circle
             cx="74"
             cy="74"
             r={R}
             fill="none"
-            stroke="url(#hc-grad)"
             strokeWidth="12"
             strokeLinecap="round"
             strokeDasharray={C}
             strokeDashoffset={C * (1 - pct)}
-            style={{ transition: "stroke-dashoffset 900ms cubic-bezier(0.22,1,0.36,1)" }}
+            style={{ stroke: "var(--accent)", transition: "stroke-dashoffset var(--t-large) var(--ease)" }}
           />
-          <defs>
-            <linearGradient id="hc-grad" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stopColor="#dcfe62" />
-              <stop offset="1" stopColor="#a8d61c" />
-            </linearGradient>
-          </defs>
         </svg>
         <div className="absolute inset-0 grid place-items-center text-center">
           <div>
             <div
-              className="text-[38px] font-extrabold leading-none tracking-tighter tabular-nums transition-transform duration-300 ease-apple"
-              style={{ transform: bump ? "scale(1.08)" : "scale(1)" }}
+              className="text-display font-semibold leading-none tabular-nums"
             >
               {count}
             </div>
-            <div className="mt-1 text-[11.5px] font-semibold text-ink-subtle">checked in</div>
+            <div className="mt-1 text-caption font-semibold text-ink-subtle">checked in</div>
           </div>
         </div>
       </div>
@@ -132,16 +116,16 @@ export function LiveHeadcount({
         <Chip tone={mode === "live" ? "volt" : "neutral"} pulse={mode === "live"}>
           {mode === "live" ? "Live" : mode === "polling" ? "Updates every 5 s" : "Connecting…"}
         </Chip>
-        <p className="headline truncate text-[19px]">{title}</p>
+        <p className="headline truncate text-title">{title}</p>
         <div className="grid grid-cols-3 gap-2 text-center">
           {[
             ["Registered", registered],
             ["Capacity", capacity ?? "No limit"],
             ["Yet to arrive", yet],
           ].map(([l, v]) => (
-            <div key={l} className="rounded-2xl bg-canvas px-2 py-2.5">
-              <p className="text-[18px] font-bold tabular-nums">{v}</p>
-              <p className="text-[11px] font-semibold text-ink-subtle">{l}</p>
+            <div key={l} className="rounded-md bg-canvas px-2 py-3">
+              <p className="text-title font-semibold tabular-nums">{v}</p>
+              <p className="text-caption font-semibold text-ink-subtle">{l}</p>
             </div>
           ))}
         </div>

@@ -13,16 +13,16 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
   const items = isOrganizer ? [...NAV, ORGANIZER_NAV] : NAV;
 
   return (
-    <aside className="sticky top-0 hidden print:!hidden h-dvh w-[88px] shrink-0 flex-col border-r border-white/[0.06] bg-surface/60 px-3 py-5 backdrop-blur-xl md:flex xl:w-[236px] xl:px-4">
-      <Link href="/dashboard" className="flex items-center gap-2.5 px-2" aria-label="EvntCult home">
+    <aside className="sticky top-0 hidden print:!hidden h-dvh w-[88px] shrink-0 flex-col border-r border-white/[0.06] bg-surface/60 px-3 py-6 md:flex xl:w-[236px] xl:px-4">
+      <Link href="/dashboard" className="flex items-center gap-3 px-2" aria-label="EvntCult home">
         <LogoIcon className="size-9 xl:hidden" />
-        <LogoWordmark motion="type" className="hidden text-[30px] text-ink xl:inline-block" />
+        <LogoWordmark motion="type" className="hidden text-display text-ink xl:inline-block" />
       </Link>
 
       {signedIn && (
         <Link
           href="/organizer/events/new"
-          className="mt-6 flex items-center justify-center gap-2 rounded-full bg-volt py-3 text-[14px] font-bold text-ink-inverse shadow-[0_14px_34px_-16px_rgba(220,254,98,0.55)] transition-colors hover:bg-volt-hover"
+          className="mt-6 flex items-center justify-center gap-2 rounded-full bg-volt py-3 text-body font-semibold text-ink-inverse transition-colors hover:bg-volt-hover"
         >
           <Plus className="size-[18px]" />
           <span className="hidden xl:inline">Host an event</span>
@@ -37,15 +37,15 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
             const Icon = item.icon;
             return (
               <li key={item.href}>
-                {item === ORGANIZER_NAV && <p className="eyebrow mb-2 mt-5 hidden px-3 xl:block">Organize</p>}
+                {item === ORGANIZER_NAV && <p className="eyebrow mb-2 mt-6 hidden px-3 xl:block">Organize</p>}
                 <Link
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   title={item.label}
                   className={cn(
-                    "group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[14px] font-semibold transition-colors",
+ "group flex items-center gap-3 rounded-md px-3 py-3 text-body font-semibold transition-colors",
                     "justify-center xl:justify-start",
-                    active ? "bg-volt text-ink-inverse shadow-brand" : "text-ink-muted hover:bg-white/5 hover:text-ink",
+                    active ? "bg-volt text-ink-inverse" : "text-ink-muted hover:bg-white/5 hover:text-ink",
                   )}
                 >
                   <Icon className="size-[19px] shrink-0" />
@@ -60,23 +60,23 @@ export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: b
       {signedIn ? (<>
       <button
         onClick={onEnterCode}
-        className="group relative isolate hidden overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-4 hover:border-volt/40 text-left transition-transform hover:-translate-y-0.5 xl:block"
+        className="group relative isolate hidden overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] p-4 hover:border-volt/40 text-left transition-transform hover:-translate-y-0.5 xl:block"
       >
-        <span className="grid size-9 place-items-center rounded-xl bg-canvas text-brand-ink shadow-card">
+        <span className="grid size-9 place-items-center rounded-md bg-canvas text-brand-ink">
           <KeyRound className="size-4" />
         </span>
-        <p className="mt-3 text-[14px] font-bold leading-tight">Got an event code?</p>
+        <p className="mt-3 text-body font-semibold leading-tight">Got an event code?</p>
       </button>
       <button
         onClick={onEnterCode}
         title="Enter event code"
-        className="mx-auto grid size-11 place-items-center rounded-2xl bg-brand-soft text-brand-ink xl:hidden"
+        className="mx-auto grid size-11 place-items-center rounded-md bg-brand-soft text-brand-ink xl:hidden"
       >
         <KeyRound className="size-[18px]" />
       </button>
       </>) : (
-        <Link href="/signin?mode=signup" className="hidden rounded-3xl bg-gradient-to-br from-brand-soft to-warn-soft p-4 transition-transform hover:-translate-y-0.5 xl:block">
-          <p className="text-[14px] font-bold leading-tight">New here?</p>
+        <Link href="/signin?mode=signup" className="hidden rounded-lg bg-gradient-to-br from-brand-soft to-warn-soft p-4 transition-transform hover:-translate-y-0.5 xl:block">
+          <p className="text-body font-semibold leading-tight">New here?</p>
         </Link>
       )}
     </aside>

@@ -41,21 +41,21 @@ export default async function VaultPage() {
       {byEvent.size === 0 ? (
         <section className="card flex flex-col items-start gap-3 p-8">
           <Images className="size-8 text-ink-subtle" />
-          <h2 className="title-xl text-[32px]">Nothing here yet</h2>
+          <h2 className="title-xl text-display">Nothing here yet</h2>
         </section>
       ) : (
         [...byEvent.entries()].map(([eventId, g]) => (
           <section key={eventId} className="space-y-3">
             <div className="flex items-end justify-between gap-3">
               <div>
-                <h2 className="title-xl text-[32px]">{g.title}</h2>
-                <p className="text-[12.5px] text-ink-muted">{fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })} · {g.ids.length} of you</p>
+                <h2 className="title-xl text-display">{g.title}</h2>
+                <p className="text-label text-ink-muted">{fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })} · {g.ids.length} of you</p>
               </div>
-              <Link href={`/events/${g.slug}/photos`} className="text-[13px] font-semibold text-ink underline">All photos</Link>
+              <Link href={`/events/${g.slug}/photos`} className="text-body-sm font-semibold text-ink underline">All photos</Link>
             </div>
             <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
               {g.ids.map((id) => (
-                <li key={id} className="aspect-square overflow-hidden rounded-2xl bg-canvas">
+                <li key={id} className="aspect-square overflow-hidden rounded-md bg-canvas">
                   <a href={`/api/photos/${id}`} target="_blank" rel="noopener" aria-label="Open full size">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={`/api/photos/${id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover" />
@@ -68,16 +68,16 @@ export default async function VaultPage() {
       )}
 
       <div className="grid gap-4">
-        <section className="card p-5">
-          <h2 className="title-xl text-[32px]">Galleries from your events</h2>
+        <section className="card p-6">
+          <h2 className="title-xl text-display">Galleries from your events</h2>
           {galleries.length === 0 ? (
-            <p className="mt-2 text-[14px] text-ink-muted">None yet.</p>
+            <p className="mt-2 text-body text-ink-muted">None yet.</p>
           ) : (
             <ul className="mt-2 divide-y divide-line">
               {galleries.map((g) => (
-                <li key={g.id} className="flex items-center justify-between gap-3 py-2.5">
-                  <Link href={`/events/${g.slug}/photos`} className="min-w-0 truncate text-[14.5px] font-semibold hover:underline">{g.title}</Link>
-                  <span className="shrink-0 text-[12.5px] text-ink-muted"><span className="font-mono tabular-nums">{g.photos}</span> photos · you&apos;re in <span className="font-mono tabular-nums">{g.mine}</span></span>
+                <li key={g.id} className="flex items-center justify-between gap-3 py-3">
+                  <Link href={`/events/${g.slug}/photos`} className="min-w-0 truncate text-body font-semibold hover:underline">{g.title}</Link>
+                  <span className="shrink-0 text-label text-ink-muted"><span className="font-mono tabular-nums">{g.photos}</span> photos · you&apos;re in <span className="font-mono tabular-nums">{g.mine}</span></span>
                 </li>
               ))}
             </ul>

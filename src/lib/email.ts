@@ -11,6 +11,7 @@
  * If neither is set, code login is OFF and the old email-only login keeps working
  * (the sign-in page shows that the code check is "Planned").
  */
+import { TOKENS as T } from "@/styles/tokens";
 type EmailEnv = { BREVO_API_KEY?: string; EMAIL_FROM?: string; EMAIL_PROVIDER?: string };
 
 export type EmailMode = "brevo" | "log" | "off";
@@ -29,19 +30,19 @@ export class EmailError extends Error {}
 export function loginCodeHtml(code: string): string {
   const shown = `${code.slice(0, 3)} ${code.slice(3)}`;
   const font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
-  const line = `font-family:${font};font-size:15px;line-height:1.55;color:#2a2a2e;margin:0 0 16px`;
+  const line = `font-family:${font};font-size:14px;line-height:1.55;color:${T.accentInk};margin:0 0 16px`;
   return `<!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light only"><title>Your EvntCult code</title></head>
-<body style="margin:0;padding:0;background:#efeee8">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#efeee8" style="background:#efeee8"><tr><td align="center" style="padding:32px 16px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;border-radius:14px;overflow:hidden">
-<tr><td bgcolor="#08080c" style="background:#08080c;padding:20px 28px;font-family:${font};font-size:22px;font-weight:800;letter-spacing:-0.8px;color:#f2f3f7">ev<span style="color:#dcfe62">|</span>ntcult</td></tr>
-<tr><td bgcolor="#ffffff" style="background:#ffffff;padding:28px">
+<body style="margin:0;padding:0;background:${T.qrGround}">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${T.qrGround}" style="background:${T.qrGround}"><tr><td align="center" style="padding:32px 16px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;border-radius:8px;overflow:hidden">
+<tr><td bgcolor="${T.surface0}" style="background:${T.surface0};padding:20px 28px;font-family:${font};font-size:24px;font-weight:600;color:${T.text}">ev<span style="color:${T.accent}">|</span>ntcult</td></tr>
+<tr><td bgcolor="${T.paper}" style="background:${T.paper};padding:28px">
 <p style="${line}">Hey,</p>
 <p style="${line}">Here's your code to log in:</p>
-<p style="margin:0 0 20px"><span style="display:inline-block;background:#dcfe62;border-radius:6px;padding:8px 14px;font-family:${font};font-size:30px;line-height:1.2;font-weight:700;letter-spacing:1px;color:#08080c">${shown}</span></p>
+<p style="margin:0 0 20px"><span style="display:inline-block;background:${T.accent};border-radius:6px;padding:8px 14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:32px;line-height:1.1;font-weight:500;letter-spacing:1px;color:${T.accentInk}">${shown}</span></p>
 <p style="${line}">It works for the next 10 minutes. If this wasn't you, just ignore this email and nothing changes.</p>
-<p style="${line};margin-bottom:0">See you at the next one,<br><b style="color:#08080c">Atharva, Nakul and Abhay</b></p>
+<p style="${line};margin-bottom:0">See you at the next one,<br><b style="color:${T.accentInk}">Atharva, Nakul and Abhay</b></p>
 </td></tr>
 </table>
 </td></tr></table>

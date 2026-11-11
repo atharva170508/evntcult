@@ -35,13 +35,13 @@ export function WhatsAppPrompt({ phone }: { phone: string }) {
 
   if (!show) return null;
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line p-4">
-      <p className="text-[14px] font-semibold">Get event reminders on WhatsApp?</p>
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-line p-4">
+      <p className="text-body font-semibold">Get event reminders on WhatsApp?</p>
       <div className="flex gap-2">
-        <button disabled={busy} onClick={turnOn} className="rounded-full bg-volt px-4 py-2 text-[13px] font-bold text-ink-inverse disabled:opacity-50">
+        <button disabled={busy} onClick={turnOn} className="rounded-full bg-volt px-4 py-2 text-body-sm font-semibold text-ink-inverse disabled:opacity-50">
           Yes
         </button>
-        <button onClick={dismiss} className="rounded-full border border-line px-4 py-2 text-[13px] font-semibold">
+        <button onClick={dismiss} className="rounded-full border border-line px-4 py-2 text-body-sm font-semibold">
           No
         </button>
       </div>

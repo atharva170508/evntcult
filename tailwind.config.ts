@@ -1,118 +1,103 @@
 import type { Config } from "tailwindcss";
 
 /**
- * EvntCult design tokens — Apple-style dark mode with ONE accent: neon yellow (M8).
- * Neon yellow ("volt") marks every call to action, active state, hover highlight,
- * live dot and key metric. Text on yellow is always the dark `ink.inverse`.
- * Type: Outfit everywhere (friendly geometric sans), Fredoka for the EvntCult logotype.
- * Near-black control-room canvas, bright poster accents (violet + sun yellow).
- * Every text colour here passes WCAG AA (4.5:1) on canvas and surface.
- * `ink.inverse` is the dark text used on light fills (ink pills, brand buttons, white chips).
- * Ideas combined from Meetup / District (dark pill buttons, rounded cards),
- * Luma (per-event poster colours), Eventbrite & AllEvents (badges, price labels),
- * Unstop / Zoho Backstage (app sidebar, number boxes).
+ * EvntCult design system (master prompt §3–§7). Every value comes from src/styles/tokens.css.
+ * One accent (acid lime), three radii plus a pill, seven type sizes, hairlines instead of shadows,
+ * no load animation. Text on the accent is always `ink.inverse`.
  */
+const v = (name: string) => `color-mix(in srgb, var(--${name}) calc(<alpha-value> * 100%), transparent)`;
+
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
+    /* §5 — the only type sizes in the product. */
+    fontSize: {
+      caption: ["var(--fs-caption)", { lineHeight: "1.5" }],
+      label: ["var(--fs-label)", { lineHeight: "1.5", fontWeight: "500" }],
+      "body-sm": ["var(--fs-body-sm)", { lineHeight: "1.5" }],
+      body: ["var(--fs-body)", { lineHeight: "1.5" }],
+      title: ["var(--fs-title)", { lineHeight: "1.3", letterSpacing: "-0.01em", fontWeight: "600" }],
+      heading: ["var(--fs-heading)", { lineHeight: "1.25", letterSpacing: "-0.015em", fontWeight: "600" }],
+      display: ["var(--fs-display)", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "600" }],
+    },
+    /* §4 — three radii and a pill. */
+    borderRadius: {
+      none: "0",
+      sm: "var(--r-1)",
+      DEFAULT: "var(--r-1)",
+      md: "var(--r-2)",
+      lg: "var(--r-3)",
+      full: "var(--r-pill)",
+    },
+    /* §2 law 7 — hairlines, not shadows. Overlays only. */
+    boxShadow: {
+      none: "none",
+      overlay: "var(--shadow-overlay)",
+    },
+    /* §7 — four durations, two curves. */
+    transitionDuration: {
+      DEFAULT: "var(--t-micro)",
+      0: "0ms",
+      press: "var(--t-press)",
+      micro: "var(--t-micro)",
+      standard: "var(--t-standard)",
+      large: "var(--t-large)",
+    },
+    transitionTimingFunction: {
+      DEFAULT: "var(--ease)",
+      standard: "var(--ease)",
+      emph: "var(--ease-emph)",
+    },
+    /* §2 law 8 — nothing animates unless the user caused it. A spinner shows only while something the user started is loading. */
+    animation: {
+      none: "none",
+      spin: "spin 700ms linear infinite",
+    },
     extend: {
       colors: {
-        canvas: "#08080c",
-        surface: "#121219",
-        line: { DEFAULT: "#262a35", strong: "#353a48" },
+        white: v("text"),
+        black: v("surface-0"),
+        canvas: v("surface-0"),
+        surface: { DEFAULT: v("surface-1"), 2: v("surface-2"), 3: v("surface-3") },
+        line: { DEFAULT: v("hair"), strong: v("hair-strong") },
         ink: {
-          DEFAULT: "#f2f3f7",
-          2: "#c8ccd8",
-          muted: "#9aa0b1",
-          subtle: "#7d8396",
-          inverse: "#08080c",
+          DEFAULT: v("text"),
+          2: v("text-muted"),
+          muted: v("text-muted"),
+          subtle: v("text-dim"),
+          inverse: v("accent-ink"),
         },
-        brand: {
-          DEFAULT: "#dcfe62",
-          hover: "#e8ff8c",
-          soft: "#1d2109",
-          ink: "#dcfe62",
-        },
-        live: { DEFAULT: "#34d399", soft: "#0f2a20" },
-        warn: { DEFAULT: "#fbbf24", soft: "#2e230b" },
-        danger: { DEFAULT: "#ff6b6e", soft: "#331618" },
-        sun: "#ffd25e",
-        /** Neon-lime call-to-action accent (always with dark text). */
-        volt: { DEFAULT: "#dcfe62", hover: "#e8ff8c" },
+        accent: { DEFAULT: v("accent"), ink: v("accent-ink") },
+        /* Old names kept so existing classes resolve to the one accent. */
+        volt: { DEFAULT: v("accent"), hover: v("accent") },
+        brand: { DEFAULT: v("accent"), hover: v("accent"), ink: v("accent"), soft: v("surface-2") },
+        live: { DEFAULT: v("ok"), soft: v("surface-2") },
+        ok: v("ok"),
+        warn: { DEFAULT: v("warn"), soft: v("surface-2") },
+        danger: { DEFAULT: v("bad"), soft: v("surface-2") },
+        bad: v("bad"),
+        sun: v("warn"),
+        qr: v("qr-ground"),
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "Consolas", "monospace"],
-        /** Logo wordmark only (Bricolage Grotesque 800). */
-        logo: ["var(--font-logo)", "var(--font-sans)", "system-ui", "sans-serif"],
-        /** Big headings: the same friendly sans, used heavy and tight. */
-        display: ["var(--font-sans)", "system-ui", "-apple-system", "sans-serif"],
-        /** The EvntCult logotype only (Fredoka, rounded). */
-        brand: ["var(--font-brand)", "var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)"],
+        sans: ["var(--font-body)"],
+        mono: ["var(--font-mono)"],
+        /* The logotype is set in the display face (one display face, §3). */
+        logo: ["var(--font-display)"],
+        brand: ["var(--font-display)"],
       },
-      letterSpacing: {
-        tightest: "-0.04em",
-        tighter: "-0.025em",
+      spacing: {
+        "s-1": "var(--s-1)",
+        "s-2": "var(--s-2)",
+        "s-3": "var(--s-3)",
+        "s-4": "var(--s-4)",
+        "s-5": "var(--s-5)",
+        "s-6": "var(--s-6)",
+        "s-7": "var(--s-7)",
+        "s-8": "var(--s-8)",
       },
-      borderRadius: {
-        "4xl": "2rem",
-      },
-      boxShadow: {
-        card: "0 1px 0 rgba(255,255,255,0.03) inset, 0 10px 30px -18px rgba(0,0,0,0.8)",
-        pop: "0 30px 70px -30px rgba(0,0,0,0.9)",
-        brand: "0 14px 34px -16px rgba(220,254,98,0.55)",
-      },
-      keyframes: {
-        /* Soft fade, like a modern editor cursor (not a hard on/off). */
-        "caret-blink": {
-          "0%, 45%": { opacity: "1" },
-          "55%, 92%": { opacity: "0.08" },
-          "100%": { opacity: "1" },
-        },
-        /* Each typed letter glides up into the gap. */
-        "type-in": {
-          "0%": { opacity: "0", transform: "translateY(0.12em) scale(0.92)" },
-          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
-        },
-        "fade-up": {
-          "0%": { opacity: "0", transform: "translateY(12px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        pulse_dot: {
-          "0%, 100%": { opacity: "1", transform: "scale(1)" },
-          "50%": { opacity: "0.45", transform: "scale(0.8)" },
-        },
-        float: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-6px)" },
-        },
-        drift: {
-          "0%, 100%": { transform: "translateY(0) rotate(var(--tilt, 0deg))" },
-          "50%": { transform: "translateY(-14px) rotate(var(--tilt, 0deg))" },
-        },
-        marquee: {
-          "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-50%)" },
-        },
-        aurora: {
-          "0%, 100%": { transform: "translate(0,0) scale(1)" },
-          "50%": { transform: "translate(4%,-6%) scale(1.12)" },
-        },
-      },
-      animation: {
-        "caret-blink": "caret-blink 1.1s ease-in-out infinite",
-        "type-in": "type-in 140ms cubic-bezier(0.22,1,0.36,1) both",
-        "fade-up": "fade-up 0.6s cubic-bezier(0.22,1,0.36,1) both",
-        "pulse-dot": "pulse_dot 1.6s ease-in-out infinite",
-        float: "float 5s ease-in-out infinite",
-        drift: "drift 7s ease-in-out infinite",
-        marquee: "marquee 38s linear infinite",
-        "spin-slow": "spin 18s linear infinite",
-        aurora: "aurora 14s ease-in-out infinite",
-      },
-      transitionTimingFunction: {
-        apple: "cubic-bezier(0.22, 1, 0.36, 1)",
-      },
+      maxWidth: { app: "1440px", marketing: "1200px", prose: "720px" },
     },
   },
   plugins: [],

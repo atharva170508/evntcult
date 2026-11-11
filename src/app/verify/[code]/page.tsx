@@ -14,20 +14,20 @@ export default async function VerifyPage({ params }: { params: Promise<{ code: s
   const c = await verifyCertificate(await getDB(), decodeURIComponent(code));
 
   return (
-    <main className="mx-auto grid min-h-dvh max-w-xl place-items-center px-5 py-10">
+    <main className="mx-auto grid min-h-dvh max-w-xl place-items-center px-6 py-12">
       {!c ? (
-        <p className="text-[18px] font-semibold">No certificate matches this code.</p>
+        <p className="text-title font-semibold">No certificate matches this code.</p>
       ) : (
         <div className="w-full">
           {c.revokedAt && (
-            <p role="alert" className="mb-6 rounded-lg bg-danger px-4 py-3 text-[15px] font-semibold text-white">
+            <p role="alert" className="mb-6 rounded-lg bg-danger px-4 py-3 text-body font-semibold text-white">
               This certificate was revoked on {date.format(new Date(c.revokedAt))}.
             </p>
           )}
-          <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-ink-muted">{code.toUpperCase()}</p>
-          <h1 className="mt-3 text-[clamp(32px,8vw,48px)] font-bold leading-tight">{c.name}</h1>
-          <p className="mt-2 text-[20px]">{c.eventTitle}</p>
-          <dl className="mt-7 divide-y divide-line border-y border-line text-[15px]">
+          <p className="font-mono text-label uppercase tracking-[0.12em] text-ink-muted">{code.toUpperCase()}</p>
+          <h1 className="mt-3 text-display font-semibold leading-tight">{c.name}</h1>
+          <p className="mt-2 text-title">{c.eventTitle}</p>
+          <dl className="mt-8 divide-y divide-line border-y border-line text-body">
             {[
               ["Type", KIND[c.kind]],
               ["Issued", date.format(new Date(c.issuedAt))],
@@ -39,7 +39,7 @@ export default async function VerifyPage({ params }: { params: Promise<{ code: s
               </div>
             ))}
           </dl>
-          <p className="mt-6 text-[14px] text-ink-muted">This certificate was issued by EvntCult for attendance at this event.</p>
+          <p className="mt-6 text-body text-ink-muted">This certificate was issued by EvntCult for attendance at this event.</p>
         </div>
       )}
     </main>

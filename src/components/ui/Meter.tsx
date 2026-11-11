@@ -12,7 +12,7 @@ export function Meter({ value, max, className }: { value: number; max: number | 
       aria-valuemin={0}
       aria-valuemax={max ?? undefined}
     >
-      <div className={cn("h-full rounded-full transition-[width] duration-1000 ease-apple", color)} style={{ width: `${pct}%` }} />
+      <div className={cn("h-full rounded-full transition-[width] duration-large ease-standard", color)} style={{ width: `${pct}%` }} />
     </div>
   );
 }

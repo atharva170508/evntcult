@@ -25,15 +25,15 @@ export function CertPanel({ eventId, issued, checkedIn, enabled }: { eventId: st
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <span className="text-[14px]"><b className="font-mono tabular-nums">{issued}</b> issued · <span className="font-mono tabular-nums">{checkedIn}</span> checked in</span>
-      <button disabled={busy} onClick={() => run(`/api/events/${eventId}/certificates/issue`)} className="rounded-full bg-volt px-4 py-2 text-[13px] font-bold text-ink-inverse disabled:opacity-50">
+      <span className="text-body"><b className="font-mono tabular-nums">{issued}</b> issued · <span className="font-mono tabular-nums">{checkedIn}</span> checked in</span>
+      <button disabled={busy} onClick={() => run(`/api/events/${eventId}/certificates/issue`)} className="rounded-full bg-volt px-4 py-2 text-body-sm font-semibold text-ink-inverse disabled:opacity-50">
         Issue certificates
       </button>
-      <label className="flex items-center gap-2 text-[13px]">
+      <label className="flex items-center gap-2 text-body-sm">
         <input type="checkbox" checked={enabled} disabled={busy} onChange={(e) => run(`/api/events/${eventId}/certificates`, { enabled: e.target.checked })} className="size-4 accent-brand" />
         Issue at check-in
       </label>
-      {note && <span role="status" className="text-[13px] text-ink-muted">{note}</span>}
+      {note && <span role="status" className="text-body-sm text-ink-muted">{note}</span>}
     </div>
   );
 }
@@ -56,9 +56,9 @@ export function AttendeeCert({ regId, certs }: { regId: string; certs: { id: str
   const missing = SPECIAL.filter(([k]) => !certs.some((c) => c.kind === k));
 
   return (
-    <div className="flex flex-wrap items-center gap-2 text-[12px]">
+    <div className="flex flex-wrap items-center gap-2 text-label">
       {certs.map((c) => (
-        <span key={c.id} className="inline-flex items-center gap-1.5 rounded-full border border-line px-2 py-0.5 capitalize">
+        <span key={c.id} className="inline-flex items-center gap-2 rounded-full border border-line px-2 py-1 capitalize">
           {c.kind}
           <button disabled={busy} aria-label={`Revoke ${c.kind} certificate`} onClick={() => confirm(`Revoke this ${c.kind} certificate?`) && run(`/api/certificates/${c.id}/revoke`)} className="font-semibold text-ink-muted hover:text-danger">×</button>
         </span>
@@ -69,7 +69,7 @@ export function AttendeeCert({ regId, certs }: { regId: string; certs: { id: str
           value=""
           disabled={busy}
           onChange={(e) => e.target.value && run(`/api/registrations/${regId}/certificate`, { kind: e.target.value })}
-          className="rounded-full border border-line bg-surface px-2 py-0.5 text-[12px]"
+          className="rounded-full border border-line bg-surface px-2 py-1 text-label"
         >
           <option value="">Add</option>
           {missing.map(([k, l]) => (

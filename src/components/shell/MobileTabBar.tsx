@@ -12,7 +12,7 @@ export function MobileTabBar({ isOrganizer }: { isOrganizer: boolean }) {
   const items = [...base, isOrganizer ? ORGANIZER_NAV : NAV.find((n) => n.href === "/vault")!];
 
   return (
-    <nav className="print:hidden fixed inset-x-3 bottom-3 z-40 rounded-full border border-white/10 bg-surface/80 px-2 py-1.5 shadow-pop backdrop-blur-xl md:hidden">
+    <nav className="print:hidden fixed inset-x-3 bottom-3 z-40 rounded-full border border-white/10 bg-surface/80 px-2 py-2 md:hidden">
       <ul className="grid grid-cols-5">
         {items.map((item) => {
           const active = isActive(pathname, item.href);
@@ -23,7 +23,7 @@ export function MobileTabBar({ isOrganizer }: { isOrganizer: boolean }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 rounded-2xl py-1.5 text-[10.5px] font-semibold transition-colors",
+ "flex flex-col items-center gap-1 rounded-md py-2 text-caption font-semibold transition-colors",
                   active ? "text-ink" : "text-ink-subtle",
                 )}
               >

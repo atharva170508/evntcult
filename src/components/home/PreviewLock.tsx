@@ -52,12 +52,12 @@ export function PreviewLock({ children, className, label }: { children: React.Re
         <div
           id={tipId}
           role="status"
-          className="absolute left-1/2 top-full z-20 mt-2 w-max max-w-[260px] -translate-x-1/2 rounded-2xl border border-volt/30 bg-surface px-4 py-3 text-left shadow-pop animate-fade-up"
+          className="absolute left-1/2 top-full z-20 mt-2 w-max max-w-[260px] -translate-x-1/2 rounded-md border border-volt/30 bg-surface px-4 py-3 text-left"
         >
-          <p className="flex items-center gap-2 text-[13.5px] font-bold text-ink">
+          <p className="flex items-center gap-2 text-body-sm font-semibold text-ink">
             <Lock className="size-4 text-volt" aria-hidden /> Sign up to view & unlock live events
           </p>
-          <Link href="/signin?mode=signup" className="mt-2 inline-flex rounded-full bg-volt px-3.5 py-1.5 text-[12.5px] font-bold text-ink-inverse hover:bg-volt-hover">
+          <Link href="/signin?mode=signup" className="mt-2 inline-flex rounded-full bg-volt px-4 py-2 text-label font-semibold text-ink-inverse hover:bg-volt-hover">
             Sign up free
           </Link>
         </div>

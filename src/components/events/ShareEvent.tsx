@@ -5,7 +5,7 @@ import { Link2, Share2 } from "lucide-react";
 
 export function ShareEvent({ url, title }: { url: string; title: string }) {
   const [copied, setCopied] = useState(false);
-  const btn = "inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-[13px] font-semibold hover:border-volt/60";
+  const btn = "inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-body-sm font-semibold hover:border-volt/60";
 
   async function share() {
     if (navigator.share) {

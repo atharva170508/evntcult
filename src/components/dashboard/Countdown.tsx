@@ -22,8 +22,8 @@ export function Countdown({ to, endsAt, compact }: { to: Date; endsAt: Date; com
 
   if (now >= +to && now < +endsAt) {
     return (
-      <p className="inline-flex items-center gap-2 rounded-full bg-volt/10 px-3 py-1.5 text-[14px] font-bold text-volt ring-1 ring-volt/30">
-        <span className="size-2 rounded-full bg-volt motion-safe:animate-pulse-dot" aria-hidden /> Happening now
+      <p className="inline-flex items-center gap-2 rounded-full bg-volt/10 px-3 py-2 text-body font-semibold text-volt ring-1 ring-volt/30">
+        <span className="size-2 rounded-full bg-volt" aria-hidden /> Happening now
       </p>
     );
   }
@@ -36,16 +36,16 @@ export function Countdown({ to, endsAt, compact }: { to: Date; endsAt: Date; com
     { v: s, l: "sec" },
   ];
   return (
-    <div className="flex items-center gap-1.5" aria-label={`Starts in ${d} days ${h} hours ${m} minutes`}>
+    <div className="flex items-center gap-2" aria-label={`Starts in ${d} days ${h} hours ${m} minutes`}>
       {cells.map((c, i) => (
-        <div key={c.l} className="flex items-center gap-1.5">
-          <div className={cn("rounded-2xl bg-canvas text-center", compact ? "min-w-[46px] px-2 py-1.5" : "min-w-[58px] px-2.5 py-2")}>
-            <div className={cn("font-bold leading-none tracking-tighter tabular-nums", compact ? "text-[18px]" : "text-[24px]")}>
+        <div key={c.l} className="flex items-center gap-2">
+          <div className={cn("rounded-md bg-canvas text-center", compact ? "min-w-[46px] px-2 py-2" : "min-w-[58px] px-3 py-2")}>
+            <div className={cn("font-semibold leading-none tabular-nums", compact ? "text-title" : "text-heading")}>
               {String(c.v).padStart(2, "0")}
             </div>
-            <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-subtle">{c.l}</div>
+            <div className="mt-1 text-caption font-semibold uppercase tracking-[0.08em] text-ink-subtle">{c.l}</div>
           </div>
-          {i < cells.length - 1 && <span className="font-bold text-ink-subtle">:</span>}
+          {i < cells.length - 1 && <span className="font-semibold text-ink-subtle">:</span>}
         </div>
       ))}
     </div>

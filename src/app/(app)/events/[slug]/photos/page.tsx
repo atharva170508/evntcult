@@ -31,24 +31,24 @@ export default async function EventPhotosPage({ params, searchParams }: { params
   const access = await photoAccess(db, viewer, event.id);
   const storageReady = await photoStorageReady();
   const back = (
-    <Link href={`/events/${event.slug}`} className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-muted hover:text-ink">
+    <Link href={`/events/${event.slug}`} className="inline-flex items-center gap-2 text-body-sm font-semibold text-ink-muted hover:text-ink">
       <ArrowLeft className="size-4" /> {event.title}
     </Link>
   );
 
   if (!access.view) {
     return (
-      <div className="space-y-5 pt-4 md:pt-6">
+      <div className="space-y-6 pt-4 md:pt-6">
         {back}
         <section className="card flex flex-col items-start gap-3 p-8">
           <Lock className="size-8 text-ink-subtle" />
-          <h1 className="title-xl text-[32px]">Photos are for people who registered</h1>
-          <p className="max-w-md text-[14.5px] text-ink-muted">
+          <h1 className="title-xl text-display">Photos are for people who registered</h1>
+          <p className="max-w-md text-body text-ink-muted">
             Only this event&apos;s registered attendees and its organizer can see its photos.
             {!viewer && " Sign in with the account you registered with."}
           </p>
           {!viewer && (
-            <Link href={`/signin?next=${encodeURIComponent(`/events/${event.slug}/photos`)}`} className="rounded-full bg-volt px-5 py-2.5 text-[14px] font-semibold text-ink-inverse">Sign in</Link>
+            <Link href={`/signin?next=${encodeURIComponent(`/events/${event.slug}/photos`)}`} className="rounded-full bg-volt px-6 py-3 text-body font-semibold text-ink-inverse">Sign in</Link>
           )}
         </section>
       </div>
@@ -59,7 +59,7 @@ export default async function EventPhotosPage({ params, searchParams }: { params
   const tagged = photos.filter((p) => p.mine).length;
 
   return (
-    <div className="space-y-5 pt-4 md:pt-6">
+    <div className="space-y-6 pt-4 md:pt-6">
       {back}
       <PageHero
         eyebrow={`Photos · ${fmtDate(new Date(event.starts_at), { day: "numeric", month: "short", year: "numeric" })}`}
@@ -82,7 +82,7 @@ export default async function EventPhotosPage({ params, searchParams }: { params
             key={tab.label}
             href={tab.href}
             aria-current={tab.active ? "page" : undefined}
-            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-[14px] font-semibold transition-colors ${tab.active ? "border-volt bg-volt text-ink-inverse" : "border-line bg-surface text-ink-2 hover:border-volt/60"}`}
+            className={`inline-flex items-center gap-2 rounded-full border px-4 py-3 text-body font-semibold transition-colors ${tab.active ? "border-volt bg-volt text-ink-inverse" : "border-line bg-surface text-ink-2 hover:border-volt/60"}`}
           >
             <tab.icon className="size-4" aria-hidden /> {tab.label}
           </Link>
@@ -95,8 +95,8 @@ export default async function EventPhotosPage({ params, searchParams }: { params
         ) : (
           <section className="card flex flex-col items-start gap-3 p-8">
             <ScanFace className="size-8 text-ink-subtle" aria-hidden />
-            <h2 className="title-xl text-[30px]">AI Face Search isn&apos;t switched on yet</h2>
-            <p className="max-w-md text-[14px] text-ink-muted">
+            <h2 className="title-xl text-display">AI Face Search isn&apos;t switched on yet</h2>
+            <p className="max-w-md text-body text-ink-muted">
               It starts working once the photo database is connected and the photographers&apos; album has been indexed. Until then, use <b>All photos</b> and tap <b>That&apos;s me</b>.
             </p>
           </section>
@@ -104,8 +104,8 @@ export default async function EventPhotosPage({ params, searchParams }: { params
       ) : (
         <>
       {access.manage && storageReady && (
-        <section className="card p-5">
-          <h2 className="headline mb-3 text-[17px]">Upload photos</h2>
+        <section className="card p-6">
+          <h2 className="headline mb-3 text-title">Upload photos</h2>
           <PhotoUploader eventId={event.id} />
         </section>
       )}
@@ -113,8 +113,8 @@ export default async function EventPhotosPage({ params, searchParams }: { params
       {photos.length === 0 ? (
         <section className="card flex flex-col items-start gap-2 p-8">
           <Camera className="size-8 text-ink-subtle" />
-          <h2 className="title-xl text-[32px]">No photos yet</h2>
-          <p className="text-[14px] text-ink-muted">{access.manage ? "Add the first ones above." : "The organizer hasn't uploaded any photos yet."}</p>
+          <h2 className="title-xl text-display">No photos yet</h2>
+          <p className="text-body text-ink-muted">{access.manage ? "Add the first ones above." : "The organizer hasn't uploaded any photos yet."}</p>
         </section>
       ) : (
         <PhotoGrid photos={photos.map((p) => ({ id: p.id, width: p.width, height: p.height, mine: p.mine === 1 }))} canTag={access.tag} canManage={access.manage} />

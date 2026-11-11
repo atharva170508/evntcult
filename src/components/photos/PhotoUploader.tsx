@@ -10,6 +10,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, ImagePlus, Loader2, XCircle } from "lucide-react";
+import { PHOTO_MATTE } from "@/styles/tokens";
 
 const MAX_SIDE = 2560;
 const THUMB_SIDE = 480;
@@ -39,7 +40,7 @@ function draw(img: HTMLImageElement, maxSide: number, type: string, quality: num
   canvas.height = h;
   const g = canvas.getContext("2d")!;
   if (type === "image/jpeg") {
-    g.fillStyle = "#fff"; // transparent PNG areas become white, not black
+    g.fillStyle = PHOTO_MATTE; // transparent PNG areas become white, not black
     g.fillRect(0, 0, w, h);
   }
   g.drawImage(img, 0, 0, w, h);
@@ -93,16 +94,16 @@ export function PhotoUploader({ eventId }: { eventId: string }) {
   const done = items.filter((i) => i.state === "done").length;
   return (
     <div className="space-y-3">
-      <label className={`flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-line p-6 text-center hover:border-volt/60 ${busy ? "pointer-events-none opacity-60" : ""}`}>
+      <label className={`flex cursor-pointer flex-col items-center gap-2 rounded-md border-2 border-dashed border-line p-6 text-center hover:border-volt/60 ${busy ? "pointer-events-none opacity-60" : ""}`}>
         <ImagePlus className="size-7 text-ink-subtle" />
-        <span className="text-[14.5px] font-semibold">Add photos</span>
-        <span className="text-[12.5px] text-ink-muted">JPEG, PNG or WebP · up to 10 MB each · location data is removed</span>
+        <span className="text-body font-semibold">Add photos</span>
+        <span className="text-label text-ink-muted">JPEG, PNG or WebP · up to 10 MB each · location data is removed</span>
         <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" multiple className="sr-only" onChange={(e) => upload(e.target.files)} disabled={busy} />
       </label>
       {items.length > 0 && (
-        <div role="status" className="space-y-1.5">
-          <p className="text-[13px] font-semibold">{busy ? `Uploading… ${done} of ${items.length}` : `Uploaded ${done} of ${items.length}`}</p>
-          <ul className="max-h-48 space-y-1 overflow-y-auto text-[12.5px]">
+        <div role="status" className="space-y-2">
+          <p className="text-body-sm font-semibold">{busy ? `Uploading… ${done} of ${items.length}` : `Uploaded ${done} of ${items.length}`}</p>
+          <ul className="max-h-48 space-y-1 overflow-y-auto text-label">
             {items.map((it, i) => (
               <li key={i} className="flex items-center gap-2">
                 {it.state === "done" ? <CheckCircle2 className="size-4 shrink-0 text-live" /> : it.state === "error" ? <XCircle className="size-4 shrink-0 text-danger" /> : it.state === "working" ? <Loader2 className="size-4 shrink-0 animate-spin" /> : <span className="size-4 shrink-0" />}

@@ -20,11 +20,11 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
   }
 
   return (
-    <article className="group overflow-hidden rounded-[22px] border border-white/[0.07] bg-surface transition-colors hover:border-volt/40">
+    <article className="group overflow-hidden rounded-lg border border-white/[0.07] bg-surface transition-colors hover:border-volt/40">
       <div className="relative aspect-[4/5] bg-white/[0.03]">
         {src ? (
           <>
-            {!loaded && <div className="absolute inset-0 motion-safe:animate-pulse bg-white/[0.04]" aria-hidden />}
+            {!loaded && <div className="absolute inset-0 bg-white/[0.04]" aria-hidden />}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               key={src}
@@ -35,26 +35,26 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
               referrerPolicy="no-referrer"
               onLoad={() => setLoaded(true)}
               onError={onError}
-              className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              className="size-full object-cover transition-transform duration-large group-hover:scale-[1.03]"
             />
           </>
         ) : (
-          <div className="grid size-full place-items-center text-center text-[12.5px] text-ink-muted">
+          <div className="grid size-full place-items-center text-center text-label text-ink-muted">
             <span className="flex flex-col items-center gap-2 px-4">
               <ImageOff className="size-6" aria-hidden /> Preview unavailable. The full photo can still be downloaded.
             </span>
           </div>
         )}
-        <span className="absolute left-2.5 top-2.5 rounded-full bg-volt px-2.5 py-1 text-[12px] font-bold tabular-nums text-ink-inverse shadow-brand">
+        <span className="absolute left-2.5 top-2.5 rounded-full bg-volt px-3 py-1 text-label font-semibold tabular-nums text-ink-inverse">
           {pct}% Match
         </span>
       </div>
-      <div className="p-2.5">
+      <div className="p-3">
         <a
           href={match.downloadUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-1.5 rounded-full bg-volt px-3 py-2.5 text-[13px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-volt px-3 py-3 text-body-sm font-semibold text-ink-inverse transition-colors hover:bg-volt-hover"
         >
           <Download className="size-4" aria-hidden /> Download Full HD (DSLR)
           <span className="sr-only">, photo {index + 1}, opens a download from Google Drive</span>

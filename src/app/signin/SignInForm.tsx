@@ -10,7 +10,7 @@ type ApiErr = { error?: { code: string; message: string } };
 const OWNER_EMAIL = "evntcult@gmail.com";
 
 const inputCls =
-  "mt-1.5 w-full rounded-2xl border border-line bg-surface px-4 py-3.5 text-[15px] placeholder:text-ink-subtle focus:outline-none";
+  "mt-2 w-full rounded-md border border-line bg-surface px-4 py-4 text-body placeholder:text-ink-subtle focus:outline-none";
 
 /**
  * Sign in / sign up.
@@ -99,8 +99,8 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
     <>
     {ownerOpen && (
       <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4" role="dialog" aria-modal="true" aria-labelledby="owner-title">
-        <form onSubmit={submitOwner} className="w-full max-w-sm space-y-3 rounded-3xl border border-line bg-surface p-6">
-          <h2 id="owner-title" className="text-[20px] font-bold">Owner code</h2>
+        <form onSubmit={submitOwner} className="w-full max-w-sm space-y-3 rounded-lg border border-line bg-surface p-6">
+          <h2 id="owner-title" className="text-title font-semibold">Owner code</h2>
           <input
             type="password"
             required
@@ -112,25 +112,25 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
             className={inputCls}
           />
           {ownerError && (
-            <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
+            <p role="alert" className="rounded-md bg-danger-soft px-4 py-3 text-body-sm font-semibold text-danger">
               {ownerError}
             </p>
           )}
           <div className="flex gap-2">
-            <button type="button" onClick={() => setOwnerOpen(false)} className="flex-1 rounded-full border border-line py-3 text-[14px] font-semibold">
+            <button type="button" onClick={() => setOwnerOpen(false)} className="flex-1 rounded-full border border-line py-3 text-body font-semibold">
               Cancel
             </button>
-            <button disabled={busy || !ownerCode} className="flex flex-1 items-center justify-center gap-2 rounded-full bg-volt py-3 text-[14px] font-bold text-ink-inverse disabled:opacity-50">
+            <button disabled={busy || !ownerCode} className="flex flex-1 items-center justify-center gap-2 rounded-full bg-volt py-3 text-body font-semibold text-ink-inverse disabled:opacity-50">
               {busy && <Loader2 className="size-4 animate-spin" aria-hidden />} Open
             </button>
           </div>
         </form>
       </div>
     )}
-    <form onSubmit={submit} className="mt-7 space-y-3">
+    <form onSubmit={submit} className="mt-8 space-y-3">
       {step === "email" ? (
         <label className="block">
-          <span className="text-[13px] font-semibold text-ink-2">Email</span>
+          <span className="text-body-sm font-semibold text-ink-2">Email</span>
           <input
             type="email"
             required
@@ -143,14 +143,14 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
         </label>
       ) : (
         <div className="space-y-3">
-          <p className="flex items-start gap-2.5 rounded-2xl border border-line bg-surface px-4 py-3 text-[14px] text-ink-2" role="status">
+          <p className="flex items-start gap-3 rounded-md border border-line bg-surface px-4 py-3 text-body text-ink-2" role="status">
             <MailCheck className="mt-0.5 size-4 shrink-0 text-live" aria-hidden />
             <span>
               We emailed a 6-digit code to <b className="text-ink">{email}</b>. It works for 10 minutes. Check spam if you don&apos;t see it.
             </span>
           </p>
           <label className="block">
-            <span className="text-[13px] font-semibold text-ink-2">6-digit code</span>
+            <span className="text-body-sm font-semibold text-ink-2">6-digit code</span>
             <input
               required
               autoFocus
@@ -161,7 +161,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
               placeholder="000000"
-              className={`${inputCls} text-center font-mono text-[26px] font-bold tracking-[0.5em]`}
+              className={`${inputCls} text-center font-mono text-heading font-semibold tracking-[0.12em]`}
             />
           </label>
         </div>
@@ -170,7 +170,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
       {needName && (
         <>
           <label className="block">
-            <span className="text-[13px] font-semibold text-ink-2">Your name</span>
+            <span className="text-body-sm font-semibold text-ink-2">Your name</span>
             <input required minLength={2} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className={inputCls} />
           </label>
           <PhoneFields phone={phone} setPhone={setPhone} optIn={optIn} setOptIn={setOptIn} />
@@ -178,21 +178,21 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
       )}
 
       {error && (
-        <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
+        <p role="alert" className="rounded-md bg-danger-soft px-4 py-3 text-body-sm font-semibold text-danger">
           {error}
         </p>
       )}
 
       <button
         disabled={busy || (step === "code" && code.length !== 6)}
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-volt py-3.5 text-[15px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-volt py-4 text-body font-semibold text-ink-inverse transition-colors hover:bg-volt-hover disabled:opacity-50"
       >
         {busy && <Loader2 className="size-4 animate-spin" aria-hidden />}
         {codeLogin && step === "email" ? "Email me a code" : needName ? "Create account" : "Log in"}
       </button>
 
       {codeLogin && step === "code" && (
-        <div className="flex items-center justify-between text-[13.5px]">
+        <div className="flex items-center justify-between text-body-sm">
           <button type="button" onClick={() => { setStep("email"); setError(null); }} className="font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
             Use a different email
           </button>

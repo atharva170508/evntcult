@@ -20,15 +20,15 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
 
   return (
     <main className="grid min-h-dvh lg:grid-cols-2">
-      <div className="relative isolate m-3 hidden flex-col justify-between overflow-hidden rounded-[36px] p-12 text-white lg:flex">
+      <div className="relative isolate m-3 hidden flex-col justify-between overflow-hidden rounded-lg p-12 text-white lg:flex">
         <Aurora />
-        <Marquee words={["Register", "Pass", "Scan", "Attend"]} className="absolute inset-x-0 top-[38%] text-[150px] text-white/[0.07]" />
-        <div className="relative flex items-center gap-2.5">
-          <LogoWordmark motion="type" className="text-[34px] text-white" />
+        <Marquee words={["Register", "Pass", "Scan", "Attend"]} className="absolute inset-x-0 top-[38%] text-display text-white/[0.07]" />
+        <div className="relative flex items-center gap-3">
+          <LogoWordmark motion="type" className="text-display text-white" />
         </div>
         <div className="relative max-w-md">
-          <h2 className="font-display text-[68px] font-bold leading-[0.95] tracking-[-0.04em]">Register. Pass. Scan. <em>Attend.</em></h2>
-          <ul className="mt-8 space-y-3 text-[16px] font-semibold text-white/90">
+          <h2 className="font-display text-display font-semibold leading-none">Register. Pass. Scan. <em>Attend.</em></h2>
+          <ul className="mt-8 space-y-3 text-body font-semibold text-white/90">
             <li className="flex items-center gap-3">
               <CalendarCheck2 className="size-5" /> Every event in one place
             </li>
@@ -42,14 +42,14 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         </div>
       </div>
 
-      <div className="grid place-items-center px-5 py-12">
-        <div className="w-full max-w-[400px] animate-fade-up">
-          <div className="flex items-center gap-2.5 lg:hidden">
-            <LogoWordmark motion="type" className="text-[30px] text-ink" />
+      <div className="grid place-items-center px-6 py-12">
+        <div className="w-full max-w-[400px]">
+          <div className="flex items-center gap-3 lg:hidden">
+            <LogoWordmark motion="type" className="text-display text-ink" />
           </div>
-          <h1 className="title-xl mt-8 text-[52px] lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
+          <h1 className="title-xl mt-8 text-display lg:mt-0">{signup ? "Create your account" : "Log in"}</h1>
           <SignInForm next={next} signup={signup} codeLogin={codeLoginOn()} />
-          <p className="mt-6 text-center text-[14px] text-ink-muted">
+          <p className="mt-6 text-center text-body text-ink-muted">
             {signup ? "Already have an account? " : "New here? "}
             <Link href={`/signin?${signup ? "" : "mode=signup&"}next=${encodeURIComponent(next)}`} className="font-semibold text-ink underline underline-offset-2">
               {signup ? "Log in" : "Sign up"}

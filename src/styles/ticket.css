@@ -1,0 +1,28 @@
+/* §8 Ticket — the one physical object: event card, pass and calendar bar. Shared by every surface.
+   Notches are punched in the page colour; set --notch-ground when the ticket sits on a card. */
+.o-ticket { position: relative; width: 520px; max-width: 100%; height: 208px; background: var(--ticket); border: 1px solid var(--hair); border-radius: var(--r-2); display: grid; grid-template-columns: 372px 148px; overflow: hidden; }
+.o-ticket-left { padding: 24px; display: flex; flex-direction: column; min-width: 0; }
+.o-ticket-right { padding: 24px 0 0 24px; display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
+.o-ticket-cat { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); margin-bottom: 8px; }
+.o-ticket-title { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-heading); line-height: 1.08; text-transform: uppercase; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+.o-ticket-meta { font-family: var(--font-mono); font-size: var(--fs-caption); display: flex; gap: 16px; white-space: nowrap; }
+.o-ticket-venue { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.o-ticket-tag { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-dim); margin-top: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.o-ticket-perf { position: absolute; left: 372px; top: 0; height: 100%; width: 1px; }
+.o-notch { position: absolute; left: 363px; width: 18px; height: 18px; border-radius: 50%; background: var(--notch-ground, var(--surface-0)); border: 1px solid var(--hair); }
+.o-qr { width: 84px; height: 84px; background: var(--surface-2); border-radius: var(--r-1); flex: none; }
+.o-qr:has(svg) { background: var(--qr-ground); padding: 4px; }
+.o-qr svg { width: 100%; height: 100%; display: block; }
+.o-ticket-code { font-family: var(--font-mono); font-size: var(--fs-caption); margin-top: 12px; white-space: nowrap; }
+.o-ticket-price { font-family: var(--font-display); font-weight: 600; font-size: var(--fs-title); line-height: 1; color: var(--accent); margin-top: 8px; white-space: nowrap; }
+.o-ticket-left-seats { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-dim); margin-top: 4px; white-space: nowrap; }
+.o-odo { display: inline-flex; overflow: hidden; height: 1em; line-height: 1; vertical-align: baseline; }
+.o-odo-col { display: flex; flex-direction: column; transition: transform var(--t-large) var(--ease-emph); }
+.o-odo-col span { height: 1em; display: block; }
+@media (max-width: 780px) {
+  .o-ticket { width: 100%; height: auto; grid-template-columns: minmax(0, 1fr); }
+  .o-ticket-tag { margin-top: 8px; }
+  .o-ticket-right { padding: 16px 24px 24px; }
+  .o-ticket-perf, .o-notch { display: none; }
+  .o-ticket-right { border-top: 1px dashed var(--hair-strong); }
+}
