@@ -18,7 +18,9 @@ import jsQR from "jsqr";
 import type { Manifest, ManifestEntry } from "@/lib/data/checkins";
 import { extractPassToken } from "@/lib/tokens";
 import { formatINR } from "@/lib/money";
-import { fmtTime } from "@/lib/utils";
+import { cn, fmtTime } from "@/lib/utils";
+import { buttonClass } from "@/components/ui/Button";
+import { Odometer } from "@/components/organizer-ui/primitives";
 import { deviceId, loadGuestList, queueScan, queuedScans, removeQueued, saveGuestList, sha256Hex, type QueuedScan } from "@/lib/scanner/offline-store";
 
 interface EventInfo {
@@ -46,12 +48,13 @@ interface MerchLine {
 }
 
 type Verdict =
-  | { color: "green"; title: string; name?: string; code?: string; note?: string; merch?: MerchLine[]; token?: string }
+  | { color: "green"; title: string; name?: string; code?: string; note?: string; merch?: MerchLine[]; token?: string; regId?: string; offlineScan?: QueuedScan; hash?: string }
   | { color: "amber"; title: string; name?: string; code?: string; note?: string; collect?: { amountPaise: number; scan: QueuedScan }; merch?: MerchLine[]; token?: string }
   | { color: "red"; title: string; note?: string };
 
 interface ServerVerdict {
   result: "admitted" | "already_in" | "unpaid" | "invalid";
+  registrationId?: string;
   name?: string;
   passCode?: string;
   scannedAt?: string;
@@ -80,7 +83,11 @@ const writeClaims = (q: QueuedClaim[]) => {
 };
 
 const SAME_CODE_PAUSE_MS = 3000;
-const GREEN_AUTO_DISMISS_MS = 1600;
+/** Express mode: a green verdict clears itself so the next person can be scanned straight away. */
+const EXPRESS_DISMISS_MS = 900;
+/** §9: undo is offered for 5 seconds after each admit. */
+const UNDO_MS = 5000;
+const EXPRESS_KEY = "evntcult-gate-express";
 
 function beep(ok: boolean) {
   try {
@@ -103,9 +110,10 @@ function beep(ok: boolean) {
 function toVerdict(v: ServerVerdict, scan: QueuedScan, pricePaise: number): Verdict {
   switch (v.result) {
     case "admitted":
-      return { color: "green", title: "Admitted", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token };
+      return { color: "green", title: "Admitted", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token, regId: v.registrationId };
     case "already_in":
-      return { color: "amber", title: "Already checked in", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token, note: v.scannedAt ? `First scanned at ${fmtTime(new Date(v.scannedAt))}` : undefined };
+      // §9: duplicate → amber "Already checked in at 10:42", and the count doesn't move.
+      return { color: "amber", title: v.scannedAt ? `Already checked in at ${fmtTime(new Date(v.scannedAt))}` : "Already checked in", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token };
     case "unpaid":
       return { color: "amber", title: `Collect ${formatINR(v.amountPaise ?? pricePaise)}`, name: v.name, code: v.passCode, note: v.claimedUtr ? `Says paid by UPI, ID ${v.claimedUtr}. Not confirmed yet.` : "Not paid yet. Take the fee, then admit.", collect: { amountPaise: v.amountPaise ?? pricePaise, scan } };
     default:
@@ -134,6 +142,35 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
   const [recent, setRecent] = useState<{ id: string; color: Verdict["color"]; text: string; at: Date; offline: boolean }[]>([]);
   const [syncNote, setSyncNote] = useState<string | null>(null);
   const [authProblem, setAuthProblem] = useState<string | null>(null);
+  const [express, setExpress] = useState(true);
+  const [undoable, setUndoable] = useState<{ key: string; name: string; regId?: string; scan?: QueuedScan; hash?: string } | null>(null);
+  const [query, setQuery] = useState("");
+  const [entries, setEntries] = useState<ManifestEntry[]>([]);
+
+  // Express is on unless this phone turned it off (§9: "Express on by default").
+  useEffect(() => {
+    try {
+      if (localStorage.getItem(EXPRESS_KEY) === "off") setExpress(false);
+    } catch {
+      // storage blocked: stay on
+    }
+  }, []);
+  const toggleExpress = () =>
+    setExpress((on) => {
+      try {
+        localStorage.setItem(EXPRESS_KEY, on ? "off" : "on");
+      } catch {
+        // fine
+      }
+      return !on;
+    });
+
+  // The undo offer disappears after 5 seconds.
+  useEffect(() => {
+    if (!undoable) return;
+    const t = setTimeout(() => setUndoable((u) => (u?.key === undoable.key ? null : u)), UNDO_MS);
+    return () => clearTimeout(t);
+  }, [undoable]);
 
   const addRecent = (color: Verdict["color"], text: string, offline: boolean) =>
     setRecent((r) => [{ id: crypto.randomUUID(), color, text, at: new Date(), offline }, ...r].slice(0, 12));
@@ -142,6 +179,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
   const applyGuestList = useCallback((m: Manifest) => {
     guestRef.current = new Map(m.entries.map((e) => [e.h, e]));
+    setEntries(m.entries);
     merchRef.current = m.merch ?? [];
     setGuestList({ size: m.entries.length, savedAt: m.generatedAt });
   }, []);
@@ -159,6 +197,12 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       if (saved) applyGuestList(saved);
     }
   }, [event.id, applyGuestList]);
+
+  /** Keep the saved list in step with the gate, so a search right after an admit shows them as inside. */
+  const markInside = useCallback((regId: string, at: string | null) => {
+    setEntries((list) => list.map((e) => (e.r === regId ? { ...e, in: at } : e)));
+    for (const e of guestRef.current.values()) if (e.r === regId) e.in = at;
+  }, []);
 
   /* ── Offline queue sync ────────────────────────────────────────────── */
 
@@ -298,17 +342,25 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
   /* ── Decide a scan ─────────────────────────────────────────────────── */
 
-  const show = useCallback((v: Verdict) => {
-    setVerdict(v);
-    beep(v.color === "green");
-    if (v.color === "green" && !v.merch?.length) setTimeout(() => setVerdict((cur) => (cur === v ? null : cur)), GREEN_AUTO_DISMISS_MS);
-  }, []);
+  const show = useCallback(
+    (v: Verdict) => {
+      setVerdict(v);
+      beep(v.color === "green");
+      if (v.color === "green") {
+        setUndoable({ key: crypto.randomUUID(), name: v.name ?? "Guest", regId: v.regId, scan: v.offlineScan, hash: v.hash });
+        if (express && !v.merch?.length) setTimeout(() => setVerdict((cur) => (cur === v ? null : cur)), EXPRESS_DISMISS_MS);
+      }
+    },
+    [express],
+  );
 
   /** Decide without the server, from the saved guest list. */
   const decideOffline = useCallback(
     async (scan: QueuedScan): Promise<Verdict> => {
-      const h = await sha256Hex(extractPassToken(scan.pass_token));
-      const entry = guestRef.current.get(h);
+      const entry = scan.registration_id
+        ? [...guestRef.current.values()].find((e) => e.r === scan.registration_id)
+        : guestRef.current.get(await sha256Hex(extractPassToken(scan.pass_token ?? "")));
+      const h = entry?.h ?? "";
       if (!guestRef.current.size) return { color: "red", title: "Can't check offline", note: "The guest list hasn't been saved on this phone yet. Connect once to download it." };
       if (!entry) return { color: "red", title: "Not on the guest list", note: "Not a pass for this event (checked offline)." };
       const offlineMerch = merchRef.current.map((i) => ({ ...i, claimedAt: entry.m?.[i.id] ?? null }));
@@ -318,11 +370,12 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       }
       await queueScan(scan);
       seenRef.current.add(h);
+      markInside(entry.r, scan.scanned_at);
       await refreshQueued();
       navigator.serviceWorker?.ready.then((reg) => (reg as ServiceWorkerRegistration & { sync?: { register(tag: string): Promise<void> } }).sync?.register("evntcult-scans")).catch(() => undefined);
-      return { color: "green", title: "Admitted", name: entry.name, code: entry.code, merch: offlineMerch, token: scan.pass_token, note: "Saved offline. It will sync when you're back online." };
+      return { color: "green", title: "Admitted", name: entry.name, code: entry.code, merch: offlineMerch, token: scan.pass_token, note: "Saved offline. It syncs when you're back online.", offlineScan: scan, hash: h };
     },
-    [event.pricePaise, refreshQueued],
+    [event.pricePaise, refreshQueued, markInside],
   );
 
   const submit = useCallback(
@@ -339,8 +392,9 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         } else {
           const data = (await res.json()) as ServerVerdict;
           if (data.counts) setCounts(data.counts);
+          if (data.registrationId && (data.result === "admitted" || data.result === "already_in")) markInside(data.registrationId, data.scannedAt ?? new Date().toISOString());
           v = toVerdict(data, scan, event.pricePaise);
-          if (data.result === "admitted") {
+          if (data.result === "admitted" && scan.pass_token) {
             const h = await sha256Hex(extractPassToken(scan.pass_token));
             seenRef.current.add(h);
           }
@@ -353,7 +407,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       const label = "name" in v && v.name ? `${v.title} · ${v.name}` : v.title;
       addRecent(v.color, label, offline);
     },
-    [decideOffline, event.pricePaise, show],
+    [decideOffline, event.pricePaise, show, markInside],
   );
 
   const onCode = useCallback(
@@ -492,84 +546,137 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
     busyRef.current = false;
   };
 
+  /* ── Undo the last admit (5 s) ────────────────────────────────────── */
+
+  const undo = async () => {
+    const u = undoable;
+    if (!u) return;
+    setUndoable(null);
+    setVerdict(null);
+    if (u.scan) {
+      // Admitted offline: it never left this phone, so take it out of the queue.
+      await removeQueued(u.scan.client_scan_id);
+      if (u.hash) seenRef.current.delete(u.hash);
+      if (u.scan.registration_id) markInside(u.scan.registration_id, null);
+      else for (const e of guestRef.current.values()) if (e.h === u.hash) markInside(e.r, null);
+      await refreshQueued();
+      addRecent("amber", `Undone · ${u.name}`, true);
+      return;
+    }
+    if (!u.regId) return;
+    try {
+      const res = await fetch(`/api/registrations/${u.regId}/undo-checkin`, { method: "POST" });
+      if (!res.ok) throw new Error();
+      const c = await fetch(`/api/events/${event.id}/gate-count`, { cache: "no-store" }).then((r) => (r.ok ? (r.json() as Promise<Counts>) : null));
+      if (c) setCounts(c);
+      markInside(u.regId, null);
+      addRecent("amber", `Undone · ${u.name}`, false);
+      void refreshGuestList();
+    } catch {
+      addRecent("red", `Couldn't undo ${u.name}. Use the guest list.`, false);
+    }
+  };
+
+  /* ── Manual check-in from the saved guest list (§9) ─────────────────── */
+
+  const q = query.trim().toLowerCase();
+  const matches = q.length < 2 ? [] : entries.filter((e) => e.name.toLowerCase().includes(q) || e.code.toLowerCase().includes(q)).slice(0, 6);
+  const manualCheckIn = async (e: ManifestEntry) => {
+    setQuery("");
+    busyRef.current = true;
+    await submit({ client_scan_id: crypto.randomUUID(), event_id: event.id, registration_id: e.r, accept_unpaid: false, scanned_at: new Date().toISOString(), device_id: deviceId() });
+    busyRef.current = false;
+  };
+
   /* ── UI ────────────────────────────────────────────────────────────── */
 
   const pct = counts.registered ? Math.min(100, Math.round((counts.checkedIn / counts.registered) * 100)) : 0;
-  const colors = { green: "bg-ok text-ink-inverse", amber: "bg-warn text-ink-inverse", red: "bg-bad" } as const;
+  // Colour is never the only signal: every verdict also says it in words, and has its own mark.
+  const tone = { green: "bg-ok text-accent-ink", amber: "bg-warn text-accent-ink", red: "bg-bad text-ink" } as const;
+  const mark = { green: "✓", amber: "!", red: "×" } as const;
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-lg flex-col gap-4 px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))]">
-      <header className="flex items-center gap-3">
-        <Link href={`/events/${event.slug}`} aria-label="Back to the event" className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10">
-          <span aria-hidden>←</span>
+    <main className="mx-auto flex min-h-dvh max-w-lg flex-col gap-6 px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))]">
+      <header className="flex items-center gap-3 border-b border-line pb-3">
+        <Link href={`/events/${event.slug}`} className={buttonClass("ghost", "sm", "-ml-2 px-2")}>
+          <span aria-hidden>←</span> Event
         </Link>
         <div className="min-w-0 flex-1">
-          <p className="text-caption font-semibold uppercase tracking-[0.12em] text-white/60">Gate scanner</p>
-          <h1 className="truncate font-display text-title font-semibold leading-tight">{event.title}</h1>
+          <p className="eyebrow">Gate</p>
+          <h1 className="truncate text-title">{event.title}</h1>
         </div>
-        <span
-          className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3 py-1 text-label font-semibold ${online ? "bg-ok/20 text-ok" : "bg-warn/20 text-warn"}`}
-          role="status"
-        >
-                    {online ? "Online" : "Offline"}
+        <p role="status" className={cn("shrink-0 font-mono text-caption", online ? "text-ok" : "text-warn")}>
+          {online ? "● Online" : "○ Offline"}
           {queued > 0 && ` · ${queued} to sync`}
-        </span>
+        </p>
       </header>
 
       {authProblem && (
-        <p role="alert" className="rounded-md bg-bad/20 px-4 py-3 text-body font-semibold text-ink">
-          {authProblem} <Link href={`/signin?next=/organizer/scan/${event.id}`} className="underline">Sign in</Link>
+        <p role="alert" className="border-l-2 border-bad pl-3 text-body">
+          {authProblem}{" "}
+          <Link href={`/signin?next=/organizer/scan/${event.id}`} className="font-semibold underline underline-offset-4">
+            Sign in
+          </Link>
         </p>
       )}
 
-      <section aria-label="Gate count" className="rounded-lg bg-white/[0.06] p-4">
-        <div className="flex items-end justify-between">
-          <p>
-            <span className="font-mono text-display font-semibold leading-none tabular-nums">{counts.checkedIn}</span>
-            <span className="ml-2 text-body text-white/60">in · of {counts.registered}</span>
-          </p>
-          <p className="text-label font-semibold text-white/50">{liveMode === "live" ? "● Live" : "Updates every 5 s"}</p>
+      {/* §9: the count is the largest thing on the screen. Mono, rolls like an odometer. */}
+      <section aria-label="Gate count">
+        <p className="flex items-baseline gap-3 font-mono tabular-nums">
+          <span className="text-display font-medium leading-none" aria-live="polite">
+            <Odometer value={String(counts.checkedIn)} />
+          </span>
+          <span className="text-body text-ink-muted">/ {counts.registered} in</span>
+        </p>
+        <div className="mt-3 h-1 overflow-hidden rounded-sm bg-surface-3" role="meter" aria-valuenow={counts.checkedIn} aria-valuemin={0} aria-valuemax={counts.registered} aria-label="Checked in">
+          <div className="h-full bg-ok" style={{ width: `${pct}%` }} />
         </div>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
-          <div className="h-full rounded-full bg-ok transition-[width] duration-large" style={{ width: `${pct}%` }} />
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <p className="font-mono text-caption text-ink-subtle">{liveMode === "live" ? "Live" : "Updates every 5 s"}</p>
+          <button type="button" role="switch" aria-checked={express} onClick={toggleExpress} className="press flex h-8 items-center gap-2 rounded-sm px-1 text-label">
+            <span className={cn("relative h-4 w-7 rounded-full border", express ? "border-ok bg-ok" : "border-line-strong bg-surface-3")} aria-hidden>
+              <span className={cn("absolute top-0.5 size-2.5 rounded-full bg-canvas transition-transform duration-micro", express ? "translate-x-3.5" : "translate-x-0.5")} />
+            </span>
+            Express {express ? "on" : "off"}
+          </button>
         </div>
       </section>
 
-      <section className="relative aspect-square overflow-hidden rounded-lg bg-black">
-        <video ref={videoRef} className={`size-full object-cover ${camera === "on" ? "" : "hidden"}`} playsInline muted />
+      <section className="relative aspect-square overflow-hidden rounded-md border border-line bg-canvas">
+        <video ref={videoRef} className={cn("size-full object-cover", camera !== "on" && "hidden")} playsInline muted />
         <canvas ref={canvasRef} className="hidden" />
 
-        {camera === "on" && !verdict && (
-          <div aria-hidden className="pointer-events-none absolute inset-[18%] rounded-lg border-[3px] border-white/80" />
-        )}
+        {camera === "on" && !verdict && <div aria-hidden className="pointer-events-none absolute inset-[18%] rounded-md border-2 border-ink/80" />}
 
         {camera !== "on" && !verdict && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
-            
-            {cameraError ? <p className="text-body text-ink">{cameraError}</p> : <p className="text-body text-white/70">Point the camera at a pass QR code.</p>}
-            <button onClick={startCamera} disabled={camera === "starting"} className="press inline-flex items-center gap-2 rounded-md bg-surface-2 px-6 h-10 text-body font-semibold text-ink disabled:opacity-60">
-                            {camera === "error" ? "Try again" : "Start camera"}
+            <p className="max-w-xs text-body text-ink-muted">{cameraError ?? "Point the camera at a pass QR code."}</p>
+            <button onClick={startCamera} disabled={camera === "starting"} className={buttonClass("primary", "lg")}>
+              {camera === "starting" ? "Starting…" : camera === "error" ? "Try again" : "Start camera"}
             </button>
           </div>
         )}
 
         {verdict && (
-          <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-y-auto p-6 text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
-            <p className="shout text-display leading-tight">{verdict.title}</p>
-            {"name" in verdict && verdict.name && <p className="text-title font-semibold">{verdict.name}</p>}
-            {"code" in verdict && verdict.code && <p className="font-mono text-body font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
-            {verdict.note && <p className="max-w-xs text-body font-medium opacity-90">{verdict.note}</p>}
+          <div className={cn("absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-y-auto p-6 text-center", tone[verdict.color])} role="alert" aria-live="assertive">
+            <p className="font-mono text-heading leading-none" aria-hidden>
+              {mark[verdict.color]}
+            </p>
+            <p className="font-display text-heading uppercase">{verdict.title}</p>
+            {"name" in verdict && verdict.name && <p className="text-title">{verdict.name}</p>}
+            {"code" in verdict && verdict.code && <p className="font-mono text-body-sm">{verdict.code}</p>}
+            {verdict.note && <p className="max-w-xs text-body">{verdict.note}</p>}
 
             {verdict.color !== "red" && verdict.token && !!verdict.merch?.length && (
-              <ul className="w-full max-w-xs space-y-2 text-left text-body" aria-label="Goodies">
+              <ul className="w-full max-w-xs text-left text-body" aria-label="Goodies">
                 {verdict.merch.map((line) => (
-                  <li key={line.id} className="flex items-center justify-between gap-3 rounded-md bg-black/25 px-3 py-2">
+                  <li key={line.id} className="flex items-center justify-between gap-3 border-t border-accent-ink/20 py-2">
                     <span className="min-w-0">
                       <span className="block truncate font-semibold">{line.label}</span>
-                      <span className="block text-label opacity-85">{line.note ?? (line.claimedAt ? `claimed ${fmtTime(new Date(line.claimedAt))}` : line.left === 0 ? "none left" : "not claimed")}</span>
+                      <span className="block font-mono text-caption">{line.note ?? (line.claimedAt ? `claimed ${fmtTime(new Date(line.claimedAt))}` : line.left === 0 ? "none left" : "not claimed")}</span>
                     </span>
                     {!line.claimedAt && line.left !== 0 && (
-                      <button onClick={() => give(line, verdict.token!)} className="press inline-flex items-center justify-center shrink-0 rounded-sm bg-surface-2 px-4 h-8 text-body-sm font-semibold text-ink">
+                      <button onClick={() => give(line, verdict.token!)} className="press h-8 shrink-0 rounded-sm bg-accent-ink px-3 text-label font-semibold text-ink">
                         Give
                       </button>
                     )}
@@ -580,16 +687,16 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
             {verdict.color === "amber" && verdict.collect ? (
               <div className="mt-2 flex w-full max-w-xs flex-col gap-2">
-                <button onClick={admitUnpaid} className="press inline-flex items-center justify-center rounded-md bg-accent-ink h-12 text-body font-semibold text-white hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">
+                <button onClick={admitUnpaid} className="press h-12 rounded-md bg-accent-ink text-body font-semibold text-ink">
                   Collected {formatINR(verdict.collect.amountPaise)} · Admit
                 </button>
-                <button onClick={() => setVerdict(null)} className="press inline-flex items-center justify-center rounded-md border-2 border-accent-ink/40 h-10 text-body font-semibold">
+                <button onClick={() => setVerdict(null)} className="press h-10 rounded-md border border-accent-ink/40 text-body font-semibold">
                   Don&apos;t admit
                 </button>
               </div>
             ) : (
-              (verdict.color !== "green" || !!verdict.merch?.length) && (
-                <button onClick={() => setVerdict(null)} className="mt-2 rounded-full bg-black/25 px-6 py-3 text-body font-semibold">
+              (verdict.color !== "green" || !express || !!verdict.merch?.length) && (
+                <button onClick={() => setVerdict(null)} className="press mt-2 h-10 rounded-md border border-current px-6 text-body font-semibold">
                   Scan next
                 </button>
               )
@@ -598,13 +705,60 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         )}
       </section>
 
-      <section className="space-y-1 text-label text-white/60">
+      {undoable && (
+        <div role="status" className="flex items-center justify-between gap-3 border-l-2 border-ok bg-surface px-3 py-2">
+          <span className="min-w-0 truncate text-body-sm">
+            Admitted <span className="font-semibold">{undoable.name}</span>
+          </span>
+          <button onClick={undo} className={buttonClass("secondary", "sm")}>
+            Undo
+          </button>
+        </div>
+      )}
+
+      {/* §9: manual search against the saved list — works offline too. */}
+      <section aria-labelledby="find-h">
+        <label id="find-h" htmlFor="gate-find" className="text-label text-ink-muted">
+          No QR? Find by name or pass code
+        </label>
+        <input
+          id="gate-find"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="e.g. Diya or EC-NEON-0001"
+          autoComplete="off"
+          className="mt-2 h-12 w-full rounded-sm border border-line-strong bg-surface px-3 text-body placeholder:text-ink-subtle"
+        />
+        {q.length >= 2 && (
+          <ul className="mt-2 border-t border-line">
+            {matches.length === 0 && <li className="py-3 text-body-sm text-ink-muted">No one on the saved list matches.</li>}
+            {matches.map((e) => (
+              <li key={e.r} className="flex items-center justify-between gap-3 border-b border-line py-2">
+                <span className="min-w-0">
+                  <span className="block truncate text-body font-semibold">{e.name}</span>
+                  <span className="block font-mono text-caption text-ink-muted">
+                    {e.code}
+                    {e.in ? ` · in at ${fmtTime(new Date(e.in))}` : e.unpaid ? " · to pay" : ""}
+                  </span>
+                </span>
+                <button onClick={() => manualCheckIn(e)} disabled={!!e.in} className={buttonClass("secondary", "sm")}>
+                  {e.in ? "Inside" : "Check in"}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="flex flex-col gap-1 font-mono text-caption text-ink-muted">
         {guestList ? (
           <p className="flex items-center justify-between gap-2">
-            <span>Guest list saved for offline use · {guestList.size} passes · {fmtTime(new Date(guestList.savedAt))}</span>
+            <span>
+              Saved for offline · {guestList.size} passes · {fmtTime(new Date(guestList.savedAt))}
+            </span>
             <button onClick={refreshGuestList} className="press h-8 rounded-sm px-2 text-label text-ink-muted hover:text-ink">
-            Refresh list
-          </button>
+              Refresh list
+            </button>
           </p>
         ) : (
           <p>Saving the guest list for offline use…</p>
@@ -613,16 +767,20 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       </section>
 
       {recent.length > 0 && (
-        <section aria-label="Recent scans">
-          <h2 className="mb-2 text-body-sm font-semibold uppercase tracking-[0.1em] text-white/50">Recent scans</h2>
-          <ul className="divide-y divide-white/10 rounded-md bg-white/[0.04]">
+        <section aria-labelledby="recent-h">
+          <h2 id="recent-h" className="eyebrow mb-2">
+            Recent scans
+          </h2>
+          <ul className="border-t border-line">
             {recent.map((r) => (
-              <li key={r.id} className="flex items-center gap-3 px-4 py-3 text-body">
-                <span className={`size-2.5 shrink-0 rounded-full ${r.color === "green" ? "bg-ok" : r.color === "amber" ? "bg-warn" : "bg-bad"}`} aria-hidden />
+              <li key={r.id} className="flex items-center gap-3 border-b border-line py-2 text-body-sm">
+                <span className={cn("w-3 shrink-0 font-mono", r.color === "green" ? "text-ok" : r.color === "amber" ? "text-warn" : "text-bad")} aria-hidden>
+                  {mark[r.color]}
+                </span>
                 <span className="sr-only">{r.color === "green" ? "Admitted:" : r.color === "amber" ? "Warning:" : "Refused:"}</span>
                 <span className="min-w-0 flex-1 truncate">{r.text}</span>
-                {r.offline && null }
-                <time className="shrink-0 font-mono text-label text-white/40">{fmtTime(r.at)}</time>
+                {r.offline && <span className="font-mono text-caption text-warn">offline</span>}
+                <time className="shrink-0 font-mono text-caption text-ink-subtle">{fmtTime(r.at)}</time>
               </li>
             ))}
           </ul>

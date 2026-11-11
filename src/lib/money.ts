@@ -1,4 +1,10 @@
 /** Money is stored as integer paise. Format for display in INR. */
+/** A sum of money (totals, collected, to collect): zero is ₹0, never "Free". */
+export function formatAmount(paise: number): string {
+  return paise === 0 ? "₹0" : formatINR(paise);
+}
+
+/** A price on a ticket: zero reads as "Free". */
 export function formatINR(paise: number): string {
   if (paise === 0) return "Free";
   return new Intl.NumberFormat("en-IN", {

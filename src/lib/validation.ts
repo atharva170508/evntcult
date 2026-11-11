@@ -33,7 +33,9 @@ export const emptySchema = z.object({}).strict();
 export const checkinSchema = z
   .object({
     event_id: z.string().trim().min(1).max(64),
-    pass_token: z.string().trim().min(1).max(200),
+    /** From the QR. Either this or registration_id (manual check-in from the gate's search). */
+    pass_token: z.string().trim().min(1).max(200).optional(),
+    registration_id: z.string().trim().min(1).max(64).optional(),
     /** The scanner's own id for this scan (UUID). Makes retries safe. */
     client_scan_id: z.string().trim().min(8).max(64),
     /** The volunteer collected the fee for an unpaid pass and tapped "Admit". */
@@ -42,7 +44,8 @@ export const checkinSchema = z
     scanned_at: z.string().datetime().optional(),
     device_id: z.string().trim().max(64).optional(),
   })
-  .strict();
+  .strict()
+  .refine((b) => !!b.pass_token !== !!b.registration_id, { message: "Send a pass_token or a registration_id." });
 
 /** POST /api/registrations/:id/payment — organizer reconciles a fee. */
 export const paymentSchema = z.discriminatedUnion("status", [

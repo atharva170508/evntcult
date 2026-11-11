@@ -9,7 +9,7 @@ import { passMerch } from "@/lib/data/merch";
 export const dynamic = "force-dynamic";
 
 /**
- * POST /api/checkins  { event_id, pass_token, client_scan_id, accept_unpaid?, scanned_at?, device_id? }
+ * POST /api/checkins  { event_id, pass_token | registration_id, client_scan_id, accept_unpaid?, scanned_at?, device_id? }
  *
  * Always 200 with a verdict the scanner shows as a colour:
  *   green  { result: "admitted" }            ← let them in
@@ -25,6 +25,7 @@ export const POST = handle(async (req: Request) => {
   const verdict = await checkIn(db, {
     eventId: body.event_id,
     passToken: body.pass_token,
+    registrationId: body.registration_id,
     clientScanId: body.client_scan_id,
     acceptUnpaid: body.accept_unpaid,
     scannedAt: body.scanned_at ? new Date(body.scanned_at) : undefined,
@@ -34,6 +35,10 @@ export const POST = handle(async (req: Request) => {
   const counts = await gateCounts(db, body.event_id);
   if (verdict.result === "admitted" && !verdict.replay) await publishGateCounts(body.event_id, counts);
 
-  const merch = verdict.result === "admitted" || verdict.result === "already_in" ? await passMerch(db, body.event_id, body.pass_token) : [];
+  let token = body.pass_token;
+  if (!token && "registrationId" in verdict) {
+    token = (await db.prepare("SELECT pass_token FROM registrations WHERE id = ?").bind(verdict.registrationId).first<{ pass_token: string }>())?.pass_token;
+  }
+  const merch = token && (verdict.result === "admitted" || verdict.result === "already_in") ? await passMerch(db, body.event_id, token) : [];
   return Response.json({ ...verdict, counts, merch });
 });

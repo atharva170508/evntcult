@@ -7,17 +7,17 @@ export function Agenda({ multi, byDay, today, cursor, empty }: { multi: Calendar
   return (
     <div>
       {empty && (
-        <p className="o-meta" style={{ borderTop: "1px solid var(--hair)", paddingTop: 14 }}>
+        <p className="o-meta border-t border-line pt-4">
           Nothing this month.
         </p>
       )}
       {multi.map((e) => (
-        <div key={e.id} style={{ borderTop: "1px solid var(--hair)", padding: "10px 0" }}>
+        <div key={e.id} className="border-t border-line py-3">
           <Link href={`/organizer/events/${e.id}`} className="o-agenda-bar">
             <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {e.title.toUpperCase()} · {spanDays(e)} days{e.venue ? ` · ${e.venue}` : ""}
             </span>
-            <span className="o-mono" style={{ fontSize: 10, whiteSpace: "nowrap" }}>
+            <span className="o-mono text-caption whitespace-nowrap">
               {spanRange(e)}
             </span>
           </Link>

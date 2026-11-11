@@ -7,7 +7,7 @@ import { Table } from "@/components/ui/Table";
 import { Ticket } from "@/components/ui/Ticket";
 import { Countdown } from "./Countdown";
 import { LiveHeadcount } from "./LiveHeadcount";
-import { formatINR } from "@/lib/money";
+import { formatAmount, formatINR } from "@/lib/money";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { cn, fmtDate, fmtRange, fmtTime, relative } from "@/lib/utils";
 
@@ -177,7 +177,7 @@ export function OrgKpis({ data }: { data: OrganizerPanel }) {
     <StatRow
       items={[
         { label: "Registrations", value: registrations.toLocaleString("en-IN"), hint: `across ${data.hosted.length} events` },
-        { label: "Fees confirmed", value: formatINR(collected), hint: "from paid passes" },
+        { label: "Fees confirmed", value: formatAmount(collected), hint: "from paid passes" },
         { label: "Checked in now", value: data.live ? data.live.checkedIn : 0, hint: data.live ? data.live.title : "no live event" },
         { label: "Payments to confirm", value: pending, hint: "UPI claims waiting" },
       ]}
@@ -240,7 +240,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
                 key: "f",
                 header: "Fees",
                 numeric: true,
-                cell: (h) => (h.feePaise > 0 ? <span>{formatINR(h.paid * h.feePaise)}{h.pendingPayments > 0 && <span className="ml-2 text-warn">{h.pendingPayments} to confirm</span>}</span> : <span className="text-ink-muted">Free</span>),
+                cell: (h) => (h.feePaise > 0 ? <span>{formatAmount(h.paid * h.feePaise)}{h.pendingPayments > 0 && <span className="ml-2 text-warn">{h.pendingPayments} to confirm</span>}</span> : <span className="text-ink-muted">Free</span>),
               },
             ]}
           />
@@ -279,7 +279,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
           {[
             { href: "/organizer/events/new", label: "New event" },
             { href: data.live ? `/organizer/scan/${data.live.id}` : "/organizer", label: "Scan passes", hint: data.live?.title ?? "pick an event" },
-            { href: "/organizer", label: "Guests and CSV" },
+            { href: "/organizer/guests", label: "Guests and CSV" },
             {
               href: data.live ? `/organizer/events/${data.live.id}/manage` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}/manage` : "/organizer",
               label: "Post an update",

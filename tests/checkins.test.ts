@@ -98,13 +98,48 @@ describe("gate check-in", { timeout: 30_000 }, () => {
   });
 });
 
+describe("manual check-in from the gate's search (§9)", { timeout: 30_000 }, () => {
+  it("admits by registration id, records method 'manual', and returns the id for undo", async () => {
+    await db.prepare("DELETE FROM checkins WHERE registration_id = 'r1'").run();
+    const before = await gateCounts(db, "free");
+    const r = await checkIn(db, { eventId: "free", registrationId: "r1", clientScanId: scanId(), now: T0 });
+    expect(r).toMatchObject({ result: "admitted", registrationId: "r1", name: "Asha Rao" });
+    const row = await db.prepare("SELECT method FROM checkins WHERE registration_id = 'r1'").first<{ method: string }>();
+    expect(row?.method).toBe("manual");
+    expect((await gateCounts(db, "free")).checkedIn).toBe(before.checkedIn + 1);
+  });
+
+  it("a duplicate is amber with the first time, and the count doesn't move", async () => {
+    const before = await gateCounts(db, "free");
+    const again = await checkIn(db, { eventId: "free", registrationId: "r1", clientScanId: scanId(), now: T0 });
+    expect(again).toMatchObject({ result: "already_in", color: "amber", registrationId: "r1" });
+    expect(await gateCounts(db, "free")).toEqual(before);
+  });
+
+  it("a replayed offline manual scan lands once", async () => {
+    await db.prepare("DELETE FROM checkins WHERE registration_id = 'r1'").run();
+    const id = scanId();
+    const a = await checkIn(db, { eventId: "free", registrationId: "r1", clientScanId: id, now: T0 });
+    const b = await checkIn(db, { eventId: "free", registrationId: "r1", clientScanId: id, now: T0 });
+    expect(a).toMatchObject({ result: "admitted", replay: false });
+    expect(b).toMatchObject({ result: "admitted", replay: true });
+    expect((await db.prepare("SELECT COUNT(*) AS n FROM checkins WHERE registration_id = 'r1'").first<{ n: number }>())?.n).toBe(1);
+  });
+
+  it("can't check in someone from another event by id, or someone without a seat", async () => {
+    expect(await checkIn(db, { eventId: "free", registrationId: "r4", clientScanId: scanId(), now: T0 })).toMatchObject({ color: "red", reason: "other_event" });
+    expect(await checkIn(db, { eventId: "free", registrationId: "r2", clientScanId: scanId(), now: T0 })).toMatchObject({ color: "red", reason: "waitlisted" });
+    expect(await checkIn(db, { eventId: "free", registrationId: "nope", clientScanId: scanId(), now: T0 })).toMatchObject({ color: "red", reason: "unknown" });
+  });
+});
+
 describe("offline guest list", { timeout: 30_000 }, () => {
   it("lists seated people by token hash, with no raw tokens, emails or phones", async () => {
     const m = (await buildManifest(db, "paid", T0))!;
     expect(m.entries).toHaveLength(2);
     const dev = m.entries.find((e) => e.code === "EC-PAID-0001")!;
     // Dev paid cash at the gate earlier, but "mark paid" is M4, so the DB still says unpaid.
-    expect(dev).toMatchObject({ h: await tokenHash(tok("dev")), name: "Dev Shah", unpaid: true });
+    expect(dev).toMatchObject({ h: await tokenHash(tok("dev")), r: "r4", name: "Dev Shah", unpaid: true });
     expect(dev.in).not.toBeNull(); // already checked in
     const json = JSON.stringify(m);
     expect(json).not.toContain(tok("dev"));
@@ -115,5 +150,16 @@ describe("offline guest list", { timeout: 30_000 }, () => {
   it("token hashes match whether you hash the QR text or the token", async () => {
     expect(await tokenHash(passQrPayload(tok("dev")))).toBe(await tokenHash(tok("dev")));
     expect(await tokenHash(tok("dev"))).toMatch(/^[0-9a-f]{64}$/);
+  });
+});
+
+describe("check-in body", () => {
+  it("takes a pass token or a registration id, never both or neither", async () => {
+    const { checkinSchema } = await import("@/lib/validation");
+    const base = { event_id: "free", client_scan_id: "scan-abcdefgh" };
+    expect(checkinSchema.safeParse({ ...base, pass_token: "X" }).success).toBe(true);
+    expect(checkinSchema.safeParse({ ...base, registration_id: "r1" }).success).toBe(true);
+    expect(checkinSchema.safeParse({ ...base }).success).toBe(false);
+    expect(checkinSchema.safeParse({ ...base, pass_token: "X", registration_id: "r1" }).success).toBe(false);
   });
 });

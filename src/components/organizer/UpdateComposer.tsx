@@ -47,7 +47,7 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
       <fieldset className="flex flex-wrap gap-2">
         <legend className="sr-only">Type of update</legend>
         {KINDS.map((k) => (
-          <label key={k.value} className={`cursor-pointer rounded-full border px-4 py-2 text-body-sm font-semibold ${kind === k.value ? "border-volt bg-volt text-ink-inverse" : "border-line hover:border-line-strong"}`}>
+          <label key={k.value} className={`flex h-8 cursor-pointer items-center rounded-sm border px-3 text-label ${kind === k.value ? "border-line-strong bg-surface-2 font-semibold text-ink" : "border-line text-ink-muted hover:border-line-strong"}`}>
             <input type="radio" name="kind" value={k.value} checked={kind === k.value} onChange={() => pickKind(k.value)} className="sr-only" />
             {k.label}
           </label>
@@ -63,7 +63,7 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
           maxLength={500}
           rows={3}
           placeholder={kind === "venue" ? "e.g. Moved to Hall B. Enter through Gate 3." : kind === "schedule" ? "e.g. Doors now open at 6:30 pm." : "e.g. Bring a photo ID."}
-          className="w-full rounded-sm border border-line-strong bg-surface px-3 h-12 md:h-10 text-body text-ink placeholder:text-ink-subtle"
+          className="min-h-24 w-full rounded-sm border border-line-strong bg-surface px-3 py-2 text-body text-ink placeholder:text-ink-subtle"
         />
       </label>
       <label className="flex items-start gap-3 text-body-sm">
@@ -73,7 +73,7 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
           {!connected && <span className="text-ink-muted"> (queued until WhatsApp is connected)</span>}
         </span>
       </label>
-      {msg && <p role="status" className={`rounded-md px-4 py-3 text-body-sm font-semibold ${msg.ok ? "bg-live-soft text-live" : "bg-danger-soft text-danger"}`}>{msg.text}</p>}
+      {msg && <p role="status" className={`border-l-2 pl-3 text-body-sm ${msg.ok ? "border-ok" : "border-bad"}`}>{msg.text}</p>}
       <button disabled={busy || body.trim().length < 3} className="press inline-flex items-center gap-2 rounded-md bg-accent px-6 h-10 text-body font-semibold text-ink-inverse disabled:opacity-50 hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">
         Post update
       </button>

@@ -54,9 +54,9 @@ export function MerchSetup({ eventId }: { eventId: string }) {
         <span className="o-label">Add item</span>
         <div>
           <div className="o-inline">
-            <input aria-label="Item name" className="o-input" style={{ flex: 2, minWidth: 0 }} placeholder="T-shirt" maxLength={80} value={name} onChange={(e) => setName(e.target.value)} />
-            <input aria-label="Variant" className="o-input" style={{ flex: 1, minWidth: 0 }} placeholder="M" maxLength={40} value={variant} onChange={(e) => setVariant(e.target.value)} />
-            <input aria-label="Stock" className="o-input o-mono" style={{ flex: 1, minWidth: 0 }} placeholder="stock" inputMode="numeric" value={stock} onChange={(e) => setStock(e.target.value.replace(/\D/g, "").slice(0, 6))} />
+            <input aria-label="Item name" className="o-input min-w-0" style={{ flex: 2 }} placeholder="T-shirt" maxLength={80} value={name} onChange={(e) => setName(e.target.value)} />
+            <input aria-label="Variant" className="o-input flex-1 min-w-0" placeholder="M" maxLength={40} value={variant} onChange={(e) => setVariant(e.target.value)} />
+            <input aria-label="Stock" className="o-input o-mono flex-1 min-w-0" placeholder="stock" inputMode="numeric" value={stock} onChange={(e) => setStock(e.target.value.replace(/\D/g, "").slice(0, 6))} />
             <Button disabled={busy} onClick={add}>Add</Button>
           </div>
           {error && <p className="o-err" role="alert">{error}</p>}
@@ -71,7 +71,7 @@ export function MerchSetup({ eventId }: { eventId: string }) {
                 <span>{i.variant ? `${i.name} · ${i.variant}` : i.name}</span>
                 <span className="o-meta">{i.left === null ? "unlimited" : `${i.left} left`}</span>
                 {i.claimed === 0 ? (
-                  <button type="button" className="o-link" style={{ fontSize: 11 }} onClick={() => remove(i.id)}>Remove</button>
+                  <button type="button" className="o-link text-caption" onClick={() => remove(i.id)}>Remove</button>
                 ) : (
                   <span className="o-meta">{i.claimed} claimed</span>
                 )}

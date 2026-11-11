@@ -173,7 +173,7 @@ export function CalendarView({ initialView, month, today, initials, events, clas
         <div className="o-crumb">
           <b>Calendar</b>
         </div>
-        <input ref={searchRef} aria-label="Search events" className="o-input" style={{ height: 26, maxWidth: 220, fontSize: 12 }} placeholder="Search  /" value={q} onChange={(e) => setQ(e.target.value)} />
+        <input ref={searchRef} aria-label="Search events" className="o-input text-label" style={{ height: 26, maxWidth: 220 }} placeholder="Search  /" value={q} onChange={(e) => setQ(e.target.value)} />
         <span className="o-spacer" />
         <Link className="o-btn o-btn-primary" href="/organizer/events/new">
           New event
@@ -185,12 +185,12 @@ export function CalendarView({ initialView, month, today, initials, events, clas
       <div className="o-page">
         <div className="o-cal">
           <div>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 10, flexWrap: "wrap" }}>
+            <div className="flex items-start gap-3 flex-wrap">
               <div>
                 <div className="o-cal-title">
                   {MONTHS[m - 1]} <span>{y}</span>
                 </div>
-                <div className="o-meta" style={{ fontSize: 10, color: "var(--dim)", marginTop: 5, height: 14 }}>
+                <div className="o-meta text-caption text-ink-subtle mt-1" style={{ height: 14 }}>
                   {loading ? <span className="o-skel" /> : `${events.length} events · ${draftCount} drafts · times in IST`}
                 </div>
               </div>
@@ -215,7 +215,7 @@ export function CalendarView({ initialView, month, today, initials, events, clas
               )}
             </div>
 
-            <div className="o-inline" style={{ margin: "14px 0", flexWrap: "wrap" }}>
+            <div className="o-inline my-4 flex-wrap">
               {(
                 [
                   ["all", `All ${events.length}`],
@@ -270,7 +270,7 @@ export function CalendarView({ initialView, month, today, initials, events, clas
 
       {popover && (
         <div className="o-pop" role="dialog" aria-label={`Events on ${popover.date}`} style={{ left: popover.x, top: popover.y }}>
-          <div className="o-inline" style={{ justifyContent: "space-between", marginBottom: 6 }}>
+          <div className="o-inline justify-between mb-2">
             <span className="o-meta">{ticketDate(`${popover.date}T12:00:00+05:30`)}</span>
             <button className="o-link" onClick={() => setPopover(null)}>
               Close

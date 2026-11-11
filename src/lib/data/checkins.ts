@@ -16,17 +16,19 @@ import { enqueueCheckedIn } from "@/lib/whatsapp";
 export type ScanColor = "green" | "amber" | "red";
 
 export type ScanResult =
-  | { result: "admitted"; color: "green"; name: string; passCode: string; scannedAt: string; replay: boolean }
-  | { result: "already_in"; color: "amber"; name: string; passCode: string; scannedAt: string }
-  | { result: "unpaid"; color: "amber"; name: string; passCode: string; amountPaise: number; claimedUtr: string | null }
+  | { result: "admitted"; color: "green"; registrationId: string; name: string; passCode: string; scannedAt: string; replay: boolean }
+  | { result: "already_in"; color: "amber"; registrationId: string; name: string; passCode: string; scannedAt: string }
+  | { result: "unpaid"; color: "amber"; registrationId: string; name: string; passCode: string; amountPaise: number; claimedUtr: string | null }
   | { result: "invalid"; color: "red"; reason: InvalidReason; message: string };
 
 export type InvalidReason = "unknown" | "other_event" | "cancelled" | "waitlisted" | "event_closed";
 
 export interface CheckInInput {
   eventId: string;
-  /** Raw token or the full QR text (evntcult://p/<token>). */
-  passToken: string;
+  /** Raw token or the full QR text (evntcult://p/<token>). Either this or registrationId. */
+  passToken?: string;
+  /** Manual check-in from the gate's guest-list search (§9: "manual search against cached list"). */
+  registrationId?: string;
   clientScanId: string;
   deviceId?: string | null;
   /** The volunteer collected the fee for an unpaid pass and tapped "Admit". */
@@ -60,30 +62,31 @@ function clampScanTime(scannedAt: Date | undefined, now: Date): string {
 
 export async function checkIn(db: D1Database, input: CheckInInput): Promise<ScanResult> {
   const now = input.now ?? new Date();
-  const token = extractPassToken(input.passToken);
+  const manual = !input.passToken && !!input.registrationId;
+  const token = manual ? "" : extractPassToken(input.passToken ?? "");
 
   // 1. Replay of a scan we've already processed (offline queue sent it twice).
   const replay = await db
     .prepare(
-      `SELECT c.scanned_at, r.pass_code, u.name, c.event_id FROM checkins c
+      `SELECT c.scanned_at, r.id AS reg_id, r.pass_code, u.name, c.event_id FROM checkins c
          JOIN registrations r ON r.id = c.registration_id JOIN users u ON u.id = r.user_id
         WHERE c.client_scan_id = ?`,
     )
     .bind(input.clientScanId)
-    .first<{ scanned_at: string; pass_code: string; name: string; event_id: string }>();
+    .first<{ scanned_at: string; reg_id: string; pass_code: string; name: string; event_id: string }>();
   if (replay && replay.event_id === input.eventId) {
-    return { result: "admitted", color: "green", name: replay.name, passCode: replay.pass_code, scannedAt: replay.scanned_at, replay: true };
+    return { result: "admitted", color: "green", registrationId: replay.reg_id, name: replay.name, passCode: replay.pass_code, scannedAt: replay.scanned_at, replay: true };
   }
 
   // 2. Is it a real pass, for this event, with a seat?
-  if (!isWellFormedPassToken(token)) return invalid("unknown", "Not an EvntCult pass.");
+  if (!manual && !isWellFormedPassToken(token)) return invalid("unknown", "Not an EvntCult pass.");
   const pass = await db
     .prepare(
       `SELECT r.id AS reg_id, r.event_id, r.status, r.payment_status, r.pass_code, u.name, e.price_paise, e.title AS event_title, r.upi_utr
          FROM registrations r JOIN users u ON u.id = r.user_id JOIN events e ON e.id = r.event_id
-        WHERE r.pass_token = ?`,
+        WHERE ${manual ? "r.id" : "r.pass_token"} = ?`,
     )
-    .bind(token)
+    .bind(manual ? input.registrationId : token)
     .first<PassLookup>();
   if (!pass) return invalid("unknown", "Not a valid pass. It may be fake or an old cancelled pass.");
   if (pass.event_id !== input.eventId) return invalid("other_event", `This pass is for a different event: ${pass.event_title}.`);
@@ -95,12 +98,12 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
 
   // 3. Already inside? (Checked before the payment question, so the volunteer isn't asked to collect twice.)
   const existing = await db.prepare("SELECT scanned_at FROM checkins WHERE registration_id = ?").bind(pass.reg_id).first<{ scanned_at: string }>();
-  if (existing) return { result: "already_in", color: "amber", name: pass.name, passCode: pass.pass_code, scannedAt: existing.scanned_at };
+  if (existing) return { result: "already_in", color: "amber", registrationId: pass.reg_id, name: pass.name, passCode: pass.pass_code, scannedAt: existing.scanned_at };
 
   // 4. Paid event, not paid yet: the volunteer collects the fee, then taps Admit (acceptUnpaid).
   const unpaid = pass.price_paise > 0 && pass.payment_status !== "paid";
   if (unpaid && !input.acceptUnpaid) {
-    return { result: "unpaid", color: "amber", name: pass.name, passCode: pass.pass_code, amountPaise: pass.price_paise, claimedUtr: pass.upi_utr };
+    return { result: "unpaid", color: "amber", registrationId: pass.reg_id, name: pass.name, passCode: pass.pass_code, amountPaise: pass.price_paise, claimedUtr: pass.upi_utr };
   }
 
   // 5. Admit. One statement; the UNIQUE constraints make a second scan a no-op.
@@ -108,10 +111,10 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
   const res = await db
     .prepare(
       `INSERT INTO checkins (id, registration_id, event_id, scanned_at, device_id, client_scan_id, method)
-       SELECT ?, r.id, r.event_id, ?, ?, ?, 'qr' FROM registrations r WHERE r.id = ? AND r.status = 'registered'
+       SELECT ?, r.id, r.event_id, ?, ?, ?, ? FROM registrations r WHERE r.id = ? AND r.status = 'registered'
        ON CONFLICT DO NOTHING`,
     )
-    .bind(newId(), scannedAt, input.deviceId ?? null, input.clientScanId, pass.reg_id)
+    .bind(newId(), scannedAt, input.deviceId ?? null, input.clientScanId, manual ? "manual" : "qr", pass.reg_id)
     .run();
 
   if ((res.meta.changes ?? 0) === 1) {
@@ -121,15 +124,15 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
       .run();
     await issueOnCheckIn(db, pass.reg_id, input.eventId, now);
     await enqueueCheckedIn(db, pass.reg_id, now);
-    return { result: "admitted", color: "green", name: pass.name, passCode: pass.pass_code, scannedAt, replay: false };
+    return { result: "admitted", color: "green", registrationId: pass.reg_id, name: pass.name, passCode: pass.pass_code, scannedAt, replay: false };
   }
 
   // Lost a race: another device admitted this pass a moment ago (or this same scan id did).
   const winner = await db.prepare("SELECT scanned_at, client_scan_id FROM checkins WHERE registration_id = ?").bind(pass.reg_id).first<{ scanned_at: string; client_scan_id: string | null }>();
   if (winner?.client_scan_id === input.clientScanId) {
-    return { result: "admitted", color: "green", name: pass.name, passCode: pass.pass_code, scannedAt: winner.scanned_at, replay: true };
+    return { result: "admitted", color: "green", registrationId: pass.reg_id, name: pass.name, passCode: pass.pass_code, scannedAt: winner.scanned_at, replay: true };
   }
-  if (winner) return { result: "already_in", color: "amber", name: pass.name, passCode: pass.pass_code, scannedAt: winner.scanned_at };
+  if (winner) return { result: "already_in", color: "amber", registrationId: pass.reg_id, name: pass.name, passCode: pass.pass_code, scannedAt: winner.scanned_at };
   return invalid("cancelled", "This registration changed while scanning. Scan again.");
 }
 
@@ -156,6 +159,8 @@ export async function tokenHash(token: string): Promise<string> {
 export interface ManifestEntry {
   /** sha256(pass token), hex */
   h: string;
+  /** registration id, for manual check-in and undo from the gate */
+  r: string;
   name: string;
   code: string;
   /** must collect the fee at the gate */
@@ -197,6 +202,7 @@ export async function buildManifest(db: D1Database, eventId: string, now = new D
   const entries = await Promise.all(
     (rows.results ?? []).map(async (r) => ({
       h: await tokenHash(r.pass_token),
+      r: r.id,
       name: r.name,
       code: r.pass_code,
       unpaid: event.price_paise > 0 && r.payment_status !== "paid",

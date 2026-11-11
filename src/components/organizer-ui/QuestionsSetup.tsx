@@ -47,7 +47,7 @@ export function QuestionsSetup({ eventId }: { eventId: string }) {
         <span className="o-label">Add question</span>
         <div>
           <input aria-label="Question" className="o-input" placeholder="T-shirt size" maxLength={120} value={label} onChange={(e) => setLabel(e.target.value)} />
-          <div className="o-inline" style={{ marginTop: 8, flexWrap: "wrap" }}>
+          <div className="o-inline mt-2 flex-wrap">
             <Segmented
               label="Answer type"
               value={kind}
@@ -57,13 +57,13 @@ export function QuestionsSetup({ eventId }: { eventId: string }) {
               ]}
               onChange={setKind}
             />
-            <label className="o-inline" style={{ fontSize: 12 }}>
+            <label className="o-inline text-label">
               <input type="checkbox" checked={required} onChange={(e) => setRequired(e.target.checked)} /> Required
             </label>
             <span className="o-spacer" />
             <Button disabled={busy} onClick={add}>Add</Button>
           </div>
-          {kind === "choice" && <input aria-label="Choices" className="o-input" style={{ marginTop: 8 }} placeholder="S, M, L, XL" value={options} onChange={(e) => setOptions(e.target.value)} />}
+          {kind === "choice" && <input aria-label="Choices" className="o-input mt-2" placeholder="S, M, L, XL" value={options} onChange={(e) => setOptions(e.target.value)} />}
           {error && <p className="o-err" role="alert">{error}</p>}
         </div>
       </div>
@@ -75,7 +75,7 @@ export function QuestionsSetup({ eventId }: { eventId: string }) {
               <div className="o-merch-row" key={q.id}>
                 <span>{q.label}</span>
                 <span className="o-meta">{q.kind === "choice" ? q.options.join(", ") : "text"}{q.required ? " · required" : ""}</span>
-                <button type="button" className="o-link" style={{ fontSize: 11 }} onClick={() => remove(q.id)}>Remove</button>
+                <button type="button" className="o-link text-caption" onClick={() => remove(q.id)}>Remove</button>
               </div>
             ))}
           </div>
