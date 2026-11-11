@@ -496,7 +496,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
   /* ── UI ────────────────────────────────────────────────────────────── */
 
   const pct = counts.registered ? Math.min(100, Math.round((counts.checkedIn / counts.registered) * 100)) : 0;
-  const colors = { green: "bg-[#0fa968]", amber: "bg-[#f59e0b] text-[#1a1203]", red: "bg-[#e5484d]" } as const;
+  const colors = { green: "bg-ok text-ink-inverse", amber: "bg-warn text-ink-inverse", red: "bg-bad" } as const;
   const Icon = verdict?.color === "green" ? CheckCircle2 : verdict?.color === "amber" ? AlertTriangle : XCircle;
 
   return (
@@ -506,11 +506,11 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
           <ArrowLeft className="size-5" />
         </Link>
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60">Gate scanner</p>
-          <h1 className="truncate font-display text-[20px] font-bold leading-tight">{event.title}</h1>
+          <p className="text-caption font-semibold uppercase tracking-[0.12em] text-white/60">Gate scanner</p>
+          <h1 className="truncate font-display text-title font-semibold leading-tight">{event.title}</h1>
         </div>
         <span
-          className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-semibold ${online ? "bg-[#0fa968]/20 text-[#5ee0a5]" : "bg-[#f59e0b]/20 text-[#fbbf5a]"}`}
+          className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3 py-1 text-label font-semibold ${online ? "bg-ok/20 text-ok" : "bg-warn/20 text-warn"}`}
           role="status"
         >
           {online ? <Wifi className="size-3.5" /> : <CloudOff className="size-3.5" />}
@@ -520,37 +520,37 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       </header>
 
       {authProblem && (
-        <p role="alert" className="rounded-2xl bg-[#e5484d]/20 px-4 py-3 text-[14px] font-semibold text-[#ffb4b6]">
+        <p role="alert" className="rounded-md bg-bad/20 px-4 py-3 text-body font-semibold text-ink">
           {authProblem} <Link href={`/signin?next=/organizer/scan/${event.id}`} className="underline">Sign in</Link>
         </p>
       )}
 
-      <section aria-label="Gate count" className="rounded-3xl bg-white/[0.06] p-4">
+      <section aria-label="Gate count" className="rounded-lg bg-white/[0.06] p-4">
         <div className="flex items-end justify-between">
           <p>
-            <span className="font-mono text-[40px] font-extrabold leading-none tabular-nums">{counts.checkedIn}</span>
-            <span className="ml-1.5 text-[15px] text-white/60">in · of {counts.registered}</span>
+            <span className="font-mono text-display font-semibold leading-none tabular-nums">{counts.checkedIn}</span>
+            <span className="ml-2 text-body text-white/60">in · of {counts.registered}</span>
           </p>
-          <p className="text-[12px] font-semibold text-white/50">{liveMode === "live" ? "● Live" : "Updates every 5 s"}</p>
+          <p className="text-label font-semibold text-white/50">{liveMode === "live" ? "● Live" : "Updates every 5 s"}</p>
         </div>
         <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
-          <div className="h-full rounded-full bg-[#0fa968] transition-[width] duration-700" style={{ width: `${pct}%` }} />
+          <div className="h-full rounded-full bg-ok transition-[width] duration-large" style={{ width: `${pct}%` }} />
         </div>
       </section>
 
-      <section className="relative aspect-square overflow-hidden rounded-3xl bg-black">
+      <section className="relative aspect-square overflow-hidden rounded-lg bg-black">
         <video ref={videoRef} className={`size-full object-cover ${camera === "on" ? "" : "hidden"}`} playsInline muted />
         <canvas ref={canvasRef} className="hidden" />
 
         {camera === "on" && !verdict && (
-          <div aria-hidden className="pointer-events-none absolute inset-[18%] rounded-3xl border-[3px] border-white/80 shadow-[0_0_0_999px_rgba(0,0,0,0.35)]" />
+          <div aria-hidden className="pointer-events-none absolute inset-[18%] rounded-lg border-[3px] border-white/80" />
         )}
 
         {camera !== "on" && !verdict && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
             <Camera className="size-10 text-white/60" />
-            {cameraError ? <p className="text-[14px] text-[#ffb4b6]">{cameraError}</p> : <p className="text-[15px] text-white/70">Point the camera at a pass QR code.</p>}
-            <button onClick={startCamera} disabled={camera === "starting"} className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] font-bold text-black disabled:opacity-60">
+            {cameraError ? <p className="text-body text-ink">{cameraError}</p> : <p className="text-body text-white/70">Point the camera at a pass QR code.</p>}
+            <button onClick={startCamera} disabled={camera === "starting"} className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-body font-semibold text-black disabled:opacity-60">
               {camera === "starting" ? <Loader2 className="size-4 animate-spin" /> : <Camera className="size-4" />}
               {camera === "error" ? "Try again" : "Start camera"}
             </button>
@@ -560,21 +560,21 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         {verdict && (
           <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-y-auto p-6 text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
             <Icon className="size-16" strokeWidth={2.2} />
-            <p className="shout text-[32px] leading-tight">{verdict.title}</p>
-            {"name" in verdict && verdict.name && <p className="text-[20px] font-bold">{verdict.name}</p>}
-            {"code" in verdict && verdict.code && <p className="font-mono text-[14px] font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
-            {verdict.note && <p className="max-w-xs text-[14px] font-medium opacity-90">{verdict.note}</p>}
+            <p className="shout text-display leading-tight">{verdict.title}</p>
+            {"name" in verdict && verdict.name && <p className="text-title font-semibold">{verdict.name}</p>}
+            {"code" in verdict && verdict.code && <p className="font-mono text-body font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
+            {verdict.note && <p className="max-w-xs text-body font-medium opacity-90">{verdict.note}</p>}
 
             {verdict.color !== "red" && verdict.token && !!verdict.merch?.length && (
-              <ul className="w-full max-w-xs space-y-2 text-left text-[14px]" aria-label="Goodies">
+              <ul className="w-full max-w-xs space-y-2 text-left text-body" aria-label="Goodies">
                 {verdict.merch.map((line) => (
-                  <li key={line.id} className="flex items-center justify-between gap-3 rounded-2xl bg-black/25 px-3 py-2">
+                  <li key={line.id} className="flex items-center justify-between gap-3 rounded-md bg-black/25 px-3 py-2">
                     <span className="min-w-0">
-                      <span className="block truncate font-bold">{line.label}</span>
-                      <span className="block text-[12px] opacity-85">{line.note ?? (line.claimedAt ? `claimed ${fmtTime(new Date(line.claimedAt))}` : line.left === 0 ? "none left" : "not claimed")}</span>
+                      <span className="block truncate font-semibold">{line.label}</span>
+                      <span className="block text-label opacity-85">{line.note ?? (line.claimedAt ? `claimed ${fmtTime(new Date(line.claimedAt))}` : line.left === 0 ? "none left" : "not claimed")}</span>
                     </span>
                     {!line.claimedAt && line.left !== 0 && (
-                      <button onClick={() => give(line, verdict.token!)} className="shrink-0 rounded-full bg-white px-4 py-1.5 text-[13px] font-bold text-black">
+                      <button onClick={() => give(line, verdict.token!)} className="shrink-0 rounded-full bg-white px-4 py-2 text-body-sm font-semibold text-black">
                         Give
                       </button>
                     )}
@@ -585,16 +585,16 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
             {verdict.color === "amber" && verdict.collect ? (
               <div className="mt-2 flex w-full max-w-xs flex-col gap-2">
-                <button onClick={admitUnpaid} className="rounded-full bg-[#1a1203] py-3.5 text-[16px] font-bold text-white">
+                <button onClick={admitUnpaid} className="rounded-full bg-accent-ink py-4 text-body font-semibold text-white">
                   Collected {formatINR(verdict.collect.amountPaise)} · Admit
                 </button>
-                <button onClick={() => setVerdict(null)} className="rounded-full border-2 border-[#1a1203]/40 py-3 text-[15px] font-bold">
+                <button onClick={() => setVerdict(null)} className="rounded-full border-2 border-accent-ink/40 py-3 text-body font-semibold">
                   Don&apos;t admit
                 </button>
               </div>
             ) : (
               (verdict.color !== "green" || !!verdict.merch?.length) && (
-                <button onClick={() => setVerdict(null)} className="mt-2 rounded-full bg-black/25 px-6 py-3 text-[15px] font-bold">
+                <button onClick={() => setVerdict(null)} className="mt-2 rounded-full bg-black/25 px-6 py-3 text-body font-semibold">
                   Scan next
                 </button>
               )
@@ -603,29 +603,29 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         )}
       </section>
 
-      <section className="space-y-1 text-[12.5px] text-white/60">
+      <section className="space-y-1 text-label text-white/60">
         {guestList ? (
           <p className="flex items-center justify-between gap-2">
             <span>Guest list saved for offline use · {guestList.size} passes · {fmtTime(new Date(guestList.savedAt))}</span>
-            <button onClick={refreshGuestList} aria-label="Refresh the saved guest list" className="rounded-full p-1.5 hover:bg-white/10"><RefreshCw className="size-3.5" /></button>
+            <button onClick={refreshGuestList} aria-label="Refresh the saved guest list" className="rounded-full p-2 hover:bg-white/10"><RefreshCw className="size-3.5" /></button>
           </p>
         ) : (
           <p>Saving the guest list for offline use…</p>
         )}
-        {syncNote && <p className="text-[#5ee0a5]">{syncNote}</p>}
+        {syncNote && <p className="text-ok">{syncNote}</p>}
       </section>
 
       {recent.length > 0 && (
         <section aria-label="Recent scans">
-          <h2 className="mb-2 text-[13px] font-bold uppercase tracking-[0.1em] text-white/50">Recent scans</h2>
-          <ul className="divide-y divide-white/10 rounded-2xl bg-white/[0.04]">
+          <h2 className="mb-2 text-body-sm font-semibold uppercase tracking-[0.1em] text-white/50">Recent scans</h2>
+          <ul className="divide-y divide-white/10 rounded-md bg-white/[0.04]">
             {recent.map((r) => (
-              <li key={r.id} className="flex items-center gap-3 px-4 py-2.5 text-[14px]">
-                <span className={`size-2.5 shrink-0 rounded-full ${r.color === "green" ? "bg-[#0fa968]" : r.color === "amber" ? "bg-[#f59e0b]" : "bg-[#e5484d]"}`} aria-hidden />
+              <li key={r.id} className="flex items-center gap-3 px-4 py-3 text-body">
+                <span className={`size-2.5 shrink-0 rounded-full ${r.color === "green" ? "bg-ok" : r.color === "amber" ? "bg-warn" : "bg-bad"}`} aria-hidden />
                 <span className="sr-only">{r.color === "green" ? "Admitted:" : r.color === "amber" ? "Warning:" : "Refused:"}</span>
                 <span className="min-w-0 flex-1 truncate">{r.text}</span>
                 {r.offline && <CloudOff className="size-3.5 text-white/40" aria-label="scanned offline" />}
-                <time className="shrink-0 font-mono text-[12px] text-white/40">{fmtTime(r.at)}</time>
+                <time className="shrink-0 font-mono text-label text-white/40">{fmtTime(r.at)}</time>
               </li>
             ))}
           </ul>

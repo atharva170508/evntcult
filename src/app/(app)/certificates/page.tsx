@@ -18,7 +18,7 @@ export default async function CertificatesPage() {
   const certs = await myCertificates(await getDB(), viewer.id);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <PageHero
         eyebrow="Certificates"
         title={<>Proof you were <em>there</em></>}
@@ -30,13 +30,13 @@ export default async function CertificatesPage() {
         <ul className="grid gap-3 md:grid-cols-2">
           {certs.map((c) => (
             <li key={c.id}>
-              <Link href={`/certificates/${c.id}`} className="card group flex items-center gap-4 p-5 transition-colors hover:border-volt/60">
-                <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-volt/10 text-volt" aria-hidden>
+              <Link href={`/certificates/${c.id}`} className="card group flex items-center gap-4 p-6 transition-colors hover:border-volt/60">
+                <span className="grid size-12 shrink-0 place-items-center rounded-md bg-volt/10 text-volt" aria-hidden>
                   <Award className="size-6" />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[16px] font-bold">{c.eventTitle}</p>
-                  <p className="text-[13px] text-ink-muted">{fmtDate(new Date(c.startsAt), { day: "numeric", month: "short", year: "numeric" })} {c.venue ? ` · ${c.venue}` : ""}{c.kind !== "participation" ? ` · ${c.kind}` : ""}</p>
+                  <p className="truncate text-body font-semibold">{c.eventTitle}</p>
+                  <p className="text-body-sm text-ink-muted">{fmtDate(new Date(c.startsAt), { day: "numeric", month: "short", year: "numeric" })} {c.venue ? ` · ${c.venue}` : ""}{c.kind !== "participation" ? ` · ${c.kind}` : ""}</p>
                 </div>
                 <ArrowUpRight className="size-4 text-ink-subtle group-hover:text-volt" aria-hidden />
               </Link>

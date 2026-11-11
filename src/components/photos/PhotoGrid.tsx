@@ -61,7 +61,7 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
         }}
         disabled={busy === id}
         aria-pressed={!!mine[id]}
-        className={`inline-flex items-center gap-1.5 rounded-full font-semibold shadow ${big ? "px-4 py-2 text-[14px]" : "px-2.5 py-1 text-[12px]"} ${mine[id] ? "bg-live text-ink-inverse" : "bg-white/95 text-ink-inverse"}`}
+        className={`inline-flex items-center gap-2 rounded-full font-semibold ${big ? "px-4 py-2 text-body" : "px-3 py-1 text-label"} ${mine[id] ? "bg-live text-ink-inverse" : "bg-white/95 text-ink-inverse"}`}
       >
         {busy === id ? <Loader2 className="size-3.5 animate-spin" /> : mine[id] ? <UserCheck className="size-3.5" /> : <UserPlus className="size-3.5" />}
         {mine[id] ? "That's me ✓" : "That's me"}
@@ -70,13 +70,13 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
 
   return (
     <>
-      {error && <p role="alert" className="mb-3 rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">{error}</p>}
+      {error && <p role="alert" className="mb-3 rounded-md bg-danger-soft px-4 py-3 text-body-sm font-semibold text-danger">{error}</p>}
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
         {photos.map((p, i) => (
-          <li key={p.id} className="group relative aspect-square overflow-hidden rounded-2xl bg-canvas">
+          <li key={p.id} className="group relative aspect-square overflow-hidden rounded-md bg-canvas">
             <button onClick={() => setOpen(i)} className="block size-full" aria-label={`Open photo ${i + 1}${mine[p.id] ? " (you're tagged)" : ""}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/api/photos/${p.id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+              <img src={`/api/photos/${p.id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-large group-hover:scale-[1.03]" />
             </button>
             <div className="pointer-events-none absolute inset-x-2 bottom-2 flex justify-start [&>*]:pointer-events-auto">{tagButton(p.id)}</div>
           </li>
@@ -87,7 +87,7 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
         ref={dialog}
         onClose={() => setOpen(null)}
         onClick={(e) => e.target === dialog.current && setOpen(null)}
-        className="m-auto max-h-[92dvh] w-[min(96vw,1100px)] rounded-3xl bg-black p-0 text-white backdrop:bg-black/80"
+        className="m-auto max-h-[92dvh] w-[min(96vw,1100px)] rounded-lg bg-black p-0 text-white backdrop:bg-black/80"
       >
         {current && (
           <div className="relative flex flex-col">
@@ -96,12 +96,12 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
             <div className="flex flex-wrap items-center gap-2 p-3">
               <button onClick={() => setOpen((o) => (o! > 0 ? o! - 1 : photos.length - 1))} aria-label="Previous photo" className="rounded-full bg-white/10 p-2"><ChevronLeft className="size-5" /></button>
               <button onClick={() => setOpen((o) => (o! < photos.length - 1 ? o! + 1 : 0))} aria-label="Next photo" className="rounded-full bg-white/10 p-2"><ChevronRight className="size-5" /></button>
-              <span className="text-[13px] text-white/60">{open! + 1} / {photos.length}</span>
+              <span className="text-body-sm text-white/60">{open! + 1} / {photos.length}</span>
               <span className="flex-1" />
               {tagButton(current.id, true)}
-              <a href={`/api/photos/${current.id}`} download className="rounded-full bg-white/10 px-4 py-2 text-[14px] font-semibold">Download</a>
+              <a href={`/api/photos/${current.id}`} download className="rounded-full bg-white/10 px-4 py-2 text-body font-semibold">Download</a>
               {canManage && (
-                <button onClick={() => remove(current.id)} disabled={busy === current.id} className="inline-flex items-center gap-1.5 rounded-full bg-danger px-4 py-2 text-[14px] font-semibold text-ink-inverse">
+                <button onClick={() => remove(current.id)} disabled={busy === current.id} className="inline-flex items-center gap-2 rounded-full bg-danger px-4 py-2 text-body font-semibold text-ink-inverse">
                   <Trash2 className="size-4" /> Delete
                 </button>
               )}

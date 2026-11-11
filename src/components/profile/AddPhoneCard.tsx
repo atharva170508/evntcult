@@ -29,22 +29,22 @@ export function AddPhoneCard() {
   }
 
   return (
-    <form onSubmit={save} className="card space-y-3 p-5 animate-fade-up">
-      <div className="flex items-center gap-2.5">
-        <span className="grid size-9 place-items-center rounded-xl bg-live-soft text-live">
+    <form onSubmit={save} className="card space-y-3 p-6">
+      <div className="flex items-center gap-3">
+        <span className="grid size-9 place-items-center rounded-md bg-live-soft text-live">
           <MessageCircle className="size-5" />
         </span>
         <div>
-          <h2 className="headline text-[16px]">Add your mobile number</h2>
+          <h2 className="headline text-body">Add your mobile number</h2>
         </div>
       </div>
       <PhoneFields phone={phone} setPhone={setPhone} optIn={optIn} setOptIn={setOptIn} />
       {error && (
-        <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
+        <p role="alert" className="rounded-md bg-danger-soft px-4 py-3 text-body-sm font-semibold text-danger">
           {error}
         </p>
       )}
-      <button disabled={busy} className="flex items-center gap-2 rounded-full bg-volt px-5 py-2.5 text-[14px] font-semibold text-ink-inverse disabled:opacity-50">
+      <button disabled={busy} className="flex items-center gap-2 rounded-full bg-volt px-6 py-3 text-body font-semibold text-ink-inverse disabled:opacity-50">
         {busy && <Loader2 className="size-4 animate-spin" />} Save number
       </button>
     </form>

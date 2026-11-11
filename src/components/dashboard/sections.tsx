@@ -87,14 +87,14 @@ const TILES = [
 
 export function QuickTiles() {
   return (
-    <div className="no-scrollbar -mx-4 flex gap-2.5 overflow-x-auto px-4 pb-1 animate-fade-up lg:mx-0 lg:px-0">
+    <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-1 lg:mx-0 lg:px-0">
       {TILES.map((t) => (
         <Link
           key={t.label}
           href={t.href}
-          className="group flex shrink-0 items-center gap-2.5 rounded-2xl border border-line bg-surface py-2 pl-2 pr-4 text-[13.5px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:border-volt/60"
+          className="group flex shrink-0 items-center gap-3 rounded-md border border-line bg-surface py-2 pl-2 pr-4 text-body-sm font-semibold transition duration-standard hover:-translate-y-0.5 hover:border-volt/60"
         >
-          <span className="grid size-8 place-items-center rounded-xl bg-volt/10 text-volt">
+          <span className="grid size-8 place-items-center rounded-md bg-volt/10 text-volt">
             <t.icon className="size-4" />
           </span>
           {t.label}
@@ -120,16 +120,16 @@ export function StatTile({
   delay?: number;
 }) {
   return (
-    <div className="card lift min-w-0 animate-fade-up p-5" style={{ animationDelay: `${delay}ms` }}>
+    <div className="card lift min-w-0 p-6" style={{ animationDelay: `${delay}ms` }}>
       <div className="flex items-center justify-between">
-        <span className="grid size-10 place-items-center rounded-2xl bg-volt/10 text-volt">
+        <span className="grid size-10 place-items-center rounded-md bg-volt/10 text-volt">
           <Icon className="size-[18px]" />
         </span>
         <ArrowUpRight className="size-4 text-ink-subtle" />
       </div>
-      <p className="mt-4 truncate font-display text-[30px] font-bold leading-none tracking-[-0.04em] text-volt tabular-nums sm:text-[40px] lg:text-[48px]">{value}</p>
-      <p className="mt-1.5 text-[13px] font-semibold text-ink-2">{label}</p>
-      {hint && <p className="text-[12px] text-ink-subtle">{hint}</p>}
+      <p className="mt-4 truncate font-display text-display font-semibold leading-none text-volt tabular-nums sm:text-display lg:text-display">{value}</p>
+      <p className="mt-2 text-body-sm font-semibold text-ink-2">{label}</p>
+      {hint && <p className="text-label text-ink-subtle">{hint}</p>}
     </div>
   );
 }
@@ -139,9 +139,9 @@ export function StatTile({
 export function NextUpHero({ event }: { event: NextUp }) {
   const badge = eventBadge(event);
   return (
-    <section className="card grid overflow-hidden animate-fade-up md:grid-cols-[1.05fr_1fr]">
+    <section className="card grid overflow-hidden md:grid-cols-[1.05fr_1fr]">
       {/* Poster */}
-      <div className="relative isolate flex min-h-[260px] flex-col justify-between p-6 text-white md:min-h-[420px] md:p-7">
+      <div className="relative isolate flex min-h-[260px] flex-col justify-between p-6 text-white md:min-h-[420px] md:p-8">
         <EventArt accent={event.accent} />
         <div className="relative flex flex-wrap items-center gap-2">
           <Chip tone="dark">Next up</Chip>
@@ -149,16 +149,16 @@ export function NextUpHero({ event }: { event: NextUp }) {
           {event.visibility === "CODE_ONLY" && <Chip tone="white">Private</Chip>}
         </div>
         <div className="relative">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-white/80">
+          <p className="text-body-sm font-semibold uppercase tracking-[0.1em] text-white/80">
             {fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "long" })}
           </p>
-          <h2 className="shout mt-2 text-[clamp(28px,3.6vw,44px)]">{event.title}</h2>
-          {event.tagline && <p className="mt-2 max-w-sm text-[16px] text-white/85">{event.tagline}</p>}
+          <h2 className="shout mt-2 text-display">{event.title}</h2>
+          {event.tagline && <p className="mt-2 max-w-sm text-body text-white/85">{event.tagline}</p>}
         </div>
       </div>
 
       {/* Details */}
-      <div className="flex flex-col gap-5 p-6 md:p-7">
+      <div className="flex flex-col gap-6 p-6 md:p-8">
         <div className="space-y-3">
           <InfoRow icon={Clock} title={fmtRange(event.startsAt, event.endsAt)} sub={fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "short" })} />
           {event.venueName && <InfoRow icon={MapPin} title={event.venueName} />}
@@ -169,7 +169,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
           <Countdown to={event.startsAt} endsAt={event.endsAt} />
         </div>
 
-        <div className="rounded-2xl bg-canvas p-3.5">
+        <div className="rounded-md bg-canvas p-4">
           <div className="flex items-center justify-between gap-3">
             <Avatars id={event.id} count={event.registered} />
             {badge && <Chip tone={badge.tone}>{badge.label}</Chip>}
@@ -177,7 +177,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
           {event.capacity && (
             <>
               <Meter value={event.registered} max={event.capacity} className="mt-3 bg-white" />
-              <p className="mt-1.5 text-[12px] font-semibold text-ink-muted">
+              <p className="mt-2 text-label font-semibold text-ink-muted">
                 {Math.max(0, event.capacity - event.registered)} spots left of {event.capacity}
               </p>
             </>
@@ -209,12 +209,12 @@ export function NextUpHero({ event }: { event: NextUp }) {
 function InfoRow({ icon: Icon, title, sub }: { icon: React.ComponentType<{ className?: string }>; title: string; sub?: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="grid size-11 shrink-0 place-items-center rounded-2xl border border-line">
+      <span className="grid size-11 shrink-0 place-items-center rounded-md border border-line">
         <Icon className="size-[18px] text-ink-2" />
       </span>
       <div className="min-w-0">
-        <p className="truncate text-[15px] font-bold">{title}</p>
-        {sub && <p className="truncate text-[12.5px] text-ink-muted">{sub}</p>}
+        <p className="truncate text-body font-semibold">{title}</p>
+        {sub && <p className="truncate text-label text-ink-muted">{sub}</p>}
       </div>
     </div>
   );
@@ -222,10 +222,10 @@ function InfoRow({ icon: Icon, title, sub }: { icon: React.ComponentType<{ class
 
 export function EmptyNextUp() {
   return (
-    <section className="card relative isolate flex min-h-[420px] flex-col items-start justify-end overflow-hidden p-9 text-white animate-fade-up">
+    <section className="card relative isolate flex min-h-[420px] flex-col items-start justify-end overflow-hidden p-8 text-white">
       <EventArt accent="violet" intensity={0.8} />
       <div className="relative">
-        <h2 className="text-[40px] font-extrabold leading-tight tracking-tightest">Nothing on your calendar.</h2>
+        <h2 className="text-display font-semibold leading-tight">Nothing on your calendar.</h2>
         <LinkButton href="/events" variant="light" className="mt-6">
           Browse events
         </LinkButton>
@@ -273,7 +273,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
         </Card>
       ) : (
         <Card eyebrow="Live now" title="No event running" icon={ScanLine} className="lg:col-span-5">
-          <p className="text-[14px] text-ink-muted">No live events.</p>
+          <p className="text-body text-ink-muted">No live events.</p>
         </Card>
       )}
 
@@ -283,17 +283,17 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
         )}
         <ul className="space-y-2">
           {data.hosted.map((h) => (
-            <li key={h.id} className="grid grid-cols-12 items-center gap-3 rounded-2xl bg-canvas p-3">
+            <li key={h.id} className="grid grid-cols-12 items-center gap-3 rounded-md bg-canvas p-3">
               <div className="col-span-12 min-w-0 sm:col-span-5">
-                <Link href={`/organizer/events/${h.id}/manage`} className="block truncate text-[14.5px] font-bold hover:text-brand-ink">
+                <Link href={`/organizer/events/${h.id}/manage`} className="block truncate text-body font-semibold hover:text-brand-ink">
                   {h.title}
                 </Link>
-                <p className="text-[12px] text-ink-muted">
+                <p className="text-label text-ink-muted">
                   {fmtDate(h.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(h.startsAt)}
                 </p>
               </div>
               <div className="col-span-7 sm:col-span-4">
-                <div className="mb-1 flex justify-between text-[12px] font-semibold tabular-nums">
+                <div className="mb-1 flex justify-between text-label font-semibold tabular-nums">
                   <span>{h.registered}</span>
                   <span className="text-ink-subtle">/ {h.capacity ?? "∞"}</span>
                 </div>
@@ -302,11 +302,11 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
               <div className="col-span-5 text-right sm:col-span-3">
                 {h.feePaise > 0 ? (
                   <>
-                    <p className="text-[13px] font-bold tabular-nums">{formatINR(h.paid * h.feePaise)}</p>
+                    <p className="text-body-sm font-semibold tabular-nums">{formatINR(h.paid * h.feePaise)}</p>
                     {h.pendingPayments > 0 ? (
-                      <p className="text-[11.5px] font-semibold text-warn">{h.pendingPayments} pending</p>
+                      <p className="text-caption font-semibold text-warn">{h.pendingPayments} pending</p>
                     ) : (
-                      <p className="text-[11.5px] text-ink-subtle">all settled</p>
+                      <p className="text-caption text-ink-subtle">all settled</p>
                     )}
                   </>
                 ) : (
@@ -325,22 +325,22 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
         className="lg:col-span-6"
       >
         {data.clashes.length === 0 ? (
-          <p className="text-[14px] text-ink-muted">No clashes.</p>
+          <p className="text-body text-ink-muted">No clashes.</p>
         ) : (
-          <ul className="space-y-2.5">
+          <ul className="space-y-3">
             {[...hard, ...soft].map((c, i) => (
-              <li key={i} className={cn("flex gap-3 rounded-2xl p-3.5", c.severity === "hard" ? "bg-danger-soft" : "bg-warn-soft")}>
+              <li key={i} className={cn("flex gap-3 rounded-md p-4", c.severity === "hard" ? "bg-danger-soft" : "bg-warn-soft")}>
                 {c.severity === "hard" ? (
                   <CircleAlert className="mt-0.5 size-[18px] shrink-0 text-danger" />
                 ) : (
                   <AlertTriangle className="mt-0.5 size-[18px] shrink-0 text-warn" />
                 )}
                 <div className="min-w-0">
-                  <p className="text-[14px] font-bold">
+                  <p className="text-body font-semibold">
                     {c.forEvent} <span className="font-medium text-ink-muted">vs</span> {c.title}
                   </p>
-                  <p className="mt-0.5 text-[13px] text-ink-2">{c.reason}</p>
-                  <p className="mt-1 text-[12px] font-semibold text-ink-muted">
+                  <p className="mt-0.5 text-body-sm text-ink-2">{c.reason}</p>
+                  <p className="mt-1 text-label font-semibold text-ink-muted">
                     {fmtDate(c.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtRange(c.startsAt, c.endsAt)}
                     {c.severity === "hard" ? " · Blocks publishing" : " · Warning only"}
                   </p>
@@ -352,7 +352,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
       </Card>
 
       <Card eyebrow="Quick actions" title="Run your event" icon={Sparkles} className="lg:col-span-6">
-        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <QuickAction href="/organizer/events/new" icon={Plus} label="New event" primary />
           <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "pick an event"} />
           <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" />
@@ -387,13 +387,13 @@ function QuickAction({
 }) {
   if (planned || !href) {
     return (
-      <div aria-disabled="true" className="flex cursor-not-allowed flex-col justify-between gap-6 rounded-2xl border border-dashed border-line p-4 opacity-60">
-        <span className="grid size-9 place-items-center rounded-xl bg-canvas text-ink-subtle">
+      <div aria-disabled="true" className="flex cursor-not-allowed flex-col justify-between gap-6 rounded-md border border-dashed border-line p-4 opacity-60">
+        <span className="grid size-9 place-items-center rounded-md bg-canvas text-ink-subtle">
           <Icon className="size-[18px]" />
         </span>
         <div>
-          <p className="text-[13.5px] font-bold leading-tight">{label}</p>
-          <p className="mt-0.5 text-[11.5px] font-semibold uppercase tracking-wider text-ink-subtle">Planned</p>
+          <p className="text-body-sm font-semibold leading-tight">{label}</p>
+          <p className="mt-0.5 text-caption font-semibold uppercase tracking-[0.08em] text-ink-subtle">Planned</p>
         </div>
       </div>
     );
@@ -402,19 +402,19 @@ function QuickAction({
     <Link
       href={href}
       className={cn(
-        "group flex flex-col justify-between gap-6 rounded-2xl border p-4 transition-all duration-200 ease-apple hover:-translate-y-0.5 active:scale-[0.98]",
+ "group flex flex-col justify-between gap-6 rounded-md border p-4 transition duration-standard ease-standard hover:-translate-y-0.5 active:scale-[0.98]",
         primary ? "border-transparent bg-volt text-ink-inverse hover:bg-volt-hover" : "border-line bg-surface hover:border-volt/60",
       )}
     >
       <span
-        className="grid size-9 place-items-center rounded-xl"
-        style={primary ? { background: "rgba(8,8,12,0.12)", color: "#08080c" } : { background: "rgba(220,254,98,0.1)", color: "#dcfe62" }}
+        className="grid size-9 place-items-center rounded-md"
+        style={primary ? { background: "color-mix(in srgb, var(--accent-ink) 12%, transparent)", color: "var(--accent-ink)" } : { background: "color-mix(in srgb, var(--accent) 10%, transparent)", color: "var(--accent)" }}
       >
         <Icon className="size-[18px]" />
       </span>
       <div>
-        <p className="text-[13.5px] font-bold leading-tight">{label}</p>
-        {hint && <p className={cn("mt-0.5 text-[11.5px]", primary ? "text-ink-inverse/70" : "text-ink-muted")}>{hint}</p>}
+        <p className="text-body-sm font-semibold leading-tight">{label}</p>
+        {hint && <p className={cn("mt-0.5 text-caption", primary ? "text-ink-inverse/70" : "text-ink-muted")}>{hint}</p>}
       </div>
     </Link>
   );
@@ -429,11 +429,11 @@ export function Announcements({ items }: { items: AnnouncementItem[] }) {
   return (
     <Card eyebrow="Live updates" title="From your organizers" icon={Megaphone} className="h-full">
       {items.length === 0 ? (
-        <p className="text-[14px] text-ink-muted">No updates yet.</p>
+        <p className="text-body text-ink-muted">No updates yet.</p>
       ) : (
-        <ol className="relative space-y-5 before:absolute before:bottom-1 before:left-[6px] before:top-1 before:w-0.5 before:rounded-full before:bg-line">
+        <ol className="relative space-y-6 before:absolute before:bottom-1 before:left-[6px] before:top-1 before:w-0.5 before:rounded-full before:bg-line">
           {items.map((a, i) => (
-            <li key={a.id} className="relative pl-7">
+            <li key={a.id} className="relative pl-8">
               <span className={cn("absolute left-0 top-1 size-[14px] rounded-full border-[3px] border-surface", i === 0 ? "bg-danger" : "bg-line-strong")} />
               <div className="flex flex-wrap items-center gap-2">
                 {i === 0 && (
@@ -442,12 +442,12 @@ export function Announcements({ items }: { items: AnnouncementItem[] }) {
                   </Chip>
                 )}
                 <Chip tone={kindTone[a.kind]}>{kindLabel[a.kind]}</Chip>
-                <span className="text-[12px] font-semibold text-ink-subtle">
+                <span className="text-label font-semibold text-ink-subtle">
                   {a.eventTitle} · {relative(a.createdAt)}
                 </span>
               </div>
-              <p className="mt-1.5 text-[15px] font-bold leading-snug">{a.title}</p>
-              <p className="mt-0.5 text-[13.5px] text-ink-muted">{a.body}</p>
+              <p className="mt-2 text-body font-semibold leading-snug">{a.title}</p>
+              <p className="mt-0.5 text-body-sm text-ink-muted">{a.body}</p>
             </li>
           ))}
         </ol>
@@ -472,10 +472,10 @@ export function LinkCard({
   body: string;
 }) {
   return (
-    <Link href={href} className="group block h-full rounded-[28px] transition-transform hover:-translate-y-0.5">
+    <Link href={href} className="group block h-full rounded-lg transition-transform hover:-translate-y-0.5">
       <Card eyebrow={eyebrow} title={title} icon={icon} className="h-full transition-colors group-hover:border-volt/50">
-        <p className="text-[13.5px] text-ink-muted">{body}</p>
-        <span className="mt-4 inline-flex items-center gap-1 text-[13px] font-bold text-volt">
+        <p className="text-body-sm text-ink-muted">{body}</p>
+        <span className="mt-4 inline-flex items-center gap-1 text-body-sm font-semibold text-volt">
           Open <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
         </span>
       </Card>
@@ -492,21 +492,21 @@ export function UpcomingList({ events }: { events: EventSummary[] }) {
       <ul className="space-y-2">
         {events.map((e) => (
           <li key={e.id}>
-            <Link href={`/events/${e.slug}`} className="group flex items-center gap-3.5 rounded-2xl p-2 transition-colors hover:bg-canvas">
-              <div className="relative isolate grid h-14 w-12 shrink-0 place-items-center overflow-hidden rounded-2xl text-center text-white">
+            <Link href={`/events/${e.slug}`} className="group flex items-center gap-4 rounded-md p-2 transition-colors hover:bg-canvas">
+              <div className="relative isolate grid h-14 w-12 shrink-0 place-items-center overflow-hidden rounded-md text-center text-white">
                 <EventArt accent={e.accent} />
                 <div className="relative">
-                  <div className="text-[10px] font-bold uppercase tracking-wider">{fmtDate(e.startsAt, { month: "short" })}</div>
-                  <div className="text-[20px] font-extrabold leading-none tabular-nums">{fmtDate(e.startsAt, { day: "numeric" })}</div>
+                  <div className="text-caption font-semibold uppercase tracking-[0.08em]">{fmtDate(e.startsAt, { month: "short" })}</div>
+                  <div className="text-title font-semibold leading-none tabular-nums">{fmtDate(e.startsAt, { day: "numeric" })}</div>
                 </div>
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[14.5px] font-bold">{e.title}</p>
-                <p className="truncate text-[12.5px] text-ink-muted">
+                <p className="truncate text-body font-semibold">{e.title}</p>
+                <p className="truncate text-label text-ink-muted">
                   {fmtTime(e.startsAt)} · {e.venueName}
                 </p>
               </div>
-              <ArrowUpRight className="size-4 text-ink-subtle transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
+              <ArrowUpRight className="size-4 text-ink-subtle transition-transform duration-standard group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
             </Link>
           </li>
         ))}
@@ -519,13 +519,13 @@ export function UpcomingList({ events }: { events: EventSummary[] }) {
 
 export function CampusRail({ events }: { events: EventSummary[] }) {
   return (
-    <section className="animate-fade-up">
+    <section className="">
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Happening soon</p>
-          <h2 className="title-xl mt-2 text-[clamp(38px,4.4vw,60px)]">Don&apos;t miss <em className="text-volt">these</em></h2>
+          <h2 className="title-xl mt-2 text-display">Don&apos;t miss <em className="text-volt">these</em></h2>
         </div>
-        <LinkButton href="/events" variant="secondary" className="py-2 text-[13px]">
+        <LinkButton href="/events" variant="secondary" className="py-2 text-body-sm">
           Browse all <ArrowUpRight className="size-4" />
         </LinkButton>
       </div>
@@ -544,28 +544,28 @@ export function EventCard({ e }: { e: EventSummary }) {
   return (
     <article className="card lift group flex w-[280px] shrink-0 snap-start flex-col overflow-hidden lg:w-auto">
       <Link href={`/events/${e.slug}`} className="relative isolate block h-[150px] overflow-hidden">
-        <EventArt accent={e.accent} className="transition-transform duration-700 ease-apple group-hover:scale-105" />
-        <div className="relative flex gap-1.5 p-3">
+        <EventArt accent={e.accent} className="transition-transform duration-large ease-standard group-hover:scale-105" />
+        <div className="relative flex gap-2 p-3">
           <Chip tone="white">{CATEGORY_LABEL[e.category]}</Chip>
           {badge && <Chip tone={badge.tone}>{badge.label}</Chip>}
         </div>
       </Link>
       <div className="flex flex-1 flex-col p-4">
-        <p className="text-[12px] font-bold uppercase tracking-[0.06em] text-brand-ink">
+        <p className="text-label font-semibold uppercase tracking-[0.06em] text-brand-ink">
           {fmtDate(e.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(e.startsAt)}
         </p>
-        <Link href={`/events/${e.slug}`} className="mt-1 text-[17px] font-extrabold leading-snug tracking-tight hover:text-brand-ink">
+        <Link href={`/events/${e.slug}`} className="mt-1 text-title font-semibold leading-snug hover:text-brand-ink">
           {e.title}
         </Link>
-        {e.tagline && <p className="mt-1 line-clamp-1 text-[13px] text-ink-muted">{e.tagline}</p>}
+        {e.tagline && <p className="mt-1 line-clamp-1 text-body-sm text-ink-muted">{e.tagline}</p>}
         {e.venueName && (
-          <p className="mt-2 flex items-center gap-1 text-[12.5px] font-semibold text-ink-2">
+          <p className="mt-2 flex items-center gap-1 text-label font-semibold text-ink-2">
             <MapPin className="size-3.5 text-ink-subtle" /> {e.venueName}
           </p>
         )}
         <div className="mt-auto flex items-center justify-between gap-2 pt-4">
           <Avatars id={e.id} count={e.registered} size={22} />
-          <span className={cn("rounded-full px-2.5 py-1 text-[12px] font-bold", e.feePaise > 0 ? "bg-volt text-ink-inverse" : "bg-live-soft text-live")}>
+          <span className={cn("rounded-full px-3 py-1 text-label font-semibold", e.feePaise > 0 ? "bg-volt text-ink-inverse" : "bg-live-soft text-live")}>
             {e.feePaise > 0 ? formatINR(e.feePaise) : "Free"}
           </span>
         </div>
@@ -580,9 +580,9 @@ export function VaultTeaser({ photosOfYou, preview = [] }: { photosOfYou: number
   const tiles = ["violet", "orange", "teal", "pink", "blue", "green"];
   return (
     <Card eyebrow="Photo Vault" title={photosOfYou === 1 ? "1 photo of you" : `${photosOfYou} photos of you`} icon={Camera} action={{ label: "Open", href: "/vault" }} className="h-full">
-      <div className="grid grid-cols-3 gap-1.5">
+      <div className="grid grid-cols-3 gap-2">
         {tiles.map((t, i) => (
-          <div key={t} className={cn("relative isolate overflow-hidden rounded-2xl bg-canvas", i === 0 ? "col-span-2 row-span-2 aspect-auto" : "aspect-square")}>
+          <div key={t} className={cn("relative isolate overflow-hidden rounded-md bg-canvas", i === 0 ? "col-span-2 row-span-2 aspect-auto" : "aspect-square")}>
             {preview[i] ? (
               // Real thumbnails of photos I tagged myself in.
               // eslint-disable-next-line @next/next/no-img-element
@@ -596,7 +596,7 @@ export function VaultTeaser({ photosOfYou, preview = [] }: { photosOfYou: number
           </div>
         ))}
       </div>
-      <p className="mt-4 flex items-center gap-2 text-[13px] font-semibold text-ink-muted">
+      <p className="mt-4 flex items-center gap-2 text-body-sm font-semibold text-ink-muted">
         <ScanFace className="size-4 text-brand-ink" /> Tap &ldquo;that&apos;s me&rdquo; on event photos to collect yours
       </p>
     </Card>
@@ -605,7 +605,7 @@ export function VaultTeaser({ photosOfYou, preview = [] }: { photosOfYou: number
 
 export function UpiPending({ amountPaise }: { amountPaise: number }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-warn-soft p-3.5 text-[13px] font-semibold animate-fade-up">
+    <div className="flex items-center gap-3 rounded-md bg-warn-soft p-4 text-body-sm font-semibold">
       <Sparkles className="size-4 shrink-0 text-warn" />
       <span className="text-ink-2">{formatINR(amountPaise)} due · Pay on the event page.</span>
     </div>

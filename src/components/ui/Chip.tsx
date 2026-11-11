@@ -1,42 +1,26 @@
 import { cn } from "@/lib/utils";
 
+/** Status labels always carry words, so colour is never the only signal (§2 law 10). */
 const tones = {
-  neutral: "bg-canvas text-ink-2",
-  accent: "bg-brand-soft text-brand-ink",
-  live: "bg-live-soft text-live",
-  /** Live / happening-now indicators: the neon-yellow accent. */
-  volt: "bg-volt/10 text-volt ring-1 ring-volt/30",
-  warn: "bg-warn-soft text-warn",
-  danger: "bg-danger-soft text-danger",
-  violet: "bg-brand-soft text-brand-ink",
-  dark: "bg-volt text-ink-inverse",
-  white: "bg-white/90 text-ink-inverse backdrop-blur",
-  outline: "border border-line bg-surface text-ink-2",
+  neutral: "border-line text-ink-muted",
+  accent: "border-accent/40 text-accent",
+  live: "border-ok/40 text-ok",
+  volt: "border-accent/40 text-accent",
+  warn: "border-warn/40 text-warn",
+  danger: "border-bad/40 text-bad",
+  violet: "border-line text-ink-muted",
+  dark: "border-accent bg-accent text-accent-ink",
+  white: "border-line-strong bg-surface-2 text-ink",
+  outline: "border-line text-ink-muted",
 } as const;
 
 export type ChipTone = keyof typeof tones;
 
-/** Small rounded label (status chips like Devfolio, badges like Eventbrite). */
-export function Chip({
-  tone = "neutral",
-  pulse,
-  className,
-  children,
-}: {
-  tone?: ChipTone;
-  pulse?: boolean;
-  className?: string;
-  children: React.ReactNode;
-}) {
+/** Small mono label for status and counts. `pulse` shows a still live dot. */
+export function Chip({ tone = "neutral", pulse, className, children }: { tone?: ChipTone; pulse?: boolean; className?: string; children: React.ReactNode }) {
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-semibold leading-none",
-        tones[tone],
-        className,
-      )}
-    >
-      {pulse && <span className="size-1.5 rounded-full bg-volt motion-safe:animate-pulse-dot" aria-hidden />}
+    <span className={cn("inline-flex h-6 items-center gap-1 rounded-sm border px-2 font-mono text-caption leading-none", tones[tone], className)}>
+      {pulse && <span className="size-1 rounded-full bg-accent" aria-hidden />}
       {children}
     </span>
   );

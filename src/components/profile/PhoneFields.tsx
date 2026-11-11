@@ -15,9 +15,9 @@ export function PhoneFields({
   return (
     <>
       <label className="block">
-        <span className="text-[13px] font-semibold text-ink-2">Mobile number</span>
-        <div className="mt-1.5 flex items-center rounded-2xl border border-line bg-surface focus-within:border-brand">
-          <span className="pl-4 pr-2 text-[15px] font-semibold text-ink-muted">+91</span>
+        <span className="text-body-sm font-semibold text-ink-2">Mobile number</span>
+        <div className="mt-2 flex items-center rounded-md border border-line bg-surface focus-within:border-brand">
+          <span className="pl-4 pr-2 text-body font-semibold text-ink-muted">+91</span>
           <input
             type="tel"
             required
@@ -27,11 +27,11 @@ export function PhoneFields({
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="98765 43210"
-            className="w-full rounded-r-2xl bg-transparent py-3.5 pr-4 text-[15px] placeholder:text-ink-subtle focus:outline-none"
+            className="w-full rounded-r-md bg-transparent py-4 pr-4 text-body placeholder:text-ink-subtle focus:outline-none"
           />
         </div>
       </label>
-      <label className="flex items-start gap-2.5 text-[13px] text-ink-2">
+      <label className="flex items-start gap-3 text-body-sm text-ink-2">
         <input type="checkbox" checked={optIn} onChange={(e) => setOptIn(e.target.checked)} className="mt-0.5 size-4 accent-brand" />
         <span>Send me event reminders and pass updates on WhatsApp.</span>
       </label>

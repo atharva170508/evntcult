@@ -15,18 +15,18 @@ export default async function ProfilePage() {
   if (!viewer) redirect("/signin?next=/profile");
 
   return (
-    <div className="mx-auto max-w-2xl animate-fade-up">
+    <div className="mx-auto max-w-2xl">
       <PageHero eyebrow="Account" title={<>Your <em>profile</em></>} />
 
-      <div className="card mt-6 flex flex-wrap items-center gap-3 p-5">
-        <span className="grid size-10 place-items-center rounded-xl bg-brand-soft text-brand-ink" aria-hidden>
+      <div className="card mt-6 flex flex-wrap items-center gap-3 p-6">
+        <span className="grid size-10 place-items-center rounded-md bg-brand-soft text-brand-ink" aria-hidden>
           <Mail className="size-5" />
         </span>
         <div className="min-w-0 flex-1">
-          <p className="text-[12px] font-semibold text-ink-subtle">Email (used to log in, can&apos;t be changed)</p>
-          <p className="truncate text-[15px] font-semibold">{viewer.email}</p>
+          <p className="text-label font-semibold text-ink-subtle">Email (used to log in, can&apos;t be changed)</p>
+          <p className="truncate text-body font-semibold">{viewer.email}</p>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-canvas px-3 py-1.5 text-[12.5px] font-semibold text-ink-2">
+        <span className="inline-flex items-center gap-2 rounded-full bg-canvas px-3 py-2 text-label font-semibold text-ink-2">
           <BadgeCheck className="size-4 text-live" aria-hidden /> {ROLE_LABEL[viewer.role]}
         </span>
       </div>

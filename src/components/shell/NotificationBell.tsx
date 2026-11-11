@@ -55,21 +55,21 @@ export function NotificationBell() {
 
   return (
     <div ref={box} className="sm:relative">
-      <button onClick={toggle} aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"} aria-expanded={open} className="relative grid size-10 place-items-center rounded-full border border-line bg-surface text-ink-2 transition-colors hover:border-volt/60 sm:size-11">
+      <button onClick={toggle} aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"} aria-expanded={open} className="relative grid size-8 shrink-0 place-items-center rounded-sm text-ink-muted transition-colors hover:text-ink">
         <Bell className="size-[18px]" />
-        {unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-volt px-1 font-mono text-[10px] font-bold text-ink-inverse">{unread > 9 ? "9+" : unread}</span>}
+        {unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-volt px-1 font-mono text-caption font-semibold text-ink-inverse">{unread > 9 ? "9+" : unread}</span>}
       </button>
       {open && (
-        <div className="absolute inset-x-4 top-[66px] z-40 max-h-[70dvh] overflow-y-auto rounded-2xl border border-line bg-surface shadow-pop sm:inset-x-auto sm:right-0 sm:top-[52px] sm:w-[340px]">
+        <div className="absolute inset-x-4 top-[66px] z-40 max-h-[70dvh] overflow-y-auto rounded-md border border-line bg-surface sm:inset-x-auto sm:right-0 sm:top-[52px] sm:w-[340px]">
           {items.length === 0 ? (
-            <p className="p-5 text-center text-[14px] text-ink-muted">No notifications</p>
+            <p className="p-6 text-center text-body text-ink-muted">No notifications</p>
           ) : (
             <ul className="divide-y divide-line">
               {items.map((n) => (
                 <li key={n.id}>
                   <Link href={n.href} onClick={() => setOpen(false)} className="block px-4 py-3 hover:bg-white/5">
-                    <span className={`block text-[13.5px] ${n.read ? "text-ink-2" : "font-semibold"}`}>{n.text}</span>
-                    <span className="mt-0.5 block text-[11.5px] text-ink-subtle">{relative(new Date(n.at))}</span>
+                    <span className={`block text-body-sm ${n.read ? "text-ink-2" : "font-semibold"}`}>{n.text}</span>
+                    <span className="mt-0.5 block text-caption text-ink-subtle">{relative(new Date(n.at))}</span>
                   </Link>
                 </li>
               ))}

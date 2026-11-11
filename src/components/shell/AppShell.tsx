@@ -19,7 +19,7 @@ export function AppShell({ viewer, children }: { viewer: NavViewer | null; child
       <div className="min-w-0 flex-1">
         <TopBar viewer={viewer} onEnterCode={() => setCodeOpen(true)} />
         <main className="mx-auto max-w-[1280px] px-4 pb-32 md:pb-16 lg:px-8">{children}</main>
-        <footer className="print:hidden mx-auto max-w-[1280px] px-4 pb-28 pt-10 text-[12.5px] text-ink-subtle md:pb-10 lg:px-8">
+        <footer className="print:hidden mx-auto max-w-[1280px] px-4 pb-32 pt-12 text-label text-ink-subtle md:pb-12 lg:px-8">
           <Wordmark />
           <div className="mt-6 flex flex-wrap justify-between gap-2 border-t border-line pt-6">
             <span>EvntCult · Every event, one place</span>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Download, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TOKENS } from "@/styles/tokens";
 
 export interface SavePassProps {
   title: string;
@@ -55,15 +56,15 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
       await document.fonts.ready;
 
       // Card
-      ctx.fillStyle = "#08080c";
+      ctx.fillStyle = TOKENS.surface0;
       ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = "#dcfe62";
+      ctx.fillStyle = TOKENS.accent;
       ctx.beginPath();
       ctx.roundRect(PAD - 24, PAD - 24, W - 2 * (PAD - 24), 360, 48);
       ctx.fill();
 
       // Title block on yellow
-      ctx.fillStyle = "#08080c";
+      ctx.fillStyle = TOKENS.accentInk;
       ctx.font = `700 34px ${font}`;
       ctx.fillText("EVNTCULT PASS", PAD + 20, PAD + 44);
       ctx.font = `800 72px ${font}`;
@@ -74,7 +75,7 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
       // QR on white
       const qrSize = 720;
       const qx = (W - qrSize) / 2, qy = 520;
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = TOKENS.qrGround;
       ctx.beginPath();
       ctx.roundRect(qx - 40, qy - 40, qrSize + 80, qrSize + 80, 40);
       ctx.fill();
@@ -92,10 +93,10 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
 
       // Pass code + venue
       ctx.textAlign = "center";
-      ctx.fillStyle = "#f2f3f7";
+      ctx.fillStyle = TOKENS.text;
       ctx.font = `700 58px ui-monospace, Menlo, monospace`;
       ctx.fillText(p.passCode, W / 2, 1400);
-      ctx.fillStyle = "#9aa0b1";
+      ctx.fillStyle = TOKENS.textMuted;
       ctx.font = `500 34px ${font}`;
       ctx.fillText(p.venue, W / 2, 1462);
 
@@ -120,11 +121,11 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
         type="button"
         onClick={save}
         disabled={busy}
-        className={cn("inline-flex items-center justify-center gap-1.5 rounded-full border border-line px-3.5 py-2 text-[13px] font-semibold transition-colors hover:border-volt/60 disabled:opacity-50", className)}
+        className={cn("inline-flex items-center justify-center gap-2 rounded-full border border-line px-4 py-2 text-body-sm font-semibold transition-colors hover:border-volt/60 disabled:opacity-50", className)}
       >
         {busy ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <Download className="size-4" aria-hidden />} Save pass image
       </button>
-      {error && <span role="alert" className="text-[12px] font-semibold text-danger">Couldn&apos;t save. Take a screenshot instead.</span>}
+      {error && <span role="alert" className="text-label font-semibold text-danger">Couldn&apos;t save. Take a screenshot instead.</span>}
     </>
   );
 }

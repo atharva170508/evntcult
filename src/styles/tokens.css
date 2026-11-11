@@ -1,0 +1,74 @@
+/* EvntCult design tokens — the only file allowed to hold raw colour hex values (master prompt §4–§7).
+   Tailwind (tailwind.config.ts) and the organizer styles both read these variables. */
+:root {
+  /* §4 surfaces, hairlines, text, accent, status */
+  --surface-0: #09090b;
+  --surface-1: #0e0e11;
+  --surface-2: #17171b;
+  --surface-3: #1f1f24;
+  --hair: #24242b;
+  --hair-strong: #33333c;
+  --text: #f0f0ec;
+  --text-muted: #8c8c96;
+  --text-dim: #7f7f8a; /* spec #7A7A86 measured 4.22:1 on surface-2; nudged to pass §15 (4.5:1) */
+  --accent: #cbf03c;
+  --accent-ink: #0a0a0c;
+  --ok: #4ec48a;
+  --warn: #ce963c;
+  --bad: #c9605d; /* spec #C4514E measured 4.39:1 on surface-0; nudged to pass §15 (4.5:1) */
+  /* §8 Ticket: its own ground; the QR sits on off-white. */
+  --ticket: #121216;
+  --qr-ground: #eeeee8;
+  /* Printed and emailed surfaces: certificates, the login email card. */
+  --paper: #ffffff;
+
+  /* §4 radius: three steps and a pill */
+  --r-1: 4px;
+  --r-2: 6px;
+  --r-3: 8px;
+  --r-pill: 999px;
+
+  /* §4/§6 space scale */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+
+  /* §7 motion */
+  --t-press: 90ms;
+  --t-micro: 120ms;
+  --t-standard: 180ms;
+  --t-large: 280ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emph: cubic-bezier(0.05, 0.7, 0.1, 1);
+
+  /* §5 type: one display face, a neutral body face, mono for all data */
+  --font-display: "Bahnschrift", var(--font-barlow), "Barlow Semi Condensed", "Archivo Narrow", sans-serif;
+  --font-body: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, var(--font-plex), "IBM Plex Mono", "Consolas", monospace;
+
+  /* §5 type scale — the only sizes in the product. */
+  --fs-caption: 11px;
+  --fs-label: 12px;
+  --fs-body-sm: 13px;
+  --fs-body: 14px;
+  --fs-title: 20px;
+  --fs-heading: 24px;
+  --fs-display: clamp(32px, 2.4vw + 20px, 40px);
+
+  /* Only overlays (menus, modals, toasts) get a shadow (§2 law 7). */
+  --shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-press: 1ms;
+    --t-micro: 1ms;
+    --t-standard: 1ms;
+    --t-large: 1ms;
+  }
+}

@@ -70,8 +70,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
   const shown = showAll ? attendees : attendees.slice(0, PAGE);
 
   return (
-    <div className="space-y-5 pt-4 md:pt-6">
-      <Link href="/organizer" className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink-muted hover:text-ink"><ArrowLeft className="size-4" /> Your events</Link>
+    <div className="space-y-6 pt-4 md:pt-6">
+      <Link href="/organizer" className="inline-flex items-center gap-2 text-body-sm font-semibold text-ink-muted hover:text-ink"><ArrowLeft className="size-4" /> Your events</Link>
 
       <PageHero
         eyebrow={`Manage event · ${e.status}`}
@@ -79,14 +79,14 @@ export default async function ManageEventPage({ params, searchParams }: { params
         sub={
           <>
             {fmtDate(new Date(e.starts_at), { weekday: "short", day: "numeric", month: "short" })} · {fmtRange(new Date(e.starts_at), new Date(e.ends_at))} · {e.venue}
-            {e.access === "code" && e.access_code && <> · code <span className="font-mono font-bold text-ink">{e.access_code}</span></>}
+            {e.access === "code" && e.access_code && <> · code <span className="font-mono font-semibold text-ink">{e.access_code}</span></>}
           </>
         }
         actions={
           <>
-            {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-1.5 rounded-full bg-volt px-4 py-2.5 text-[13.5px] font-bold text-ink-inverse hover:bg-volt-hover"><ScanLine className="size-4" aria-hidden /> Gate scanner</Link>}
-            {e.status !== "draft" && <Link href={`/events/${e.slug}/photos`} className="glass inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[13.5px] font-semibold hover:bg-white/15"><Camera className="size-4" aria-hidden /> Photos</Link>}
-            <Link href={`/organizer/events/${e.id}`} className="glass inline-flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[13.5px] font-semibold hover:bg-white/15"><Pencil className="size-4" aria-hidden /> Edit</Link>
+            {e.status === "published" && <Link href={`/organizer/scan/${e.id}`} className="inline-flex items-center gap-2 rounded-full bg-volt px-4 py-3 text-body-sm font-semibold text-ink-inverse hover:bg-volt-hover"><ScanLine className="size-4" aria-hidden /> Gate scanner</Link>}
+            {e.status !== "draft" && <Link href={`/events/${e.slug}/photos`} className="glass inline-flex items-center gap-2 rounded-full px-4 py-3 text-body-sm font-semibold hover:bg-white/15"><Camera className="size-4" aria-hidden /> Photos</Link>}
+            <Link href={`/organizer/events/${e.id}`} className="glass inline-flex items-center gap-2 rounded-full px-4 py-3 text-body-sm font-semibold hover:bg-white/15"><Pencil className="size-4" aria-hidden /> Edit</Link>
           </>
         }
       />
@@ -104,31 +104,31 @@ export default async function ManageEventPage({ params, searchParams }: { params
             : [["Entry", "Free"]]),
         ].map(([label, value]) => (
           <div key={label} className="card p-4">
-            <dt className="text-[12px] font-semibold text-ink-subtle">{label}</dt>
-            <dd className="mt-1 font-mono text-[20px] font-bold tabular-nums">{value}</dd>
+            <dt className="text-label font-semibold text-ink-subtle">{label}</dt>
+            <dd className="mt-1 font-mono text-title font-semibold tabular-nums">{value}</dd>
           </div>
         ))}
       </dl>
 
       <div className="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
-        <section className="card p-5">
-          <h2 className="title-xl text-[32px]">Post an update</h2>
+        <section className="card p-6">
+          <h2 className="title-xl text-display">Post an update</h2>
           {e.status === "draft" ? (
-            <p className="rounded-2xl bg-canvas p-4 text-[14px] font-semibold text-ink-2">Publish the event first, then you can post updates.</p>
+            <p className="rounded-md bg-canvas p-4 text-body font-semibold text-ink-2">Publish the event first, then you can post updates.</p>
           ) : (
             <UpdateComposer eventId={e.id} optedIn={optedIn} connected={connected} />
           )}
         </section>
 
-        <section className="card p-5">
+        <section className="card p-6">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="flex items-center gap-2 text-[16px] font-bold"><MessageCircle className="size-4 text-ink-subtle" /> WhatsApp</h2>
-            <span className="font-mono text-[13px] tabular-nums">{outbox.optedIn} opted in</span>
+            <h2 className="flex items-center gap-2 text-body font-semibold"><MessageCircle className="size-4 text-ink-subtle" /> WhatsApp</h2>
+            <span className="font-mono text-body-sm tabular-nums">{outbox.optedIn} opted in</span>
           </div>
-          <ul className="mt-3 divide-y divide-line text-[13.5px]">
+          <ul className="mt-3 divide-y divide-line text-body-sm">
             {outbox.next.map((n) => (
               <li key={n.at + n.template} className="flex justify-between gap-3 py-2">
-                <span className="font-mono text-[12.5px]">{istLabel(n.at)}</span>
+                <span className="font-mono text-label">{istLabel(n.at)}</span>
                 <span className="text-ink-muted">{WA_LABEL[n.template] ?? n.template.replace(/_/g, " ")}</span>
               </li>
             ))}
@@ -150,13 +150,13 @@ export default async function ManageEventPage({ params, searchParams }: { params
             )}
           </ul>
           <WaTestButton eventId={e.id} />
-          <h3 className="mt-4 text-[13px] font-bold uppercase tracking-[0.08em] text-ink-subtle">Recent updates</h3>
+          <h3 className="mt-4 text-body-sm font-semibold uppercase tracking-[0.08em] text-ink-subtle">Recent updates</h3>
           {updates.length === 0 ? (
-            <p className="mt-1 text-[13.5px] text-ink-muted">None yet.</p>
+            <p className="mt-1 text-body-sm text-ink-muted">None yet.</p>
           ) : (
-            <ul className="mt-2 space-y-2.5">
+            <ul className="mt-2 space-y-3">
               {updates.map((u) => (
-                <li key={u.id} className="text-[13.5px]">
+                <li key={u.id} className="text-body-sm">
                   <span className="font-semibold">{UPDATE_LABEL[u.kind] ?? "Update"}</span> <span className="text-ink-muted">· {relative(new Date(u.created_at))}{u.notified ? " · WhatsApp" : ""}</span>
                   <p className="text-ink-2">{u.body}</p>
                 </li>
@@ -166,20 +166,20 @@ export default async function ManageEventPage({ params, searchParams }: { params
         </section>
       </div>
 
-      <section className="card p-5">
-        <h2 className="title-xl mb-3 text-[32px]">Certificates</h2>
+      <section className="card p-6">
+        <h2 className="title-xl mb-3 text-display">Certificates</h2>
         <CertPanel eventId={e.id} issued={certs.filter((c) => c.kind === "participation").length} checkedIn={s.checkedIn} enabled={e.certificates_enabled === 1} />
       </section>
 
       {merch.length > 0 && (
-        <section className="card p-5">
+        <section className="card p-6">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <h2 className="title-xl text-[32px]">Merch</h2>
-            <a href={`/api/events/${e.id}/merch/claims.csv`} className="inline-flex h-10 items-center gap-1.5 rounded-full border border-line px-4 text-[13px] font-semibold hover:border-volt/60"><Download className="size-4" /> CSV</a>
+            <h2 className="title-xl text-display">Merch</h2>
+            <a href={`/api/events/${e.id}/merch/claims.csv`} className="inline-flex h-10 items-center gap-2 rounded-full border border-line px-4 text-body-sm font-semibold hover:border-volt/60"><Download className="size-4" /> CSV</a>
           </div>
-          <ul className="divide-y divide-line font-mono text-[13px]">
+          <ul className="divide-y divide-line font-mono text-body-sm">
             {merch.map((m) => (
-              <li key={m.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5">
+              <li key={m.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                 <span className="font-sans font-semibold">{m.variant ? `${m.name} · ${m.variant}` : m.name}</span>
                 <span className="text-ink-muted">
                   {m.claimed} claimed · {m.left === null ? "unlimited" : `${m.left} left`}
@@ -188,58 +188,58 @@ export default async function ManageEventPage({ params, searchParams }: { params
               </li>
             ))}
           </ul>
-          <p className="mt-3 text-[13.5px] text-ink-muted">Collected {collected.collected} of {collected.passes} passes</p>
+          <p className="mt-3 text-body-sm text-ink-muted">Collected {collected.collected} of {collected.passes} passes</p>
         </section>
       )}
 
       <section className="card overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line p-4">
-          <h2 className="title-xl text-[32px]">Attendees <span className="font-mono text-[15px] text-ink-muted tabular-nums">({attendees.length}{q ? " found" : ""})</span></h2>
+          <h2 className="title-xl text-display">Attendees <span className="font-mono text-body text-ink-muted tabular-nums">({attendees.length}{q ? " found" : ""})</span></h2>
           <div className="flex flex-wrap items-center gap-2">
-            <form className="flex h-10 items-center rounded-full border border-line bg-surface pl-3.5 pr-1 transition-colors focus-within:border-volt/70">
+            <form className="flex h-10 items-center rounded-full border border-line bg-surface pl-4 pr-1 transition-colors focus-within:border-volt/70">
               <Search className="size-4 text-ink-subtle" />
-              <input name="q" defaultValue={q} placeholder="Name, email or pass code" aria-label="Search attendees" className="w-48 bg-transparent px-2 text-[13.5px] focus:outline-none" />
-              <button className="rounded-full bg-volt px-3 py-1.5 text-[12.5px] font-semibold text-ink-inverse">Search</button>
+              <input name="q" defaultValue={q} placeholder="Name, email or pass code" aria-label="Search attendees" className="w-48 bg-transparent px-2 text-body-sm focus:outline-none" />
+              <button className="rounded-full bg-volt px-3 py-2 text-label font-semibold text-ink-inverse">Search</button>
             </form>
-            <a href={`/api/events/${e.id}/attendees?format=csv${q ? `&q=${encodeURIComponent(q)}` : ""}`} className="inline-flex h-10 items-center gap-1.5 rounded-full border border-line px-4 text-[13px] font-semibold hover:border-volt/60">
+            <a href={`/api/events/${e.id}/attendees?format=csv${q ? `&q=${encodeURIComponent(q)}` : ""}`} className="inline-flex h-10 items-center gap-2 rounded-full border border-line px-4 text-body-sm font-semibold hover:border-volt/60">
               <Download className="size-4" /> CSV
             </a>
           </div>
         </div>
 
         {attendees.length === 0 ? (
-          <p className="p-6 text-[14px] text-ink-muted">{q ? `Nobody matches “${q}”.` : "No registrations yet."}</p>
+          <p className="p-6 text-body text-ink-muted">{q ? `Nobody matches “${q}”.` : "No registrations yet."}</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] text-left text-[13.5px]">
-              <thead className="bg-canvas text-[12px] font-semibold text-ink-subtle">
+            <table className="w-full min-w-[720px] text-left text-body-sm">
+              <thead className="bg-canvas text-label font-semibold text-ink-subtle">
                 <tr>
-                  <th scope="col" className="px-4 py-2.5">Name</th>
-                  <th scope="col" className="px-4 py-2.5">Pass</th>
-                  <th scope="col" className="px-4 py-2.5">Status</th>
-                  <th scope="col" className="px-4 py-2.5">Checked in</th>
-                  <th scope="col" className="px-4 py-2.5">Certificate</th>
-                  {paidEvent && <th scope="col" className="px-4 py-2.5">Payment</th>}
+                  <th scope="col" className="px-4 py-3">Name</th>
+                  <th scope="col" className="px-4 py-3">Pass</th>
+                  <th scope="col" className="px-4 py-3">Status</th>
+                  <th scope="col" className="px-4 py-3">Checked in</th>
+                  <th scope="col" className="px-4 py-3">Certificate</th>
+                  {paidEvent && <th scope="col" className="px-4 py-3">Payment</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
                 {shown.map((a) => (
                   <tr key={a.id}>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3">
                       <p className="font-semibold">{a.name}</p>
-                      <p className="text-[12px] text-ink-muted">{a.email}</p>
+                      <p className="text-label text-ink-muted">{a.email}</p>
                       {questions.filter((q) => answers.get(a.id)?.[q.id]).map((q) => (
-                        <p key={q.id} className="text-[12px] text-ink-2">{q.label}: {answers.get(a.id)?.[q.id]}</p>
+                        <p key={q.id} className="text-label text-ink-2">{q.label}: {answers.get(a.id)?.[q.id]}</p>
                       ))}
                     </td>
-                    <td className="px-4 py-2.5 font-mono text-[12.5px]">{a.pass_code}</td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 py-3 font-mono text-label">{a.pass_code}</td>
+                    <td className="px-4 py-3">
                       {a.status === "registered" ? <Chip tone="outline">Registered</Chip> : a.hold_expires_at ? <Chip tone="warn">Seat held</Chip> : <Chip>Waitlist</Chip>}
                     </td>
-                    <td className="px-4 py-2.5">{a.checked_in_at ? <span className="font-semibold text-live">{fmtTime(new Date(a.checked_in_at))}</span> : <span className="text-ink-subtle">—</span>}</td>
-                    <td className="px-4 py-2.5">{a.checked_in_at ? <AttendeeCert regId={a.id} certs={certs.filter((c) => c.registrationId === a.id)} /> : <span className="text-ink-subtle">—</span>}</td>
+                    <td className="px-4 py-3">{a.checked_in_at ? <span className="font-semibold text-live">{fmtTime(new Date(a.checked_in_at))}</span> : <span className="text-ink-subtle">—</span>}</td>
+                    <td className="px-4 py-3">{a.checked_in_at ? <AttendeeCert regId={a.id} certs={certs.filter((c) => c.registrationId === a.id)} /> : <span className="text-ink-subtle">—</span>}</td>
                     {paidEvent && (
-                      <td className="px-4 py-2.5">
+                      <td className="px-4 py-3">
                         {a.status === "registered" ? <PaymentCell regId={a.id} paid={a.payment_status === "paid"} method={a.payment_method} refCode={a.payment_ref} utr={a.upi_utr} /> : <span className="text-ink-subtle">—</span>}
                       </td>
                     )}
@@ -250,7 +250,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
           </div>
         )}
         {attendees.length > shown.length && (
-          <p className="border-t border-line p-4 text-[13px] text-ink-muted">
+          <p className="border-t border-line p-4 text-body-sm text-ink-muted">
             Showing {shown.length} of {attendees.length}.{" "}
             <Link href={`?${new URLSearchParams({ ...(q ? { q } : {}), all: "1" })}`} className="font-semibold text-ink underline">Show all</Link> or download the CSV.
           </p>

@@ -8,6 +8,7 @@ import { siteHost } from "@/lib/organizer/page-data";
 import { slugify } from "@/lib/organizer/shared";
 import { PrintButton } from "@/components/certificates/PrintButton";
 import "./certificate.css";
+import { TOKENS } from "@/styles/tokens";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,7 @@ export default async function CertificatePage({ params }: Props) {
   if (!c) notFound();
 
   const scheme = host.startsWith("localhost") ? "http" : "https";
-  const qr = await QRCode.toString(`${scheme}://${host}/verify/${c.publicCode}`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#111111", light: "#f7f6f2" } });
+  const qr = await QRCode.toString(`${scheme}://${host}/verify/${c.publicCode}`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: TOKENS.accentInk, light: TOKENS.qrGround } });
 
   return (
     <main className="cert-page">

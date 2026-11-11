@@ -1,5 +1,20 @@
 import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { extendTailwindMerge } from "tailwind-merge";
+
+/** tailwind-merge must know our token names, or `text-body` and `text-ink` would be treated as clashing colours. */
+const twMerge = extendTailwindMerge({
+  extend: {
+    theme: {
+      text: ["caption", "label", "body-sm", "body", "title", "heading", "display"],
+      radius: ["sm", "md", "lg", "full"],
+      shadow: ["overlay"],
+    },
+    classGroups: {
+      duration: [{ duration: ["press", "micro", "standard", "large"] }],
+      ease: [{ ease: ["standard", "emph"] }],
+    },
+  },
+});
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

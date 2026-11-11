@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { ToastView } from "@/components/ui/Toast";
 
 export function Button({ variant = "ghost", className = "", ...p }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "ghost" | "primary" }) {
   return <button type="button" className={`o-btn ${variant === "primary" ? "o-btn-primary" : ""} ${className}`} {...p} />;
@@ -80,29 +81,9 @@ export function Odometer({ value }: { value: string }) {
 
 export type ToastState = { message: string; action?: { label: string; run: () => void } } | null;
 
+/** The shared §8 toast (one at a time, 4–6s, action inside). */
 export function Toast({ toast, onDone, ms = 6000 }: { toast: ToastState; onDone: () => void; ms?: number }) {
-  useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(onDone, ms);
-    return () => clearTimeout(t);
-  }, [toast, onDone, ms]);
-  if (!toast) return null;
-  return (
-    <div className="o-toast" role="status">
-      {toast.message}
-      {toast.action && (
-        <button
-          className="o-link"
-          onClick={() => {
-            toast.action!.run();
-            onDone();
-          }}
-        >
-          {toast.action.label}
-        </button>
-      )}
-    </div>
-  );
+  return <ToastView toast={toast ? { ...toast, ms } : null} onDone={onDone} />;
 }
 
 /** "12s ago", kept ticking. */
