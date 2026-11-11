@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Link2, Share2 } from "lucide-react";
+import { buttonClass } from "@/components/ui/Button";
 
 export function ShareEvent({ url, title }: { url: string; title: string }) {
   const [copied, setCopied] = useState(false);
-  const btn = "inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-body-sm font-semibold hover:border-volt/60";
+  const btn = buttonClass("secondary", "sm");
 
   async function share() {
     if (navigator.share) {
@@ -24,10 +24,10 @@ export function ShareEvent({ url, title }: { url: string; title: string }) {
   return (
     <div className="flex flex-wrap gap-2">
       <button onClick={share} className={btn}>
-        <Share2 className="size-4" aria-hidden /> Share
+        Share
       </button>
       <button onClick={copy} className={btn}>
-        <Link2 className="size-4" aria-hidden /> {copied ? "Copied" : "Copy link"}
+        {copied ? "Copied" : "Copy link"}
       </button>
     </div>
   );

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Images } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDB } from "@/lib/db";
 import { myGalleries, myTaggedPhotos } from "@/lib/data/photos";
 import { fmtDate } from "@/lib/utils";
 import { PageHero } from "@/components/brand/PageHero";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export const metadata: Metadata = { title: "Photo Vault" };
 export const dynamic = "force-dynamic";
@@ -26,36 +26,32 @@ export default async function VaultPage() {
   }
 
   return (
-    <div className="space-y-6 pt-4 md:pt-6">
+    <div className="flex flex-col gap-12">
       <PageHero
         eyebrow="Photo Vault"
-        title={<>Photos <em>of you</em></>}
+        title="Photos of you"
         sub={
           <>
             <span className="font-mono tabular-nums">{tagged.length}</span> photo{tagged.length === 1 ? "" : "s"}
           </>
         }
-        marquee={["Relive it", "Photo Vault"]}
       />
 
       {byEvent.size === 0 ? (
-        <section className="card flex flex-col items-start gap-3 p-8">
-          <Images className="size-8 text-ink-subtle" />
-          <h2 className="title-xl text-display">Nothing here yet</h2>
-        </section>
+        <EmptyState title="No photos of you yet." body={"Open an event's photos and tap \u201cThat's me\u201d on the ones you're in. They collect here."} />
       ) : (
         [...byEvent.entries()].map(([eventId, g]) => (
-          <section key={eventId} className="space-y-3">
-            <div className="flex items-end justify-between gap-3">
+          <section key={eventId} className="flex flex-col gap-3">
+            <div className="flex items-end justify-between gap-3 border-b border-line pb-3">
               <div>
-                <h2 className="title-xl text-display">{g.title}</h2>
-                <p className="text-label text-ink-muted">{fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })} · {g.ids.length} of you</p>
+                <h2 className="text-heading">{g.title}</h2>
+                <p className="font-mono text-label text-ink-muted">{fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })} · {g.ids.length} of you</p>
               </div>
-              <Link href={`/events/${g.slug}/photos`} className="text-body-sm font-semibold text-ink underline">All photos</Link>
+              <Link href={`/events/${g.slug}/photos`} className="text-label text-ink-muted underline underline-offset-4 hover:text-ink">All photos ›</Link>
             </div>
             <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
               {g.ids.map((id) => (
-                <li key={id} className="aspect-square overflow-hidden rounded-md bg-canvas">
+                <li key={id} className="aspect-square overflow-hidden rounded-sm bg-surface">
                   <a href={`/api/photos/${id}`} target="_blank" rel="noopener" aria-label="Open full size">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={`/api/photos/${id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover" />
@@ -67,17 +63,17 @@ export default async function VaultPage() {
         ))
       )}
 
-      <div className="grid gap-4">
-        <section className="card p-6">
-          <h2 className="title-xl text-display">Galleries from your events</h2>
+      <div>
+        <section aria-labelledby="gal-h">
+          <h2 id="gal-h" className="border-b border-line pb-3 text-heading">Galleries from your events</h2>
           {galleries.length === 0 ? (
-            <p className="mt-2 text-body text-ink-muted">None yet.</p>
+            <p className="mt-3 text-body text-ink-muted">When an event you went to posts photos, its gallery shows up here.</p>
           ) : (
-            <ul className="mt-2 divide-y divide-line">
+            <ul>
               {galleries.map((g) => (
-                <li key={g.id} className="flex items-center justify-between gap-3 py-3">
+                <li key={g.id} className="flex items-center justify-between gap-3 border-b border-line py-3">
                   <Link href={`/events/${g.slug}/photos`} className="min-w-0 truncate text-body font-semibold hover:underline">{g.title}</Link>
-                  <span className="shrink-0 text-label text-ink-muted"><span className="font-mono tabular-nums">{g.photos}</span> photos · you&apos;re in <span className="font-mono tabular-nums">{g.mine}</span></span>
+                  <span className="shrink-0 font-mono text-label text-ink-muted"><span className="font-mono tabular-nums">{g.photos}</span> photos · you&apos;re in <span className="font-mono tabular-nums">{g.mine}</span></span>
                 </li>
               ))}
             </ul>

@@ -78,6 +78,7 @@ const config: Config = {
         bad: v("bad"),
         sun: v("warn"),
         qr: v("qr-ground"),
+        ticket: v("ticket"),
       },
       fontFamily: {
         display: ["var(--font-display)"],

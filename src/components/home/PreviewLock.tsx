@@ -2,12 +2,12 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import { Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { buttonClass } from "@/components/ui/Button";
 
 /**
  * Landing-page preview cards are for looking only. Clicking one doesn't open an event:
- * it shows a small "Sign up to view & unlock live events" bubble instead.
+ * it shows a small "Sign up to see this event" note instead.
  */
 export function PreviewLock({ children, className, label }: { children: React.ReactNode; className?: string; label: string }) {
   const [open, setOpen] = useState(false);
@@ -44,7 +44,7 @@ export function PreviewLock({ children, className, label }: { children: React.Re
             setOpen((o) => !o);
           }
         }}
-        className="h-full cursor-pointer rounded-[inherit] outline-none focus-visible:ring-2 focus-visible:ring-volt"
+        className="h-full cursor-pointer rounded-[inherit]"
       >
         {children}
       </div>
@@ -52,13 +52,12 @@ export function PreviewLock({ children, className, label }: { children: React.Re
         <div
           id={tipId}
           role="status"
-          className="absolute left-1/2 top-full z-20 mt-2 w-max max-w-[260px] -translate-x-1/2 rounded-md border border-volt/30 bg-surface px-4 py-3 text-left"
+          className="ec-menu absolute left-1/2 top-full z-20 mt-2 w-max max-w-[260px] -translate-x-1/2 rounded-md border border-line-strong bg-surface-2 px-4 py-3 text-left shadow-overlay"
+          data-phase="in"
         >
-          <p className="flex items-center gap-2 text-body-sm font-semibold text-ink">
-            <Lock className="size-4 text-volt" aria-hidden /> Sign up to view & unlock live events
-          </p>
-          <Link href="/signin?mode=signup" className="mt-2 inline-flex rounded-full bg-volt px-4 py-2 text-label font-semibold text-ink-inverse hover:bg-volt-hover">
-            Sign up free
+          <p className="text-body-sm text-ink">Sign up to see this event and register.</p>
+          <Link href="/signin?mode=signup" className={buttonClass("primary", "sm", "mt-3")}>
+            Sign up
           </Link>
         </div>
       )}

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { BadgeCheck, Mail } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { PageHero } from "@/components/brand/PageHero";
+import { LogoutButton } from "@/components/profile/LogoutButton";
 
 export const metadata: Metadata = { title: "Your profile" };
 export const dynamic = "force-dynamic";
@@ -15,23 +15,28 @@ export default async function ProfilePage() {
   if (!viewer) redirect("/signin?next=/profile");
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <PageHero eyebrow="Account" title={<>Your <em>profile</em></>} />
+    <div className="max-w-prose">
+      <PageHero eyebrow="Account" title="Your profile" />
 
-      <div className="card mt-6 flex flex-wrap items-center gap-3 p-6">
-        <span className="grid size-10 place-items-center rounded-md bg-brand-soft text-brand-ink" aria-hidden>
-          <Mail className="size-5" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-label font-semibold text-ink-subtle">Email (used to log in, can&apos;t be changed)</p>
-          <p className="truncate text-body font-semibold">{viewer.email}</p>
+      <dl className="mt-6 border-t border-line">
+        <div className="grid grid-cols-[96px_minmax(0,1fr)] gap-4 border-b border-line py-3">
+          <dt className="text-label leading-6 text-ink-muted">Email</dt>
+          <dd className="min-w-0">
+            <span className="block truncate font-mono text-body-sm leading-6">{viewer.email}</span>
+            <span className="text-label text-ink-subtle">Used to log in. It can&apos;t be changed.</span>
+          </dd>
         </div>
-        <span className="inline-flex items-center gap-2 rounded-full bg-canvas px-3 py-2 text-label font-semibold text-ink-2">
-          <BadgeCheck className="size-4 text-live" aria-hidden /> {ROLE_LABEL[viewer.role]}
-        </span>
-      </div>
+        <div className="grid grid-cols-[96px_minmax(0,1fr)] gap-4 border-b border-line py-3">
+          <dt className="text-label leading-6 text-ink-muted">Role</dt>
+          <dd className="text-body">{ROLE_LABEL[viewer.role]}</dd>
+        </div>
+      </dl>
 
       <ProfileForm name={viewer.name} phone={viewer.phone} whatsappOptIn={viewer.whatsappOptIn} />
+
+      <div className="mt-12 border-t border-line pt-6">
+        <LogoutButton />
+      </div>
     </div>
   );
 }

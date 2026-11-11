@@ -40,7 +40,7 @@ export function InstallApp() {
               await prompt.prompt();
               setPrompt(null);
             }}
-            className="mt-3 w-full rounded-full bg-volt py-4 text-body font-semibold text-ink-inverse hover:bg-volt-hover"
+            className="press inline-flex items-center justify-center mt-3 w-full rounded-md bg-accent h-12 text-body font-semibold text-ink-inverse hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]"
           >
             Install EvntCult
           </button>

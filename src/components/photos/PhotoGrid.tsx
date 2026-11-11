@@ -3,7 +3,7 @@
 /** Event gallery: thumbnails, a full-size viewer, "That's me" for attendees, delete for the organizer. */
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, Loader2, Trash2, UserCheck, UserPlus, X } from "lucide-react";
+import { buttonClass } from "@/components/ui/Button";
 
 export interface GridPhoto {
   id: string;
@@ -61,22 +61,21 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
         }}
         disabled={busy === id}
         aria-pressed={!!mine[id]}
-        className={`inline-flex items-center gap-2 rounded-full font-semibold ${big ? "px-4 py-2 text-body" : "px-3 py-1 text-label"} ${mine[id] ? "bg-live text-ink-inverse" : "bg-white/95 text-ink-inverse"}`}
+        className={`press inline-flex items-center rounded-sm border font-semibold ${big ? "h-8 px-3 text-label" : "h-8 px-2 text-label"} ${mine[id] ? "border-ok bg-canvas text-ok" : "border-line-strong bg-canvas text-ink"}`}
       >
-        {busy === id ? <Loader2 className="size-3.5 animate-spin" /> : mine[id] ? <UserCheck className="size-3.5" /> : <UserPlus className="size-3.5" />}
         {mine[id] ? "That's me ✓" : "That's me"}
       </button>
     );
 
   return (
     <>
-      {error && <p role="alert" className="mb-3 rounded-md bg-danger-soft px-4 py-3 text-body-sm font-semibold text-danger">{error}</p>}
+      {error && <p role="alert" className="mb-3 border-l-2 border-bad bg-surface px-4 py-3 text-body-sm">{error}</p>}
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
         {photos.map((p, i) => (
-          <li key={p.id} className="group relative aspect-square overflow-hidden rounded-md bg-canvas">
+          <li key={p.id} className="relative aspect-square overflow-hidden rounded-sm bg-surface">
             <button onClick={() => setOpen(i)} className="block size-full" aria-label={`Open photo ${i + 1}${mine[p.id] ? " (you're tagged)" : ""}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/api/photos/${p.id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-large group-hover:scale-[1.03]" />
+              <img src={`/api/photos/${p.id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover" />
             </button>
             <div className="pointer-events-none absolute inset-x-2 bottom-2 flex justify-start [&>*]:pointer-events-auto">{tagButton(p.id)}</div>
           </li>
@@ -87,25 +86,36 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
         ref={dialog}
         onClose={() => setOpen(null)}
         onClick={(e) => e.target === dialog.current && setOpen(null)}
-        className="m-auto max-h-[92dvh] w-[min(96vw,1100px)] rounded-lg bg-black p-0 text-white backdrop:bg-black/80"
+        className="ec-modal m-auto max-h-[92dvh] w-[min(96vw,1100px)] rounded-lg border border-line-strong bg-canvas p-0 text-ink shadow-overlay"
+        data-phase="in"
       >
         {current && (
           <div className="relative flex flex-col">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`/api/photos/${current.id}`} alt={`Photo ${open! + 1} of ${photos.length}`} className="max-h-[78dvh] w-full object-contain" />
             <div className="flex flex-wrap items-center gap-2 p-3">
-              <button onClick={() => setOpen((o) => (o! > 0 ? o! - 1 : photos.length - 1))} aria-label="Previous photo" className="rounded-full bg-white/10 p-2"><ChevronLeft className="size-5" /></button>
-              <button onClick={() => setOpen((o) => (o! < photos.length - 1 ? o! + 1 : 0))} aria-label="Next photo" className="rounded-full bg-white/10 p-2"><ChevronRight className="size-5" /></button>
-              <span className="text-body-sm text-white/60">{open! + 1} / {photos.length}</span>
+              <button onClick={() => setOpen((o) => (o! > 0 ? o! - 1 : photos.length - 1))} className={buttonClass("secondary", "sm")}>
+                <span aria-hidden>←</span> Previous
+              </button>
+              <button onClick={() => setOpen((o) => (o! < photos.length - 1 ? o! + 1 : 0))} className={buttonClass("secondary", "sm")}>
+                Next <span aria-hidden>›</span>
+              </button>
+              <span className="font-mono text-label text-ink-muted">
+                {open! + 1} / {photos.length}
+              </span>
               <span className="flex-1" />
               {tagButton(current.id, true)}
-              <a href={`/api/photos/${current.id}`} download className="rounded-full bg-white/10 px-4 py-2 text-body font-semibold">Download</a>
+              <a href={`/api/photos/${current.id}`} download className={buttonClass("secondary", "sm")}>
+                Download
+              </a>
               {canManage && (
-                <button onClick={() => remove(current.id)} disabled={busy === current.id} className="inline-flex items-center gap-2 rounded-full bg-danger px-4 py-2 text-body font-semibold text-ink-inverse">
-                  <Trash2 className="size-4" /> Delete
+                <button onClick={() => remove(current.id)} disabled={busy === current.id} className={buttonClass("danger", "sm", "ml-6")}>
+                  Delete
                 </button>
               )}
-              <button onClick={() => setOpen(null)} aria-label="Close" className="rounded-full bg-white/10 p-2"><X className="size-5" /></button>
+              <button onClick={() => setOpen(null)} className={buttonClass("ghost", "sm")}>
+                Close
+              </button>
             </div>
           </div>
         )}

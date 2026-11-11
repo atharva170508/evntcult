@@ -23,10 +23,10 @@
   ::selection {
     background: color-mix(in srgb, var(--accent) 30%, transparent);
   }
-  /* Accent words in headings: the one accent, upright. */
+  /* Emphasis is weight, not colour: the accent is kept for 3–5 things per screen (§2 law 4). */
   em {
     font-style: normal;
-    color: var(--accent);
+    font-weight: 600;
   }
   /* §2 law 9 — focus is never removed. Appears instantly (§7: focus-visible 0ms). */
   :focus-visible {

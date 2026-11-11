@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, MessageCircle } from "lucide-react";
 import { PhoneFields } from "./PhoneFields";
+import { Button } from "@/components/ui/Button";
 
 /** Shown on the dashboard to signed-in users who haven't added a mobile number yet. */
 export function AddPhoneCard() {
@@ -29,24 +29,20 @@ export function AddPhoneCard() {
   }
 
   return (
-    <form onSubmit={save} className="card space-y-3 p-6">
-      <div className="flex items-center gap-3">
-        <span className="grid size-9 place-items-center rounded-md bg-live-soft text-live">
-          <MessageCircle className="size-5" />
-        </span>
-        <div>
-          <h2 className="headline text-body">Add your mobile number</h2>
-        </div>
+    <form onSubmit={save} className="card flex max-w-[720px] flex-col gap-4 p-4 sm:p-6">
+      <div>
+        <h2 className="text-title">Add your mobile number</h2>
+        <p className="mt-1 text-body-sm text-ink-muted">For event reminders and pass updates. Organizers never see it.</p>
       </div>
       <PhoneFields phone={phone} setPhone={setPhone} optIn={optIn} setOptIn={setOptIn} />
       {error && (
-        <p role="alert" className="rounded-md bg-danger-soft px-4 py-3 text-body-sm font-semibold text-danger">
+        <p role="alert" className="border-l-2 border-bad bg-surface px-4 py-3 text-body-sm">
           {error}
         </p>
       )}
-      <button disabled={busy} className="flex items-center gap-2 rounded-full bg-volt px-6 py-3 text-body font-semibold text-ink-inverse disabled:opacity-50">
-        {busy && <Loader2 className="size-4 animate-spin" />} Save number
-      </button>
+      <Button type="submit" variant="secondary" loading={busy} className="w-fit">
+        Save number
+      </Button>
     </form>
   );
 }

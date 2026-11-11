@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera, ImageUp, Loader2, RotateCcw, ScanFace, ShieldCheck } from "lucide-react";
 import type { PhotoMatch } from "@/lib/data/face-search";
 import { PhotoMatchCard } from "./PhotoMatchCard";
+import { buttonClass } from "@/components/ui/Button";
 
 type Phase =
   | { kind: "idle" }
@@ -76,22 +76,19 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
 
   return (
     <section aria-labelledby="ai-search-title" className="space-y-6">
-      <div className="card relative overflow-hidden p-6 md:p-8">
-        <div aria-hidden className="absolute -right-20 -top-20 size-64 rounded-full bg-volt/10 blur-3xl" />
-        <div className="relative flex flex-col gap-6 md:flex-row md:items-center">
+      <div className="card p-4 sm:p-6">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start">
           <div className="min-w-0 flex-1">
-            <p className="flex items-center gap-2 text-label font-semibold uppercase tracking-[0.12em] text-volt">
-              <ScanFace className="size-4" aria-hidden /> AI Face Search
-            </p>
-            <h2 id="ai-search-title" className="title-xl mt-2 text-display">
-              Find every photo <em>you&apos;re in</em>
+            <p className="eyebrow">AI face search</p>
+            <h2 id="ai-search-title" className="mt-1 text-heading">
+              Find every photo you&apos;re in
             </h2>
             <p className="mt-2 max-w-xl text-body text-ink-muted">
               Take a selfie and we&apos;ll find you in the photos from {eventTitle}.
             </p>
 
-            <label className="mt-6 flex max-w-xl cursor-pointer items-start gap-3 rounded-md border border-white/[0.07] bg-white/[0.02] p-4 text-body-sm text-ink-2">
-              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 size-4 shrink-0 accent-volt" />
+            <label className="mt-6 flex max-w-xl cursor-pointer items-start gap-3 border-l-2 border-line-strong py-1 pl-3 text-body-sm text-ink-muted">
+              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 size-4 shrink-0 accent-[var(--accent)]" />
               <span>
                 I agree to my selfie being turned into face numbers on this device to search this event&apos;s photos. The numbers are used once and not stored.
               </span>
@@ -102,21 +99,21 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
                 type="button"
                 disabled={!consent || busy}
                 onClick={() => cameraRef.current?.click()}
-                className="inline-flex items-center gap-2 rounded-full bg-volt px-6 py-3 text-body font-semibold text-ink-inverse transition-colors hover:bg-volt-hover disabled:opacity-40"
+                className={buttonClass("primary")}
               >
-                <Camera className="size-4" aria-hidden /> Take a selfie
+                Take a selfie
               </button>
               <button
                 type="button"
                 disabled={!consent || busy}
                 onClick={() => uploadRef.current?.click()}
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-body font-semibold transition-colors hover:border-volt/60 disabled:opacity-40"
+                className={buttonClass("secondary")}
               >
-                <ImageUp className="size-4" aria-hidden /> Upload a photo
+                Upload a photo
               </button>
               {(phase.kind === "done" || phase.kind === "error") && (
-                <button type="button" onClick={reset} className="inline-flex items-center gap-2 rounded-full px-4 py-3 text-body font-semibold text-ink-muted hover:text-volt">
-                  <RotateCcw className="size-4" aria-hidden /> Start over
+                <button type="button" onClick={reset} className={buttonClass("ghost")}>
+                  Start over
                 </button>
               )}
             </div>
@@ -125,24 +122,24 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
           </div>
 
           {preview && (
-            <div className="relative mx-auto size-36 shrink-0 overflow-hidden rounded-lg border border-white/10 md:mx-0">
+            <figure className="mx-auto w-36 shrink-0 md:mx-0">
+              <div className="size-36 overflow-hidden rounded-md border border-line">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={preview} alt="Your selfie (stays on this device)" className="size-full object-cover" />
-              <span className="absolute inset-x-2 bottom-2 flex items-center justify-center gap-1 rounded-full bg-black/60 py-1 text-caption font-semibold text-white">
-                <ShieldCheck className="size-3" aria-hidden /> Stays on device
-              </span>
-            </div>
+              </div>
+              <figcaption className="mt-2 font-mono text-caption text-ink-muted">Stays on this device</figcaption>
+            </figure>
           )}
         </div>
 
-        <div aria-live="polite" className="relative">
+        <div aria-live="polite">
           {phase.kind === "working" && (
             <p className="mt-6 flex items-center gap-2 text-body font-semibold text-ink-2">
-              <Loader2 className="size-4 animate-spin text-volt" aria-hidden /> {STEP_LABEL[phase.step]}
+               {STEP_LABEL[phase.step]}
             </p>
           )}
           {phase.kind === "error" && (
-            <p role="alert" className="mt-6 rounded-md bg-danger-soft px-4 py-3 text-body font-semibold text-danger">
+            <p role="alert" className="mt-6 border-l-2 border-bad bg-surface px-4 py-3 text-body font-semibold text-danger">
               {phase.message}
             </p>
           )}

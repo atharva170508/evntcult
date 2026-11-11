@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { CalendarDays, KeyRound, LogOut, Plus, Search, Shapes } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { cn, initials } from "@/lib/utils";
 import { LogoMark, LogoWordmark } from "@/components/brand/MissingE";
 import { NotificationBell } from "./NotificationBell";
@@ -24,54 +23,43 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
     await fetch("/api/auth/session", { method: "DELETE" });
     window.location.href = "/dashboard";
   }
-  const [scrolled, setScrolled] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 6);
     const onKey = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         inputRef.current?.focus();
       }
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("keydown", onKey);
     return () => {
-      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("keydown", onKey);
     };
   }, []);
 
   return (
-    <header
-      className={cn(
- "sticky top-0 z-30 print:hidden transition-[background-color,box-shadow] duration-standard",
-        scrolled ? "bg-canvas/85" : "bg-canvas",
-      )}
-    >
+    <header className="sticky top-0 z-30 border-b border-line bg-canvas print:hidden">
       <div className="mx-auto flex h-[52px] max-w-app items-center gap-2 px-4 sm:gap-3 lg:px-8">
-        <Link href="/dashboard" className={cn("flex shrink-0 items-center gap-3", viewer && "md:hidden")} aria-label="EvntCult home">
+        <Link href="/dashboard" className={cn("flex shrink-0 items-center gap-2", viewer && "lg:hidden")} aria-label="EvntCult home">
           <LogoMark className="size-8 text-ink" />
           <LogoWordmark className="hidden text-title text-ink min-[400px]:inline-block" />
         </Link>
 
         {/* Search is for signed-in people only: visitors just see the landing page. */}
         {viewer && (
-        <form action="/events" className="hidden h-10 min-w-0 flex-1 sm:flex items-center rounded-sm border border-line bg-surface pl-3 pr-1 transition-colors focus-within:border-volt/70 md:max-w-[640px]">
-            <Search className="size-[18px] shrink-0 text-ink-subtle" />
+        <form action="/events" className="hidden h-10 min-w-0 flex-1 sm:flex items-center rounded-sm border border-line bg-surface pl-3 pr-1 transition-colors focus-within:border-accent md:max-w-[640px]">
+            
             <input
               ref={inputRef}
               name="q"
               placeholder="Search events, clubs, venues…"
-              className="min-w-0 flex-1 bg-transparent px-3 text-body text-ink placeholder:text-ink-subtle focus:outline-none"
+              className="min-w-0 flex-1 bg-transparent px-3 text-body text-ink placeholder:text-ink-subtle"
               aria-label="Search events"
             />
             <span className="hidden h-6 w-px bg-line lg:block" />
-            <label className="hidden items-center gap-2 px-3 text-body-sm font-semibold text-ink-2 lg:flex">
-              <CalendarDays className="size-4 text-ink-subtle" />
-              <select name="when" className="cursor-pointer bg-transparent focus:outline-none" defaultValue="any" aria-label="When">
+            <label className="hidden items-center gap-2 px-3 text-label text-ink-muted lg:flex">
+              <select name="when" className="cursor-pointer bg-transparent" defaultValue="any" aria-label="When">
                 <option value="any">Any day</option>
                 <option value="today">Today</option>
                 <option value="weekend">This weekend</option>
@@ -79,9 +67,8 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
               </select>
             </label>
             <span className="hidden h-6 w-px bg-line xl:block" />
-            <label className="hidden items-center gap-2 px-3 text-body-sm font-semibold text-ink-2 xl:flex">
-              <Shapes className="size-4 text-ink-subtle" />
-              <select name="type" className="cursor-pointer bg-transparent focus:outline-none" defaultValue="all" aria-label="Category">
+            <label className="hidden items-center gap-2 px-3 text-label text-ink-muted xl:flex">
+              <select name="type" className="cursor-pointer bg-transparent" defaultValue="all" aria-label="Category">
                 <option value="all">All types</option>
                 <option value="GAMING">Gaming</option>
                 <option value="SPORTS">Sports</option>
@@ -91,9 +78,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
               </select>
             </label>
             <kbd className="mr-1 hidden rounded-md border border-line px-2 py-1 font-mono text-caption text-ink-subtle 2xl:block">Ctrl K</kbd>
-            <button className="grid size-8 shrink-0 place-items-center rounded-sm text-ink-muted hover:text-ink" aria-label="Search">
-              <Search className="size-4" />
-            </button>
+            <button className={buttonClass("ghost", "sm", "px-2")}>Search</button>
           </form>
         )}
 
@@ -103,15 +88,15 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
               <NotificationBell />
               <Link
                 href="/organizer/events/new"
-                  className={buttonClass("primary", "sm", "md:hidden")}
+                  className={buttonClass("secondary", "sm", "lg:hidden")}
                 >
-                  <Plus className="size-4" /> Host
+                   Host
                 </Link>
               <button
                 onClick={onEnterCode}
                 className={buttonClass("secondary", "sm", "hidden sm:inline-flex")}
               >
-                <KeyRound className="size-4" /> Enter code
+                 Enter code
               </button>
               <Link
                 href="/profile"
@@ -123,11 +108,9 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
               </Link>
               <button
                 onClick={logout}
-                title="Log out"
-                aria-label="Log out"
-                className={buttonClass("ghost", "sm", "px-2")}
+                className={buttonClass("ghost", "sm", "hidden px-2 sm:inline-flex")}
               >
-                <LogOut className="size-[18px]" />
+                Log out
               </button>
             </>
           ) : (
@@ -135,7 +118,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
               <Link href="/signin" className={buttonClass("secondary", "sm")}>
                 Log in
               </Link>
-              <Link href="/signin?mode=signup" className={buttonClass("primary", "sm")}>
+              <Link href="/signin?mode=signup" className={buttonClass("secondary", "sm")}>
                 Sign up
               </Link>
             </>

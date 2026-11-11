@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Download, ImageOff } from "lucide-react";
 import { matchPercent } from "@/lib/face/embedding";
 import type { PhotoMatch } from "@/lib/data/face-search";
+import { buttonClass } from "@/components/ui/Button";
 
 /**
  * One AI Face Search result: our small thumbnail (falling back to Drive's own preview, then to
@@ -20,7 +20,7 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
   }
 
   return (
-    <article className="group overflow-hidden rounded-lg border border-white/[0.07] bg-surface transition-colors hover:border-volt/40">
+    <article className="group overflow-hidden rounded-lg border border-white/[0.07] bg-surface transition-colors hover:border-line-strong">
       <div className="relative aspect-[4/5] bg-white/[0.03]">
         {src ? (
           <>
@@ -35,17 +35,17 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
               referrerPolicy="no-referrer"
               onLoad={() => setLoaded(true)}
               onError={onError}
-              className="size-full object-cover transition-transform duration-large group-hover:scale-[1.03]"
+              className="size-full object-cover"
             />
           </>
         ) : (
           <div className="grid size-full place-items-center text-center text-label text-ink-muted">
-            <span className="flex flex-col items-center gap-2 px-4">
-              <ImageOff className="size-6" aria-hidden /> Preview unavailable. The full photo can still be downloaded.
+            <span className="px-4">
+              Preview unavailable. The full photo can still be downloaded.
             </span>
           </div>
         )}
-        <span className="absolute left-2.5 top-2.5 rounded-full bg-volt px-3 py-1 text-label font-semibold tabular-nums text-ink-inverse">
+        <span className="absolute left-2 top-2 rounded-sm bg-canvas px-2 py-1 font-mono text-caption tabular-nums text-ink">
           {pct}% Match
         </span>
       </div>
@@ -54,9 +54,9 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
           href={match.downloadUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-volt px-3 py-3 text-body-sm font-semibold text-ink-inverse transition-colors hover:bg-volt-hover"
+          className={buttonClass("secondary", "md", "w-full")}
         >
-          <Download className="size-4" aria-hidden /> Download Full HD (DSLR)
+          Download full size
           <span className="sr-only">, photo {index + 1}, opens a download from Google Drive</span>
         </a>
       </div>
