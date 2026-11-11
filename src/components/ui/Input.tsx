@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
  * Focus is a 1.4px accent border plus a 2px ring (globals.css).
  */
 export const fieldClass =
-  "w-full rounded-sm border border-line-strong bg-surface px-3 text-body text-ink placeholder:text-ink-subtle transition-colors duration-micro hover:border-[color-mix(in_srgb,var(--hair-strong)_60%,var(--text-dim))] aria-[invalid=true]:border-bad disabled:cursor-not-allowed disabled:text-ink-subtle";
+  "w-full rounded-sm border border-line-strong bg-surface px-3 text-body text-ink placeholder:text-ink-subtle transition-colors duration-micro hover:border-[color-mix(in_srgb,var(--hair-strong)_60%,var(--text-dim))] aria-[invalid=true]:border-bad focus-visible:border-accent disabled:cursor-not-allowed disabled:text-ink-subtle";
 
 type Validate = (value: string) => string | null;
 

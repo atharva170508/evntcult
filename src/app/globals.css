@@ -40,8 +40,10 @@
   select:focus-visible {
     outline: 0;
     border-color: var(--accent);
-    border-width: 1.4px;
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
+    /* Browsers round a 1.4px border down to 1px, so the extra 0.4px is drawn as an inner ring. */
+    box-shadow:
+      inset 0 0 0 0.4px var(--accent),
+      0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent);
   }
   /* Data is mono and lines up (§3, §5). */
   .tabular,

@@ -6,6 +6,7 @@ import { CalendarDays, KeyRound, LogOut, Plus, Search, Shapes } from "lucide-rea
 import { cn, initials } from "@/lib/utils";
 import { LogoMark, LogoWordmark } from "@/components/brand/MissingE";
 import { NotificationBell } from "./NotificationBell";
+import { buttonClass } from "@/components/ui/Button";
 
 export interface NavViewer {
   name: string;
@@ -50,15 +51,15 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
         scrolled ? "bg-canvas/85" : "bg-canvas",
       )}
     >
-      <div className="mx-auto flex h-[72px] max-w-[1280px] items-center gap-3 px-4 lg:px-8">
+      <div className="mx-auto flex h-[52px] max-w-app items-center gap-2 px-4 sm:gap-3 lg:px-8">
         <Link href="/dashboard" className={cn("flex shrink-0 items-center gap-3", viewer && "md:hidden")} aria-label="EvntCult home">
           <LogoMark className="size-8 text-ink" />
-          <LogoWordmark motion="type" className="text-display text-ink" />
+          <LogoWordmark className="hidden text-title text-ink min-[400px]:inline-block" />
         </Link>
 
         {/* Search is for signed-in people only: visitors just see the landing page. */}
         {viewer && (
-        <form action="/events" className="hidden h-12 min-w-0 flex-1 sm:flex items-center rounded-full border border-line bg-surface pl-4 pr-2 transition-colors focus-within:border-volt/70 md:max-w-[640px]">
+        <form action="/events" className="hidden h-10 min-w-0 flex-1 sm:flex items-center rounded-sm border border-line bg-surface pl-3 pr-1 transition-colors focus-within:border-volt/70 md:max-w-[640px]">
             <Search className="size-[18px] shrink-0 text-ink-subtle" />
             <input
               ref={inputRef}
@@ -90,7 +91,7 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
               </select>
             </label>
             <kbd className="mr-1 hidden rounded-md border border-line px-2 py-1 font-mono text-caption text-ink-subtle 2xl:block">Ctrl K</kbd>
-            <button className="grid size-9 shrink-0 place-items-center rounded-full bg-volt text-ink-inverse transition-colors hover:bg-volt-hover" aria-label="Search">
+            <button className="grid size-8 shrink-0 place-items-center rounded-sm text-ink-muted hover:text-ink" aria-label="Search">
               <Search className="size-4" />
             </button>
           </form>
@@ -102,19 +103,19 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
               <NotificationBell />
               <Link
                 href="/organizer/events/new"
-                  className="inline-flex items-center gap-2 rounded-full bg-volt px-4 py-3 text-body-sm font-semibold text-ink-inverse transition-colors hover:bg-volt-hover md:hidden"
+                  className={buttonClass("primary", "sm", "md:hidden")}
                 >
                   <Plus className="size-4" /> Host
                 </Link>
               <button
                 onClick={onEnterCode}
-                className="hidden items-center gap-2 rounded-full border border-line bg-surface px-4 py-3 text-body-sm font-semibold text-ink-2 transition-colors hover:border-volt/60 sm:inline-flex"
+                className={buttonClass("secondary", "sm", "hidden sm:inline-flex")}
               >
                 <KeyRound className="size-4" /> Enter code
               </button>
               <Link
                 href="/profile"
-                className="grid size-10 place-items-center overflow-hidden rounded-full bg-volt sm:size-11 text-body-sm font-semibold text-ink-inverse ring-2 ring-canvas"
+                className="grid size-8 shrink-0 place-items-center overflow-hidden rounded-full border border-line-strong font-mono text-caption text-ink"
                 title={`${viewer.name} · ${viewer.email}`}
                 aria-label={`Your profile (${viewer.name})`}
               >
@@ -124,17 +125,17 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
                 onClick={logout}
                 title="Log out"
                 aria-label="Log out"
-                className="grid size-10 place-items-center rounded-full border border-line bg-surface text-ink-2 transition-colors hover:border-volt/60 sm:size-11"
+                className={buttonClass("ghost", "sm", "px-2")}
               >
                 <LogOut className="size-[18px]" />
               </button>
             </>
           ) : (
             <>
-              <Link href="/signin" className="rounded-full border border-line bg-surface px-4 py-3 text-body-sm font-semibold text-ink transition-colors hover:border-volt/60">
+              <Link href="/signin" className={buttonClass("secondary", "sm")}>
                 Log in
               </Link>
-              <Link href="/signin?mode=signup" className="rounded-full bg-volt px-4 py-3 text-body-sm font-semibold text-ink-inverse transition-colors hover:bg-volt-hover">
+              <Link href="/signin?mode=signup" className={buttonClass("primary", "sm")}>
                 Sign up
               </Link>
             </>

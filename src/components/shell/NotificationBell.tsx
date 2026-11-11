@@ -55,7 +55,7 @@ export function NotificationBell() {
 
   return (
     <div ref={box} className="sm:relative">
-      <button onClick={toggle} aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"} aria-expanded={open} className="relative grid size-10 place-items-center rounded-full border border-line bg-surface text-ink-2 transition-colors hover:border-volt/60 sm:size-11">
+      <button onClick={toggle} aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"} aria-expanded={open} className="relative grid size-8 shrink-0 place-items-center rounded-sm text-ink-muted transition-colors hover:text-ink">
         <Bell className="size-[18px]" />
         {unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-volt px-1 font-mono text-caption font-semibold text-ink-inverse">{unread > 9 ? "9+" : unread}</span>}
       </button>

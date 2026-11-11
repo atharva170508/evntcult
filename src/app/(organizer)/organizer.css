@@ -52,7 +52,7 @@
 .o-input { width: 100%; height: 40px; background: var(--field); border: 1px solid var(--hair); border-radius: var(--radius); color: var(--text); padding: 0 12px; font: inherit; font-size: var(--fs-body); }
 .o-input.o-mono { font-family: var(--font-mono); font-size: var(--fs-body-sm); color-scheme: dark; }
 .o-input::placeholder, .o-area::placeholder { color: var(--dim); }
-.o-input:focus-visible, .o-area:focus-visible { outline: 0; border: 1.4px solid var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
+.o-input:focus-visible, .o-area:focus-visible { outline: 0; border-color: var(--accent); box-shadow: inset 0 0 0 .4px var(--accent), 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
 .o-input[aria-invalid="true"], .o-area[aria-invalid="true"] { border-color: var(--bad); }
 .o-input:disabled { color: var(--dim); }
 .o-area { width: 100%; min-height: 144px; background: var(--field); border: 1px solid var(--hair); border-radius: var(--radius); color: var(--text); padding: 8px 12px; font: inherit; resize: vertical; display: block; }

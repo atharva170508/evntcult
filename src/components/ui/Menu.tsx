@@ -43,11 +43,13 @@ export function Menu({ label, items, align = "start", triggerClassName }: { labe
   };
 
   // Focus the first item (or the search box) when opening.
+  // The list only exists once mounted, so wait for both.
   useEffect(() => {
-    if (!open) return;
+    if (!open || !mounted) return;
     setActive(0);
-    requestAnimationFrame(() => (withSearch ? search.current?.focus() : list.current?.querySelector<HTMLElement>("[role=menuitem]")?.focus()));
-  }, [open, withSearch]);
+    if (withSearch) search.current?.focus();
+    else list.current?.querySelector<HTMLElement>("[role=menuitem]")?.focus();
+  }, [open, mounted, withSearch]);
 
   // Click outside closes without stealing focus.
   useEffect(() => {

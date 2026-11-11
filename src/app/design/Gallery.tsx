@@ -61,7 +61,7 @@ function Inner() {
           <Button variant="ghost">Cancel</Button>
           <Button disabled>Disabled</Button>
           <Button loading={loading} onClick={() => setLoading((l) => !l)}>
-            {loading ? "Saving" : "Click to load"}
+            Save changes
           </Button>
           <LinkButton href="#" variant="secondary" size="sm">
             Link button
