@@ -596,7 +596,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
   const mark = { green: "✓", amber: "!", red: "×" } as const;
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-lg flex-col gap-6 px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))]">
+    <main id="main" tabIndex={-1} className="mx-auto flex min-h-dvh max-w-lg flex-col gap-6 px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))]">
       <header className="flex items-center gap-3 border-b border-line pb-3">
         <Link href={`/events/${event.slug}`} className={buttonClass("ghost", "sm", "-ml-2 px-2")}>
           <span aria-hidden>←</span> Event

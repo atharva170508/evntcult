@@ -33,7 +33,7 @@ function Inner() {
   const [tab, setTab] = useState<"a" | "b">("a");
   const [loading, setLoading] = useState(false);
   return (
-    <main className="mx-auto flex max-w-app flex-col gap-12 px-4 py-12 sm:px-8">
+    <main id="main" tabIndex={-1} className="mx-auto flex max-w-app flex-col gap-12 px-4 py-12 sm:px-8">
       <header>
         <p className="eyebrow">EvntCult</p>
         <h1 className="title-xl mt-1">Design system</h1>

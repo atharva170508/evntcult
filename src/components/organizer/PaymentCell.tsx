@@ -41,7 +41,7 @@ export function PaymentCell({ regId, paid, method, refCode, utr }: { regId: stri
             {refCode ? ` · ${refCode}` : ""}
           </span>
         )}
-        <button onClick={() => confirm("Mark this pass as unpaid again?") && send({ status: "unpaid" })} disabled={busy} className="text-ink-muted underline underline-offset-4 hover:text-ink">
+        <button onClick={() => confirm("Mark this pass as unpaid again?") && send({ status: "unpaid" })} disabled={busy} className="inline-flex min-h-6 items-center text-ink-muted underline underline-offset-4 hover:text-ink">
           Mark unpaid
         </button>
         {error}

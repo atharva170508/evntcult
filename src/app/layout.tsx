@@ -21,7 +21,13 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-IN" className={`${barlow.variable} ${plex.variable}`}>
-      <body>{children}</body>
+      <body>
+        {/* §15: a skip link, the first thing a keyboard reaches. */}
+        <a href="#main" className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-[100] focus-visible:rounded-sm focus-visible:bg-surface-2 focus-visible:px-4 focus-visible:py-3 focus-visible:text-body">
+          Skip to content
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

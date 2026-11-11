@@ -140,7 +140,7 @@ export async function issueBulk(db: D1Database, eventId: string, actorId: string
   const rows = await db
     .prepare(
       `SELECT c.registration_id AS id FROM checkins c
-        WHERE c.event_id = ? AND NOT EXISTS (SELECT 1 FROM certificates ct WHERE ct.registration_id = c.registration_id AND ct.kind = 'participation')`,
+        WHERE c.event_id = ? AND c.undone_at IS NULL AND NOT EXISTS (SELECT 1 FROM certificates ct WHERE ct.registration_id = c.registration_id AND ct.kind = 'participation')`,
     )
     .bind(eventId)
     .all<{ id: string }>();
@@ -153,7 +153,7 @@ export async function issueBulk(db: D1Database, eventId: string, actorId: string
 
 /** One person, any kind. Still only for someone who actually checked in. */
 export async function issueOne(db: D1Database, registrationId: string, kind: CertKind, actorId: string, now = new Date()) {
-  const reg = await db.prepare("SELECT event_id FROM checkins WHERE registration_id = ?").bind(registrationId).first<{ event_id: string }>();
+  const reg = await db.prepare("SELECT event_id FROM checkins WHERE registration_id = ? AND undone_at IS NULL").bind(registrationId).first<{ event_id: string }>();
   if (!reg) throw new ActionError(409, "not_checked_in", "Only people who checked in can get a certificate.");
   const exists = await db.prepare("SELECT revoked_at, revoked_reason FROM certificates WHERE registration_id = ? AND kind = ?").bind(registrationId, kind).first<{ revoked_at: string | null; revoked_reason: string | null }>();
   if (exists && !exists.revoked_at) throw new ActionError(409, "already_issued", "They already have this certificate.");
@@ -174,7 +174,11 @@ export async function revokeCertificate(db: D1Database, id: string, reason: stri
 
 /** Removes a mistaken check-in. Their attendance certificate is withdrawn with it. */
 export async function undoCheckIn(db: D1Database, registrationId: string, actorId: string, now = new Date()) {
-  const res = await db.prepare("DELETE FROM checkins WHERE registration_id = ?").bind(registrationId).run();
+  // §11: nothing is deleted. The row is marked undone, and stops counting everywhere.
+  const res = await db
+    .prepare("UPDATE checkins SET undone_at = ?, undone_by = ? WHERE registration_id = ? AND undone_at IS NULL")
+    .bind(now.toISOString(), actorId, registrationId)
+    .run();
   if (!res.meta.changes) throw new ActionError(409, "not_checked_in", "This pass isn't checked in.");
   await db.prepare("UPDATE certificates SET revoked_at = ?, revoked_reason = ? WHERE registration_id = ? AND revoked_at IS NULL").bind(now.toISOString(), CERT_UNDONE, registrationId).run();
   await audit(db, actorId, "checkin_undo", registrationId, {}, now);

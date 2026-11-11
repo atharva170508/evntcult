@@ -187,9 +187,9 @@ export function CalendarView({ initialView, month, today, initials, events, clas
           <div>
             <div className="flex items-start gap-3 flex-wrap">
               <div>
-                <div className="o-cal-title">
+                <h1 className="o-cal-title">
                   {MONTHS[m - 1]} <span>{y}</span>
-                </div>
+                </h1>
                 <div className="o-meta text-caption text-ink-subtle mt-1" style={{ height: 14 }}>
                   {loading ? <span className="o-skel" /> : `${events.length} events · ${draftCount} drafts · times in IST`}
                 </div>

@@ -23,7 +23,7 @@ export default async function ScanPage({ params }: { params: Promise<{ id: strin
 
   if (!event || !(await canManageEvent(viewer, event.id))) {
     return (
-      <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
+      <main id="main" tabIndex={-1} className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
         
         <h1 className="title-xl">Only this event&apos;s organizer can scan passes.</h1>
         <p className="text-body text-ink-muted">If you&apos;re helping at the gate, ask the organizer to scan, or to sign in on this phone.</p>

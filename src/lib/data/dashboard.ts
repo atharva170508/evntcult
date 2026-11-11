@@ -49,7 +49,7 @@ export async function getDashboardData(viewer: Viewer): Promise<DashboardData> {
       viewer.id,
     ),
     count(
-      `SELECT COUNT(*) AS n FROM checkins c JOIN registrations r ON r.id = c.registration_id WHERE r.user_id = ?`,
+      `SELECT COUNT(*) AS n FROM checkins c JOIN registrations r ON r.id = c.registration_id WHERE r.user_id = ? AND c.undone_at IS NULL`,
       viewer.id,
     ),
     count(
@@ -135,7 +135,7 @@ async function getOrganizerPanel(viewer: Viewer, now: Date): Promise<OrganizerPa
     EventRowWithCount & { checked_in: number; paid: number; unpaid: number }
   >(
     `SELECT e.*, ${SEATS_TAKEN_SQL} AS taken,
-            (SELECT COUNT(*) FROM checkins c WHERE c.event_id = e.id) AS checked_in,
+            (SELECT COUNT(*) FROM checkins c WHERE c.event_id = e.id AND c.undone_at IS NULL) AS checked_in,
             (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id AND r.status = 'registered' AND r.payment_status = 'paid') AS paid,
             (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id AND r.status = 'registered' AND r.payment_status = 'unpaid') AS unpaid
        FROM events e

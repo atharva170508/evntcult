@@ -70,7 +70,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
     .prepare(
       `SELECT c.scanned_at, r.id AS reg_id, r.pass_code, u.name, c.event_id FROM checkins c
          JOIN registrations r ON r.id = c.registration_id JOIN users u ON u.id = r.user_id
-        WHERE c.client_scan_id = ?`,
+        WHERE c.client_scan_id = ? AND c.undone_at IS NULL`,
     )
     .bind(input.clientScanId)
     .first<{ scanned_at: string; reg_id: string; pass_code: string; name: string; event_id: string }>();
@@ -97,7 +97,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
   if (!event || event.status !== "published") return invalid("event_closed", "This event isn't open for check-in.");
 
   // 3. Already inside? (Checked before the payment question, so the volunteer isn't asked to collect twice.)
-  const existing = await db.prepare("SELECT scanned_at FROM checkins WHERE registration_id = ?").bind(pass.reg_id).first<{ scanned_at: string }>();
+  const existing = await db.prepare("SELECT scanned_at FROM checkins WHERE registration_id = ? AND undone_at IS NULL").bind(pass.reg_id).first<{ scanned_at: string }>();
   if (existing) return { result: "already_in", color: "amber", registrationId: pass.reg_id, name: pass.name, passCode: pass.pass_code, scannedAt: existing.scanned_at };
 
   // 4. Paid event, not paid yet: the volunteer collects the fee, then taps Admit (acceptUnpaid).
@@ -112,6 +112,9 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
     .prepare(
       `INSERT INTO checkins (id, registration_id, event_id, scanned_at, device_id, client_scan_id, method)
        SELECT ?, r.id, r.event_id, ?, ?, ?, ? FROM registrations r WHERE r.id = ? AND r.status = 'registered'
+       ON CONFLICT (registration_id) DO UPDATE SET scanned_at = excluded.scanned_at, device_id = excluded.device_id,
+          client_scan_id = excluded.client_scan_id, method = excluded.method, undone_at = NULL, undone_by = NULL
+          WHERE checkins.undone_at IS NOT NULL
        ON CONFLICT DO NOTHING`,
     )
     .bind(newId(), scannedAt, input.deviceId ?? null, input.clientScanId, manual ? "manual" : "qr", pass.reg_id)
@@ -128,7 +131,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
   }
 
   // Lost a race: another device admitted this pass a moment ago (or this same scan id did).
-  const winner = await db.prepare("SELECT scanned_at, client_scan_id FROM checkins WHERE registration_id = ?").bind(pass.reg_id).first<{ scanned_at: string; client_scan_id: string | null }>();
+  const winner = await db.prepare("SELECT scanned_at, client_scan_id FROM checkins WHERE registration_id = ? AND undone_at IS NULL").bind(pass.reg_id).first<{ scanned_at: string; client_scan_id: string | null }>();
   if (winner?.client_scan_id === input.clientScanId) {
     return { result: "admitted", color: "green", registrationId: pass.reg_id, name: pass.name, passCode: pass.pass_code, scannedAt: winner.scanned_at, replay: true };
   }
@@ -140,7 +143,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
 export async function gateCounts(db: D1Database, eventId: string): Promise<{ checkedIn: number; registered: number }> {
   const row = await db
     .prepare(
-      `SELECT (SELECT COUNT(*) FROM checkins WHERE event_id = ?1) AS checkedIn,
+      `SELECT (SELECT COUNT(*) FROM checkins WHERE event_id = ?1 AND undone_at IS NULL) AS checkedIn,
               (SELECT COUNT(*) FROM registrations WHERE event_id = ?1 AND status = 'registered') AS registered`,
     )
     .bind(eventId)
@@ -187,7 +190,7 @@ export async function buildManifest(db: D1Database, eventId: string, now = new D
   const rows = await db
     .prepare(
       `SELECT r.id, r.pass_token, r.pass_code, r.payment_status, u.name, c.scanned_at
-         FROM registrations r JOIN users u ON u.id = r.user_id LEFT JOIN checkins c ON c.registration_id = r.id
+         FROM registrations r JOIN users u ON u.id = r.user_id LEFT JOIN checkins c ON c.registration_id = r.id AND c.undone_at IS NULL
         WHERE r.event_id = ? AND r.status = 'registered'`,
     )
     .bind(eventId)

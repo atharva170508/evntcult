@@ -266,7 +266,7 @@ export async function cancel(db: D1Database, regId: string, userId: string, now 
     .prepare(
       `UPDATE registrations SET status = 'cancelled', cancelled_at = ?, hold_expires_at = NULL
         WHERE id = ? AND user_id = ? AND status IN ('registered','waitlisted')
-          AND NOT EXISTS (SELECT 1 FROM checkins c WHERE c.registration_id = registrations.id)
+          AND NOT EXISTS (SELECT 1 FROM checkins c WHERE c.registration_id = registrations.id AND c.undone_at IS NULL)
           AND (SELECT ends_at FROM events WHERE id = registrations.event_id) > ?`,
     )
     .bind(iso(now), regId, userId, iso(now))
@@ -276,7 +276,7 @@ export async function cancel(db: D1Database, regId: string, userId: string, now 
   if (!reg || reg.user_id !== userId) throw new RegistrationError(404, "not_found", "Registration not found.");
   if ((res.meta.changes ?? 0) === 0) {
     if (reg.status === "cancelled") throw new RegistrationError(409, "already_cancelled", "This registration is already cancelled.");
-    const checkedIn = await db.prepare("SELECT 1 AS x FROM checkins WHERE registration_id = ?").bind(regId).first();
+    const checkedIn = await db.prepare("SELECT 1 AS x FROM checkins WHERE registration_id = ? AND undone_at IS NULL").bind(regId).first();
     if (checkedIn) throw new RegistrationError(409, "checked_in", "You've already checked in, so this can't be cancelled.");
     throw new RegistrationError(409, "ended", "This event has ended.");
   }

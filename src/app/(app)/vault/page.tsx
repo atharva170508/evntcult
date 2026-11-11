@@ -47,7 +47,7 @@ export default async function VaultPage() {
                 <h2 className="text-heading">{g.title}</h2>
                 <p className="font-mono text-label text-ink-muted">{fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })} · {g.ids.length} of you</p>
               </div>
-              <Link href={`/events/${g.slug}/photos`} className="text-label text-ink-muted underline underline-offset-4 hover:text-ink">All photos ›</Link>
+              <Link href={`/events/${g.slug}/photos`} className="inline-flex min-h-6 items-center text-label text-ink-muted underline underline-offset-4 hover:text-ink">All photos ›</Link>
             </div>
             <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
               {g.ids.map((id) => (
@@ -72,7 +72,7 @@ export default async function VaultPage() {
             <ul>
               {galleries.map((g) => (
                 <li key={g.id} className="flex items-center justify-between gap-3 border-b border-line py-3">
-                  <Link href={`/events/${g.slug}/photos`} className="min-w-0 truncate text-body font-semibold hover:underline">{g.title}</Link>
+                  <Link href={`/events/${g.slug}/photos`} className="min-w-0 min-h-6 truncate py-0.5 text-body font-semibold hover:underline">{g.title}</Link>
                   <span className="shrink-0 font-mono text-label text-ink-muted"><span className="font-mono tabular-nums">{g.photos}</span> photos · you&apos;re in <span className="font-mono tabular-nums">{g.mine}</span></span>
                 </li>
               ))}

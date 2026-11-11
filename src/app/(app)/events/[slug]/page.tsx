@@ -64,7 +64,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
 
   return (
     <div className="flex flex-col gap-12 pt-6">
-      <Link href="/events" className="inline-flex w-fit items-center gap-2 text-body-sm text-ink-muted hover:text-ink">
+      <Link href="/events" className="inline-flex min-h-11 w-fit items-center gap-2 text-body-sm text-ink-muted hover:text-ink">
         <span aria-hidden>←</span> All events
       </Link>
 

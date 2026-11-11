@@ -191,3 +191,12 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* §15: skeletons only beyond 300ms. A fast page never flashes a placeholder. Not a transform, just visibility. */
+@keyframes ec-reveal {
+  to { visibility: visible; }
+}
+.after-300ms {
+  visibility: hidden;
+  animation: ec-reveal 0s linear 300ms forwards;
+}
