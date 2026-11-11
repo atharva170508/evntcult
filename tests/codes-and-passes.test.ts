@@ -89,3 +89,12 @@ describe("phone numbers", () => {
   });
   it("formats for display", () => expect(formatPhone("+919876543210")).toBe("+91 98765 43210"));
 });
+
+describe("money labels", () => {
+  it("a ticket price of zero reads Free; a total of zero reads ₹0", async () => {
+    const { formatAmount, formatINR } = await import("@/lib/money");
+    expect(formatINR(0)).toBe("Free");
+    expect(formatAmount(0)).toBe("₹0");
+    expect(formatAmount(29900)).toBe(formatINR(29900));
+  });
+});

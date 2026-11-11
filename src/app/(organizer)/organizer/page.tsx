@@ -26,7 +26,7 @@ function Row({ e, draft }: { e: HomeEvent; draft?: boolean }) {
       <Link href={`/organizer/events/${e.id}`} className="o-t">
         {e.title}
       </Link>
-      <span className="o-meta o-hide-sm" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+      <span className="o-meta o-hide-sm truncate">
         {draft ? (missing.length ? `needs ${missing.join(", ")}` : "") : e.venue_status === "tba" ? "Venue TBA" : e.venue}
       </span>
       <span className="o-hide-sm">{draft ? <span className="o-pill">DRAFT</span> : <Seats e={e} />}</span>
@@ -37,8 +37,8 @@ function Row({ e, draft }: { e: HomeEvent; draft?: boolean }) {
             Finish setup
           </Link>
         ) : (
-          <Link className="o-btn" href={`/organizer/events/${e.id}/manage`}>
-            Attendees
+          <Link className="o-btn" href={`/organizer/guests?event=${e.id}`}>
+            Guests
           </Link>
         )}
       </div>
@@ -90,17 +90,17 @@ export default async function OrganizerHome() {
           Create event
         </Link>
       </header>
-      <div className="o-page" style={{ maxWidth: 1100 }}>
+      <div className="o-page max-w-[1100px]">
         <h1 className="o-title">Your events</h1>
         {money && money.collected + money.to_verify > 0 && (
-          <p className="o-meta" style={{ marginTop: 6 }}>
+          <p className="o-meta mt-2">
             Collected {money.collected ? formatINR(money.collected) : "₹0"}
             {money.to_verify > 0 && ` · To verify ${formatINR(money.to_verify)}`}
           </p>
         )}
         {events.length === 0 ? (
-          <div style={{ borderTop: "1px solid var(--hair)", marginTop: 24, paddingTop: 18 }}>
-            <p style={{ fontSize: 15, margin: "0 0 12px" }}>No events yet.</p>
+          <div className="mt-6 border-t border-line pt-4">
+            <p className="mb-3 text-body">No events yet. Create one; it starts as a draft only you can see.</p>
             <Link className="o-btn o-btn-primary" href="/organizer/events/new">
               Create event
             </Link>
@@ -115,7 +115,7 @@ export default async function OrganizerHome() {
               </List>
             )}
             <List title="Upcoming" count={upcoming.length}>
-              {upcoming.length === 0 && <p className="o-meta" style={{ borderTop: "1px solid var(--hair-2)", paddingTop: 11 }}>Nothing published yet.</p>}
+              {upcoming.length === 0 && <p className="o-meta border-t border-line pt-3">Nothing published yet.</p>}
               {upcoming.map((e) => (
                 <Row key={e.id} e={e} />
               ))}

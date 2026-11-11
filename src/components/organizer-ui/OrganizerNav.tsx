@@ -8,6 +8,7 @@ const NAV = [
   { href: "/organizer", label: "Home", exact: true },
   { href: "/organizer/events/new", label: "New", exact: true },
   { href: "/organizer/calendar", label: "Calendar", exact: false },
+  { href: "/organizer/guests", label: "Guests", exact: false },
 ];
 
 export function OrganizerNav() {

@@ -340,8 +340,8 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
         )}
         {id && <Button onClick={duplicate}>Duplicate</Button>}
         {id && (
-          <Link className="o-btn" href={`/organizer/events/${id}/manage`}>
-            Attendees
+          <Link className="o-btn" href={`/organizer/guests?event=${id}`}>
+            Guests
           </Link>
         )}
         {status === "published" ? (
@@ -399,8 +399,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                   slugEditing ? (
                     <input
                       aria-label="Event link"
-                      className="o-input o-mono"
-                      style={{ height: 24, fontSize: 11 }}
+                      className="o-input o-mono text-caption" style={{ height: 24 }}
                       autoFocus
                       defaultValue={previewSlug}
                       onBlur={(e) => {
@@ -415,7 +414,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                   ) : (
                     <>
                       {host}/e/{previewSlug || "your-event"}{" "}
-                      <button type="button" className="o-link" style={{ fontSize: 10 }} onClick={() => setSlugEditing(true)}>
+                      <button type="button" className="o-link text-caption" onClick={() => setSlugEditing(true)}>
                         edit
                       </button>
                       {fieldError.slug && <span style={{ color: "var(--bad)" }}> {fieldError.slug}</span>}
@@ -445,7 +444,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                 {(a) => (
                   <div className="o-inline">
                     <input {...a} aria-label="Start date" type="date" className="o-input o-mono" style={{ flex: 1.4 }} value={f.date} onChange={(e) => set("date", e.target.value)} />
-                    <input aria-label="Start time" type="time" className="o-input o-mono" style={{ flex: 1 }} value={f.time} onChange={(e) => set("time", e.target.value)} />
+                    <input aria-label="Start time" type="time" className="o-input o-mono flex-1" value={f.time} onChange={(e) => set("time", e.target.value)} />
                     <span className="o-meta">IST</span>
                   </div>
                 )}
@@ -472,7 +471,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                       Custom
                     </button>
                   </div>
-                  <div className="o-inline" style={{ marginTop: 6 }}>
+                  <div className="o-inline mt-2">
                     {custom && (
                       <input
                         aria-label="Hours"
@@ -496,13 +495,13 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                 label="Venue"
                 hint={
                   f.venueStatus === "tba" ? (
-                    <button type="button" className="o-link" style={{ fontSize: 10 }} onClick={() => set("venueStatus", "confirmed")}>
+                    <button type="button" className="o-link text-caption" onClick={() => set("venueStatus", "confirmed")}>
                       Add a venue
                     </button>
                   ) : f.venueStatus === "confirmed" ? (
                     <>
-                      {f.venuePlaceId && <div style={{ marginBottom: 4 }}>Matched: {f.venueAddress ?? f.venue}</div>}
-                      <button type="button" className="o-link" style={{ fontSize: 10 }} onClick={() => set("venueStatus", "tba")}>
+                      {f.venuePlaceId && <div className="mb-1">Matched: {f.venueAddress ?? f.venue}</div>}
+                      <button type="button" className="o-link text-caption" onClick={() => set("venueStatus", "tba")}>
                         Mark as TBA
                       </button>
                     </>
@@ -660,7 +659,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                   <span className={ok ? "" : "todo"}>{label}</span>
                   {!ok && (
                     <button type="button" className="o-check-add" onClick={() => goTo(section)}>
-                      Add →
+                      Add ›
                     </button>
                   )}
                 </div>

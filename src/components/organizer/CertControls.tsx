@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { buttonClass } from "@/components/ui/Button";
 
 async function send(url: string, body: object = {}) {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -26,7 +27,7 @@ export function CertPanel({ eventId, issued, checkedIn, enabled }: { eventId: st
   return (
     <div className="flex flex-wrap items-center gap-3">
       <span className="text-body"><b className="font-mono tabular-nums">{issued}</b> issued · <span className="font-mono tabular-nums">{checkedIn}</span> checked in</span>
-      <button disabled={busy} onClick={() => run(`/api/events/${eventId}/certificates/issue`)} className="press inline-flex items-center justify-center rounded-sm bg-accent px-4 h-8 text-body-sm font-semibold text-ink-inverse disabled:opacity-50 hover:bg-[color-mix(in_srgb,var(--accent)_90%,var(--text))]">
+      <button disabled={busy} onClick={() => run(`/api/events/${eventId}/certificates/issue`)} className={buttonClass("secondary", "sm")}>
         Issue certificates
       </button>
       <label className="flex items-center gap-2 text-body-sm">

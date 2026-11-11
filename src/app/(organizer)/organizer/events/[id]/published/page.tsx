@@ -33,7 +33,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
       <div className="o-page">
         <div className="o-form-grid">
           <div>
-            <h1 className="o-title" style={{ marginBottom: 24 }}>It&apos;s live.</h1>
+            <h1 className="o-title mb-6">It&apos;s live.</h1>
             <section className="o-section">
               <div className="o-section-head">
                 <span className="o-section-n">01</span>

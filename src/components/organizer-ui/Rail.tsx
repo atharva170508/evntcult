@@ -39,7 +39,7 @@ export function Rail(props: { events: CalendarEvent[]; clashes: RailClash[]; dra
                   {at ? `${ticketDate(at)} · ` : ""}
                   {c.venue}
                 </span>
-                <span className="o-rail-go">Resolve →</span>
+                <span className="o-rail-go">Resolve ›</span>
               </Link>
             );
           })}
@@ -55,7 +55,7 @@ export function Rail(props: { events: CalendarEvent[]; clashes: RailClash[]; dra
                 {ticketDate(d.starts_at)}
                 {d.missing.length ? ` · needs ${d.missing.join(", ")}` : " · ready"}
               </span>
-              <span className="o-rail-go">Finish setup →</span>
+              <span className="o-rail-go">Finish setup ›</span>
             </Link>
           ))}
         </section>
@@ -94,7 +94,7 @@ export function Rail(props: { events: CalendarEvent[]; clashes: RailClash[]; dra
         {next && (
           <Link className="o-rail-row o-kv" href={`/organizer/events/${next.id}`}>
             <span>Next</span>
-            <span className="o-mono" style={{ fontSize: 11 }}>
+            <span className="o-mono text-caption">
               {next.title.slice(0, 22)}
             </span>
           </Link>

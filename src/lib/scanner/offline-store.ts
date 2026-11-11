@@ -16,7 +16,9 @@ const DB_VERSION = 1;
 export interface QueuedScan {
   client_scan_id: string;
   event_id: string;
-  pass_token: string;
+  /** From the QR; a manual check-in sends registration_id instead. */
+  pass_token?: string;
+  registration_id?: string;
   accept_unpaid: boolean;
   scanned_at: string;
   device_id: string;

@@ -25,9 +25,9 @@ export default async function ScanPage({ params }: { params: Promise<{ id: strin
     return (
       <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
         
-        <h1 className="font-display text-display font-semibold leading-tight">Only this event&apos;s organizer can scan passes.</h1>
-        <p className="text-body text-white/70">If you&apos;re helping at the gate, ask the organizer to scan, or to sign in on this phone.</p>
-        <Link href="/dashboard" className="inline-flex items-center gap-2 text-body font-semibold text-white/80 underline"><span aria-hidden>←</span> Dashboard</Link>
+        <h1 className="title-xl">Only this event&apos;s organizer can scan passes.</h1>
+        <p className="text-body text-ink-muted">If you&apos;re helping at the gate, ask the organizer to scan, or to sign in on this phone.</p>
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-body text-ink-muted underline underline-offset-4"><span aria-hidden>←</span> Dashboard</Link>
       </main>
     );
   }

@@ -45,7 +45,7 @@
 
 .o-section { border-top: 1px solid var(--hair); padding: 16px 0 24px; }
 .o-section-head { display: flex; gap: 12px; align-items: baseline; margin-bottom: 16px; }
-.o-section-n { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--accent); }
+.o-section-n { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--text-dim); }
 .o-section-label { font-size: var(--fs-caption); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
 .o-row { display: grid; grid-template-columns: 132px minmax(0, 320px); align-items: start; margin-bottom: 12px; }
 .o-label { font-size: var(--fs-label); color: var(--muted); padding-top: 8px; }
@@ -82,7 +82,7 @@
 .o-check-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
 .o-check-row { display: flex; justify-content: space-between; align-items: center; height: 28px; font-size: var(--fs-label); border-top: 1px solid var(--hair-2); }
 .o-check-row .todo { color: var(--muted); }
-.o-check-add { background: none; border: 0; padding: 0; color: var(--accent); font-size: var(--fs-caption); cursor: pointer; }
+.o-check-add { background: none; border: 0; padding: 0; color: var(--text); font-size: var(--fs-caption); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
 .o-col-reason { margin: 0 0 4px; }
 .o-narrow-only { display: none; }
 .o-venue { position: relative; }
@@ -129,7 +129,7 @@
 /* calendar */
 .o-cal { display: grid; grid-template-columns: minmax(0, 862px) 300px; column-gap: 32px; align-items: start; }
 .o-cal-title { font-family: var(--font-display); font-size: var(--fs-heading); font-weight: 600; line-height: 1; }
-.o-cal-title span { color: var(--accent); }
+.o-cal-title span { color: var(--text-muted); }
 .o-filter { height: 32px; padding: 0 8px; font-size: var(--fs-caption); border: 1px solid var(--hair); border-radius: var(--radius); background: none; color: var(--muted); cursor: pointer; }
 .o-filter[aria-pressed="true"] { background: var(--surface-3); color: var(--text); }
 .o-select { height: 32px; background: var(--field); border: 1px solid var(--hair); border-radius: var(--radius); color: var(--muted); font-size: var(--fs-caption); padding: 0 8px; }
@@ -153,14 +153,14 @@
 .o-clash { color: var(--warn); margin-left: auto; font-weight: 700; }
 .o-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex: none; }
 .o-more { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--muted); background: none; border: 0; padding: 1px 2px; cursor: pointer; }
-.o-bar { position: absolute; top: 5px; height: 17px; background: color-mix(in srgb, var(--accent) 8%, var(--surface-1)); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--surface-1)); border-radius: var(--radius); color: var(--accent); font-size: var(--fs-caption); line-height: 15px; padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.o-bar { position: absolute; top: 5px; height: 17px; background: var(--surface-2); border: 1px solid var(--hair-strong); border-radius: var(--radius); color: var(--text); font-size: var(--fs-caption); line-height: 15px; padding: 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .o-bar-meta { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--muted); margin-left: 8px; }
 .o-pop { position: fixed; z-index: 50; width: 260px; background: var(--surface-2); border: 1px solid var(--hair-strong); border-radius: var(--radius-lg); padding: 12px; }
 .o-pop a { display: flex; gap: 8px; font-size: var(--fs-label); padding: 4px 0; border-top: 1px solid var(--hair-2); }
 
 .o-agenda-day { display: grid; grid-template-columns: 132px minmax(0, 1fr); border-top: 1px solid var(--hair); padding: 12px 0; }
 .o-agenda-wd { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--dim); }
-.o-agenda-wd.today { color: var(--accent); }
+.o-agenda-wd.today { color: var(--text); font-weight: 600; }
 .o-agenda-num { font-family: var(--font-display); font-size: var(--fs-heading); font-weight: 600; line-height: 1.05; }
 .o-agenda-row { display: grid; grid-template-columns: 60px minmax(0, 1fr) minmax(0, 200px) 92px; gap: 12px; align-items: center; padding: 4px 0; }
 .o-agenda-row.selected { outline: 1px solid var(--accent); outline-offset: 1px; border-radius: var(--radius); }
@@ -169,7 +169,7 @@
 .o-agenda-time { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--muted); display: flex; align-items: center; gap: 4px; }
 .o-agenda-venue { font-size: var(--fs-caption); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .o-agenda-cap { font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--muted); text-align: right; }
-.o-agenda-bar { display: flex; justify-content: space-between; gap: 12px; background: color-mix(in srgb, var(--accent) 8%, var(--surface-1)); border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--surface-1)); border-radius: var(--radius); padding: 4px 8px; font-size: var(--fs-label); color: var(--accent); }
+.o-agenda-bar { display: flex; justify-content: space-between; gap: 12px; background: var(--surface-2); border: 1px solid var(--hair-strong); border-radius: var(--radius); padding: 4px 8px; font-size: var(--fs-label); color: var(--text); }
 
 .o-rail-title { font-family: var(--font-display); font-size: var(--fs-title); font-weight: 600; margin: 0 0 12px; }
 .o-avatar { width: 26px; height: 26px; display: grid; place-items: center; background: var(--surface-3); color: var(--text); border-radius: var(--radius); font-family: var(--font-mono); font-size: var(--fs-caption); }
@@ -179,7 +179,7 @@
 .o-rail-row { display: block; width: 100%; text-align: left; background: none; border: 0; color: var(--text); font-size: var(--fs-label); padding: 4px 0; cursor: pointer; font-family: inherit; }
 .o-rail-row:hover { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
 .o-rail-sub { display: block; font-family: var(--font-mono); font-size: var(--fs-caption); color: var(--muted); }
-.o-rail-go { color: var(--accent); font-size: var(--fs-caption); }
+.o-rail-go { color: var(--text-muted); font-size: var(--fs-caption); }
 .o-kv { display: flex; justify-content: space-between; }
 
 @media (max-width: 1320px) { .o-cal { grid-template-columns: minmax(0, 1fr); row-gap: 24px; } }
