@@ -46,33 +46,6 @@ export function SectionHead({ n, title, action }: { n: string; title: string; ac
   );
 }
 
-/* ─── Filter links ───────────────────────────────────────────────────────── */
-
-const FILTERS = [
-  { href: "/events?when=today", label: "Today" },
-  { href: "/events?when=weekend", label: "This weekend" },
-  { href: "/events?price=free", label: "Free" },
-  { href: "/events?type=GAMING", label: "Gaming" },
-  { href: "/events?type=SPORTS", label: "Sports" },
-  { href: "/events?type=TECH", label: "Tech" },
-  { href: "/events?type=CULTURAL", label: "Cultural" },
-  { href: "/events?type=PARTY", label: "Parties" },
-  { href: "/events?type=WORKSHOP", label: "Workshops" },
-  { href: "/events?type=TALK", label: "Talks" },
-];
-
-export function QuickTiles() {
-  return (
-    <nav aria-label="Browse by" className="no-scrollbar flex gap-2 overflow-x-auto">
-      {FILTERS.map((t) => (
-        <Link key={t.label} href={t.href} className="press inline-flex h-8 shrink-0 items-center rounded-sm border border-line px-3 text-label text-ink-muted hover:border-line-strong hover:text-ink">
-          {t.label}
-        </Link>
-      ))}
-    </nav>
-  );
-}
-
 /* ─── Numbers: one hairline row, mono figures ───────────────────────────── */
 
 export function StatRow({ items }: { items: { label: string; value: string | number; hint?: string; href?: string }[] }) {

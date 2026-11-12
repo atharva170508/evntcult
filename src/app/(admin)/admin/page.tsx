@@ -9,6 +9,7 @@ import { istTime, ticketDate } from "@/lib/organizer/shared";
 import { codeLoginOn } from "@/lib/email";
 import { whatsappConnected } from "@/lib/notify";
 import { AdminLock, OwnerAction } from "@/components/organizer-ui/AdminGate";
+import { pendingHosts } from "@/lib/data/hosting";
 
 export const metadata: Metadata = { title: "Owners", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -20,7 +21,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   if (!(await readAdminValue((await cookies()).get(ADMIN_COOKIE)?.value))) redirect("/signin");
 
   const { q } = await searchParams;
-  const { stats: s, events, users, activity, stuck, organizers, signups, outbox } = await adminOverview(await getDB(), q);
+  const db = await getDB();
+  const [{ stats: s, events, users, activity, stuck, organizers, signups, outbox }, applicants] = await Promise.all([adminOverview(db, q), pendingHosts(db)]);
   const stats: [string, string][] = [
     ["Users", String(s.users)],
     ["New in 7 days", String(s.newUsers)],
@@ -51,7 +53,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         <a className="o-btn" href="/api/admin/export?type=events">Events CSV</a>
         <AdminLock />
       </header>
-      <div className="o-page" style={{ maxWidth: 1100 }}>
+      <div className="o-page max-w-[1100px]">
         <dl className="a-stats">
           {stats.map(([k, v]) => (
             <div key={k}>
@@ -60,6 +62,41 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             </div>
           ))}
         </dl>
+
+        {/* Hosting is for approved organizers only. New applications wait here. */}
+        <h2 className="o-section-label a-head">Host applications{applicants.length ? ` · ${applicants.length} waiting` : ""}</h2>
+        {applicants.length === 0 ? (
+          <p className="o-meta">No one is waiting. Students apply from their profile.</p>
+        ) : (
+          <table className="a-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Club or group</th>
+                <th>What they plan to run</th>
+                <th>Applied</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {applicants.map((a) => (
+                <tr key={a.id}>
+                  <td>
+                    {a.name}
+                    <div className="o-meta">{a.email}</div>
+                  </td>
+                  <td>{a.club}</td>
+                  <td className="max-w-[360px]">{a.note}</td>
+                  <td className="o-mono">{when(a.appliedAt)}</td>
+                  <td className="whitespace-nowrap">
+                    <OwnerAction kind="approve_host" id={a.id} label="Approve" ask={`Let ${a.name} host events? They can create and publish straight away.`} />{" "}
+                    <OwnerAction kind="reject_host" id={a.id} label="Reject" ask={`Reject ${a.name}'s application? They can apply again later.`} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
         {stuck.length > 0 && (
           <>

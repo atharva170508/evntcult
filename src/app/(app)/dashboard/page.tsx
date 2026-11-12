@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { getViewer } from "@/lib/rbac";
 import { getDashboardData, getPublicDashboard } from "@/lib/data/dashboard";
@@ -6,7 +7,10 @@ import QRCode from "qrcode";
 import { PublicHome } from "@/components/home/PublicHome";
 import { LinkButton } from "@/components/ui/Button";
 import { AddPhoneCard } from "@/components/profile/AddPhoneCard";
-import { MiniCalendar } from "@/components/dashboard/MiniCalendar";
+import { MonthCalendar } from "@/components/calendar/MonthCalendar";
+import { calendarMonth } from "@/lib/data/calendar";
+import { greeting } from "@/lib/greeting";
+import { getDB } from "@/lib/db";
 import { SavePassButton } from "@/components/passes/SavePassButton";
 import {
   Announcements,
@@ -16,7 +20,6 @@ import {
   OrganizerConsole,
   OrgKpis,
   LinkCard,
-  QuickTiles,
   SectionHead,
   StatRow,
   UpcomingList,
@@ -29,15 +32,10 @@ import { TOKENS } from "@/styles/tokens";
 export const metadata: Metadata = { title: "Home" };
 export const dynamic = "force-dynamic";
 
-function greeting() {
-  const h = Number(new Intl.DateTimeFormat("en-IN", { hour: "numeric", hour12: false, timeZone: "Asia/Kolkata" }).format(new Date()));
-  return h < 5 ? "Up late" : h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening";
-}
-
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ denied?: string }> }) {
   const viewer = await getViewer();
   if (!viewer) return <PublicLanding />;
-  const [data, params] = await Promise.all([getDashboardData(viewer), searchParams]);
+  const [data, params, month] = await Promise.all([getDashboardData(viewer), searchParams, getDB().then((db) => calendarMonth(db, viewer.id))]);
   const firstName = viewer.name.split(" ")[0];
 
   const summary = [
@@ -104,6 +102,20 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         )}
       </section>
 
+      {/* Replaces the old category row: events don't fit fixed genres, but they all fit on a calendar. */}
+      <section id="calendar">
+        <SectionHead
+          n={num()}
+          title="Your calendar"
+          action={
+            <Link href="/calendar" className="inline-flex min-h-6 items-center text-label text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+              Full calendar ›
+            </Link>
+          }
+        />
+        <MonthCalendar initial={month} signedIn />
+      </section>
+
       <section>
         <SectionHead n={num()} title="Your numbers" />
         <StatRow
@@ -126,22 +138,16 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         </section>
       )}
 
-      <div className="flex flex-col gap-6">
-        <QuickTiles />
-        <CampusRail events={data.campus} n={num()} />
-      </div>
+      <CampusRail events={data.campus} n={num()} />
 
       <section>
         <SectionHead n={num()} title="For you" />
         <div className="grid gap-x-12 gap-y-8 lg:grid-cols-12">
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-7">
             <Announcements items={data.announcements} />
           </div>
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-5">
             <UpcomingList events={data.upcoming} />
-          </div>
-          <div className="lg:col-span-3">
-            <MiniCalendar data={data.calendar} />
           </div>
         </div>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -161,11 +167,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
 /** What a signed-out visitor sees: the cinematic landing page, built from real campus data. */
 async function PublicLanding() {
-  const d = await getPublicDashboard();
+  const [d, month] = await Promise.all([getPublicDashboard(), getDB().then((db) => calendarMonth(db, null))]);
   // The sample OnePass on the landing page carries a real QR: scanning it opens sign-up.
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "evntcult.caliper.workers.dev";
   const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const onePassQr = await QRCode.toString(`${proto}://${host}/signin?mode=signup`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: TOKENS.accentInk, light: TOKENS.qrGround } });
-  return <PublicHome data={{ ...d, onePassQr }} />;
+  return <PublicHome data={{ ...d, onePassQr, month }} />;
 }

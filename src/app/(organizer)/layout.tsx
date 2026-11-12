@@ -3,9 +3,11 @@ import { getViewer } from "@/lib/rbac";
 import { OrganizerNav } from "@/components/organizer-ui/OrganizerNav";
 import "./organizer.css";
 
-/** The hosting side has its own quiet shell. Anyone logged in can host. */
+/** The hosting side has its own quiet shell. Approved organizers only; everyone else is sent to apply. */
 export default async function OrganizerLayout({ children }: { children: React.ReactNode }) {
-  if (!(await getViewer())) redirect("/signin?next=/organizer");
+  const viewer = await getViewer();
+  if (!viewer) redirect("/signin?next=/organizer");
+  if (!viewer.verifiedOrganizer) redirect("/host");
   return (
     <div className="o-root">
       <OrganizerNav />

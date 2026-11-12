@@ -40,9 +40,10 @@ describe("drafts", () => {
     const b = await createDraft(db, org, { title: "garba night", date: "2026-12-22" }, now);
     expect([a.slug, b.slug]).toEqual(["garba-night", "garba-night-2"]);
   });
-  it("a student becomes an organizer by hosting, once", async () => {
-    await createDraft(db, { id: "kid", role: "attendee" }, { title: "Open mic", date: "2026-12-23" }, now);
-    expect((await db.prepare("SELECT role FROM users WHERE id = 'kid'").first<{ role: string }>())!.role).toBe("organizer");
+  it("a student can't create an event until an admin approves them, and trying doesn't make them an organizer", async () => {
+    await expect(createDraft(db, { id: "kid", role: "attendee" }, { title: "Open mic", date: "2026-12-23" }, now)).rejects.toMatchObject({ status: 403, code: "not_approved" });
+    expect((await db.prepare("SELECT role FROM users WHERE id = 'kid'").first<{ role: string }>())!.role).toBe("attendee");
+    expect((await db.prepare("SELECT COUNT(*) AS n FROM events WHERE organizer_id = 'kid'").first<{ n: number }>())!.n).toBe(0);
   });
 });
 

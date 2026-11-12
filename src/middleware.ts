@@ -6,7 +6,7 @@ import { readSessionValue, SESSION_COOKIE } from "@/lib/session";
  * visitors see a preview on the landing page and are asked to sign up to open real events.
  * Only verifies the cookie signature; roles are checked against the database in each page / route.
  */
-const PROTECTED = ["/passes", "/vault", "/organizer", "/events", "/calendar", "/venues", "/certificates", "/profile"];
+const PROTECTED = ["/passes", "/vault", "/organizer", "/events", "/calendar", "/venues", "/certificates", "/profile", "/host"];
 
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;

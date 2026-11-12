@@ -85,6 +85,8 @@ export async function defaultPayoutUpi(db: D1Database, ownerId: string): Promise
 
 /** First save of a new event. Hosting makes an attendee an organizer, so the tools for their own events work. */
 export async function createDraft(db: D1Database, owner: Owner, input: EventFields & { title: string }, now = new Date()) {
+  // Hosting is for approved organizers only (admins approve applications in the owner panel).
+  if (owner.role !== "organizer" && owner.role !== "admin") throw new OrganizerError(403, "not_approved", "Hosting is for approved organizers. Apply from your profile.");
   const date = input.date ?? istDate(now);
   const time = input.time ?? "18:00";
   const startsAt = istToIso(date, time);
@@ -110,10 +112,6 @@ export async function createDraft(db: D1Database, owner: Owner, input: EventFiel
     throw e;
   }
   await audit(db, owner.id, "event_create", id, { slug, draft: true }, now);
-  if (owner.role === "attendee") {
-    const res = await db.prepare("UPDATE users SET role = 'organizer' WHERE id = ? AND role = 'attendee'").bind(owner.id).run();
-    if (res.meta.changes) await audit(db, owner.id, "role_change", owner.id, { from: "attendee", to: "organizer", reason: "hosted_event", eventId: id }, now);
-  }
   return { id, slug, version: 1, access_code: code };
 }
 

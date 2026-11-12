@@ -5,17 +5,23 @@ export interface NavItem {
   short?: string;
 }
 
-/** Main menu (sidebar on laptops, bottom bar on phones). Words only — no icons (§3). */
+/** The main menu: across the top on laptops, along the bottom on phones. Words only (§3). */
 export const NAV: NavItem[] = [
   { href: "/dashboard", label: "Home" },
   { href: "/events", label: "Discover" },
   { href: "/calendar", label: "Calendar" },
-  { href: "/passes", label: "My passes", short: "Passes" },
-  { href: "/vault", label: "Photo Vault", short: "Photos" },
-  { href: "/certificates", label: "Certificates" },
-  { href: "/venues", label: "Venues" },
+  { href: "/passes", label: "My Passes", short: "Passes" },
+  { href: "/certificates", label: "Certificates", short: "Certs" },
 ];
 
-export const ORGANIZER_NAV: NavItem = { href: "/organizer", label: "Organizer", short: "Host" };
+/** Visitors: the calendar is on the landing page itself. Everything else asks them to sign in. */
+export const VISITOR_HREF: Record<string, string> = { "/dashboard": "/", "/calendar": "/#calendar" };
+
+/** Pages that moved into the avatar menu. */
+export const MORE: NavItem[] = [
+  { href: "/profile", label: "Profile" },
+  { href: "/vault", label: "Photo Vault" },
+  { href: "/venues", label: "Venues" },
+];
 
 export const isActive = (pathname: string, href: string) => pathname === href || pathname.startsWith(`${href}/`);

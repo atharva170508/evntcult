@@ -9,7 +9,7 @@ async function post(url: string, body: object) {
   return res.ok ? null : (data.error?.message ?? "Something went wrong.");
 }
 
-export function OwnerAction({ kind, id, label, ask }: { kind: "block" | "unblock" | "take_down" | "restore"; id: string; label: string; ask: string }) {
+export function OwnerAction({ kind, id, label, ask }: { kind: "block" | "unblock" | "take_down" | "restore" | "approve_host" | "reject_host"; id: string; label: string; ask: string }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   return (

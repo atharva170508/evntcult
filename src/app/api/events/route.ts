@@ -41,7 +41,7 @@ export const GET = handle(async (req: Request) => {
   });
 });
 
-/** POST /api/events: create a draft. Anyone logged in can host. */
+/** POST /api/events: create a draft. Approved organizers only (createDraft checks the role). */
 export const POST = orgHandle(async (req: Request) => {
   const viewer = await requireUser();
   const input = await parseBody(req, createDraftSchema);
