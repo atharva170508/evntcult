@@ -25,7 +25,7 @@ export default async function ScanPage({ params }: { params: Promise<{ id: strin
     return (
       <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
         <ShieldAlert className="size-10 text-[#ff6b6b]" />
-        <h1 className="text-[26px] font-extrabold leading-tight">Only this event&apos;s organizer can scan passes.</h1>
+        <h1 className="font-serif text-[36px] leading-tight">Only this event&apos;s organizer can scan passes.</h1>
         <p className="text-[15px] text-white/70">If you&apos;re helping at the gate, ask the organizer to scan, or to sign in on this phone.</p>
         <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-white/80 underline"><ArrowLeft className="size-4" /> Dashboard</Link>
       </main>

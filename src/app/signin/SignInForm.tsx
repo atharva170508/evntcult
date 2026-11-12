@@ -133,7 +133,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
 
       <button
         disabled={busy || (step === "code" && code.length !== 6)}
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-ink py-3.5 text-[15px] font-semibold text-ink-inverse transition-colors hover:bg-ink-2 disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-volt py-3.5 text-[15px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover disabled:opacity-50"
       >
         {busy && <Loader2 className="size-4 animate-spin" aria-hidden />}
         {codeLogin && step === "email" ? "Email me a code" : needName ? "Create account" : "Log in"}
