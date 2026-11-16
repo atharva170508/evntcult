@@ -1,18 +1,17 @@
 import { cn } from "@/lib/utils";
-import { Aurora } from "./Aurora";
-import { Marquee } from "./Marquee";
 
 /**
- * The top of every app page (M7): a dark aurora band, small eyebrow, huge editorial
- * serif title (wrap one word in <em> for the italic accent), optional sub line,
- * actions on the right and faded marquee words behind.
+ * Editorial page header used at the top of every app page: mono eyebrow, display title
+ * (wrap one word in <em> for the serif accent), optional sub line, actions aligned to the
+ * baseline, and a hairline to close the header.
+ *
+ * `marquee` is accepted for backwards compatibility and intentionally ignored.
  */
 export function PageHero({
   eyebrow,
   title,
   sub,
   actions,
-  marquee,
   className,
 }: {
   eyebrow: React.ReactNode;
@@ -23,16 +22,14 @@ export function PageHero({
   className?: string;
 }) {
   return (
-    <header className={cn("relative isolate mt-3 overflow-hidden rounded-[32px] px-6 py-9 animate-fade-up md:px-10 md:py-12", className)}>
-      <Aurora quiet />
-      {marquee && <Marquee words={marquee} className="absolute inset-x-0 bottom-2 text-[clamp(52px,8vw,112px)] text-white/[0.04]" />}
-      <div className="relative flex flex-wrap items-end justify-between gap-5">
+    <header className={cn("animate-fade-up border-b border-line pb-8 pt-6 md:pb-10 md:pt-10", className)}>
+      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
         <div className="min-w-0 max-w-3xl">
-          <p className="eyebrow text-ink-2">{eyebrow}</p>
-          <h1 className="title-xl mt-3 text-[clamp(40px,5.6vw,80px)] ">{title}</h1>
-          {sub && <div className="mt-3 text-[15.5px] text-ink-2">{sub}</div>}
+          <p className="eyebrow">{eyebrow}</p>
+          <h1 className="mt-3 text-display-lg font-semibold text-ink">{title}</h1>
+          {sub && <div className="mt-3 max-w-prose text-lead text-ink-muted">{sub}</div>}
         </div>
-        {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
     </header>
   );

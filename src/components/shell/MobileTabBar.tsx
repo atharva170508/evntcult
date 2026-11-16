@@ -5,15 +5,18 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { NAV, ORGANIZER_NAV, isActive } from "./nav";
 
-/** App-style bottom tabs on phones (District idea). */
+/** Phone bottom tabs for signed-in people: five destinations, 56px targets, ink indicator. */
 export function MobileTabBar({ isOrganizer }: { isOrganizer: boolean }) {
   const pathname = usePathname();
   const base = NAV.filter((n) => ["/dashboard", "/events", "/passes", "/calendar"].includes(n.href));
   const items = [...base, isOrganizer ? ORGANIZER_NAV : NAV.find((n) => n.href === "/vault")!];
 
   return (
-    <nav className="print:hidden fixed inset-x-3 bottom-3 z-40 rounded-full border border-white/10 bg-surface/80 px-2 py-1.5 shadow-pop backdrop-blur-xl md:hidden">
-      <ul className="grid grid-cols-5">
+    <nav
+      aria-label="Tabs"
+      className="glass fixed inset-x-0 bottom-0 z-40 border-t border-line pb-[env(safe-area-inset-bottom)] print:hidden md:hidden"
+    >
+      <ul className="mx-auto grid max-w-md grid-cols-5">
         {items.map((item) => {
           const active = isActive(pathname, item.href);
           const Icon = item.icon;
@@ -23,14 +26,13 @@ export function MobileTabBar({ isOrganizer }: { isOrganizer: boolean }) {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 rounded-2xl py-1.5 text-[10.5px] font-semibold transition-colors",
+                  "relative flex h-14 flex-col items-center justify-center gap-1 text-[10.5px] font-medium transition-colors duration-fast",
                   active ? "text-ink" : "text-ink-subtle",
                 )}
               >
-                <span className={cn("grid h-8 w-12 place-items-center rounded-full transition-colors", active && "bg-volt text-ink-inverse")}>
-                  <Icon className="size-[18px]" />
-                </span>
-                {item.label.replace("My passes", "Passes")}
+                <span className={cn("absolute top-0 h-[2px] w-6 rounded-full bg-ink transition-opacity duration-base", active ? "opacity-100" : "opacity-0")} aria-hidden />
+                <Icon className="size-[20px]" strokeWidth={active ? 2.1 : 1.8} aria-hidden />
+                {item.label.replace("My passes", "Passes").replace("Photo Vault", "Vault")}
               </Link>
             </li>
           );

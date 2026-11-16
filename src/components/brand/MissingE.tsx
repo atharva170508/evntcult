@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,9 +15,9 @@ import { cn } from "@/lib/utils";
  *   motion="still"  static bar (print, certificates)
  * People who ask their device for reduced motion always get "still".
  *
- * Accent: rgb(220, 254, 98) / #dcfe62 (Tailwind `volt`).
+ * Accent: the signal vermilion #D93A12 (Tailwind `accent`). Set in Geist 600, tight.
  */
-export const LOGO_ACCENT = "#dcfe62";
+export const LOGO_ACCENT = "#D93A12";
 
 type Motion = "type" | "blink" | "still";
 const SCRIPT = ["e", "you"];
@@ -103,7 +103,7 @@ export function LogoWordmark({ className, motion = "blink" }: { className?: stri
       role="img"
       aria-label="EvntCult"
       onMouseEnter={mode === "type" ? () => void play() : undefined}
-      className={cn("inline-block whitespace-nowrap font-logo font-extrabold leading-none tracking-[-0.045em]", className)}
+      className={cn("inline-block whitespace-nowrap font-logo font-semibold leading-none tracking-[-0.055em]", className)}
     >
       <span aria-hidden>ev</span>
       <span aria-hidden className="inline-block min-w-[0.2em] text-center">
@@ -126,40 +126,12 @@ export function LogoWordmark({ className, motion = "blink" }: { className?: stri
   );
 }
 
-const RING = "M15.5 6.5H26.5A12 12 0 0 1 38.5 18.5V29.5A12 12 0 0 1 26.5 41.5H15.5A12 12 0 0 1 3.5 29.5V18.5A12 12 0 0 1 15.5 6.5Z";
-
-/** The image mark: a squared c with the e's bar falling out of it (evnt + cult). */
-function MarkPaths({ color }: { color: string }) {
-  const id = useId().replace(/:/g, "");
+/** Square icon for tight spots (collapsed sidebar, tab icon): the signal caret on ink. */
+export function LogoIcon({ className = "size-9", blink = true }: { className?: string; blink?: boolean }) {
   return (
-    <>
-      <defs>
-        <mask id={id} maskUnits="userSpaceOnUse" x="-10" y="-10" width="68" height="68">
-          <rect x="-10" y="-10" width="68" height="68" fill="#fff" />
-          <rect x="24" y="15" width="30" height="18" fill="#000" transform="rotate(10 21 24)" />
-        </mask>
-      </defs>
-      <path d={RING} fill="none" stroke={color} strokeWidth="7" mask={`url(#${id})`} />
-      <path d="M10 24H47" fill="none" stroke={color} strokeWidth="6" transform="rotate(10 21 24)" />
-    </>
-  );
-}
-
-/** The mark on its own, in the text colour. */
-export function LogoMark({ className = "size-8" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 48 48" className={className} role="img" aria-label="EvntCult" fill="none">
-      <MarkPaths color="currentColor" />
-    </svg>
-  );
-}
-
-/** Square icon for tight spots and the tab: the mark on lime. */
-export function LogoIcon({ className = "size-9" }: { className?: string; blink?: boolean }) {
-  return (
-    <svg viewBox="-8 -8 64 64" className={className} role="img" aria-label="EvntCult">
-      <rect x="-8" y="-8" width="64" height="64" rx="14" fill={LOGO_ACCENT} />
-      <MarkPaths color="#08080c" />
+    <svg viewBox="0 0 64 64" className={className} role="img" aria-label="EvntCult">
+      <rect width="64" height="64" rx="16" fill="#111110" />
+      <rect x="29" y="16" width="6" height="32" rx="1.5" fill={LOGO_ACCENT} className={blink ? "motion-safe:animate-caret-blink" : undefined} />
     </svg>
   );
 }

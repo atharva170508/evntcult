@@ -3,7 +3,8 @@
 /** Event gallery: thumbnails, a full-size viewer, "That's me" for attendees, delete for the organizer. */
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, Loader2, Trash2, UserCheck, UserPlus, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Loader2, Trash2, UserCheck, UserPlus, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export interface GridPhoto {
   id: string;
@@ -33,9 +34,12 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
     setMine((m) => ({ ...m, [id]: next })); // optimistic
     setBusy(id);
     setError(null);
-    const res = await fetch(`/api/photos/${id}/tag`, { method: next ? "POST" : "DELETE", headers: { "Content-Type": "application/json" }, body: next ? "{}" : undefined });
+    const res = await fetch(`/api/photos/${id}/tag`, { method: next ? "POST" : "DELETE", headers: { "Content-Type": "application/json" }, body: next ? "{}" : undefined }).catch(() => null);
     setBusy(null);
-    if (!res.ok) {
+    if (!res) {
+      setMine((m) => ({ ...m, [id]: !next }));
+      setError("You seem to be offline. Try again.");
+    } else if (!res.ok) {
       setMine((m) => ({ ...m, [id]: !next }));
       setError(((await res.json().catch(() => ({}))) as { error?: { message?: string } }).error?.message ?? "Couldn't save that.");
     } else router.refresh();
@@ -44,9 +48,9 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
   async function remove(id: string) {
     if (!confirm("Delete this photo for everyone? Tags on it are removed too.")) return;
     setBusy(id);
-    const res = await fetch(`/api/photos/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/photos/${id}`, { method: "DELETE" }).catch(() => null);
     setBusy(null);
-    if (!res.ok) return setError("Couldn't delete that photo.");
+    if (!res?.ok) return setError("Couldn't delete that photo.");
     setOpen(null);
     router.refresh();
   }
@@ -61,22 +65,32 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
         }}
         disabled={busy === id}
         aria-pressed={!!mine[id]}
-        className={`inline-flex items-center gap-1.5 rounded-full font-semibold shadow ${big ? "px-4 py-2 text-[14px]" : "px-2.5 py-1 text-[12px]"} ${mine[id] ? "bg-live text-ink-inverse" : "bg-white/95 text-ink-inverse"}`}
+        className={cn(
+          "inline-flex items-center gap-1.5 rounded-full font-medium shadow-[0_1px_2px_rgba(17,17,16,0.2)] transition-[background-color,color,transform] duration-fast ease-out active:scale-[0.97]",
+          big ? "h-10 px-4 text-[14px]" : "h-7 px-2.5 text-[12px]",
+          mine[id] ? "bg-ink text-white" : "bg-white/95 text-ink hover:bg-white",
+        )}
       >
-        {busy === id ? <Loader2 className="size-3.5 animate-spin" /> : mine[id] ? <UserCheck className="size-3.5" /> : <UserPlus className="size-3.5" />}
-        {mine[id] ? "That's me ✓" : "That's me"}
+        {busy === id ? <Loader2 className="size-3.5 animate-spin" aria-hidden /> : mine[id] ? <UserCheck className="size-3.5" aria-hidden /> : <UserPlus className="size-3.5" aria-hidden />}
+        {mine[id] ? "That's me" : "Tag me"}
       </button>
     );
 
+  const iconBtn = "grid size-10 place-items-center rounded-full bg-white/10 text-white transition-colors duration-fast hover:bg-white/20";
+
   return (
     <>
-      {error && <p role="alert" className="mb-3 rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">{error}</p>}
-      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+      {error && (
+        <p role="alert" className="mb-4 rounded-tile bg-danger-soft px-3.5 py-3 text-[13.5px] font-medium text-danger">
+          {error}
+        </p>
+      )}
+      <ul className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-4">
         {photos.map((p, i) => (
-          <li key={p.id} className="group relative aspect-square overflow-hidden rounded-2xl bg-canvas">
+          <li key={p.id} className="group relative aspect-square overflow-hidden rounded-tile bg-sunken">
             <button onClick={() => setOpen(i)} className="block size-full" aria-label={`Open photo ${i + 1}${mine[p.id] ? " (you're tagged)" : ""}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/api/photos/${p.id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+              <img src={`/api/photos/${p.id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-slow ease-out group-hover:scale-[1.03]" />
             </button>
             <div className="pointer-events-none absolute inset-x-2 bottom-2 flex justify-start [&>*]:pointer-events-auto">{tagButton(p.id)}</div>
           </li>
@@ -87,25 +101,45 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
         ref={dialog}
         onClose={() => setOpen(null)}
         onClick={(e) => e.target === dialog.current && setOpen(null)}
-        className="m-auto max-h-[92dvh] w-[min(96vw,1100px)] rounded-3xl bg-black p-0 text-white backdrop:bg-black/80"
+        onKeyDown={(e) => {
+          if (open === null) return;
+          if (e.key === "ArrowLeft") setOpen((o) => (o! > 0 ? o! - 1 : photos.length - 1));
+          if (e.key === "ArrowRight") setOpen((o) => (o! < photos.length - 1 ? o! + 1 : 0));
+        }}
+        aria-label="Photo viewer"
+        className="m-auto max-h-[94dvh] w-[min(96vw,1120px)] overflow-hidden rounded-panel bg-[#0c0c0b] p-0 text-white shadow-pop backdrop:bg-ink/80 backdrop:backdrop-blur-sm open:animate-scale-in"
       >
         {current && (
           <div className="relative flex flex-col">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`/api/photos/${current.id}`} alt={`Photo ${open! + 1} of ${photos.length}`} className="max-h-[78dvh] w-full object-contain" />
-            <div className="flex flex-wrap items-center gap-2 p-3">
-              <button onClick={() => setOpen((o) => (o! > 0 ? o! - 1 : photos.length - 1))} aria-label="Previous photo" className="rounded-full bg-white/10 p-2"><ChevronLeft className="size-5" /></button>
-              <button onClick={() => setOpen((o) => (o! < photos.length - 1 ? o! + 1 : 0))} aria-label="Next photo" className="rounded-full bg-white/10 p-2"><ChevronRight className="size-5" /></button>
-              <span className="text-[13px] text-white/60">{open! + 1} / {photos.length}</span>
+            <img src={`/api/photos/${current.id}`} alt={`Photo ${open! + 1} of ${photos.length}`} className="max-h-[80dvh] w-full object-contain" />
+            <div className="flex flex-wrap items-center gap-2 border-t border-white/10 p-3">
+              <button onClick={() => setOpen((o) => (o! > 0 ? o! - 1 : photos.length - 1))} aria-label="Previous photo" className={iconBtn}>
+                <ChevronLeft className="size-5" />
+              </button>
+              <button onClick={() => setOpen((o) => (o! < photos.length - 1 ? o! + 1 : 0))} aria-label="Next photo" className={iconBtn}>
+                <ChevronRight className="size-5" />
+              </button>
+              <span className="px-1 font-mono text-[12.5px] tabular-nums text-white/60">
+                {open! + 1} / {photos.length}
+              </span>
               <span className="flex-1" />
               {tagButton(current.id, true)}
-              <a href={`/api/photos/${current.id}`} download className="rounded-full bg-white/10 px-4 py-2 text-[14px] font-semibold">Download</a>
+              <a href={`/api/photos/${current.id}`} download className="inline-flex h-10 items-center gap-1.5 rounded-full bg-white/10 px-4 text-[14px] font-medium transition-colors hover:bg-white/20">
+                <Download className="size-4" aria-hidden /> Download
+              </a>
               {canManage && (
-                <button onClick={() => remove(current.id)} disabled={busy === current.id} className="inline-flex items-center gap-1.5 rounded-full bg-danger px-4 py-2 text-[14px] font-semibold text-ink-inverse">
-                  <Trash2 className="size-4" /> Delete
+                <button
+                  onClick={() => remove(current.id)}
+                  disabled={busy === current.id}
+                  className="inline-flex h-10 items-center gap-1.5 rounded-full bg-danger px-4 text-[14px] font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                >
+                  <Trash2 className="size-4" aria-hidden /> Delete
                 </button>
               )}
-              <button onClick={() => setOpen(null)} aria-label="Close" className="rounded-full bg-white/10 p-2"><X className="size-5" /></button>
+              <button onClick={() => setOpen(null)} aria-label="Close" className={iconBtn}>
+                <X className="size-5" />
+              </button>
             </div>
           </div>
         )}

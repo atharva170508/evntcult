@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Download, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { buttonClass } from "@/components/ui/Button";
 
 export interface SavePassProps {
   title: string;
@@ -54,21 +54,25 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
       const font = `${getComputedStyle(document.body).fontFamily}, system-ui, sans-serif`;
       await document.fonts.ready;
 
-      // Card
-      ctx.fillStyle = "#08080c";
+      // Paper card with an ink header block (matches the on-screen pass)
+      ctx.fillStyle = "#F6F5F1";
       ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = "#dcfe62";
+      ctx.fillStyle = "#111110";
       ctx.beginPath();
-      ctx.roundRect(PAD - 24, PAD - 24, W - 2 * (PAD - 24), 360, 48);
+      ctx.roundRect(PAD - 24, PAD - 24, W - 2 * (PAD - 24), 360, 40);
       ctx.fill();
 
-      // Title block on yellow
-      ctx.fillStyle = "#08080c";
-      ctx.font = `700 34px ${font}`;
-      ctx.fillText("EVNTCULT PASS", PAD + 20, PAD + 44);
-      ctx.font = `800 72px ${font}`;
+      // Title block on ink, with the signal caret
+      ctx.fillStyle = "#D93A12";
+      ctx.fillRect(PAD + 20, PAD + 14, 8, 40);
+      ctx.fillStyle = "rgba(255,255,255,0.6)";
+      ctx.font = `500 30px ui-monospace, Menlo, monospace`;
+      ctx.fillText("EVNTCULT · ONEPASS", PAD + 46, PAD + 46);
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = `600 70px ${font}`;
       wrap(ctx, p.title, W - 2 * PAD - 40, 2).forEach((l, i) => ctx.fillText(l, PAD + 20, PAD + 140 + i * 80));
-      ctx.font = `600 34px ${font}`;
+      ctx.fillStyle = "rgba(255,255,255,0.75)";
+      ctx.font = `500 34px ${font}`;
       ctx.fillText(`${p.dateLabel} · ${p.timeLabel}`, PAD + 20, PAD + 300);
 
       // QR on white
@@ -76,8 +80,11 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
       const qx = (W - qrSize) / 2, qy = 520;
       ctx.fillStyle = "#ffffff";
       ctx.beginPath();
-      ctx.roundRect(qx - 40, qy - 40, qrSize + 80, qrSize + 80, 40);
+      ctx.roundRect(qx - 40, qy - 40, qrSize + 80, qrSize + 80, 32);
       ctx.fill();
+      ctx.strokeStyle = "#E4E1DA";
+      ctx.lineWidth = 2;
+      ctx.stroke();
       const svg = p.qrSvg.includes("xmlns") ? p.qrSvg : p.qrSvg.replace("<svg", '<svg xmlns="http://www.w3.org/2000/svg"');
       const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
       try {
@@ -92,11 +99,11 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
 
       // Pass code + venue
       ctx.textAlign = "center";
-      ctx.fillStyle = "#f2f3f7";
-      ctx.font = `700 58px ui-monospace, Menlo, monospace`;
+      ctx.fillStyle = "#111110";
+      ctx.font = `500 58px ui-monospace, Menlo, monospace`;
       ctx.fillText(p.passCode, W / 2, 1400);
-      ctx.fillStyle = "#9aa0b1";
-      ctx.font = `500 34px ${font}`;
+      ctx.fillStyle = "#62605A";
+      ctx.font = `400 34px ${font}`;
       ctx.fillText(p.venue, W / 2, 1462);
 
       const blob: Blob = await new Promise((res, rej) => canvas.toBlob((b) => (b ? res(b) : rej(new Error("toBlob failed"))), "image/png"));
@@ -120,11 +127,11 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
         type="button"
         onClick={save}
         disabled={busy}
-        className={cn("inline-flex items-center justify-center gap-1.5 rounded-full border border-line px-3.5 py-2 text-[13px] font-semibold transition-colors hover:border-volt/60 disabled:opacity-50", className)}
+        className={buttonClass("secondary", "md", className)}
       >
         {busy ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <Download className="size-4" aria-hidden />} Save pass image
       </button>
-      {error && <span role="alert" className="text-[12px] font-semibold text-danger">Couldn&apos;t save. Take a screenshot instead.</span>}
+      {error && <span role="alert" className="text-center text-[12.5px] font-medium text-danger">Couldn&apos;t save. Take a screenshot instead.</span>}
     </>
   );
 }

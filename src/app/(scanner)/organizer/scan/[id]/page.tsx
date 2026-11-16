@@ -9,7 +9,7 @@ import { GateScanner } from "@/components/scanner/GateScanner";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Gate scanner" };
-export const viewport: Viewport = { themeColor: "#0b0c10", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#0C0C0B", colorScheme: "dark" };
 
 export default async function ScanPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -24,10 +24,14 @@ export default async function ScanPage({ params }: { params: Promise<{ id: strin
   if (!event || !(await canManageEvent(viewer, event.id))) {
     return (
       <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center gap-4 p-6">
-        <ShieldAlert className="size-10 text-[#ff6b6b]" />
-        <h1 className="font-display text-[32px] font-bold leading-tight tracking-[-0.03em]">Only this event&apos;s organizer can scan passes.</h1>
-        <p className="text-[15px] text-white/70">If you&apos;re helping at the gate, ask the organizer to scan, or to sign in on this phone.</p>
-        <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-white/80 underline"><ArrowLeft className="size-4" /> Dashboard</Link>
+        <span className="grid size-12 place-items-center rounded-full bg-[#D6342A]/20">
+          <ShieldAlert className="size-6 text-[#FF8A80]" aria-hidden />
+        </span>
+        <h1 className="text-[32px] font-semibold leading-[1.05] tracking-[-0.04em]">Only this event&apos;s organizer can scan passes.</h1>
+        <p className="text-[15px] text-white/65">If you&apos;re helping at the gate, ask the organizer to scan, or to sign in on this phone.</p>
+        <Link href="/dashboard" className="mt-2 inline-flex h-11 w-fit items-center gap-1.5 rounded-full bg-white/[0.08] px-4 text-[14px] font-medium text-white transition-colors hover:bg-white/[0.14]">
+          <ArrowLeft className="size-4" aria-hidden /> Dashboard
+        </Link>
       </main>
     );
   }

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Images } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Images } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDB } from "@/lib/db";
 import { myGalleries, myTaggedPhotos } from "@/lib/data/photos";
 import { fmtDate } from "@/lib/utils";
 import { PageHero } from "@/components/brand/PageHero";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { LinkButton } from "@/components/ui/Button";
 
 export const metadata: Metadata = { title: "Photo Vault" };
 export const dynamic = "force-dynamic";
@@ -26,39 +28,48 @@ export default async function VaultPage() {
   }
 
   return (
-    <div className="space-y-6 pt-4 md:pt-6">
+    <div className="space-y-14 pb-8">
       <PageHero
         eyebrow="Photo Vault"
-        title={<>Photos <em>of you</em></>}
-        sub={
+        title={
           <>
-            <span className="font-mono tabular-nums">{tagged.length}</span> photo{tagged.length === 1 ? "" : "s"}
+            Photos <em>of you.</em>
           </>
         }
-        marquee={["Relive it", "Photo Vault"]}
+        sub={
+          <>
+            <span className="font-mono tabular-nums text-ink">{tagged.length}</span> photo{tagged.length === 1 ? "" : "s"} you&apos;ve tagged yourself in. Only you see your tags.
+          </>
+        }
       />
 
       {byEvent.size === 0 ? (
-        <section className="card flex flex-col items-start gap-3 p-8">
-          <Images className="size-8 text-ink-subtle" />
-          <h2 className="title-xl text-[32px]">Nothing here yet</h2>
-        </section>
+        <EmptyState
+          icon={Images}
+          title="Nothing here yet"
+          body="Open the photos from an event you went to and tap “That's me” on the ones you're in. They'll collect here."
+          action={galleries.length ? { label: "Browse your galleries", href: `/events/${galleries[0].slug}/photos` } : { label: "Find an event", href: "/events" }}
+        />
       ) : (
         [...byEvent.entries()].map(([eventId, g]) => (
-          <section key={eventId} className="space-y-3">
-            <div className="flex items-end justify-between gap-3">
+          <section key={eventId} aria-label={g.title} className="space-y-5">
+            <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
-                <h2 className="title-xl text-[32px]">{g.title}</h2>
-                <p className="text-[12.5px] text-ink-muted">{fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })} · {g.ids.length} of you</p>
+                <p className="eyebrow">
+                  {fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })} · {g.ids.length} of you
+                </p>
+                <h2 className="mt-2 text-display-md font-semibold">{g.title}</h2>
               </div>
-              <Link href={`/events/${g.slug}/photos`} className="text-[13px] font-semibold text-ink underline">All photos</Link>
+              <LinkButton href={`/events/${g.slug}/photos`} variant="secondary" size="sm">
+                All photos <ArrowRight className="size-3.5" aria-hidden />
+              </LinkButton>
             </div>
-            <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
-              {g.ids.map((id) => (
-                <li key={id} className="aspect-square overflow-hidden rounded-2xl bg-canvas">
-                  <a href={`/api/photos/${id}`} target="_blank" rel="noopener" aria-label="Open full size">
+            <ul className="grid grid-cols-3 gap-1.5 sm:grid-cols-4 lg:grid-cols-6">
+              {g.ids.map((id, i) => (
+                <li key={id} className={i === 0 ? "col-span-2 row-span-2 overflow-hidden rounded-card bg-sunken" : "aspect-square overflow-hidden rounded-tile bg-sunken"}>
+                  <a href={`/api/photos/${id}`} target="_blank" rel="noopener" aria-label="Open full size" className="group block size-full">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/api/photos/${id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover" />
+                    <img src={`/api/photos/${id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-slow ease-out group-hover:scale-[1.03]" />
                   </a>
                 </li>
               ))}
@@ -67,23 +78,30 @@ export default async function VaultPage() {
         ))
       )}
 
-      <div className="grid gap-4">
-        <section className="card p-5">
-          <h2 className="title-xl text-[32px]">Galleries from your events</h2>
-          {galleries.length === 0 ? (
-            <p className="mt-2 text-[14px] text-ink-muted">None yet.</p>
-          ) : (
-            <ul className="mt-2 divide-y divide-line">
-              {galleries.map((g) => (
-                <li key={g.id} className="flex items-center justify-between gap-3 py-2.5">
-                  <Link href={`/events/${g.slug}/photos`} className="min-w-0 truncate text-[14.5px] font-semibold hover:underline">{g.title}</Link>
-                  <span className="shrink-0 text-[12.5px] text-ink-muted"><span className="font-mono tabular-nums">{g.photos}</span> photos · you&apos;re in <span className="font-mono tabular-nums">{g.mine}</span></span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      </div>
+      <section aria-labelledby="galleries-heading" className="space-y-5">
+        <h2 id="galleries-heading" className="text-h3 font-semibold">
+          Galleries from your events
+        </h2>
+        {galleries.length === 0 ? (
+          <p className="text-small text-ink-muted">When organizers upload photos from events you registered for, they&apos;ll be listed here.</p>
+        ) : (
+          <ul className="card divide-y divide-line">
+            {galleries.map((g) => (
+              <li key={g.id}>
+                <Link href={`/events/${g.slug}/photos`} className="group flex items-center justify-between gap-3 px-5 py-4 transition-colors duration-fast hover:bg-sunken/40">
+                  <span className="min-w-0 truncate text-[15px] font-medium">{g.title}</span>
+                  <span className="flex shrink-0 items-center gap-3 text-[12.5px] text-ink-muted">
+                    <span>
+                      <span className="font-mono tabular-nums text-ink">{g.photos}</span> photos · you&apos;re in <span className="font-mono tabular-nums text-ink">{g.mine}</span>
+                    </span>
+                    <ArrowUpRight className="size-4 text-ink-subtle transition-transform duration-base ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

@@ -5,9 +5,8 @@ import { getDashboardData, getPublicDashboard } from "@/lib/data/dashboard";
 import { headers } from "next/headers";
 import QRCode from "qrcode";
 import { PublicHome } from "@/components/home/PublicHome";
-import { Aurora } from "@/components/brand/Aurora";
-import { Marquee } from "@/components/brand/Marquee";
 import { LinkButton } from "@/components/ui/Button";
+import { SectionHeader } from "@/components/ui/Section";
 import { PassCard } from "@/components/dashboard/PassCard";
 import { AddPhoneCard } from "@/components/profile/AddPhoneCard";
 import { MiniCalendar } from "@/components/dashboard/MiniCalendar";
@@ -47,86 +46,106 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     .filter(Boolean)
     .join(" · ");
 
+  const today = new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Kolkata" }).format(new Date());
+
   return (
-    <div className="space-y-5">
-      {/* Greeting: cinematic band with huge editorial serif */}
-      <header className="relative isolate mt-3 overflow-hidden rounded-[36px] px-6 py-10 animate-fade-up md:px-12 md:py-14">
-        <Aurora quiet />
-        <Marquee words={["Tonight near you", "Your passes", "Live at the gate"]} className="absolute inset-x-0 bottom-3 text-[clamp(56px,9vw,128px)] text-white/[0.04]" />
-        <div className="relative">
-          <p className="eyebrow text-ink-2">{new Intl.DateTimeFormat("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Kolkata" }).format(new Date())}</p>
-          <h1 className="title-xl mt-3 text-[clamp(44px,6.6vw,100px)]">
-            {greeting()}, <em className="text-volt">{firstName}</em>
-          </h1>
-          <p className="mt-3 text-[16px] font-medium text-ink-2">{summary}</p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <LinkButton href="/passes" variant="volt">My passes</LinkButton>
-            <LinkButton href="/events" variant="glass">Discover events</LinkButton>
-          </div>
-          {params.denied === "organizer" && (
-            <p className="mt-4 inline-block rounded-full bg-warn-soft px-4 py-1.5 text-[13px] font-semibold text-warn">
-              The organizer console is only for verified organizers.
+    <div className="space-y-12 pt-6 md:space-y-16 md:pt-10">
+      {/* Greeting */}
+      <header className="animate-fade-up">
+        <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-6">
+          <div className="min-w-0">
+            <p className="eyebrow">{today}</p>
+            <h1 className="mt-3 text-display-lg font-semibold">
+              {greeting()}, <em>{firstName}.</em>
+            </h1>
+            <p className="mt-3 flex items-center gap-2 text-lead text-ink-muted">
+              {data.organizer?.live && <span className="size-2 rounded-full bg-accent motion-safe:animate-pulse-dot" aria-hidden />}
+              {summary}
             </p>
-          )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <LinkButton href="/passes">
+              <Ticket className="size-4" aria-hidden /> My passes
+            </LinkButton>
+            <LinkButton href="/events" variant="secondary">
+              Discover events
+            </LinkButton>
+          </div>
+        </div>
+        {params.denied === "organizer" && (
+          <p role="status" className="mt-6 inline-flex rounded-full bg-warn-soft px-4 py-1.5 text-[13px] font-medium text-warn">
+            The organizer console is only for verified organizers.
+          </p>
+        )}
+        <div className="mt-8">
+          <QuickTiles />
         </div>
       </header>
+
       {!viewer.phone && <AddPhoneCard />}
-      <QuickTiles />
 
       {/* Next up + pass */}
-      <div className="grid gap-4 lg:grid-cols-12">
-        <div className="lg:col-span-8">{data.nextUp ? <NextUpHero event={data.nextUp} /> : <EmptyNextUp />}</div>
-        {data.nextUp && (
-          <div className="lg:col-span-4">
-            <PassCard pass={data.nextUp} />
-          </div>
-        )}
-      </div>
-      {data.nextUp?.paymentStatus === "PENDING" && <UpiPending amountPaise={data.nextUp.feePaise} />}
+      <section aria-label="Your next event" className="space-y-3">
+        <div className="grid gap-4 lg:grid-cols-12">
+          <div className={data.nextUp ? "lg:col-span-8" : "lg:col-span-12"}>{data.nextUp ? <NextUpHero event={data.nextUp} /> : <EmptyNextUp />}</div>
+          {data.nextUp && (
+            <div className="lg:col-span-4">
+              <PassCard pass={data.nextUp} />
+            </div>
+          )}
+        </div>
+        {data.nextUp?.paymentStatus === "PENDING" && <UpiPending amountPaise={data.nextUp.feePaise} />}
+      </section>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label="Registered" value={data.stats.registered} hint="upcoming events" icon={Ticket} delay={60} />
-        <StatTile label="This week" value={data.stats.thisWeek} hint="on your calendar" icon={CalendarCheck2} delay={110} />
-        <StatTile label="Attended" value={data.stats.attended} hint="checked in at the gate" icon={DoorOpen} delay={160} />
-        <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="in the vault" icon={Images} delay={210} />
-      </div>
+      <section aria-label="Your numbers" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatTile label="Registered" value={data.stats.registered} hint="Upcoming events" icon={Ticket} href="/passes" />
+        <StatTile label="This week" value={data.stats.thisWeek} hint="On your calendar" icon={CalendarCheck2} href="/calendar" />
+        <StatTile label="Attended" value={data.stats.attended} hint="Checked in at the gate" icon={DoorOpen} href="/certificates" />
+        <StatTile label="Photos of you" value={data.stats.photosOfYou} hint="In the vault" icon={Images} href="/vault" />
+      </section>
 
       {/* Organizer console */}
       {data.organizer && (
-        <section className="space-y-4 pt-6">
-          <div className="flex flex-wrap items-end justify-between gap-3 animate-fade-up">
-            <div>
-              <p className="eyebrow">Organizer</p>
-              <h2 className="title-xl mt-2 text-[clamp(38px,4.4vw,60px)]">Your events, <em className="text-volt">at a glance</em></h2>
-            </div>
-          </div>
+        <section aria-labelledby="org-heading" className="space-y-6">
+          <SectionHeader
+            id="org-heading"
+            eyebrow="Organizer"
+            title={
+              <>
+                Your events, at a <em>glance.</em>
+              </>
+            }
+            actions={
+              <LinkButton href="/organizer" variant="secondary" size="sm">
+                Open console
+              </LinkButton>
+            }
+          />
           <OrgKpis data={data.organizer} />
           <OrganizerConsole data={data.organizer} />
         </section>
       )}
 
       {/* Campus events */}
-      <div className="pt-6">
-        <CampusRail events={data.campus} />
-      </div>
+      <CampusRail events={data.campus} />
 
       {/* Personal */}
-      <section className="grid gap-4 pt-2 lg:grid-cols-12">
+      <section aria-label="Updates and calendar" className="grid gap-4 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <Announcements items={data.announcements} />
         </div>
         <div className="lg:col-span-4">
           <UpcomingList events={data.upcoming} />
         </div>
-        <div className="card p-6 animate-fade-up lg:col-span-3">
+        <div className="card p-5 md:p-6 lg:col-span-3">
           <MiniCalendar data={data.calendar} />
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <section aria-label="More" className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <VaultTeaser photosOfYou={data.stats.photosOfYou} preview={data.vaultPreview} />
-        <LinkCard href="/venues" eyebrow="Venues" title="Find your way" icon={MapIcon} body="Every venue, what's on there next, and directions." />
+        <LinkCard href="/venues" eyebrow="Venues" title="Find your way" icon={MapIcon} body="Every venue on campus, what's on there next, and walking directions." />
         <LinkCard
           href="/certificates"
           eyebrow="Certificates"
@@ -146,6 +165,6 @@ async function PublicLanding() {
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "evntcult.caliper.workers.dev";
   const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const onePassQr = await QRCode.toString(`${proto}://${host}/signin?mode=signup`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#08080c", light: "#ffffff" } });
+  const onePassQr = await QRCode.toString(`${proto}://${host}/signin?mode=signup`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#111110", light: "#ffffff" } });
   return <PublicHome data={{ ...d, onePassQr }} />;
 }

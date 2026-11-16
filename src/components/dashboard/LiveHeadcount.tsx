@@ -18,7 +18,7 @@ export function LiveHeadcount({
 }: {
   eventId: string;
   title: string;
-  capacity: number | null;
+  capacity: number;
   registered: number;
   initial: number;
 }) {
@@ -92,59 +92,56 @@ export function LiveHeadcount({
   const yet = Math.max(0, registered - count);
 
   return (
-    <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-      <div className="relative mx-auto size-[156px] shrink-0 sm:mx-0">
-        <svg viewBox="0 0 148 148" className="size-full -rotate-90">
-          <circle cx="74" cy="74" r={R} fill="none" stroke="#262a35" strokeWidth="12" />
+    <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+      <div className="relative mx-auto size-[152px] shrink-0 sm:mx-0">
+        <svg viewBox="0 0 148 148" className="size-full -rotate-90" aria-hidden>
+          <circle cx="74" cy="74" r={R} fill="none" stroke="#EEECE6" strokeWidth="10" />
           <circle
             cx="74"
             cy="74"
             r={R}
             fill="none"
-            stroke="url(#hc-grad)"
-            strokeWidth="12"
+            stroke="#111110"
+            strokeWidth="10"
             strokeLinecap="round"
             strokeDasharray={C}
             strokeDashoffset={C * (1 - pct)}
-            style={{ transition: "stroke-dashoffset 900ms cubic-bezier(0.22,1,0.36,1)" }}
+            style={{ transition: "stroke-dashoffset 900ms cubic-bezier(0.16,1,0.3,1)" }}
           />
-          <defs>
-            <linearGradient id="hc-grad" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stopColor="#dcfe62" />
-              <stop offset="1" stopColor="#a8d61c" />
-            </linearGradient>
-          </defs>
         </svg>
         <div className="absolute inset-0 grid place-items-center text-center">
           <div>
             <div
-              className="text-[38px] font-extrabold leading-none tracking-tighter tabular-nums transition-transform duration-300 ease-apple"
+              className="font-mono text-[36px] font-medium leading-none tracking-[-0.05em] tabular-nums transition-transform duration-base ease-spring"
               style={{ transform: bump ? "scale(1.08)" : "scale(1)" }}
+              aria-live="polite"
             >
               {count}
             </div>
-            <div className="mt-1 text-[11.5px] font-semibold text-ink-subtle">checked in</div>
+            <div className="mt-1.5 text-[12px] text-ink-muted">checked in</div>
           </div>
         </div>
       </div>
 
       <div className="min-w-0 flex-1 space-y-3">
-        <Chip tone={mode === "live" ? "volt" : "neutral"} pulse={mode === "live"}>
+        <Chip tone={mode === "live" ? "accent" : "neutral"} pulse={mode === "live"}>
           {mode === "live" ? "Live" : mode === "polling" ? "Updates every 5 s" : "Connecting…"}
         </Chip>
-        <p className="headline truncate text-[19px]">{title}</p>
-        <div className="grid grid-cols-3 gap-2 text-center">
-          {[
-            ["Registered", registered],
-            ["Capacity", capacity ?? "No limit"],
-            ["Yet to arrive", yet],
-          ].map(([l, v]) => (
-            <div key={l} className="rounded-2xl bg-canvas px-2 py-2.5">
-              <p className="text-[18px] font-bold tabular-nums">{v}</p>
-              <p className="text-[11px] font-semibold text-ink-subtle">{l}</p>
+        <p className="truncate text-h4 font-semibold">{title}</p>
+        <dl className="grid grid-cols-3 divide-x divide-line rounded-tile bg-sunken/70 py-2.5 text-center">
+          {(
+            [
+              ["Registered", registered],
+              ["Capacity", capacity],
+              ["Yet to arrive", yet],
+            ] as const
+          ).map(([l, v]) => (
+            <div key={l} className="flex flex-col-reverse px-2">
+              <dt className="text-[11.5px] text-ink-muted">{l}</dt>
+              <dd className="font-mono text-[18px] font-medium tabular-nums">{v}</dd>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
     </div>
   );

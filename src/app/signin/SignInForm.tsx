@@ -1,16 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, MailCheck } from "lucide-react";
+import { MailCheck } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Field, Input, Notice } from "@/components/ui/Field";
 import { PhoneFields } from "@/components/profile/PhoneFields";
 
 type ApiErr = { error?: { code: string; message: string } };
 
-/** This address never logs in as a student: it opens the owner code popup. The server checks the code. */
-const OWNER_EMAIL = "evntcult@gmail.com";
-
-const inputCls =
-  "mt-1.5 w-full rounded-2xl border border-line bg-surface px-4 py-3.5 text-[15px] placeholder:text-ink-subtle focus:outline-none";
 
 /**
  * Sign in / sign up.
@@ -28,9 +25,6 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
   const [resendIn, setResendIn] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [ownerOpen, setOwnerOpen] = useState(false);
-  const [ownerCode, setOwnerCode] = useState("");
-  const [ownerError, setOwnerError] = useState<string | null>(null);
 
   useEffect(() => {
     if (resendIn <= 0) return;
@@ -43,10 +37,10 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
   async function post(url: string, body: unknown) {
     setBusy(true);
     setError(null);
-    const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    const data = (await res.json().catch(() => ({}))) as ApiErr & { resendAfterSec?: number };
+    const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).catch(() => null);
+    const data = ((await res?.json().catch(() => ({}))) ?? { error: { code: "offline", message: "You seem to be offline. Check your connection and try again." } }) as ApiErr & { resendAfterSec?: number };
     setBusy(false);
-    return { res, data };
+    return { res: res ?? ({ ok: false } as Response), data };
   }
 
   function handleError(data: ApiErr, fallback: string) {
@@ -67,23 +61,8 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
     setResendIn(data.resendAfterSec ?? 30);
   }
 
-  async function submitOwner(e: React.FormEvent) {
-    e.preventDefault();
-    setOwnerError(null);
-    const { res, data } = await post("/api/admin/session", { email, code: ownerCode });
-    if (res.ok) return void (window.location.href = "/admin");
-    setOwnerCode("");
-    setOwnerError(data.error?.message ?? "That didn't work. Try again.");
-  }
-
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (email.trim().toLowerCase() === OWNER_EMAIL) {
-      setError(null);
-      setOwnerError(null);
-      setOwnerOpen(true);
-      return;
-    }
     if (!codeLogin) {
       const { res, data } = await post("/api/auth/session", { email, ...details() });
       if (res.ok) return void (window.location.href = next);
@@ -96,112 +75,81 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
   }
 
   return (
-    <>
-    {ownerOpen && (
-      <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4" role="dialog" aria-modal="true" aria-labelledby="owner-title">
-        <form onSubmit={submitOwner} className="w-full max-w-sm space-y-3 rounded-3xl border border-line bg-surface p-6">
-          <h2 id="owner-title" className="text-[20px] font-bold">Owner code</h2>
-          <input
-            type="password"
-            required
-            autoFocus
-            autoComplete="off"
-            aria-labelledby="owner-title"
-            value={ownerCode}
-            onChange={(e) => setOwnerCode(e.target.value)}
-            className={inputCls}
-          />
-          {ownerError && (
-            <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
-              {ownerError}
-            </p>
-          )}
-          <div className="flex gap-2">
-            <button type="button" onClick={() => setOwnerOpen(false)} className="flex-1 rounded-full border border-line py-3 text-[14px] font-semibold">
-              Cancel
-            </button>
-            <button disabled={busy || !ownerCode} className="flex flex-1 items-center justify-center gap-2 rounded-full bg-volt py-3 text-[14px] font-bold text-ink-inverse disabled:opacity-50">
-              {busy && <Loader2 className="size-4 animate-spin" aria-hidden />} Open
-            </button>
-          </div>
-        </form>
-      </div>
-    )}
-    <form onSubmit={submit} className="mt-7 space-y-3">
+    <form onSubmit={submit} className="mt-8 space-y-4" noValidate={false}>
       {step === "email" ? (
-        <label className="block">
-          <span className="text-[13px] font-semibold text-ink-2">Email</span>
-          <input
-            type="email"
-            required
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@email.com"
-            className={inputCls}
-          />
-        </label>
+        <Field label="College email">
+          {(a) => <Input {...a} type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@college.edu" className="h-12" />}
+        </Field>
       ) : (
-        <div className="space-y-3">
-          <p className="flex items-start gap-2.5 rounded-2xl border border-line bg-surface px-4 py-3 text-[14px] text-ink-2" role="status">
-            <MailCheck className="mt-0.5 size-4 shrink-0 text-live" aria-hidden />
-            <span>
-              We emailed a 6-digit code to <b className="text-ink">{email}</b>. It works for 10 minutes. Check spam if you don&apos;t see it.
+        <div className="space-y-4">
+          <Notice tone="live" icon={MailCheck}>
+            <span className="font-normal text-ink-2">
+              We emailed a 6-digit code to <span className="font-medium text-ink">{email}</span>. It works for 10 minutes. Check spam if you don&apos;t see it.
             </span>
-          </p>
-          <label className="block">
-            <span className="text-[13px] font-semibold text-ink-2">6-digit code</span>
-            <input
-              required
-              autoFocus
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              pattern="\d{6}"
-              maxLength={6}
-              value={code}
-              onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-              placeholder="000000"
-              className={`${inputCls} text-center font-mono text-[26px] font-bold tracking-[0.5em]`}
-            />
-          </label>
+          </Notice>
+          <Field label="6-digit code">
+            {(a) => (
+              <Input
+                {...a}
+                required
+                autoFocus
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                pattern="\d{6}"
+                maxLength={6}
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                placeholder="000000"
+                className="h-16 text-center font-mono text-[28px] font-medium tracking-[0.5em] placeholder:text-ink-subtle/40"
+              />
+            )}
+          </Field>
         </div>
       )}
 
       {needName && (
-        <>
-          <label className="block">
-            <span className="text-[13px] font-semibold text-ink-2">Your name</span>
-            <input required minLength={2} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className={inputCls} />
-          </label>
+        <div className="space-y-4 animate-fade-up">
+          <Field label="Your name">{(a) => <Input {...a} required minLength={2} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className="h-12" />}</Field>
           <PhoneFields phone={phone} setPhone={setPhone} optIn={optIn} setOptIn={setOptIn} />
-        </>
+        </div>
       )}
 
-      {error && (
-        <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
-          {error}
-        </p>
-      )}
+      {error && <Notice tone="danger">{error}</Notice>}
 
-      <button
-        disabled={busy || (step === "code" && code.length !== 6)}
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-volt py-3.5 text-[15px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover disabled:opacity-50"
-      >
-        {busy && <Loader2 className="size-4 animate-spin" aria-hidden />}
+      <Button type="submit" size="lg" variant={needName ? "accent" : "primary"} loading={busy} disabled={step === "code" && code.length !== 6} className="w-full">
         {codeLogin && step === "email" ? "Email me a code" : needName ? "Create account" : "Log in"}
-      </button>
+      </Button>
 
       {codeLogin && step === "code" && (
         <div className="flex items-center justify-between text-[13.5px]">
-          <button type="button" onClick={() => { setStep("email"); setError(null); }} className="font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
+          <button
+            type="button"
+            onClick={() => {
+              setStep("email");
+              setError(null);
+            }}
+            className="font-medium text-ink-muted underline-offset-4 transition-colors hover:text-ink hover:underline"
+          >
             Use a different email
           </button>
-          <button type="button" disabled={busy || resendIn > 0} onClick={sendCode} className="font-semibold text-brand-ink underline-offset-4 hover:underline disabled:text-ink-subtle disabled:no-underline">
-            {resendIn > 0 ? `Resend code in ${resendIn}s` : "Resend code"}
+          <button type="button" disabled={busy || resendIn > 0} onClick={sendCode} className="font-medium text-ink underline decoration-line-strong underline-offset-4 disabled:text-ink-subtle disabled:no-underline">
+            {resendIn > 0 ? (
+              <>
+                Resend in <span className="font-mono tabular-nums">{resendIn}s</span>
+              </>
+            ) : (
+              "Resend code"
+            )}
           </button>
         </div>
       )}
+
+      {!codeLogin && (
+        <p className="rounded-tile border border-dashed border-line-strong px-3.5 py-3 text-[12.5px] text-ink-muted">
+          <span className="mr-1.5 rounded-full bg-warn-soft px-2 py-0.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-warn">Planned</span>
+          Email code check isn&apos;t switched on yet, so anyone who types your email can log in as you.
+        </p>
+      )}
     </form>
-    </>
   );
 }

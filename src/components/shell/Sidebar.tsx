@@ -5,80 +5,97 @@ import { usePathname } from "next/navigation";
 import { KeyRound, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogoIcon, LogoWordmark } from "@/components/brand/MissingE";
-import { NAV, ORGANIZER_NAV, isActive } from "./nav";
+import { NAV, NAV_GROUPS, ORGANIZER_NAV, isActive, type NavItem } from "./nav";
 
-/** App-style left menu for laptops (Unstop / Zoho Backstage idea). Hidden on phones. */
-export function Sidebar({ isOrganizer, signedIn, onEnterCode }: { isOrganizer: boolean; signedIn: boolean; onEnterCode: () => void }) {
+/**
+ * Laptop app menu. 72px icon rail on md/lg, 248px labelled menu on xl.
+ * Active item: white chip with a hairline (Linear-style), never a colour fill.
+ */
+export function Sidebar({ isOrganizer, onEnterCode }: { isOrganizer: boolean; signedIn?: boolean; onEnterCode: () => void }) {
   const pathname = usePathname();
-  const items = isOrganizer ? [...NAV, ORGANIZER_NAV] : NAV;
+  const byHref = new Map(NAV.map((n) => [n.href, n]));
 
   return (
-    <aside className="sticky top-0 hidden print:!hidden h-dvh w-[88px] shrink-0 flex-col border-r border-white/[0.06] bg-surface/60 px-3 py-5 backdrop-blur-xl md:flex xl:w-[236px] xl:px-4">
-      <Link href="/dashboard" className="flex items-center gap-2.5 px-2" aria-label="EvntCult home">
-        <LogoIcon className="size-9 xl:hidden" />
-        <LogoWordmark motion="type" className="hidden text-[30px] text-ink xl:inline-block" />
+    <aside className="sticky top-0 hidden h-dvh w-[72px] shrink-0 flex-col border-r border-line bg-canvas px-3 py-4 print:!hidden md:flex xl:w-[248px] xl:px-4">
+      <Link href="/dashboard" className="flex h-10 items-center justify-center rounded-xl xl:justify-start xl:px-2" aria-label="EvntCult home">
+        <LogoIcon className="size-8 xl:hidden" />
+        <LogoWordmark motion="blink" className="hidden text-[26px] text-ink xl:inline-block" />
       </Link>
 
-      {signedIn && (
+      {isOrganizer && (
         <Link
           href="/organizer/events/new"
-          className="mt-6 flex items-center justify-center gap-2 rounded-full bg-volt py-3 text-[14px] font-bold text-ink-inverse shadow-[0_14px_34px_-16px_rgba(220,254,98,0.55)] transition-colors hover:bg-volt-hover"
+          title="Create event"
+          className="mt-5 flex h-10 items-center justify-center gap-2 rounded-full bg-ink text-[14px] font-medium text-white shadow-button transition-[background-color,transform] duration-fast ease-out hover:bg-[#2a2a28] active:scale-[0.98]"
         >
-          <Plus className="size-[18px]" />
-          <span className="hidden xl:inline">Host an event</span>
+          <Plus className="size-4" aria-hidden />
+          <span className="hidden xl:inline">Create event</span>
         </Link>
       )}
 
-      <nav className="mt-6 flex-1">
-        <p className="eyebrow mb-2 hidden px-3 xl:block">Menu</p>
-        <ul className="space-y-1">
-          {items.map((item) => {
-            const active = isActive(pathname, item.href);
-            const Icon = item.icon;
-            return (
-              <li key={item.href}>
-                {item === ORGANIZER_NAV && <p className="eyebrow mb-2 mt-5 hidden px-3 xl:block">Organize</p>}
-                <Link
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  title={item.label}
-                  className={cn(
-                    "group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[14px] font-semibold transition-colors",
-                    "justify-center xl:justify-start",
-                    active ? "bg-volt text-ink-inverse shadow-brand" : "text-ink-muted hover:bg-white/5 hover:text-ink",
-                  )}
-                >
-                  <Icon className="size-[19px] shrink-0" />
-                  <span className="hidden xl:inline">{item.label}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+      <nav className="mt-6 flex-1 space-y-6 overflow-y-auto no-scrollbar" aria-label="Main">
+        {NAV_GROUPS.map((g) => (
+          <div key={g.label}>
+            <p className="eyebrow mb-1.5 hidden px-2.5 xl:block">{g.label}</p>
+            <ul className="space-y-0.5">
+              {g.hrefs.map((h) => {
+                const item = byHref.get(h);
+                return item ? <SideLink key={h} item={item} active={isActive(pathname, h)} /> : null;
+              })}
+            </ul>
+          </div>
+        ))}
+        {isOrganizer && (
+          <div>
+            <p className="eyebrow mb-1.5 hidden px-2.5 xl:block">Organize</p>
+            <ul>
+              <SideLink item={ORGANIZER_NAV} active={isActive(pathname, ORGANIZER_NAV.href)} />
+            </ul>
+          </div>
+        )}
       </nav>
 
-      {signedIn ? (<>
       <button
         onClick={onEnterCode}
-        className="group relative isolate hidden overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] p-4 hover:border-volt/40 text-left transition-transform hover:-translate-y-0.5 xl:block"
+        className="group hidden w-full rounded-card bg-surface p-4 text-left shadow-card transition-[box-shadow,transform] duration-base ease-out hover:-translate-y-0.5 hover:shadow-raised xl:block"
       >
-        <span className="grid size-9 place-items-center rounded-xl bg-canvas text-brand-ink shadow-card">
-          <KeyRound className="size-4" />
+        <span className="flex items-center justify-between">
+          <span className="grid size-8 place-items-center rounded-lg bg-sunken text-ink">
+            <KeyRound className="size-4" aria-hidden />
+          </span>
+          <span className="kbd">CODE</span>
         </span>
-        <p className="mt-3 text-[14px] font-bold leading-tight">Got an event code?</p>
+        <p className="mt-3 text-[14px] font-medium leading-tight">Got an event code?</p>
+        <p className="mt-0.5 text-[12.5px] text-ink-muted">Unlock a private event in one step.</p>
       </button>
       <button
         onClick={onEnterCode}
         title="Enter event code"
-        className="mx-auto grid size-11 place-items-center rounded-2xl bg-brand-soft text-brand-ink xl:hidden"
+        aria-label="Enter event code"
+        className="mx-auto grid size-10 place-items-center rounded-xl text-ink-muted transition-colors hover:bg-ink/[0.05] hover:text-ink xl:hidden"
       >
         <KeyRound className="size-[18px]" />
       </button>
-      </>) : (
-        <Link href="/signin?mode=signup" className="hidden rounded-3xl bg-gradient-to-br from-brand-soft to-warn-soft p-4 transition-transform hover:-translate-y-0.5 xl:block">
-          <p className="text-[14px] font-bold leading-tight">New here?</p>
-        </Link>
-      )}
     </aside>
+  );
+}
+
+function SideLink({ item, active }: { item: NavItem; active: boolean }) {
+  const Icon = item.icon;
+  return (
+    <li>
+      <Link
+        href={item.href}
+        aria-current={active ? "page" : undefined}
+        title={item.label}
+        className={cn(
+          "flex h-10 items-center justify-center gap-3 rounded-xl px-2.5 text-[14px] font-medium transition-[background-color,color,box-shadow] duration-fast ease-out xl:justify-start",
+          active ? "bg-surface text-ink shadow-card" : "text-ink-muted hover:bg-ink/[0.04] hover:text-ink",
+        )}
+      >
+        <Icon className={cn("size-[18px] shrink-0", active ? "text-ink" : "text-ink-subtle")} strokeWidth={active ? 2.1 : 1.8} />
+        <span className="hidden xl:inline">{item.label}</span>
+      </Link>
+    </li>
   );
 }

@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Notice } from "@/components/ui/Field";
 import { PhoneFields } from "./PhoneFields";
 
-/** Shown on the dashboard to signed-in users who haven't added a mobile number yet. */
+/** Dashboard prompt for signed-in people who haven't added a mobile number yet. */
 export function AddPhoneCard() {
   const router = useRouter();
   const [phone, setPhone] = useState("");
@@ -21,32 +23,31 @@ export function AddPhoneCard() {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ phone, whatsappOptIn: optIn }),
-    });
-    const data = (await res.json().catch(() => ({}))) as { error?: { message: string } };
+    }).catch(() => null);
+    const data = (await res?.json().catch(() => ({}))) as { error?: { message: string } } | undefined;
     setBusy(false);
-    if (!res.ok) return setError(data.error?.message ?? "Couldn't save. Try again.");
+    if (!res?.ok) return setError(data?.error?.message ?? "Couldn't save. Check your connection and try again.");
     router.refresh();
   }
 
   return (
-    <form onSubmit={save} className="card space-y-3 p-5 animate-fade-up">
-      <div className="flex items-center gap-2.5">
-        <span className="grid size-9 place-items-center rounded-xl bg-live-soft text-live">
-          <MessageCircle className="size-5" />
+    <form onSubmit={save} className="card grid gap-6 p-5 md:grid-cols-[1fr_1.2fr] md:p-6">
+      <div className="flex items-start gap-3">
+        <span className="grid size-10 shrink-0 place-items-center rounded-tile bg-live-soft text-live">
+          <MessageCircle className="size-[18px]" aria-hidden />
         </span>
         <div>
-          <h2 className="headline text-[16px]">Add your mobile number</h2>
+          <h2 className="text-h4 font-semibold">Add your mobile number</h2>
+          <p className="mt-1 text-small text-ink-muted">So you can get event reminders and pass updates on WhatsApp.</p>
         </div>
       </div>
-      <PhoneFields phone={phone} setPhone={setPhone} optIn={optIn} setOptIn={setOptIn} />
-      {error && (
-        <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
-          {error}
-        </p>
-      )}
-      <button disabled={busy} className="flex items-center gap-2 rounded-full bg-volt px-5 py-2.5 text-[14px] font-semibold text-ink-inverse disabled:opacity-50">
-        {busy && <Loader2 className="size-4 animate-spin" />} Save number
-      </button>
+      <div className="space-y-3">
+        <PhoneFields phone={phone} setPhone={setPhone} optIn={optIn} setOptIn={setOptIn} />
+        {error && <Notice tone="danger">{error}</Notice>}
+        <Button type="submit" loading={busy}>
+          Save number
+        </Button>
+      </div>
     </form>
   );
 }

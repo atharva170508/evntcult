@@ -1,7 +1,7 @@
 import { Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/** "184 going" — a real count from the registrations table (no invented faces). */
+/** "184 going" — a real count from registrations, set in tabular mono. */
 export function Avatars({
   count,
   label = "going",
@@ -16,11 +16,10 @@ export function Avatars({
   onDark?: boolean;
 }) {
   return (
-    <div className={cn("flex items-center gap-1.5", className)}>
-      <Users className={cn("size-4", onDark ? "text-white/80" : "text-ink-subtle")} />
-      <span className={cn("font-mono text-[12.5px] font-semibold tabular-nums", onDark ? "text-white" : "text-ink-2")}>
-        {count.toLocaleString("en-IN")} <span className={cn("font-sans", onDark ? "text-white/75" : "text-ink-muted")}>{label}</span>
-      </span>
-    </div>
+    <span className={cn("inline-flex items-center gap-1.5 text-[13px]", onDark ? "text-white/85" : "text-ink-muted", className)}>
+      <Users className="size-3.5" aria-hidden />
+      <span className={cn("font-mono font-medium tabular-nums", onDark ? "text-white" : "text-ink")}>{count.toLocaleString("en-IN")}</span>
+      {label}
+    </span>
   );
 }

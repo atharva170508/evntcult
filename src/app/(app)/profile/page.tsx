@@ -2,36 +2,54 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { BadgeCheck, Mail } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
+import { codeLoginOn } from "@/lib/email";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { PageHero } from "@/components/brand/PageHero";
+import { initials } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Your profile" };
 export const dynamic = "force-dynamic";
 
-const ROLE_LABEL = { attendee: "Member", organizer: "Organizer", admin: "Admin" } as const;
+const ROLE_LABEL = { attendee: "Student", organizer: "Organizer", admin: "Admin" } as const;
 
 export default async function ProfilePage() {
   const viewer = await getViewer();
   if (!viewer) redirect("/signin?next=/profile");
 
   return (
-    <div className="mx-auto max-w-2xl animate-fade-up">
-      <PageHero eyebrow="Account" title={<>Your <em>profile</em></>} />
+    <div className="pb-8">
+      <PageHero eyebrow="Account" title={<>Your <em>profile.</em></>} sub="Your name, number and how we reach you." />
 
-      <div className="card mt-6 flex flex-wrap items-center gap-3 p-5">
-        <span className="grid size-10 place-items-center rounded-xl bg-brand-soft text-brand-ink" aria-hidden>
-          <Mail className="size-5" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-[12px] font-semibold text-ink-subtle">Email (used to log in, can&apos;t be changed)</p>
-          <p className="truncate text-[15px] font-semibold">{viewer.email}</p>
-        </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-canvas px-3 py-1.5 text-[12.5px] font-semibold text-ink-2">
-          <BadgeCheck className="size-4 text-live" aria-hidden /> {ROLE_LABEL[viewer.role]}
-        </span>
+      <div className="mt-10 grid gap-10 lg:grid-cols-[280px_1fr] lg:gap-16">
+        <aside className="space-y-6">
+          <div className="flex items-center gap-4">
+            <span className="grid size-14 shrink-0 place-items-center rounded-full bg-ink text-[18px] font-medium text-white" aria-hidden>
+              {initials(viewer.name)}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-h4 font-semibold">{viewer.name}</p>
+              <p className="mt-0.5 inline-flex items-center gap-1.5 text-[13px] text-ink-muted">
+                <BadgeCheck className="size-4 text-live" aria-hidden /> {ROLE_LABEL[viewer.role]}
+              </p>
+            </div>
+          </div>
+          <dl className="space-y-1 border-t border-line pt-5">
+            <dt className="eyebrow flex items-center gap-1.5">
+              <Mail className="size-3.5" aria-hidden /> College email
+            </dt>
+            <dd className="break-all text-[15px] font-medium">{viewer.email}</dd>
+            <dd className="text-[12.5px] text-ink-subtle">Used to log in. It can&apos;t be changed.</dd>
+          </dl>
+          <p className="border-t border-line pt-5 text-[13px] leading-relaxed text-ink-muted">
+            {codeLoginOn()
+              ? "You log in with a 6-digit code we email you each time."
+              : "Logging in with an emailed 6-digit code is Planned. It switches on once the email service is set up."}{" "}
+            Organizers never see your number. It&apos;s only used for WhatsApp reminders if you turn them on.
+          </p>
+        </aside>
+
+        <ProfileForm name={viewer.name} phone={viewer.phone} whatsappOptIn={viewer.whatsappOptIn} />
       </div>
-
-      <ProfileForm name={viewer.name} phone={viewer.phone} whatsappOptIn={viewer.whatsappOptIn} />
     </div>
   );
 }

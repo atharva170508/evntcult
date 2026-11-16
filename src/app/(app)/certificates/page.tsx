@@ -18,27 +18,40 @@ export default async function CertificatesPage() {
   const certs = await myCertificates(await getDB(), viewer.id);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-10 pb-8">
       <PageHero
         eyebrow="Certificates"
-        title={<>Proof you were <em>there</em></>}
-        sub={`${certs.length} certificate${certs.length === 1 ? "" : "s"}`}
+        title={
+          <>
+            Proof you were <em>there.</em>
+          </>
+        }
+        sub={
+          <>
+            <span className="font-mono tabular-nums text-ink">{certs.length}</span> certificate{certs.length === 1 ? "" : "s"}. You get one automatically for every event where your pass was scanned at the gate.
+          </>
+        }
       />
       {certs.length === 0 ? (
-        <EmptyState icon={Award} title="No certificates yet" action={{ label: "Find an event", href: "/events" }} />
+        <EmptyState icon={Award} title="No certificates yet" body="Go to an event and get your pass scanned at the gate. Your certificate appears here right after." action={{ label: "Find an event", href: "/events" }} />
       ) : (
-        <ul className="grid gap-3 md:grid-cols-2">
+        <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {certs.map((c) => (
             <li key={c.id}>
-              <Link href={`/certificates/${c.id}`} className="card group flex items-center gap-4 p-5 transition-colors hover:border-volt/60">
-                <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-volt/10 text-volt" aria-hidden>
-                  <Award className="size-6" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[16px] font-bold">{c.eventTitle}</p>
-                  <p className="text-[13px] text-ink-muted">{fmtDate(new Date(c.startsAt), { day: "numeric", month: "short", year: "numeric" })} {c.venue ? ` · ${c.venue}` : ""}{c.kind !== "participation" ? ` · ${c.kind}` : ""}</p>
+              <Link href={`/certificates/${c.id}`} className="card card-hover group flex h-full flex-col overflow-hidden">
+                {/* Miniature certificate */}
+                <div className="relative border-b border-line bg-[linear-gradient(180deg,#FFFFFF,#FAF9F6)] px-6 pb-6 pt-8 text-center">
+                  <span className="absolute inset-x-0 top-0 h-1 bg-ink" aria-hidden />
+                  <p className="eyebrow">Certificate of attendance</p>
+                  <p className="mt-3 line-clamp-2 text-h3 font-semibold">{c.eventTitle}</p>
                 </div>
-                <ArrowUpRight className="size-4 text-ink-subtle group-hover:text-volt" aria-hidden />
+                <div className="flex items-center gap-3 p-5">
+                  <Award className="size-5 shrink-0 text-ink-subtle" aria-hidden />
+                  <p className="min-w-0 flex-1 truncate text-[13px] text-ink-muted">
+                    <span className="font-mono">{fmtDate(new Date(c.startsAt), { day: "numeric", month: "short", year: "numeric" })}</span> · {c.venue}
+                  </p>
+                  <ArrowUpRight className="size-4 shrink-0 text-ink-subtle transition-transform duration-base ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+                </div>
               </Link>
             </li>
           ))}

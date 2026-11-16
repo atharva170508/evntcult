@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface CardProps {
@@ -11,37 +11,39 @@ interface CardProps {
   bodyClassName?: string;
   children: React.ReactNode;
   style?: React.CSSProperties;
+  as?: "section" | "div" | "article";
 }
 
-/** Glass card with an optional icon, eyebrow, title and "See all" link. */
-export function Card({ eyebrow, title, icon: Icon, action, className, bodyClassName, children, style }: CardProps) {
+/** Paper card: optional mono eyebrow, title and a quiet "See all →" link. */
+export function Card({ eyebrow, title, icon: Icon, action, className, bodyClassName, children, style, as: Tag = "section" }: CardProps) {
+  const hasHeader = !!(eyebrow || title || action);
   return (
-    <section className={cn("card flex flex-col overflow-hidden animate-fade-up", className)} style={style}>
-      {(eyebrow || title || action) && (
-        <header className="flex items-center justify-between gap-4 px-6 pt-6">
+    <Tag className={cn("card flex flex-col", className)} style={style}>
+      {hasHeader && (
+        <header className="flex items-start justify-between gap-4 px-5 pt-5 md:px-6 md:pt-6">
           <div className="flex min-w-0 items-center gap-3">
             {Icon && (
-              <span className="grid size-10 shrink-0 place-items-center rounded-2xl border border-volt/20 bg-volt/10 text-volt">
-                <Icon className="size-[18px]" />
+              <span className="grid size-9 shrink-0 place-items-center rounded-tile bg-sunken text-ink-2">
+                <Icon className="size-[17px]" />
               </span>
             )}
             <div className="min-w-0">
               {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-              {title && <h2 className="truncate font-display text-[21px] font-bold leading-[1.1] tracking-[-0.02em] text-ink">{title}</h2>}
+              {title && <h2 className="mt-0.5 truncate text-h4 font-semibold text-ink">{title}</h2>}
             </div>
           </div>
           {action && (
             <Link
               href={action.href}
-              className="group inline-flex shrink-0 items-center rounded-full border border-line px-3 py-1.5 text-[12.5px] font-semibold text-ink-2 transition-colors hover:border-volt hover:bg-volt hover:text-ink-inverse"
+              className="group -mr-2 inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1.5 text-[13px] font-medium text-ink-muted transition-colors duration-fast hover:bg-ink/[0.05] hover:text-ink"
             >
               {action.label}
-              <ChevronRight className="ml-0.5 size-3.5 transition-transform duration-300 ease-apple group-hover:translate-x-0.5" />
+              <ArrowRight className="size-3.5 transition-transform duration-base ease-out group-hover:translate-x-0.5" aria-hidden />
             </Link>
           )}
         </header>
       )}
-      <div className={cn("flex-1 p-6", (eyebrow || title) && "pt-4", bodyClassName)}>{children}</div>
-    </section>
+      <div className={cn("flex-1 p-5 md:p-6", hasHeader && "pt-4 md:pt-4", bodyClassName)}>{children}</div>
+    </Tag>
   );
 }

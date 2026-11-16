@@ -2,98 +2,117 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * EvntCult — Paper, Ink & Signal. Tokens live in tailwind.config.ts; the rules here are
+ * the few patterns that are easier to express as classes than as utility strings.
+ */
+
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
+    --header-h: 64px;
   }
   html {
     @apply bg-canvas text-ink antialiased;
     text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: calc(var(--header-h) + 16px);
   }
   body {
-    @apply min-h-dvh bg-canvas font-sans text-[15px] leading-relaxed;
+    @apply min-h-dvh bg-canvas font-sans text-body;
+    font-feature-settings: "ss01", "cv11";
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
   }
   ::selection {
-    background: rgba(220, 254, 98, 0.3);
+    background: rgba(217, 58, 18, 0.16);
   }
-  /* Accent words in headings: neon yellow, upright (no serif italics any more). */
+  /* Headline accents: one word set in the editorial serif, never coloured. */
   em {
-    font-style: normal;
-    color: theme("colors.volt.DEFAULT");
+    @apply font-serif font-normal italic;
+    letter-spacing: -0.01em;
   }
   :focus-visible {
-    @apply outline-none ring-2 ring-volt ring-offset-2 ring-offset-canvas;
+    @apply outline-none ring-2 ring-ink ring-offset-2 ring-offset-canvas;
   }
-  /* Text boxes show focus through their own border, or their rounded wrapper, not a square ring. */
-  input:not([type="checkbox"]):not([type="radio"]):focus-visible,
-  textarea:focus-visible,
-  select:focus-visible {
-    @apply outline-none ring-0 ring-offset-0;
-  }
-  input:not([type="checkbox"]):not([type="radio"]):focus,
-  textarea:focus,
-  select:focus {
-    border-color: rgb(220 254 98 / 0.7);
-  }
-  /* Browser autofill must not paint a white box on the dark theme. */
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus {
-    -webkit-text-fill-color: currentColor;
-    caret-color: currentColor;
-    transition: background-color 99999s ease-out;
-  }
-  /* Phones zoom the whole page when a text box is smaller than 16px. */
-  @media (pointer: coarse) {
-    input:not([type="checkbox"]):not([type="radio"]),
-    textarea,
-    select {
-      font-size: 16px !important;
-    }
+  /* Tabular numerals wherever numbers line up. */
+  .tabular,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
   }
 }
 
 @layer components {
-  /* The core card: smoked glass panel with a hairline top highlight. */
+  /* ── Surfaces ─────────────────────────────────────────── */
+
+  /* The core container: white paper with a hairline edge and an inner top highlight. */
   .card {
-    @apply relative rounded-[28px] border border-white/[0.07] bg-surface/80 shadow-card backdrop-blur-xl;
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0) 40%);
+    @apply relative rounded-card bg-surface shadow-card;
   }
-  /* Frosted glass for things floating over gradients. */
+  /* A card that responds to the pointer. */
+  .card-hover {
+    @apply transition-[transform,box-shadow] duration-base ease-out hover:-translate-y-0.5 hover:shadow-raised;
+  }
+  .lift {
+    @apply transition-[transform,box-shadow] duration-base ease-out hover:-translate-y-0.5 hover:shadow-raised;
+  }
+  /* Recessed well inside a card (stats, meters, form groups). */
+  .well {
+    @apply rounded-tile bg-sunken/70;
+  }
+  /* Frosted bar for sticky navigation. */
   .glass {
-    @apply border border-white/15 bg-white/[0.07] backdrop-blur-xl;
+    @apply bg-canvas/80 backdrop-blur-xl backdrop-saturate-150;
   }
-  /* Huge, friendly display heading (Outfit, heavy and tight). */
+
+  /* ── Type ─────────────────────────────────────────────── */
+
+  /* Mono micro-label above headings (ticket-stub voice). */
+  .eyebrow {
+    @apply font-mono text-micro font-medium uppercase text-ink-subtle;
+  }
   .title-xl {
-    @apply font-display font-bold leading-[0.98] tracking-[-0.035em] text-ink;
+    @apply font-display font-semibold text-display-lg text-ink;
   }
-  /* Uppercase poster shout. */
+  .headline {
+    @apply font-semibold tracking-tighter text-ink;
+  }
   .shout {
-    @apply font-display font-extrabold uppercase leading-[0.95] tracking-[-0.025em];
+    @apply font-display font-semibold tracking-tightest;
   }
-  /* Brushed-aluminium fill for the giant footer wordmark (Apple-ish). */
+  /* Ink fading to paper — for the oversized footer wordmark. */
   .text-metal {
-    background: linear-gradient(180deg, #f2f3f7 0%, #9a9cab 40%, #3a3b44 55%, #d5d6de 75%, #55575f 100%);
+    background: linear-gradient(180deg, #111110 0%, #111110 35%, rgba(17, 17, 16, 0.08) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
-  /* Film grain over gradients, so they look printed rather than flat. */
+
+  /* ── Controls ─────────────────────────────────────────── */
+
+  .field {
+    @apply w-full rounded-xl border border-line bg-surface px-3.5 py-3 text-body text-ink shadow-[0_1px_0_rgba(17,17,16,0.03)] transition-[border-color,box-shadow] duration-fast ease-out placeholder:text-ink-subtle hover:border-line-strong focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/[0.06] disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-muted aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/10;
+  }
+  .kbd {
+    @apply inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-line bg-surface px-1.5 font-mono text-[10.5px] font-medium text-ink-subtle shadow-[0_1px_0_rgba(17,17,16,0.06)];
+  }
+  .link {
+    @apply font-medium text-ink underline decoration-line-strong underline-offset-[3px] transition-colors duration-fast hover:decoration-ink;
+  }
+
+  /* ── Texture & motifs ─────────────────────────────────── */
+
   .grain::after {
     content: "";
-    @apply pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-  /* Hover lift for clickable cards. */
-  .lift {
-    @apply transition-[transform,box-shadow,border-color] duration-300 ease-apple hover:-translate-y-0.5 hover:border-line-strong hover:shadow-pop;
-  }
-  .eyebrow {
-    @apply text-[11.5px] font-semibold uppercase tracking-[0.1em] text-ink-subtle;
-  }
-  /* Poster headings: heavy and tight. */
-  .headline {
-    @apply font-extrabold tracking-tightest text-ink;
+    @apply pointer-events-none absolute inset-0 opacity-[0.22] mix-blend-multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   .no-scrollbar {
     scrollbar-width: none;
@@ -101,20 +120,47 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  /* Ticket perforation: a dashed line with two half-circle cut-outs. */
+  /* Ticket perforation: dashed rule with two notches cut into the card edges. */
   .ticket-cut {
-    @apply relative my-1 h-6;
+    @apply relative h-6;
   }
   .ticket-cut::before {
     content: "";
-    @apply absolute left-5 right-5 top-1/2 border-t-2 border-dashed border-line;
+    @apply absolute left-5 right-5 top-1/2 border-t border-dashed border-line-strong;
   }
   .ticket-cut::after {
     content: "";
     @apply pointer-events-none absolute inset-y-0 -left-3 -right-3;
     background:
-      radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 12px) left / 24px 24px no-repeat,
-      radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 12px) right / 24px 24px no-repeat;
+      radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 11.5px) left / 24px 24px no-repeat,
+      radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 11.5px) right / 24px 24px no-repeat;
+  }
+  /* Faint dot grid used behind hero areas. */
+  .dot-grid {
+    background-image: radial-gradient(rgba(17, 17, 16, 0.09) 1px, transparent 1.2px);
+    background-size: 22px 22px;
+  }
+  /* Skeleton shimmer. */
+  .skeleton {
+    @apply rounded-tile bg-sunken;
+    background-image: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+    background-size: 400px 100%;
+    background-repeat: no-repeat;
+    @apply motion-safe:animate-shimmer;
+  }
+
+  /* ── Scroll reveal (paired with <Reveal>) ─────────────── */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  [data-reveal="in"] {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -133,5 +179,10 @@
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
   }
 }

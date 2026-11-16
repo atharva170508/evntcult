@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { KeyRound, Loader2, X } from "lucide-react";
+import { Check, KeyRound, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
-/** Google-Classroom-style "join with a code" sheet. */
+/** "Join with a code" modal: one segmented mono input, inline status, auto-redirect on success. */
 export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -31,34 +31,39 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code }),
-    });
+    }).catch(() => null);
+    if (!res) return setState({ status: "error", message: "You seem to be offline. Try again." });
     const data = (await res.json().catch(() => ({}))) as { error?: { message?: string }; event?: { title: string; slug: string } };
     if (!res.ok || !data.event) return setState({ status: "error", message: data.error?.message ?? "Something went wrong." });
     const ev = data.event;
-    setState({ status: "ok", message: `Unlocked ${ev.title}` });
+    setState({ status: "ok", message: `Unlocked · ${ev.title}` });
     setTimeout(() => {
       onClose();
       router.push(`/events/${ev.slug}?code=${encodeURIComponent(code)}`);
     }, 700);
   }
 
+  const ready = code.replace(/[\s-]/g, "").length >= 7;
+
   return (
     <dialog
       ref={ref}
       onClose={onClose}
       onClick={(e) => e.target === ref.current && onClose()}
-      className="m-auto w-[min(92vw,420px)] rounded-[28px] border border-line bg-surface p-0 text-ink shadow-pop backdrop:bg-black/70 backdrop:backdrop-blur-sm open:animate-fade-up"
+      aria-labelledby="code-title"
+      className="m-auto w-[min(92vw,420px)] rounded-panel bg-surface p-0 text-ink shadow-pop backdrop:bg-ink/40 backdrop:backdrop-blur-[2px] open:animate-scale-in"
     >
-      <form onSubmit={submit} className="p-7">
+      <form onSubmit={submit} className="p-6 md:p-7">
         <div className="flex items-start justify-between">
-          <div className="grid size-12 place-items-center rounded-2xl bg-brand-soft text-brand-ink">
-            <KeyRound className="size-5" />
-          </div>
-          <button type="button" onClick={onClose} aria-label="Close" className="rounded-full p-2 text-ink-subtle hover:bg-canvas hover:text-ink">
+          <span className="grid size-10 place-items-center rounded-tile bg-sunken text-ink">
+            <KeyRound className="size-[18px]" />
+          </span>
+          <button type="button" onClick={onClose} aria-label="Close" className="-mr-2 -mt-2 grid size-9 place-items-center rounded-full text-ink-muted transition-colors hover:bg-ink/[0.05] hover:text-ink">
             <X className="size-4" />
           </button>
         </div>
-        <h2 className="headline mt-5 text-[24px]">Join with a code</h2>
+        <h2 id="code-title" className="mt-5 text-h3 font-semibold">Join with a code</h2>
+        <p className="mt-1 text-small text-ink-muted">Private events share a 7-character code. Ask the organizer for yours.</p>
 
         <input
           ref={inputRef}
@@ -69,26 +74,27 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
           }}
           maxLength={9}
           autoComplete="off"
+          autoCapitalize="characters"
           spellCheck={false}
           placeholder="ACK3PQ7"
           aria-label="Event code"
-          className={cn(
-            "mt-6 w-full rounded-2xl border-2 bg-canvas px-4 py-3.5 text-center font-mono text-[22px] font-bold tracking-[0.35em] text-ink placeholder:text-ink-subtle/50 transition-colors focus:outline-none",
-            state.status === "error" ? "border-danger/60" : "border-transparent focus:border-brand",
-          )}
+          aria-invalid={state.status === "error" || undefined}
+          aria-describedby="code-status"
+          className={cn("field mt-6 h-16 text-center font-mono text-[24px] font-medium tracking-[0.4em] placeholder:text-ink-subtle/40")}
         />
         <p
+          id="code-status"
+          role="status"
           className={cn(
-            "mt-2 h-5 text-center text-[13px] font-semibold",
+            "mt-2 flex h-5 items-center justify-center gap-1.5 text-[13px] font-medium",
             state.status === "error" ? "text-danger" : state.status === "ok" ? "text-live" : "text-transparent",
           )}
-          role="status"
         >
+          {state.status === "ok" && <Check className="size-3.5" aria-hidden />}
           {state.message ?? "—"}
         </p>
 
-        <Button type="submit" className="mt-3 w-full py-3.5" disabled={code.replace(/[\s-]/g, "").length < 7 || state.status === "loading"}>
-          {state.status === "loading" && <Loader2 className="size-4 animate-spin" />}
+        <Button type="submit" size="lg" className="mt-3 w-full" disabled={!ready} loading={state.status === "loading"}>
           Continue
         </Button>
       </form>

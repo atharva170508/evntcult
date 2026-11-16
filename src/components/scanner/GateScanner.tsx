@@ -38,17 +38,9 @@ interface Counts {
   registered: number;
 }
 
-interface MerchLine {
-  id: string;
-  label: string;
-  left: number | null;
-  claimedAt: string | null;
-  note?: string;
-}
-
 type Verdict =
-  | { color: "green"; title: string; name?: string; code?: string; note?: string; merch?: MerchLine[]; token?: string }
-  | { color: "amber"; title: string; name?: string; code?: string; note?: string; collect?: { amountPaise: number; scan: QueuedScan }; merch?: MerchLine[]; token?: string }
+  | { color: "green"; title: string; name?: string; code?: string; note?: string }
+  | { color: "amber"; title: string; name?: string; code?: string; note?: string; collect?: { amountPaise: number; scan: QueuedScan } }
   | { color: "red"; title: string; note?: string };
 
 interface ServerVerdict {
@@ -57,28 +49,9 @@ interface ServerVerdict {
   passCode?: string;
   scannedAt?: string;
   amountPaise?: number;
-  claimedUtr?: string | null;
   message?: string;
   counts?: Counts;
-  merch?: MerchLine[];
 }
-
-const CLAIM_QUEUE = "evntcult-merch-queue";
-type QueuedClaim = { token: string; item_id: string; client_claim_id: string; claimed_at: string };
-const readClaims = (): QueuedClaim[] => {
-  try {
-    return JSON.parse(localStorage.getItem(CLAIM_QUEUE) ?? "[]") as QueuedClaim[];
-  } catch {
-    return [];
-  }
-};
-const writeClaims = (q: QueuedClaim[]) => {
-  try {
-    localStorage.setItem(CLAIM_QUEUE, JSON.stringify(q));
-  } catch {
-    // storage full or blocked: the claim stays on screen only
-  }
-};
 
 const SAME_CODE_PAUSE_MS = 3000;
 const GREEN_AUTO_DISMISS_MS = 1600;
@@ -104,11 +77,11 @@ function beep(ok: boolean) {
 function toVerdict(v: ServerVerdict, scan: QueuedScan, pricePaise: number): Verdict {
   switch (v.result) {
     case "admitted":
-      return { color: "green", title: "Admitted", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token };
+      return { color: "green", title: "Admitted", name: v.name, code: v.passCode };
     case "already_in":
-      return { color: "amber", title: "Already checked in", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token, note: v.scannedAt ? `First scanned at ${fmtTime(new Date(v.scannedAt))}` : undefined };
+      return { color: "amber", title: "Already checked in", name: v.name, code: v.passCode, note: v.scannedAt ? `First scanned at ${fmtTime(new Date(v.scannedAt))}` : undefined };
     case "unpaid":
-      return { color: "amber", title: `Collect ${formatINR(v.amountPaise ?? pricePaise)}`, name: v.name, code: v.passCode, note: v.claimedUtr ? `Says paid by UPI, ID ${v.claimedUtr}. Not confirmed yet.` : "Not paid yet. Take the fee, then admit.", collect: { amountPaise: v.amountPaise ?? pricePaise, scan } };
+      return { color: "amber", title: `Collect ${formatINR(v.amountPaise ?? pricePaise)}`, name: v.name, code: v.passCode, note: "Not paid yet. Take the fee, then admit.", collect: { amountPaise: v.amountPaise ?? pricePaise, scan } };
     default:
       return { color: "red", title: "Not valid", note: v.message };
   }
@@ -122,7 +95,6 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
   const lastCodeRef = useRef<{ text: string; at: number } | null>(null);
   const guestRef = useRef<Map<string, ManifestEntry>>(new Map());
   const seenRef = useRef<Set<string>>(new Set()); // hashes admitted offline on this phone
-  const merchRef = useRef<{ id: string; label: string; left: number | null }[]>([]);
 
   const [camera, setCamera] = useState<"off" | "starting" | "on" | "error">("off");
   const [cameraError, setCameraError] = useState<string | null>(null);
@@ -143,7 +115,6 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
   const applyGuestList = useCallback((m: Manifest) => {
     guestRef.current = new Map(m.entries.map((e) => [e.h, e]));
-    merchRef.current = m.merch ?? [];
     setGuestList({ size: m.entries.length, savedAt: m.generatedAt });
   }, []);
 
@@ -302,7 +273,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
   const show = useCallback((v: Verdict) => {
     setVerdict(v);
     beep(v.color === "green");
-    if (v.color === "green" && !v.merch?.length) setTimeout(() => setVerdict((cur) => (cur === v ? null : cur)), GREEN_AUTO_DISMISS_MS);
+    if (v.color === "green") setTimeout(() => setVerdict((cur) => (cur === v ? null : cur)), GREEN_AUTO_DISMISS_MS);
   }, []);
 
   /** Decide without the server, from the saved guest list. */
@@ -312,8 +283,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       const entry = guestRef.current.get(h);
       if (!guestRef.current.size) return { color: "red", title: "Can't check offline", note: "The guest list hasn't been saved on this phone yet. Connect once to download it." };
       if (!entry) return { color: "red", title: "Not on the guest list", note: "Not a pass for this event (checked offline)." };
-      const offlineMerch = merchRef.current.map((i) => ({ ...i, claimedAt: entry.m?.[i.id] ?? null }));
-      if (entry.in || seenRef.current.has(h)) return { color: "amber", title: "Already checked in", name: entry.name, code: entry.code, merch: offlineMerch, token: scan.pass_token, note: entry.in ? `First scanned at ${fmtTime(new Date(entry.in))}` : "Scanned on this phone earlier." };
+      if (entry.in || seenRef.current.has(h)) return { color: "amber", title: "Already checked in", name: entry.name, code: entry.code, note: entry.in ? `First scanned at ${fmtTime(new Date(entry.in))}` : "Scanned on this phone earlier." };
       if (entry.unpaid && !scan.accept_unpaid) {
         return { color: "amber", title: `Collect ${formatINR(event.pricePaise)}`, name: entry.name, code: entry.code, note: "Not paid yet. Take the fee, then admit.", collect: { amountPaise: event.pricePaise, scan } };
       }
@@ -321,7 +291,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       seenRef.current.add(h);
       await refreshQueued();
       navigator.serviceWorker?.ready.then((reg) => (reg as ServiceWorkerRegistration & { sync?: { register(tag: string): Promise<void> } }).sync?.register("evntcult-scans")).catch(() => undefined);
-      return { color: "green", title: "Admitted", name: entry.name, code: entry.code, merch: offlineMerch, token: scan.pass_token, note: "Saved offline. It will sync when you're back online." };
+      return { color: "green", title: "Admitted", name: entry.name, code: entry.code, note: "Saved offline. It will sync when you're back online." };
     },
     [event.pricePaise, refreshQueued],
   );
@@ -434,54 +404,6 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
   useEffect(() => () => streamRef.current?.getTracks().forEach((t) => t.stop()), []);
 
-  /* ── Goodies ───────────────────────────────────────────────────────── */
-
-  const flushClaims = useCallback(async () => {
-    const queue = readClaims();
-    for (const claim of queue) {
-      try {
-        const res = await fetch("/api/merch/claim", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(claim) });
-        if (res.status === 401 || res.status === 403) return;
-        writeClaims(readClaims().filter((c) => c.client_claim_id !== claim.client_claim_id));
-      } catch {
-        return; // still offline
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    void flushClaims();
-    window.addEventListener("online", flushClaims);
-    const t = setInterval(flushClaims, 20_000);
-    return () => {
-      window.removeEventListener("online", flushClaims);
-      clearInterval(t);
-    };
-  }, [flushClaims]);
-
-  const updateLine = (id: string, patch: Partial<MerchLine>) =>
-    setVerdict((v) => (v && v.color !== "red" && v.merch ? ({ ...v, merch: v.merch.map((l) => (l.id === id ? { ...l, ...patch } : l)) } as Verdict) : v));
-
-  const give = async (line: MerchLine, token: string) => {
-    const claim: QueuedClaim = { token, item_id: line.id, client_claim_id: crypto.randomUUID(), claimed_at: new Date().toISOString() };
-    try {
-      const res = await fetch("/api/merch/claim", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(claim) });
-      if (res.status === 401 || res.status === 403) return updateLine(line.id, { note: "Sign in again to give this." });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const r = (await res.json()) as { result: string; claimedAt?: string; left?: number | null; message?: string; claimed?: number };
-      if (r.result === "claimed") updateLine(line.id, { claimedAt: r.claimedAt ?? claim.claimed_at, left: r.left ?? null, note: undefined });
-      else if (r.result === "already_claimed") updateLine(line.id, { claimedAt: r.claimedAt ?? null, note: `Already collected at ${fmtTime(new Date(r.claimedAt ?? claim.claimed_at))}` });
-      else if (r.result === "sold_out") updateLine(line.id, { left: 0, note: `${r.message} · ${r.claimed ?? 0} given` });
-      else updateLine(line.id, { note: r.message });
-    } catch {
-      writeClaims([...readClaims(), claim]);
-      const h = await sha256Hex(extractPassToken(token));
-      const entry = guestRef.current.get(h);
-      if (entry) entry.m = { ...entry.m, [line.id]: claim.claimed_at };
-      updateLine(line.id, { claimedAt: claim.claimed_at, note: "Saved offline" });
-    }
-  };
-
   /* ── Unpaid: the volunteer collected the fee ───────────────────────── */
 
   const admitUnpaid = async () => {
@@ -496,105 +418,108 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
   /* ── UI ────────────────────────────────────────────────────────────── */
 
   const pct = counts.registered ? Math.min(100, Math.round((counts.checkedIn / counts.registered) * 100)) : 0;
-  const colors = { green: "bg-[#0fa968]", amber: "bg-[#f59e0b] text-[#1a1203]", red: "bg-[#e5484d]" } as const;
+  /* Verdict fills: high-chroma on purpose — readable at arm's length in the dark. */
+  const colors = { green: "bg-[#16A05E] text-white", amber: "bg-[#F2A516] text-[#1A1203]", red: "bg-[#D6342A] text-white" } as const;
   const Icon = verdict?.color === "green" ? CheckCircle2 : verdict?.color === "amber" ? AlertTriangle : XCircle;
+  const ghost = "grid size-10 shrink-0 place-items-center rounded-full bg-white/[0.08] text-white transition-colors duration-150 hover:bg-white/[0.14]";
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-lg flex-col gap-4 px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))]">
       <header className="flex items-center gap-3">
-        <Link href={`/events/${event.slug}`} aria-label="Back to the event" className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10">
+        <Link href={`/events/${event.slug}`} aria-label="Back to the event" className={ghost}>
           <ArrowLeft className="size-5" />
         </Link>
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60">Gate scanner</p>
-          <h1 className="truncate font-display text-[20px] font-bold leading-tight">{event.title}</h1>
+          <p className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-white/50">Gate scanner</p>
+          <h1 className="truncate text-[19px] font-semibold leading-tight tracking-[-0.02em]">{event.title}</h1>
         </div>
         <span
-          className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-semibold ${online ? "bg-[#0fa968]/20 text-[#5ee0a5]" : "bg-[#f59e0b]/20 text-[#fbbf5a]"}`}
+          className={`inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-medium ${online ? "bg-[#16A05E]/20 text-[#6EE3A6]" : "bg-[#F2A516]/20 text-[#FFCB6B]"}`}
           role="status"
         >
-          {online ? <Wifi className="size-3.5" /> : <CloudOff className="size-3.5" />}
+          {online ? <Wifi className="size-3.5" aria-hidden /> : <CloudOff className="size-3.5" aria-hidden />}
           {online ? "Online" : "Offline"}
-          {queued > 0 && ` · ${queued} to sync`}
+          {queued > 0 && <span className="font-mono"> · {queued} to sync</span>}
         </span>
       </header>
 
       {authProblem && (
-        <p role="alert" className="rounded-2xl bg-[#e5484d]/20 px-4 py-3 text-[14px] font-semibold text-[#ffb4b6]">
-          {authProblem} <Link href={`/signin?next=/organizer/scan/${event.id}`} className="underline">Sign in</Link>
+        <p role="alert" className="rounded-[14px] bg-[#D6342A]/20 px-4 py-3 text-[14px] font-medium text-[#FFB4AE]">
+          {authProblem}{" "}
+          <Link href={`/signin?next=/organizer/scan/${event.id}`} className="underline underline-offset-2">
+            Sign in
+          </Link>
         </p>
       )}
 
-      <section aria-label="Gate count" className="rounded-3xl bg-white/[0.06] p-4">
+      <section aria-label="Gate count" className="rounded-[20px] bg-white/[0.06] p-4 ring-1 ring-inset ring-white/[0.06]">
         <div className="flex items-end justify-between">
           <p>
-            <span className="font-mono text-[40px] font-extrabold leading-none tabular-nums">{counts.checkedIn}</span>
-            <span className="ml-1.5 text-[15px] text-white/60">in · of {counts.registered}</span>
+            <span className="font-mono text-[44px] font-medium leading-none tracking-[-0.05em] tabular-nums">{counts.checkedIn}</span>
+            <span className="ml-2 text-[14px] text-white/55">
+              in · of <span className="font-mono">{counts.registered}</span>
+            </span>
           </p>
-          <p className="text-[12px] font-semibold text-white/50">{liveMode === "live" ? "● Live" : "Updates every 5 s"}</p>
+          <p className="flex items-center gap-1.5 text-[12px] font-medium text-white/50">
+            {liveMode === "live" && <span className="size-1.5 rounded-full bg-[#FF5A33] motion-safe:animate-pulse-dot" aria-hidden />}
+            {liveMode === "live" ? "Live" : "Updates every 5 s"}
+          </p>
         </div>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
-          <div className="h-full rounded-full bg-[#0fa968] transition-[width] duration-700" style={{ width: `${pct}%` }} />
+        <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/10">
+          <div className="h-full rounded-full bg-white transition-[width] duration-700 ease-out" style={{ width: `${pct}%` }} />
         </div>
       </section>
 
-      <section className="relative aspect-square overflow-hidden rounded-3xl bg-black">
+      <section className="relative aspect-square overflow-hidden rounded-[28px] bg-black ring-1 ring-inset ring-white/[0.06]">
         <video ref={videoRef} className={`size-full object-cover ${camera === "on" ? "" : "hidden"}`} playsInline muted />
         <canvas ref={canvasRef} className="hidden" />
 
         {camera === "on" && !verdict && (
-          <div aria-hidden className="pointer-events-none absolute inset-[18%] rounded-3xl border-[3px] border-white/80 shadow-[0_0_0_999px_rgba(0,0,0,0.35)]" />
+          <div aria-hidden className="pointer-events-none absolute inset-[18%] rounded-[24px] shadow-[0_0_0_999px_rgba(0,0,0,0.4)]">
+            {/* corner brackets */}
+            {["left-0 top-0 border-l-[3px] border-t-[3px] rounded-tl-[24px]", "right-0 top-0 border-r-[3px] border-t-[3px] rounded-tr-[24px]", "bottom-0 left-0 border-b-[3px] border-l-[3px] rounded-bl-[24px]", "bottom-0 right-0 border-b-[3px] border-r-[3px] rounded-br-[24px]"].map((c) => (
+              <span key={c} className={`absolute size-10 border-white ${c}`} />
+            ))}
+          </div>
         )}
 
         {camera !== "on" && !verdict && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
-            <Camera className="size-10 text-white/60" />
-            {cameraError ? <p className="text-[14px] text-[#ffb4b6]">{cameraError}</p> : <p className="text-[15px] text-white/70">Point the camera at a pass QR code.</p>}
-            <button onClick={startCamera} disabled={camera === "starting"} className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] font-bold text-black disabled:opacity-60">
-              {camera === "starting" ? <Loader2 className="size-4 animate-spin" /> : <Camera className="size-4" />}
+            <span className="grid size-14 place-items-center rounded-full bg-white/[0.08]">
+              <Camera className="size-6 text-white/70" aria-hidden />
+            </span>
+            {cameraError ? <p className="max-w-xs text-[14px] text-[#FFB4AE]">{cameraError}</p> : <p className="max-w-xs text-[15px] text-white/70">Point the camera at a pass QR code.</p>}
+            <button
+              onClick={startCamera}
+              disabled={camera === "starting"}
+              className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-[15px] font-medium text-[#111110] transition-transform duration-150 active:scale-[0.98] disabled:opacity-60"
+            >
+              {camera === "starting" ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <Camera className="size-4" aria-hidden />}
               {camera === "error" ? "Try again" : "Start camera"}
             </button>
           </div>
         )}
 
         {verdict && (
-          <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-y-auto p-6 text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
-            <Icon className="size-16" strokeWidth={2.2} />
-            <p className="shout text-[32px] leading-tight">{verdict.title}</p>
-            {"name" in verdict && verdict.name && <p className="text-[20px] font-bold">{verdict.name}</p>}
-            {"code" in verdict && verdict.code && <p className="font-mono text-[14px] font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
-            {verdict.note && <p className="max-w-xs text-[14px] font-medium opacity-90">{verdict.note}</p>}
-
-            {verdict.color !== "red" && verdict.token && !!verdict.merch?.length && (
-              <ul className="w-full max-w-xs space-y-2 text-left text-[14px]" aria-label="Goodies">
-                {verdict.merch.map((line) => (
-                  <li key={line.id} className="flex items-center justify-between gap-3 rounded-2xl bg-black/25 px-3 py-2">
-                    <span className="min-w-0">
-                      <span className="block truncate font-bold">{line.label}</span>
-                      <span className="block text-[12px] opacity-85">{line.note ?? (line.claimedAt ? `claimed ${fmtTime(new Date(line.claimedAt))}` : line.left === 0 ? "none left" : "not claimed")}</span>
-                    </span>
-                    {!line.claimedAt && line.left !== 0 && (
-                      <button onClick={() => give(line, verdict.token!)} className="shrink-0 rounded-full bg-white px-4 py-1.5 text-[13px] font-bold text-black">
-                        Give
-                      </button>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
+          <div className={`absolute inset-0 flex animate-scale-in flex-col items-center justify-center gap-3 p-6 text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
+            <Icon className="size-16" strokeWidth={2} aria-hidden />
+            <p className="text-[34px] font-semibold leading-[1.05] tracking-[-0.04em]">{verdict.title}</p>
+            {"name" in verdict && verdict.name && <p className="text-[20px] font-medium">{verdict.name}</p>}
+            {"code" in verdict && verdict.code && <p className="font-mono text-[14px] tracking-[0.14em] opacity-80">{verdict.code}</p>}
+            {verdict.note && <p className="max-w-xs text-[14px] opacity-90">{verdict.note}</p>}
 
             {verdict.color === "amber" && verdict.collect ? (
-              <div className="mt-2 flex w-full max-w-xs flex-col gap-2">
-                <button onClick={admitUnpaid} className="rounded-full bg-[#1a1203] py-3.5 text-[16px] font-bold text-white">
-                  Collected {formatINR(verdict.collect.amountPaise)} · Admit
+              <div className="mt-3 flex w-full max-w-xs flex-col gap-2">
+                <button onClick={admitUnpaid} className="h-12 rounded-full bg-[#1A1203] text-[16px] font-medium text-white transition-transform duration-150 active:scale-[0.98]">
+                  Collected <span className="font-mono">{formatINR(verdict.collect.amountPaise)}</span> · Admit
                 </button>
-                <button onClick={() => setVerdict(null)} className="rounded-full border-2 border-[#1a1203]/40 py-3 text-[15px] font-bold">
+                <button onClick={() => setVerdict(null)} className="h-12 rounded-full text-[15px] font-medium ring-2 ring-inset ring-[#1A1203]/30 transition-transform duration-150 active:scale-[0.98]">
                   Don&apos;t admit
                 </button>
               </div>
             ) : (
-              (verdict.color !== "green" || !!verdict.merch?.length) && (
-                <button onClick={() => setVerdict(null)} className="mt-2 rounded-full bg-black/25 px-6 py-3 text-[15px] font-bold">
+              verdict.color !== "green" && (
+                <button onClick={() => setVerdict(null)} className="mt-3 h-12 rounded-full bg-black/25 px-7 text-[15px] font-medium transition-transform duration-150 active:scale-[0.98]">
                   Scan next
                 </button>
               )
@@ -603,25 +528,33 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         )}
       </section>
 
-      <section className="space-y-1 text-[12.5px] text-white/60">
+      <section className="space-y-1 text-[12.5px] text-white/55">
         {guestList ? (
           <p className="flex items-center justify-between gap-2">
-            <span>Guest list saved for offline use · {guestList.size} passes · {fmtTime(new Date(guestList.savedAt))}</span>
-            <button onClick={refreshGuestList} aria-label="Refresh the saved guest list" className="rounded-full p-1.5 hover:bg-white/10"><RefreshCw className="size-3.5" /></button>
+            <span>
+              Guest list saved for offline use · <span className="font-mono">{guestList.size}</span> passes · <span className="font-mono">{fmtTime(new Date(guestList.savedAt))}</span>
+            </span>
+            <button onClick={refreshGuestList} aria-label="Refresh the saved guest list" className="grid size-8 place-items-center rounded-full transition-colors hover:bg-white/10">
+              <RefreshCw className="size-3.5" />
+            </button>
           </p>
         ) : (
-          <p>Saving the guest list for offline use…</p>
+          <p className="flex items-center gap-2">
+            <Loader2 className="size-3.5 animate-spin" aria-hidden /> Saving the guest list for offline use…
+          </p>
         )}
-        {syncNote && <p className="text-[#5ee0a5]">{syncNote}</p>}
+        {syncNote && <p className="text-[#6EE3A6]">{syncNote}</p>}
       </section>
 
       {recent.length > 0 && (
-        <section aria-label="Recent scans">
-          <h2 className="mb-2 text-[13px] font-bold uppercase tracking-[0.1em] text-white/50">Recent scans</h2>
-          <ul className="divide-y divide-white/10 rounded-2xl bg-white/[0.04]">
+        <section aria-labelledby="recent-heading">
+          <h2 id="recent-heading" className="mb-2 font-mono text-[10.5px] uppercase tracking-[0.12em] text-white/45">
+            Recent scans
+          </h2>
+          <ul className="divide-y divide-white/[0.07] rounded-[20px] bg-white/[0.04] ring-1 ring-inset ring-white/[0.06]">
             {recent.map((r) => (
-              <li key={r.id} className="flex items-center gap-3 px-4 py-2.5 text-[14px]">
-                <span className={`size-2.5 shrink-0 rounded-full ${r.color === "green" ? "bg-[#0fa968]" : r.color === "amber" ? "bg-[#f59e0b]" : "bg-[#e5484d]"}`} aria-hidden />
+              <li key={r.id} className="flex items-center gap-3 px-4 py-3 text-[14px]">
+                <span className={`size-2 shrink-0 rounded-full ${r.color === "green" ? "bg-[#16A05E]" : r.color === "amber" ? "bg-[#F2A516]" : "bg-[#D6342A]"}`} aria-hidden />
                 <span className="sr-only">{r.color === "green" ? "Admitted:" : r.color === "amber" ? "Warning:" : "Refused:"}</span>
                 <span className="min-w-0 flex-1 truncate">{r.text}</span>
                 {r.offline && <CloudOff className="size-3.5 text-white/40" aria-label="scanned offline" />}

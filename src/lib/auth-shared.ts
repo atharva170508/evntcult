@@ -1,4 +1,3 @@
-import { ADMIN_EMAIL } from "@/lib/data/admin";
 import "server-only";
 import { z } from "zod";
 import { first, run } from "@/lib/db";
@@ -18,12 +17,11 @@ export const signupFields = {
 };
 
 export function assertDomainAllowed(email: string) {
-  if (email.trim().toLowerCase() === ADMIN_EMAIL) throw new ApiError(403, "owner_email", "This email can only open the owner panel.");
   const list = (process.env.ALLOWED_EMAIL_DOMAINS ?? "")
     .split(",")
     .map((d) => d.trim().toLowerCase())
     .filter(Boolean);
-  if (list.length > 0 && !list.includes(email.split("@")[1] ?? "")) throw new ApiError(403, "domain_not_allowed", "That email domain isn't allowed.");
+  if (list.length > 0 && !list.includes(email.split("@")[1] ?? "")) throw new ApiError(403, "domain_not_allowed", "Use your college email address.");
 }
 
 export async function findUserId(email: string) {
@@ -41,8 +39,8 @@ export async function createUser(email: string, d: { name?: string; phone?: stri
   const id = newId();
   const now = nowIso();
   await run(
-    "INSERT INTO users (id, email, name, role, created_at, phone, whatsapp_opt_in, phone_updated_at, wa_opt_in_at) VALUES (?, ?, ?, 'attendee', ?, ?, ?, ?, ?)",
-    id, email, d.name, now, d.phone, d.whatsappOptIn ? 1 : 0, now, d.whatsappOptIn ? now : null,
+    "INSERT INTO users (id, email, name, role, created_at, phone, whatsapp_opt_in, phone_updated_at) VALUES (?, ?, ?, 'attendee', ?, ?, ?, ?)",
+    id, email, d.name, now, d.phone, d.whatsappOptIn ? 1 : 0, now,
   );
   return id;
 }

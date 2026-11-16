@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Megaphone } from "lucide-react";
+import { Megaphone } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Notice, Textarea } from "@/components/ui/Field";
+import { cn } from "@/lib/utils";
 
 const KINDS = [
   { value: "schedule", label: "Schedule change", whatsapp: true },
@@ -28,10 +31,10 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
     e.preventDefault();
     setBusy(true);
     setMsg(null);
-    const res = await fetch(`/api/events/${eventId}/updates`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind, body, whatsapp }) });
-    const data = (await res.json().catch(() => ({}))) as { whatsapp?: { queued: number; connected: boolean }; error?: { message: string } };
+    const res = await fetch(`/api/events/${eventId}/updates`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind, body, whatsapp }) }).catch(() => null);
+    const data = ((await res?.json().catch(() => ({}))) ?? {}) as { whatsapp?: { queued: number; connected: boolean }; error?: { message: string } };
     setBusy(false);
-    if (!res.ok) return setMsg({ ok: false, text: data.error?.message ?? "Couldn't post the update." });
+    if (!res?.ok) return setMsg({ ok: false, text: data.error?.message ?? (res ? "Couldn't post the update." : "You seem to be offline. Try again.") });
     const q = data.whatsapp?.queued ?? 0;
     setMsg({
       ok: true,
@@ -44,40 +47,50 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
   }
 
   return (
-    <form onSubmit={submit} className="space-y-3">
-      <fieldset className="flex flex-wrap gap-2">
+    <form onSubmit={submit} className="space-y-4">
+      <fieldset className="inline-flex flex-wrap rounded-full bg-sunken p-1">
         <legend className="sr-only">Type of update</legend>
         {KINDS.map((k) => (
-          <label key={k.value} className={`cursor-pointer rounded-full border px-3.5 py-1.5 text-[13px] font-semibold ${kind === k.value ? "border-volt bg-volt text-ink-inverse" : "border-line hover:border-volt"}`}>
+          <label
+            key={k.value}
+            className={cn(
+              "cursor-pointer rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-[background-color,color,box-shadow] duration-fast focus-within:ring-2 focus-within:ring-ink",
+              kind === k.value ? "bg-surface text-ink shadow-card" : "text-ink-muted hover:text-ink",
+            )}
+          >
             <input type="radio" name="kind" value={k.value} checked={kind === k.value} onChange={() => pickKind(k.value)} className="sr-only" />
             {k.label}
           </label>
         ))}
       </fieldset>
-      <label className="block">
-        <span className="sr-only">Message</span>
-        <textarea
+      <div>
+        <label htmlFor={`msg-${eventId}`} className="sr-only">
+          Message
+        </label>
+        <Textarea
+          id={`msg-${eventId}`}
           value={body}
           onChange={(e) => setBody(e.target.value)}
           required
           minLength={3}
           maxLength={500}
           rows={3}
-          placeholder={kind === "venue" ? "e.g. Moved to Hall B. Enter through Gate 3." : kind === "schedule" ? "e.g. Doors now open at 6:30 pm." : "e.g. Bring a photo ID."}
-          className="w-full rounded-2xl border border-line bg-surface px-4 py-3 text-[14.5px] focus:border-ink focus:outline-none"
+          className="min-h-[96px]"
+          placeholder={kind === "venue" ? "e.g. Moved to the Open Air Theatre. Enter through Gate 3." : kind === "schedule" ? "e.g. Doors now open at 6:30 pm." : "e.g. Bring your college ID."}
         />
-      </label>
-      <label className="flex items-start gap-2.5 text-[13.5px]">
-        <input type="checkbox" checked={whatsapp} onChange={(e) => setWhatsapp(e.target.checked)} className="mt-0.5 size-4 accent-brand" />
+        <p className="mt-1 text-right font-mono text-[11px] tabular-nums text-ink-subtle">{body.length}/500</p>
+      </div>
+      <label className="flex cursor-pointer items-start gap-2.5 text-[13.5px] text-ink-2">
+        <input type="checkbox" checked={whatsapp} onChange={(e) => setWhatsapp(e.target.checked)} className="mt-0.5 size-4 accent-ink" />
         <span>
-          Also send on WhatsApp to the <b className="font-mono tabular-nums">{optedIn}</b> registered {optedIn === 1 ? "person" : "people"} who opted in
+          Also send on WhatsApp to the <span className="font-mono font-medium tabular-nums text-ink">{optedIn}</span> registered student{optedIn === 1 ? "" : "s"} who opted in
           {!connected && <span className="text-ink-muted"> (queued until WhatsApp is connected)</span>}
         </span>
       </label>
-      {msg && <p role="status" className={`rounded-2xl px-3.5 py-2.5 text-[13px] font-semibold ${msg.ok ? "bg-live-soft text-live" : "bg-danger-soft text-danger"}`}>{msg.text}</p>}
-      <button disabled={busy || body.trim().length < 3} className="inline-flex items-center gap-2 rounded-full bg-volt px-5 py-2.5 text-[14px] font-semibold text-ink-inverse disabled:opacity-50">
-        {busy ? <Loader2 className="size-4 animate-spin" /> : <Megaphone className="size-4" />} Post update
-      </button>
+      {msg && <Notice tone={msg.ok ? "live" : "danger"}>{msg.text}</Notice>}
+      <Button type="submit" loading={busy} disabled={body.trim().length < 3}>
+        <Megaphone className="size-4" aria-hidden /> Post update
+      </Button>
     </form>
   );
 }

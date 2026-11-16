@@ -8,7 +8,7 @@ function parts(ms: number) {
   return { d: Math.floor(s / 86400), h: Math.floor((s % 86400) / 3600), m: Math.floor((s % 3600) / 60), s: s % 60 };
 }
 
-/** Live countdown in little boxes (Unstop / Devfolio idea); "Happening now" once started. */
+/** Live countdown in tabular mono cells; "Happening now" once started, "Ended" after. */
 export function Countdown({ to, endsAt, compact }: { to: Date; endsAt: Date; compact?: boolean }) {
   const [now, setNow] = useState<number | null>(null);
 
@@ -18,12 +18,16 @@ export function Countdown({ to, endsAt, compact }: { to: Date; endsAt: Date; com
     return () => clearInterval(id);
   }, []);
 
-  if (now === null) return <div className={compact ? "h-[44px]" : "h-[62px]"} />; // avoid hydration mismatch
+  if (now === null) return <div className={compact ? "h-[44px]" : "h-[60px]"} aria-hidden />; // avoid hydration mismatch
 
-  if (now >= +to && now < +endsAt) {
+  if (now >= +endsAt) {
+    return <p className="inline-flex h-8 items-center rounded-full bg-sunken px-3 text-[13px] font-medium text-ink-muted">Ended</p>;
+  }
+
+  if (now >= +to) {
     return (
-      <p className="inline-flex items-center gap-2 rounded-full bg-volt/10 px-3 py-1.5 text-[14px] font-bold text-volt ring-1 ring-volt/30">
-        <span className="size-2 rounded-full bg-volt motion-safe:animate-pulse-dot" aria-hidden /> Happening now
+      <p className="inline-flex h-8 items-center gap-2 rounded-full bg-accent-soft px-3 text-[13px] font-medium text-accent-ink">
+        <span className="size-1.5 rounded-full bg-accent motion-safe:animate-pulse-dot" aria-hidden /> Happening now
       </p>
     );
   }
@@ -36,16 +40,13 @@ export function Countdown({ to, endsAt, compact }: { to: Date; endsAt: Date; com
     { v: s, l: "sec" },
   ];
   return (
-    <div className="flex items-center gap-1.5" aria-label={`Starts in ${d} days ${h} hours ${m} minutes`}>
-      {cells.map((c, i) => (
-        <div key={c.l} className="flex items-center gap-1.5">
-          <div className={cn("rounded-2xl bg-canvas text-center", compact ? "min-w-[46px] px-2 py-1.5" : "min-w-[58px] px-2.5 py-2")}>
-            <div className={cn("font-bold leading-none tracking-tighter tabular-nums", compact ? "text-[18px]" : "text-[24px]")}>
-              {String(c.v).padStart(2, "0")}
-            </div>
-            <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-subtle">{c.l}</div>
+    <div role="timer" className="flex items-stretch gap-1" aria-label={`Starts in ${d} days ${h} hours ${m} minutes`}>
+      {cells.map((c) => (
+        <div key={c.l} className={cn("rounded-xl bg-sunken text-center", compact ? "min-w-[44px] px-1.5 py-1.5" : "min-w-[56px] px-2 py-2")}>
+          <div className={cn("font-mono font-medium leading-none tracking-[-0.04em] tabular-nums text-ink", compact ? "text-[17px]" : "text-[22px]")}>
+            {String(c.v).padStart(2, "0")}
           </div>
-          {i < cells.length - 1 && <span className="font-bold text-ink-subtle">:</span>}
+          <div className="mt-1 font-mono text-[9.5px] uppercase tracking-[0.08em] text-ink-subtle">{c.l}</div>
         </div>
       ))}
     </div>

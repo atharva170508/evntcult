@@ -16,8 +16,8 @@ const CATEGORY_ACCENT: Record<string, string> = {
 };
 
 /** Stable poster colour per event. */
-export const accentFor = (e: { id: string; category: string | null }) =>
-  CATEGORY_ACCENT[e.category ?? ""] ?? ACCENTS[[...e.id].reduce((s, c) => s + c.charCodeAt(0), 0) % ACCENTS.length];
+export const accentFor = (e: { id: string; category: string }) =>
+  CATEGORY_ACCENT[e.category] ?? ACCENTS[[...e.id].reduce((s, c) => s + c.charCodeAt(0), 0) % ACCENTS.length];
 
 /** Seats taken = registered + waitlisted holds (the same count the atomic insert uses). */
 export const SEATS_TAKEN_SQL =
@@ -30,8 +30,8 @@ export function toSummary(e: EventRowWithCount): EventSummary {
     id: e.id,
     slug: e.slug,
     title: e.title,
-    tagline: e.tagline?.trim() || firstLine(e.description),
-    category: e.category ?? ("OTHER" as EventRow["category"] & string), // category is optional; shows as "Event"
+    tagline: firstLine(e.description),
+    category: e.category,
     visibility: e.access === "code" ? "CODE_ONLY" : "PUBLIC",
     status: e.status,
     startsAt: new Date(e.starts_at),
@@ -127,14 +127,11 @@ export interface MyRegistration {
   payment_status: "paid" | "unpaid";
   hold_expires_at: string | null;
   checked_in_at: string | null;
-  upi_utr: string | null;
-  upi_rejected_at: string | null;
 }
 
 export interface EventDetail {
   event: EventRowWithCount;
-  /** Null = unlimited. */
-  seatsLeft: number | null;
+  seatsLeft: number;
   myRegistration: MyRegistration | null;
   isOwner: boolean;
 }
@@ -151,7 +148,7 @@ export async function getEventDetail(ref: string, viewer: Viewer | null, code?: 
 
   const myRegistration = viewer
     ? await first<MyRegistration>(
-        `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.hold_expires_at, r.upi_utr, r.upi_rejected_at,
+        `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.hold_expires_at,
                 (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id) AS checked_in_at
            FROM registrations r WHERE r.event_id = ? AND r.user_id = ?`,
         event.id,
@@ -165,10 +162,5 @@ export async function getEventDetail(ref: string, viewer: Viewer | null, code?: 
     if (!ok) return null;
   }
 
-  // Online events: the join link is only for the organizer and people holding a pass.
-  // Strip it here so it can't leak into any page or client component for everyone else.
-  if (!isOwner && myRegistration?.status !== "registered") event.meeting_url = null;
-  // seatsLeft null = unlimited; never compare it as a number.
-  const seatsLeft = event.capacity === null ? null : Math.max(0, event.capacity - event.taken);
-  return { event, seatsLeft, myRegistration, isOwner };
+  return { event, seatsLeft: Math.max(0, event.capacity - event.taken), myRegistration, isOwner };
 }

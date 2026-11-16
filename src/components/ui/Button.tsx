@@ -1,43 +1,63 @@
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Buttons. Anatomy: pill, 1px inner top highlight on filled variants, 0.98 press,
+ * 160ms colour transitions. `primary` is ink — use `accent` for the single most
+ * important action on a screen (Register, Sign up).
+ */
 const variants = {
-  /** Neon-yellow pill — the main action. */
-  primary: "bg-volt text-ink-inverse hover:bg-volt-hover shadow-[0_10px_24px_-12px_rgba(0,0,0,0.6)]",
-  /** Neon-lime call to action (event-booking style). */
-  volt: "bg-volt text-ink-inverse font-bold hover:bg-volt-hover shadow-[0_14px_34px_-16px_rgba(220,254,98,0.55)]",
-  /** Frosted glass pill for use over gradients. */
-  glass: "glass text-white hover:bg-white/15",
-  /** Brand violet — for "create" / highlight actions. */
-  brand: "bg-brand text-ink-inverse hover:bg-brand-hover shadow-brand",
-  /** White pill with a border. */
-  secondary: "border border-line bg-surface text-ink hover:border-line-strong hover:bg-canvas",
-  /** Soft violet. */
-  soft: "bg-brand-soft text-brand-ink hover:bg-[#2c2560]",
-  /** Text-only link style. */
-  ghost: "text-brand-ink hover:text-brand-hover",
-  /** White pill for use on posters / dark areas. */
-  light: "bg-white text-ink-inverse hover:bg-white/90",
+  primary: "bg-ink text-white shadow-button hover:bg-[#2a2a28]",
+  accent: "bg-accent text-white shadow-accent hover:bg-accent-hover",
+  secondary: "bg-surface text-ink shadow-card hover:shadow-raised hover:bg-surface",
+  ghost: "text-ink-2 hover:bg-ink/[0.05] hover:text-ink",
+  soft: "bg-sunken text-ink hover:bg-[#E5E2DB]",
+  danger: "bg-surface text-danger shadow-card hover:bg-danger-soft",
+  /** White pill for use on posters and dark photos. */
+  light: "bg-white text-ink shadow-button hover:bg-white/90",
+
+  /* legacy names → new anatomy */
+  volt: "bg-accent text-white shadow-accent hover:bg-accent-hover",
+  brand: "bg-accent text-white shadow-accent hover:bg-accent-hover",
+  glass: "bg-surface text-ink shadow-card hover:shadow-raised",
 } as const;
 
-type Variant = keyof typeof variants;
+const sizes = {
+  sm: "h-8 gap-1.5 px-3 text-[13px]",
+  md: "h-10 gap-2 px-4 text-[14px]",
+  lg: "h-12 gap-2 px-6 text-[15px]",
+} as const;
 
-const base =
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2.5 text-[14px] font-semibold transition-all duration-200 ease-apple active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40";
+export type ButtonVariant = keyof typeof variants;
+export type ButtonSize = keyof typeof sizes;
+
+export const buttonClass = (variant: ButtonVariant = "primary", size: ButtonSize = "md", className?: string) =>
+  cn(
+    "relative inline-flex select-none items-center justify-center whitespace-nowrap rounded-full font-medium tracking-[-0.01em]",
+    "transition-[background-color,box-shadow,color,transform] duration-fast ease-out active:scale-[0.98] active:duration-75",
+    "disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45",
+    variants[variant],
+    sizes[size],
+    className,
+  );
 
 export function LinkButton({
   href,
   variant = "primary",
+  size = "md",
   className,
   children,
+  ...rest
 }: {
   href: string;
-  variant?: Variant;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   className?: string;
   children: React.ReactNode;
-}) {
+} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className">) {
   return (
-    <Link href={href} className={cn(base, variants[variant], className)}>
+    <Link href={href} className={buttonClass(variant, size, className)} {...rest}>
       {children}
     </Link>
   );
@@ -45,8 +65,21 @@ export function LinkButton({
 
 export function Button({
   variant = "primary",
+  size = "md",
+  loading = false,
   className,
+  children,
+  disabled,
   ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
-  return <button className={cn(base, variants[variant], className)} {...props} />;
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant; size?: ButtonSize; loading?: boolean }) {
+  return (
+    <button className={buttonClass(variant, size, className)} disabled={disabled || loading} aria-busy={loading || undefined} {...props}>
+      {loading && (
+        <span className="absolute inset-0 grid place-items-center">
+          <Loader2 className="size-4 animate-spin" aria-hidden />
+        </span>
+      )}
+      <span className={cn("inline-flex items-center gap-[inherit]", loading && "invisible")}>{children}</span>
+    </button>
+  );
 }

@@ -10,15 +10,13 @@
  *    twice (flaky network, retries), the second copy returns the first result.
  */
 import { extractPassToken, isWellFormedPassToken, newId } from "@/lib/tokens";
-import { issueOnCheckIn } from "@/lib/data/certificates";
-import { enqueueCheckedIn } from "@/lib/whatsapp";
 
 export type ScanColor = "green" | "amber" | "red";
 
 export type ScanResult =
   | { result: "admitted"; color: "green"; name: string; passCode: string; scannedAt: string; replay: boolean }
   | { result: "already_in"; color: "amber"; name: string; passCode: string; scannedAt: string }
-  | { result: "unpaid"; color: "amber"; name: string; passCode: string; amountPaise: number; claimedUtr: string | null }
+  | { result: "unpaid"; color: "amber"; name: string; passCode: string; amountPaise: number }
   | { result: "invalid"; color: "red"; reason: InvalidReason; message: string };
 
 export type InvalidReason = "unknown" | "other_event" | "cancelled" | "waitlisted" | "event_closed";
@@ -46,7 +44,6 @@ interface PassLookup {
   name: string;
   price_paise: number;
   event_title: string;
-  upi_utr: string | null;
 }
 
 const invalid = (reason: InvalidReason, message: string): ScanResult => ({ result: "invalid", color: "red", reason, message });
@@ -79,7 +76,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
   if (!isWellFormedPassToken(token)) return invalid("unknown", "Not an EvntCult pass.");
   const pass = await db
     .prepare(
-      `SELECT r.id AS reg_id, r.event_id, r.status, r.payment_status, r.pass_code, u.name, e.price_paise, e.title AS event_title, r.upi_utr
+      `SELECT r.id AS reg_id, r.event_id, r.status, r.payment_status, r.pass_code, u.name, e.price_paise, e.title AS event_title
          FROM registrations r JOIN users u ON u.id = r.user_id JOIN events e ON e.id = r.event_id
         WHERE r.pass_token = ?`,
     )
@@ -100,7 +97,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
   // 4. Paid event, not paid yet: the volunteer collects the fee, then taps Admit (acceptUnpaid).
   const unpaid = pass.price_paise > 0 && pass.payment_status !== "paid";
   if (unpaid && !input.acceptUnpaid) {
-    return { result: "unpaid", color: "amber", name: pass.name, passCode: pass.pass_code, amountPaise: pass.price_paise, claimedUtr: pass.upi_utr };
+    return { result: "unpaid", color: "amber", name: pass.name, passCode: pass.pass_code, amountPaise: pass.price_paise };
   }
 
   // 5. Admit. One statement; the UNIQUE constraints make a second scan a no-op.
@@ -119,8 +116,6 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
       .prepare("INSERT INTO audit_log (id, actor_id, action, target_id, meta, created_at) VALUES (?, ?, 'checkin', ?, ?, ?)")
       .bind(newId(), input.actorId ?? null, pass.reg_id, JSON.stringify({ event_id: input.eventId, client_scan_id: input.clientScanId, ...(unpaid ? { unpaid_admitted: true } : {}) }), now.toISOString())
       .run();
-    await issueOnCheckIn(db, pass.reg_id, input.eventId, now);
-    await enqueueCheckedIn(db, pass.reg_id, now);
     return { result: "admitted", color: "green", name: pass.name, passCode: pass.pass_code, scannedAt, replay: false };
   }
 
@@ -162,8 +157,6 @@ export interface ManifestEntry {
   unpaid: boolean;
   /** scanned_at if already checked in */
   in: string | null;
-  /** item id -> when this pass collected it */
-  m?: Record<string, string>;
 }
 
 export interface Manifest {
@@ -172,7 +165,6 @@ export interface Manifest {
   pricePaise: number;
   generatedAt: string;
   entries: ManifestEntry[];
-  merch?: { id: string; label: string; left: number | null }[];
 }
 
 /** Everyone with a seat, for offline checking. No phone numbers, no emails, no raw tokens. */
@@ -181,19 +173,12 @@ export async function buildManifest(db: D1Database, eventId: string, now = new D
   if (!event) return null;
   const rows = await db
     .prepare(
-      `SELECT r.id, r.pass_token, r.pass_code, r.payment_status, u.name, c.scanned_at
+      `SELECT r.pass_token, r.pass_code, r.payment_status, u.name, c.scanned_at
          FROM registrations r JOIN users u ON u.id = r.user_id LEFT JOIN checkins c ON c.registration_id = r.id
         WHERE r.event_id = ? AND r.status = 'registered'`,
     )
     .bind(eventId)
-    .all<{ id: string; pass_token: string; pass_code: string; payment_status: string; name: string; scanned_at: string | null }>();
-  const items = await db.prepare("SELECT id, name, variant, stock FROM merch_items WHERE event_id = ? ORDER BY created_at, id").bind(eventId).all<{ id: string; name: string; variant: string | null; stock: number | null }>();
-  const claims = await db
-    .prepare("SELECT c.registration_id, c.item_id, c.claimed_at FROM merch_claims c JOIN merch_items m ON m.id = c.item_id WHERE m.event_id = ?")
-    .bind(eventId)
-    .all<{ registration_id: string; item_id: string; claimed_at: string }>();
-  const claimed = new Map<string, Record<string, string>>();
-  for (const c of claims.results ?? []) claimed.set(c.registration_id, { ...claimed.get(c.registration_id), [c.item_id]: c.claimed_at });
+    .all<{ pass_token: string; pass_code: string; payment_status: string; name: string; scanned_at: string | null }>();
   const entries = await Promise.all(
     (rows.results ?? []).map(async (r) => ({
       h: await tokenHash(r.pass_token),
@@ -201,8 +186,7 @@ export async function buildManifest(db: D1Database, eventId: string, now = new D
       code: r.pass_code,
       unpaid: event.price_paise > 0 && r.payment_status !== "paid",
       in: r.scanned_at,
-      m: claimed.get(r.id),
     })),
   );
-  return { eventId: event.id, title: event.title, pricePaise: event.price_paise, generatedAt: now.toISOString(), entries, merch: (items.results ?? []).map((i) => ({ id: i.id, label: i.variant ? `${i.name} · ${i.variant}` : i.name, left: i.stock })) };
+  return { eventId: event.id, title: event.title, pricePaise: event.price_paise, generatedAt: now.toISOString(), entries };
 }
