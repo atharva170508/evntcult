@@ -28,7 +28,13 @@ jobs:
       - run: npm ci
 
       - name: Build and deploy
-        run: npm run cf:deploy
+        # Secrets pasted from a browser sometimes carry extra lines or spaces:
+        # use only the first non-empty line, trimmed.
+        run: |
+          export CLOUDFLARE_API_TOKEN="$(printf '%s\n' "$RAW_TOKEN" | sed '/^[[:space:]]*$/d' | head -n1 | tr -d '[:space:]')"
+          export CLOUDFLARE_ACCOUNT_ID="$(printf '%s\n' "$RAW_ACCOUNT" | sed '/^[[:space:]]*$/d' | head -n1 | tr -d '[:space:]')"
+          echo "::add-mask::$CLOUDFLARE_API_TOKEN"
+          npm run cf:deploy
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          RAW_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          RAW_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
