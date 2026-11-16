@@ -1,10 +1,12 @@
 import { ApiError, handle, parseBody } from "@/lib/api";
-import { first } from "@/lib/db";
+import { first, getDB } from "@/lib/db";
 import { requireUser } from "@/lib/rbac";
 import { registerSchema } from "@/lib/validation";
 import { normalizeAccessCode } from "@/lib/tokens";
 import { register, type EventForRegistration } from "@/lib/data/registrations";
 import { withRegistrations } from "@/lib/data/registration-api";
+import { withOrganizerActions } from "@/lib/data/organizer-api";
+import { cleanAnswers, listQuestions, saveAnswers } from "@/lib/data/questions";
 
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ ref: string }> };
@@ -36,7 +38,13 @@ export const POST = handle(async (req: Request, { params }: Ctx) => {
     if (!mine && !codeOk) throw new ApiError(403, "code_required", "This is a private event. Enter its code to register.");
   }
 
-  const result = await withRegistrations((db) => register(db, event, viewer.id, { waitlist: body.waitlist }));
+  const db = await getDB();
+  // Checked before a seat is taken, so a missing answer can't leave someone half registered.
+  const questions = await listQuestions(db, event.id);
+  const answers = await withOrganizerActions(async () => cleanAnswers(questions, body.answers));
+
+  const result = await withRegistrations((d) => register(d, event, viewer.id, { waitlist: body.waitlist }));
+  if (result.kind !== "full") await saveAnswers(db, result.registration.id, answers);
 
   if (result.kind === "full") return Response.json({ full: true, waitlist_position: result.position });
   if (result.kind === "waitlisted") {

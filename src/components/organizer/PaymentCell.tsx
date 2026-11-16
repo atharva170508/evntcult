@@ -7,7 +7,7 @@ import { Chip } from "@/components/ui/Chip";
 import { cn } from "@/lib/utils";
 
 /** Mark paid (Cash / UPI + optional reference) or undo. Every change is audited on the server. */
-export function PaymentCell({ regId, paid, method, refCode }: { regId: string; paid: boolean; method: string | null; refCode: string | null }) {
+export function PaymentCell({ regId, paid, method, refCode, utr }: { regId: string; paid: boolean; method: string | null; refCode: string | null; utr?: string | null }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [how, setHow] = useState<"cash" | "upi">("cash");
@@ -41,6 +41,30 @@ export function PaymentCell({ regId, paid, method, refCode }: { regId: string; p
         </button>
         {err && (
           <span role="alert" className="text-[12px] text-danger">
+            {err}
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  if (utr && !open) {
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        <Chip tone="warn">To verify</Chip>
+        <span className="font-mono text-[12px]">{utr}</span>
+        <Button size="sm" loading={busy} onClick={() => send({ status: "paid", method: "upi" })} className="h-7 px-3 text-[12px]">
+          Received
+        </Button>
+        <button
+          onClick={() => send({ status: "rejected" })}
+          disabled={busy}
+          className={buttonClass("secondary", "sm", "h-7 px-3 text-[12px] hover:text-danger")}
+        >
+          Not received
+        </button>
+        {err && (
+          <span role="alert" className="w-full text-[12px] text-danger">
             {err}
           </span>
         )}

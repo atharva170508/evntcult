@@ -17,8 +17,9 @@ const serif = localFont({
 });
 
 export const metadata: Metadata = {
-  title: { default: "EvntCult — Every campus event, one pass", template: "%s · EvntCult" },
-  description: "Discover campus events, register in a tap, walk in with a scan and relive it after. All you need is your college email.",
+  title: { default: "EvntCult — Every event, one pass", template: "%s · EvntCult" },
+  description: "Every event, one place. Discover, register, check in, relive.",
+  appleWebApp: { capable: true, title: "EvntCult", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {

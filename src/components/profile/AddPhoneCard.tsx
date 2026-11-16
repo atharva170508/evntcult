@@ -38,7 +38,6 @@ export function AddPhoneCard() {
         </span>
         <div>
           <h2 className="text-h4 font-semibold">Add your mobile number</h2>
-          <p className="mt-1 text-small text-ink-muted">So you can get event reminders and pass updates on WhatsApp.</p>
         </div>
       </div>
       <div className="space-y-3">

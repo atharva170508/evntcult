@@ -145,7 +145,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
       <section aria-label="More" className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <VaultTeaser photosOfYou={data.stats.photosOfYou} preview={data.vaultPreview} />
-        <LinkCard href="/venues" eyebrow="Venues" title="Find your way" icon={MapIcon} body="Every venue on campus, what's on there next, and walking directions." />
+        <LinkCard href="/venues" eyebrow="Venues" title="Find your way" icon={MapIcon} body="Every venue, what's on there next, and directions." />
         <LinkCard
           href="/certificates"
           eyebrow="Certificates"

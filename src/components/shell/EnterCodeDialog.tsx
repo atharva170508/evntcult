@@ -63,7 +63,6 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
           </button>
         </div>
         <h2 id="code-title" className="mt-5 text-h3 font-semibold">Join with a code</h2>
-        <p className="mt-1 text-small text-ink-muted">Private events share a 7-character code. Ask the organizer for yours.</p>
 
         <input
           ref={inputRef}

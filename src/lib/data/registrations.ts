@@ -16,6 +16,7 @@
  */
 import { newId, newPassToken } from "@/lib/tokens";
 import { istLabel, notifyUser } from "@/lib/notify";
+import { enqueueOne } from "@/lib/whatsapp";
 
 export const HOLD_MS = 2 * 60 * 60 * 1000; // 2 hours to confirm a held seat…
 export const MIN_HOLD_MS = 20 * 60 * 1000; // …but never less than 20 minutes,
@@ -27,7 +28,7 @@ export type RegStatus = "registered" | "waitlisted" | "cancelled";
 export interface EventForRegistration {
   id: string;
   slug: string;
-  capacity: number;
+  capacity: number | null;
   status: string;
   starts_at: string;
   ends_at: string;
@@ -129,7 +130,7 @@ async function upsertRegistration(
   now: Date,
 ): Promise<number> {
   const capacity = withCapacityCheck
-    ? "AND (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id AND r.status IN ('registered','waitlisted')) < e.capacity"
+    ? "AND (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id AND r.status IN ('registered','waitlisted')) < COALESCE(e.capacity, 1e18)"
     : "";
   // The display number continues across every event that shares this 4-letter prefix
   // (robowars / robotics both give "EC-ROBO-"), so codes are unique by construction.
@@ -145,7 +146,8 @@ async function upsertRegistration(
         WHERE e.id = ?7 AND e.status = 'published' AND e.ends_at > ?6 ${capacity}
        ON CONFLICT (event_id, user_id) DO UPDATE SET
               status = excluded.status, pass_token = excluded.pass_token, payment_status = 'unpaid',
-              hold_expires_at = NULL, cancelled_at = NULL, created_at = excluded.created_at
+              hold_expires_at = NULL, cancelled_at = NULL, created_at = excluded.created_at,
+              upi_utr = NULL, upi_claimed_at = NULL, upi_rejected_at = NULL
         WHERE registrations.status = 'cancelled'`,
     )
     .bind(newId(), userId, status, passCodePrefix(event.slug), newPassToken(), iso(now), event.id)
@@ -178,6 +180,7 @@ export async function register(
   if ((await upsertRegistration(db, event, userId, "registered", true, now)) === 1) {
     const reg = (await findMine(db, event.id, userId))!;
     await audit(db, userId, "register", reg.id, { event_id: event.id, status: "registered" }, now);
+    await enqueueOne(db, userId, event.id, "pass_confirmed", `pass_confirmed:${reg.id}`, now);
     return { kind: "registered", registration: reg };
   }
 
@@ -215,7 +218,7 @@ export async function promoteWaitlist(db: D1Database, eventId: string, now = new
   const event = await db
     .prepare("SELECT id, slug, title, capacity, status, starts_at, ends_at FROM events WHERE id = ?")
     .bind(eventId)
-    .first<{ id: string; slug: string; title: string; capacity: number; status: string; starts_at: string; ends_at: string }>();
+    .first<{ id: string; slug: string; title: string; capacity: number | null; status: string; starts_at: string; ends_at: string }>();
   if (!event || event.status !== "published" || Date.parse(event.ends_at) <= now.getTime()) return [];
 
   const promoted: RegistrationRow[] = [];
@@ -235,7 +238,7 @@ export async function promoteWaitlist(db: D1Database, eventId: string, now = new
           WHERE id = ? AND status = 'waitlisted' AND hold_expires_at IS NULL
             AND (SELECT COUNT(*) FROM registrations r
                   WHERE r.event_id = ? AND (r.status = 'registered' OR (r.status = 'waitlisted' AND r.hold_expires_at IS NOT NULL)))
-                < (SELECT capacity FROM events WHERE id = ?)`,
+                < COALESCE((SELECT capacity FROM events WHERE id = ?), 1e18)`,
       )
       .bind(holdExpiry(now, event.starts_at, event.ends_at), head.id, eventId, eventId)
       .run();
@@ -248,7 +251,7 @@ export async function promoteWaitlist(db: D1Database, eventId: string, now = new
       db,
       held.user_id,
       eventId,
-      "seat_hold",
+      "waitlist_offer",
       { event_title: event.title, confirm_by: istLabel(held.hold_expires_at!), link: `/events/${event.slug}` },
       `hold:${held.id}:${held.hold_expires_at}`,
       now,

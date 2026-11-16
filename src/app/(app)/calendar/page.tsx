@@ -58,7 +58,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
         }
         sub={
           <>
-            <span className="font-mono tabular-nums text-ink">{events.length}</span> event{events.length === 1 ? "" : "s"} {onlyMine ? "you're going to or hosting" : "on campus"} this month.
+            <span className="font-mono tabular-nums text-ink">{events.length}</span> event{events.length === 1 ? "" : "s"} {onlyMine ? "you're going to or hosting" : "happening"} this month.
           </>
         }
         actions={
@@ -79,7 +79,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
       {viewer && (
         <nav aria-label="Which events" className="inline-flex rounded-full bg-sunken p-1">
           {[
-            { view: undefined, text: "All campus events" },
+            { view: undefined, text: "All events" },
             { view: "mine", text: "Only mine" },
           ].map((t) => {
             const active = (t.view === "mine") === onlyMine;
@@ -161,7 +161,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
             <span className="size-2.5 rounded-[3px] bg-accent-soft ring-1 ring-inset ring-accent/30" /> Hosting
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-[3px] bg-sunken ring-1 ring-inset ring-line-strong" /> Campus
+            <span className="size-2.5 rounded-[3px] bg-sunken ring-1 ring-inset ring-line-strong" /> All events
           </span>
         </p>
       </section>

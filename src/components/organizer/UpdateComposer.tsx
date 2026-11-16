@@ -76,14 +76,14 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
           maxLength={500}
           rows={3}
           className="min-h-[96px]"
-          placeholder={kind === "venue" ? "e.g. Moved to the Open Air Theatre. Enter through Gate 3." : kind === "schedule" ? "e.g. Doors now open at 6:30 pm." : "e.g. Bring your college ID."}
+          placeholder={kind === "venue" ? "e.g. Moved to Hall B. Enter through Gate 3." : kind === "schedule" ? "e.g. Doors now open at 6:30 pm." : "e.g. Bring a photo ID."}
         />
         <p className="mt-1 text-right font-mono text-[11px] tabular-nums text-ink-subtle">{body.length}/500</p>
       </div>
       <label className="flex cursor-pointer items-start gap-2.5 text-[13.5px] text-ink-2">
         <input type="checkbox" checked={whatsapp} onChange={(e) => setWhatsapp(e.target.checked)} className="mt-0.5 size-4 accent-ink" />
         <span>
-          Also send on WhatsApp to the <span className="font-mono font-medium tabular-nums text-ink">{optedIn}</span> registered student{optedIn === 1 ? "" : "s"} who opted in
+          Also send on WhatsApp to the <span className="font-mono font-medium tabular-nums text-ink">{optedIn}</span> registered {optedIn === 1 ? "person" : "people"} who opted in
           {!connected && <span className="text-ink-muted"> (queued until WhatsApp is connected)</span>}
         </span>
       </label>

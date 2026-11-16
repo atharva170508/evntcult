@@ -11,7 +11,7 @@ import { NAV, NAV_GROUPS, ORGANIZER_NAV, isActive, type NavItem } from "./nav";
  * Laptop app menu. 72px icon rail on md/lg, 248px labelled menu on xl.
  * Active item: white chip with a hairline (Linear-style), never a colour fill.
  */
-export function Sidebar({ isOrganizer, onEnterCode }: { isOrganizer: boolean; signedIn?: boolean; onEnterCode: () => void }) {
+export function Sidebar({ isOrganizer, signedIn = true, onEnterCode }: { isOrganizer: boolean; signedIn?: boolean; onEnterCode: () => void }) {
   const pathname = usePathname();
   const byHref = new Map(NAV.map((n) => [n.href, n]));
 
@@ -22,14 +22,14 @@ export function Sidebar({ isOrganizer, onEnterCode }: { isOrganizer: boolean; si
         <LogoWordmark motion="blink" className="hidden text-[26px] text-ink xl:inline-block" />
       </Link>
 
-      {isOrganizer && (
+      {signedIn && (
         <Link
           href="/organizer/events/new"
-          title="Create event"
+          title="Host an event"
           className="mt-5 flex h-10 items-center justify-center gap-2 rounded-full bg-ink text-[14px] font-medium text-white shadow-button transition-[background-color,transform] duration-fast ease-out hover:bg-[#2a2a28] active:scale-[0.98]"
         >
           <Plus className="size-4" aria-hidden />
-          <span className="hidden xl:inline">Create event</span>
+          <span className="hidden xl:inline">Host an event</span>
         </Link>
       )}
 
@@ -66,7 +66,6 @@ export function Sidebar({ isOrganizer, onEnterCode }: { isOrganizer: boolean; si
           <span className="kbd">CODE</span>
         </span>
         <p className="mt-3 text-[14px] font-medium leading-tight">Got an event code?</p>
-        <p className="mt-0.5 text-[12.5px] text-ink-muted">Unlock a private event in one step.</p>
       </button>
       <button
         onClick={onEnterCode}

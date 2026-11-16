@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ChevronDown, KeyRound, LayoutDashboard, LogOut, Menu, Search, UserRound, X } from "lucide-react";
+import { ArrowRight, ChevronDown, KeyRound, LayoutDashboard, LogOut, Menu, Plus, Search, UserRound, X } from "lucide-react";
 import { cn, initials } from "@/lib/utils";
 import { LogoWordmark } from "@/components/brand/MissingE";
 import { buttonClass } from "@/components/ui/Button";
 import { NAV, ORGANIZER_NAV, PUBLIC_NAV, isActive } from "./nav";
+import { NotificationBell } from "./NotificationBell";
 
 export interface NavViewer {
   name: string;
@@ -89,6 +90,10 @@ export function TopBar({ viewer, onEnterCode }: { viewer: NavViewer | null; onEn
                 <button onClick={onEnterCode} className={buttonClass("ghost", "sm", "hidden sm:inline-flex")}>
                   <KeyRound className="size-3.5" aria-hidden /> Enter code
                 </button>
+                <NotificationBell />
+                <Link href="/organizer/events/new" className={buttonClass("primary", "sm", "md:hidden")}>
+                  <Plus className="size-3.5" aria-hidden /> Host
+                </Link>
                 <AccountMenu viewer={viewer} />
               </>
             ) : (

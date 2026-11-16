@@ -4,6 +4,7 @@ import { requireEventOwner } from "@/lib/rbac";
 import { checkinSchema } from "@/lib/validation";
 import { checkIn, gateCounts } from "@/lib/data/checkins";
 import { publishGateCounts } from "@/lib/live/publish";
+import { passMerch } from "@/lib/data/merch";
 
 export const dynamic = "force-dynamic";
 
@@ -33,5 +34,6 @@ export const POST = handle(async (req: Request) => {
   const counts = await gateCounts(db, body.event_id);
   if (verdict.result === "admitted" && !verdict.replay) await publishGateCounts(body.event_id, counts);
 
-  return Response.json({ ...verdict, counts });
+  const merch = verdict.result === "admitted" || verdict.result === "already_in" ? await passMerch(db, body.event_id, body.pass_token) : [];
+  return Response.json({ ...verdict, counts, merch });
 });

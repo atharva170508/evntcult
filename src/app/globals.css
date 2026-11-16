@@ -42,6 +42,28 @@
   :focus-visible {
     @apply outline-none ring-2 ring-ink ring-offset-2 ring-offset-canvas;
   }
+  /* Text boxes show focus through their own border (see .field), not a square ring. */
+  input:not([type="checkbox"]):not([type="radio"]):focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply ring-offset-0;
+  }
+  /* Browser autofill must not paint a coloured box over the paper fields. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: currentColor;
+    caret-color: currentColor;
+    transition: background-color 99999s ease-out;
+  }
+  /* Phones zoom the whole page when a text box is smaller than 16px. */
+  @media (pointer: coarse) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+  }
   /* Tabular numerals wherever numbers line up. */
   .tabular,
   [data-numeric] {

@@ -165,7 +165,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
       <div className="flex flex-col gap-6 p-6 md:p-7">
         <dl className="space-y-4">
           <InfoRow icon={Clock} title={fmtRange(event.startsAt, event.endsAt)} sub={fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "short" })} />
-          {event.venueName && <InfoRow icon={MapPin} title={event.venueName} sub="Tap Directions for the walking route" />}
+          {event.venueName && <InfoRow icon={MapPin} title={event.venueName} />}
         </dl>
 
         <div>
@@ -280,13 +280,13 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
 
       <Card eyebrow="Your events" title="Registrations & fees" className="lg:col-span-7" action={{ label: "Manage", href: "/organizer" }}>
         {data.hosted.length === 0 ? (
-          <EmptyState icon={Ticket} title="No events yet" body="Create your first event and its registrations and fees show up here." action={{ label: "Create event", href: "/organizer/events/new" }} />
+          <EmptyState icon={Ticket} title="No events yet" action={{ label: "Create event", href: "/organizer/events/new" }} />
         ) : (
           <ul className="-mx-2 divide-y divide-line">
             {data.hosted.map((h) => (
               <li key={h.id} className="grid grid-cols-12 items-center gap-3 px-2 py-3">
                 <div className="col-span-12 min-w-0 sm:col-span-5">
-                  <Link href={`/organizer/events/${h.id}`} className="block truncate text-[14.5px] font-medium hover:underline hover:decoration-line-strong hover:underline-offset-4">
+                  <Link href={`/organizer/events/${h.id}/manage`} className="block truncate text-[14.5px] font-medium hover:underline hover:decoration-line-strong hover:underline-offset-4">
                     {h.title}
                   </Link>
                   <p className="font-mono text-[11.5px] uppercase tracking-[0.04em] text-ink-subtle">
@@ -322,7 +322,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
         className="lg:col-span-6"
       >
         {data.clashes.length === 0 ? (
-          <p className="text-small text-ink-muted">Your drafts don&apos;t overlap any booked venue or major campus event.</p>
+          <p className="text-small text-ink-muted">No clashes.</p>
         ) : (
           <ul className="space-y-2">
             {[...hard, ...soft].map((c, i) => (
@@ -348,15 +348,15 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           <QuickAction href="/organizer/events/new" icon={Plus} label="New event" primary />
           <QuickAction href={data.live ? `/organizer/scan/${data.live.id}` : "/organizer"} icon={ScanLine} label="Scan passes" hint={data.live ? data.live.title : "Pick an event"} />
-          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" hint="Payments, export" />
+          <QuickAction href="/organizer" icon={FileText} label="Attendees & CSV" />
           <QuickAction
-            href={data.live ? `/organizer/events/${data.live.id}` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}` : "/organizer"}
+            href={data.live ? `/organizer/events/${data.live.id}/manage` : data.hosted[0] ? `/organizer/events/${data.hosted[0].id}/manage` : "/organizer"}
             icon={Megaphone}
             label="Broadcast update"
             hint={data.live?.title ?? data.hosted[0]?.title ?? "Pick an event"}
           />
-          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" hint="Reminders queue automatically" />
-          <QuickAction href="/calendar" icon={CalendarRange} label="Calendar" hint="Every event, by day" />
+          <QuickAction href="/organizer#whatsapp" icon={MessageCircle} label="WhatsApp" />
+          <QuickAction href="/calendar" icon={CalendarRange} label="Calendar" />
         </div>
       </Card>
     </div>
@@ -404,7 +404,7 @@ export function Announcements({ items }: { items: AnnouncementItem[] }) {
       {items.length === 0 ? (
         <div className="flex items-center gap-3 rounded-tile bg-sunken/70 p-4">
           <Megaphone className="size-5 shrink-0 text-ink-subtle" aria-hidden />
-          <p className="text-small text-ink-muted">Updates from events you&apos;ve joined will show up here.</p>
+          <p className="text-small text-ink-muted">No updates yet.</p>
         </div>
       ) : (
         <ol className="relative space-y-5 before:absolute before:bottom-2 before:left-[4.5px] before:top-2 before:w-px before:bg-line">
@@ -476,7 +476,7 @@ export function UpcomingList({ events }: { events: EventSummary[] }) {
   return (
     <Card eyebrow="Your calendar" title="Coming up" action={{ label: "Calendar", href: "/calendar" }} className="h-full">
       {events.length === 0 ? (
-        <EmptyState icon={CalendarRange} title="Nothing coming up" body="Events you register for appear here." action={{ label: "Find an event", href: "/events" }} />
+        <EmptyState icon={CalendarRange} title="Nothing coming up" action={{ label: "Find an event", href: "/events" }} />
       ) : (
         <ul className="-mx-2 space-y-0.5">
           {events.map((e) => (
@@ -507,7 +507,7 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
     <section aria-labelledby="campus-heading">
       <SectionHeader
         id="campus-heading"
-        eyebrow="Happening on campus"
+        eyebrow="Happening soon"
         title={
           <>
             Don&apos;t miss <em>these.</em>
@@ -521,7 +521,7 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
       />
       <div className="mt-6">
         {events.length === 0 ? (
-          <EmptyState icon={CalendarRange} title="No upcoming events on campus" body="When organizers publish events, they show up here." />
+          <EmptyState icon={CalendarRange} title="No upcoming events" />
         ) : (
           <div className="no-scrollbar -mx-gutter flex snap-x snap-mandatory gap-4 overflow-x-auto px-gutter pb-2 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 xl:grid-cols-4">
             {events.map((e) => (

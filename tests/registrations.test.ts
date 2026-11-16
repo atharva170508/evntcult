@@ -181,7 +181,7 @@ describe("waitlist order and holds", { timeout: 30_000 }, () => {
     await expect(confirmHold(db, (await regOf(e.id, "u3")).id, "u3", at(200))).rejects.toMatchObject({ code: "hold_expired" });
 
     const c = await counts(e.id);
-    expect(c.registered + c.held).toBeLessThanOrEqual(e.capacity);
+    expect(c.registered + c.held).toBeLessThanOrEqual(e.capacity!);
   });
 
   it("raising capacity fills the new seats from the queue in order", async () => {

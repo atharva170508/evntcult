@@ -28,12 +28,12 @@ export default async function CertificatesPage() {
         }
         sub={
           <>
-            <span className="font-mono tabular-nums text-ink">{certs.length}</span> certificate{certs.length === 1 ? "" : "s"}. You get one automatically for every event where your pass was scanned at the gate.
+            <span className="font-mono tabular-nums text-ink">{certs.length}</span> certificate{certs.length === 1 ? "" : "s"}
           </>
         }
       />
       {certs.length === 0 ? (
-        <EmptyState icon={Award} title="No certificates yet" body="Go to an event and get your pass scanned at the gate. Your certificate appears here right after." action={{ label: "Find an event", href: "/events" }} />
+        <EmptyState icon={Award} title="No certificates yet" action={{ label: "Find an event", href: "/events" }} />
       ) : (
         <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {certs.map((c) => (
@@ -48,7 +48,9 @@ export default async function CertificatesPage() {
                 <div className="flex items-center gap-3 p-5">
                   <Award className="size-5 shrink-0 text-ink-subtle" aria-hidden />
                   <p className="min-w-0 flex-1 truncate text-[13px] text-ink-muted">
-                    <span className="font-mono">{fmtDate(new Date(c.startsAt), { day: "numeric", month: "short", year: "numeric" })}</span> · {c.venue}
+                    <span className="font-mono">{fmtDate(new Date(c.startsAt), { day: "numeric", month: "short", year: "numeric" })}</span>
+                    {c.venue ? ` · ${c.venue}` : ""}
+                    {c.kind !== "participation" ? ` · ${c.kind}` : ""}
                   </p>
                   <ArrowUpRight className="size-4 shrink-0 text-ink-subtle transition-transform duration-base ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
                 </div>

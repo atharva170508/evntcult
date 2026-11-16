@@ -9,7 +9,7 @@ export function Footer({ viewer }: { viewer: NavViewer | null }) {
       title: "Explore",
       links: [
         { href: "/events", label: "Discover events" },
-        { href: "/calendar", label: "Campus calendar" },
+        { href: "/calendar", label: "Calendar" },
         { href: "/venues", label: "Venues & directions" },
       ],
     },
@@ -48,8 +48,8 @@ export function Footer({ viewer }: { viewer: NavViewer | null }) {
       <div className="mx-auto max-w-shell px-gutter pt-14">
         <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
           <div className="max-w-xs">
-            <p className="text-h4 font-semibold">Every campus event, one pass.</p>
-            <p className="mt-2 text-small text-ink-muted">Discover, register, walk in with a scan and relive it after. Built for college life.</p>
+            <p className="text-h4 font-semibold">Every event, one pass.</p>
+            <p className="mt-2 text-small text-ink-muted">Discover, register, walk in with a scan and relive it after.</p>
           </div>
           {columns.map((c) => (
             <nav key={c.title} aria-label={c.title}>
@@ -67,8 +67,12 @@ export function Footer({ viewer }: { viewer: NavViewer | null }) {
           ))}
         </div>
         <div className="mt-14 flex flex-wrap items-center justify-between gap-3 border-t border-line py-5 text-[12.5px] text-ink-subtle">
-          <span>© {new Date().getFullYear()} EvntCult</span>
-          <span className="font-mono uppercase tracking-[0.08em]">Made for campus life · IST</span>
+          <span>
+            © {new Date().getFullYear()} EvntCult · Made by Atharva, Nakul and Abhay <span aria-label="with love">♥</span>
+          </span>
+          <Link href="/get-app" className="font-medium text-ink-2 underline decoration-line-strong underline-offset-4 hover:text-ink">
+            Get the app
+          </Link>
         </div>
       </div>
       <div className="-mb-[0.18em] pb-24 md:pb-0" aria-hidden>

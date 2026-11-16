@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, MapPin, MapPinOff, Navigation, Users } from "lucide-react";
+import { ArrowUpRight, MapPinOff, Navigation, Users } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDB } from "@/lib/db";
 import { VENUES, directionsUrl, type VenueInfo } from "@/lib/venues";
+import { mapsUrl } from "@/lib/organizer/shared";
 import { upcomingByVenue } from "@/lib/data/venue-schedule";
 import { cn, fmtDate, fmtTime } from "@/lib/utils";
 import { PageHero } from "@/components/brand/PageHero";
 import { Chip } from "@/components/ui/Chip";
 import { buttonClass } from "@/components/ui/Button";
-import { Notice } from "@/components/ui/Field";
 
 export const metadata: Metadata = { title: "Venues" };
 export const dynamic = "force-dynamic";
@@ -27,7 +27,6 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
   const venues: VenueInfo[] = [...VENUES];
   for (const name of byVenue.keys()) if (!venues.some((v) => v.name === name)) venues.push({ name, capacity: 0, bufferMinutes: 30 });
   if (target) venues.sort((a, b) => Number(b.name === target) - Number(a.name === target));
-  const mapped = venues.filter((v) => directionsUrl(v)).length;
 
   return (
     <div className="space-y-8 pb-8">
@@ -40,21 +39,16 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
         }
         sub={
           <>
-            <span className="font-mono tabular-nums text-ink">{venues.length}</span> venues · <span className="font-mono tabular-nums text-ink">{mapped}</span> with directions. Tap an event to open it.
+            <span className="font-mono tabular-nums text-ink">{venues.length}</span> venues
           </>
         }
       />
 
-      {mapped < venues.length && (
-        <Notice icon={MapPinOff}>
-          Some venues don&apos;t have a map location yet, so they show no Directions button. Organizers can add them in <code className="font-mono text-ink">src/lib/venues.ts</code>.
-        </Notice>
-      )}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {venues.map((v) => {
           const list = byVenue.get(v.name) ?? [];
-          const url = directionsUrl(v);
+          const url = directionsUrl(v) ?? mapsUrl({ venue: v.name });
           const live = list.find((e) => e.live);
           const highlighted = v.name === target;
           return (
@@ -117,9 +111,6 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
         })}
       </div>
 
-      <p className="flex items-center gap-1.5 text-[12.5px] text-ink-subtle">
-        <MapPin className="size-3.5" aria-hidden /> Directions open Google Maps in a new tab.
-      </p>
     </div>
   );
 }

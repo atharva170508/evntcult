@@ -25,7 +25,7 @@ export function MiniCalendar({ data }: { data: Record<string, { campus: number; 
             <span className="size-1.5 rounded-full bg-accent" /> Yours
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="size-1.5 rounded-full bg-ink-subtle" /> Campus
+            <span className="size-1.5 rounded-full bg-ink-subtle" /> All events
           </span>
         </div>
       </div>
@@ -40,7 +40,7 @@ export function MiniCalendar({ data }: { data: Record<string, { campus: number; 
           const key = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
           const info = data[key];
           const isToday = key === today;
-          const label = `${d} ${monthName}${info ? `: ${info.campus} campus event${info.campus === 1 ? "" : "s"}${info.mine ? `, ${info.mine} yours` : ""}` : ""}`;
+          const label = `${d} ${monthName}${info ? `: ${info.campus} event${info.campus === 1 ? "" : "s"}${info.mine ? `, ${info.mine} yours` : ""}` : ""}`;
           return (
             <div key={i} className="flex flex-col items-center py-0.5" aria-label={label}>
               <span

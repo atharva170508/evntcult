@@ -39,7 +39,7 @@ export function PhoneFields({
       </div>
       <label className="flex cursor-pointer items-start gap-3 rounded-tile bg-sunken/70 p-3.5 text-[13.5px] text-ink-2">
         <input type="checkbox" checked={optIn} onChange={(e) => setOptIn(e.target.checked)} className="mt-0.5 size-4 shrink-0 cursor-pointer accent-ink" />
-        <span>Send me event reminders and pass updates on WhatsApp. You can turn this off any time.</span>
+        <span>Send me event reminders and pass updates on WhatsApp.</span>
       </label>
     </>
   );

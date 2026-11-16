@@ -15,7 +15,6 @@ export default function NotFound() {
         <h1 className="mt-5 text-display-xl font-semibold">
           This page doesn&apos;t <em>exist.</em>
         </h1>
-        <p className="mt-5 max-w-sm text-lead text-ink-muted">The link may be old, or the event was removed.</p>
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Link href="/dashboard" className={buttonClass("primary", "lg")}>
             <ArrowLeft className="size-4" aria-hidden /> Back to home

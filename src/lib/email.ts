@@ -25,6 +25,29 @@ export const codeLoginOn = (env?: EmailEnv) => emailMode(env) !== "off";
 
 export class EmailError extends Error {}
 
+/** A note from a person on brand paper: dark masthead, and the code marked up with a highlighter. */
+export function loginCodeHtml(code: string): string {
+  const shown = `${code.slice(0, 3)} ${code.slice(3)}`;
+  const font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+  const line = `font-family:${font};font-size:15px;line-height:1.55;color:#2a2a2e;margin:0 0 16px`;
+  return `<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light only"><title>Your EvntCult code</title></head>
+<body style="margin:0;padding:0;background:#efeee8">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#efeee8" style="background:#efeee8"><tr><td align="center" style="padding:32px 16px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;border-radius:14px;overflow:hidden">
+<tr><td bgcolor="#08080c" style="background:#08080c;padding:20px 28px;font-family:${font};font-size:22px;font-weight:800;letter-spacing:-0.8px;color:#f2f3f7">ev<span style="color:#dcfe62">|</span>ntcult</td></tr>
+<tr><td bgcolor="#ffffff" style="background:#ffffff;padding:28px">
+<p style="${line}">Hey,</p>
+<p style="${line}">Here's your code to log in:</p>
+<p style="margin:0 0 20px"><span style="display:inline-block;background:#dcfe62;border-radius:6px;padding:8px 14px;font-family:${font};font-size:30px;line-height:1.2;font-weight:700;letter-spacing:1px;color:#08080c">${shown}</span></p>
+<p style="${line}">It works for the next 10 minutes. If this wasn't you, just ignore this email and nothing changes.</p>
+<p style="${line};margin-bottom:0">See you at the next one,<br><b style="color:#08080c">Atharva, Nakul and Abhay</b></p>
+</td></tr>
+</table>
+</td></tr></table>
+</body></html>`;
+}
+
 export async function sendLoginCode(email: string, code: string, env: EmailEnv = process.env as EmailEnv): Promise<void> {
   const mode = emailMode(env);
   if (mode === "log") {
@@ -33,11 +56,8 @@ export async function sendLoginCode(email: string, code: string, env: EmailEnv =
   }
   if (mode !== "brevo") throw new EmailError("Email sending isn't set up.");
 
-  const text = `Your EvntCult login code is ${code}\n\nIt works for 10 minutes. If you didn't ask for it, you can ignore this email.`;
-  const html = `<div style="font-family:system-ui,sans-serif;font-size:15px;color:#121218">
-<p>Your EvntCult login code is</p>
-<p style="font-size:32px;font-weight:800;letter-spacing:6px;margin:8px 0">${code}</p>
-<p style="color:#6b6b79">It works for 10 minutes. If you didn't ask for it, you can ignore this email.</p></div>`;
+  const text = `Hey,\n\nHere's your code to log in to EvntCult:\n\n${code.slice(0, 3)} ${code.slice(3)}\n\nIt works for the next 10 minutes. If this wasn't you, just ignore this email and nothing changes.\n\nSee you at the next one,\nAtharva, Nakul and Abhay`;
+  const html = loginCodeHtml(code);
 
   const res = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
@@ -45,7 +65,7 @@ export async function sendLoginCode(email: string, code: string, env: EmailEnv =
     body: JSON.stringify({
       sender: { name: "EvntCult", email: env.EMAIL_FROM },
       to: [{ email }],
-      subject: `${code} is your EvntCult login code`,
+      subject: `Your EvntCult code: ${code}`,
       textContent: text,
       htmlContent: html,
     }),

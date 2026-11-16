@@ -18,7 +18,7 @@ export function LiveHeadcount({
 }: {
   eventId: string;
   title: string;
-  capacity: number;
+  capacity: number | null;
   registered: number;
   initial: number;
 }) {
@@ -132,7 +132,7 @@ export function LiveHeadcount({
           {(
             [
               ["Registered", registered],
-              ["Capacity", capacity],
+              ["Capacity", capacity ?? "No limit"],
               ["Yet to arrive", yet],
             ] as const
           ).map(([l, v]) => (

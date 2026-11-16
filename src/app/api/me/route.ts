@@ -24,7 +24,7 @@ export const PATCH = handle(async (req: Request) => {
   const { name, phone, whatsappOptIn } = await parseBody(req, patch);
   const phoneChanged = phone !== v.phone || whatsappOptIn !== v.whatsappOptIn;
   await run(
-    "UPDATE users SET name = COALESCE(?, name), phone = ?, whatsapp_opt_in = ?, phone_updated_at = CASE WHEN ? THEN ? ELSE phone_updated_at END WHERE id = ?",
+    "UPDATE users SET name = COALESCE(?1, name), phone = ?2, whatsapp_opt_in = ?3, phone_updated_at = CASE WHEN ?4 THEN ?5 ELSE phone_updated_at END, wa_opt_in_at = CASE WHEN ?3 = 1 AND whatsapp_opt_in = 0 THEN ?5 ELSE wa_opt_in_at END, wa_opt_out_at = CASE WHEN ?3 = 1 THEN NULL WHEN whatsapp_opt_in = 1 THEN ?5 ELSE wa_opt_out_at END WHERE id = ?6",
     name ?? null, phone, whatsappOptIn ? 1 : 0, phoneChanged ? 1 : 0, nowIso(), v.id,
   );
   if (phoneChanged) await audit(v.id, "phone_update", v.id, { whatsappOptIn });

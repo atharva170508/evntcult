@@ -10,6 +10,8 @@ const PROTECTED = ["/passes", "/vault", "/organizer", "/events", "/calendar", "/
 
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
+  // A shared event link opens for anyone. Registering still needs an account.
+  if (/^\/events\/[^/]+$/.test(path)) return NextResponse.next();
   if (!PROTECTED.some((p) => path === p || path.startsWith(`${p}/`))) return NextResponse.next();
   const uid = await readSessionValue(req.cookies.get(SESSION_COOKIE)?.value);
   if (uid) return NextResponse.next();

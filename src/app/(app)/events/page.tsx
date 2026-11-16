@@ -44,10 +44,9 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
         eyebrow="Discover"
         title={
           <>
-            Events on <em>campus.</em>
+            Events <em>near you.</em>
           </>
         }
-        sub="Fests, game nights, workshops and talks. Register in a tap."
       />
 
       <div className="sticky top-[var(--header-h)] z-20 -mx-gutter border-b border-line bg-canvas/90 px-gutter py-4 backdrop-blur-xl">
@@ -121,7 +120,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
 
       {events.length === 0 ? (
         <div className="mt-6">
-          <EmptyState icon={SearchX} title="No events match these filters" body="Try another day or type, or clear the search." action={{ label: "Clear filters", href: "/events" }} />
+          <EmptyState icon={SearchX} title="No events match these filters" action={{ label: "Clear filters", href: "/events" }} />
         </div>
       ) : (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 [&>article]:w-auto">

@@ -17,7 +17,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
   if (await getViewer()) redirect(next);
 
   const steps = [
-    { icon: CalendarCheck2, k: "Register", v: "Every campus event in one place" },
+    { icon: CalendarCheck2, k: "Register", v: "Every event in one place" },
     { icon: QrCode, k: "Pass", v: "One QR pass at the gate, even offline" },
     { icon: Users, k: "Attend", v: "A certificate the moment you're scanned in" },
   ];
@@ -33,9 +33,6 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           <div className="animate-fade-up">
             <p className="eyebrow">{signup ? "Create account" : "Welcome back"}</p>
             <h1 className="mt-3 text-display-md font-semibold">{signup ? <>Get your <em>OnePass.</em></> : <>Log <em>in.</em></>}</h1>
-            <p className="mt-3 text-body text-ink-muted">
-              {signup ? "Sign up with your college email to register for events and get passes." : "Use your college email to see your events and passes."}
-            </p>
             <SignInForm next={next} signup={signup} codeLogin={codeLoginOn()} />
             <div className="mt-8 space-y-2 border-t border-line pt-6 text-[14px] text-ink-muted">
               <p>

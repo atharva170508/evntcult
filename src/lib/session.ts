@@ -64,6 +64,28 @@ export async function readSessionValue(value: string | undefined | null, now = D
   }
 }
 
+/* Owner panel: a separate cookie, signed for a different purpose, so a student session can never open it. */
+export const ADMIN_COOKIE = "ec_admin";
+const ADMIN_HOURS = 8;
+
+export async function createAdminValue(now = Date.now()): Promise<string> {
+  const exp = Math.floor(now / 1000) + ADMIN_HOURS * 3600;
+  return `admin.${exp}.${await hmac(`admin-panel:${exp}`)}`;
+}
+
+export async function readAdminValue(value: string | undefined | null, now = Date.now()): Promise<boolean> {
+  if (!value) return false;
+  const parts = value.split(".");
+  if (parts.length !== 3 || parts[0] !== "admin") return false;
+  const exp = Number(parts[1]);
+  if (!Number.isFinite(exp) || exp * 1000 < now) return false;
+  return safeEqual(parts[2], await hmac(`admin-panel:${parts[1]}`));
+}
+
+const secureFlag = () => (process.env.NODE_ENV === "production" ? "; Secure" : "");
+export const adminCookieHeader = (value: string) => `${ADMIN_COOKIE}=${value}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${ADMIN_HOURS * 3600}${secureFlag()}`;
+export const clearAdminCookieHeader = () => `${ADMIN_COOKIE}=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0${secureFlag()}`;
+
 export function sessionCookieHeader(value: string, maxAgeSeconds = SESSION_DAYS * 86_400): string {
   const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
   return `${SESSION_COOKIE}=${value}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAgeSeconds}${secure}`;

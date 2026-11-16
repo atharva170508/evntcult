@@ -38,7 +38,7 @@ export default async function VaultPage() {
         }
         sub={
           <>
-            <span className="font-mono tabular-nums text-ink">{tagged.length}</span> photo{tagged.length === 1 ? "" : "s"} you&apos;ve tagged yourself in. Only you see your tags.
+            <span className="font-mono tabular-nums text-ink">{tagged.length}</span> photo{tagged.length === 1 ? "" : "s"}
           </>
         }
       />
@@ -47,7 +47,6 @@ export default async function VaultPage() {
         <EmptyState
           icon={Images}
           title="Nothing here yet"
-          body="Open the photos from an event you went to and tap “That's me” on the ones you're in. They'll collect here."
           action={galleries.length ? { label: "Browse your galleries", href: `/events/${galleries[0].slug}/photos` } : { label: "Find an event", href: "/events" }}
         />
       ) : (
@@ -83,7 +82,7 @@ export default async function VaultPage() {
           Galleries from your events
         </h2>
         {galleries.length === 0 ? (
-          <p className="text-small text-ink-muted">When organizers upload photos from events you registered for, they&apos;ll be listed here.</p>
+          <p className="text-small text-ink-muted">None yet.</p>
         ) : (
           <ul className="card divide-y divide-line">
             {galleries.map((g) => (

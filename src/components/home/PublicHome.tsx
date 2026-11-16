@@ -1,12 +1,14 @@
 import {
   ArrowRight,
+  CalendarCheck2,
+  LayoutGrid,
+  Radio,
   ArrowUpRight,
   BellRing,
   Camera,
   Check,
   CloudOff,
   Download,
-  Headset,
   MapPin,
   Megaphone,
   ScanLine,
@@ -35,34 +37,13 @@ export interface PublicHomeData {
   onePassQr: string;
 }
 
-/**
- * Shown when no events are published yet, so visitors still see what the product looks like.
- * Clearly labelled as examples and never clickable through to anything.
- */
-const DAY = 86_400_000;
-function exampleEvents(): EventSummary[] {
-  const base = Date.now();
-  const mk = (i: number, title: string, category: EventSummary["category"], accent: string, venue: string, days: number, hour: number): EventSummary => {
-    const start = new Date(Math.floor(base / DAY) * DAY + days * DAY + (hour - 5.5) * 3_600_000);
-    return { id: `example-${i}`, slug: "", title, category, visibility: "PUBLIC", status: "published", startsAt: start, endsAt: new Date(+start + 3 * 3_600_000), venueName: venue, capacity: null, registered: 0, feePaise: 0, accent };
-  };
-  return [
-    mk(1, "Neon Night", "PARTY", "violet", "Main Auditorium", 2, 19),
-    mk(2, "Hackathon Kickoff", "TECH", "blue", "Computer Lab 4", 3, 10),
-    mk(3, "Inter-college Football", "SPORTS", "orange", "Sports Complex", 4, 16),
-    mk(4, "Garba Night", "CULTURAL", "pink", "Open Air Theatre", 6, 19),
-    mk(5, "Design Sprint", "WORKSHOP", "teal", "Seminar Hall 2", 8, 11),
-  ];
-}
-
 const CATEGORY_LABEL: Record<string, string> = { GAMING: "Gaming", SPORTS: "Sports", TECH: "Tech", CULTURAL: "Cultural", WORKSHOP: "Workshop", TALK: "Talk", PARTY: "Party" };
 
 const STEPS = [
   { icon: Ticket, title: "Register in a tap", body: "Pick an event, tap Register and your OnePass is ready instantly. Full? Join the waitlist and we hold a seat for you when one opens." },
-  { icon: ScanLine, title: "Fast-track entry", body: "Show the QR at the gate and you're in. Organizers scan it in a second, even when the campus Wi-Fi drops." },
+  { icon: ScanLine, title: "Fast-track entry", body: "Show the QR at the gate and you're in. Organizers scan it in a second, even when the Wi-Fi drops." },
   { icon: BellRing, title: "Always up to date", body: "Time or venue changed? Updates from the organizer show up right on your dashboard." },
   { icon: Camera, title: "Relive it after", body: "Your certificate of attendance appears the moment you're scanned in, and you can save the event photos you're in." },
-  { icon: Headset, title: "Contact event support", body: "Message the organizer straight from your pass.", planned: true },
 ];
 
 const ORGANIZER_FEATURES = [
@@ -75,8 +56,7 @@ const ORGANIZER_FEATURES = [
 
 /** What a signed-out visitor sees. Event cards are a preview only: they never open an event. */
 export function PublicHome({ data }: { data: PublicHomeData }) {
-  const live = data.campus.length > 0;
-  const events = live ? data.campus : exampleEvents();
+  const events = data.campus;
   const [next, ...rest] = events;
 
   return (
@@ -90,16 +70,30 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
               <span className="flex items-center gap-1.5 rounded-full bg-accent-soft px-2 py-0.5 font-mono text-[11px] uppercase tracking-[0.08em] text-accent-ink">
                 <span className="size-1.5 rounded-full bg-accent motion-safe:animate-pulse-dot" aria-hidden /> Live
               </span>
-              {data.thisWeek > 0 ? `${data.thisWeek} event${data.thisWeek === 1 ? "" : "s"} on campus this week` : "Campus events, one place"}
+              {data.thisWeek > 0 ? `${data.thisWeek} event${data.thisWeek === 1 ? "" : "s"} this week` : "Welcome to EvntCult"}
             </p>
             <h1 className="mt-8 text-display-2xl font-semibold text-ink">
-              One pass.
+              Every event.
               <br />
-              Every campus <em>night.</em>
+              One <em>place.</em>
             </h1>
             <p className="mt-7 max-w-[34rem] text-lead text-ink-muted">
-              Register in a tap, walk in with a scan, relive it after. All you need is your college email.
+              EvntCult brings every fest, game night and workshop together. Your calendar fills itself, organizers&apos; updates reach you live, clash detection keeps events from colliding, and{" "}
+              <span className="font-medium text-ink">OnePass</span> gets you in with one tap.
             </p>
+            <ul className="mt-7 flex max-w-xl flex-wrap gap-1.5" aria-label="What EvntCult does">
+              {[
+                { icon: LayoutGrid, label: "All events, one place" },
+                { icon: CalendarCheck2, label: "Calendar that fills itself" },
+                { icon: Radio, label: "Live updates" },
+                { icon: ShieldCheck, label: "Clash detection" },
+                { icon: Ticket, label: "OnePass entry" },
+              ].map((f) => (
+                <li key={f.label} className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface px-3 text-[13px] font-medium text-ink-2 shadow-card">
+                  <f.icon className="size-3.5 text-ink-subtle" aria-hidden /> {f.label}
+                </li>
+              ))}
+            </ul>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <LinkButton href="/signin?mode=signup" variant="accent" size="lg" className="group">
                 Sign up free <ArrowRight className="size-4 transition-transform duration-base ease-out group-hover:translate-x-0.5" aria-hidden />
@@ -107,13 +101,16 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
               <LinkButton href="/events" variant="secondary" size="lg">
                 Browse events
               </LinkButton>
+              <LinkButton href={`/signin?next=${encodeURIComponent("/organizer/events/new")}`} variant="ghost" size="lg">
+                Host an event <ArrowRight className="size-4" aria-hidden />
+              </LinkButton>
             </div>
 
             <dl className="mt-14 grid max-w-lg grid-cols-3 divide-x divide-line border-y border-line">
               {[
                 { v: data.thisWeek, l: "This week" },
                 { v: data.upcoming, l: "Upcoming" },
-                { v: data.going, l: "Students going" },
+                { v: data.going, l: "People going" },
               ].map((s) => (
                 <div key={s.l} className="flex flex-col-reverse px-4 py-4 first:pl-0">
                   <dt className="mt-0.5 text-[12.5px] text-ink-muted">{s.l}</dt>
@@ -125,6 +122,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
 
           {/* Ticket stack: the next event fanned behind the sample pass. */}
           <div className="relative mx-auto h-[460px] w-full max-w-[400px] animate-fade-up [animation-delay:120ms] md:h-[520px]">
+            {next && (
             <PreviewLock label={next.title} className="absolute right-0 top-0 w-[78%] rotate-[5deg] rounded-card transition-transform duration-slow ease-out hover:rotate-[3deg]">
               <div className="overflow-hidden rounded-card bg-surface shadow-raised">
                 <div className="relative aspect-[4/3]">
@@ -140,6 +138,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
                 </div>
               </div>
             </PreviewLock>
+            )}
 
             <article aria-label="Sample OnePass" className="absolute bottom-0 left-0 w-[80%] -rotate-[3deg] overflow-hidden rounded-card bg-surface shadow-pop">
               <div className="flex items-center justify-between bg-ink px-5 py-4 text-white">
@@ -175,8 +174,8 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
 
       {/* ── 2. Category ticker ─────────────────────────────── */}
       <div className="border-y border-line bg-surface py-5">
-        <Marquee words={["Gaming nights", "Inter-college sports", "Hackathons", "Cultural fests", "Workshops", "Talks", "Parties"]} className="text-[22px] font-medium tracking-tighter text-ink-muted" />
-        <p className="sr-only">Gaming nights, inter-college sports, hackathons, cultural fests, workshops, talks and parties.</p>
+        <Marquee words={["Gaming nights", "Sports", "Hackathons", "Cultural fests", "Workshops", "Talks", "Parties"]} className="text-[22px] font-medium tracking-tighter text-ink-muted" />
+        <p className="sr-only">Gaming nights, sports, hackathons, cultural fests, workshops, talks and parties.</p>
       </div>
 
       {/* ── 3. OnePass, step by step ───────────────────────── */}
@@ -185,13 +184,13 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
           <Reveal className="lg:sticky lg:top-28 lg:self-start">
             <SectionHeader
               id="onepass-heading"
-              eyebrow="01 — Meet OnePass"
+              eyebrow="01 — Our flagship · OnePass"
               title={
                 <>
-                  Your campus ID <em>for</em> events.
+                  Your identity <em>for</em> events.
                 </>
               }
-              sub="One dynamic pass for everything you do at a campus event. No paper tickets, no forms at the door, no hunting for photos later."
+              sub="One dynamic pass that makes going to events effortless: check-in at the gate, live updates, all from a single tap. No paper tickets, no forms at the door, no hunting for photos later."
               size="lg"
             />
           </Reveal>
@@ -203,7 +202,6 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
                 <div className="min-w-0">
                   <p className="flex flex-wrap items-center gap-2 text-h3 font-semibold">
                     {s.title}
-                    {s.planned && <span className="rounded-full bg-sunken px-2 py-0.5 font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-muted">Planned</span>}
                   </p>
                   <p className="mt-2 max-w-prose text-body text-ink-muted">{s.body}</p>
                 </div>
@@ -217,12 +215,13 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
       </section>
 
       {/* ── 4. What's on (preview) ─────────────────────────── */}
+      {next && (
       <section aria-labelledby="preview-heading" className="px-gutter pb-section">
         <div className="mx-auto max-w-shell">
           <Reveal>
             <SectionHeader
               id="preview-heading"
-              eyebrow={live ? "02 — Happening on campus" : "02 — What your dashboard looks like"}
+              eyebrow="02 — A peek at your dashboard"
               title={
                 <>
                   What&apos;s <em>on</em> this week.
@@ -230,9 +229,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
               }
               size="lg"
               actions={
-                <span className="rounded-full bg-surface px-3.5 py-1.5 text-[13px] text-ink-muted shadow-card">
-                  {live ? "Preview · sign up to open events" : "Example events · sign up to see real ones"}
-                </span>
+                <span className="rounded-full bg-surface px-3.5 py-1.5 text-[13px] text-ink-muted shadow-card">Preview · sign up to open events</span>
               }
             />
           </Reveal>
@@ -297,6 +294,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── 5. For organizers ──────────────────────────────── */}
       <section aria-labelledby="org-heading" className="border-y border-line bg-surface px-gutter py-section">
@@ -333,7 +331,7 @@ export function PublicHome({ data }: { data: PublicHomeData }) {
         <Reveal className="mx-auto flex max-w-shell flex-col items-start justify-between gap-10 md:flex-row md:items-end">
           <h2 className="max-w-3xl text-display-xl font-semibold">
             Get your <em>OnePass.</em>
-            <span className="block text-ink-subtle">It takes a college email.</span>
+            <span className="block text-ink-subtle">It takes one email.</span>
           </h2>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <LinkButton href="/signin?mode=signup" variant="accent" size="lg">
