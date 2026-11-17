@@ -10,6 +10,7 @@ import { passQrPayload } from "@/lib/tokens";
 import { formatINR, upiUri } from "@/lib/money";
 import { directionsUrl, linkLabel } from "@/lib/organizer/shared";
 import { fmtDate, fmtRange, fmtTime } from "@/lib/utils";
+import { Entrance } from "@/components/motion/MaskedLines";
 import { EventArt } from "@/components/ui/EventArt";
 import { Chip } from "@/components/ui/Chip";
 import { Meter } from "@/components/ui/Meter";
@@ -115,7 +116,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
       </Link>
 
       {/* Title row */}
-      <header className="mt-4 md:mt-0">
+      <Entrance delay={0.02} className="mt-4 md:mt-0">
         <div className="flex flex-wrap gap-1.5">
           {e.access === "code" && <Chip tone="dark">Private · code only</Chip>}
           {e.status === "draft" && <Chip tone="warn">Draft · only you can see this</Chip>}
@@ -130,10 +131,10 @@ export default async function EventPage({ params, searchParams }: { params: Prom
           <span className="text-ink-subtle"> · </span>
           <span className="underline decoration-line-strong underline-offset-2">{e.event_type === "virtual" ? "Online" : (e.venue ?? "Venue TBA")}</span>
         </p>
-      </header>
+      </Entrance>
 
       {/* Cover */}
-      <div className="relative mt-6 aspect-[4/3] overflow-hidden rounded-[20px] bg-sunken sm:aspect-[2.4/1]">
+      <Entrance delay={0.12} className="relative mt-6 aspect-[4/3] overflow-hidden rounded-[20px] bg-sunken shadow-[0_24px_48px_-28px_rgba(60,40,10,0.45)] sm:aspect-[2.4/1]">
         <EventArt accent={s.accent} seed={s.id} scrim={false} />
         {e.banner_url && (
           <>
@@ -141,7 +142,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
             <img src={e.banner_url} alt="" className="absolute inset-0 size-full object-cover" />
           </>
         )}
-      </div>
+      </Entrance>
 
       <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-20">
         {/* Details */}

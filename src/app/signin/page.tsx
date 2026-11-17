@@ -21,7 +21,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
         <LogoWordmark className="text-[24px]" />
       </Link>
       <div className="flex flex-1 items-start justify-center py-8 sm:items-center">
-        <div className="w-full max-w-[568px] overflow-hidden rounded-2xl border border-line-strong bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)]">
+        <div className="w-full max-w-[568px] overflow-hidden rounded-2xl border border-line-strong bg-white shadow-[0_1px_2px_rgba(60,40,10,0.06),0_24px_56px_-24px_rgba(60,40,10,0.28)]">
           <p className="border-b border-line px-6 py-4 text-center text-[16px] font-semibold text-ink">{signup ? "Sign up" : "Log in or sign up"}</p>
           <div className="px-6 pb-8 pt-6 sm:px-8">
             <h1 className="font-display text-[34px] leading-tight tracking-[-0.02em] text-ink">

@@ -2,7 +2,7 @@
   "name": "evntcult",
   "version": "0.1.0",
   "private": true,
-  "description": "EvntCult — campus event management, Apple-style dark mode.",
+  "description": "EvntCult \u2014 campus event management, Apple-style dark mode.",
   "scripts": {
     "predev": "node scripts/copy-face-models.mjs",
     "dev": "next dev",
@@ -20,12 +20,14 @@
     "seed": "tsx scripts/seed.ts && wrangler d1 execute evntcult-db --local --file seed.sql --yes",
     "seed:remote": "tsx scripts/seed.ts && wrangler d1 execute evntcult-db --remote --file seed.sql --yes",
     "photos:index": "tsx --env-file=.dev.vars scripts/index-drive-album.ts",
-    "photos:check": "tsx --env-file=.dev.vars scripts/check-selfie.ts"
+    "photos:check": "tsx --env-file=.dev.vars scripts/check-selfie.ts",
+    "design:lint": "design.md lint DESIGN.md"
   },
   "dependencies": {
     "clsx": "2.1.1",
     "jsqr": "1.4.0",
     "lucide-react": "0.577.0",
+    "motion": "^14.14.0",
     "next": "15.5.29",
     "qrcode": "1.5.4",
     "react": "19.1.1",
@@ -36,6 +38,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
+    "@google/design.md": "^0.4.0",
     "@opennextjs/cloudflare": "^1.20.16",
     "@tensorflow/tfjs": "4.22.0",
     "@tensorflow/tfjs-backend-wasm": "4.22.0",

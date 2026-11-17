@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Cpu, Drama, Gamepad2, LayoutGrid, Mic, PartyPopper, Ticket, Trophy, Wrench, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { m } from "motion/react";
+import { EASE } from "@/components/motion/MotionProvider";
 
 const KINDS: { key: string; label: string; icon: LucideIcon; href: string }[] = [
   { key: "", label: "All", icon: LayoutGrid, href: "/events" },
@@ -37,12 +39,13 @@ export function KindRail() {
               active ? "text-ink" : "text-ink-muted hover:text-ink",
             )}
           >
-            <k.icon className="size-6" strokeWidth={1.6} aria-hidden />
+            <k.icon className="size-6 transition-transform duration-base ease-out group-hover:-translate-y-0.5" strokeWidth={1.6} aria-hidden />
             {k.label}
-            <span
-              aria-hidden
-              className={cn("absolute inset-x-0 bottom-0 h-[2px] bg-ink transition-opacity", active ? "opacity-100" : "opacity-0 group-hover:bg-line-strong group-hover:opacity-100")}
-            />
+            {active ? (
+              <m.span layoutId="kind-underline" aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] bg-ink" transition={{ duration: 0.45, ease: EASE }} />
+            ) : (
+              <span aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] bg-line-strong opacity-0 transition-opacity group-hover:opacity-100" />
+            )}
           </Link>
         );
       })}

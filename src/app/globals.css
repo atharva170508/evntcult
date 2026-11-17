@@ -20,6 +20,7 @@
     }
   }
   html {
+    scroll-behavior: smooth;
     @apply bg-canvas text-ink antialiased;
     text-rendering: optimizeLegibility;
     -webkit-tap-highlight-color: transparent;
@@ -134,6 +135,39 @@
   }
   .text-metal {
     color: currentColor;
+  }
+
+  /* Cursor-lit surfaces (components/motion/Spotlight). */
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+  .spotlight-dark::before {
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 235, 0.09), transparent 45%);
+  }
+  .spotlight-light::before {
+    background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.35), transparent 50%);
+  }
+  .spotlight-dark::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    padding: 1px;
+    background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 235, 0.35), rgba(255, 255, 255, 0.08) 60%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
   }
 
   /* Full-width band inside the centred page column. */

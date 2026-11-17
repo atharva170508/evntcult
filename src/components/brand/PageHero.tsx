@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Entrance } from "@/components/motion/MaskedLines";
 
 /**
  * Page header: a plain bold title, an optional short line under it, actions on the right.
@@ -20,11 +21,11 @@ export function PageHero({
 }) {
   return (
     <header className={cn("flex flex-wrap items-end justify-between gap-x-8 gap-y-4 pb-6 pt-8 md:pb-8 md:pt-12", className)}>
-      <div className="min-w-0 max-w-3xl">
+      <Entrance delay={0.05} className="min-w-0 max-w-3xl">
         {eyebrow && <p className="sr-only">{eyebrow}</p>}
         <h1 className="text-[28px] font-semibold leading-tight tracking-[-0.02em] text-ink md:text-[32px]">{title}</h1>
         {sub && <div className="mt-1.5 text-[15px] text-ink-muted">{sub}</div>}
-      </div>
+      </Entrance>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </header>
   );

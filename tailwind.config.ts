@@ -88,15 +88,17 @@ const config: Config = {
         "4xl": "2rem",
       },
       boxShadow: {
-        card: "0 0 0 1px #DCD6C6",
-        raised: "0 6px 16px rgba(0,0,0,0.12)",
-        pop: "0 2px 16px rgba(0,0,0,0.12)",
-        search: "0 3px 12px 0 rgba(0,0,0,0.1)",
+        /* Warm-tinted, lit from above (DESIGN.md › Elevation & Depth). */
+        card: "0 0 0 1px #DCD6C6, inset 0 1px 0 rgba(255,255,255,0.9)",
+        raised: "0 1px 2px rgba(60,40,10,0.06), 0 10px 28px -8px rgba(60,40,10,0.16)",
+        pop: "0 0 0 1px rgba(60,40,10,0.06), 0 16px 40px -10px rgba(60,40,10,0.22)",
+        search: "0 1px 2px rgba(60,40,10,0.06), 0 6px 18px -4px rgba(60,40,10,0.14)",
         inset: "inset 0 1px 0 rgba(255,255,255,0.9)",
-        button: "none",
-        accent: "none",
+        button: "inset 0 1px 0 rgba(255,255,255,0.5)",
+        accent: "inset 0 1px 0 rgba(255,255,255,0.5)",
         brand: "none",
-        float: "0 6px 16px rgba(0,0,0,0.12)",
+        float: "0 1px 2px rgba(60,40,10,0.06), 0 10px 28px -8px rgba(60,40,10,0.16)",
+        glow: "0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.08)",
       },
       transitionTimingFunction: {
         /* quick out, long settle — default for UI */
@@ -144,6 +146,10 @@ const config: Config = {
         marquee: {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
+        },
+        scan: {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(450%)" },
         },
         flap: {
           "0%": { transform: "rotateX(90deg)", opacity: "0" },

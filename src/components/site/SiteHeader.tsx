@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Award, Download, KeyRound, LogOut, MapPinned, Menu, Plus, Search, ShieldCheck, UserRound, X } from "lucide-react";
 import { cn, initials } from "@/lib/utils";
+import { m } from "motion/react";
+import { EASE } from "@/components/motion/MotionProvider";
 import { NotificationBell } from "@/components/shell/NotificationBell";
 import { isActive, workspaceFor, type Workspace } from "@/components/shell/nav";
 import { BrandLogo } from "./Brand";
@@ -87,7 +89,13 @@ export function SiteHeader({
 
   return (
     <>
-      <header ref={ref} className="sticky top-0 z-40 border-b border-line bg-canvas/95 backdrop-blur-xl print:hidden">
+      <header
+        ref={ref}
+        className={cn(
+          "sticky top-0 z-40 border-b backdrop-blur-xl backdrop-saturate-150 transition-[background-color,box-shadow,border-color] duration-base ease-out print:hidden",
+          scrolled ? "border-line/80 bg-canvas/80 shadow-[0_8px_24px_-12px_rgba(60,40,10,0.18)]" : "border-line bg-canvas/95",
+        )}
+      >
         <div className={cn("mx-auto px-gutter", wide ? "max-w-[1440px]" : "max-w-[1360px]")}>
           <div className="grid h-20 grid-cols-[auto_1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
             <div className="flex items-center gap-3">
@@ -120,13 +128,11 @@ export function SiteHeader({
                       >
                         <t.icon className="size-9 transition-transform duration-base ease-out group-hover:scale-110" />
                         {t.label}
-                        <span
-                          aria-hidden
-                          className={cn(
-                            "absolute inset-x-3 bottom-0 h-[2px] rounded-full bg-ink transition-opacity duration-base",
-                            active ? "opacity-100" : "opacity-0 group-hover:opacity-20",
-                          )}
-                        />
+                        {active ? (
+                          <m.span layoutId="tab-underline" aria-hidden className="absolute inset-x-3 bottom-0 h-[2px] rounded-full bg-ink" transition={{ duration: 0.45, ease: EASE }} />
+                        ) : (
+                          <span aria-hidden className="absolute inset-x-3 bottom-0 h-[2px] rounded-full bg-ink opacity-0 transition-opacity duration-base group-hover:opacity-20" />
+                        )}
                       </Link>
                     );
                   })}
@@ -351,7 +357,15 @@ function MenuSheet({
   const row = "flex h-14 items-center gap-4 border-b border-line text-[16px] text-ink";
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 flex flex-col bg-canvas text-ink motion-safe:animate-fade-in md:hidden">
+    <m.div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menu"
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: EASE }}
+      className="fixed inset-0 z-50 flex flex-col bg-canvas text-ink md:hidden"
+    >
       <div className="flex h-16 shrink-0 items-center justify-between border-b border-line px-gutter">
         <BrandLogo className="text-[22px]" />
         <button onClick={onClose} aria-label="Close menu" className="grid size-10 place-items-center rounded-full hover:bg-sunken">
@@ -369,13 +383,13 @@ function MenuSheet({
           </Link>
         )}
         <ul>
-          {tabs.map((t) => (
-            <li key={t.href}>
+          {tabs.map((t, i) => (
+            <m.li key={t.href} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, ease: EASE, delay: 0.08 + i * 0.05 }}>
               <Link href={t.href} aria-current={isActive(pathname, t) ? "page" : undefined} className={cn(row, isActive(pathname, t) && "font-semibold")}>
                 <t.icon className="size-8" />
                 {t.label}
               </Link>
-            </li>
+            </m.li>
           ))}
           {ws === "attend" && (
             <>
@@ -442,6 +456,6 @@ function MenuSheet({
           )}
         </div>
       </div>
-    </div>
+    </m.div>
   );
 }

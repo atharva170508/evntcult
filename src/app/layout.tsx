@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 
 /* Figtree for the interface, EB Garamond for big headlines, JetBrains Mono for pass codes.
    Self-hosted (SIL OFL). */
@@ -43,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );

@@ -1,62 +1,281 @@
 ---
-version: 3.0
-name: EvntCult — Marketplace, warm
-description: Browse like Airbnb, feel like Wispr Flow. Cream page, white cards, #1A1A1A ink, lavender call-to-action buttons with a dark outline, brand red for search, the logo and live states. Figtree for the interface, EB Garamond for big headlines (italic for the second phrase), JetBrains Mono for pass codes.
+version: alpha
+name: EvntCult
+description: Campus events, browsed like a marketplace and felt like a warm product. Cream paper, white cards, ink, lavender actions with a dark outline, brand red for search and live moments. Figtree for the interface, EB Garamond for the big moments.
+colors:
+  primary: "#1A1A1A"
+  on-primary: "#FFFFFF"
+  neutral: "#FFFEF6"
+  surface: "#FFFFFF"
+  surface-sunken: "#F6F3EA"
+  surface-mist: "#ECE8DC"
+  on-surface: "#1A1A1A"
+  on-surface-variant: "#6A6A6A"
+  on-surface-subtle: "#717171"
+  outline: "#DCD6C6"
+  outline-variant: "#ECE8DD"
+  secondary: "#F0D7FF"
+  on-secondary: "#1A1A1A"
+  secondary-hover: "#E6C4FB"
+  tertiary: "#E3264F"
+  on-tertiary: "#FFFFFF"
+  night: "#1A1A1A"
+  on-night: "#FFFFEB"
+  live: "#0B7A54"
+  error: "#B42318"
+typography:
+  display-xl:
+    fontFamily: EB Garamond
+    fontSize: 96px
+    fontWeight: 400
+    lineHeight: 0.95
+    letterSpacing: -0.035em
+  display-lg:
+    fontFamily: EB Garamond
+    fontSize: 72px
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: -0.03em
+  headline-lg:
+    fontFamily: Figtree
+    fontSize: 32px
+    fontWeight: 600
+    lineHeight: 1.2
+    letterSpacing: -0.02em
+  headline-md:
+    fontFamily: Figtree
+    fontSize: 22px
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: -0.01em
+  title-md:
+    fontFamily: Figtree
+    fontSize: 15px
+    fontWeight: 600
+    lineHeight: 1.35
+  body-lg:
+    fontFamily: Figtree
+    fontSize: 18px
+    fontWeight: 400
+    lineHeight: 1.5
+  body-md:
+    fontFamily: Figtree
+    fontSize: 15px
+    fontWeight: 400
+    lineHeight: 1.55
+  label-md:
+    fontFamily: Figtree
+    fontSize: 13px
+    fontWeight: 600
+    lineHeight: 1.3
+  code:
+    fontFamily: JetBrains Mono
+    fontSize: 15px
+    fontWeight: 500
+    lineHeight: 1.3
+    letterSpacing: 0.1em
+rounded:
+  sm: 8px
+  md: 12px
+  lg: 16px
+  xl: 20px
+  2xl: 24px
+  full: 9999px
+spacing:
+  unit: 8px
+  gutter: 24px
+  margin-mobile: 20px
+  margin-desktop: 48px
+  container-max: 1360px
+  section: 96px
+components:
+  button-primary:
+    backgroundColor: "{colors.secondary}"
+    textColor: "{colors.on-secondary}"
+    typography: "{typography.title-md}"
+    rounded: "{rounded.md}"
+    height: 48px
+    padding: 0 24px
+  button-primary-hover:
+    backgroundColor: "{colors.secondary-hover}"
+  button-solid:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
+    typography: "{typography.title-md}"
+    rounded: "{rounded.md}"
+    height: 48px
+  button-search:
+    backgroundColor: "{colors.tertiary}"
+    textColor: "{colors.on-tertiary}"
+    rounded: "{rounded.full}"
+    size: 48px
+  card-event:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.on-surface}"
+    rounded: "{rounded.xl}"
+  panel:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.on-surface}"
+    rounded: "{rounded.lg}"
+    padding: 24px
+  band-night:
+    backgroundColor: "{colors.night}"
+    textColor: "{colors.on-night}"
+    typography: "{typography.display-lg}"
+  chip-filter:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.on-surface}"
+    typography: "{typography.label-md}"
+    rounded: "{rounded.full}"
+    height: 36px
+  chip-filter-active:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
+  input-field:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.on-surface}"
+    typography: "{typography.body-md}"
+    rounded: "{rounded.sm}"
+    height: 56px
+  pass-code:
+    textColor: "{colors.on-surface}"
+    typography: "{typography.code}"
+  muted-text:
+    textColor: "{colors.on-surface-variant}"
+    typography: "{typography.body-md}"
+  status-live:
+    textColor: "{colors.live}"
+  status-error:
+    textColor: "{colors.error}"
+  divider:
+    backgroundColor: "{colors.outline-variant}"
+  hairline:
+    backgroundColor: "{colors.outline}"
+  well:
+    backgroundColor: "{colors.surface-sunken}"
+  well-hover:
+    backgroundColor: "{colors.surface-mist}"
+  page:
+    backgroundColor: "{colors.neutral}"
+  caption:
+    textColor: "{colors.on-surface-subtle}"
+  display-hero:
+    typography: "{typography.display-xl}"
+  headline-page:
+    typography: "{typography.headline-lg}"
+  headline-shelf:
+    typography: "{typography.headline-md}"
+  body-intro:
+    typography: "{typography.body-lg}"
 ---
 
-# EvntCult design system
+# EvntCult
 
-> Read this before touching UI. Tokens live in `tailwind.config.ts` and `src/app/globals.css`;
-> primitives in `src/components/ui/*`; the shell in `src/components/site/*`; browse pieces in
-> `src/components/landing/*`. Use the tokens — never hard-code a colour, radius or shadow.
+## Overview
 
-## Principles
+The noticeboard outside a college canteen in November, rebuilt as a quiet, well-lit app.
+Every event on campus is pinned there — hackathons, Garba nights, finals under floodlights —
+and the app's job is to let a student find tonight's one in seconds, register in a tap and
+walk in with a scan.
 
-1. **Browse first.** People come to find something to do. The header search and the category
-   bar are always one glance away; events are shown as shelves (`Row`) and grids of `EventCard`.
-2. **Facts, not copy.** No taglines or explanatory paragraphs. Section titles are two or three
-   words ("This week", "Free entry"). Cards carry date, time, venue, price and seats left.
-3. **One badge, one red.** A card shows at most one badge (Live now, Almost full, Full). Red is
-   for the single most important action on a screen.
-4. **Real data only.** No invented numbers, reviews or testimonials.
+Two references set the feel. The **structure** is a marketplace (Airbnb): search first,
+shelves of real things, facts on every card, nothing to read that isn't useful. The **warmth**
+is a crafted product site (Wispr Flow): cream paper, a classic serif for the big moments,
+buttons with a hand-drawn confidence — lavender fill, dark outline. Premium here means
+*calm and exact*, not glossy: thin edges, soft light from above, motion that answers you.
 
-## Colour
+## Colors
 
-| Token | Hex | Use |
+A paper-and-ink system with two signals.
+
+- **Neutral {colors.neutral}** is the page — cream, never pure white, so white cards lift off it.
+- **Surface {colors.surface}** is every card, panel and sheet that holds content.
+- **Primary {colors.primary}** is ink: all text, solid buttons, the dark bands. Never pure black.
+- **Secondary {colors.secondary}** (lavender) is the call to action — Register, Get your pass,
+  Create event — always with a 2px ink outline.
+- **Tertiary {colors.tertiary}** (brand red) is reserved: the logo, the search button, live
+  badges. Its scarcity is what makes "Live now" read instantly.
+- **Night {colors.night}** with **cream {colors.on-night}** type carries the one or two cinematic
+  bands per page.
+
+## Typography
+
+**EB Garamond** speaks only at the big moments: the homepage welcome, dark bands, "Good
+questions", sign-in, the hosting welcome. It sets tight (−0.03em) and puts the second phrase in
+italic — "Every event, *one pass.*" — the whole phrase, never a single accented word.
+
+**Figtree** does all the work: page titles {typography.headline-lg}, shelf titles
+{typography.headline-md}, card titles {typography.title-md}, body {typography.body-md}.
+Labels are sentence case. **JetBrains Mono** appears only in pass codes.
+
+## Layout
+
+Centred column, max {spacing.container-max}, margins {spacing.margin-mobile} → {spacing.margin-desktop},
+8px rhythm. Browsing pages are shelves (horizontally scrolling rows) and grids of event cards;
+detail pages split 2:1 with a sticky panel. Feature groups use a **bento**: one large tile with
+a live preview beside smaller tiles, never a row of identical cards. Everything is left-aligned
+except the homepage welcome, which is centred like a poster.
+
+## Elevation & Depth
+
+Three planes, lit from above.
+
+1. **Paper** — the cream page.
+2. **Card** — white, a 1px {colors.outline} edge and a 1px white inner highlight on the top edge,
+   so the card catches light.
+3. **Float** — menus, the header on scroll, the booking panel: a soft shadow tinted warm
+   (`rgba(60, 40, 10, 0.10)`), never cold grey, plus a backdrop blur for the header.
+
+On hover a card lifts 2px and a soft light follows the cursor across it.
+
+## Shapes
+
+Rounded, with hierarchy: inputs {rounded.sm}, buttons and chips {rounded.md} or full pills,
+panels {rounded.lg}, event covers {rounded.xl}, big bands {rounded.2xl}. Avatars and icon
+buttons are circles.
+
+## Components
+
+- **Buttons:** lavender call to action with a 2px ink outline; solid ink for secondary actions
+  that still matter; white with an ink outline for the rest. The main call to action leans
+  toward the cursor slightly (magnetic) and presses down on click.
+- **Event card:** cover with {rounded.xl} corners, at most one badge, then title, date and time,
+  venue, price and seats left. No box around the card.
+- **Search:** one pill — what · when · kind — with the round red button that widens to say
+  "Search" while you're choosing.
+- **Tabs and category bar:** the current item has an ink underline that slides between items.
+- **Questions:** an accordion whose answers open smoothly; the plus turns into a cross.
+- **Ticker:** a single line of what's on next, gliding under the welcome; pauses on hover.
+- **Featured event:** the homepage's big card — cover, a live countdown in the serif,
+  when/where, a seats bar and the lavender Register.
+- **Bentos:** kinds (one large tile, four small, real counts), hosting (a scanner preview tile
+  plus three feature tiles on the night band). Tiles are lit by the cursor.
+- **Numbers:** real counts in the serif that count up once when they arrive.
+
+Inspiration taken from the awesome-design-md collection (Airbnb's single shadow tier and
+search orb, Apple's frosted bars and press scale, Stripe's tinted shadows, composited product
+previews and tabular figures, Linear's top-edge highlight, Superhuman's closing call to action)
+— never copied.
+
+## Motion
+
+| Role | Duration | Curve |
 |---|---|---|
-| `canvas` / `surface` | `#FFFEF6` / `#FFFFFF` | Cream page, white cards |
-| `ink` · `ink-2` · `ink-muted` · `ink-subtle` | `#1A1A1A` · `#3F3F3F` · `#6A6A6A` · `#717171` | Text |
-| `line` / `line-strong` | `#ECE8DD` / `#DCD6C6` | Warm hairlines, outlines |
-| `sunken` / `mist` | `#F6F3EA` / `#ECE8DC` | Footer, wells, hovers |
-| `lavender` | `#F0D7FF` | Call-to-action buttons (with a 2px `ink` outline) |
-| `night` / `cream` | `#1A1A1A` / `#FFFFEB` | Dark bands with cream type |
-| `accent` | `#E3264F` | Search button, the logo, live badges |
-| `live` · `warn` · `danger` | status colours, always with a word |
+| Feedback (hover, press, toggle, tab switch) | 160ms | `cubic-bezier(0.16, 1, 0.3, 1)` |
+| Content (menus, sheets, accordion) | 450ms | same |
+| Reveal (first entrance of a section) | 700ms, 70ms stagger | same |
 
-## Type
+Motion answers people. One out-expo curve everywhere — nothing bounces, nothing lingers. There is **one** orchestrated
+entrance per page: the homepage welcome rises line by line, sharpening from a slight blur.
+Below the fold, sections appear once as you reach them, never again. Under
+`prefers-reduced-motion` everything is shown in its final state with no movement.
 
-Figtree for the interface: page titles 28–32px semibold, shelf titles 22px semibold, card titles
-15px semibold, body 14–16px. EB Garamond (`font-display`, `text-display-xl/2xl`) for the big
-moments — the homepage hero, dark bands, "Good questions", sign-in, the hosting welcome — with an
-`<em>` for the italic second phrase. JetBrains Mono only for pass codes.
+## Do's and Don'ts
 
-## Shape
-
-- Buttons: 10–12px corners, 40–48px tall. `accent` is lavender with a 2px dark outline; primary is solid dark.
-- Search, filter chips, the account button and icon buttons are fully round.
-- Cards: cover with 20px corners, no box around the card. Panels: 16–24px corners, 1px `#DDDDDD`.
-- Shadows only on things that float or on hover (`shadow-raised`, `shadow-pop`, `shadow-search`).
-
-## Covers
-
-`EventArt` draws a scene per kind of event (court, circuit, controller, diyas, chat bubbles,
-confetti) in the category's colours, varied by event id. An uploaded banner always wins.
-
-## Shell
-
-- `SiteHeader`: logo · illustrated tabs (Events, Calendar, Passes, Photos) · Host link,
-  notifications, account menu. Home and Events add the big `HeaderSearch` pill, which folds into
-  `CompactSearch` on scroll. Hosting swaps the tabs and shows Create event.
-- Phones: search button and menu sheet; signed-in phones get the `TabBar`
-  (Explore, Passes, Calendar, Photos, Profile).
-- `SiteFooter`: three columns on `#F7F7F7`.
+- **Do** keep red for search, the logo and live states only.
+- **Do** put the italic on the whole second phrase of a serif headline.
+- **Do** show real data — counts, seats left, prices — and nothing invented.
+- **Don't** add taglines or explanatory paragraphs; titles are two or three words.
+- **Don't** stack fade-ups on every block or loop anything except the live dot and the ticker.
+- **Don't** use grey shadows, gradients as decoration, or all-caps labels.
+- **Don't** put more than one badge on a card.

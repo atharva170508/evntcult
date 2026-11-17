@@ -11,8 +11,28 @@ export interface EventRow {
   events: EventSummary[];
 }
 
+export interface KindCount {
+  key: string;
+  title: string;
+  count: number;
+  accent: string;
+  seed: string;
+}
+
+export interface VenueCount {
+  name: string;
+  count: number;
+  next: EventSummary;
+}
+
 export interface LandingData {
   rows: EventRow[];
+  /** The event to feature: happening now, or the soonest one with the most demand. */
+  featured: EventSummary | null;
+  /** What's on next, soonest first: the ticker. */
+  ticker: EventSummary[];
+  kinds: KindCount[];
+  venues: VenueCount[];
   upcoming: number;
   going: number;
   checkins: number;
@@ -66,5 +86,24 @@ export async function getLandingData(): Promise<LandingData> {
     if (list.length >= 2) out.push({ key: `kind-${k}`, title: KIND_TITLE[k], href: `/events?type=${k}`, events: list });
   }
 
-  return { rows: out, upcoming: events.length, going, checkins };
+  // Featured: live now, else the most-registered event in the next 7 days, else the next one.
+  const soon = events.filter((e) => +e.startsAt > t && +e.startsAt < t + 7 * DAY);
+  const featured = live[0] ?? [...soon].sort((a, b) => b.registered - a.registered)[0] ?? events[0] ?? null;
+
+  const kinds: KindCount[] = Object.entries(KIND_TITLE)
+    .map(([k, title]) => {
+      const list = byKind.get(k) ?? [];
+      return { key: k, title, count: list.length, accent: list[0]?.accent ?? "blue", seed: list[0]?.id ?? k };
+    })
+    .filter((k) => k.count > 0)
+    .sort((a, b) => b.count - a.count);
+
+  const byVenue = new Map<string, EventSummary[]>();
+  for (const e of events) if (e.venueName) byVenue.set(e.venueName, [...(byVenue.get(e.venueName) ?? []), e]);
+  const venues: VenueCount[] = [...byVenue.entries()]
+    .map(([name, list]) => ({ name, count: list.length, next: list[0] }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 6);
+
+  return { rows: out, featured, ticker: events.slice(0, 12), kinds, venues, upcoming: events.length, going, checkins };
 }
