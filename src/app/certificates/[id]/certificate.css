@@ -1,35 +1,38 @@
 /* A4 landscape, 1123 x 794 at 96dpi. Every size is a share of the sheet, so it scales on a phone. */
 @page { size: A4 landscape; margin: 0; }
 
-.cert-page { min-height: 100dvh; padding: 20px 16px 40px; }
-.cert-actions { max-width: 1123px; margin: 0 auto 14px; display: flex; justify-content: flex-end; }
+.cert-page { min-height: 100dvh; padding: 20px 16px 48px; background: #EEECE6; }
+.cert-actions { max-width: 1123px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .cert-frame { container-type: inline-size; max-width: 1123px; margin: 0 auto; }
 .cert {
   --u: calc(100cqw / 1123);
   box-sizing: border-box; position: relative; aspect-ratio: 1123 / 794; width: 100%;
-  background: #f7f6f2; color: #111; padding: calc(var(--u) * 72) calc(var(--u) * 80);
+  background: #FFFFFF; color: #111110; border-radius: 4px; box-shadow: 0 1px 2px rgba(17,17,16,.06), 0 24px 60px -24px rgba(17,17,16,.25); padding: calc(var(--u) * 72) calc(var(--u) * 80);
   display: flex; flex-direction: column; font-family: var(--font-sans), system-ui, sans-serif;
 }
-.cert-brand { margin: 0; font-family: var(--font-mono), monospace; font-size: calc(var(--u) * 14); letter-spacing: .28em; }
-.cert-kind { margin: calc(var(--u) * 44) 0 0; font-family: var(--font-mono), monospace; font-size: calc(var(--u) * 14); letter-spacing: .16em; text-transform: uppercase; }
-.cert-name { margin: calc(var(--u) * 34) 0 0; font-size: calc(var(--u) * 64); line-height: 1.05; font-weight: 700; overflow-wrap: anywhere; }
-.cert-verb { margin: calc(var(--u) * 16) 0 0; font-size: calc(var(--u) * 18); }
-.cert-event { margin: calc(var(--u) * 10) 0 0; font-size: calc(var(--u) * 34); line-height: 1.12; font-weight: 700; text-transform: uppercase; overflow-wrap: anywhere; }
-.cert-rule { width: calc(var(--u) * 120); height: 2px; background: #dcfe62; margin-top: calc(var(--u) * 16); }
+.cert::before { content: ""; position: absolute; inset: calc(var(--u) * 24); border: 1px solid #E4E1DA; pointer-events: none; }
+.cert::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--u) * 10); background: #D93A12; }
+.cert-brand { margin: 0; font-size: calc(var(--u) * 20); font-weight: 600; letter-spacing: -.02em; }
+.cert-kind { margin: calc(var(--u) * 44) 0 0; font-family: var(--font-mono), monospace; font-size: calc(var(--u) * 14); letter-spacing: .16em; text-transform: uppercase; color: #6B6862; }
+.cert-name { margin: calc(var(--u) * 34) 0 0; font-family: var(--font-serif), Georgia, serif; font-style: italic; font-size: calc(var(--u) * 84); line-height: 1; font-weight: 400; letter-spacing: -.01em; overflow-wrap: anywhere; }
+.cert-verb { margin: calc(var(--u) * 18) 0 0; font-size: calc(var(--u) * 18); color: #6B6862; }
+.cert-event { margin: calc(var(--u) * 10) 0 0; font-size: calc(var(--u) * 36); line-height: 1.1; font-weight: 600; letter-spacing: -.025em; overflow-wrap: anywhere; }
+.cert-rule { width: calc(var(--u) * 120); height: calc(var(--u) * 3); background: #D93A12; margin-top: calc(var(--u) * 16); }
 .cert-when { margin: calc(var(--u) * 16) 0 0; font-family: var(--font-mono), monospace; font-size: calc(var(--u) * 15); }
 .cert-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; gap: calc(var(--u) * 40); }
-.cert-sign { width: calc(var(--u) * 220); border-top: 1px solid #111; }
+.cert-sign { width: calc(var(--u) * 220); border-top: 1px solid #111110; }
 .cert-org { margin: calc(var(--u) * 10) 0 0; font-size: calc(var(--u) * 15); }
 .cert-check { display: flex; align-items: flex-end; gap: calc(var(--u) * 16); }
 .cert-qr { width: calc(var(--u) * 92); height: calc(var(--u) * 92); }
 .cert-qr svg { display: block; width: 100%; height: 100%; }
-.cert-code { margin: 0; font-family: var(--font-mono), monospace; font-size: calc(var(--u) * 16); font-weight: 700; letter-spacing: .08em; }
-.cert-at { margin: calc(var(--u) * 6) 0 0; font-family: var(--font-mono), monospace; font-size: calc(var(--u) * 11); line-height: 1.35; }
+.cert-code { margin: 0; font-family: var(--font-mono), monospace; font-size: calc(var(--u) * 16); font-weight: 500; letter-spacing: .08em; }
+.cert-at { margin: calc(var(--u) * 6) 0 0; font-family: var(--font-mono), monospace; font-size: calc(var(--u) * 11); line-height: 1.35; color: #6B6862; }
 
 @media print {
-  html, body { background: #f7f6f2 !important; }
+  html, body { background: #FFFFFF !important; }
+  .cert-page { background: none; }
   .cert-actions { display: none; }
   .cert-page { padding: 0; min-height: 0; }
   .cert-frame { max-width: none; width: 297mm; }
-  .cert { height: 210mm; width: 297mm; aspect-ratio: auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
+  .cert { height: 210mm; width: 297mm; aspect-ratio: auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; border-radius: 0; box-shadow: none; }
 }

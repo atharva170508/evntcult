@@ -57,7 +57,7 @@ export function QuestionsSetup({ eventId }: { eventId: string }) {
               ]}
               onChange={setKind}
             />
-            <label className="o-inline" style={{ fontSize: 12 }}>
+            <label className="o-inline" style={{ fontSize: 13 }}>
               <input type="checkbox" checked={required} onChange={(e) => setRequired(e.target.checked)} /> Required
             </label>
             <span className="o-spacer" />
@@ -75,7 +75,7 @@ export function QuestionsSetup({ eventId }: { eventId: string }) {
               <div className="o-merch-row" key={q.id}>
                 <span>{q.label}</span>
                 <span className="o-meta">{q.kind === "choice" ? q.options.join(", ") : "text"}{q.required ? " · required" : ""}</span>
-                <button type="button" className="o-link" style={{ fontSize: 11 }} onClick={() => remove(q.id)}>Remove</button>
+                <button type="button" className="o-link" style={{ fontSize: 12.5 }} onClick={() => remove(q.id)}>Remove</button>
               </div>
             ))}
           </div>

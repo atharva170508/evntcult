@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import QRCode from "qrcode";
 import { getDB } from "@/lib/db";
 import { getViewer } from "@/lib/rbac";
@@ -31,16 +33,19 @@ export default async function CertificatePage({ params }: Props) {
   if (!c) notFound();
 
   const scheme = host.startsWith("localhost") ? "http" : "https";
-  const qr = await QRCode.toString(`${scheme}://${host}/verify/${c.publicCode}`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#111111", light: "#f7f6f2" } });
+  const qr = await QRCode.toString(`${scheme}://${host}/verify/${c.publicCode}`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#111110", light: "#ffffff" } });
 
   return (
     <main className="cert-page">
       <div className="cert-actions">
+        <Link href="/certificates" className="group inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink">
+          <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" aria-hidden /> All certificates
+        </Link>
         <PrintButton />
       </div>
       <div className="cert-frame">
         <article className="cert" aria-label={HEADING[c.kind]}>
-          <p className="cert-brand">EVNTCULT</p>
+          <p className="cert-brand">EvntCult</p>
           <p className="cert-kind">{HEADING[c.kind]}</p>
           <h1 className="cert-name">{c.name}</h1>
           <p className="cert-verb">{VERB[c.kind]}</p>

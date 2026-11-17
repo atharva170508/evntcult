@@ -1,18 +1,15 @@
-import { Barlow_Semi_Condensed } from "next/font/google";
 import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/rbac";
-import { OrganizerNav } from "@/components/organizer-ui/OrganizerNav";
+import { AppShell } from "@/components/shell/AppShell";
 import "./organizer.css";
 
-const barlow = Barlow_Semi_Condensed({ subsets: ["latin"], weight: ["600"], variable: "--font-barlow", display: "swap" });
-
-/** The hosting side has its own quiet shell. Anyone logged in can host. */
+/** Hosting lives in the same frame as the rest of the app, in its own "Host" workspace. Anyone logged in can host. */
 export default async function OrganizerLayout({ children }: { children: React.ReactNode }) {
-  if (!(await getViewer())) redirect("/signin?next=/organizer");
+  const viewer = await getViewer();
+  if (!viewer) redirect("/signin?next=/organizer");
   return (
-    <div className={`o-root ${barlow.variable}`}>
-      <OrganizerNav />
-      <div className="o-main">{children}</div>
-    </div>
+    <AppShell wide viewer={{ name: viewer.name, email: viewer.email, image: viewer.image, isOrganizer: viewer.verifiedOrganizer, isAdmin: viewer.role === "admin" }}>
+      <div className="o-root">{children}</div>
+    </AppShell>
   );
 }

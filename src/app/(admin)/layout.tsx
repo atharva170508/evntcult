@@ -1,12 +1,15 @@
-import { Barlow_Semi_Condensed } from "next/font/google";
+import { AppShell } from "@/components/shell/AppShell";
+import { getViewer } from "@/lib/rbac";
 import "../(organizer)/organizer.css";
 
-const barlow = Barlow_Semi_Condensed({ subsets: ["latin"], weight: ["600"], variable: "--font-barlow", display: "swap" });
-
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const viewer = await getViewer();
   return (
-    <div className={`o-root ${barlow.variable}`}>
-      <div className="o-main">{children}</div>
-    </div>
+    <AppShell
+      wide
+      viewer={viewer ? { name: viewer.name, email: viewer.email, image: viewer.image, isOrganizer: viewer.verifiedOrganizer, isAdmin: viewer.role === "admin" } : null}
+    >
+      <div className="o-root">{children}</div>
+    </AppShell>
   );
 }

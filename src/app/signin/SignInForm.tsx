@@ -10,7 +10,7 @@ type ApiErr = { error?: { code: string; message: string } };
 const OWNER_EMAIL = "evntcult@gmail.com";
 
 const inputCls =
-  "mt-1.5 w-full rounded-2xl border border-line bg-surface px-4 py-3.5 text-[15px] placeholder:text-ink-subtle focus:outline-none";
+  "mt-1.5 h-12 w-full rounded-tile border border-line bg-surface px-4 text-[15px] shadow-[inset_0_1px_1px_rgba(17,17,16,0.03)] transition-[border-color,box-shadow] duration-fast placeholder:text-ink-subtle hover:border-line-strong focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/[0.06]";
 
 /**
  * Sign in / sign up.
@@ -98,9 +98,9 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
   return (
     <>
     {ownerOpen && (
-      <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4" role="dialog" aria-modal="true" aria-labelledby="owner-title">
-        <form onSubmit={submitOwner} className="w-full max-w-sm space-y-3 rounded-3xl border border-line bg-surface p-6">
-          <h2 id="owner-title" className="text-[20px] font-bold">Owner code</h2>
+      <div className="fixed inset-0 z-50 grid place-items-center bg-ink/40 px-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="owner-title">
+        <form onSubmit={submitOwner} className="w-full max-w-sm space-y-4 rounded-panel bg-surface p-6 shadow-pop">
+          <h2 id="owner-title" className="text-h3 font-semibold">Owner code</h2>
           <input
             type="password"
             required
@@ -112,15 +112,15 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
             className={inputCls}
           />
           {ownerError && (
-            <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
+            <p role="alert" className="rounded-tile bg-danger-soft px-3.5 py-2.5 text-[13px] font-medium text-danger">
               {ownerError}
             </p>
           )}
           <div className="flex gap-2">
-            <button type="button" onClick={() => setOwnerOpen(false)} className="flex-1 rounded-full border border-line py-3 text-[14px] font-semibold">
+            <button type="button" onClick={() => setOwnerOpen(false)} className="h-11 flex-1 rounded-full bg-surface text-[14px] font-medium shadow-card transition-shadow hover:shadow-raised">
               Cancel
             </button>
-            <button disabled={busy || !ownerCode} className="flex flex-1 items-center justify-center gap-2 rounded-full bg-volt py-3 text-[14px] font-bold text-ink-inverse disabled:opacity-50">
+            <button disabled={busy || !ownerCode} className="flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-ink text-[14px] font-medium text-white shadow-button disabled:opacity-50">
               {busy && <Loader2 className="size-4 animate-spin" aria-hidden />} Open
             </button>
           </div>
@@ -130,7 +130,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
     <form onSubmit={submit} className="mt-7 space-y-3">
       {step === "email" ? (
         <label className="block">
-          <span className="text-[13px] font-semibold text-ink-2">Email</span>
+          <span className="text-[13px] font-medium text-ink-2">Email</span>
           <input
             type="email"
             required
@@ -143,14 +143,14 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
         </label>
       ) : (
         <div className="space-y-3">
-          <p className="flex items-start gap-2.5 rounded-2xl border border-line bg-surface px-4 py-3 text-[14px] text-ink-2" role="status">
+          <p className="flex items-start gap-2.5 rounded-tile bg-live-soft px-4 py-3 text-[14px] text-ink-2" role="status">
             <MailCheck className="mt-0.5 size-4 shrink-0 text-live" aria-hidden />
             <span>
               We emailed a 6-digit code to <b className="text-ink">{email}</b>. It works for 10 minutes. Check spam if you don&apos;t see it.
             </span>
           </p>
           <label className="block">
-            <span className="text-[13px] font-semibold text-ink-2">6-digit code</span>
+            <span className="text-[13px] font-medium text-ink-2">6-digit code</span>
             <input
               required
               autoFocus
@@ -161,7 +161,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
               placeholder="000000"
-              className={`${inputCls} text-center font-mono text-[26px] font-bold tracking-[0.5em]`}
+              className={`${inputCls} text-center h-16 font-mono text-[26px] font-medium tracking-[0.5em]`}
             />
           </label>
         </div>
@@ -170,7 +170,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
       {needName && (
         <>
           <label className="block">
-            <span className="text-[13px] font-semibold text-ink-2">Your name</span>
+            <span className="text-[13px] font-medium text-ink-2">Your name</span>
             <input required minLength={2} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} className={inputCls} />
           </label>
           <PhoneFields phone={phone} setPhone={setPhone} optIn={optIn} setOptIn={setOptIn} />
@@ -178,14 +178,14 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
       )}
 
       {error && (
-        <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
+        <p role="alert" className="rounded-tile bg-danger-soft px-3.5 py-2.5 text-[13px] font-medium text-danger">
           {error}
         </p>
       )}
 
       <button
         disabled={busy || (step === "code" && code.length !== 6)}
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-volt py-3.5 text-[15px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover disabled:opacity-50"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-white shadow-button transition-[background-color,transform] duration-fast hover:bg-[#2a2a28] active:scale-[0.98] disabled:opacity-50"
       >
         {busy && <Loader2 className="size-4 animate-spin" aria-hidden />}
         {codeLogin && step === "email" ? "Email me a code" : needName ? "Create account" : "Log in"}
@@ -196,7 +196,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
           <button type="button" onClick={() => { setStep("email"); setError(null); }} className="font-semibold text-ink-muted underline-offset-4 hover:text-ink hover:underline">
             Use a different email
           </button>
-          <button type="button" disabled={busy || resendIn > 0} onClick={sendCode} className="font-semibold text-brand-ink underline-offset-4 hover:underline disabled:text-ink-subtle disabled:no-underline">
+          <button type="button" disabled={busy || resendIn > 0} onClick={sendCode} className="font-semibold text-accent-ink underline-offset-4 hover:underline disabled:text-ink-subtle disabled:no-underline">
             {resendIn > 0 ? `Resend code in ${resendIn}s` : "Resend code"}
           </button>
         </div>

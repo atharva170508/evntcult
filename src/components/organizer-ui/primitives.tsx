@@ -42,10 +42,10 @@ export function Field({ label, error, hint, children }: { label: string; error?:
 
 export function Segmented<T extends string>({ value, options, onChange, label, fill }: { value: T; options: readonly (readonly [T, string])[]; onChange: (v: T) => void; label: string; fill?: "accent" }) {
   const i = Math.max(0, options.findIndex(([v]) => v === value));
-  const style = fill === "accent" ? ({ "--seg-fill": "var(--accent)", "--seg-text": "var(--ink)" } as React.CSSProperties) : undefined;
+  const style = fill === "accent" ? ({ "--seg-fill": "var(--ink)", "--seg-text": "#fff" } as React.CSSProperties) : undefined;
   return (
     <div className="o-seg" role="radiogroup" aria-label={label} style={style}>
-      <span className="o-seg-thumb" aria-hidden style={{ width: `calc((100% - 4px) / ${options.length})`, transform: `translateX(${i * 100}%)` }} />
+      <span className="o-seg-thumb" aria-hidden style={{ width: `calc((100% - 6px) / ${options.length})`, transform: `translateX(${i * 100}%)` }} />
       {options.map(([v, l]) => (
         <button key={v} type="button" role="radio" aria-checked={v === value} onClick={() => onChange(v)}>
           {l}

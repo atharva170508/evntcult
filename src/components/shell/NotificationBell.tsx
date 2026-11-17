@@ -55,25 +55,31 @@ export function NotificationBell() {
 
   return (
     <div ref={box} className="sm:relative">
-      <button onClick={toggle} aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"} aria-expanded={open} className="relative grid size-10 place-items-center rounded-full border border-line bg-surface text-ink-2 transition-colors hover:border-volt/60 sm:size-11">
-        <Bell className="size-[18px]" />
-        {unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-volt px-1 font-mono text-[10px] font-bold text-ink-inverse">{unread > 9 ? "9+" : unread}</span>}
+      <button onClick={toggle} aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"} aria-expanded={open} className="relative grid size-9 place-items-center rounded-full text-ink-2 transition-colors duration-fast hover:bg-ink/[0.05] hover:text-ink aria-expanded:bg-ink/[0.06]">
+        <Bell className="size-[18px]" aria-hidden />
+        {unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-[17px] min-w-[17px] place-items-center rounded-full bg-accent px-1 font-mono text-[10px] font-medium text-white ring-2 ring-surface">{unread > 9 ? "9+" : unread}</span>}
       </button>
       {open && (
-        <div className="absolute inset-x-4 top-[66px] z-40 max-h-[70dvh] overflow-y-auto rounded-2xl border border-line bg-surface shadow-pop sm:inset-x-auto sm:right-0 sm:top-[52px] sm:w-[340px]">
+        <div className="absolute inset-x-3 top-[60px] z-40 max-h-[70dvh] overflow-y-auto rounded-card bg-surface shadow-pop motion-safe:animate-scale-in origin-top-right sm:inset-x-auto sm:right-0 sm:top-[44px] sm:w-[360px]">
           {items.length === 0 ? (
-            <p className="p-5 text-center text-[14px] text-ink-muted">No notifications</p>
+            <p className="px-5 py-8 text-center text-[14px] text-ink-muted">You&apos;re all caught up.</p>
           ) : (
-            <ul className="divide-y divide-line">
+            <>
+            <div className="flex items-center justify-between border-b border-line/70 px-4 py-3"><p className="text-[14px] font-semibold">Notifications</p>{unread > 0 && <span className="font-mono text-[11.5px] text-ink-muted">{unread} new</span>}</div>
+            <ul className="divide-y divide-line/70 p-1">
               {items.map((n) => (
                 <li key={n.id}>
-                  <Link href={n.href} onClick={() => setOpen(false)} className="block px-4 py-3 hover:bg-white/5">
-                    <span className={`block text-[13.5px] ${n.read ? "text-ink-2" : "font-semibold"}`}>{n.text}</span>
-                    <span className="mt-0.5 block text-[11.5px] text-ink-subtle">{relative(new Date(n.at))}</span>
+                  <Link href={n.href} onClick={() => setOpen(false)} className="flex gap-3 rounded-tile px-3 py-3 transition-colors hover:bg-sunken/70">
+                    <span aria-hidden className={`mt-1.5 size-1.5 shrink-0 rounded-full ${n.read ? "bg-transparent" : "bg-accent"}`} />
+                    <span className="min-w-0">
+                      <span className={`block text-[13.5px] ${n.read ? "text-ink-2" : "font-medium text-ink"}`}>{n.text}</span>
+                      <span className="mt-0.5 block font-mono text-[11px] text-ink-subtle">{relative(new Date(n.at))}</span>
+                    </span>
                   </Link>
                 </li>
               ))}
             </ul>
+            </>
           )}
         </div>
       )}

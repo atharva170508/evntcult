@@ -8,9 +8,9 @@ import { Notice, Textarea } from "@/components/ui/Field";
 import { cn } from "@/lib/utils";
 
 const KINDS = [
-  { value: "schedule", label: "Schedule change", whatsapp: true },
-  { value: "venue", label: "Venue change", whatsapp: true },
-  { value: "update", label: "General info", whatsapp: false },
+  { value: "schedule", label: "Schedule", whatsapp: true },
+  { value: "venue", label: "Venue", whatsapp: true },
+  { value: "update", label: "General", whatsapp: false },
 ] as const;
 
 /** Post an update to everyone registered. WhatsApp is ticked by default for schedule/venue changes. */
@@ -48,13 +48,13 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <fieldset className="inline-flex flex-wrap rounded-full bg-sunken p-1">
+      <fieldset className="grid w-full grid-cols-3 rounded-full bg-sunken p-1">
         <legend className="sr-only">Type of update</legend>
         {KINDS.map((k) => (
           <label
             key={k.value}
             className={cn(
-              "cursor-pointer rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-[background-color,color,box-shadow] duration-fast focus-within:ring-2 focus-within:ring-ink",
+              "cursor-pointer rounded-full px-3 py-1.5 text-center text-[13px] font-medium transition-[background-color,color,box-shadow] duration-fast focus-within:ring-2 focus-within:ring-ink",
               kind === k.value ? "bg-surface text-ink shadow-card" : "text-ink-muted hover:text-ink",
             )}
           >

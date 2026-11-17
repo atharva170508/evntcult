@@ -29,7 +29,7 @@ export function Ticket(p: TicketProps) {
       setQr(null);
       return;
     }
-    QRCode.toString(p.qrValue, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#0a0a0c", light: "#eeeee8" } }).then((s) => live && setQr(s));
+    QRCode.toString(p.qrValue, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#111110", light: "#ffffff" } }).then((s) => live && setQr(s));
     return () => {
       live = false;
     };
@@ -60,7 +60,7 @@ export function Ticket(p: TicketProps) {
         <div className="o-ticket-left-seats">{p.seatsLabel}</div>
       </div>
       <svg className="o-ticket-perf" aria-hidden width="1" height="208">
-        <line x1="0.5" y1="9" x2="0.5" y2="199" stroke="#3A3A44" strokeDasharray="7 7" />
+        <line x1="0.5" y1="9" x2="0.5" y2="199" stroke="#D1CDC4" strokeDasharray="7 7" />
       </svg>
       <span className="o-notch" aria-hidden style={{ top: -10 }} />
       <span className="o-notch" aria-hidden style={{ bottom: -10 }} />

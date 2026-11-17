@@ -17,7 +17,7 @@ export function Agenda({ multi, byDay, today, cursor, empty }: { multi: Calendar
             <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {e.title.toUpperCase()} · {spanDays(e)} days{e.venue ? ` · ${e.venue}` : ""}
             </span>
-            <span className="o-mono" style={{ fontSize: 10, whiteSpace: "nowrap" }}>
+            <span className="o-mono" style={{ fontSize: 12.5, whiteSpace: "nowrap" }}>
               {spanRange(e)}
             </span>
           </Link>

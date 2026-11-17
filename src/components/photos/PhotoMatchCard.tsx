@@ -20,11 +20,11 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
   }
 
   return (
-    <article className="group overflow-hidden rounded-[22px] border border-white/[0.07] bg-surface transition-colors hover:border-volt/40">
-      <div className="relative aspect-[4/5] bg-white/[0.03]">
+    <article className="card card-hover group overflow-hidden">
+      <div className="relative aspect-[4/5] bg-sunken">
         {src ? (
           <>
-            {!loaded && <div className="absolute inset-0 motion-safe:animate-pulse bg-white/[0.04]" aria-hidden />}
+            {!loaded && <div className="absolute inset-0 skeleton rounded-none" aria-hidden />}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               key={src}
@@ -45,7 +45,7 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
             </span>
           </div>
         )}
-        <span className="absolute left-2.5 top-2.5 rounded-full bg-volt px-2.5 py-1 text-[12px] font-bold tabular-nums text-ink-inverse shadow-brand">
+        <span className="absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2.5 py-1 font-mono text-[11.5px] font-medium tabular-nums text-ink shadow-[0_1px_2px_rgba(17,17,16,0.2)]">
           {pct}% Match
         </span>
       </div>
@@ -54,9 +54,9 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
           href={match.downloadUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex w-full items-center justify-center gap-1.5 rounded-full bg-volt px-3 py-2.5 text-[13px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover"
+          className="flex h-9 w-full items-center justify-center gap-1.5 rounded-full bg-ink px-3 text-[13px] font-medium text-white shadow-button transition-colors hover:bg-[#2a2a28]"
         >
-          <Download className="size-4" aria-hidden /> Download Full HD (DSLR)
+          <Download className="size-4" aria-hidden /> Download full HD
           <span className="sr-only">, photo {index + 1}, opens a download from Google Drive</span>
         </a>
       </div>

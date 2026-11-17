@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { MessageCircle } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 const KEY = "evntcult-wa-prompt-dismissed";
 
@@ -35,15 +37,18 @@ export function WhatsAppPrompt({ phone }: { phone: string }) {
 
   if (!show) return null;
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-line p-4">
-      <p className="text-[14px] font-semibold">Get event reminders on WhatsApp?</p>
-      <div className="flex gap-2">
-        <button disabled={busy} onClick={turnOn} className="rounded-full bg-volt px-4 py-2 text-[13px] font-bold text-ink-inverse disabled:opacity-50">
-          Yes
-        </button>
-        <button onClick={dismiss} className="rounded-full border border-line px-4 py-2 text-[13px] font-semibold">
-          No
-        </button>
+    <div className="flex items-start gap-3 rounded-tile bg-live-soft/70 p-3.5">
+      <MessageCircle className="mt-0.5 size-4 shrink-0 text-live" aria-hidden />
+      <div className="min-w-0 flex-1">
+        <p className="text-[13.5px] font-medium">Get event reminders on WhatsApp?</p>
+        <div className="mt-2.5 flex gap-2">
+          <Button size="sm" loading={busy} onClick={turnOn}>
+            Turn on
+          </Button>
+          <Button size="sm" variant="ghost" onClick={dismiss}>
+            Not now
+          </Button>
+        </div>
       </div>
     </div>
   );

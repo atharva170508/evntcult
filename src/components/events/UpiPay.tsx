@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Check, Copy, Hourglass } from "lucide-react";
+import { Button, buttonClass } from "@/components/ui/Button";
+import { Input, Notice } from "@/components/ui/Field";
 import { formatINR } from "@/lib/money";
 
 export interface UpiPayProps {
@@ -28,10 +30,10 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected }: Up
     e.preventDefault();
     setBusy(true);
     setError(null);
-    const res = await fetch(`/api/registrations/${regId}/upi`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ utr: value }) });
-    const data = (await res.json().catch(() => ({}))) as { error?: { message: string } };
+    const res = await fetch(`/api/registrations/${regId}/upi`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ utr: value }) }).catch(() => null);
+    const data = ((await res?.json().catch(() => ({}))) ?? {}) as { error?: { message: string } };
     setBusy(false);
-    if (!res.ok) return setError(data.error?.message ?? "Didn't save. Try again.");
+    if (!res?.ok) return setError(data.error?.message ?? (res ? "Didn't save. Try again." : "You seem to be offline. Try again."));
     setEditing(false);
     setValue("");
     router.refresh();
@@ -49,64 +51,72 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected }: Up
 
   if (utr && !editing) {
     return (
-      <div className="rounded-2xl bg-warn-soft p-4">
-        <p className="text-[14px] font-bold text-warn">Payment being checked</p>
-        <p className="mt-1 font-mono text-[13px] text-ink-2">{utr}</p>
-        <button onClick={() => setEditing(true)} className="mt-2 text-[12.5px] font-semibold text-ink-muted underline">
-          Change ID
+      <Notice tone="warn" icon={Hourglass}>
+        <p>Payment being checked</p>
+        <p className="mt-1 font-mono font-normal text-ink-2">{utr}</p>
+        <button onClick={() => setEditing(true)} className="mt-2 text-[12.5px] font-medium text-ink-muted underline decoration-line-strong underline-offset-2 hover:text-ink">
+          Change transaction ID
         </button>
-      </div>
+      </Notice>
     );
   }
 
   return (
-    <div className="space-y-3 rounded-2xl border border-line p-4">
-      <p className="text-[16px] font-bold">Pay {formatINR(pricePaise)}</p>
-      {rejected && (
-        <p role="alert" className="rounded-2xl bg-danger-soft px-3.5 py-2.5 text-[13px] font-semibold text-danger">
-          The organizer couldn&apos;t find that payment. Check the ID.
-        </p>
-      )}
-      <div className="w-[150px] rounded-xl bg-white p-2 [&>svg]:size-full" dangerouslySetInnerHTML={{ __html: qrSvg }} />
-      <a href={uri} className="inline-flex w-full items-center justify-center rounded-full bg-volt py-3 text-[14px] font-semibold text-ink-inverse md:hidden">
-        Open UPI app
-      </a>
-      <div className="flex items-center gap-2">
-        <span className="min-w-0 flex-1 truncate font-mono text-[13px]">{vpa}</span>
-        <button type="button" onClick={copy} className="rounded-full border border-line px-3 py-1 text-[12px] font-semibold hover:border-volt/60">
-          {copied ? "Copied" : "Copy"}
-        </button>
+    <section aria-label={`Pay ${formatINR(pricePaise)} by UPI`} className="overflow-hidden rounded-card ring-1 ring-line">
+      <div className="flex items-center justify-between bg-sunken/60 px-4 py-3">
+        <p className="text-[14px] font-semibold">Pay by UPI</p>
+        <p className="font-mono text-[15px] font-medium tabular-nums">{formatINR(pricePaise)}</p>
       </div>
-      <form onSubmit={submit} className="space-y-2 border-t border-line pt-3">
-        <label htmlFor="upi-utr" className="block text-[13px] font-semibold">
-          UPI transaction ID
-        </label>
-        <input
-          id="upi-utr"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          inputMode="numeric"
-          autoComplete="off"
-          placeholder="12 digits"
-          maxLength={20}
-          className="w-full rounded-full border border-line bg-surface px-4 py-2.5 font-mono text-[14px]"
-        />
-        {error && (
-          <p role="alert" className="text-[12.5px] font-semibold text-danger">
-            {error}
-          </p>
-        )}
-        <div className="flex items-center gap-3">
-          <button disabled={busy || !value.trim()} className="inline-flex items-center gap-1.5 rounded-full bg-volt px-5 py-2.5 text-[14px] font-semibold text-ink-inverse disabled:opacity-50">
-            {busy && <Loader2 className="size-4 animate-spin" />} I&apos;ve paid
-          </button>
-          {editing && (
-            <button type="button" onClick={() => setEditing(false)} className="text-[13px] font-semibold text-ink-muted">
-              Cancel
-            </button>
-          )}
+      <div className="space-y-4 p-4">
+        {rejected && <Notice tone="danger">The organizer couldn&apos;t find that payment. Check the transaction ID.</Notice>}
+        <div className="flex items-center gap-4">
+          <div className="w-[128px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line [&>svg]:size-full" role="img" aria-label="UPI payment QR code" dangerouslySetInnerHTML={{ __html: qrSvg }} />
+          <div className="min-w-0 space-y-2">
+            <p className="text-[12.5px] text-ink-muted">Scan with any UPI app, or pay to</p>
+            <div className="flex items-center gap-1.5">
+              <span className="min-w-0 truncate font-mono text-[13px]">{vpa}</span>
+              <button type="button" onClick={copy} className={buttonClass("secondary", "sm", "h-7 shrink-0 px-2.5 text-[12px]")}>
+                {copied ? <Check className="size-3.5" aria-hidden /> : <Copy className="size-3.5" aria-hidden />}
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </div>
+          </div>
         </div>
-      </form>
-    </div>
+        <a href={uri} className={buttonClass("primary", "md", "w-full md:hidden")}>
+          Open UPI app
+        </a>
+        <form onSubmit={submit} className="space-y-2 border-t border-line pt-4">
+          <label htmlFor="upi-utr" className="block text-[13px] font-medium">
+            UPI transaction ID
+          </label>
+          <Input
+            id="upi-utr"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            inputMode="numeric"
+            autoComplete="off"
+            placeholder="12 digits"
+            maxLength={20}
+            aria-invalid={!!error || undefined}
+            className="font-mono"
+          />
+          {error && (
+            <p role="alert" className="text-[12.5px] font-medium text-danger">
+              {error}
+            </p>
+          )}
+          <div className="flex items-center gap-2 pt-1">
+            <Button type="submit" loading={busy} disabled={!value.trim()}>
+              I&apos;ve paid
+            </Button>
+            {editing && (
+              <Button type="button" variant="ghost" onClick={() => setEditing(false)}>
+                Cancel
+              </Button>
+            )}
+          </div>
+        </form>
+      </div>
+    </section>
   );
 }

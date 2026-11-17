@@ -10,7 +10,13 @@
 @layer base {
   :root {
     color-scheme: light;
-    --header-h: 64px;
+    /* Header = utility bar (56) on phones; + section tabs (44) from md up. */
+    --header-h: 57px;
+  }
+  @media (min-width: 768px) {
+    :root {
+      --header-h: 101px;
+    }
   }
   html {
     @apply bg-canvas text-ink antialiased;

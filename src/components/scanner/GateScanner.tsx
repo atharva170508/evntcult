@@ -502,12 +502,12 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
   return (
     <main className="mx-auto flex min-h-dvh max-w-lg flex-col gap-4 px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))]">
       <header className="flex items-center gap-3">
-        <Link href={`/events/${event.slug}`} aria-label="Back to the event" className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10">
+        <Link href={`/events/${event.slug}`} aria-label="Back to the event" className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 transition-colors hover:bg-white/15">
           <ArrowLeft className="size-5" />
         </Link>
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60">Gate scanner</p>
-          <h1 className="truncate font-display text-[20px] font-bold leading-tight">{event.title}</h1>
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">Gate scanner</p>
+          <h1 className="truncate text-[19px] font-semibold leading-tight tracking-[-0.01em]">{event.title}</h1>
         </div>
         <span
           className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-semibold ${online ? "bg-[#0fa968]/20 text-[#5ee0a5]" : "bg-[#f59e0b]/20 text-[#fbbf5a]"}`}
@@ -520,37 +520,37 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       </header>
 
       {authProblem && (
-        <p role="alert" className="rounded-2xl bg-[#e5484d]/20 px-4 py-3 text-[14px] font-semibold text-[#ffb4b6]">
+        <p role="alert" className="rounded-tile bg-[#e5484d]/20 px-4 py-3 text-[14px] font-semibold text-[#ffb4b6]">
           {authProblem} <Link href={`/signin?next=/organizer/scan/${event.id}`} className="underline">Sign in</Link>
         </p>
       )}
 
-      <section aria-label="Gate count" className="rounded-3xl bg-white/[0.06] p-4">
+      <section aria-label="Gate count" className="rounded-card bg-white/[0.06] p-5 ring-1 ring-inset ring-white/[0.06]">
         <div className="flex items-end justify-between">
           <p>
-            <span className="font-mono text-[40px] font-extrabold leading-none tabular-nums">{counts.checkedIn}</span>
+            <span className="font-mono text-[44px] font-medium leading-none tracking-[-0.03em] tabular-nums">{counts.checkedIn}</span>
             <span className="ml-1.5 text-[15px] text-white/60">in · of {counts.registered}</span>
           </p>
-          <p className="text-[12px] font-semibold text-white/50">{liveMode === "live" ? "● Live" : "Updates every 5 s"}</p>
+          <p className="font-mono text-[11.5px] text-white/50">{liveMode === "live" ? "● Live" : "Updates every 5 s"}</p>
         </div>
         <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
           <div className="h-full rounded-full bg-[#0fa968] transition-[width] duration-700" style={{ width: `${pct}%` }} />
         </div>
       </section>
 
-      <section className="relative aspect-square overflow-hidden rounded-3xl bg-black">
+      <section className="relative aspect-square overflow-hidden rounded-panel bg-black ring-1 ring-white/[0.08]">
         <video ref={videoRef} className={`size-full object-cover ${camera === "on" ? "" : "hidden"}`} playsInline muted />
         <canvas ref={canvasRef} className="hidden" />
 
         {camera === "on" && !verdict && (
-          <div aria-hidden className="pointer-events-none absolute inset-[18%] rounded-3xl border-[3px] border-white/80 shadow-[0_0_0_999px_rgba(0,0,0,0.35)]" />
+          <div aria-hidden className="pointer-events-none absolute inset-[18%] rounded-card border-[3px] border-white/85 shadow-[0_0_0_999px_rgba(0,0,0,0.35)]" />
         )}
 
         {camera !== "on" && !verdict && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
             <Camera className="size-10 text-white/60" />
             {cameraError ? <p className="text-[14px] text-[#ffb4b6]">{cameraError}</p> : <p className="text-[15px] text-white/70">Point the camera at a pass QR code.</p>}
-            <button onClick={startCamera} disabled={camera === "starting"} className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[15px] font-bold text-black disabled:opacity-60">
+            <button onClick={startCamera} disabled={camera === "starting"} className="inline-flex items-center gap-2 h-12 rounded-full bg-white px-6 text-[15px] font-medium text-[#111110] transition-transform active:scale-[0.98] disabled:opacity-60">
               {camera === "starting" ? <Loader2 className="size-4 animate-spin" /> : <Camera className="size-4" />}
               {camera === "error" ? "Try again" : "Start camera"}
             </button>
@@ -568,7 +568,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
             {verdict.color !== "red" && verdict.token && !!verdict.merch?.length && (
               <ul className="w-full max-w-xs space-y-2 text-left text-[14px]" aria-label="Goodies">
                 {verdict.merch.map((line) => (
-                  <li key={line.id} className="flex items-center justify-between gap-3 rounded-2xl bg-black/25 px-3 py-2">
+                  <li key={line.id} className="flex items-center justify-between gap-3 rounded-tile bg-black/25 px-3 py-2">
                     <span className="min-w-0">
                       <span className="block truncate font-bold">{line.label}</span>
                       <span className="block text-[12px] opacity-85">{line.note ?? (line.claimedAt ? `claimed ${fmtTime(new Date(line.claimedAt))}` : line.left === 0 ? "none left" : "not claimed")}</span>
@@ -617,8 +617,8 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
       {recent.length > 0 && (
         <section aria-label="Recent scans">
-          <h2 className="mb-2 text-[13px] font-bold uppercase tracking-[0.1em] text-white/50">Recent scans</h2>
-          <ul className="divide-y divide-white/10 rounded-2xl bg-white/[0.04]">
+          <h2 className="mb-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">Recent scans</h2>
+          <ul className="divide-y divide-white/[0.07] overflow-hidden rounded-card bg-white/[0.04] ring-1 ring-inset ring-white/[0.06]">
             {recent.map((r) => (
               <li key={r.id} className="flex items-center gap-3 px-4 py-2.5 text-[14px]">
                 <span className={`size-2.5 shrink-0 rounded-full ${r.color === "green" ? "bg-[#0fa968]" : r.color === "amber" ? "bg-[#f59e0b]" : "bg-[#e5484d]"}`} aria-hidden />

@@ -94,7 +94,7 @@ export function Rail(props: { events: CalendarEvent[]; clashes: RailClash[]; dra
         {next && (
           <Link className="o-rail-row o-kv" href={`/organizer/events/${next.id}`}>
             <span>Next</span>
-            <span className="o-mono" style={{ fontSize: 11 }}>
+            <span className="o-mono" style={{ fontSize: 12.5 }}>
               {next.title.slice(0, 22)}
             </span>
           </Link>

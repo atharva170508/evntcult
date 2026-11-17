@@ -1,30 +1,33 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { BottomNav } from "./BottomNav";
 import { EnterCodeDialog } from "./EnterCodeDialog";
 import { Footer } from "./Footer";
-import { MobileTabBar } from "./MobileTabBar";
-import { Sidebar } from "./Sidebar";
-import { TopBar, type NavViewer } from "./TopBar";
+import { Header, type NavViewer } from "./Header";
+import { workspaceFor } from "./nav";
+
+export type { NavViewer };
 
 /**
- * Signed in: sidebar + glass header + phone tabs. Signed out: marketing header only.
- * Both share the footer and the code dialog.
+ * One frame for every signed-in and public page: two-tier header, centred content column,
+ * footer on attendee/public pages, phone tab bar. Host and Admin pages use the same frame
+ * so the whole product feels like one app.
  */
-export function AppShell({ viewer, children }: { viewer: NavViewer | null; children: React.ReactNode }) {
+export function AppShell({ viewer, children, wide = false }: { viewer: NavViewer | null; children: React.ReactNode; wide?: boolean }) {
   const [codeOpen, setCodeOpen] = useState(false);
+  const ws = workspaceFor(usePathname());
 
   return (
-    <div className="flex min-h-dvh overflow-x-clip">
-      {viewer && <Sidebar isOrganizer={!!viewer.isOrganizer} onEnterCode={() => setCodeOpen(true)} />}
-      <div className="flex min-w-0 flex-1 flex-col">
-        <TopBar viewer={viewer} onEnterCode={() => setCodeOpen(true)} />
-        <main id="main" className="mx-auto w-full max-w-shell flex-1 px-gutter pb-8">
-          {children}
-        </main>
-        <Footer viewer={viewer} />
-      </div>
-      {viewer && <MobileTabBar isOrganizer={!!viewer.isOrganizer} />}
+    <div className="flex min-h-dvh flex-col overflow-x-clip">
+      <Header viewer={viewer} wide={wide} onEnterCode={() => setCodeOpen(true)} />
+      <main id="main" className={cn("mx-auto w-full flex-1 px-gutter pb-24 md:pb-12", wide ? "max-w-[1440px]" : "max-w-shell")}>
+        {children}
+      </main>
+      {ws === "attend" && <Footer viewer={viewer} />}
+      {viewer && <BottomNav />}
       <EnterCodeDialog open={codeOpen} onClose={() => setCodeOpen(false)} />
     </div>
   );

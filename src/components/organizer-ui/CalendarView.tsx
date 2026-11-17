@@ -173,14 +173,11 @@ export function CalendarView({ initialView, month, today, initials, events, clas
         <div className="o-crumb">
           <b>Calendar</b>
         </div>
-        <input ref={searchRef} aria-label="Search events" className="o-input" style={{ height: 26, maxWidth: 220, fontSize: 12 }} placeholder="Search  /" value={q} onChange={(e) => setQ(e.target.value)} />
+        <input ref={searchRef} aria-label="Search events" className="o-input" style={{ height: 34, maxWidth: 240, fontSize: 13, borderRadius: 999 }} placeholder="Search  /" value={q} onChange={(e) => setQ(e.target.value)} />
         <span className="o-spacer" />
-        <Link className="o-btn o-btn-primary" href="/organizer/events/new">
-          New event
-        </Link>
-        <Link className="o-avatar" href="/profile" aria-label="Your profile">
-          {initials}
-        </Link>
+        <span className="o-meta" aria-hidden>
+          Press / to search
+        </span>
       </header>
       <div className="o-page">
         <div className="o-cal">
@@ -190,7 +187,7 @@ export function CalendarView({ initialView, month, today, initials, events, clas
                 <div className="o-cal-title">
                   {MONTHS[m - 1]} <span>{y}</span>
                 </div>
-                <div className="o-meta" style={{ fontSize: 10, color: "var(--dim)", marginTop: 5, height: 14 }}>
+                <div className="o-meta" style={{ fontSize: 12.5, color: "var(--dim)", marginTop: 5, height: 14 }}>
                   {loading ? <span className="o-skel" /> : `${events.length} events · ${draftCount} drafts · times in IST`}
                 </div>
               </div>

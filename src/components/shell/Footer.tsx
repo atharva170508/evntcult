@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/Wordmark";
-import type { NavViewer } from "./TopBar";
+import type { NavViewer } from "./Header";
 
 /** Multi-column footer with the oversized wordmark sign-off. */
 export function Footer({ viewer }: { viewer: NavViewer | null }) {

@@ -5,7 +5,9 @@ import { getViewer } from "@/lib/rbac";
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const viewer = await getViewer();
   return (
-    <AppShell viewer={viewer ? { name: viewer.name, email: viewer.email, image: viewer.image, isOrganizer: viewer.verifiedOrganizer } : null}>
+    <AppShell
+      viewer={viewer ? { name: viewer.name, email: viewer.email, image: viewer.image, isOrganizer: viewer.verifiedOrganizer, isAdmin: viewer.role === "admin" } : null}
+    >
       {children}
     </AppShell>
   );

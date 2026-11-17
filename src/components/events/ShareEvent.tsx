@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Link2, Share2 } from "lucide-react";
+import { Check, Link2, Share2 } from "lucide-react";
+import { buttonClass } from "@/components/ui/Button";
 
 export function ShareEvent({ url, title }: { url: string; title: string }) {
   const [copied, setCopied] = useState(false);
-  const btn = "inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 text-[13px] font-semibold hover:border-volt/60";
 
   async function share() {
     if (navigator.share) {
@@ -22,13 +22,19 @@ export function ShareEvent({ url, title }: { url: string; title: string }) {
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
-      <button onClick={share} className={btn}>
-        <Share2 className="size-4" aria-hidden /> Share
-      </button>
-      <button onClick={copy} className={btn}>
-        <Link2 className="size-4" aria-hidden /> {copied ? "Copied" : "Copy link"}
-      </button>
+    <div className="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <p className="text-h4 font-semibold">Bring your friends</p>
+        <p className="mt-0.5 text-[13px] text-ink-muted">Share the event so they can register too.</p>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        <button onClick={share} className={buttonClass("primary", "md")}>
+          <Share2 className="size-4" aria-hidden /> Share
+        </button>
+        <button onClick={copy} className={buttonClass("secondary", "md")}>
+          {copied ? <Check className="size-4" aria-hidden /> : <Link2 className="size-4" aria-hidden />} {copied ? "Copied" : "Copy link"}
+        </button>
+      </div>
     </div>
   );
 }

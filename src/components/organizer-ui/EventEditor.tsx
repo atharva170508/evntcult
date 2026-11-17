@@ -400,7 +400,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                     <input
                       aria-label="Event link"
                       className="o-input o-mono"
-                      style={{ height: 24, fontSize: 11 }}
+                      style={{ height: 34, fontSize: 13 }}
                       autoFocus
                       defaultValue={previewSlug}
                       onBlur={(e) => {
@@ -415,7 +415,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                   ) : (
                     <>
                       {host}/e/{previewSlug || "your-event"}{" "}
-                      <button type="button" className="o-link" style={{ fontSize: 10 }} onClick={() => setSlugEditing(true)}>
+                      <button type="button" className="o-link" style={{ fontSize: 12.5 }} onClick={() => setSlugEditing(true)}>
                         edit
                       </button>
                       {fieldError.slug && <span style={{ color: "var(--bad)" }}> {fieldError.slug}</span>}
@@ -477,7 +477,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                       <input
                         aria-label="Hours"
                         className="o-input o-mono"
-                        style={{ width: 90, height: 26 }}
+                        style={{ width: 96, height: 34 }}
                         inputMode="decimal"
                         placeholder="hours"
                         defaultValue={f.durationMinutes / 60}
@@ -496,13 +496,13 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                 label="Venue"
                 hint={
                   f.venueStatus === "tba" ? (
-                    <button type="button" className="o-link" style={{ fontSize: 10 }} onClick={() => set("venueStatus", "confirmed")}>
+                    <button type="button" className="o-link" style={{ fontSize: 12.5 }} onClick={() => set("venueStatus", "confirmed")}>
                       Add a venue
                     </button>
                   ) : f.venueStatus === "confirmed" ? (
                     <>
                       {f.venuePlaceId && <div style={{ marginBottom: 4 }}>Matched: {f.venueAddress ?? f.venue}</div>}
-                      <button type="button" className="o-link" style={{ fontSize: 10 }} onClick={() => set("venueStatus", "tba")}>
+                      <button type="button" className="o-link" style={{ fontSize: 12.5 }} onClick={() => set("venueStatus", "tba")}>
                         Mark as TBA
                       </button>
                     </>
@@ -587,7 +587,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                       </div>
                     )}
                   </Field>
-                  <Field label="Payout UPI" error={errors.upi} hint={<span style={{ color: "var(--accent)" }}>required</span>}>
+                  <Field label="Payout UPI" error={errors.upi} hint={<span style={{ color: "var(--accent-ink)" }}>required</span>}>
                     {(a) => <input {...a} className="o-input o-mono" placeholder="name@bank" autoCapitalize="none" value={f.payoutUpi} onChange={(e) => set("payoutUpi", e.target.value)} onBlur={() => blur("upi")} />}
                   </Field>
                 </>
