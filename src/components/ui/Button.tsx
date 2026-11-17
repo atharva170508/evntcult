@@ -3,30 +3,30 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Buttons. Anatomy: pill, 1px inner top highlight on filled variants, 0.98 press,
- * 160ms colour transitions. `primary` is ink — use `accent` for the single most
- * important action on a screen (Register, Sign up).
+ * Buttons. Anatomy: 10–12px corners (never pills), semibold label, 0.98 press,
+ * 160ms colour transitions. `primary` is night navy — use `accent` (crimson) for the
+ * single most important action on a screen (Register, Search, Sign up).
  */
 const variants = {
-  primary: "bg-ink text-white shadow-button hover:bg-[#2a2a28]",
+  primary: "bg-night text-white shadow-button hover:bg-night-3",
   accent: "bg-accent text-white shadow-accent hover:bg-accent-hover",
-  secondary: "bg-surface text-ink shadow-card hover:shadow-raised hover:bg-surface",
-  ghost: "text-ink-2 hover:bg-ink/[0.05] hover:text-ink",
-  soft: "bg-sunken text-ink hover:bg-[#E5E2DB]",
-  danger: "bg-surface text-danger shadow-card hover:bg-danger-soft",
-  /** White pill for use on posters and dark photos. */
+  secondary: "bg-surface text-ink ring-1 ring-inset ring-line-strong hover:bg-sunken hover:ring-ink-subtle/40",
+  ghost: "text-ink-2 hover:bg-sunken hover:text-ink",
+  soft: "bg-sunken text-ink hover:bg-mist",
+  danger: "bg-surface text-danger ring-1 ring-inset ring-line-strong hover:bg-danger-soft",
+  /** White button for use on posters and dark bands. */
   light: "bg-white text-ink shadow-button hover:bg-white/90",
 
   /* legacy names → new anatomy */
   volt: "bg-accent text-white shadow-accent hover:bg-accent-hover",
   brand: "bg-accent text-white shadow-accent hover:bg-accent-hover",
-  glass: "bg-surface text-ink shadow-card hover:shadow-raised",
+  glass: "bg-surface text-ink ring-1 ring-inset ring-line-strong hover:bg-sunken",
 } as const;
 
 const sizes = {
-  sm: "h-8 gap-1.5 px-3 text-[13px]",
-  md: "h-10 gap-2 px-4 text-[14px]",
-  lg: "h-12 gap-2 px-6 text-[15px]",
+  sm: "h-8 gap-1.5 rounded-[9px] px-3 text-[13px]",
+  md: "h-10 gap-2 rounded-[10px] px-4 text-[14px]",
+  lg: "h-12 gap-2 rounded-xl px-6 text-[15px]",
 } as const;
 
 export type ButtonVariant = keyof typeof variants;
@@ -34,7 +34,7 @@ export type ButtonSize = keyof typeof sizes;
 
 export const buttonClass = (variant: ButtonVariant = "primary", size: ButtonSize = "md", className?: string) =>
   cn(
-    "relative inline-flex select-none items-center justify-center whitespace-nowrap rounded-full font-medium tracking-[-0.01em]",
+    "relative inline-flex select-none items-center justify-center whitespace-nowrap font-semibold",
     "transition-[background-color,box-shadow,color,transform] duration-fast ease-out active:scale-[0.98] active:duration-75",
     "disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45",
     variants[variant],

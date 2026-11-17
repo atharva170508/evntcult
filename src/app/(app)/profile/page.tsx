@@ -22,7 +22,7 @@ export default async function ProfilePage() {
       <div className="mt-10 grid gap-10 lg:grid-cols-[280px_1fr] lg:gap-16">
         <aside className="space-y-6">
           <div className="flex items-center gap-4">
-            <span className="grid size-14 shrink-0 place-items-center rounded-full bg-ink text-[18px] font-medium text-white" aria-hidden>
+            <span className="grid size-14 shrink-0 place-items-center rounded-full bg-night text-[18px] font-medium text-white" aria-hidden>
               {initials(viewer.name)}
             </span>
             <div className="min-w-0">

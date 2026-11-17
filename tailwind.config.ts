@@ -1,103 +1,101 @@
 import type { Config } from "tailwindcss";
 
 /**
- * EvntCult design tokens — "Paper, Ink & Signal".
+ * EvntCult design tokens — "Concourse".
  *
- * A light, editorial system: warm paper canvas, near-black ink, and ONE signal colour
- * (vermilion) that marks what matters — the live dot, the logo caret, the register button.
- * Primary actions are ink-black; the signal colour is reserved for the single most
- * important action on a screen. Full rationale lives in /DESIGN.md.
+ * Campus life as a terminal: events depart, passes board, the gate scans. A calm white
+ * page, a deep night navy for cinematic bands and primary actions, one crimson for the
+ * action that matters most, and a brass gold used only as foil on passes.
+ * Fraunces (upright, soft optical serif) carries headlines; Figtree carries the interface;
+ * JetBrains Mono is reserved for pass codes and timetable figures.
  *
- * Contrast (WCAG 2.1): every text colour below is ≥ 4.5:1 on `canvas` and `surface`.
- *   ink 17.3 · ink-2 10.4 · ink-muted 5.8 · ink-subtle 4.8 · accent-ink 5.8 · white on accent 4.6
+ * Contrast (WCAG 2.1 on white): ink 17.9 · ink-2 10.9 · ink-muted 5.9 · ink-subtle 4.8
+ * · accent-ink 6.6 · white on accent 4.9 · white on night 18.4.
  *
- * Legacy aliases (volt, brand, sun, ink.inverse) map onto the new palette so any screen
- * not yet touched still renders inside the system. Don't use them in new code.
+ * Older token names (canvas, volt, brand, sun, ink.inverse) are kept as aliases so every
+ * screen resolves inside this system.
  */
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        canvas: "#F6F5F1",
+        canvas: "#FFFFFF",
         surface: "#FFFFFF",
-        sunken: "#EEECE6",
-        line: { DEFAULT: "#E4E1DA", strong: "#D1CDC4" },
+        sunken: "#F4F5F7",
+        mist: "#EEF0F3",
+        line: { DEFAULT: "#E5E7EB", strong: "#D2D6DC" },
         ink: {
-          DEFAULT: "#111110",
-          2: "#3B3A36",
-          muted: "#62605A",
-          subtle: "#6E6C66",
-          /** Text on ink or accent fills. */
+          DEFAULT: "#14161B",
+          2: "#383D47",
+          muted: "#5B626E",
+          subtle: "#6A717D",
           inverse: "#FFFFFF",
         },
+        night: { DEFAULT: "#0B1626", 2: "#132238", 3: "#1C2E48", line: "rgba(255,255,255,0.12)" },
         accent: {
-          DEFAULT: "#D93A12",
-          hover: "#C2330F",
-          soft: "#FBE9E2",
-          /** Accent used as text on paper (passes AA). */
-          ink: "#B22F0D",
+          DEFAULT: "#D9234B",
+          hover: "#BE1B3F",
+          soft: "#FDECEF",
+          ink: "#B01A3C",
         },
-        live: { DEFAULT: "#16734A", soft: "#E4F2EA", dot: "#1F9D63" },
-        warn: { DEFAULT: "#8F5200", soft: "#FAEFD9" },
-        danger: { DEFAULT: "#B42619", soft: "#FBE7E4" },
+        gold: { DEFAULT: "#C9A45C", soft: "#F7F0E1", ink: "#7A5D1F" },
+        live: { DEFAULT: "#0B7A54", soft: "#E3F3EC", dot: "#12A56F" },
+        warn: { DEFAULT: "#8A5300", soft: "#FBF0DC" },
+        danger: { DEFAULT: "#B42318", soft: "#FDECEA" },
 
-        /* ── legacy aliases ───────────────────────────────── */
-        volt: { DEFAULT: "#D93A12", hover: "#C2330F" },
-        brand: { DEFAULT: "#D93A12", hover: "#C2330F", soft: "#FBE9E2", ink: "#B22F0D" },
-        sun: "#8F5200",
+        /* aliases */
+        volt: { DEFAULT: "#D9234B", hover: "#BE1B3F" },
+        brand: { DEFAULT: "#D9234B", hover: "#BE1B3F", soft: "#FDECEF", ink: "#B01A3C" },
+        sun: "#8A5300",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Consolas", "monospace"],
-        /** One-word editorial accents inside headlines (<em>). */
-        serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
-        display: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "ui-serif", "Georgia", "serif"],
+        serif: ["var(--font-display)", "ui-serif", "Georgia", "serif"],
         logo: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
         brand: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       fontSize: {
-        /* [size, { lineHeight, letterSpacing }] — fluid display steps, fixed UI steps */
-        "display-2xl": ["clamp(56px, 9vw, 136px)", { lineHeight: "0.9", letterSpacing: "-0.05em" }],
-        "display-xl": ["clamp(44px, 6.4vw, 96px)", { lineHeight: "0.95", letterSpacing: "-0.045em" }],
-        "display-lg": ["clamp(36px, 4.6vw, 64px)", { lineHeight: "1", letterSpacing: "-0.04em" }],
-        "display-md": ["clamp(28px, 3.2vw, 40px)", { lineHeight: "1.05", letterSpacing: "-0.035em" }],
-        h3: ["22px", { lineHeight: "1.2", letterSpacing: "-0.025em" }],
-        h4: ["17px", { lineHeight: "1.3", letterSpacing: "-0.015em" }],
-        body: ["15px", { lineHeight: "1.6", letterSpacing: "-0.005em" }],
-        lead: ["18px", { lineHeight: "1.55", letterSpacing: "-0.01em" }],
-        small: ["13px", { lineHeight: "1.45" }],
-        micro: ["11px", { lineHeight: "1.3", letterSpacing: "0.08em" }],
+        "display-2xl": ["clamp(52px, 8vw, 120px)", { lineHeight: "0.96", letterSpacing: "-0.035em" }],
+        "display-xl": ["clamp(42px, 6vw, 88px)", { lineHeight: "1", letterSpacing: "-0.03em" }],
+        "display-lg": ["clamp(34px, 4.2vw, 58px)", { lineHeight: "1.04", letterSpacing: "-0.025em" }],
+        "display-md": ["clamp(26px, 3vw, 38px)", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
+        h3: ["22px", { lineHeight: "1.25", letterSpacing: "-0.015em" }],
+        h4: ["17px", { lineHeight: "1.35", letterSpacing: "-0.01em" }],
+        body: ["15.5px", { lineHeight: "1.6" }],
+        lead: ["18.5px", { lineHeight: "1.55", letterSpacing: "-0.005em" }],
+        small: ["13.5px", { lineHeight: "1.45" }],
+        micro: ["11.5px", { lineHeight: "1.3", letterSpacing: "0.04em" }],
       },
       letterSpacing: {
-        tightest: "-0.045em",
-        tighter: "-0.03em",
+        tightest: "-0.035em",
+        tighter: "-0.022em",
       },
       spacing: {
-        /* section rhythm */
-        section: "clamp(72px, 10vw, 136px)",
-        gutter: "clamp(16px, 4vw, 40px)",
+        section: "clamp(80px, 11vw, 152px)",
+        gutter: "clamp(20px, 4vw, 48px)",
       },
       maxWidth: {
-        shell: "1240px",
-        prose: "640px",
+        shell: "1280px",
+        prose: "660px",
       },
       borderRadius: {
-        /* controls are pills; containers use these */
-        tile: "14px",
-        card: "20px",
-        panel: "28px",
+        tile: "12px",
+        card: "18px",
+        panel: "26px",
         "4xl": "2rem",
       },
       boxShadow: {
-        /* hairline-first depth: a 1px edge + a soft ambient drop */
-        card: "0 0 0 1px rgba(17,17,16,0.06), 0 1px 2px rgba(17,17,16,0.04)",
-        raised: "0 0 0 1px rgba(17,17,16,0.06), 0 2px 4px rgba(17,17,16,0.04), 0 12px 32px -12px rgba(17,17,16,0.16)",
-        pop: "0 0 0 1px rgba(17,17,16,0.06), 0 24px 64px -20px rgba(17,17,16,0.32)",
+        card: "0 0 0 1px #E5E7EB",
+        raised: "0 0 0 1px rgba(20,22,27,0.04), 0 6px 20px -4px rgba(20,22,27,0.10)",
+        pop: "0 0 0 1px rgba(20,22,27,0.05), 0 18px 48px -12px rgba(20,22,27,0.22)",
         inset: "inset 0 1px 0 rgba(255,255,255,0.9)",
-        button: "inset 0 1px 0 rgba(255,255,255,0.14), 0 1px 2px rgba(17,17,16,0.24)",
-        accent: "inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 2px rgba(178,47,13,0.3), 0 8px 20px -8px rgba(217,58,18,0.5)",
-        brand: "0 8px 20px -8px rgba(217,58,18,0.45)",
+        button: "0 1px 1px rgba(11,22,38,0.18)",
+        accent: "0 1px 1px rgba(176,26,60,0.25), 0 8px 18px -8px rgba(217,35,75,0.55)",
+        brand: "0 8px 18px -8px rgba(217,35,75,0.5)",
+        float: "0 1px 2px rgba(20,22,27,0.06), 0 10px 28px -6px rgba(20,22,27,0.14)",
       },
       transitionTimingFunction: {
         /* quick out, long settle — default for UI */
@@ -138,13 +136,22 @@ const config: Config = {
           "100%": { opacity: "1", transform: "scale(1) translateY(0)" },
         },
         pulse_dot: {
-          "0%": { boxShadow: "0 0 0 0 rgba(217,58,18,0.45)" },
-          "70%": { boxShadow: "0 0 0 6px rgba(217,58,18,0)" },
-          "100%": { boxShadow: "0 0 0 0 rgba(217,58,18,0)" },
+          "0%": { boxShadow: "0 0 0 0 rgba(18,165,111,0.45)" },
+          "70%": { boxShadow: "0 0 0 6px rgba(18,165,111,0)" },
+          "100%": { boxShadow: "0 0 0 0 rgba(18,165,111,0)" },
         },
         marquee: {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-50%)" },
+        },
+        flap: {
+          "0%": { transform: "rotateX(90deg)", opacity: "0" },
+          "60%": { transform: "rotateX(-8deg)", opacity: "1" },
+          "100%": { transform: "rotateX(0)", opacity: "1" },
+        },
+        rise: {
+          "0%": { opacity: "0", transform: "translateY(24px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
         shimmer: {
           "0%": { backgroundPosition: "-400px 0" },
@@ -161,6 +168,8 @@ const config: Config = {
         "pulse-dot": "pulse_dot 1.8s cubic-bezier(0.16,1,0.3,1) infinite",
         marquee: "marquee 48s linear infinite",
         shimmer: "shimmer 1.4s linear infinite",
+        flap: "flap 520ms cubic-bezier(0.2,0.9,0.25,1) both",
+        rise: "rise 900ms cubic-bezier(0.16,1,0.3,1) both",
       },
     },
   },

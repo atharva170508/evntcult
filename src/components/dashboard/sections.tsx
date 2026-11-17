@@ -146,7 +146,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
     <section aria-labelledby="next-up-title" className="card grid h-full overflow-hidden md:grid-cols-[1fr_1fr]">
       {/* Poster */}
       <Link href={`/events/${event.slug}`} className="group relative isolate flex min-h-[260px] flex-col justify-between overflow-hidden p-6 text-white md:min-h-[440px] md:p-7">
-        <EventArt accent={event.accent} className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]" />
+        <EventArt accent={event.accent} seed={event.id} className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]" />
         <div className="relative flex flex-wrap items-center gap-1.5">
           <Chip tone="white">Next up</Chip>
           <Chip tone="white">{CATEGORY_LABEL[event.category]}</Chip>
@@ -381,7 +381,7 @@ function QuickAction({
       href={href}
       className={cn(
         "group flex min-h-[112px] flex-col justify-between gap-4 rounded-tile p-3.5 transition-[background-color,box-shadow,transform] duration-fast ease-out active:scale-[0.98]",
-        primary ? "bg-ink text-white shadow-button hover:bg-[#2a2a28]" : "bg-sunken/70 hover:bg-surface hover:shadow-raised",
+        primary ? "bg-night text-white shadow-button hover:bg-night-3" : "bg-sunken/70 hover:bg-surface hover:shadow-raised",
       )}
     >
       <Icon className={cn("size-[18px]", primary ? "text-white" : "text-ink-2")} aria-hidden />
@@ -541,7 +541,7 @@ export function EventCard({ e }: { e: EventSummary }) {
     <article className="w-[272px] shrink-0 snap-start lg:w-auto">
       <Link href={`/events/${e.slug}`} className="card card-hover group flex h-full flex-col overflow-hidden">
         <div className="relative isolate aspect-[16/10] overflow-hidden">
-          <EventArt accent={e.accent} className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]" />
+          <EventArt accent={e.accent} seed={e.id} className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]" />
           <div className="relative flex flex-wrap gap-1.5 p-3">
             <Chip tone="white">{CATEGORY_LABEL[e.category]}</Chip>
             {badge && <Chip tone={badge.tone === "accent" ? "dark" : "white"}>{badge.label}</Chip>}
@@ -609,9 +609,9 @@ export function NavigatorTeaser({ next }: { next: NextUp | null }) {
             <rect x="150" y="18" width="92" height="70" rx="10" />
             <rect x="282" y="18" width="100" height="70" rx="10" />
           </g>
-          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#111110" strokeWidth="2.5" strokeDasharray="6 6" strokeLinecap="round" />
-          <circle cx="60" cy="128" r="6" fill="#FFFFFF" stroke="#111110" strokeWidth="2.5" />
-          <circle cx="330" cy="54" r="7" fill="#D93A12" stroke="#FFFFFF" strokeWidth="3" />
+          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#14161B" strokeWidth="2.5" strokeDasharray="6 6" strokeLinecap="round" />
+          <circle cx="60" cy="128" r="6" fill="#FFFFFF" stroke="#14161B" strokeWidth="2.5" />
+          <circle cx="330" cy="54" r="7" fill="#D9234B" stroke="#FFFFFF" strokeWidth="3" />
         </svg>
       </div>
       <p className="mt-4 flex items-start gap-2 text-[13px] text-ink-muted">

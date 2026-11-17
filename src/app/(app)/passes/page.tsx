@@ -69,7 +69,7 @@ export default async function PassesPage() {
   const qr = new Map<string, string>();
   for (const r of upcoming) {
     if (r.status === "registered" && r.event_status !== "cancelled") {
-      qr.set(r.id, await QRCode.toString(passQrPayload(r.pass_token), { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#111110", light: "#ffffff" } }));
+      qr.set(r.id, await QRCode.toString(passQrPayload(r.pass_token), { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#14161B", light: "#ffffff" } }));
     }
   }
 
@@ -85,7 +85,7 @@ export default async function PassesPage() {
         sub="Show the QR at the gate. Saved images work offline too."
         actions={
           upcoming.length > 0 ? (
-            <span className="rounded-full bg-surface px-3.5 py-1.5 text-[13px] text-ink-muted shadow-card">
+            <span className="rounded-[10px] bg-surface px-3.5 py-1.5 text-[13px] text-ink-muted shadow-card">
               <span className="font-mono tabular-nums text-ink">{upcoming.length}</span> upcoming
             </span>
           ) : undefined
@@ -144,7 +144,7 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
     <article aria-label={`Pass for ${r.title}`} className="card flex flex-col overflow-hidden sm:flex-row">
       {/* Stub: poster strip with date */}
       <div className="relative isolate flex shrink-0 flex-row items-end justify-between gap-3 p-5 text-white sm:w-[176px] sm:flex-col sm:items-start">
-        <EventArt accent={accentFor({ id: r.event_id, category: r.category })} />
+        <EventArt accent={accentFor({ id: r.event_id, category: r.category })} seed={r.event_id} />
         <div className="relative">
           <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/80">{fmtDate(starts, { weekday: "short" })}</p>
           <p className="text-[44px] font-semibold leading-none tracking-[-0.05em] tabular-nums">{fmtDate(starts, { day: "numeric" })}</p>

@@ -18,7 +18,8 @@ const WHEN: Record<string, string> = { today: "Today", weekend: "This weekend", 
 
 export default async function EventsPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const raw = await searchParams;
-  const parsed = listQuerySchema.safeParse(raw);
+  // Blank fields from the homepage search bar mean "any", not "invalid".
+  const parsed = listQuerySchema.safeParse(Object.fromEntries(Object.entries(raw).filter(([, v]) => v)));
   const q = parsed.success ? parsed.data : {};
   const { events, nextCursor } = await listEvents(q);
 
@@ -32,8 +33,8 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
   };
   const chip = (active: boolean) =>
     cn(
-      "inline-flex h-8 shrink-0 items-center rounded-full px-3.5 text-[13px] font-medium transition-[background-color,color,box-shadow] duration-fast ease-out",
-      active ? "bg-ink text-white shadow-button" : "bg-surface text-ink-2 shadow-card hover:text-ink hover:shadow-raised",
+      "inline-flex h-8 shrink-0 items-center rounded-[10px] px-3.5 text-[13px] font-medium transition-[background-color,color,box-shadow] duration-fast ease-out",
+      active ? "bg-night text-white shadow-button" : "bg-surface text-ink-2 shadow-card hover:text-ink hover:shadow-raised",
     );
   const filtered = !!(q.type || q.when || q.price || q.q);
   const nextHref = nextCursor ? `${href({})}${href({}).includes("?") ? "&" : "?"}cursor=${encodeURIComponent(nextCursor)}` : null;

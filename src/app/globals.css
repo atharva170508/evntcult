@@ -3,19 +3,20 @@
 @tailwind utilities;
 
 /*
- * EvntCult — Paper, Ink & Signal. Tokens live in tailwind.config.ts; the rules here are
- * the few patterns that are easier to express as classes than as utility strings.
+ * EvntCult — Concourse. Tokens live in tailwind.config.ts; the rules here are the few
+ * patterns that are easier to express as classes than as utility strings.
  */
 
 @layer base {
   :root {
     color-scheme: light;
-    /* Header = utility bar (56) on phones; + section tabs (44) from md up. */
-    --header-h: 57px;
+    /* One navigation bar; the shell keeps this in sync with its real height. */
+    --header-h: 64px;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   }
   @media (min-width: 768px) {
     :root {
-      --header-h: 101px;
+      --header-h: 72px;
     }
   }
   html {
@@ -26,7 +27,17 @@
   }
   body {
     @apply min-h-dvh bg-canvas font-sans text-body;
-    font-feature-settings: "ss01", "cv11";
+    font-feature-settings: "ss01";
+  }
+  /* Headlines: Fraunces, upright, softened, optical size follows the type size. */
+  .font-display,
+  .text-display-2xl,
+  .text-display-xl,
+  .text-display-lg,
+  .text-display-md {
+    font-family: var(--font-display), ui-serif, Georgia, serif;
+    font-variation-settings: "SOFT" 60, "WONK" 0;
+    font-optical-sizing: auto;
   }
   h1,
   h2,
@@ -38,15 +49,14 @@
     text-wrap: pretty;
   }
   ::selection {
-    background: rgba(217, 58, 18, 0.16);
+    background: rgba(217, 35, 75, 0.14);
   }
-  /* Headline accents: one word set in the editorial serif, never coloured. */
+  /* Emphasis inside headlines carries no special styling. */
   em {
-    @apply font-serif font-normal italic;
-    letter-spacing: -0.01em;
+    font-style: normal;
   }
   :focus-visible {
-    @apply outline-none ring-2 ring-ink ring-offset-2 ring-offset-canvas;
+    @apply outline-none ring-2 ring-night ring-offset-2 ring-offset-white;
   }
   /* Text boxes show focus through their own border (see .field), not a square ring. */
   input:not([type="checkbox"]):not([type="radio"]):focus-visible,
@@ -80,7 +90,7 @@
 @layer components {
   /* ── Surfaces ─────────────────────────────────────────── */
 
-  /* The core container: white paper with a hairline edge and an inner top highlight. */
+  /* The core container: white with a hairline edge. Depth only appears on interaction. */
   .card {
     @apply relative rounded-card bg-surface shadow-card;
   }
@@ -97,48 +107,50 @@
   }
   /* Frosted bar for sticky navigation. */
   .glass {
-    @apply bg-canvas/80 backdrop-blur-xl backdrop-saturate-150;
+    @apply bg-white/85 backdrop-blur-xl backdrop-saturate-150;
   }
 
   /* ── Type ─────────────────────────────────────────────── */
 
-  /* Mono micro-label above headings (ticket-stub voice). */
+  /* Small context line above a heading. */
   .eyebrow {
-    @apply font-mono text-micro font-medium uppercase text-ink-subtle;
+    @apply font-sans text-[13.5px] font-semibold tracking-normal text-ink-muted;
   }
   .title-xl {
-    @apply font-display font-semibold text-display-lg text-ink;
+    @apply text-display-lg font-medium text-ink;
   }
   .headline {
     @apply font-semibold tracking-tighter text-ink;
   }
   .shout {
-    @apply font-display font-semibold tracking-tightest;
+    @apply font-display font-medium tracking-tightest;
   }
-  /* Ink fading to paper — for the oversized footer wordmark. */
   .text-metal {
-    background: linear-gradient(180deg, #111110 0%, #111110 35%, rgba(17, 17, 16, 0.08) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: currentColor;
+  }
+
+  /* Full-width band inside the centred page column. */
+  .bleed {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
   }
 
   /* ── Controls ─────────────────────────────────────────── */
 
   .field {
-    @apply w-full rounded-xl border border-line bg-surface px-3.5 py-3 text-body text-ink shadow-[0_1px_0_rgba(17,17,16,0.03)] transition-[border-color,box-shadow] duration-fast ease-out placeholder:text-ink-subtle hover:border-line-strong focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/[0.06] disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-muted aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/10;
+    @apply w-full rounded-tile border border-line-strong bg-surface px-3.5 py-3 text-body text-ink transition-[border-color,box-shadow] duration-fast ease-out placeholder:text-ink-subtle hover:border-ink-subtle focus:border-night focus:outline-none focus:ring-[3px] focus:ring-night/10 disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-muted aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/10;
   }
   .kbd {
-    @apply inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-line bg-surface px-1.5 font-mono text-[10.5px] font-medium text-ink-subtle shadow-[0_1px_0_rgba(17,17,16,0.06)];
+    @apply inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-line bg-surface px-1.5 font-sans text-[11px] font-semibold text-ink-subtle;
   }
   .link {
-    @apply font-medium text-ink underline decoration-line-strong underline-offset-[3px] transition-colors duration-fast hover:decoration-ink;
+    @apply font-semibold text-ink underline decoration-line-strong decoration-[1.5px] underline-offset-[3px] transition-colors duration-fast hover:decoration-accent;
   }
 
   /* ── Texture & motifs ─────────────────────────────────── */
 
   .grain::after {
-    content: "";
+    content: none;
     @apply pointer-events-none absolute inset-0 opacity-[0.22] mix-blend-multiply;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
@@ -160,13 +172,12 @@
     content: "";
     @apply pointer-events-none absolute inset-y-0 -left-3 -right-3;
     background:
-      radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 11.5px) left / 24px 24px no-repeat,
-      radial-gradient(circle at 12px 50%, theme("colors.canvas") 11px, transparent 11.5px) right / 24px 24px no-repeat;
+      radial-gradient(circle at 12px 50%, var(--cut-bg, #fff) 11px, transparent 11.5px) left / 24px 24px no-repeat,
+      radial-gradient(circle at 12px 50%, var(--cut-bg, #fff) 11px, transparent 11.5px) right / 24px 24px no-repeat;
   }
-  /* Faint dot grid used behind hero areas. */
+  /* Retired motif: kept as a no-op so older markup renders cleanly. */
   .dot-grid {
-    background-image: radial-gradient(rgba(17, 17, 16, 0.09) 1px, transparent 1.2px);
-    background-size: 22px 22px;
+    background-image: none;
   }
   /* Skeleton shimmer. */
   .skeleton {

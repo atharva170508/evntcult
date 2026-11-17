@@ -117,7 +117,7 @@ export function PhotoUploader({ eventId }: { eventId: string }) {
             {failed > 0 && <p className="font-medium text-danger">{failed} failed</p>}
           </div>
           <div className="h-1 overflow-hidden rounded-full bg-sunken">
-            <div className="h-full rounded-full bg-ink transition-[width] duration-slow ease-out" style={{ width: `${((done + failed) / items.length) * 100}%` }} />
+            <div className="h-full rounded-full bg-night transition-[width] duration-slow ease-out" style={{ width: `${((done + failed) / items.length) * 100}%` }} />
           </div>
           <ul className="max-h-48 divide-y divide-line overflow-y-auto rounded-tile bg-surface text-[12.5px] shadow-card">
             {items.map((it, i) => (

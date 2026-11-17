@@ -102,7 +102,7 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
                 type="button"
                 disabled={!consent || busy}
                 onClick={() => cameraRef.current?.click()}
-                className="inline-flex h-11 items-center gap-2 rounded-full bg-ink px-5 text-[14.5px] font-medium text-white shadow-button transition-colors hover:bg-[#2a2a28] active:scale-[0.98] disabled:opacity-40"
+                className="inline-flex h-11 items-center gap-2 rounded-[10px] bg-night px-5 text-[14.5px] font-medium text-white shadow-button transition-colors hover:bg-night-3 active:scale-[0.98] disabled:opacity-40"
               >
                 <Camera className="size-4" aria-hidden /> Take a selfie
               </button>
@@ -110,12 +110,12 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
                 type="button"
                 disabled={!consent || busy}
                 onClick={() => uploadRef.current?.click()}
-                className="inline-flex h-11 items-center gap-2 rounded-full bg-surface px-5 text-[14.5px] font-medium shadow-card transition-shadow hover:shadow-raised active:scale-[0.98] disabled:opacity-40"
+                className="inline-flex h-11 items-center gap-2 rounded-[10px] bg-surface px-5 text-[14.5px] font-medium shadow-card transition-shadow hover:shadow-raised active:scale-[0.98] disabled:opacity-40"
               >
                 <ImageUp className="size-4" aria-hidden /> Upload a photo
               </button>
               {(phase.kind === "done" || phase.kind === "error") && (
-                <button type="button" onClick={reset} className="inline-flex h-11 items-center gap-2 rounded-full px-4 text-[14px] font-medium text-ink-muted transition-colors hover:bg-ink/[0.05] hover:text-ink">
+                <button type="button" onClick={reset} className="inline-flex h-11 items-center gap-2 rounded-[10px] px-4 text-[14px] font-medium text-ink-muted transition-colors hover:bg-ink/[0.05] hover:text-ink">
                   <RotateCcw className="size-4" aria-hidden /> Start over
                 </button>
               )}

@@ -1,76 +1,67 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Generated poster for events without an uploaded image. Printed, not glowing:
- * a flat ink colour, one oversized geometric form in a tonal shade, a hairline ring,
- * a halftone band and paper grain. Each accent key gets its own composition so a
- * grid of events reads like a wall of gig posters.
+ * Generated poster for events without an uploaded image, drawn like a quiet travel poster:
+ * a flat sky, one sun, three horizons. Each event gets its own variation of the composition
+ * (sun position and size, which way the land falls) from its seed, so a grid of events never
+ * repeats, while the category keeps the colour family.
  */
-type Palette = { base: string; shade: string; tint: string; form: "sun" | "arc" | "split" | "stack" };
+type Palette = { sky: string; sun: string; far: string; near: string; ground: string };
 
 const palettes: Record<string, Palette> = {
-  blue: { base: "#2C47C9", shade: "#1F3496", tint: "#9DB0FF", form: "sun" },
-  violet: { base: "#4B2A7A", shade: "#34195A", tint: "#C7A8F0", form: "arc" },
-  orange: { base: "#E2582A", shade: "#B8401A", tint: "#FFC9A8", form: "split" },
-  teal: { base: "#0F6B63", shade: "#0A4D47", tint: "#9EE3D8", form: "stack" },
-  pink: { base: "#C9466F", shade: "#9C2E52", tint: "#FFC2D3", form: "sun" },
-  green: { base: "#3D6E33", shade: "#2A5023", tint: "#C4E3A6", form: "arc" },
-  red: { base: "#B8321A", shade: "#8C2311", tint: "#FFB8A3", form: "stack" },
+  blue: { sky: "#23408F", sun: "#FFD688", far: "#2E57B5", near: "#1A3474", ground: "#10224F" },
+  violet: { sky: "#4D2F7C", sun: "#FFC3D2", far: "#623E98", near: "#3D2366", ground: "#29174B" },
+  orange: { sky: "#E37B3F", sun: "#FFE7AE", far: "#CF6230", near: "#B04C21", ground: "#853713" },
+  teal: { sky: "#167C70", sun: "#F5E9BA", far: "#11695E", near: "#0C534A", ground: "#083C36" },
+  pink: { sky: "#C4547D", sun: "#FFE2BD", far: "#AE436C", near: "#913357", ground: "#6C2441" },
+  green: { sky: "#4F7D3D", sun: "#F6E8AA", far: "#416B32", near: "#335628", ground: "#243F1C" },
+  red: { sky: "#BF3D2E", sun: "#FFDBA4", far: "#A63124", near: "#89271B", ground: "#661B11" },
 };
 
-function Form({ p }: { p: Palette }) {
-  switch (p.form) {
-    case "sun":
-      return (
-        <>
-          <circle cx="78" cy="30" r="34" fill={p.shade} />
-          <circle cx="78" cy="30" r="46" fill="none" stroke={p.tint} strokeOpacity="0.35" strokeWidth="0.4" />
-          <circle cx="78" cy="30" r="58" fill="none" stroke={p.tint} strokeOpacity="0.2" strokeWidth="0.4" />
-        </>
-      );
-    case "arc":
-      return (
-        <>
-          <path d="M-10 100 A 60 60 0 0 1 110 100 Z" fill={p.shade} />
-          <path d="M5 100 A 45 45 0 0 1 95 100" fill="none" stroke={p.tint} strokeOpacity="0.35" strokeWidth="0.4" />
-        </>
-      );
-    case "split":
-      return (
-        <>
-          <path d="M100 0 L100 100 L30 100 Z" fill={p.shade} />
-          <circle cx="26" cy="26" r="12" fill="none" stroke={p.tint} strokeOpacity="0.45" strokeWidth="0.5" />
-        </>
-      );
-    case "stack":
-      return (
-        <>
-          <rect x="54" y="-6" width="38" height="38" rx="19" fill={p.shade} />
-          <rect x="54" y="36" width="38" height="38" rx="19" fill={p.shade} opacity="0.7" />
-          <rect x="54" y="78" width="38" height="38" rx="19" fill={p.shade} opacity="0.45" />
-        </>
-      );
-  }
-}
+const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
 
-export function EventArt({ accent, className, intensity = 1 }: { accent: string; className?: string; intensity?: number }) {
+export function EventArt({
+  accent,
+  seed,
+  className,
+  scrim = true,
+  flat = false,
+}: {
+  accent: string;
+  /** Usually the event id; varies the composition within the colour family. */
+  seed?: string;
+  className?: string;
+  /** Darkens the lower third so overlaid white type stays readable. */
+  scrim?: boolean;
+  /** Small tiles: just the sky and the land, no sun, so type sits cleanly on top. */
+  flat?: boolean;
+  intensity?: number;
+}) {
   const p = palettes[accent] ?? palettes.blue;
-  const id = `ht-${accent}`;
+  const h = hash(seed ?? accent);
+  const sunX = [30, 50, 70, 38, 62][h % 5];
+  const sunY = 30 + (h % 11);
+  const sunR = 11 + (h % 7);
+  const flip = (h >> 3) % 2 === 1;
+
   return (
-    <div aria-hidden className={cn("grain pointer-events-none absolute inset-0 overflow-hidden", className)} style={{ background: p.base }}>
-      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full" style={{ opacity: Math.max(0.4, intensity) }}>
-        <defs>
-          <pattern id={id} width="3" height="3" patternUnits="userSpaceOnUse">
-            <circle cx="1.5" cy="1.5" r="0.45" fill={p.tint} fillOpacity="0.35" />
-          </pattern>
-        </defs>
-        <Form p={p} />
-        <rect x="0" y="62" width="100" height="14" fill={`url(#${id})`} />
+    <div aria-hidden className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} style={{ background: p.sky }}>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full">
+        {!flat && (
+          <>
+            <circle cx={sunX} cy={sunY} r={sunR} fill={p.sun} />
+            <circle cx={sunX} cy={sunY} r={sunR + 7} fill="none" stroke={p.sun} strokeOpacity="0.18" strokeWidth="0.5" />
+          </>
+        )}
+        <g transform={flip ? "translate(100 0) scale(-1 1)" : undefined}>
+          <path d="M0 60 C 16 51, 30 57, 48 54 S 80 47, 100 56 V100 H0Z" fill={p.far} />
+          <path d="M0 71 C 18 63, 36 73, 56 67 S 86 60, 100 69 V100 H0Z" fill={p.near} />
+          <path d="M0 84 C 28 79, 62 88, 100 81 V100 H0Z" fill={p.ground} />
+        </g>
       </svg>
-      {/* reading scrim for overlaid type */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-transparent" />
+      {scrim && <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/35 to-transparent" />}
     </div>
   );
 }
 
-export const accentHex = (accent: string) => (palettes[accent] ?? palettes.blue).base;
+export const accentHex = (accent: string) => (palettes[accent] ?? palettes.blue).sky;

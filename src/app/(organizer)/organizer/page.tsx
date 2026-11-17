@@ -24,7 +24,7 @@ function EventRow({ e, draft }: { e: HomeEvent; draft?: boolean }) {
   return (
     <li className="group grid grid-cols-[56px_minmax(0,1fr)_auto] items-center gap-4 border-t border-line/70 px-4 py-3.5 first:border-t-0 sm:px-5 md:grid-cols-[56px_minmax(0,1fr)_200px_140px_auto]">
       <div className="relative isolate grid h-14 w-14 place-items-center overflow-hidden rounded-xl text-center text-white">
-        <EventArt accent={CAT_ACCENT[e.category ?? ""] ?? "blue"} />
+        <EventArt accent={CAT_ACCENT[e.category ?? ""] ?? "blue"} seed={e.id} scrim={false} flat />
         <div className="relative leading-none">
           <div className="font-mono text-[9.5px] uppercase tracking-[0.08em]">{ticketDate(e.starts_at).split(" ")[2]}</div>
           <div className="mt-0.5 text-[19px] font-semibold tabular-nums">{ticketDate(e.starts_at).split(" ")[1]}</div>

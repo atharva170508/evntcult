@@ -41,7 +41,7 @@ export default async function CertificatesPage() {
               <Link href={`/certificates/${c.id}`} className="card card-hover group flex h-full flex-col overflow-hidden">
                 {/* Miniature certificate */}
                 <div className="relative border-b border-line bg-[linear-gradient(180deg,#FFFFFF,#FAF9F6)] px-6 pb-6 pt-8 text-center">
-                  <span className="absolute inset-x-0 top-0 h-1 bg-ink" aria-hidden />
+                  <span className="absolute inset-x-0 top-0 h-1 bg-night" aria-hidden />
                   <p className="eyebrow">Certificate of attendance</p>
                   <p className="mt-3 line-clamp-2 text-h3 font-semibold">{c.eventTitle}</p>
                 </div>

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { CalendarCheck2, DoorOpen, Images, Map as MapIcon, Award, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
-import { getDashboardData, getPublicDashboard } from "@/lib/data/dashboard";
+import { getDashboardData } from "@/lib/data/dashboard";
 import { headers } from "next/headers";
 import QRCode from "qrcode";
-import { PublicHome } from "@/components/home/PublicHome";
+import { Landing } from "@/components/landing/Landing";
+import { getLandingData } from "@/lib/data/landing";
 import { LinkButton } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/Section";
 import { PassCard } from "@/components/dashboard/PassCard";
@@ -73,7 +74,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           </div>
         </div>
         {params.denied === "organizer" && (
-          <p role="status" className="mt-6 inline-flex rounded-full bg-warn-soft px-4 py-1.5 text-[13px] font-medium text-warn">
+          <p role="status" className="mt-6 inline-flex rounded-[10px] bg-warn-soft px-4 py-1.5 text-[13px] font-medium text-warn">
             The organizer console is only for verified organizers.
           </p>
         )}
@@ -160,11 +161,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
 /** What a signed-out visitor sees: the cinematic landing page, built from real campus data. */
 async function PublicLanding() {
-  const d = await getPublicDashboard();
+  const d = await getLandingData();
   // The sample OnePass on the landing page carries a real QR: scanning it opens sign-up.
   const h = await headers();
   const host = h.get("x-forwarded-host") ?? h.get("host") ?? "evntcult.caliper.workers.dev";
   const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const onePassQr = await QRCode.toString(`${proto}://${host}/signin?mode=signup`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#111110", light: "#ffffff" } });
-  return <PublicHome data={{ ...d, onePassQr }} />;
+  const onePassQr = await QRCode.toString(`${proto}://${host}/signin?mode=signup`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#0B1626", light: "#ffffff" } });
+  return <Landing data={d} qr={onePassQr} />;
 }

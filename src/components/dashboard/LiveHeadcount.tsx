@@ -95,13 +95,13 @@ export function LiveHeadcount({
     <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
       <div className="relative mx-auto size-[152px] shrink-0 sm:mx-0">
         <svg viewBox="0 0 148 148" className="size-full -rotate-90" aria-hidden>
-          <circle cx="74" cy="74" r={R} fill="none" stroke="#EEECE6" strokeWidth="10" />
+          <circle cx="74" cy="74" r={R} fill="none" stroke="#F4F5F7" strokeWidth="10" />
           <circle
             cx="74"
             cy="74"
             r={R}
             fill="none"
-            stroke="#111110"
+            stroke="#14161B"
             strokeWidth="10"
             strokeLinecap="round"
             strokeDasharray={C}

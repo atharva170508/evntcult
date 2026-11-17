@@ -40,7 +40,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
       </header>
       <div className="mx-auto grid max-w-[1180px] items-start gap-10 py-10 lg:grid-cols-[minmax(0,1fr)_440px] lg:py-14">
         <div className="min-w-0">
-          <span className="inline-flex items-center gap-2 rounded-full bg-live-soft px-3 py-1 text-[13px] font-medium text-live">
+          <span className="inline-flex items-center gap-2 rounded-[10px] bg-live-soft px-3 py-1 text-[13px] font-medium text-live">
             <CircleCheck className="size-4" aria-hidden /> Your event is live
           </span>
           <h1 className="mt-5 text-display-lg font-semibold">

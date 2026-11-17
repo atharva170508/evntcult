@@ -52,7 +52,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
       </div>
 
       {/* Brand panel */}
-      <aside aria-hidden className="relative isolate m-3 hidden flex-col justify-between overflow-hidden rounded-panel bg-ink p-12 text-white lg:flex">
+      <aside aria-hidden className="relative isolate m-3 hidden flex-col justify-between overflow-hidden rounded-panel bg-night p-12 text-white lg:flex">
         <div className="absolute inset-0 -z-10 opacity-[0.5] [background-image:radial-gradient(rgba(255,255,255,0.12)_1px,transparent_1.2px)] [background-size:22px_22px] [mask-image:radial-gradient(ellipse_80%_70%_at_70%_20%,black,transparent_75%)]" />
         <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">EvntCult · OnePass</p>
         <div>

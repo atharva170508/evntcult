@@ -7,8 +7,8 @@ const tones = {
   live: "bg-live-soft text-live",
   warn: "bg-warn-soft text-warn",
   danger: "bg-danger-soft text-danger",
-  dark: "bg-ink text-white",
-  white: "bg-white/95 text-ink shadow-[0_1px_2px_rgba(17,17,16,0.12)] backdrop-blur",
+  dark: "bg-night text-white",
+  white: "bg-white/95 text-ink shadow-[0_1px_2px_rgba(20,22,27,0.12)] backdrop-blur",
 
   /* legacy names */
   volt: "bg-accent-soft text-accent-ink",
@@ -32,12 +32,12 @@ export function Chip({
   return (
     <span
       className={cn(
-        "inline-flex h-6 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-[12px] font-medium leading-none tracking-[-0.005em]",
+        "inline-flex h-6 items-center gap-1.5 whitespace-nowrap rounded-md px-2 text-[12px] font-semibold leading-none",
         tones[tone],
         className,
       )}
     >
-      {pulse && <span className="size-1.5 rounded-full bg-accent motion-safe:animate-pulse-dot" aria-hidden />}
+      {pulse && <span className="size-1.5 rounded-full bg-live-dot motion-safe:animate-pulse-dot" aria-hidden />}
       {children}
     </span>
   );

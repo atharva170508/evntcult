@@ -10,7 +10,7 @@ type ApiErr = { error?: { code: string; message: string } };
 const OWNER_EMAIL = "evntcult@gmail.com";
 
 const inputCls =
-  "mt-1.5 h-12 w-full rounded-tile border border-line bg-surface px-4 text-[15px] shadow-[inset_0_1px_1px_rgba(17,17,16,0.03)] transition-[border-color,box-shadow] duration-fast placeholder:text-ink-subtle hover:border-line-strong focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/[0.06]";
+  "mt-1.5 h-12 w-full rounded-tile border border-line bg-surface px-4 text-[15px] shadow-[inset_0_1px_1px_rgba(20,22,27,0.03)] transition-[border-color,box-shadow] duration-fast placeholder:text-ink-subtle hover:border-line-strong focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/[0.06]";
 
 /**
  * Sign in / sign up.
@@ -120,7 +120,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
             <button type="button" onClick={() => setOwnerOpen(false)} className="h-11 flex-1 rounded-full bg-surface text-[14px] font-medium shadow-card transition-shadow hover:shadow-raised">
               Cancel
             </button>
-            <button disabled={busy || !ownerCode} className="flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-ink text-[14px] font-medium text-white shadow-button disabled:opacity-50">
+            <button disabled={busy || !ownerCode} className="flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-night text-[14px] font-medium text-white shadow-button disabled:opacity-50">
               {busy && <Loader2 className="size-4 animate-spin" aria-hidden />} Open
             </button>
           </div>
@@ -185,7 +185,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
 
       <button
         disabled={busy || (step === "code" && code.length !== 6)}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-ink text-[15px] font-medium text-white shadow-button transition-[background-color,transform] duration-fast hover:bg-[#2a2a28] active:scale-[0.98] disabled:opacity-50"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-night text-[15px] font-medium text-white shadow-button transition-[background-color,transform] duration-fast hover:bg-night-3 active:scale-[0.98] disabled:opacity-50"
       >
         {busy && <Loader2 className="size-4 animate-spin" aria-hidden />}
         {codeLogin && step === "email" ? "Email me a code" : needName ? "Create account" : "Log in"}

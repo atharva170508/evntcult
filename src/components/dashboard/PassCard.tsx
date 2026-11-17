@@ -17,12 +17,12 @@ export async function PassCard({ pass }: { pass: NextUp }) {
     type: "svg",
     margin: 0,
     errorCorrectionLevel: "M",
-    color: { dark: "#111110", light: "#ffffff" },
+    color: { dark: "#14161B", light: "#ffffff" },
   });
 
   return (
     <article aria-label={`Pass for ${pass.title}`} className="card flex h-full flex-col overflow-hidden">
-      <div className="flex items-center justify-between gap-3 bg-ink px-5 py-3.5 text-white">
+      <div className="flex items-center justify-between gap-3 bg-night px-5 py-3.5 text-white">
         <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em] text-white/70">
           <LogoIcon className="size-5" blink={false} /> Your pass
         </span>

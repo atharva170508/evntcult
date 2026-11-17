@@ -29,7 +29,7 @@ export function Ticket(p: TicketProps) {
       setQr(null);
       return;
     }
-    QRCode.toString(p.qrValue, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#111110", light: "#ffffff" } }).then((s) => live && setQr(s));
+    QRCode.toString(p.qrValue, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#14161B", light: "#ffffff" } }).then((s) => live && setQr(s));
     return () => {
       live = false;
     };

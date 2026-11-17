@@ -18,7 +18,7 @@ const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function eventTone(e: CalendarEvent) {
   if (e.status === "cancelled") return "bg-danger-soft text-danger line-through";
-  if (e.mine === "registered") return "bg-ink text-white";
+  if (e.mine === "registered") return "bg-night text-white";
   if (e.mine === "waitlisted") return "bg-warn-soft text-warn";
   if (e.hosting) return "bg-accent-soft text-accent-ink";
   return "bg-sunken text-ink-2";
@@ -89,7 +89,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                 href={href(range.key, t.view)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "rounded-full px-4 py-1.5 text-[13.5px] font-medium transition-[background-color,color,box-shadow] duration-fast",
+                  "rounded-[10px] px-4 py-1.5 text-[13.5px] font-medium transition-[background-color,color,box-shadow] duration-fast",
                   active ? "bg-surface text-ink shadow-card" : "text-ink-muted hover:text-ink",
                 )}
               >
@@ -119,7 +119,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                 <p
                   className={cn(
                     "grid size-6 place-items-center rounded-full font-mono text-[12px] tabular-nums",
-                    isToday ? "bg-ink font-medium text-white" : list.length ? "font-medium text-ink" : "text-ink-subtle",
+                    isToday ? "bg-night font-medium text-white" : list.length ? "font-medium text-ink" : "text-ink-subtle",
                   )}
                 >
                   {Number(day.slice(8))}
@@ -152,7 +152,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
         </div>
         <p className="flex flex-wrap gap-x-5 gap-y-1.5 border-t border-line px-4 py-3 text-[12px] text-ink-muted">
           <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-[3px] bg-ink" /> Going
+            <span className="size-2.5 rounded-[3px] bg-night" /> Going
           </span>
           <span className="flex items-center gap-1.5">
             <span className="size-2.5 rounded-[3px] bg-warn-soft ring-1 ring-inset ring-warn/30" /> Waitlist

@@ -32,7 +32,7 @@ export default async function VerifyPage({ params }: { params: Promise<{ code: s
           </div>
         ) : (
           <article className="card overflow-hidden">
-            <div className={c.revokedAt ? "flex items-center gap-2.5 bg-danger px-6 py-4 text-white" : "flex items-center gap-2.5 bg-ink px-6 py-4 text-white"}>
+            <div className={c.revokedAt ? "flex items-center gap-2.5 bg-danger px-6 py-4 text-white" : "flex items-center gap-2.5 bg-night px-6 py-4 text-white"}>
               {c.revokedAt ? <XCircle className="size-5" aria-hidden /> : <BadgeCheck className="size-5 text-[#6EE3A6]" aria-hidden />}
               <p className="text-[15px] font-medium" role={c.revokedAt ? "alert" : "status"}>
                 {c.revokedAt ? `Revoked on ${date.format(new Date(c.revokedAt))}` : "Verified certificate"}

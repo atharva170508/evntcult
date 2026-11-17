@@ -66,9 +66,9 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
         disabled={busy === id}
         aria-pressed={!!mine[id]}
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-full font-medium shadow-[0_1px_2px_rgba(17,17,16,0.2)] transition-[background-color,color,transform] duration-fast ease-out active:scale-[0.97]",
+          "inline-flex items-center gap-1.5 rounded-full font-medium shadow-[0_1px_2px_rgba(20,22,27,0.2)] transition-[background-color,color,transform] duration-fast ease-out active:scale-[0.97]",
           big ? "h-10 px-4 text-[14px]" : "h-7 px-2.5 text-[12px]",
-          mine[id] ? "bg-ink text-white" : "bg-white/95 text-ink hover:bg-white",
+          mine[id] ? "bg-night text-white" : "bg-white/95 text-ink hover:bg-white",
         )}
       >
         {busy === id ? <Loader2 className="size-3.5 animate-spin" aria-hidden /> : mine[id] ? <UserCheck className="size-3.5" aria-hidden /> : <UserPlus className="size-3.5" aria-hidden />}
@@ -125,14 +125,14 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
               </span>
               <span className="flex-1" />
               {tagButton(current.id, true)}
-              <a href={`/api/photos/${current.id}`} download className="inline-flex h-10 items-center gap-1.5 rounded-full bg-white/10 px-4 text-[14px] font-medium transition-colors hover:bg-white/20">
+              <a href={`/api/photos/${current.id}`} download className="inline-flex h-10 items-center gap-1.5 rounded-[10px] bg-white/10 px-4 text-[14px] font-medium transition-colors hover:bg-white/20">
                 <Download className="size-4" aria-hidden /> Download
               </a>
               {canManage && (
                 <button
                   onClick={() => remove(current.id)}
                   disabled={busy === current.id}
-                  className="inline-flex h-10 items-center gap-1.5 rounded-full bg-danger px-4 text-[14px] font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-[10px] bg-danger px-4 text-[14px] font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
                 >
                   <Trash2 className="size-4" aria-hidden /> Delete
                 </button>
