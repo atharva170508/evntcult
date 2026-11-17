@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/rbac";
+import { requireTermsAccepted } from "@/lib/terms-gate";
 import { AppShell } from "@/components/shell/AppShell";
 import "./organizer.css";
 
@@ -7,6 +8,7 @@ import "./organizer.css";
 export default async function OrganizerLayout({ children }: { children: React.ReactNode }) {
   const viewer = await getViewer();
   if (!viewer) redirect("/signin?next=/organizer");
+  await requireTermsAccepted(viewer);
   if (!viewer.verifiedOrganizer) redirect("/host");
   return (
     <AppShell wide viewer={{ name: viewer.name, email: viewer.email, image: viewer.image, isOrganizer: viewer.verifiedOrganizer, isAdmin: viewer.role === "admin" }}>

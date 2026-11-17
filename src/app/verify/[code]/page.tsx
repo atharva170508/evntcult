@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { getDB } from "@/lib/db";
+import { getViewer } from "@/lib/rbac";
+import { requireTermsAccepted } from "@/lib/terms-gate";
 import { verifyCertificate, type CertKind } from "@/lib/data/certificates";
 import { BadgeCheck, XCircle } from "lucide-react";
 import { LogoWordmark } from "@/components/brand/MissingE";
@@ -10,9 +13,12 @@ export const dynamic = "force-dynamic";
 const KIND: Record<CertKind, string> = { participation: "Participation", winner: "Winner", volunteer: "Volunteer", speaker: "Speaker" };
 const date = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kolkata", day: "numeric", month: "long", year: "numeric" });
 
-/** Public, no account and no app navigation. Made to be screenshotted. */
+/** Certificate check: shows the holder's name, so it's for signed-in people only. No app navigation; made to be screenshotted. */
 export default async function VerifyPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
+  const viewer = await getViewer();
+  if (!viewer) redirect(`/signin?next=/verify/${encodeURIComponent(code)}`);
+  await requireTermsAccepted(viewer);
   const c = await verifyCertificate(await getDB(), decodeURIComponent(code));
 
   return (

@@ -17,87 +17,28 @@ const cta =
 /* ── Hero: split, text left, the real "up next" list right (antislop layouts §17a) ── */
 
 /**
- * The visitor's first screen, about EvntCult as a whole: every campus event in one place, one
- * calendar, live updates. Left: the line, Sign up, a link to this month. Right: the product itself —
- * the next events on campus, or the most recent ones when nothing is scheduled.
+ * The visitor's first screen, about EvntCult as a whole, centred like a poster. No real events here:
+ * names, dates and venues are only for signed-in people. One primary action, then a text link.
  */
-export function Hero({ upNext, recent }: { upNext: EventSummary[]; recent: EventSummary[] }) {
-  const list = (upNext.length ? upNext : recent).slice(0, 4);
-  const now = new Date();
+export function Hero() {
   return (
-    <section aria-labelledby="hero-h" className="grid items-center gap-12 pb-12 pt-10 md:pt-16 lg:grid-cols-[1.15fr_1fr] lg:gap-16 lg:pb-20 lg:pt-20">
-      <div>
-        <h1 id="hero-h" className="font-display text-[clamp(56px,8.5vw,108px)] leading-[0.92] tracking-[-0.035em] text-ink">
-          <MaskedLines lines={["Every campus event,", <em key="l2">in one place.</em>]} />
-        </h1>
-        <Entrance delay={0.3}>
-          <p className="mt-7 max-w-[34ch] text-[18px] leading-snug text-ink-2 md:text-[20px]">Every club on one calendar, with live updates when plans change.</p>
-        </Entrance>
-        <Entrance delay={0.38} className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
-          <Magnetic>
-            <Link href="/signin?mode=signup" className={cta}>
-              Sign up free
-            </Link>
-          </Magnetic>
-          <Link href="#calendar" className="text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors duration-fast hover:decoration-ink">
-            See this month
+    <section aria-labelledby="hero-h" className="mx-auto flex max-w-[980px] flex-col items-center pb-14 pt-14 text-center md:pt-24 lg:pb-20">
+      <h1 id="hero-h" className="font-display text-[clamp(56px,9vw,116px)] leading-[0.92] tracking-[-0.035em] text-ink">
+        <MaskedLines lines={["Every campus event,", <em key="l2">in one place.</em>]} />
+      </h1>
+      <Entrance delay={0.3}>
+        <p className="mx-auto mt-7 max-w-[36ch] text-[18px] leading-snug text-ink-2 md:text-[20px]">Every club on one calendar, with live updates when plans change.</p>
+      </Entrance>
+      <Entrance delay={0.38} className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+        <Magnetic>
+          <Link href="/signin?mode=signup" className={cta}>
+            Sign up free
           </Link>
-        </Entrance>
-      </div>
-
-      {list.length > 0 && (
-        <Entrance delay={0.2}>
-          <section aria-labelledby="upnext-h" className="rounded-3xl border border-line-strong bg-white p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_30px_60px_-36px_rgba(60,40,10,0.45)]">
-            <div className="flex items-center justify-between px-4 pb-2 pt-3">
-              <h2 id="upnext-h" className="text-[15px] font-semibold text-ink">
-                {upNext.length ? "Up next on campus" : "Recently on campus"}
-              </h2>
-              <Link href="/events" className="-my-3 inline-flex min-h-11 items-center px-2 text-[13.5px] font-semibold text-ink-muted transition-colors duration-fast hover:text-ink">
-                See all
-              </Link>
-            </div>
-            <ul>
-              {list.map((e) => {
-                const live = seatState(e, now) === "live";
-                const left = e.capacity ? Math.max(0, e.capacity - e.registered) : null;
-                return (
-                  <li key={e.id}>
-                    <Link href={`/events/${e.slug}`} className="group flex items-center gap-4 rounded-2xl p-3 transition-colors duration-fast hover:bg-sunken">
-                      <span className="relative grid size-14 shrink-0 place-items-center overflow-hidden rounded-xl text-white">
-                        <EventArt accent={e.accent} seed={e.id} flat scrim={false} />
-                        <span className="relative text-center leading-none">
-                          <span className="block text-[10px] font-semibold opacity-85">{fmtDate(e.startsAt, { month: "short" })}</span>
-                          <span className="block text-[20px] font-semibold">{fmtDate(e.startsAt, { day: "numeric" })}</span>
-                        </span>
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[15.5px] font-semibold text-ink">{e.title}</span>
-                        <span className="block truncate text-[13.5px] text-ink-muted">
-                          {fmtTime(e.startsAt)} · {e.venueName ?? "Venue TBA"}
-                        </span>
-                      </span>
-                      <span className="shrink-0 text-right text-[13px]">
-                        {live ? (
-                          <span className="inline-flex items-center gap-1.5 font-semibold text-accent">
-                            <span className="size-1.5 rounded-full bg-accent" aria-hidden /> Live
-                          </span>
-                        ) : upNext.length ? (
-                          <>
-                            <span className="block font-semibold tabular-nums text-ink">{e.feePaise ? formatINR(e.feePaise) : "Free"}</span>
-                            {left !== null && <span className="block tabular-nums text-ink-muted">{left === 0 ? "Full" : `${left} left`}</span>}
-                          </>
-                        ) : (
-                          <span className="text-ink-muted">{e.registered} went</span>
-                        )}
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
-        </Entrance>
-      )}
+        </Magnetic>
+        <Link href="#preview" className="text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors duration-fast hover:decoration-ink">
+          See what&apos;s inside
+        </Link>
+      </Entrance>
     </section>
   );
 }

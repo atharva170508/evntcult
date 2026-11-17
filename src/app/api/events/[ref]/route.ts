@@ -1,5 +1,5 @@
 import { ApiError, handle, parseBody } from "@/lib/api";
-import { getViewer } from "@/lib/rbac";
+import { requireUser } from "@/lib/rbac";
 import { getEventDetail } from "@/lib/data/events";
 import { saveEvent } from "@/lib/data/organizer-events";
 import { orgHandle, ownedEvent, type RefCtx } from "@/lib/organizer/route";
@@ -9,9 +9,9 @@ import { passQrPayload } from "@/lib/tokens";
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ ref: string }> };
 
-/** GET /api/events/:slug — includes seats_left and my_registration. */
+/** GET /api/events/:slug — includes seats_left and my_registration. Signed-in people only. */
 export const GET = handle(async (req: Request, { params }: Ctx) => {
-  const viewer = await getViewer();
+  const viewer = await requireUser();
   const { ref } = await params;
   const d = await getEventDetail(ref, viewer, new URL(req.url).searchParams.get("code"));
   if (!d) throw new ApiError(404, "not_found", "Event not found.");

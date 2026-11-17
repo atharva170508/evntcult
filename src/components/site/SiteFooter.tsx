@@ -37,6 +37,7 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
         { href: "/vault", label: "Photos" },
         { href: "/certificates", label: "Certificates" },
         { href: "/get-app", label: "Get the app" },
+        { href: "/terms", label: "Terms & Conditions" },
         ...(viewer ? [{ href: "/profile", label: "Account" }] : [{ href: "/signin?mode=signup", label: "Create an account" }]),
       ],
     },
@@ -64,9 +65,17 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
             </div>
           ))}
         </nav>
-        <div className="mt-12 flex flex-col gap-2 border-t border-line-strong pt-6 text-[14px] text-ink-2 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} EvntCult · Made in Nashik, India</p>
-          <p className="text-ink-muted">All times in IST · Prices in ₹ INR</p>
+        <div className="mt-12 flex flex-col gap-4 border-t border-line-strong pt-6 text-[14px] text-ink-2 sm:flex-row sm:items-start sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} EvntCult ·{" "}
+            <a href="mailto:evntcult@gmail.com" className="hover:underline hover:underline-offset-2">
+              evntcult@gmail.com
+            </a>
+          </p>
+          <p className="sm:text-right">
+            <span className="block font-semibold text-ink">Made by Synchronous Labs</span>
+            <span className="block text-ink-muted">Many minds. One momentum.</span>
+          </p>
         </div>
       </div>
     </footer>

@@ -5,7 +5,7 @@ import { Entrance } from "@/components/motion/MaskedLines";
 import { getViewer } from "@/lib/rbac";
 import { getDashboardData } from "@/lib/data/dashboard";
 import { getLandingData } from "@/lib/data/landing";
-import { Landing } from "@/components/landing/Landing";
+import { Landing, PublicHome } from "@/components/landing/Landing";
 import { getDB } from "@/lib/db";
 import { calendarMonth } from "@/lib/data/calendar";
 import { EventArt } from "@/components/ui/EventArt";
@@ -22,8 +22,9 @@ export default async function DashboardPage({
   searchParams: Promise<{ denied?: string }>;
 }) {
   const viewer = await getViewer();
-  const [landing, month] = await Promise.all([getLandingData(), getDB().then((db) => calendarMonth(db, viewer?.id ?? null))]);
-  if (!viewer) return <Landing data={landing} month={month} />;
+  // Visitors get the public homepage only: no event data is loaded for them at all.
+  if (!viewer) return <PublicHome />;
+  const [landing, month] = await Promise.all([getLandingData(), getDB().then((db) => calendarMonth(db, viewer.id))]);
 
   const [data, params] = await Promise.all([
     getDashboardData(viewer),
@@ -215,7 +216,7 @@ export default async function DashboardPage({
         )}
       </section>
 
-      <Landing data={landing} month={month} signedIn isOrganizer={viewer.verifiedOrganizer} />
+      <Landing data={landing} month={month} isOrganizer={viewer.verifiedOrganizer} />
 
       {!viewer.phone && (
         <div className="pt-6">

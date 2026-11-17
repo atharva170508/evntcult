@@ -26,6 +26,10 @@ const mono = localFont({
 export const metadata: Metadata = {
   title: { default: "EvntCult — Every event, one pass", template: "%s · EvntCult" },
   description: "Every campus event, one pass. Find what's on, register, and walk in with a scan.",
+  applicationName: "EvntCult",
+  authors: [{ name: "Synchronous Labs", url: "mailto:evntcult@gmail.com" }],
+  creator: "Synchronous Labs",
+  publisher: "Synchronous Labs",
   appleWebApp: { capable: true, title: "EvntCult", statusBarStyle: "default" },
 };
 

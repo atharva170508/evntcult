@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import QRCode from "qrcode";
 import { getDB } from "@/lib/db";
 import { getViewer } from "@/lib/rbac";
+import { requireTermsAccepted } from "@/lib/terms-gate";
 import { certificateFor, type CertKind } from "@/lib/data/certificates";
 import { siteHost } from "@/lib/organizer/page-data";
 import { slugify } from "@/lib/organizer/shared";
@@ -30,6 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CertificatePage({ params }: Props) {
   const [{ id }, viewer, host] = await Promise.all([params, getViewer(), siteHost()]);
   if (!viewer) redirect(`/signin?next=/certificates/${encodeURIComponent(id)}`);
+  await requireTermsAccepted(viewer);
   const c = await certificateFor(await getDB(), id, viewer);
   if (!c) notFound();
 
