@@ -2,7 +2,8 @@
   "name": "evntcult",
   "version": "0.1.0",
   "private": true,
-  "description": "EvntCult \u2014 campus event management, Apple-style dark mode.",
+  "description": "EvntCult \u2014 campus event management, by Synchronous Labs.",
+  "author": "Synchronous Labs <evntcult@gmail.com>",
   "scripts": {
     "predev": "node scripts/copy-face-models.mjs",
     "dev": "next dev",

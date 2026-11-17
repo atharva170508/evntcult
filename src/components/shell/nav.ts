@@ -35,8 +35,11 @@ export const ATTEND_NAV: NavItem[] = [
   { href: "/certificates", label: "Certificates", short: "Certs", icon: Award },
 ];
 
-/** Signed-out visitors see the campus calendar on the homepage itself, so Calendar points there. */
-export const VISITOR_HREF: Record<string, string> = { "/calendar": "/dashboard#calendar" };
+/**
+ * Where a menu item goes for signed-out visitors, when it differs. Empty: every item is behind the
+ * login, so visitors are sent to sign in and land on the page they picked.
+ */
+export const VISITOR_HREF: Record<string, string> = {};
 
 /** Home stays lit on the homepage only; every other item matches its own section. */
 export function isMainActive(pathname: string, href: string) {

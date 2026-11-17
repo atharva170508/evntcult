@@ -9,7 +9,7 @@ import { createDraftSchema, listQuerySchema, windowQuerySchema } from "@/lib/val
 export const dynamic = "force-dynamic";
 
 /**
- * GET /api/events?type&when&price&q&cursor: public upcoming events.
+ * GET /api/events?type&when&price&q&cursor: upcoming events, for signed-in people only.
  * GET /api/events?from&to: the signed-in organizer's calendar window.
  */
 export const GET = handle(async (req: Request) => {
@@ -20,6 +20,7 @@ export const GET = handle(async (req: Request) => {
     const viewer = await requireUser();
     return Response.json(await calendarWindow(await getDB(), viewer.id, w.data.from, w.data.to), { headers: { "Cache-Control": "private, no-store" } });
   }
+  await requireUser();
   const parsed = listQuerySchema.safeParse(params);
   if (!parsed.success) throw new ApiError(400, "invalid", parsed.error.issues[0]?.message ?? "Invalid filters.");
   const { events, nextCursor } = await listEvents(parsed.data);

@@ -7,6 +7,7 @@ import { newId } from "@/lib/tokens";
 import { nowIso } from "@/lib/time";
 import { phoneSchema } from "@/lib/phone";
 import { sessionCookieHeader, createSessionValue } from "@/lib/session";
+import { TERMS_VERSION } from "@/lib/terms";
 
 export const emailSchema = z.string().trim().toLowerCase().email().max(200);
 
@@ -15,6 +16,8 @@ export const signupFields = {
   name: z.string().trim().min(2).max(80).optional(),
   phone: phoneSchema.optional(),
   whatsappOptIn: z.boolean().optional(),
+  /** The sign-up checkbox: "I have read, understand, and agree to the Terms & Conditions and User Rules". */
+  acceptTerms: z.boolean().optional(),
 };
 
 export function assertDomainAllowed(email: string) {
@@ -31,18 +34,19 @@ export async function findUserId(email: string) {
 }
 
 /** Throws name_required / phone_required if a new account is missing details (checked before any code try is used up). */
-export function assertSignupDetails(d: { name?: string; phone?: string }) {
+export function assertSignupDetails(d: { name?: string; phone?: string; acceptTerms?: boolean }) {
   if (!d.name) throw new ApiError(400, "name_required", "Tell us your name to create your account.");
   if (!d.phone) throw new ApiError(400, "phone_required", "Add your mobile number to create your account.");
+  if (d.acceptTerms !== true) throw new ApiError(400, "terms_required", "Tick the box to agree to the Terms & Conditions and User Rules.");
 }
 
-export async function createUser(email: string, d: { name?: string; phone?: string; whatsappOptIn?: boolean }) {
+export async function createUser(email: string, d: { name?: string; phone?: string; whatsappOptIn?: boolean; acceptTerms?: boolean }) {
   assertSignupDetails(d);
   const id = newId();
   const now = nowIso();
   await run(
-    "INSERT INTO users (id, email, name, role, created_at, phone, whatsapp_opt_in, phone_updated_at, wa_opt_in_at) VALUES (?, ?, ?, 'attendee', ?, ?, ?, ?, ?)",
-    id, email, d.name, now, d.phone, d.whatsappOptIn ? 1 : 0, now, d.whatsappOptIn ? now : null,
+    "INSERT INTO users (id, email, name, role, created_at, phone, whatsapp_opt_in, phone_updated_at, wa_opt_in_at, terms_accepted_at, terms_version) VALUES (?, ?, ?, 'attendee', ?, ?, ?, ?, ?, ?, ?)",
+    id, email, d.name, now, d.phone, d.whatsappOptIn ? 1 : 0, now, d.whatsappOptIn ? now : null, now, TERMS_VERSION,
   );
   return id;
 }

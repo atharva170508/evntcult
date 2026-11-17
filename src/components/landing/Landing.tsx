@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { Bell, Check, Plus, ScanLine, Search } from "lucide-react";
 import type { LandingData } from "@/lib/data/landing";
 import type { MonthPayload } from "@/lib/data/calendar";
@@ -9,16 +8,16 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/motion/Reveal";
 import { Spotlight } from "@/components/motion/Spotlight";
 import { EventCard } from "./EventCard";
-import { KindRail } from "./KindRail";
 import { Row } from "./Row";
-import { AppBand, Closing, Featured, Hero, HowItWorks, KindBento, Numbers, Venues } from "./Sections";
+import { AppBand, Closing, Featured, Hero, HowItWorks, Numbers, Venues } from "./Sections";
+import { DashboardPreview } from "./DashboardPreview";
 import { EventArt } from "@/components/ui/EventArt";
 
 const FAQ: [string, string][] = [
   ["Do I need to print my pass?", "No. Show the QR on your phone at the gate. A saved image of it works without internet too."],
   ["How do I pay for a paid event?", "By UPI, straight to the organizer. Add your UTR after paying and the organizer confirms it. Some events take payment at the desk instead."],
   ["Can I cancel?", "Yes, from your pass. Your seat goes to the next person on the waitlist."],
-  ["Where's my certificate?", "In Certificates, once the organizer issues it. Anyone can check it's real from the code printed on it."],
+  ["Where's my certificate?", "In Certificates, once the organizer issues it. Anyone with an EvntCult account can check it's real from the code printed on it."],
   ["Who can see the photos?", "Only people registered for that event, and its organizer."],
   ["How do I host an event?", "Organizer accounts are approved by EvntCult. Sign up, then choose Apply to host events in your account menu."],
 ];
@@ -67,49 +66,66 @@ function EmptyCampus({ isOrganizer }: { isOrganizer: boolean }) {
   );
 }
 
-/** The month calendar: campus events for visitors; signed in, your events too. */
-function CampusCalendar({ month, signedIn }: { month: MonthPayload; signedIn: boolean }) {
+/** Your month: your registrations and events you host, plus campus events. */
+function CampusCalendar({ month }: { month: MonthPayload }) {
   return (
-    <section id="calendar" aria-labelledby="calendar-h" className={signedIn ? "scroll-mt-28 pt-10" : "scroll-mt-28 py-12 md:py-16"}>
+    <section id="calendar" aria-labelledby="calendar-h" className="scroll-mt-28 pt-10">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        {signedIn ? (
-          <h2 id="calendar-h" className="text-[22px] font-semibold tracking-[-0.01em] text-ink">
-            Your calendar
-          </h2>
-        ) : (
-          <h2 id="calendar-h" className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-            What&apos;s on <em>this month.</em>
-          </h2>
-        )}
-        {signedIn && (
-          <Link href="/calendar" className="text-[15px] font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink">
-            Full calendar
-          </Link>
-        )}
+        <h2 id="calendar-h" className="text-[22px] font-semibold tracking-[-0.01em] text-ink">
+          Your calendar
+        </h2>
+        <Link href="/calendar" className="text-[15px] font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink">
+          Full calendar
+        </Link>
       </div>
-      <MonthCalendar initial={month} signedIn={signedIn} />
+      <MonthCalendar initial={month} signedIn />
     </section>
   );
 }
 
 /**
- * The homepage. Visitors: welcome, OnePass, this month's calendar, then what's on, shelves, kinds,
- * venues, app, questions. Signed in: your calendar in place of the kinds, then the same shelves.
- * Hosting is for approved organizers, so visitors don't see the hosting band.
+ * The homepage for visitors: welcome, OnePass, a labelled example of the signed-in home, the app,
+ * questions and sign-up. Nothing real (event names, dates, venues, people or counts) is shown or
+ * even loaded until someone signs in.
  */
-export function Landing({ data, month, signedIn = false, isOrganizer = false }: { data: LandingData; month: MonthPayload; signedIn?: boolean; isOrganizer?: boolean }) {
+export function PublicHome() {
+  return (
+    <div className="pb-6">
+      <Hero />
+      <HowItWorks />
+      <DashboardPreview />
+      <AppBand />
+      <Questions />
+      <Closing />
+    </div>
+  );
+}
+
+function Questions() {
+  return (
+    <section aria-labelledby="faq-h" className="grid gap-10 py-20 md:grid-cols-[1fr_1.4fr] md:py-28">
+      <Reveal>
+        <h2 id="faq-h" className="font-display text-[clamp(44px,6vw,72px)] leading-none tracking-[-0.03em]">
+          Good <em>questions.</em>
+        </h2>
+      </Reveal>
+      <Reveal delay={0.08}>
+        <Accordion items={FAQ} />
+      </Reveal>
+    </section>
+  );
+}
+
+/**
+ * The signed-in homepage below the greeting: your calendar, then what's on, shelves, venues,
+ * numbers, the hosting band, the app and questions.
+ */
+export function Landing({ data, month, isOrganizer = false }: { data: LandingData; month: MonthPayload; isOrganizer?: boolean }) {
   const hostHref = isOrganizer ? "/organizer/events/new" : "/host";
 
   return (
     <div className="pb-6">
-      {!signedIn && (
-        <>
-          <Hero upNext={data.ticker} recent={data.recent} />
-          <HowItWorks />
-          <CampusCalendar month={month} signedIn={false} />
-        </>
-      )}
-      {signedIn && <CampusCalendar month={month} signedIn />}
+      <CampusCalendar month={month} />
 
       {/* Phones: the header has no room for the big bar, so search lives here. */}
       <form action="/events" method="get" role="search" className="pt-5 md:hidden">
@@ -119,23 +135,13 @@ export function Landing({ data, month, signedIn = false, isOrganizer = false }: 
         </label>
       </form>
 
-      {!signedIn && (
-        <div className="mt-6 border-b border-line">
-          <Suspense>
-            <KindRail />
-          </Suspense>
-        </div>
-      )}
-
       {data.featured && <Featured e={data.featured} />}
 
       <div className="pt-6">
         {data.rows.length === 0 ? <EmptyCampus isOrganizer={isOrganizer} /> : data.rows.slice(0, 2).map(shelf)}
       </div>
 
-      {signedIn && <HowItWorks />}
-
-      {!signedIn && <KindBento kinds={data.kinds} />}
+      <HowItWorks />
 
       {data.rows.slice(2).map(shelf)}
 
@@ -143,8 +149,7 @@ export function Landing({ data, month, signedIn = false, isOrganizer = false }: 
 
       <Numbers upcoming={data.upcoming} going={data.going} checkins={data.checkins} />
 
-      {/* Hosting: a dark band with a bento of what organizers get. Signed-in people only. */}
-      {signedIn && (
+      {/* Hosting: a dark band with a bento of what organizers get. */}
       <section id="hosts" aria-labelledby="hosts-h" className="bleed mt-16 scroll-mt-28 bg-night text-cream">
         <div className="mx-auto max-w-[1360px] px-gutter py-20 md:py-28">
           <Reveal className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
@@ -239,7 +244,7 @@ export function Landing({ data, month, signedIn = false, isOrganizer = false }: 
               <div className="relative z-[2] flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h3 className="text-[18px] font-semibold text-cream">After the night</h3>
-                  <p className="mt-1.5 max-w-[30ch] text-[14px] text-cream/65">Photos people can find themselves in. Certificates anyone can verify.</p>
+                  <p className="mt-1.5 max-w-[30ch] text-[14px] text-cream/65">Photos people can find themselves in. Certificates other students can verify.</p>
                 </div>
                 <div className="flex items-end gap-3" aria-hidden>
                   <div className="grid grid-cols-2 gap-1.5">
@@ -262,22 +267,10 @@ export function Landing({ data, month, signedIn = false, isOrganizer = false }: 
           <p className="mt-4 text-[12.5px] text-cream/50">Example screens. Your own events show your guests, payments and messages.</p>
         </div>
       </section>
-      )}
 
       <AppBand />
 
-      <section aria-labelledby="faq-h" className="grid gap-10 py-20 md:grid-cols-[1fr_1.4fr] md:py-28">
-          <Reveal>
-            <h2 id="faq-h" className="font-display text-[clamp(44px,6vw,72px)] leading-none tracking-[-0.03em]">
-              Good <em>questions.</em>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <Accordion items={FAQ} />
-          </Reveal>
-        </section>
-
-      {!signedIn && <Closing />}
+      <Questions />
     </div>
   );
 }

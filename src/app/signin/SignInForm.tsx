@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Loader2, MailCheck } from "lucide-react";
 import { PhoneFields } from "@/components/profile/PhoneFields";
 import { ModalDialog } from "@/components/ui/ModalDialog";
+import { TermsCheckbox } from "@/components/terms/AcceptTerms";
 
 type ApiErr = { error?: { code: string; message: string } };
 
@@ -31,6 +32,7 @@ export function SignInForm({
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [optIn, setOptIn] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [needName, setNeedName] = useState(signup);
   const [step, setStep] = useState<"email" | "code">("email");
   const [code, setCode] = useState("");
@@ -47,7 +49,7 @@ export function SignInForm({
     return () => clearTimeout(t);
   }, [resendIn]);
 
-  const details = () => (needName ? { name, phone, whatsappOptIn: optIn } : {});
+  const details = () => (needName ? { name, phone, whatsappOptIn: optIn, acceptTerms } : {});
 
   async function post(url: string, body: unknown) {
     setBusy(true);
@@ -71,6 +73,11 @@ export function SignInForm({
     ) {
       setNeedName(true);
       setError("New here? Add your name and number to create your account.");
+      return;
+    }
+    if (data.error?.code === "terms_required") {
+      setNeedName(true);
+      setError(data.error.message);
       return;
     }
     if (
@@ -251,6 +258,8 @@ export function SignInForm({
               optIn={optIn}
               setOptIn={setOptIn}
             />
+            {/* Required to create an account. Opens the terms in a new tab so the form isn't lost. */}
+            <TermsCheckbox checked={acceptTerms} onChange={setAcceptTerms} newTab />
           </>
         )}
 
