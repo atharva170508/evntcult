@@ -114,3 +114,28 @@ export function monthGrid(year: number, month: number): (string | null)[] {
   while (cells.length % 7) cells.push(null);
   return cells;
 }
+
+/** One month packed for the interactive calendar (landing and dashboard). Visitors get public events only. */
+export interface MonthPayload {
+  key: string;
+  prev: string;
+  next: string;
+  label: string;
+  today: string;
+  cells: (string | null)[];
+  events: Pick<CalendarEvent, "id" | "slug" | "title" | "venue" | "startsAt" | "day" | "mine" | "hosting" | "status" | "pricePaise">[];
+}
+
+export async function calendarMonth(db: D1Database, viewerId: string | null, ym?: string, now: Date = new Date()): Promise<MonthPayload> {
+  const r = monthRange(ym, now);
+  const events = await monthEvents(db, { viewerId, start: r.start, end: r.end });
+  return {
+    key: r.key,
+    prev: r.prev,
+    next: r.next,
+    label: new Intl.DateTimeFormat("en-IN", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(r.year, r.month, 1))),
+    today: istDay(now.toISOString()),
+    cells: monthGrid(r.year, r.month),
+    events: events.map(({ id, slug, title, venue, startsAt, day, mine, hosting, status, pricePaise }) => ({ id, slug, title, venue, startsAt, day, mine, hosting, status, pricePaise })),
+  };
+}

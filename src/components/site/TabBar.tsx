@@ -2,26 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarDays, Images, Plus, Search, Ticket, UserRound } from "lucide-react";
+import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { HOST_NAV, isActive, workspaceFor } from "@/components/shell/nav";
+import { ATTEND_NAV, HOST_NAV, VISITOR_HREF, isActive, isMainActive, workspaceFor } from "@/components/shell/nav";
 
-const ATTEND_TABS = [
-  { href: "/dashboard", label: "Explore", icon: Search },
-  { href: "/passes", label: "Passes", icon: Ticket },
-  { href: "/calendar", label: "Calendar", icon: CalendarDays },
-  { href: "/vault", label: "Photos", icon: Images },
-  { href: "/profile", label: "Profile", icon: UserRound },
-];
-
-/** Phone tab bar for signed-in people: the current workspace's main destinations. */
-export function TabBar() {
+/** Phone tab bar: Home · Discover · Calendar · Passes · Certs (or the hosting tabs). Visitors get it too. */
+export function TabBar({ signedIn = true }: { signedIn?: boolean }) {
   const pathname = usePathname();
   const ws = workspaceFor(pathname);
   // Admin has no tabs; an event's own page shows its price-and-register bar instead.
   if (ws === "admin" || /^\/events\/[^/]+$/.test(pathname)) return null;
 
-  const items = ws === "host" ? HOST_NAV : ATTEND_TABS;
+  const items = ws === "host" ? HOST_NAV : ATTEND_NAV;
 
   return (
     <nav
@@ -30,12 +22,12 @@ export function TabBar() {
     >
       <ul className={cn("mx-auto grid max-w-md", ws === "host" ? "grid-cols-3" : "grid-cols-5")}>
         {items.map((item) => {
-          const active = item.href === "/dashboard" ? pathname === "/dashboard" || pathname.startsWith("/events") : isActive(pathname, item);
+          const active = ws === "host" ? isActive(pathname, item) : isMainActive(pathname, item.href);
           const Icon = item.icon;
           return (
             <li key={item.href}>
               <Link
-                href={item.href}
+                href={!signedIn && VISITOR_HREF[item.href] ? VISITOR_HREF[item.href] : item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "flex h-[62px] flex-col items-center justify-center gap-1 text-[10.5px] font-semibold transition-colors duration-fast",
@@ -43,7 +35,7 @@ export function TabBar() {
                 )}
               >
                 <Icon className="size-[22px]" strokeWidth={active ? 2.2 : 1.7} aria-hidden />
-                {item.label}
+                {item.short ?? item.label}
               </Link>
             </li>
           );

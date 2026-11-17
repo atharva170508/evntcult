@@ -5,6 +5,7 @@ import { getDB } from "@/lib/db";
 import { formatINR } from "@/lib/money";
 import { ADMIN_COOKIE, readAdminValue } from "@/lib/session";
 import { adminOverview } from "@/lib/data/admin";
+import { pendingHosts } from "@/lib/data/hosting";
 import { istTime, ticketDate } from "@/lib/organizer/shared";
 import { codeLoginOn } from "@/lib/email";
 import { whatsappConnected } from "@/lib/notify";
@@ -20,7 +21,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   if (!(await readAdminValue((await cookies()).get(ADMIN_COOKIE)?.value))) redirect("/signin");
 
   const { q } = await searchParams;
-  const { stats: s, events, users, activity, stuck, organizers, signups, outbox } = await adminOverview(await getDB(), q);
+  const db = await getDB();
+  const [{ stats: s, events, users, activity, stuck, organizers, signups, outbox }, applicants] = await Promise.all([adminOverview(db, q), pendingHosts(db)]);
   const stats: [string, string][] = [
     ["Users", String(s.users)],
     ["New in 7 days", String(s.newUsers)],
@@ -60,6 +62,37 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             </div>
           ))}
         </dl>
+
+        {/* Hosting is for approved organizers only. New applications wait here. */}
+        <h2 className="o-section-label a-head">Host applications{applicants.length ? ` · ${applicants.length} waiting` : ""}</h2>
+        {applicants.length === 0 ? (
+          <p className="o-meta">No one is waiting. Students apply from their account menu.</p>
+        ) : (
+          <div className="a-scroll">
+            <table className="a-table">
+              <thead>
+                <tr><th>Name</th><th>Club or group</th><th>What they plan to run</th><th>Applied</th><th /></tr>
+              </thead>
+              <tbody>
+                {applicants.map((a) => (
+                  <tr key={a.id}>
+                    <td>
+                      {a.name}
+                      <div className="m">{a.email}</div>
+                    </td>
+                    <td>{a.club}</td>
+                    <td style={{ maxWidth: 360 }}>{a.note}</td>
+                    <td className="m">{when(a.appliedAt)}</td>
+                    <td className="n" style={{ whiteSpace: "nowrap" }}>
+                      <OwnerAction kind="approve_host" id={a.id} label="Approve" ask={`Let ${a.name} host events? They can create and publish straight away.`} />{" "}
+                      <OwnerAction kind="reject_host" id={a.id} label="Reject" ask={`Reject ${a.name}'s application? They can apply again later.`} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {stuck.length > 0 && (
           <>

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Bell, Check, Plus, ScanLine, Search } from "lucide-react";
 import type { LandingData } from "@/lib/data/landing";
+import type { MonthPayload } from "@/lib/data/calendar";
+import { MonthCalendar } from "@/components/calendar/MonthCalendar";
 import { Accordion } from "@/components/motion/Accordion";
 import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/motion/Reveal";
@@ -18,7 +20,7 @@ const FAQ: [string, string][] = [
   ["Can I cancel?", "Yes, from your pass. Your seat goes to the next person on the waitlist."],
   ["Where's my certificate?", "In Certificates, once the organizer issues it. Anyone can check it's real from the code printed on it."],
   ["Who can see the photos?", "Only people registered for that event, and its organizer."],
-  ["How do I host an event?", "Organizer accounts are approved by EvntCult. Write to evntcult@gmail.com and we'll set you up."],
+  ["How do I host an event?", "Organizer accounts are approved by EvntCult. Sign up, then choose Apply to host events in your account menu."],
 ];
 
 const nf = new Intl.NumberFormat("en-IN");
@@ -65,13 +67,49 @@ function EmptyCampus({ isOrganizer }: { isOrganizer: boolean }) {
   );
 }
 
-/** The homepage: welcome, what's on, the featured event, shelves, kinds, venues, hosting, app, questions. */
-export function Landing({ data, signedIn = false, isOrganizer = false }: { data: LandingData; signedIn?: boolean; isOrganizer?: boolean }) {
-  const hostHref = isOrganizer ? "/organizer/events/new" : "mailto:evntcult@gmail.com?subject=Organizer%20account";
+/** The month calendar: campus events for visitors; signed in, your events too. */
+function CampusCalendar({ month, signedIn }: { month: MonthPayload; signedIn: boolean }) {
+  return (
+    <section id="calendar" aria-labelledby="calendar-h" className={signedIn ? "scroll-mt-28 pt-10" : "scroll-mt-28 py-12 md:py-16"}>
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        {signedIn ? (
+          <h2 id="calendar-h" className="text-[22px] font-semibold tracking-[-0.01em] text-ink">
+            Your calendar
+          </h2>
+        ) : (
+          <h2 id="calendar-h" className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
+            What&apos;s on <em>this month.</em>
+          </h2>
+        )}
+        {signedIn && (
+          <Link href="/calendar" className="text-[15px] font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink">
+            Full calendar
+          </Link>
+        )}
+      </div>
+      <MonthCalendar initial={month} signedIn={signedIn} />
+    </section>
+  );
+}
+
+/**
+ * The homepage. Visitors: welcome, OnePass, this month's calendar, then what's on, shelves, kinds,
+ * venues, app, questions. Signed in: your calendar in place of the kinds, then the same shelves.
+ * Hosting is for approved organizers, so visitors don't see the hosting band.
+ */
+export function Landing({ data, month, signedIn = false, isOrganizer = false }: { data: LandingData; month: MonthPayload; signedIn?: boolean; isOrganizer?: boolean }) {
+  const hostHref = isOrganizer ? "/organizer/events/new" : "/host";
 
   return (
     <div className="pb-6">
-      {!signedIn && <Hero upNext={data.ticker} recent={data.recent} />}
+      {!signedIn && (
+        <>
+          <Hero upNext={data.ticker} recent={data.recent} />
+          <HowItWorks />
+          <CampusCalendar month={month} signedIn={false} />
+        </>
+      )}
+      {signedIn && <CampusCalendar month={month} signedIn />}
 
       {/* Phones: the header has no room for the big bar, so search lives here. */}
       <form action="/events" method="get" role="search" className="pt-5 md:hidden">
@@ -81,11 +119,13 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
         </label>
       </form>
 
-      <div className="mt-6 border-b border-line">
-        <Suspense>
-          <KindRail />
-        </Suspense>
-      </div>
+      {!signedIn && (
+        <div className="mt-6 border-b border-line">
+          <Suspense>
+            <KindRail />
+          </Suspense>
+        </div>
+      )}
 
       {data.featured && <Featured e={data.featured} />}
 
@@ -93,9 +133,9 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
         {data.rows.length === 0 ? <EmptyCampus isOrganizer={isOrganizer} /> : data.rows.slice(0, 2).map(shelf)}
       </div>
 
-      <HowItWorks />
+      {signedIn && <HowItWorks />}
 
-      <KindBento kinds={data.kinds} />
+      {!signedIn && <KindBento kinds={data.kinds} />}
 
       {data.rows.slice(2).map(shelf)}
 
@@ -103,7 +143,8 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
 
       <Numbers upcoming={data.upcoming} going={data.going} checkins={data.checkins} />
 
-      {/* Hosting: a dark band with a bento of what organizers get. */}
+      {/* Hosting: a dark band with a bento of what organizers get. Signed-in people only. */}
+      {signedIn && (
       <section id="hosts" aria-labelledby="hosts-h" className="bleed mt-16 scroll-mt-28 bg-night text-cream">
         <div className="mx-auto max-w-[1360px] px-gutter py-20 md:py-28">
           <Reveal className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
@@ -120,7 +161,7 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
                     <Plus className="size-4" strokeWidth={2.6} aria-hidden /> Create an event
                   </>
                 ) : (
-                  "Become an organizer"
+                  "Apply to host events"
                 )}
               </a>
             </Magnetic>
@@ -221,6 +262,7 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
           <p className="mt-4 text-[12.5px] text-cream/50">Example screens. Your own events show your guests, payments and messages.</p>
         </div>
       </section>
+      )}
 
       <AppBand />
 

@@ -3,7 +3,7 @@ import type { NavViewer } from "./SiteHeader";
 
 /** Light grey footer: three columns of destinations and a quiet bottom line. */
 export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
-  const columns: { title: string; links: { href: string; label: string }[] }[] = [
+  const all: { title: string; links: { href: string; label: string }[] }[] = [
     {
       title: "Explore",
       links: [
@@ -23,10 +23,12 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
             { href: "/organizer/events/new", label: "Create an event" },
             { href: "/organizer/calendar", label: "Host calendar" },
           ]
-        : [
-            { href: viewer ? "/organizer/events/new" : `/signin?next=${encodeURIComponent("/organizer/events/new")}`, label: "Host an event" },
-            { href: "/dashboard#hosts", label: "How hosting works" },
-          ],
+        : viewer
+          ? [
+              { href: "/host", label: "Apply to host events" },
+              { href: "/dashboard#hosts", label: "How hosting works" },
+            ]
+          : [],
     },
     {
       title: "EvntCult",
@@ -39,6 +41,9 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
       ],
     },
   ];
+
+  // Hosting is for approved organizers, so visitors don't get a Hosting column at all.
+  const columns = all.filter((c) => c.links.length > 0);
 
   return (
     <footer className="border-t border-line bg-sunken print:hidden">
