@@ -17,7 +17,7 @@ export async function PassCard({ pass }: { pass: NextUp }) {
     type: "svg",
     margin: 0,
     errorCorrectionLevel: "M",
-    color: { dark: "#14161B", light: "#ffffff" },
+    color: { dark: "#222222", light: "#ffffff" },
   });
 
   return (

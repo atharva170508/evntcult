@@ -3,30 +3,30 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Buttons. Anatomy: 10–12px corners (never pills), semibold label, 0.98 press,
- * 160ms colour transitions. `primary` is night navy — use `accent` (crimson) for the
- * single most important action on a screen (Register, Search, Sign up).
+ * Buttons. Anatomy: 8px corners, semibold label, 0.96 press, 160ms colour transitions.
+ * `primary` is #222 — use `accent` (red) for the single most important action on a screen
+ * (Register, Search, Sign up). `secondary` is white with a dark 1px outline.
  */
 const variants = {
-  primary: "bg-night text-white shadow-button hover:bg-night-3",
-  accent: "bg-accent text-white shadow-accent hover:bg-accent-hover",
-  secondary: "bg-surface text-ink ring-1 ring-inset ring-line-strong hover:bg-sunken hover:ring-ink-subtle/40",
+  primary: "bg-ink text-white hover:bg-black",
+  accent: "bg-accent text-white hover:bg-accent-hover",
+  secondary: "bg-surface text-ink ring-1 ring-inset ring-ink hover:bg-sunken",
   ghost: "text-ink-2 hover:bg-sunken hover:text-ink",
   soft: "bg-sunken text-ink hover:bg-mist",
   danger: "bg-surface text-danger ring-1 ring-inset ring-line-strong hover:bg-danger-soft",
   /** White button for use on posters and dark bands. */
-  light: "bg-white text-ink shadow-button hover:bg-white/90",
+  light: "bg-white text-ink hover:bg-white/90",
 
   /* legacy names → new anatomy */
-  volt: "bg-accent text-white shadow-accent hover:bg-accent-hover",
-  brand: "bg-accent text-white shadow-accent hover:bg-accent-hover",
+  volt: "bg-accent text-white hover:bg-accent-hover",
+  brand: "bg-accent text-white hover:bg-accent-hover",
   glass: "bg-surface text-ink ring-1 ring-inset ring-line-strong hover:bg-sunken",
 } as const;
 
 const sizes = {
-  sm: "h-8 gap-1.5 rounded-[9px] px-3 text-[13px]",
-  md: "h-10 gap-2 rounded-[10px] px-4 text-[14px]",
-  lg: "h-12 gap-2 rounded-xl px-6 text-[15px]",
+  sm: "h-8 gap-1.5 rounded-lg px-3 text-[13px]",
+  md: "h-10 gap-2 rounded-lg px-4 text-[14px]",
+  lg: "h-12 gap-2 rounded-lg px-6 text-[16px]",
 } as const;
 
 export type ButtonVariant = keyof typeof variants;
@@ -35,7 +35,7 @@ export type ButtonSize = keyof typeof sizes;
 export const buttonClass = (variant: ButtonVariant = "primary", size: ButtonSize = "md", className?: string) =>
   cn(
     "relative inline-flex select-none items-center justify-center whitespace-nowrap font-semibold",
-    "transition-[background-color,box-shadow,color,transform] duration-fast ease-out active:scale-[0.98] active:duration-75",
+    "transition-[background-color,box-shadow,color,transform] duration-fast ease-out active:scale-[0.96] active:duration-75",
     "disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45",
     variants[variant],
     sizes[size],

@@ -54,7 +54,7 @@ export function AppShell({
       <SiteHeader viewer={viewer} wide={wide} onSearch={() => setSearchOpen(true)} onEnterCode={() => setCodeOpen(true)} />
       <main
         id="main"
-        className={cn("mx-auto w-full flex-1 px-gutter pb-28 md:pb-12", wide ? "max-w-[1440px]" : "max-w-shell")}
+        className={cn("mx-auto w-full flex-1 px-gutter pb-28 md:pb-12", wide ? "max-w-[1440px]" : "max-w-[1360px]")}
       >
         {children}
       </main>

@@ -2,24 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import {
-  ArrowLeftRight,
-  ChevronDown,
-  Download,
-  KeyRound,
-  LogOut,
-  Menu,
-  Plus,
-  Search,
-  ShieldCheck,
-  UserRound,
-  X,
-} from "lucide-react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { Award, Download, KeyRound, LogOut, MapPinned, Menu, Plus, Search, ShieldCheck, UserRound, X } from "lucide-react";
 import { cn, initials } from "@/lib/utils";
 import { NotificationBell } from "@/components/shell/NotificationBell";
-import { ATTEND_NAV, HOST_NAV, isActive, workspaceFor, type NavItem, type Workspace } from "@/components/shell/nav";
+import { isActive, workspaceFor, type Workspace } from "@/components/shell/nav";
 import { BrandLogo } from "./Brand";
+import { CompactSearch, HeaderSearch } from "./HeaderSearch";
+import { CalendarIcon, EventsIcon, HostIcon, PassIcon, PhotosIcon } from "./TabIcons";
 
 export interface NavViewer {
   name: string;
@@ -34,18 +24,26 @@ async function logout() {
   window.location.href = "/dashboard";
 }
 
-/** Attend shows four destinations in the bar; the rest live under "More". */
-const ATTEND_PRIMARY = ["/events", "/calendar", "/passes", "/vault"];
-const PUBLIC_LINKS = [
-  { href: "/events", label: "Discover" },
-  { href: "/dashboard#how", label: "How it works" },
-  { href: "/dashboard#hosts", label: "For organizers" },
+type Tab = { href: string; label: string; icon: React.ComponentType<{ className?: string }>; exact?: boolean };
+
+const ATTEND_TABS: Tab[] = [
+  { href: "/events", label: "Events", icon: EventsIcon },
+  { href: "/calendar", label: "Calendar", icon: CalendarIcon },
+  { href: "/passes", label: "Passes", icon: PassIcon },
+  { href: "/vault", label: "Photos", icon: PhotosIcon },
+];
+const HOST_TABS: Tab[] = [
+  { href: "/organizer", label: "Your events", icon: HostIcon, exact: true },
+  { href: "/organizer/calendar", label: "Calendar", icon: CalendarIcon },
 ];
 
+/** Pages that open with the big search bar under the tabs. */
+const SEARCH_PAGES = ["/dashboard", "/events"];
+
 /**
- * One bar for the whole product. Its colour tells you where you are: white while attending,
- * night navy while hosting or in admin. Search is a command palette (Ctrl/⌘ K or "/").
- * Phones get a full-screen menu; signed-in phones also get the tab bar.
+ * The header. Logo on the left, illustrated tabs in the middle, hosting switch, notifications
+ * and the account menu on the right. Home and Discover add the big search bar underneath; it
+ * folds into a compact pill once you scroll. Phones get a search button and a menu.
  */
 export function SiteHeader({
   viewer,
@@ -60,7 +58,7 @@ export function SiteHeader({
 }) {
   const pathname = usePathname();
   const ws = workspaceFor(pathname);
-  const dark = ws !== "attend";
+  const hasSearch = ws === "attend" && SEARCH_PAGES.includes(pathname);
   const [scrolled, setScrolled] = useState(false);
   const [sheet, setSheet] = useState(false);
   const ref = useRef<HTMLElement>(null);
@@ -76,7 +74,7 @@ export function SiteHeader({
   }, []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 4);
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -84,150 +82,107 @@ export function SiteHeader({
 
   useEffect(() => setSheet(false), [pathname]);
 
-  const links: NavItem[] =
-    ws === "host" ? HOST_NAV : ws === "admin" ? [] : ATTEND_NAV.filter((n) => ATTEND_PRIMARY.includes(n.href));
-  const more = ws === "attend" ? ATTEND_NAV.filter((n) => !ATTEND_PRIMARY.includes(n.href) && n.href !== "/dashboard") : [];
+  const tabs = ws === "host" ? HOST_TABS : ws === "admin" ? [] : ATTEND_TABS;
+  const compact = hasSearch && scrolled;
 
   return (
     <>
-      <header
-        ref={ref}
-        className={cn(
-          "sticky top-0 z-40 transition-[background-color,box-shadow] duration-base ease-out print:hidden",
-          dark
-            ? "bg-night text-white"
-            : scrolled
-              ? "bg-white/90 shadow-[0_1px_0_#E5E7EB] backdrop-blur-xl backdrop-saturate-150"
-              : "bg-white shadow-[0_1px_0_transparent]",
-        )}
-      >
-        <div className={cn("mx-auto flex h-16 items-center gap-2 px-gutter md:h-[72px] md:gap-4", wide ? "max-w-[1440px]" : "max-w-shell")}>
-          <Link
-            href={ws === "host" ? "/organizer" : ws === "admin" ? "/admin" : "/dashboard"}
-            aria-label="EvntCult home"
-            className="flex shrink-0 items-center rounded-lg py-1 pr-1"
-          >
-            <BrandLogo className="text-[23px]" tone={dark ? "white" : "ink"} />
-          </Link>
-          {ws !== "attend" && (
-            <span className="ml-1 hidden rounded-md bg-white/[0.1] px-2 py-1 text-[12px] font-semibold text-white/85 sm:inline">
-              {ws === "host" ? "Hosting" : "Admin"}
-            </span>
-          )}
+      <header ref={ref} className="sticky top-0 z-40 border-b border-line bg-white print:hidden">
+        <div className={cn("mx-auto px-gutter", wide ? "max-w-[1440px]" : "max-w-[1360px]")}>
+          <div className="grid h-20 grid-cols-[auto_1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
+            <div className="flex items-center gap-3">
+              <Link href={ws === "host" ? "/organizer" : ws === "admin" ? "/admin" : "/dashboard"} aria-label="EvntCult home" className="rounded-lg py-1">
+                <BrandLogo className="text-[24px]" />
+              </Link>
+              {ws !== "attend" && (
+                <span className="hidden rounded-full bg-sunken px-2.5 py-1 text-[12px] font-semibold text-ink-2 sm:inline">{ws === "host" ? "Hosting" : "Admin"}</span>
+              )}
+            </div>
 
-          {viewer ? (
-            <nav aria-label="Main" className="ml-4 hidden items-center gap-0.5 lg:flex">
-              {links.map((l) => (
-                <BarLink key={l.href} href={l.href} active={isActive(pathname, l)} dark={dark}>
-                  {l.label}
-                </BarLink>
-              ))}
-              {more.length > 0 && <MoreMenu items={more} pathname={pathname} />}
-            </nav>
-          ) : (
-            <nav aria-label="Main" className="ml-4 hidden items-center gap-0.5 lg:flex">
-              {PUBLIC_LINKS.map((l) => (
-                <BarLink key={l.href} href={l.href} active={pathname === l.href} dark={false}>
-                  {l.label}
-                </BarLink>
-              ))}
-            </nav>
-          )}
+            <div className="hidden justify-center md:flex">
+              {compact ? (
+                <div className="motion-safe:animate-scale-in">
+                  <CompactSearch onOpen={onSearch} />
+                </div>
+              ) : (
+                <nav aria-label="Main" className="flex items-center gap-2">
+                  {tabs.map((t) => {
+                    const active = isActive(pathname, t);
+                    return (
+                      <Link
+                        key={t.href}
+                        href={t.href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "group relative flex h-14 items-center gap-2 px-3 text-[15px] transition-colors duration-fast",
+                          active ? "font-semibold text-ink" : "font-medium text-ink-muted hover:text-ink",
+                        )}
+                      >
+                        <t.icon className="size-9 transition-transform duration-base ease-out group-hover:scale-110" />
+                        {t.label}
+                        <span
+                          aria-hidden
+                          className={cn(
+                            "absolute inset-x-3 bottom-0 h-[2px] rounded-full bg-ink transition-opacity duration-base",
+                            active ? "opacity-100" : "opacity-0 group-hover:opacity-20",
+                          )}
+                        />
+                      </Link>
+                    );
+                  })}
+                </nav>
+              )}
+            </div>
 
-          <div className="ml-auto flex items-center gap-1.5 md:gap-2">
-            {ws !== "admin" && (
+            <div className="flex items-center justify-end gap-1">
+              {ws === "host" ? (
+                <>
+                  <Link href="/dashboard" className="hidden h-10 items-center rounded-full px-3.5 text-[14px] font-semibold text-ink transition-colors hover:bg-sunken lg:flex">
+                    Switch to attending
+                  </Link>
+                  <Link href="/organizer/events/new" className="mr-1 hidden h-10 items-center gap-1.5 rounded-full bg-accent px-4 text-[14px] font-semibold text-white transition-colors hover:bg-accent-hover md:flex">
+                    <Plus className="size-4" strokeWidth={2.6} aria-hidden /> Create event
+                  </Link>
+                </>
+              ) : ws === "attend" ? (
+                <Link
+                  href={viewer?.isOrganizer ? "/organizer" : viewer ? "/organizer/events/new" : `/signin?next=${encodeURIComponent("/organizer/events/new")}`}
+                  className="hidden h-10 items-center rounded-full px-3.5 text-[14px] font-semibold text-ink transition-colors hover:bg-sunken lg:flex"
+                >
+                  {viewer?.isOrganizer ? "Switch to hosting" : "Host an event"}
+                </Link>
+              ) : null}
+
               <button
                 onClick={onSearch}
                 aria-label="Search events"
-                className={cn(
-                  "group flex h-10 items-center gap-2.5 rounded-xl text-[14px] transition-colors duration-fast",
-                  "w-10 justify-center md:w-[232px] md:justify-start md:px-3.5",
-                  dark
-                    ? "text-white/80 hover:text-white md:bg-white/[0.08] md:hover:bg-white/[0.13]"
-                    : "text-ink-muted hover:text-ink md:bg-sunken md:hover:bg-mist",
-                )}
+                className="grid size-10 place-items-center rounded-full bg-sunken text-ink transition-colors hover:bg-mist md:hidden"
               >
-                <Search className="size-[18px] shrink-0" aria-hidden />
-                <span className="hidden md:inline">Search events</span>
-                <span className={cn("ml-auto hidden rounded-md px-1.5 py-0.5 text-[11px] font-semibold md:inline", dark ? "bg-white/10 text-white/70" : "bg-white text-ink-subtle shadow-[0_0_0_1px_#E5E7EB]")}>
-                  Ctrl K
-                </span>
+                <Search className="size-[18px]" strokeWidth={2.2} aria-hidden />
               </button>
-            )}
-
-            {viewer ? (
-              <>
-                {ws === "host" ? (
-                  <>
-                    <Link href="/dashboard" className="hidden h-10 items-center gap-2 rounded-xl px-3 text-[14px] font-semibold text-white/80 transition-colors hover:bg-white/[0.08] hover:text-white xl:flex">
-                      <ArrowLeftRight className="size-4" aria-hidden /> Switch to attending
-                    </Link>
-                    <Link
-                      href="/organizer/events/new"
-                      className="hidden h-10 items-center gap-1.5 rounded-xl bg-accent px-4 text-[14px] font-semibold text-white shadow-accent transition-colors hover:bg-accent-hover md:flex"
-                    >
-                      <Plus className="size-4" aria-hidden /> Create event
-                    </Link>
-                  </>
-                ) : ws === "attend" ? (
-                  <Link
-                    href={viewer.isOrganizer ? "/organizer" : "/organizer/events/new"}
-                    className="hidden h-10 items-center rounded-xl px-3 text-[14px] font-semibold text-ink transition-colors hover:bg-sunken xl:flex"
-                  >
-                    {viewer.isOrganizer ? "Switch to hosting" : "Host an event"}
-                  </Link>
-                ) : null}
-                <NotificationBell tone={dark ? "dark" : "light"} />
-                <AccountMenu viewer={viewer} ws={ws} dark={dark} onEnterCode={onEnterCode} />
-              </>
-            ) : (
-              <>
-                <Link href="/signin" className="hidden h-10 items-center rounded-xl px-3.5 text-[14px] font-semibold text-ink transition-colors hover:bg-sunken sm:flex">
-                  Log in
-                </Link>
-                <Link
-                  href="/signin?mode=signup"
-                  className="hidden h-10 items-center rounded-xl bg-accent px-4 text-[14px] font-semibold text-white shadow-accent transition-colors hover:bg-accent-hover sm:flex"
-                >
-                  Get your pass
-                </Link>
-              </>
-            )}
-
-            <button
-              onClick={() => setSheet(true)}
-              aria-label="Open menu"
-              aria-expanded={sheet}
-              className={cn("grid size-10 place-items-center rounded-xl transition-colors lg:hidden", dark ? "hover:bg-white/[0.08]" : "hover:bg-sunken")}
-            >
-              <Menu className="size-[20px]" aria-hidden />
-            </button>
+              {viewer && (
+                <span className="hidden md:block">
+                  <NotificationBell />
+                </span>
+              )}
+              <AccountMenu viewer={viewer} ws={ws} onEnterCode={onEnterCode} />
+              <button onClick={() => setSheet(true)} aria-label="Open menu" className="grid size-10 place-items-center rounded-full transition-colors hover:bg-sunken md:hidden">
+                <Menu className="size-[20px]" aria-hidden />
+              </button>
+            </div>
           </div>
+
+          {hasSearch && !compact && (
+            <div className="hidden justify-center pb-6 pt-1 md:flex">
+              <Suspense fallback={<div className="h-[66px] w-full max-w-[850px] rounded-full border border-line-strong shadow-search" />}>
+                <HeaderSearch className="max-w-[850px]" />
+              </Suspense>
+            </div>
+          )}
         </div>
       </header>
-      {sheet && <MenuSheet viewer={viewer} ws={ws} pathname={pathname} onClose={() => setSheet(false)} onEnterCode={onEnterCode} />}
+      {sheet && <MenuSheet viewer={viewer} ws={ws} pathname={pathname} tabs={tabs} onClose={() => setSheet(false)} onEnterCode={onEnterCode} />}
     </>
-  );
-}
-
-function BarLink({ href, active, dark, children }: { href: string; active: boolean; dark: boolean; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      aria-current={active ? "page" : undefined}
-      className={cn(
-        "relative flex h-10 items-center rounded-xl px-3.5 text-[14.5px] font-semibold transition-colors duration-fast",
-        dark
-          ? active
-            ? "bg-white/[0.12] text-white"
-            : "text-white/65 hover:bg-white/[0.06] hover:text-white"
-          : active
-            ? "bg-sunken text-ink"
-            : "text-ink-muted hover:bg-sunken/70 hover:text-ink",
-      )}
-    >
-      {children}
-    </Link>
   );
 }
 
@@ -247,143 +202,139 @@ function useDismiss(open: boolean, close: () => void) {
   return box;
 }
 
-function MoreMenu({ items, pathname }: { items: NavItem[]; pathname: string }) {
-  const [open, setOpen] = useState(false);
-  const box = useDismiss(open, () => setOpen(false));
-  useEffect(() => setOpen(false), [pathname]);
-  const active = items.some((i) => isActive(pathname, i));
-  return (
-    <div ref={box} className="relative">
-      <button
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        aria-haspopup="menu"
-        className={cn(
-          "flex h-10 items-center gap-1 rounded-xl px-3.5 text-[14.5px] font-semibold transition-colors duration-fast",
-          active ? "bg-sunken text-ink" : "text-ink-muted hover:bg-sunken/70 hover:text-ink",
-        )}
-      >
-        More <ChevronDown className={cn("size-4 transition-transform duration-base", open && "rotate-180")} aria-hidden />
-      </button>
-      {open && (
-        <div role="menu" className="absolute left-0 top-12 w-60 origin-top-left rounded-2xl bg-white p-1.5 shadow-pop motion-safe:animate-scale-in">
-          {items.map((i) => (
-            <Link
-              key={i.href}
-              role="menuitem"
-              href={i.href}
-              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14.5px] font-medium text-ink-2 transition-colors hover:bg-sunken hover:text-ink"
-            >
-              <i.icon className="size-[18px] text-ink-subtle" aria-hidden />
-              {i.label}
-            </Link>
-          ))}
-          <div className="my-1 h-px bg-line" />
-          <Link role="menuitem" href="/get-app" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[14.5px] font-medium text-ink-2 transition-colors hover:bg-sunken hover:text-ink">
-            <Download className="size-[18px] text-ink-subtle" aria-hidden />
-            Get the app
-          </Link>
-        </div>
-      )}
-    </div>
-  );
-}
-
 function Avatar({ name, className }: { name: string; className?: string }) {
   return (
-    <span aria-hidden className={cn("grid shrink-0 place-items-center rounded-full bg-[#2C3E5C] font-semibold text-white", className)}>
+    <span aria-hidden className={cn("grid shrink-0 place-items-center rounded-full bg-ink font-semibold text-white", className)}>
       {initials(name)}
     </span>
   );
 }
 
-function AccountMenu({ viewer, ws, dark, onEnterCode }: { viewer: NavViewer; ws: Workspace; dark: boolean; onEnterCode: () => void }) {
+const menuItem = "flex w-full items-center gap-3 px-4 py-3 text-left text-[14px] text-ink transition-colors hover:bg-sunken";
+
+function AccountMenu({ viewer, ws, onEnterCode }: { viewer: NavViewer | null; ws: Workspace; onEnterCode: () => void }) {
   const [open, setOpen] = useState(false);
   const box = useDismiss(open, () => setOpen(false));
   const pathname = usePathname();
   useEffect(() => setOpen(false), [pathname]);
 
-  const item = "flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[14.5px] font-medium text-ink-2 transition-colors hover:bg-sunken hover:text-ink";
-
   return (
-    <div ref={box} className="relative max-md:hidden">
+    <div ref={box} className="relative ml-1 hidden md:block">
       <button
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label="Account menu"
         className={cn(
-          "flex h-10 items-center gap-2 rounded-xl pl-1 pr-2.5 transition-colors duration-fast",
-          dark ? "hover:bg-white/[0.08]" : "hover:bg-sunken",
-          open && (dark ? "bg-white/[0.08]" : "bg-sunken"),
+          "flex h-[42px] items-center gap-3 rounded-full border border-line-strong bg-white pl-3.5 pr-1.5 transition-shadow duration-base hover:shadow-raised",
+          open && "shadow-raised",
         )}
       >
-        <Avatar name={viewer.name} className="size-8 text-[12px]" />
-        <ChevronDown className={cn("size-4 transition-transform duration-base", dark ? "text-white/70" : "text-ink-subtle", open && "rotate-180")} aria-hidden />
+        <Menu className="size-4 text-ink" strokeWidth={2.4} aria-hidden />
+        {viewer ? (
+          <Avatar name={viewer.name} className="size-[30px] text-[11.5px]" />
+        ) : (
+          <span className="grid size-[30px] place-items-center rounded-full bg-[#717171] text-white">
+            <UserRound className="size-[18px]" fill="currentColor" strokeWidth={0} aria-hidden />
+          </span>
+        )}
       </button>
       {open && (
-        <div role="menu" className="absolute right-0 top-12 z-50 w-72 origin-top-right rounded-2xl bg-white p-1.5 text-ink shadow-pop motion-safe:animate-scale-in">
-          <div className="flex items-center gap-3 px-3 pb-3 pt-2.5">
-            <Avatar name={viewer.name} className="size-10 text-[13px]" />
-            <div className="min-w-0">
-              <p className="truncate text-[15px] font-semibold">{viewer.name}</p>
-              <p className="truncate text-[13px] text-ink-subtle">{viewer.email}</p>
-            </div>
-          </div>
-          <div className="mb-1 h-px bg-line" />
-          {ws === "attend" ? (
-            <Link role="menuitem" href={viewer.isOrganizer ? "/organizer" : "/organizer/events/new"} className={item}>
-              <ArrowLeftRight className="size-[18px] text-ink-subtle" aria-hidden />
-              {viewer.isOrganizer ? "Switch to hosting" : "Host an event"}
-            </Link>
+        <div role="menu" className="absolute right-0 top-[52px] z-50 w-64 origin-top-right overflow-hidden rounded-xl bg-white py-2 text-ink shadow-pop ring-1 ring-black/[0.04] motion-safe:animate-scale-in">
+          {viewer ? (
+            <>
+              <div className="px-4 pb-2 pt-1">
+                <p className="truncate text-[14px] font-semibold">{viewer.name}</p>
+                <p className="truncate text-[12.5px] text-ink-subtle">{viewer.email}</p>
+              </div>
+              <Sep />
+              <Link role="menuitem" href="/passes" className={cn(menuItem, "font-semibold")}>
+                Passes
+              </Link>
+              <Link role="menuitem" href="/vault" className={cn(menuItem, "font-semibold")}>
+                Photos
+              </Link>
+              <Link role="menuitem" href="/certificates" className={cn(menuItem, "font-semibold")}>
+                Certificates
+              </Link>
+              <Sep />
+              {ws === "attend" ? (
+                <Link role="menuitem" href={viewer.isOrganizer ? "/organizer" : "/organizer/events/new"} className={menuItem}>
+                  {viewer.isOrganizer ? "Switch to hosting" : "Host an event"}
+                </Link>
+              ) : (
+                <Link role="menuitem" href="/dashboard" className={menuItem}>
+                  Switch to attending
+                </Link>
+              )}
+              {viewer.isAdmin && ws !== "admin" && (
+                <Link role="menuitem" href="/admin" className={menuItem}>
+                  Admin
+                </Link>
+              )}
+              <Link role="menuitem" href="/venues" className={menuItem}>
+                Venues
+              </Link>
+              <button
+                role="menuitem"
+                onClick={() => {
+                  setOpen(false);
+                  onEnterCode();
+                }}
+                className={menuItem}
+              >
+                Enter an event code
+              </button>
+              <Link role="menuitem" href="/profile" className={menuItem}>
+                Profile
+              </Link>
+              <Sep />
+              <button role="menuitem" onClick={logout} className={menuItem}>
+                Log out
+              </button>
+            </>
           ) : (
-            <Link role="menuitem" href="/dashboard" className={item}>
-              <ArrowLeftRight className="size-[18px] text-ink-subtle" aria-hidden />
-              Switch to attending
-            </Link>
+            <>
+              <Link role="menuitem" href="/signin?mode=signup" className={cn(menuItem, "font-semibold")}>
+                Sign up
+              </Link>
+              <Link role="menuitem" href="/signin" className={menuItem}>
+                Log in
+              </Link>
+              <Sep />
+              <Link role="menuitem" href={`/signin?next=${encodeURIComponent("/organizer/events/new")}`} className={menuItem}>
+                Host an event
+              </Link>
+              <Link role="menuitem" href="/venues" className={menuItem}>
+                Venues
+              </Link>
+              <Link role="menuitem" href="/get-app" className={menuItem}>
+                Get the app
+              </Link>
+            </>
           )}
-          {viewer.isAdmin && ws !== "admin" && (
-            <Link role="menuitem" href="/admin" className={item}>
-              <ShieldCheck className="size-[18px] text-ink-subtle" aria-hidden />
-              Admin
-            </Link>
-          )}
-          <Link role="menuitem" href="/profile" className={item}>
-            <UserRound className="size-[18px] text-ink-subtle" aria-hidden />
-            Profile
-          </Link>
-          <button
-            role="menuitem"
-            onClick={() => {
-              setOpen(false);
-              onEnterCode();
-            }}
-            className={item}
-          >
-            <KeyRound className="size-[18px] text-ink-subtle" aria-hidden />
-            Enter an event code
-          </button>
-          <div className="my-1 h-px bg-line" />
-          <button role="menuitem" onClick={logout} className={item}>
-            <LogOut className="size-[18px] text-ink-subtle" aria-hidden />
-            Log out
-          </button>
         </div>
       )}
     </div>
   );
 }
 
+function Sep() {
+  return <div className="my-2 h-px bg-line" />;
+}
+
 function MenuSheet({
   viewer,
   ws,
   pathname,
+  tabs,
   onClose,
   onEnterCode,
 }: {
   viewer: NavViewer | null;
   ws: Workspace;
   pathname: string;
+  tabs: Tab[];
   onClose: () => void;
   onEnterCode: () => void;
 }) {
@@ -397,60 +348,64 @@ function MenuSheet({
     };
   }, [onClose]);
 
-  const nav = viewer ? (ws === "host" ? HOST_NAV : ATTEND_NAV) : PUBLIC_LINKS.map((l) => ({ ...l, icon: null }));
+  const row = "flex h-14 items-center gap-4 border-b border-line text-[16px] text-ink";
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 flex flex-col bg-white text-ink motion-safe:animate-fade-in lg:hidden">
-      <div className="flex h-16 shrink-0 items-center justify-between px-gutter">
-        <BrandLogo className="text-[23px]" />
-        <button onClick={onClose} aria-label="Close menu" className="grid size-10 place-items-center rounded-xl hover:bg-sunken">
+    <div role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 flex flex-col bg-white text-ink motion-safe:animate-fade-in md:hidden">
+      <div className="flex h-16 shrink-0 items-center justify-between border-b border-line px-gutter">
+        <BrandLogo className="text-[22px]" />
+        <button onClick={onClose} aria-label="Close menu" className="grid size-10 place-items-center rounded-full hover:bg-sunken">
           <X className="size-[20px]" aria-hidden />
         </button>
       </div>
-      <div className="flex-1 overflow-y-auto px-gutter pb-8 pt-4">
+      <div className="flex-1 overflow-y-auto px-gutter pb-10 pt-2">
         {viewer && (
-          <div className="mb-6 flex items-center gap-3 rounded-2xl bg-sunken p-3">
-            <Avatar name={viewer.name} className="size-11 text-[14px]" />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-[16px] font-semibold">{viewer.name}</p>
-              <p className="truncate text-[13px] text-ink-subtle">{viewer.email}</p>
-            </div>
-            <Link href="/profile" className="rounded-[10px] px-3 py-2 text-[13.5px] font-semibold text-ink transition-colors hover:bg-white">
-              Profile
-            </Link>
-          </div>
+          <Link href="/profile" className="flex items-center gap-3 border-b border-line py-4">
+            <Avatar name={viewer.name} className="size-12 text-[15px]" />
+            <span className="min-w-0">
+              <span className="block truncate text-[17px] font-semibold">{viewer.name}</span>
+              <span className="block text-[13.5px] text-ink-subtle">Show profile</span>
+            </span>
+          </Link>
         )}
         <ul>
-          {nav.map((l, i) => {
-            const active = "exact" in l ? isActive(pathname, l as NavItem) : pathname === l.href;
-            return (
-              <li key={l.href} className="motion-safe:animate-rise" style={{ animationDelay: `${40 + i * 30}ms` }}>
-                <Link
-                  href={l.href}
-                  aria-current={active ? "page" : undefined}
-                  className="flex h-[60px] items-center justify-between border-b border-line font-display text-[28px] font-medium tracking-[-0.02em]"
-                >
-                  {l.label}
-                  {active && <span className="size-2 rounded-full bg-accent" aria-hidden />}
+          {tabs.map((t) => (
+            <li key={t.href}>
+              <Link href={t.href} aria-current={isActive(pathname, t) ? "page" : undefined} className={cn(row, isActive(pathname, t) && "font-semibold")}>
+                <t.icon className="size-8" />
+                {t.label}
+              </Link>
+            </li>
+          ))}
+          {ws === "attend" && (
+            <>
+              <li>
+                <Link href="/certificates" className={row}>
+                  <Award className="mx-1 size-6 text-ink-muted" aria-hidden /> Certificates
                 </Link>
               </li>
-            );
-          })}
+              <li>
+                <Link href="/venues" className={row}>
+                  <MapPinned className="mx-1 size-6 text-ink-muted" aria-hidden /> Venues
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
-        <div className="mt-8 grid gap-2">
+        <div className="mt-6 grid gap-2.5">
           {viewer ? (
             <>
               {ws === "host" ? (
                 <>
-                  <Link href="/organizer/events/new" className="flex h-12 items-center justify-center gap-2 rounded-xl bg-accent text-[15px] font-semibold text-white">
+                  <Link href="/organizer/events/new" className="flex h-12 items-center justify-center gap-2 rounded-lg bg-accent text-[16px] font-semibold text-white">
                     <Plus className="size-4" aria-hidden /> Create event
                   </Link>
-                  <Link href="/dashboard" className="flex h-12 items-center justify-center gap-2 rounded-xl border border-line-strong text-[15px] font-semibold">
+                  <Link href="/dashboard" className="flex h-12 items-center justify-center rounded-lg border border-ink text-[16px] font-semibold">
                     Switch to attending
                   </Link>
                 </>
               ) : (
-                <Link href={viewer.isOrganizer ? "/organizer" : "/organizer/events/new"} className="flex h-12 items-center justify-center rounded-xl border border-line-strong text-[15px] font-semibold">
+                <Link href={viewer.isOrganizer ? "/organizer" : "/organizer/events/new"} className="flex h-12 items-center justify-center rounded-lg border border-ink text-[16px] font-semibold">
                   {viewer.isOrganizer ? "Switch to hosting" : "Host an event"}
                 </Link>
               )}
@@ -459,25 +414,28 @@ function MenuSheet({
                   onClose();
                   onEnterCode();
                 }}
-                className="flex h-12 items-center justify-center gap-2 rounded-xl border border-line-strong text-[15px] font-semibold"
+                className="flex h-12 items-center justify-center gap-2 rounded-lg border border-line-strong text-[16px] font-semibold"
               >
                 <KeyRound className="size-4" aria-hidden /> Enter an event code
               </button>
               {viewer.isAdmin && (
-                <Link href="/admin" className="flex h-12 items-center justify-center gap-2 rounded-xl border border-line-strong text-[15px] font-semibold">
+                <Link href="/admin" className="flex h-12 items-center justify-center gap-2 rounded-lg border border-line-strong text-[16px] font-semibold">
                   <ShieldCheck className="size-4" aria-hidden /> Admin
                 </Link>
               )}
-              <button onClick={logout} className="mt-2 h-12 text-[15px] font-semibold text-ink-muted">
-                Log out
+              <Link href="/get-app" className="flex h-12 items-center justify-center gap-2 rounded-lg border border-line-strong text-[16px] font-semibold">
+                <Download className="size-4" aria-hidden /> Get the app
+              </Link>
+              <button onClick={logout} className="mt-1 flex h-12 items-center justify-center gap-2 text-[15px] font-semibold text-ink-muted underline underline-offset-4">
+                <LogOut className="size-4" aria-hidden /> Log out
               </button>
             </>
           ) : (
             <>
-              <Link href="/signin?mode=signup" className="flex h-12 items-center justify-center rounded-xl bg-accent text-[15px] font-semibold text-white">
-                Get your pass
+              <Link href="/signin?mode=signup" className="flex h-12 items-center justify-center rounded-lg bg-accent text-[16px] font-semibold text-white">
+                Sign up
               </Link>
-              <Link href="/signin" className="flex h-12 items-center justify-center rounded-xl border border-line-strong text-[15px] font-semibold">
+              <Link href="/signin" className="flex h-12 items-center justify-center rounded-lg border border-ink text-[16px] font-semibold">
                 Log in
               </Link>
             </>

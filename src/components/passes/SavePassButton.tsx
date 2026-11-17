@@ -57,13 +57,13 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
       // Paper card with an ink header block (matches the on-screen pass)
       ctx.fillStyle = "#FFFFFF";
       ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = "#14161B";
+      ctx.fillStyle = "#222222";
       ctx.beginPath();
       ctx.roundRect(PAD - 24, PAD - 24, W - 2 * (PAD - 24), 360, 40);
       ctx.fill();
 
       // Title block on ink, with the signal caret
-      ctx.fillStyle = "#D9234B";
+      ctx.fillStyle = "#E3264F";
       ctx.fillRect(PAD + 20, PAD + 14, 8, 40);
       ctx.fillStyle = "rgba(255,255,255,0.6)";
       ctx.font = `500 30px ui-monospace, Menlo, monospace`;
@@ -99,7 +99,7 @@ export function SavePassButton({ className, ...p }: SavePassProps) {
 
       // Pass code + venue
       ctx.textAlign = "center";
-      ctx.fillStyle = "#14161B";
+      ctx.fillStyle = "#222222";
       ctx.font = `500 58px ui-monospace, Menlo, monospace`;
       ctx.fillText(p.passCode, W / 2, 1400);
       ctx.fillStyle = "#62605A";

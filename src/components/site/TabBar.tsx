@@ -2,11 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Plus } from "lucide-react";
+import { CalendarDays, Images, Plus, Search, Ticket, UserRound } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ATTEND_NAV, HOST_NAV, isActive, workspaceFor } from "@/components/shell/nav";
+import { HOST_NAV, isActive, workspaceFor } from "@/components/shell/nav";
 
-const ATTEND_TABS = ["/dashboard", "/events", "/passes", "/vault", "/calendar"];
+const ATTEND_TABS = [
+  { href: "/dashboard", label: "Explore", icon: Search },
+  { href: "/passes", label: "Passes", icon: Ticket },
+  { href: "/calendar", label: "Calendar", icon: CalendarDays },
+  { href: "/vault", label: "Photos", icon: Images },
+  { href: "/profile", label: "Profile", icon: UserRound },
+];
 
 /** Phone tab bar for signed-in people: the current workspace's main destinations. */
 export function TabBar() {
@@ -14,7 +20,7 @@ export function TabBar() {
   const ws = workspaceFor(pathname);
   if (ws === "admin") return null;
 
-  const items = ws === "host" ? HOST_NAV : ATTEND_TABS.map((h) => ATTEND_NAV.find((n) => n.href === h)!);
+  const items = ws === "host" ? HOST_NAV : ATTEND_TABS;
 
   return (
     <nav
@@ -23,7 +29,7 @@ export function TabBar() {
     >
       <ul className={cn("mx-auto grid max-w-md", ws === "host" ? "grid-cols-3" : "grid-cols-5")}>
         {items.map((item) => {
-          const active = isActive(pathname, item);
+          const active = item.href === "/dashboard" ? pathname === "/dashboard" || pathname.startsWith("/events") : isActive(pathname, item);
           const Icon = item.icon;
           return (
             <li key={item.href}>
@@ -31,22 +37,20 @@ export function TabBar() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex h-[60px] flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors duration-fast",
-                  active ? "text-night" : "text-ink-subtle",
+                  "flex h-[62px] flex-col items-center justify-center gap-1 text-[10.5px] font-semibold transition-colors duration-fast",
+                  active ? "text-accent" : "text-ink-subtle",
                 )}
               >
-                <span className={cn("grid h-7 w-12 place-items-center rounded-full transition-colors duration-base", active && "bg-sunken")}>
-                  <Icon className="size-[19px]" strokeWidth={active ? 2.2 : 1.8} aria-hidden />
-                </span>
-                {item.short ?? (item.href === "/dashboard" ? "Home" : item.label)}
+                <Icon className="size-[22px]" strokeWidth={active ? 2.2 : 1.7} aria-hidden />
+                {item.label}
               </Link>
             </li>
           );
         })}
         {ws === "host" && (
           <li>
-            <Link href="/organizer/events/new" className="flex h-[60px] flex-col items-center justify-center gap-1 text-[11px] font-semibold text-ink">
-              <span className="grid h-7 w-12 place-items-center rounded-full bg-accent text-white" aria-hidden>
+            <Link href="/organizer/events/new" className="flex h-[62px] flex-col items-center justify-center gap-1 text-[10.5px] font-semibold text-ink">
+              <span className="grid size-7 place-items-center rounded-full bg-accent text-white" aria-hidden>
                 <Plus className="size-[18px]" />
               </span>
               Create

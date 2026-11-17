@@ -101,7 +101,7 @@ export function LiveHeadcount({
             cy="74"
             r={R}
             fill="none"
-            stroke="#14161B"
+            stroke="#222222"
             strokeWidth="10"
             strokeLinecap="round"
             strokeDasharray={C}

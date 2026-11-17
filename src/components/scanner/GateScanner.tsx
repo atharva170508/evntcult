@@ -550,7 +550,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
             <Camera className="size-10 text-white/60" />
             {cameraError ? <p className="text-[14px] text-[#ffb4b6]">{cameraError}</p> : <p className="text-[15px] text-white/70">Point the camera at a pass QR code.</p>}
-            <button onClick={startCamera} disabled={camera === "starting"} className="inline-flex items-center gap-2 h-12 rounded-[10px] bg-white px-6 text-[15px] font-medium text-[#14161B] transition-transform active:scale-[0.98] disabled:opacity-60">
+            <button onClick={startCamera} disabled={camera === "starting"} className="inline-flex items-center gap-2 h-12 rounded-[10px] bg-white px-6 text-[15px] font-medium text-[#222222] transition-transform active:scale-[0.98] disabled:opacity-60">
               {camera === "starting" ? <Loader2 className="size-4 animate-spin" /> : <Camera className="size-4" />}
               {camera === "error" ? "Try again" : "Start camera"}
             </button>

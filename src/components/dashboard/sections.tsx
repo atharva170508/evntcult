@@ -609,9 +609,9 @@ export function NavigatorTeaser({ next }: { next: NextUp | null }) {
             <rect x="150" y="18" width="92" height="70" rx="10" />
             <rect x="282" y="18" width="100" height="70" rx="10" />
           </g>
-          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#14161B" strokeWidth="2.5" strokeDasharray="6 6" strokeLinecap="round" />
-          <circle cx="60" cy="128" r="6" fill="#FFFFFF" stroke="#14161B" strokeWidth="2.5" />
-          <circle cx="330" cy="54" r="7" fill="#D9234B" stroke="#FFFFFF" strokeWidth="3" />
+          <path d="M60 128 C 120 128, 130 110, 140 100 S 250 105, 330 54" fill="none" stroke="#222222" strokeWidth="2.5" strokeDasharray="6 6" strokeLinecap="round" />
+          <circle cx="60" cy="128" r="6" fill="#FFFFFF" stroke="#222222" strokeWidth="2.5" />
+          <circle cx="330" cy="54" r="7" fill="#E3264F" stroke="#FFFFFF" strokeWidth="3" />
         </svg>
       </div>
       <p className="mt-4 flex items-start gap-2 text-[13px] text-ink-muted">

@@ -1,16 +1,14 @@
 import type { Config } from "tailwindcss";
 
 /**
- * EvntCult design tokens — "Concourse".
+ * EvntCult design tokens.
  *
- * Campus life as a terminal: events depart, passes board, the gate scans. A calm white
- * page, a deep night navy for cinematic bands and primary actions, one crimson for the
- * action that matters most, and a brass gold used only as foil on passes.
- * Fraunces (upright, soft optical serif) carries headlines; Figtree carries the interface;
- * JetBrains Mono is reserved for pass codes and timetable figures.
+ * A marketplace look: white pages, #222 text, soft grey hairlines, photos and posters doing
+ * the talking, one red for the action that matters (search, register, create). Figtree is the
+ * only typeface; JetBrains Mono is reserved for pass codes.
  *
- * Contrast (WCAG 2.1 on white): ink 17.9 · ink-2 10.9 · ink-muted 5.9 · ink-subtle 4.8
- * · accent-ink 6.6 · white on accent 4.9 · white on night 18.4.
+ * Contrast (WCAG 2.1 on white): ink 15.9 · ink-2 10.7 · ink-muted 5.4 · ink-subtle 4.9
+ * · white on accent 4.6.
  *
  * Older token names (canvas, volt, brand, sun, ink.inverse) are kept as aliases so every
  * screen resolves inside this system.
@@ -22,22 +20,22 @@ const config: Config = {
       colors: {
         canvas: "#FFFFFF",
         surface: "#FFFFFF",
-        sunken: "#F4F5F7",
-        mist: "#EEF0F3",
-        line: { DEFAULT: "#E5E7EB", strong: "#D2D6DC" },
+        sunken: "#F7F7F7",
+        mist: "#EBEBEB",
+        line: { DEFAULT: "#EBEBEB", strong: "#DDDDDD" },
         ink: {
-          DEFAULT: "#14161B",
-          2: "#383D47",
-          muted: "#5B626E",
-          subtle: "#6A717D",
+          DEFAULT: "#222222",
+          2: "#3F3F3F",
+          muted: "#6A6A6A",
+          subtle: "#717171",
           inverse: "#FFFFFF",
         },
-        night: { DEFAULT: "#0B1626", 2: "#132238", 3: "#1C2E48", line: "rgba(255,255,255,0.12)" },
+        night: { DEFAULT: "#222222", 2: "#2C2C2C", 3: "#000000", line: "rgba(255,255,255,0.12)" },
         accent: {
-          DEFAULT: "#D9234B",
-          hover: "#BE1B3F",
+          DEFAULT: "#E3264F",
+          hover: "#C81E44",
           soft: "#FDECEF",
-          ink: "#B01A3C",
+          ink: "#B8173F",
         },
         gold: { DEFAULT: "#C9A45C", soft: "#F7F0E1", ink: "#7A5D1F" },
         live: { DEFAULT: "#0B7A54", soft: "#E3F3EC", dot: "#12A56F" },
@@ -45,27 +43,27 @@ const config: Config = {
         danger: { DEFAULT: "#B42318", soft: "#FDECEA" },
 
         /* aliases */
-        volt: { DEFAULT: "#D9234B", hover: "#BE1B3F" },
-        brand: { DEFAULT: "#D9234B", hover: "#BE1B3F", soft: "#FDECEF", ink: "#B01A3C" },
+        volt: { DEFAULT: "#E3264F", hover: "#C81E44" },
+        brand: { DEFAULT: "#E3264F", hover: "#C81E44", soft: "#FDECEF", ink: "#B8173F" },
         sun: "#8A5300",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Consolas", "monospace"],
-        display: ["var(--font-display)", "ui-serif", "Georgia", "serif"],
-        serif: ["var(--font-display)", "ui-serif", "Georgia", "serif"],
+        display: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
         logo: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
         brand: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       fontSize: {
-        "display-2xl": ["clamp(52px, 8vw, 120px)", { lineHeight: "0.96", letterSpacing: "-0.035em" }],
-        "display-xl": ["clamp(42px, 6vw, 88px)", { lineHeight: "1", letterSpacing: "-0.03em" }],
-        "display-lg": ["clamp(34px, 4.2vw, 58px)", { lineHeight: "1.04", letterSpacing: "-0.025em" }],
-        "display-md": ["clamp(26px, 3vw, 38px)", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
-        h3: ["22px", { lineHeight: "1.25", letterSpacing: "-0.015em" }],
-        h4: ["17px", { lineHeight: "1.35", letterSpacing: "-0.01em" }],
-        body: ["15.5px", { lineHeight: "1.6" }],
-        lead: ["18.5px", { lineHeight: "1.55", letterSpacing: "-0.005em" }],
+        "display-2xl": ["clamp(40px, 5vw, 64px)", { lineHeight: "1.06", letterSpacing: "-0.025em" }],
+        "display-xl": ["clamp(32px, 3.6vw, 48px)", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
+        "display-lg": ["clamp(26px, 2.6vw, 32px)", { lineHeight: "1.2", letterSpacing: "-0.015em" }],
+        "display-md": ["clamp(22px, 2vw, 26px)", { lineHeight: "1.25", letterSpacing: "-0.01em" }],
+        h3: ["20px", { lineHeight: "1.3", letterSpacing: "-0.01em" }],
+        h4: ["16px", { lineHeight: "1.35" }],
+        body: ["15px", { lineHeight: "1.55" }],
+        lead: ["17px", { lineHeight: "1.5" }],
         small: ["13.5px", { lineHeight: "1.45" }],
         micro: ["11.5px", { lineHeight: "1.3", letterSpacing: "0.04em" }],
       },
@@ -83,19 +81,20 @@ const config: Config = {
       },
       borderRadius: {
         tile: "12px",
-        card: "18px",
-        panel: "26px",
+        card: "16px",
+        panel: "24px",
         "4xl": "2rem",
       },
       boxShadow: {
-        card: "0 0 0 1px #E5E7EB",
-        raised: "0 0 0 1px rgba(20,22,27,0.04), 0 6px 20px -4px rgba(20,22,27,0.10)",
-        pop: "0 0 0 1px rgba(20,22,27,0.05), 0 18px 48px -12px rgba(20,22,27,0.22)",
+        card: "0 0 0 1px #DDDDDD",
+        raised: "0 6px 16px rgba(0,0,0,0.12)",
+        pop: "0 2px 16px rgba(0,0,0,0.12)",
+        search: "0 3px 12px 0 rgba(0,0,0,0.1)",
         inset: "inset 0 1px 0 rgba(255,255,255,0.9)",
-        button: "0 1px 1px rgba(11,22,38,0.18)",
-        accent: "0 1px 1px rgba(176,26,60,0.25), 0 8px 18px -8px rgba(217,35,75,0.55)",
-        brand: "0 8px 18px -8px rgba(217,35,75,0.5)",
-        float: "0 1px 2px rgba(20,22,27,0.06), 0 10px 28px -6px rgba(20,22,27,0.14)",
+        button: "none",
+        accent: "none",
+        brand: "none",
+        float: "0 6px 16px rgba(0,0,0,0.12)",
       },
       transitionTimingFunction: {
         /* quick out, long settle — default for UI */

@@ -38,14 +38,14 @@ export default async function EventPage({ params, searchParams }: { params: Prom
   const ended = new Date(e.ends_at) <= new Date();
   const qrSvg =
     reg?.status === "registered"
-      ? await QRCode.toString(passQrPayload(reg.pass_token), { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#14161B", light: "#ffffff" } })
+      ? await QRCode.toString(passQrPayload(reg.pass_token), { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#222222", light: "#ffffff" } })
       : null;
 
   const upiUrl =
     reg?.status === "registered" && e.price_paise > 0 && reg.payment_status !== "paid" && e.organizer_upi_id
       ? upiUri({ vpa: e.organizer_upi_id, payeeName: e.title, amountPaise: e.price_paise, note: reg.pass_code })
       : null;
-  const upiQr = upiUrl ? await QRCode.toString(upiUrl, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#14161B", light: "#ffffff" } }) : null;
+  const upiQr = upiUrl ? await QRCode.toString(upiUrl, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#222222", light: "#ffffff" } }) : null;
 
   const waitlistPosition = reg?.status === "waitlisted" ? await waitlistPos(e.id, reg.id) : null;
   const db = await getDB();

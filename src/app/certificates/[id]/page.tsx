@@ -33,7 +33,7 @@ export default async function CertificatePage({ params }: Props) {
   if (!c) notFound();
 
   const scheme = host.startsWith("localhost") ? "http" : "https";
-  const qr = await QRCode.toString(`${scheme}://${host}/verify/${c.publicCode}`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#14161B", light: "#ffffff" } });
+  const qr = await QRCode.toString(`${scheme}://${host}/verify/${c.publicCode}`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#222222", light: "#ffffff" } });
 
   return (
     <main className="cert-page">

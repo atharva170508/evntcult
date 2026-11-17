@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /*
- * EvntCult — Concourse. Tokens live in tailwind.config.ts; the rules here are the few
+ * EvntCult. Tokens live in tailwind.config.ts; the rules here are the few
  * patterns that are easier to express as classes than as utility strings.
  */
 
@@ -11,12 +11,12 @@
   :root {
     color-scheme: light;
     /* One navigation bar; the shell keeps this in sync with its real height. */
-    --header-h: 64px;
+    --header-h: 80px;
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   }
   @media (min-width: 768px) {
     :root {
-      --header-h: 72px;
+      --header-h: 80px;
     }
   }
   html {
@@ -29,15 +29,12 @@
     @apply min-h-dvh bg-canvas font-sans text-body;
     font-feature-settings: "ss01";
   }
-  /* Headlines: Fraunces, upright, softened, optical size follows the type size. */
-  .font-display,
+  /* Headings are semibold by default; pages may go bolder but never lighter. */
   .text-display-2xl,
   .text-display-xl,
   .text-display-lg,
   .text-display-md {
-    font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-variation-settings: "SOFT" 60, "WONK" 0;
-    font-optical-sizing: auto;
+    font-weight: 600;
   }
   h1,
   h2,
@@ -49,14 +46,14 @@
     text-wrap: pretty;
   }
   ::selection {
-    background: rgba(217, 35, 75, 0.14);
+    background: rgba(227, 38, 79, 0.14);
   }
   /* Emphasis inside headlines carries no special styling. */
   em {
     font-style: normal;
   }
   :focus-visible {
-    @apply outline-none ring-2 ring-night ring-offset-2 ring-offset-white;
+    @apply outline-none ring-2 ring-ink ring-offset-2 ring-offset-white;
   }
   /* Text boxes show focus through their own border (see .field), not a square ring. */
   input:not([type="checkbox"]):not([type="radio"]):focus-visible,
@@ -114,7 +111,7 @@
 
   /* Small context line above a heading. */
   .eyebrow {
-    @apply font-sans text-[13.5px] font-semibold tracking-normal text-ink-muted;
+    @apply font-sans text-[14px] font-medium tracking-normal text-ink-muted;
   }
   .title-xl {
     @apply text-display-lg font-medium text-ink;
@@ -138,13 +135,13 @@
   /* ── Controls ─────────────────────────────────────────── */
 
   .field {
-    @apply w-full rounded-tile border border-line-strong bg-surface px-3.5 py-3 text-body text-ink transition-[border-color,box-shadow] duration-fast ease-out placeholder:text-ink-subtle hover:border-ink-subtle focus:border-night focus:outline-none focus:ring-[3px] focus:ring-night/10 disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-muted aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/10;
+    @apply w-full rounded-lg border border-[#B0B0B0] bg-surface px-3.5 py-3 text-body text-ink transition-[border-color,box-shadow] duration-fast ease-out placeholder:text-ink-subtle hover:border-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-muted aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/10;
   }
   .kbd {
     @apply inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-line bg-surface px-1.5 font-sans text-[11px] font-semibold text-ink-subtle;
   }
   .link {
-    @apply font-semibold text-ink underline decoration-line-strong decoration-[1.5px] underline-offset-[3px] transition-colors duration-fast hover:decoration-accent;
+    @apply font-semibold text-ink underline decoration-line-strong decoration-[1.5px] underline-offset-[3px] transition-colors duration-fast hover:decoration-ink;
   }
 
   /* ── Texture & motifs ─────────────────────────────────── */

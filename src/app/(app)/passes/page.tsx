@@ -69,7 +69,7 @@ export default async function PassesPage() {
   const qr = new Map<string, string>();
   for (const r of upcoming) {
     if (r.status === "registered" && r.event_status !== "cancelled") {
-      qr.set(r.id, await QRCode.toString(passQrPayload(r.pass_token), { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#14161B", light: "#ffffff" } }));
+      qr.set(r.id, await QRCode.toString(passQrPayload(r.pass_token), { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#222222", light: "#ffffff" } }));
     }
   }
 

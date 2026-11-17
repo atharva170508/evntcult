@@ -4,7 +4,7 @@
  */
 import { BrandLogo, BrandMark, BrandTile } from "@/components/site/Brand";
 
-export const LOGO_ACCENT = "#D9234B";
+export const LOGO_ACCENT = "#E3264F";
 
 type Motion = "blink" | "still" | "type";
 
