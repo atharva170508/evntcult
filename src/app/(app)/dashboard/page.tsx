@@ -109,7 +109,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
         </section>
       )}
 
-      <Landing data={landing} signedIn isOrganizer={viewer.role === "organizer" || viewer.role === "admin"} />
+      <Landing data={landing} signedIn isOrganizer={viewer.verifiedOrganizer} />
 
       {!viewer.phone && (
         <div className="pt-6">

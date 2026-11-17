@@ -10,7 +10,7 @@ type ApiErr = { error?: { code: string; message: string } };
 const OWNER_EMAIL = "evntcult@gmail.com";
 
 const inputCls =
-  "mt-1.5 h-12 w-full rounded-tile border border-line bg-surface px-4 text-[15px] shadow-[inset_0_1px_1px_rgba(20,22,27,0.03)] transition-[border-color,box-shadow] duration-fast placeholder:text-ink-subtle hover:border-line-strong focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/[0.06]";
+  "mt-1.5 h-12 w-full rounded-tile border border-line bg-surface px-4 text-[15px] shadow-[inset_0_1px_1px_rgba(0,0,0,0.03)] transition-[border-color,box-shadow] duration-fast placeholder:text-ink-subtle hover:border-line-strong focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/[0.06]";
 
 /**
  * Sign in / sign up.
@@ -127,7 +127,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
         </form>
       </div>
     )}
-    <form onSubmit={submit} className="mt-7 space-y-3">
+    <form onSubmit={submit} className="mt-6 space-y-4">
       {step === "email" ? (
         <label className="block">
           <span className="text-[13px] font-medium text-ink-2">Email</span>
@@ -185,7 +185,7 @@ export function SignInForm({ next, signup = false, codeLogin }: { next: string; 
 
       <button
         disabled={busy || (step === "code" && code.length !== 6)}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-night text-[15px] font-medium text-white shadow-button transition-[background-color,transform] duration-fast hover:bg-night-3 active:scale-[0.98] disabled:opacity-50"
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-lavender text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-[background-color,transform] duration-fast hover:bg-lavender-hover active:scale-[0.98] disabled:opacity-50"
       >
         {busy && <Loader2 className="size-4 animate-spin" aria-hidden />}
         {codeLogin && step === "email" ? "Email me a code" : needName ? "Create account" : "Log in"}

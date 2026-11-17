@@ -50,19 +50,14 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
   return (
     <div className="space-y-10 pb-8">
       <PageHero
-        eyebrow="Calendar · IST"
-        title={
-          <>
-            {monthName.split(" ")[0]} <em>{monthName.split(" ")[1]}</em>
-          </>
-        }
+        title={monthName}
         sub={
           <>
-            <span className="font-mono tabular-nums text-ink">{events.length}</span> event{events.length === 1 ? "" : "s"} {onlyMine ? "you're going to or hosting" : "happening"} this month.
+            {events.length} event{events.length === 1 ? "" : "s"}{onlyMine ? " you're in" : ""}
           </>
         }
         actions={
-          <div className="flex items-center gap-1 rounded-full bg-surface p-1 shadow-card">
+          <div className="flex items-center gap-1 rounded-full border border-line-strong bg-white p-1">
             <Link href={href(range.prev)} className={buttonClass("ghost", "sm", "w-8 px-0")} aria-label="Previous month">
               <ChevronLeft className="size-4" aria-hidden />
             </Link>

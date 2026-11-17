@@ -20,17 +20,7 @@ export default async function CertificatesPage() {
   return (
     <div className="space-y-10 pb-8">
       <PageHero
-        eyebrow="Certificates"
-        title={
-          <>
-            Proof you were <em>there.</em>
-          </>
-        }
-        sub={
-          <>
-            <span className="font-mono tabular-nums text-ink">{certs.length}</span> certificate{certs.length === 1 ? "" : "s"}
-          </>
-        }
+        title="Certificates"
       />
       {certs.length === 0 ? (
         <EmptyState icon={Award} title="No certificates yet" action={{ label: "Find an event", href: "/events" }} />

@@ -30,15 +30,10 @@ export default async function VaultPage() {
   return (
     <div className="space-y-14 pb-8">
       <PageHero
-        eyebrow="Photo Vault"
-        title={
-          <>
-            Photos <em>of you.</em>
-          </>
-        }
+        title="Photos"
         sub={
           <>
-            <span className="font-mono tabular-nums text-ink">{tagged.length}</span> photo{tagged.length === 1 ? "" : "s"}
+            {tagged.length} photo{tagged.length === 1 ? "" : "s"}
           </>
         }
       />

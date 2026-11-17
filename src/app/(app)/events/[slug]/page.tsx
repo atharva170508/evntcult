@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import QRCode from "qrcode";
-import { ArrowLeft, ArrowUpRight, Camera, CalendarDays, ChevronRight, Clock, Link as LinkIcon, MapPin, Navigation, Pencil, ScanLine, Ticket, Users, Video } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Camera, CalendarDays, ChevronRight, Link as LinkIcon, MapPin, Navigation, Pencil, ScanLine, Ticket, Users, Video } from "lucide-react";
 import { LinkButton } from "@/components/ui/Button";
 import { getViewer } from "@/lib/rbac";
 import { getEventDetail, toSummary } from "@/lib/data/events";
@@ -88,8 +88,7 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     );
 
   const facts = [
-    { icon: CalendarDays, label: "Date", value: fmtDate(s.startsAt, { weekday: "long", day: "numeric", month: "long", year: "numeric" }) },
-    { icon: Clock, label: "Time", value: <>{fmtRange(s.startsAt, s.endsAt)} <span className="font-normal text-ink-subtle">IST</span></> },
+    { icon: CalendarDays, label: fmtDate(s.startsAt, { weekday: "long", day: "numeric", month: "long" }), value: <>{fmtRange(s.startsAt, s.endsAt)} IST</> },
     { icon: e.event_type === "virtual" ? Video : MapPin, label: e.event_type === "virtual" ? "Where" : "Venue", value: where },
     {
       icon: Ticket,
@@ -105,128 +104,128 @@ export default async function EventPage({ params, searchParams }: { params: Prom
     },
   ];
 
+  const kind = e.category ? (LABEL[e.category] ?? e.category) : "Event";
+  const priceLabel = e.price_paise ? formatINR(e.price_paise) : "Free";
+  const canRegister = !!viewer && !d.isOwner && !reg && e.status === "published" && !ended;
+
   return (
-    <div className="pb-8 pt-6 md:pt-8">
-      <Link href="/events" className="group inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink">
-        <ArrowLeft className="size-4 transition-transform duration-base ease-out group-hover:-translate-x-0.5" aria-hidden /> All events
+    <div className="pb-28 pt-6 md:pb-10 md:pt-8">
+      <Link href="/events" className="group inline-flex items-center gap-1.5 text-[14px] font-medium text-ink-muted transition-colors hover:text-ink md:hidden">
+        <ArrowLeft className="size-4" aria-hidden /> Events
       </Link>
 
-      {/* Poster */}
-      <section className="relative isolate mt-5 flex min-h-[320px] animate-fade-up flex-col justify-between overflow-hidden rounded-panel p-6 text-white md:min-h-[480px] md:p-10">
-        <EventArt accent={s.accent} seed={s.id} />
+      {/* Title row */}
+      <header className="mt-4 md:mt-0">
+        <div className="flex flex-wrap gap-1.5">
+          {e.access === "code" && <Chip tone="dark">Private · code only</Chip>}
+          {e.status === "draft" && <Chip tone="warn">Draft · only you can see this</Chip>}
+          {e.status === "cancelled" && <Chip tone="danger">Cancelled</Chip>}
+          {ended && e.status !== "cancelled" && <Chip>Ended</Chip>}
+        </div>
+        <h1 className="mt-2 text-[28px] font-semibold leading-tight tracking-[-0.02em] text-ink md:text-[32px]">{e.title}</h1>
+        <p className="mt-1.5 text-[15px] text-ink-2">
+          <span className="font-semibold">{kind}</span>
+          <span className="text-ink-subtle"> · </span>
+          {fmtDate(s.startsAt, { weekday: "short", day: "numeric", month: "short" })}, {fmtTime(s.startsAt)}
+          <span className="text-ink-subtle"> · </span>
+          <span className="underline decoration-line-strong underline-offset-2">{e.event_type === "virtual" ? "Online" : (e.venue ?? "Venue TBA")}</span>
+        </p>
+      </header>
+
+      {/* Cover */}
+      <div className="relative mt-6 aspect-[4/3] overflow-hidden rounded-[20px] bg-sunken sm:aspect-[2.4/1]">
+        <EventArt accent={s.accent} seed={s.id} scrim={false} />
         {e.banner_url && (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={e.banner_url} alt="" className="absolute inset-0 size-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/30" aria-hidden />
           </>
         )}
-        <div className="relative flex flex-wrap gap-1.5">
-          <Chip tone="white">{e.category ? (LABEL[e.category] ?? e.category) : "Event"}</Chip>
-          {e.access === "code" && <Chip tone="dark">Private · code only</Chip>}
-          {e.status === "draft" && <Chip tone="warn">Draft · only you can see this</Chip>}
-          {e.status === "cancelled" && <Chip tone="danger">Cancelled</Chip>}
-          {ended && e.status !== "cancelled" && <Chip tone="white">Ended</Chip>}
-        </div>
-        <div className="relative max-w-3xl">
-          <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-white/80">
-            {fmtDate(s.startsAt, { weekday: "long", day: "numeric", month: "long" })} · {fmtTime(s.startsAt)}
-          </p>
-          <h1 className="mt-3 text-display-xl font-semibold">{e.title}</h1>
-          {s.tagline && <p className="mt-4 max-w-xl text-[19px] leading-snug text-white/90">{s.tagline}</p>}
-        </div>
-      </section>
+      </div>
 
-      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-14">
+      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-20">
         {/* Details */}
-        <div className="min-w-0 space-y-10">
-          <dl className="grid gap-px overflow-hidden rounded-card bg-line shadow-card sm:grid-cols-2">
+        <div className="min-w-0">
+          {s.tagline && <p className="border-b border-line pb-8 font-display text-[28px] leading-snug text-ink">{s.tagline}</p>}
+
+          <dl className="divide-y divide-line border-b border-line">
             {facts.map((f) => (
-              <div key={f.label} className="flex items-start gap-3.5 bg-surface p-5">
-                <f.icon className="mt-0.5 size-[18px] shrink-0 text-ink-subtle" aria-hidden />
+              <div key={f.label} className="flex items-start gap-5 py-5">
+                <f.icon className="mt-0.5 size-6 shrink-0 text-ink" strokeWidth={1.6} aria-hidden />
                 <div className="min-w-0">
-                  <dt className="eyebrow">{f.label}</dt>
-                  <dd className="mt-1 text-[15px] font-medium">{f.value}</dd>
+                  <dt className="text-[16px] font-semibold text-ink">{f.label}</dt>
+                  <dd className="mt-0.5 text-[15px] text-ink-muted">{f.value}</dd>
                 </div>
               </div>
             ))}
           </dl>
 
-          {e.link_url && (
-            <a href={e.link_url} target="_blank" rel="noopener noreferrer" className="card card-hover group flex items-center gap-4 p-4">
-              <span className="grid size-10 place-items-center rounded-tile bg-sunken text-ink-2">
-                <LinkIcon className="size-[17px]" aria-hidden />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[14px] font-medium">More from the organizer</span>
-                <span className="block truncate font-mono text-[12px] text-ink-muted">{linkLabel(e.link_url)}</span>
-              </span>
-              <ArrowUpRight className="size-4 text-ink-subtle transition-transform duration-base ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
-            </a>
-          )}
-
           {e.description && (
-            <section aria-labelledby="about-h">
-              <h2 id="about-h" className="text-h3 font-semibold">
+            <section aria-labelledby="about-h" className="border-b border-line py-8">
+              <h2 id="about-h" className="text-[22px] font-semibold text-ink">
                 About this event
               </h2>
               <div className="mt-4 max-w-prose whitespace-pre-line text-[16px] leading-[1.7] text-ink-2">{e.description}</div>
             </section>
           )}
 
-          {photos.view && (photoCount > 0 || photos.manage) && (
-            <Link href={`/events/${e.slug}/photos`} className="card card-hover group flex items-center gap-4 p-5">
-              <span className="grid size-11 place-items-center rounded-tile bg-sunken text-ink-2">
-                <Camera className="size-5" aria-hidden />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-h4 font-semibold">Photos</span>
-                <span className="block text-[13px] text-ink-muted">
-                  {photoCount ? `${photoCount} photo${photoCount === 1 ? "" : "s"}` : "No photos yet"}
-                  {photos.manage ? " · add photos" : " · find yourself and save them to your Vault"}
-                </span>
-              </span>
-              <ChevronRight className="size-5 text-ink-subtle transition-transform duration-base ease-out group-hover:translate-x-0.5" aria-hidden />
-            </Link>
+          {(e.link_url || (photos.view && (photoCount > 0 || photos.manage))) && (
+            <div className="grid gap-3 border-b border-line py-8 sm:grid-cols-2">
+              {photos.view && (photoCount > 0 || photos.manage) && (
+                <Link href={`/events/${e.slug}/photos`} className="group flex items-center gap-4 rounded-2xl border border-line-strong bg-white p-4 transition-shadow hover:shadow-raised">
+                  <Camera className="size-6 shrink-0 text-ink" strokeWidth={1.6} aria-hidden />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[15px] font-semibold text-ink">Photos</span>
+                    <span className="block text-[13.5px] text-ink-muted">{photoCount ? `${photoCount} photo${photoCount === 1 ? "" : "s"}` : photos.manage ? "Add photos" : "None yet"}</span>
+                  </span>
+                  <ChevronRight className="size-5 text-ink-subtle" aria-hidden />
+                </Link>
+              )}
+              {e.link_url && (
+                <a href={e.link_url} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 rounded-2xl border border-line-strong bg-white p-4 transition-shadow hover:shadow-raised">
+                  <LinkIcon className="size-6 shrink-0 text-ink" strokeWidth={1.6} aria-hidden />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[15px] font-semibold text-ink">More info</span>
+                    <span className="block truncate text-[13.5px] text-ink-muted">{linkLabel(e.link_url)}</span>
+                  </span>
+                  <ArrowUpRight className="size-5 text-ink-subtle" aria-hidden />
+                </a>
+              )}
+            </div>
           )}
 
           {e.status === "published" && e.access === "public" && (
-            <section aria-label="Share" className="border-t border-line pt-8">
+            <section aria-label="Share" className="py-8">
               <ShareEvent url={shareUrl} title={e.title} />
             </section>
           )}
         </div>
 
-        {/* Ticket panel */}
-        <aside aria-label="Registration" className="lg:sticky lg:top-[calc(var(--header-h)+24px)] lg:self-start">
-          <div className="card overflow-hidden">
-            <div className="p-5 md:p-6">
-              <div className="flex items-baseline justify-between gap-3">
-                <p className="font-mono text-[26px] font-medium tracking-[-0.04em] tabular-nums">{e.price_paise ? formatINR(e.price_paise) : "Free"}</p>
-                <p className="text-[13px] text-ink-muted">
-                  {e.capacity === null ? (
-                    "No seat limit"
-                  ) : (
-                    <>
-                      <span className={d.seatsLeft === 0 ? "font-mono font-medium text-danger" : "font-mono text-ink"}>{d.seatsLeft}</span> of{" "}
-                      <span className="font-mono tabular-nums">{e.capacity}</span> left
-                    </>
-                  )}
-                </p>
-              </div>
-              {e.capacity !== null && <Meter value={e.taken} max={e.capacity} className="mt-3" />}
-              <p className="mt-2 flex items-center gap-1.5 text-[12.5px] text-ink-muted">
-                <Users className="size-3.5" aria-hidden /> <span className="font-mono tabular-nums text-ink">{e.taken}</span> going
+        {/* Booking card */}
+        <aside id="register" aria-label="Registration" className="scroll-mt-28 lg:sticky lg:top-[calc(var(--header-h)+32px)] lg:self-start">
+          <div className="rounded-2xl border border-line-strong bg-white p-6 shadow-raised">
+            <div className="flex items-baseline justify-between gap-3">
+              <p className="text-[22px] font-semibold text-ink">{priceLabel}</p>
+              <p className="text-[14px] text-ink-muted">
+                {e.capacity === null ? (
+                  `${e.taken} going`
+                ) : d.seatsLeft === 0 ? (
+                  <span className="font-semibold text-danger">Full</span>
+                ) : (
+                  <>
+                    <span className="font-semibold text-ink">{d.seatsLeft}</span> of {e.capacity} left
+                  </>
+                )}
               </p>
             </div>
-            <div className="ticket-cut" />
-            <div className="space-y-4 p-5 pt-3 md:p-6 md:pt-3">
+            {e.capacity !== null && <Meter value={e.taken} max={e.capacity} className="mt-3" />}
+            <div className="mt-5">
               {!viewer ? (
                 <div className="space-y-3">
                   <LinkButton href={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} variant="accent" size="lg" className="w-full">
                     Log in to register
                   </LinkButton>
-                  <p className="text-center text-[13px] text-ink-muted">
+                  <p className="text-center text-[14px] text-ink-muted">
                     New here?{" "}
                     <Link href={`/signin?mode=signup&next=${encodeURIComponent(`/events/${e.slug}`)}`} className="link">
                       Create an account
@@ -235,20 +234,19 @@ export default async function EventPage({ params, searchParams }: { params: Prom
                 </div>
               ) : d.isOwner ? (
                 <div className="space-y-3">
-                  <p className="text-[13px] text-ink-muted">
-                    You&apos;re hosting this event
+                  <p className="text-[14px] text-ink-muted">
+                    You&apos;re hosting this
                     {e.access === "code" && e.access_code ? (
                       <>
                         {" "}
-                        · join code <span className="font-mono font-medium tracking-[0.12em] text-ink">{e.access_code}</span>
+                        · code <span className="font-mono font-medium tracking-[0.12em] text-ink">{e.access_code}</span>
                       </>
                     ) : null}
-                    .
                   </p>
                   <div className="grid gap-2">
                     {e.status === "published" && (
                       <LinkButton href={`/organizer/scan/${e.id}`} size="lg" className="w-full">
-                        <ScanLine className="size-4" aria-hidden /> Open gate scanner
+                        <ScanLine className="size-4" aria-hidden /> Gate scanner
                       </LinkButton>
                     )}
                     <div className="grid grid-cols-2 gap-2">
@@ -288,11 +286,36 @@ export default async function EventPage({ params, searchParams }: { params: Prom
                   upi={upiUrl && upiQr && reg ? { regId: reg.id, pricePaise: e.price_paise, vpa: e.organizer_upi_id!, uri: upiUrl, qrSvg: upiQr, utr: reg.upi_utr, rejected: !!reg.upi_rejected_at } : null}
                 />
               )}
-              {viewer && reg && reg.status !== "cancelled" && viewer.phone && !viewer.whatsappOptIn && <WhatsAppPrompt phone={viewer.phone} />}
+              {viewer && reg && reg.status !== "cancelled" && viewer.phone && !viewer.whatsappOptIn && (
+                <div className="mt-4">
+                  <WhatsAppPrompt phone={viewer.phone} />
+                </div>
+              )}
             </div>
           </div>
+          <p className="mt-4 flex items-center justify-center gap-1.5 text-[13.5px] text-ink-muted">
+            <Users className="size-4" aria-hidden /> {e.taken} going
+          </p>
         </aside>
       </div>
+
+      {/* Phones: price and the main action stay in reach. */}
+      {(canRegister || !viewer) && (
+        <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-line-strong bg-white px-gutter pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 lg:hidden">
+          <div>
+            <p className="text-[17px] font-semibold text-ink">{priceLabel}</p>
+            <p className="text-[13px] text-ink-muted">
+              {fmtDate(s.startsAt, { day: "numeric", month: "short" })} · {e.capacity === null ? `${e.taken} going` : d.seatsLeft === 0 ? "Full" : `${d.seatsLeft} left`}
+            </p>
+          </div>
+          <a
+            href={viewer ? "#register" : `/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`}
+            className="inline-flex h-12 items-center rounded-xl bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink"
+          >
+            {viewer ? (d.seatsLeft === 0 ? "Join waitlist" : "Register") : "Log in to register"}
+          </a>
+        </div>
+      )}
     </div>
   );
 }

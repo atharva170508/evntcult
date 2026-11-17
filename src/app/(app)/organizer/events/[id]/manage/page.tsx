@@ -122,8 +122,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
       {/* Title */}
       <header className="pt-8">
-        <p className="eyebrow">Manage event</p>
-        <h1 className="mt-2 text-display-md font-semibold">{e.title}</h1>
+        <h1 className="text-[28px] font-semibold leading-tight tracking-[-0.02em] md:text-[32px]">{e.title}</h1>
         <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] text-ink-muted">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays className="size-4 text-ink-subtle" aria-hidden />

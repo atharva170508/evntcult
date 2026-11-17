@@ -2,8 +2,17 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
-/* Figtree for everything, JetBrains Mono for pass codes. Self-hosted (SIL OFL). */
+/* Figtree for the interface, EB Garamond for big headlines, JetBrains Mono for pass codes.
+   Self-hosted (SIL OFL). */
 const sans = localFont({ src: "./fonts/Figtree-Variable.woff2", weight: "300 900", variable: "--font-sans", display: "swap" });
+const serif = localFont({
+  src: [
+    { path: "./fonts/EBGaramond-Variable.woff2", weight: "400 800", style: "normal" },
+    { path: "./fonts/EBGaramond-Italic-Variable.woff2", weight: "400 800", style: "italic" },
+  ],
+  variable: "--font-serif",
+  display: "swap",
+});
 const mono = localFont({
   src: [
     { path: "./fonts/JetBrainsMono-Regular.woff2", weight: "400" },
@@ -20,13 +29,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FFFFFF",
+  themeColor: "#FFFEF6",
   colorScheme: "light",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="en-IN" className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
       <body>
         <a
           href="#main"

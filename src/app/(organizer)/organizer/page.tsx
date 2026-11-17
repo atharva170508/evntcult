@@ -112,12 +112,9 @@ export default async function OrganizerHome() {
   return (
     <div className="pb-8 pt-8 md:pt-12">
       <header className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
-        <div>
-          <p className="eyebrow">Host · {firstName}</p>
-          <h1 className="mt-3 text-display-lg font-semibold">
-            Your <em>events.</em>
-          </h1>
-        </div>
+        <h1 className="font-display text-[clamp(40px,5vw,56px)] leading-none tracking-[-0.03em]">
+          Welcome back, <em>{firstName}</em>
+        </h1>
         <div className="flex flex-wrap gap-2 md:hidden">
           <LinkButton href="/organizer/calendar" variant="secondary">
             <CalendarRange className="size-4" aria-hidden /> Calendar

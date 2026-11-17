@@ -31,17 +31,7 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
   return (
     <div className="space-y-8 pb-8">
       <PageHero
-        eyebrow="Venues"
-        title={
-          <>
-            Find your <em>way.</em>
-          </>
-        }
-        sub={
-          <>
-            <span className="font-mono tabular-nums text-ink">{venues.length}</span> venues
-          </>
-        }
+        title="Venues"
       />
 
 

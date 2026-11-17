@@ -29,9 +29,19 @@
     @apply min-h-dvh bg-canvas font-sans text-body;
     font-feature-settings: "ss01";
   }
-  /* Headings are semibold by default; pages may go bolder but never lighter. */
+  /* Big headlines are set in the serif; an <em> inside one turns italic. */
+  .font-display,
   .text-display-2xl,
-  .text-display-xl,
+  .text-display-xl {
+    font-family: var(--font-serif), ui-serif, Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+  }
+  .font-display em,
+  .text-display-2xl em,
+  .text-display-xl em {
+    font-style: italic;
+  }
   .text-display-lg,
   .text-display-md {
     font-weight: 600;
@@ -46,7 +56,7 @@
     text-wrap: pretty;
   }
   ::selection {
-    background: rgba(227, 38, 79, 0.14);
+    background: #F0D7FF;
   }
   /* Emphasis inside headlines carries no special styling. */
   em {
@@ -135,7 +145,7 @@
   /* ── Controls ─────────────────────────────────────────── */
 
   .field {
-    @apply w-full rounded-lg border border-[#B0B0B0] bg-surface px-3.5 py-3 text-body text-ink transition-[border-color,box-shadow] duration-fast ease-out placeholder:text-ink-subtle hover:border-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-muted aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/10;
+    @apply w-full rounded-lg border border-[#B5AF9F] bg-surface px-3.5 py-3 text-body text-ink transition-[border-color,box-shadow] duration-fast ease-out placeholder:text-ink-subtle hover:border-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-muted aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/10;
   }
   .kbd {
     @apply inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-line bg-surface px-1.5 font-sans text-[11px] font-semibold text-ink-subtle;

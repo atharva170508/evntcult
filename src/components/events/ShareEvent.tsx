@@ -23,10 +23,7 @@ export function ShareEvent({ url, title }: { url: string; title: string }) {
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-4">
-      <div>
-        <p className="text-h4 font-semibold">Bring your friends</p>
-        <p className="mt-0.5 text-[13px] text-ink-muted">Share the event so they can register too.</p>
-      </div>
+      <p className="text-[16px] font-semibold text-ink">Share</p>
       <div className="flex flex-wrap gap-2">
         <button onClick={share} className={buttonClass("primary", "md")}>
           <Share2 className="size-4" aria-hidden /> Share

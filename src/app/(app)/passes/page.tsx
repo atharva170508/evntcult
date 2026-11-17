@@ -74,23 +74,8 @@ export default async function PassesPage() {
   }
 
   return (
-    <div className="space-y-14 pb-8">
-      <PageHero
-        eyebrow="My passes"
-        title={
-          <>
-            Your <em>tickets.</em>
-          </>
-        }
-        sub="Show the QR at the gate. Saved images work offline too."
-        actions={
-          upcoming.length > 0 ? (
-            <span className="rounded-[10px] bg-surface px-3.5 py-1.5 text-[13px] text-ink-muted shadow-card">
-              <span className="font-mono tabular-nums text-ink">{upcoming.length}</span> upcoming
-            </span>
-          ) : undefined
-        }
-      />
+    <div className="space-y-12 pb-8">
+      <PageHero title="Passes" />
 
       {upcoming.length === 0 ? (
         <EmptyState icon={Ticket} title="No upcoming passes" action={{ label: "Find an event", href: "/events" }} />
@@ -104,18 +89,21 @@ export default async function PassesPage() {
 
       {past.length > 0 && (
         <section aria-labelledby="past-heading" className="space-y-5">
-          <h2 id="past-heading" className="text-display-md font-semibold">
-            Past events
+          <h2 id="past-heading" className="text-[22px] font-semibold">
+            Where you&apos;ve been
           </h2>
-          <ul className="card divide-y divide-line">
+          <ul className="grid gap-x-6 gap-y-5 md:grid-cols-2">
             {past.map((r) => (
-              <li key={r.id} className="flex items-center justify-between gap-3 px-5 py-4">
-                <div className="min-w-0">
-                  <Link href={`/events/${r.slug}`} className="block truncate text-[15px] font-medium hover:underline hover:decoration-line-strong hover:underline-offset-4">
+              <li key={r.id} className="flex items-center gap-4">
+                <div className="relative size-16 shrink-0 overflow-hidden rounded-xl">
+                  <EventArt accent={accentFor({ id: r.event_id, category: r.category })} seed={r.event_id} scrim={false} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <Link href={`/events/${r.slug}`} className="block truncate text-[15px] font-semibold hover:underline hover:underline-offset-4">
                     {r.title}
                   </Link>
-                  <p className="mt-0.5 text-[12.5px] text-ink-muted">
-                    <span className="font-mono">{fmtDate(new Date(r.starts_at), { day: "numeric", month: "short", year: "numeric" })}</span> · {r.venue}
+                  <p className="mt-0.5 truncate text-[14px] text-ink-muted">
+                    {fmtDate(new Date(r.starts_at), { day: "numeric", month: "short", year: "numeric" })} · {r.venue}
                   </p>
                 </div>
                 {r.cert_id ? (
@@ -141,14 +129,14 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
   const cancelled = r.event_status === "cancelled";
 
   return (
-    <article aria-label={`Pass for ${r.title}`} className="card flex flex-col overflow-hidden sm:flex-row">
+    <article aria-label={`Pass for ${r.title}`} className="flex flex-col overflow-hidden rounded-[20px] border border-line-strong bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:flex-row">
       {/* Stub: poster strip with date */}
       <div className="relative isolate flex shrink-0 flex-row items-end justify-between gap-3 p-5 text-white sm:w-[176px] sm:flex-col sm:items-start">
-        <EventArt accent={accentFor({ id: r.event_id, category: r.category })} seed={r.event_id} />
+        <EventArt accent={accentFor({ id: r.event_id, category: r.category })} seed={r.event_id} flat scrim={false} />
         <div className="relative">
-          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/80">{fmtDate(starts, { weekday: "short" })}</p>
-          <p className="text-[44px] font-semibold leading-none tracking-[-0.05em] tabular-nums">{fmtDate(starts, { day: "numeric" })}</p>
-          <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-white/80">{fmtDate(starts, { month: "short", year: "numeric" })}</p>
+          <p className="text-[13px] font-semibold text-white/85">{fmtDate(starts, { weekday: "long" })}</p>
+          <p className="font-display text-[56px] leading-none">{fmtDate(starts, { day: "numeric" })}</p>
+          <p className="text-[13px] font-semibold text-white/85">{fmtDate(starts, { month: "long" })}</p>
         </div>
         <div className="relative">
           {cancelled ? (
@@ -170,7 +158,7 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
 
       <div className="flex min-w-0 flex-1 flex-col gap-4 p-5">
         <div className="min-w-0">
-          <h2 className="truncate text-h3 font-semibold">{r.title}</h2>
+          <h2 className="truncate text-[20px] font-semibold">{r.title}</h2>
           <p className="mt-1.5 flex items-center gap-1.5 text-[13px] text-ink-2">
             <Clock className="size-3.5 text-ink-subtle" aria-hidden /> {fmtRange(starts, ends)} <span className="text-ink-subtle">IST</span>
           </p>
@@ -185,14 +173,14 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
           ) : (
             <div className="grid w-[116px] shrink-0 place-items-center rounded-xl border border-dashed border-line-strong bg-sunken/50 p-3 text-center text-[11.5px] text-ink-muted">
               <Hourglass className="mb-1 size-4" aria-hidden />
-              {cancelled ? "No entry" : "QR appears when you get a seat"}
+              {cancelled ? "No entry" : "QR once you get a seat"}
             </div>
           )}
           <div className="min-w-0 flex-1 space-y-1.5 text-[13px]">
             {r.status === "registered" && (
               <>
-                <p className="eyebrow">Pass</p>
-                <p className="font-mono text-[15px] font-medium tracking-[0.12em]">{r.pass_code}</p>
+                <p className="text-[12.5px] font-semibold text-ink-muted">Pass</p>
+                <p className="font-mono text-[15px] font-medium tracking-[0.1em]">{r.pass_code}</p>
               </>
             )}
             {r.checked_in_at && (

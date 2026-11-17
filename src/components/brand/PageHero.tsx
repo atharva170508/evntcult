@@ -1,11 +1,8 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Editorial page header used at the top of every app page: mono eyebrow, display title
- * (wrap one word in <em> for the serif accent), optional sub line, actions aligned to the
- * baseline, and a hairline to close the header.
- *
- * `marquee` is accepted for backwards compatibility and intentionally ignored.
+ * Page header: a plain bold title, an optional short line under it, actions on the right.
+ * `eyebrow` is kept in the props for older callers but is only announced to screen readers.
  */
 export function PageHero({
   eyebrow,
@@ -14,7 +11,7 @@ export function PageHero({
   actions,
   className,
 }: {
-  eyebrow: React.ReactNode;
+  eyebrow?: React.ReactNode;
   title: React.ReactNode;
   sub?: React.ReactNode;
   actions?: React.ReactNode;
@@ -22,15 +19,13 @@ export function PageHero({
   className?: string;
 }) {
   return (
-    <header className={cn("animate-fade-up border-b border-line pb-8 pt-6 md:pb-10 md:pt-10", className)}>
-      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
-        <div className="min-w-0 max-w-3xl">
-          <p className="eyebrow">{eyebrow}</p>
-          <h1 className="mt-3 text-display-lg font-semibold text-ink">{title}</h1>
-          {sub && <div className="mt-3 max-w-prose text-lead text-ink-muted">{sub}</div>}
-        </div>
-        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+    <header className={cn("flex flex-wrap items-end justify-between gap-x-8 gap-y-4 pb-6 pt-8 md:pb-8 md:pt-12", className)}>
+      <div className="min-w-0 max-w-3xl">
+        {eyebrow && <p className="sr-only">{eyebrow}</p>}
+        <h1 className="text-[28px] font-semibold leading-tight tracking-[-0.02em] text-ink md:text-[32px]">{title}</h1>
+        {sub && <div className="mt-1.5 text-[15px] text-ink-muted">{sub}</div>}
       </div>
+      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </header>
   );
 }

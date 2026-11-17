@@ -17,7 +17,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="pb-8">
-      <PageHero eyebrow="Account" title={<>Your <em>profile.</em></>} />
+      <PageHero title="Profile" />
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[280px_1fr] lg:gap-16">
         <aside className="space-y-6">

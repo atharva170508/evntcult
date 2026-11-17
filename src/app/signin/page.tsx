@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { CalendarCheck2, QrCode, Users } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { LogoWordmark } from "@/components/brand/MissingE";
 import { codeLoginOn } from "@/lib/email";
@@ -16,23 +15,26 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
   const next = nextParam?.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/dashboard";
   if (await getViewer()) redirect(next);
 
-  const steps = [
-    { icon: CalendarCheck2, k: "Register", v: "Every event in one place" },
-    { icon: QrCode, k: "Pass", v: "One QR pass at the gate, even offline" },
-    { icon: Users, k: "Attend", v: "A certificate the moment you're scanned in" },
-  ];
-
   return (
-    <main id="main" className="grid min-h-dvh lg:grid-cols-[1fr_1.05fr]">
-      {/* Form */}
-      <div className="flex flex-col px-gutter py-6">
-        <Link href="/dashboard" aria-label="EvntCult home" className="w-fit">
-          <LogoWordmark motion="type" className="text-[26px] text-ink" />
-        </Link>
-        <div className="mx-auto flex w-full max-w-[400px] flex-1 flex-col justify-center py-12">
-          <div className="animate-fade-up">
-            <p className="eyebrow">{signup ? "Create account" : "Welcome back"}</p>
-            <h1 className="mt-3 text-display-md font-semibold">{signup ? <>Get your <em>OnePass.</em></> : <>Log <em>in.</em></>}</h1>
+    <main id="main" className="flex min-h-dvh flex-col px-gutter py-5">
+      <Link href="/dashboard" aria-label="EvntCult home" className="w-fit">
+        <LogoWordmark className="text-[24px]" />
+      </Link>
+      <div className="flex flex-1 items-start justify-center py-8 sm:items-center">
+        <div className="w-full max-w-[568px] overflow-hidden rounded-2xl border border-line-strong bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)]">
+          <p className="border-b border-line px-6 py-4 text-center text-[16px] font-semibold text-ink">{signup ? "Sign up" : "Log in or sign up"}</p>
+          <div className="px-6 pb-8 pt-6 sm:px-8">
+            <h1 className="font-display text-[34px] leading-tight tracking-[-0.02em] text-ink">
+              {signup ? (
+                <>
+                  Get your <em>pass.</em>
+                </>
+              ) : (
+                <>
+                  Welcome <em>back.</em>
+                </>
+              )}
+            </h1>
             <SignInForm next={next} signup={signup} codeLogin={codeLoginOn()} />
             <div className="mt-8 space-y-2 border-t border-line pt-6 text-[14px] text-ink-muted">
               <p>
@@ -50,27 +52,6 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           </div>
         </div>
       </div>
-
-      {/* Brand panel */}
-      <aside aria-hidden className="relative isolate m-3 hidden flex-col justify-between overflow-hidden rounded-panel bg-night p-12 text-white lg:flex">
-        <div className="absolute inset-0 -z-10 opacity-[0.5] [background-image:radial-gradient(rgba(255,255,255,0.12)_1px,transparent_1.2px)] [background-size:22px_22px] [mask-image:radial-gradient(ellipse_80%_70%_at_70%_20%,black,transparent_75%)]" />
-        <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">EvntCult · OnePass</p>
-        <div>
-          <h2 className="max-w-lg text-display-xl font-semibold">
-            Register. Pass. Scan. <em className="text-white/70">Attend.</em>
-          </h2>
-          <ol className="mt-12 grid max-w-lg gap-px overflow-hidden rounded-card bg-white/10">
-            {steps.map((st, i) => (
-              <li key={st.k} className="flex items-center gap-4 bg-ink/95 px-5 py-4">
-                <span className="font-mono text-[12px] text-white/40">0{i + 1}</span>
-                <st.icon className="size-[18px] text-white/80" />
-                <span className="text-[15px] font-medium">{st.k}</span>
-                <span className="ml-auto text-right text-[13px] text-white/55">{st.v}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </aside>
     </main>
   );
 }

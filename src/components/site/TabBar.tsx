@@ -18,7 +18,8 @@ const ATTEND_TABS = [
 export function TabBar() {
   const pathname = usePathname();
   const ws = workspaceFor(pathname);
-  if (ws === "admin") return null;
+  // Admin has no tabs; an event's own page shows its price-and-register bar instead.
+  if (ws === "admin" || /^\/events\/[^/]+$/.test(pathname)) return null;
 
   const items = ws === "host" ? HOST_NAV : ATTEND_TABS;
 

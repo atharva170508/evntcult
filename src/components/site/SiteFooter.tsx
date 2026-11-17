@@ -41,7 +41,7 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
   ];
 
   return (
-    <footer className="mt-20 border-t border-line bg-sunken print:hidden">
+    <footer className="border-t border-line bg-sunken print:hidden">
       <div className="mx-auto max-w-[1360px] px-gutter pb-28 pt-12 md:pb-8">
         <nav aria-label="Footer" className="grid gap-y-8 md:grid-cols-3 md:gap-x-12">
           {columns.map((c, i) => (

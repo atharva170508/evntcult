@@ -3,9 +3,9 @@ import type { Config } from "tailwindcss";
 /**
  * EvntCult design tokens.
  *
- * A marketplace look: white pages, #222 text, soft grey hairlines, photos and posters doing
- * the talking, one red for the action that matters (search, register, create). Figtree is the
- * only typeface; JetBrains Mono is reserved for pass codes.
+ * Browse like a marketplace, feel like a warm product site: a cream page, white cards,
+ * #1A1A1A ink, lavender call-to-action buttons with a dark outline, brand red for search,
+ * the logo and live states. Figtree for the interface, EB Garamond for big headlines.
  *
  * Contrast (WCAG 2.1 on white): ink 15.9 · ink-2 10.7 · ink-muted 5.4 · ink-subtle 4.9
  * · white on accent 4.6.
@@ -18,19 +18,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        canvas: "#FFFFFF",
+        canvas: "#FFFEF6",
         surface: "#FFFFFF",
-        sunken: "#F7F7F7",
-        mist: "#EBEBEB",
-        line: { DEFAULT: "#EBEBEB", strong: "#DDDDDD" },
+        sunken: "#F6F3EA",
+        mist: "#ECE8DC",
+        line: { DEFAULT: "#ECE8DD", strong: "#DCD6C6" },
+        cream: "#FFFFEB",
+        lavender: { DEFAULT: "#F0D7FF", hover: "#E6C4FB" },
         ink: {
-          DEFAULT: "#222222",
+          DEFAULT: "#1A1A1A",
           2: "#3F3F3F",
           muted: "#6A6A6A",
           subtle: "#717171",
           inverse: "#FFFFFF",
         },
-        night: { DEFAULT: "#222222", 2: "#2C2C2C", 3: "#000000", line: "rgba(255,255,255,0.12)" },
+        night: { DEFAULT: "#1A1A1A", 2: "#262626", 3: "#000000", line: "rgba(255,255,255,0.12)" },
         accent: {
           DEFAULT: "#E3264F",
           hover: "#C81E44",
@@ -50,8 +52,8 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Consolas", "monospace"],
-        display: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
-        serif: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
+        serif: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
         logo: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
         brand: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
@@ -86,7 +88,7 @@ const config: Config = {
         "4xl": "2rem",
       },
       boxShadow: {
-        card: "0 0 0 1px #DDDDDD",
+        card: "0 0 0 1px #DCD6C6",
         raised: "0 6px 16px rgba(0,0,0,0.12)",
         pop: "0 2px 16px rgba(0,0,0,0.12)",
         search: "0 3px 12px 0 rgba(0,0,0,0.1)",

@@ -3,13 +3,13 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Buttons. Anatomy: 8px corners, semibold label, 0.96 press, 160ms colour transitions.
- * `primary` is #222 — use `accent` (red) for the single most important action on a screen
- * (Register, Search, Sign up). `secondary` is white with a dark 1px outline.
+ * Buttons. Anatomy: 10px corners, semibold label, 0.96 press, 160ms colour transitions.
+ * `accent` is the call to action: lavender with a 2px dark outline (Register, Sign up, Create).
+ * `primary` is solid dark; `secondary` is white with a dark outline.
  */
 const variants = {
   primary: "bg-ink text-white hover:bg-black",
-  accent: "bg-accent text-white hover:bg-accent-hover",
+  accent: "bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
   secondary: "bg-surface text-ink ring-1 ring-inset ring-ink hover:bg-sunken",
   ghost: "text-ink-2 hover:bg-sunken hover:text-ink",
   soft: "bg-sunken text-ink hover:bg-mist",
@@ -18,15 +18,15 @@ const variants = {
   light: "bg-white text-ink hover:bg-white/90",
 
   /* legacy names → new anatomy */
-  volt: "bg-accent text-white hover:bg-accent-hover",
-  brand: "bg-accent text-white hover:bg-accent-hover",
+  volt: "bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
+  brand: "bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
   glass: "bg-surface text-ink ring-1 ring-inset ring-line-strong hover:bg-sunken",
 } as const;
 
 const sizes = {
   sm: "h-8 gap-1.5 rounded-lg px-3 text-[13px]",
-  md: "h-10 gap-2 rounded-lg px-4 text-[14px]",
-  lg: "h-12 gap-2 rounded-lg px-6 text-[16px]",
+  md: "h-10 gap-2 rounded-[10px] px-4 text-[14px]",
+  lg: "h-12 gap-2 rounded-xl px-6 text-[16px]",
 } as const;
 
 export type ButtonVariant = keyof typeof variants;

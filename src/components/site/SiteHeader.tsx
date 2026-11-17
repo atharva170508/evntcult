@@ -87,7 +87,7 @@ export function SiteHeader({
 
   return (
     <>
-      <header ref={ref} className="sticky top-0 z-40 border-b border-line bg-white print:hidden">
+      <header ref={ref} className="sticky top-0 z-40 border-b border-line bg-canvas/95 backdrop-blur-xl print:hidden">
         <div className={cn("mx-auto px-gutter", wide ? "max-w-[1440px]" : "max-w-[1360px]")}>
           <div className="grid h-20 grid-cols-[auto_1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
             <div className="flex items-center gap-3">
@@ -140,7 +140,7 @@ export function SiteHeader({
                   <Link href="/dashboard" className="hidden h-10 items-center rounded-full px-3.5 text-[14px] font-semibold text-ink transition-colors hover:bg-sunken lg:flex">
                     Switch to attending
                   </Link>
-                  <Link href="/organizer/events/new" className="mr-1 hidden h-10 items-center gap-1.5 rounded-full bg-accent px-4 text-[14px] font-semibold text-white transition-colors hover:bg-accent-hover md:flex">
+                  <Link href="/organizer/events/new" className="mr-1 hidden h-10 items-center gap-1.5 rounded-full bg-lavender ring-2 ring-inset ring-ink px-4 text-[14px] font-semibold text-ink transition-colors hover:bg-lavender ring-2 ring-inset ring-ink-hover md:flex">
                     <Plus className="size-4" strokeWidth={2.6} aria-hidden /> Create event
                   </Link>
                 </>
@@ -351,7 +351,7 @@ function MenuSheet({
   const row = "flex h-14 items-center gap-4 border-b border-line text-[16px] text-ink";
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 flex flex-col bg-white text-ink motion-safe:animate-fade-in md:hidden">
+    <div role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 flex flex-col bg-canvas text-ink motion-safe:animate-fade-in md:hidden">
       <div className="flex h-16 shrink-0 items-center justify-between border-b border-line px-gutter">
         <BrandLogo className="text-[22px]" />
         <button onClick={onClose} aria-label="Close menu" className="grid size-10 place-items-center rounded-full hover:bg-sunken">
@@ -397,7 +397,7 @@ function MenuSheet({
             <>
               {ws === "host" ? (
                 <>
-                  <Link href="/organizer/events/new" className="flex h-12 items-center justify-center gap-2 rounded-lg bg-accent text-[16px] font-semibold text-white">
+                  <Link href="/organizer/events/new" className="flex h-12 items-center justify-center gap-2 rounded-lg bg-lavender ring-2 ring-inset ring-ink text-[16px] font-semibold text-ink">
                     <Plus className="size-4" aria-hidden /> Create event
                   </Link>
                   <Link href="/dashboard" className="flex h-12 items-center justify-center rounded-lg border border-ink text-[16px] font-semibold">
@@ -432,7 +432,7 @@ function MenuSheet({
             </>
           ) : (
             <>
-              <Link href="/signin?mode=signup" className="flex h-12 items-center justify-center rounded-lg bg-accent text-[16px] font-semibold text-white">
+              <Link href="/signin?mode=signup" className="flex h-12 items-center justify-center rounded-lg bg-lavender ring-2 ring-inset ring-ink text-[16px] font-semibold text-ink">
                 Sign up
               </Link>
               <Link href="/signin" className="flex h-12 items-center justify-center rounded-lg border border-ink text-[16px] font-semibold">

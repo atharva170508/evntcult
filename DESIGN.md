@@ -1,7 +1,7 @@
 ---
 version: 3.0
-name: EvntCult — Marketplace
-description: A browse-first event marketplace. White pages, #222 text, soft grey hairlines, covers doing the talking, one red for the action that matters. Figtree only; JetBrains Mono for pass codes.
+name: EvntCult — Marketplace, warm
+description: Browse like Airbnb, feel like Wispr Flow. Cream page, white cards, #1A1A1A ink, lavender call-to-action buttons with a dark outline, brand red for search, the logo and live states. Figtree for the interface, EB Garamond for big headlines (italic for the second phrase), JetBrains Mono for pass codes.
 ---
 
 # EvntCult design system
@@ -24,20 +24,25 @@ description: A browse-first event marketplace. White pages, #222 text, soft grey
 
 | Token | Hex | Use |
 |---|---|---|
-| `ink` · `ink-2` · `ink-muted` · `ink-subtle` | `#222222` · `#3F3F3F` · `#6A6A6A` · `#717171` | Text |
-| `line` / `line-strong` | `#EBEBEB` / `#DDDDDD` | Hairlines, outlines |
-| `sunken` / `mist` | `#F7F7F7` / `#EBEBEB` | Footer, wells, hovers |
-| `accent` | `#E3264F` | Search button, Register, Create event, the logo |
+| `canvas` / `surface` | `#FFFEF6` / `#FFFFFF` | Cream page, white cards |
+| `ink` · `ink-2` · `ink-muted` · `ink-subtle` | `#1A1A1A` · `#3F3F3F` · `#6A6A6A` · `#717171` | Text |
+| `line` / `line-strong` | `#ECE8DD` / `#DCD6C6` | Warm hairlines, outlines |
+| `sunken` / `mist` | `#F6F3EA` / `#ECE8DC` | Footer, wells, hovers |
+| `lavender` | `#F0D7FF` | Call-to-action buttons (with a 2px `ink` outline) |
+| `night` / `cream` | `#1A1A1A` / `#FFFFEB` | Dark bands with cream type |
+| `accent` | `#E3264F` | Search button, the logo, live badges |
 | `live` · `warn` · `danger` | status colours, always with a word |
 
 ## Type
 
-Figtree for everything. Page titles 26–32px semibold; shelf titles 22px semibold; card titles
-15px semibold; body 14–16px. JetBrains Mono only for pass codes.
+Figtree for the interface: page titles 28–32px semibold, shelf titles 22px semibold, card titles
+15px semibold, body 14–16px. EB Garamond (`font-display`, `text-display-xl/2xl`) for the big
+moments — the homepage hero, dark bands, "Good questions", sign-in, the hosting welcome — with an
+`<em>` for the italic second phrase. JetBrains Mono only for pass codes.
 
 ## Shape
 
-- Buttons: 8px corners (`rounded-lg`), 40–48px tall. Primary is `#222`; `accent` is red.
+- Buttons: 10–12px corners, 40–48px tall. `accent` is lavender with a 2px dark outline; primary is solid dark.
 - Search, filter chips, the account button and icon buttons are fully round.
 - Cards: cover with 20px corners, no box around the card. Panels: 16–24px corners, 1px `#DDDDDD`.
 - Shadows only on things that float or on hover (`shadow-raised`, `shadow-pop`, `shadow-search`).
