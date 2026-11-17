@@ -8,7 +8,7 @@ const tones = {
   warn: "bg-warn-soft text-warn",
   danger: "bg-danger-soft text-danger",
   dark: "bg-night text-white",
-  white: "bg-white/95 text-ink shadow-[0_1px_2px_rgba(20,22,27,0.12)] backdrop-blur",
+  white: "bg-white text-ink shadow-[0_1px_2px_rgba(20,22,27,0.12)]",
 
   /* legacy names */
   volt: "bg-accent-soft text-accent-ink",

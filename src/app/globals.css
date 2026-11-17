@@ -19,6 +19,17 @@
       --header-h: 80px;
     }
   }
+  /* Anything you can click shows it (antislop: cursor-pointer on all clickables). */
+  button:not(:disabled),
+  [role="button"],
+  summary,
+  select,
+  label[for],
+  input[type="checkbox"],
+  input[type="radio"] {
+    cursor: pointer;
+  }
+
   html {
     scroll-behavior: smooth;
     @apply bg-canvas text-ink antialiased;

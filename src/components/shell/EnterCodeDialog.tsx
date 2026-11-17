@@ -36,7 +36,7 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
     const data = (await res.json().catch(() => ({}))) as { error?: { message?: string }; event?: { title: string; slug: string } };
     if (!res.ok || !data.event) return setState({ status: "error", message: data.error?.message ?? "Something went wrong." });
     const ev = data.event;
-    setState({ status: "ok", message: `Unlocked · ${ev.title}` });
+    setState({ status: "ok", message: `Code accepted: ${ev.title}` });
     setTimeout(() => {
       onClose();
       router.push(`/events/${ev.slug}?code=${encodeURIComponent(code)}`);

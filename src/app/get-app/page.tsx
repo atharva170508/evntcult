@@ -24,11 +24,11 @@ export default function GetAppPage() {
             </h1>
             <p className="mt-4 max-w-md text-lead text-ink-muted">One tap to your passes. Works like an app, no store needed.</p>
           </div>
-          <LogoIcon className="size-20 shrink-0 rounded-[22px] shadow-raised" blink={false} />
+          <LogoIcon className="size-20 shrink-0 rounded-[20px] shadow-raised" blink={false} />
         </div>
         <ul className="mt-10 grid gap-px overflow-hidden rounded-card bg-line shadow-card sm:grid-cols-3">
           {[
-            { icon: Zap, t: "Opens instantly", b: "Straight to your passes." },
+            { icon: Zap, t: "Opens to your passes", b: "No browser tabs to find." },
             { icon: CloudOff, t: "Works offline", b: "Saved passes still show at the gate." },
             { icon: BellRing, t: "Stays in the loop", b: "Event updates in one place." },
           ].map((f) => (

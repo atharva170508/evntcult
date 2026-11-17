@@ -89,7 +89,7 @@ export default async function EventPhotosPage({ params, searchParams }: { params
             key={tab.label}
             href={tab.href}
             aria-current={tab.active ? "page" : undefined}
-            className={`inline-flex h-9 items-center gap-2 rounded-[10px] px-4 text-[13.5px] font-medium transition-[background-color,color,box-shadow] duration-fast ${tab.active ? "bg-surface text-ink shadow-card" : "text-ink-muted hover:text-ink"}`}
+            className={`inline-flex h-9 items-center gap-2 rounded-xl px-4 text-[13.5px] font-medium transition-[background-color,color,box-shadow] duration-fast ${tab.active ? "bg-surface text-ink shadow-card" : "text-ink-muted hover:text-ink"}`}
           >
             <tab.icon className="size-4" aria-hidden /> {tab.label}
           </Link>

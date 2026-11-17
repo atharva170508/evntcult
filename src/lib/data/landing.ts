@@ -29,8 +29,10 @@ export interface LandingData {
   rows: EventRow[];
   /** The event to feature: happening now, or the soonest one with the most demand. */
   featured: EventSummary | null;
-  /** What's on next, soonest first: the ticker. */
+  /** What's on next, soonest first. */
   ticker: EventSummary[];
+  /** Past public events, newest first — what the page shows when nothing is scheduled. */
+  recent: EventSummary[];
   kinds: KindCount[];
   venues: VenueCount[];
   upcoming: number;
@@ -58,8 +60,9 @@ export async function getLandingData(): Promise<LandingData> {
   const nowIso = now.toISOString();
   const pub = "e.status = 'published' AND e.access = 'public'";
 
-  const [rows, going, checkins] = await Promise.all([
+  const [rows, pastRows, going, checkins] = await Promise.all([
     all<EventRowWithCount>(`SELECT e.*, ${SEATS_TAKEN_SQL} AS taken FROM events e WHERE ${pub} AND e.ends_at > ? ORDER BY e.starts_at ASC LIMIT 80`, nowIso),
+    all<EventRowWithCount>(`SELECT e.*, ${SEATS_TAKEN_SQL} AS taken FROM events e WHERE ${pub} AND e.ends_at <= ? ORDER BY e.starts_at DESC LIMIT 12`, nowIso),
     count(
       `SELECT COUNT(*) AS n FROM registrations r JOIN events e ON e.id = r.event_id WHERE ${pub} AND e.ends_at > ? AND r.status = 'registered'`,
       nowIso,
@@ -68,6 +71,7 @@ export async function getLandingData(): Promise<LandingData> {
   ]);
 
   const events = rows.map(toSummary);
+  const recent = pastRows.map(toSummary);
   const t = +now;
   const live = events.filter((e) => +e.startsAt <= t && t < +e.endsAt);
   const week = events.filter((e) => +e.startsAt > t && +e.startsAt < t + 7 * DAY);
@@ -90,9 +94,12 @@ export async function getLandingData(): Promise<LandingData> {
   const soon = events.filter((e) => +e.startsAt > t && +e.startsAt < t + 7 * DAY);
   const featured = live[0] ?? [...soon].sort((a, b) => b.registered - a.registered)[0] ?? events[0] ?? null;
 
+  // Kinds: from what's scheduled, or from recent events when the calendar is quiet.
+  const kindSource = byKind.size >= 3 ? byKind : new Map<string, EventSummary[]>();
+  if (byKind.size < 3) for (const e of [...events, ...recent]) if (KIND_TITLE[e.category]) kindSource.set(e.category, [...(kindSource.get(e.category) ?? []), e]);
   const kinds: KindCount[] = Object.entries(KIND_TITLE)
     .map(([k, title]) => {
-      const list = byKind.get(k) ?? [];
+      const list = kindSource.get(k) ?? [];
       return { key: k, title, count: list.length, accent: list[0]?.accent ?? "blue", seed: list[0]?.id ?? k };
     })
     .filter((k) => k.count > 0)
@@ -105,5 +112,7 @@ export async function getLandingData(): Promise<LandingData> {
     .sort((a, b) => b.count - a.count)
     .slice(0, 6);
 
-  return { rows: out, featured, ticker: events.slice(0, 12), kinds, venues, upcoming: events.length, going, checkins };
+  if (recent.length) out.push({ key: "recent", title: "Recently on campus", href: "/events", events: recent });
+
+  return { rows: out, featured, ticker: events.slice(0, 12), recent, kinds, venues, upcoming: events.length, going, checkins };
 }

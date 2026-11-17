@@ -146,7 +146,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
     <section aria-labelledby="next-up-title" className="card grid h-full overflow-hidden md:grid-cols-[1fr_1fr]">
       {/* Poster */}
       <Link href={`/events/${event.slug}`} className="group relative isolate flex min-h-[260px] flex-col justify-between overflow-hidden p-6 text-white md:min-h-[440px] md:p-7">
-        <EventArt accent={event.accent} seed={event.id} className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]" />
+        <EventArt accent={event.accent} seed={event.id} />
         <div className="relative flex flex-wrap items-center gap-1.5">
           <Chip tone="white">Next up</Chip>
           <Chip tone="white">{CATEGORY_LABEL[event.category]}</Chip>
@@ -541,7 +541,7 @@ export function EventCard({ e }: { e: EventSummary }) {
     <article className="w-[272px] shrink-0 snap-start lg:w-auto">
       <Link href={`/events/${e.slug}`} className="card card-hover group flex h-full flex-col overflow-hidden">
         <div className="relative isolate aspect-[16/10] overflow-hidden">
-          <EventArt accent={e.accent} seed={e.id} className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]" />
+          <EventArt accent={e.accent} seed={e.id} />
           <div className="relative flex flex-wrap gap-1.5 p-3">
             <Chip tone="white">{CATEGORY_LABEL[e.category]}</Chip>
             {badge && <Chip tone={badge.tone === "accent" ? "dark" : "white"}>{badge.label}</Chip>}

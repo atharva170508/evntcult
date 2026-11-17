@@ -21,12 +21,12 @@ export function Countdown({ to, endsAt, compact }: { to: Date; endsAt: Date; com
   if (now === null) return <div className={compact ? "h-[44px]" : "h-[60px]"} aria-hidden />; // avoid hydration mismatch
 
   if (now >= +endsAt) {
-    return <p className="inline-flex h-8 items-center rounded-[10px] bg-sunken px-3 text-[13px] font-medium text-ink-muted">Ended</p>;
+    return <p className="inline-flex h-8 items-center rounded-xl bg-sunken px-3 text-[13px] font-medium text-ink-muted">Ended</p>;
   }
 
   if (now >= +to) {
     return (
-      <p className="inline-flex h-8 items-center gap-2 rounded-[10px] bg-accent-soft px-3 text-[13px] font-medium text-accent-ink">
+      <p className="inline-flex h-8 items-center gap-2 rounded-xl bg-accent-soft px-3 text-[13px] font-medium text-accent-ink">
         <span className="size-1.5 rounded-full bg-accent motion-safe:animate-pulse-dot" aria-hidden /> Happening now
       </p>
     );

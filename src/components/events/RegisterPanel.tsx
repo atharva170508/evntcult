@@ -8,6 +8,7 @@ import { Input, Notice, Select } from "@/components/ui/Field";
 import { formatINR } from "@/lib/money";
 import { UpiPay, type UpiPayProps } from "@/components/events/UpiPay";
 import type { Question } from "@/lib/data/questions";
+import { svgSrc } from "@/lib/svg-src";
 
 interface Reg {
   id: string;
@@ -112,7 +113,12 @@ export function RegisterPanel(props: {
           {r.checkedInAt ? `Checked in at ${r.checkedInAt}` : "You're registered. See you there."}
         </Notice>
         <div className="flex items-center gap-4">
-          {props.qrSvg && <div className="w-[112px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line [&>svg]:size-full" role="img" aria-label="Entry QR code" dangerouslySetInnerHTML={{ __html: props.qrSvg }} />}
+          {props.qrSvg && (
+            <div className="w-[112px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={svgSrc(props.qrSvg)} alt="Entry QR code" className="block aspect-square w-full" />
+            </div>
+          )}
           <div className="min-w-0 space-y-1">
             <p className="eyebrow">Pass</p>
             <p className="font-mono text-[16px] font-medium tracking-[0.12em]">{r.passCode}</p>

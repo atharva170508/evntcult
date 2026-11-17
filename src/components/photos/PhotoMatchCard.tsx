@@ -35,7 +35,7 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
               referrerPolicy="no-referrer"
               onLoad={() => setLoaded(true)}
               onError={onError}
-              className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              className="size-full object-cover transition-transform duration-500"
             />
           </>
         ) : (
@@ -45,7 +45,7 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
             </span>
           </div>
         )}
-        <span className="absolute left-2.5 top-2.5 rounded-[10px] bg-white/95 px-2.5 py-1 font-mono text-[11.5px] font-medium tabular-nums text-ink shadow-[0_1px_2px_rgba(20,22,27,0.2)]">
+        <span className="absolute left-2.5 top-2.5 rounded-xl bg-white/95 px-2.5 py-1 font-mono text-[11.5px] font-medium tabular-nums text-ink shadow-[0_1px_2px_rgba(20,22,27,0.2)]">
           {pct}% Match
         </span>
       </div>
@@ -54,7 +54,7 @@ export function PhotoMatchCard({ match, index }: { match: PhotoMatch; index: num
           href={match.downloadUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-9 w-full items-center justify-center gap-1.5 rounded-[10px] bg-night px-3 text-[13px] font-medium text-white shadow-button transition-colors hover:bg-night-3"
+          className="flex h-9 w-full items-center justify-center gap-1.5 rounded-xl bg-night px-3 text-[13px] font-medium text-white shadow-button transition-colors hover:bg-night-3"
         >
           <Download className="size-4" aria-hidden /> Download full HD
           <span className="sr-only">, photo {index + 1}, opens a download from Google Drive</span>

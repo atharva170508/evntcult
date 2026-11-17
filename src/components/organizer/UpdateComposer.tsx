@@ -54,7 +54,7 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
           <label
             key={k.value}
             className={cn(
-              "cursor-pointer rounded-[10px] px-3 py-1.5 text-center text-[13px] font-medium transition-[background-color,color,box-shadow] duration-fast focus-within:ring-2 focus-within:ring-ink",
+              "cursor-pointer rounded-xl px-3 py-1.5 text-center text-[13px] font-medium transition-[background-color,color,box-shadow] duration-fast focus-within:ring-2 focus-within:ring-ink",
               kind === k.value ? "bg-surface text-ink shadow-card" : "text-ink-muted hover:text-ink",
             )}
           >

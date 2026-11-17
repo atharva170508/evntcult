@@ -7,6 +7,7 @@ import { LogoIcon } from "@/components/brand/MissingE";
 import { buttonClass } from "@/components/ui/Button";
 import { formatINR } from "@/lib/money";
 import { fmtDate, fmtTime } from "@/lib/utils";
+import { svgSrc } from "@/lib/svg-src";
 
 const payTone = { PAID: "live", PENDING: "warn", FAILED: "danger", REFUNDED: "neutral", WAIVED: "neutral", NOT_REQUIRED: "neutral" } as const;
 const payLabel = { PAID: "Paid", PENDING: "Payment pending", FAILED: "Payment failed", REFUNDED: "Refunded", WAIVED: "Fee waived", NOT_REQUIRED: "Free entry" } as const;
@@ -32,7 +33,10 @@ export async function PassCard({ pass }: { pass: NextUp }) {
       <div className="flex flex-1 flex-col px-5 pt-5">
         <p className="truncate text-h4 font-semibold">{pass.title}</p>
         <div className="mx-auto mt-5 w-full max-w-[184px] rounded-xl bg-white p-3 ring-1 ring-line">
-          <div className="aspect-square w-full [&>svg]:size-full" role="img" aria-label="Entry QR code" dangerouslySetInnerHTML={{ __html: svg }} />
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={svgSrc(svg)} alt="Entry QR code" className="block aspect-square w-full" />
+          </>
         </div>
         <p className="mt-3 text-center font-mono text-[13px] tracking-[0.16em] text-ink-2">{pass.passSerial}</p>
       </div>

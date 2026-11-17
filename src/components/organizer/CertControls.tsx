@@ -26,7 +26,7 @@ export function CertPanel({ eventId, issued, checkedIn, enabled }: { eventId: st
   return (
     <div className="flex flex-wrap items-center gap-3">
       <span className="text-[14px]"><b className="font-mono font-medium tabular-nums">{issued}</b> issued · <span className="font-mono tabular-nums">{checkedIn}</span> checked in</span>
-      <button disabled={busy} onClick={() => run(`/api/events/${eventId}/certificates/issue`)} className="inline-flex h-8 items-center rounded-[10px] bg-night px-3.5 text-[13px] font-medium text-white shadow-button transition-colors hover:bg-night-3 disabled:opacity-50">
+      <button disabled={busy} onClick={() => run(`/api/events/${eventId}/certificates/issue`)} className="inline-flex h-8 items-center rounded-xl bg-night px-3.5 text-[13px] font-medium text-white shadow-button transition-colors hover:bg-night-3 disabled:opacity-50">
         Issue certificates
       </button>
       <label className="flex items-center gap-2 text-[13px]">
@@ -58,7 +58,7 @@ export function AttendeeCert({ regId, certs }: { regId: string; certs: { id: str
   return (
     <div className="flex flex-wrap items-center gap-2 text-[12px]">
       {certs.map((c) => (
-        <span key={c.id} className="inline-flex h-6 items-center gap-1.5 rounded-[10px] bg-sunken px-2.5 capitalize text-ink-2">
+        <span key={c.id} className="inline-flex h-6 items-center gap-1.5 rounded-xl bg-sunken px-2.5 capitalize text-ink-2">
           {c.kind}
           <button disabled={busy} aria-label={`Revoke ${c.kind} certificate`} onClick={() => confirm(`Revoke this ${c.kind} certificate?`) && run(`/api/certificates/${c.id}/revoke`)} className="font-medium text-ink-muted hover:text-danger">×</button>
         </span>
@@ -69,7 +69,7 @@ export function AttendeeCert({ regId, certs }: { regId: string; certs: { id: str
           value=""
           disabled={busy}
           onChange={(e) => e.target.value && run(`/api/registrations/${regId}/certificate`, { kind: e.target.value })}
-          className="h-6 rounded-[10px] bg-surface px-2 text-[12px] shadow-card"
+          className="h-6 rounded-xl bg-surface px-2 text-[12px] shadow-card"
         >
           <option value="">Add</option>
           {missing.map(([k, l]) => (

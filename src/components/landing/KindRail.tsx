@@ -42,7 +42,7 @@ export function KindRail() {
             <k.icon className="size-6 transition-transform duration-base ease-out group-hover:-translate-y-0.5" strokeWidth={1.6} aria-hidden />
             {k.label}
             {active ? (
-              <m.span layoutId="kind-underline" aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] bg-ink" transition={{ duration: 0.45, ease: EASE }} />
+              <m.span layoutId="kind-underline" aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] bg-ink" transition={{ duration: 0.25, ease: EASE }} />
             ) : (
               <span aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] bg-line-strong opacity-0 transition-opacity group-hover:opacity-100" />
             )}

@@ -99,7 +99,7 @@ export function PaymentCell({ regId, paid, method, refCode, utr }: { regId: stri
             role="radio"
             aria-checked={how === m}
             onClick={() => setHow(m)}
-            className={cn("h-6 rounded-[10px] px-2.5 text-[12px] font-medium transition-colors", how === m ? "bg-surface text-ink shadow-card" : "text-ink-muted")}
+            className={cn("h-6 rounded-xl px-2.5 text-[12px] font-medium transition-colors", how === m ? "bg-surface text-ink shadow-card" : "text-ink-muted")}
           >
             {m === "upi" ? "UPI" : "Cash"}
           </button>

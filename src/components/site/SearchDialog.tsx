@@ -2,8 +2,16 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, CalendarDays, Search, Sparkles, Ticket, X } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarDays,
+  Search,
+  Sparkles,
+  Ticket,
+  X,
+} from "lucide-react";
 import { CATEGORY_NAMES } from "./categories";
+import { ModalDialog } from "@/components/ui/ModalDialog";
 
 const QUICK = [
   { label: "Happening today", href: "/events?when=today", icon: CalendarDays },
@@ -15,22 +23,21 @@ const QUICK = [
  * Command search. Opens from the header, Ctrl/⌘ K or "/". Typing and Enter searches events;
  * the shortcuts below jump straight into a filtered list.
  */
-export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function SearchDialog({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!open) return;
     const t = window.setTimeout(() => input.current?.focus(), 30);
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", onKey);
-    document.documentElement.style.overflow = "hidden";
-    return () => {
-      window.clearTimeout(t);
-      document.removeEventListener("keydown", onKey);
-      document.documentElement.style.overflow = "";
-    };
-  }, [open, onClose]);
+    return () => window.clearTimeout(t);
+  }, [open]);
 
   if (!open) return null;
 
@@ -40,8 +47,16 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
   };
 
   return (
-    <div className="fixed inset-0 z-[60] print:hidden" role="dialog" aria-modal="true" aria-label="Search events">
-      <button aria-label="Close search" onClick={onClose} className="absolute inset-0 bg-night/45 backdrop-blur-[3px] motion-safe:animate-fade-in" />
+    <ModalDialog
+      label="Search events"
+      onClose={onClose}
+      className="print:hidden"
+    >
+      <button
+        aria-label="Close search"
+        onClick={onClose}
+        className="absolute inset-0 bg-night/45 backdrop-blur-[3px] motion-safe:animate-fade-in"
+      />
       <div className="relative mx-auto mt-0 w-full max-w-[640px] px-0 sm:mt-[12vh] sm:px-4">
         <div className="overflow-hidden bg-white shadow-pop motion-safe:animate-scale-in sm:rounded-[20px]">
           <form
@@ -62,13 +77,20 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
               aria-label="Search events"
               className="h-16 min-w-0 flex-1 bg-transparent text-[17px] text-ink outline-none placeholder:text-ink-subtle [&::-webkit-search-cancel-button]:hidden"
             />
-            <button type="button" onClick={onClose} className="grid size-9 shrink-0 place-items-center rounded-[10px] text-ink-muted transition-colors hover:bg-sunken hover:text-ink" aria-label="Close">
+            <button
+              type="button"
+              onClick={onClose}
+              className="grid size-9 shrink-0 place-items-center rounded-xl text-ink-muted transition-colors hover:bg-sunken hover:text-ink"
+              aria-label="Close"
+            >
               <X className="size-[18px]" aria-hidden />
             </button>
           </form>
 
           <div className="max-h-[70dvh] overflow-y-auto p-3">
-            <p className="px-3 pb-2 pt-2 text-[12.5px] font-semibold text-ink-subtle">Jump to</p>
+            <p className="px-3 pb-2 pt-2 text-[12.5px] font-semibold text-ink-subtle">
+              Jump to
+            </p>
             <ul>
               {QUICK.map((q) => (
                 <li key={q.href}>
@@ -76,22 +98,27 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
                     onClick={() => go(q.href)}
                     className="group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-[15px] font-medium text-ink transition-colors hover:bg-sunken focus-visible:bg-sunken"
                   >
-                    <span className="grid size-9 place-items-center rounded-[10px] bg-sunken text-ink-2 transition-colors group-hover:bg-white">
+                    <span className="grid size-9 place-items-center rounded-xl bg-sunken text-ink-2 transition-colors group-hover:bg-white">
                       <q.icon className="size-[17px]" aria-hidden />
                     </span>
                     {q.label}
-                    <ArrowRight className="ml-auto size-4 text-ink-subtle opacity-0 transition-opacity group-hover:opacity-100" aria-hidden />
+                    <ArrowRight
+                      className="ml-auto size-4 text-ink-subtle opacity-0 transition-opacity group-hover:opacity-100"
+                      aria-hidden
+                    />
                   </button>
                 </li>
               ))}
             </ul>
-            <p className="px-3 pb-2 pt-4 text-[12.5px] font-semibold text-ink-subtle">Browse by kind</p>
+            <p className="px-3 pb-2 pt-4 text-[12.5px] font-semibold text-ink-subtle">
+              Browse by kind
+            </p>
             <div className="flex flex-wrap gap-2 px-3 pb-3">
               {Object.entries(CATEGORY_NAMES).map(([k, label]) => (
                 <button
                   key={k}
                   onClick={() => go(`/events?type=${k}`)}
-                  className="h-9 rounded-[10px] border border-line px-3.5 text-[14px] font-medium text-ink-2 transition-colors hover:border-ink-subtle hover:text-ink"
+                  className="h-9 rounded-xl border border-line px-3.5 text-[14px] font-medium text-ink-2 transition-colors hover:border-ink-subtle hover:text-ink"
                 >
                   {label}
                 </button>
@@ -108,6 +135,6 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
           </div>
         </div>
       </div>
-    </div>
+    </ModalDialog>
   );
 }

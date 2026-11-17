@@ -25,7 +25,7 @@ const mono = localFont({
 
 export const metadata: Metadata = {
   title: { default: "EvntCult — Every event, one pass", template: "%s · EvntCult" },
-  description: "Everything happening on campus, in one pass. Find events, register in seconds, walk in with a scan.",
+  description: "Every campus event, one pass. Find what's on, register, and walk in with a scan.",
   appleWebApp: { capable: true, title: "EvntCult", statusBarStyle: "default" },
 };
 

@@ -4,7 +4,7 @@
  * organizer components; every rule below is new.
  */
 .o-root {
-  --page: #ffffff;
+  --page: #fffef6;
   --panel: #ffffff;
   --field: #ffffff;
   --sunken: #f7f7f7;
@@ -50,7 +50,7 @@
   position: sticky; top: var(--header-h); z-index: 20;
   min-height: var(--toolbar-h); display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px;
   margin: 0 calc(-1 * clamp(16px, 4vw, 40px)); padding: 12px clamp(16px, 4vw, 40px);
-  background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(16px) saturate(1.5);
+  background: var(--page);
   border-bottom: 1px solid var(--hair);
 }
 .o-crumb { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 13.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

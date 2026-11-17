@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import QRCode from "qrcode";
 import { Odometer } from "./primitives";
+import { svgSrc } from "@/lib/svg-src";
 
 export interface TicketProps {
   category: string | null;
@@ -51,7 +52,8 @@ export function Ticket(p: TicketProps) {
       </div>
       <div className="o-ticket-right">
         <div className="o-qr" aria-label={qr ? "QR code" : "QR code appears after the first save"}>
-          {qr ? <span style={{ display: "block", width: "100%", height: "100%" }} dangerouslySetInnerHTML={{ __html: qr }} /> : null}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {qr ? <img src={svgSrc(qr)} alt="Pass QR code" style={{ display: "block", width: "100%", height: "100%" }} /> : null}
         </div>
         {has(p.passCode) && <div className="o-ticket-code">{p.passCode}</div>}
         <div className="o-ticket-price">

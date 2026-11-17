@@ -88,7 +88,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
   return (
     <div className="pb-8">
       {/* Toolbar */}
-      <div className="sticky top-[var(--header-h)] z-20 -mx-gutter flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-line bg-canvas/85 px-gutter py-3 backdrop-blur-xl">
+      <div className="sticky top-[var(--header-h)] z-20 -mx-gutter flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-line bg-canvas px-gutter py-3">
         <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1.5 text-[13.5px] text-ink-muted">
           <Link href="/organizer" className="transition-colors hover:text-ink">
             Events

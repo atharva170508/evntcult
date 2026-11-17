@@ -510,7 +510,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
           <h1 className="truncate text-[19px] font-semibold leading-tight tracking-[-0.01em]">{event.title}</h1>
         </div>
         <span
-          className={`inline-flex shrink-0 items-center gap-1.5 rounded-[10px] px-2.5 py-1 text-[12px] font-semibold ${online ? "bg-[#0fa968]/20 text-[#5ee0a5]" : "bg-[#f59e0b]/20 text-[#fbbf5a]"}`}
+          className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl px-2.5 py-1 text-[12px] font-semibold ${online ? "bg-[#0fa968]/20 text-[#5ee0a5]" : "bg-[#f59e0b]/20 text-[#fbbf5a]"}`}
           role="status"
         >
           {online ? <Wifi className="size-3.5" /> : <CloudOff className="size-3.5" />}
@@ -550,7 +550,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
             <Camera className="size-10 text-white/60" />
             {cameraError ? <p className="text-[14px] text-[#ffb4b6]">{cameraError}</p> : <p className="text-[15px] text-white/70">Point the camera at a pass QR code.</p>}
-            <button onClick={startCamera} disabled={camera === "starting"} className="inline-flex items-center gap-2 h-12 rounded-[10px] bg-white px-6 text-[15px] font-medium text-[#222222] transition-transform active:scale-[0.98] disabled:opacity-60">
+            <button onClick={startCamera} disabled={camera === "starting"} className="inline-flex items-center gap-2 h-12 rounded-xl bg-white px-6 text-[15px] font-medium text-[#222222] transition-transform active:scale-[0.98] disabled:opacity-60">
               {camera === "starting" ? <Loader2 className="size-4 animate-spin" /> : <Camera className="size-4" />}
               {camera === "error" ? "Try again" : "Start camera"}
             </button>
@@ -574,7 +574,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
                       <span className="block text-[12px] opacity-85">{line.note ?? (line.claimedAt ? `claimed ${fmtTime(new Date(line.claimedAt))}` : line.left === 0 ? "none left" : "not claimed")}</span>
                     </span>
                     {!line.claimedAt && line.left !== 0 && (
-                      <button onClick={() => give(line, verdict.token!)} className="shrink-0 rounded-[10px] bg-white px-4 py-1.5 text-[13px] font-bold text-black">
+                      <button onClick={() => give(line, verdict.token!)} className="shrink-0 rounded-xl bg-white px-4 py-1.5 text-[13px] font-bold text-black">
                         Give
                       </button>
                     )}
@@ -594,7 +594,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
               </div>
             ) : (
               (verdict.color !== "green" || !!verdict.merch?.length) && (
-                <button onClick={() => setVerdict(null)} className="mt-2 rounded-[10px] bg-black/25 px-6 py-3 text-[15px] font-bold">
+                <button onClick={() => setVerdict(null)} className="mt-2 rounded-xl bg-black/25 px-6 py-3 text-[15px] font-bold">
                   Scan next
                 </button>
               )

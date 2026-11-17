@@ -7,13 +7,13 @@ import { useRef } from "react";
  * Leans its child toward the pointer (at most `strength` px) and springs back on leave.
  * Pointer devices only; still on touch and under reduced motion.
  */
-export function Magnetic({ children, strength = 10, className }: { children: React.ReactNode; strength?: number; className?: string }) {
+export function Magnetic({ children, strength = 6, className }: { children: React.ReactNode; strength?: number; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const reduce = useReducedMotion();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 260, damping: 18, mass: 0.4 });
-  const sy = useSpring(y, { stiffness: 260, damping: 18, mass: 0.4 });
+  const sx = useSpring(x, { stiffness: 300, damping: 34, mass: 0.4 });
+  const sy = useSpring(y, { stiffness: 300, damping: 34, mass: 0.4 });
 
   const move = (e: React.PointerEvent) => {
     if (reduce || e.pointerType !== "mouse" || !ref.current) return;

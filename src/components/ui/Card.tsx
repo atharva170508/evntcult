@@ -35,7 +35,7 @@ export function Card({ eyebrow, title, icon: Icon, action, className, bodyClassN
           {action && (
             <Link
               href={action.href}
-              className="group -mr-2 inline-flex shrink-0 items-center gap-1 rounded-[10px] px-2.5 py-1.5 text-[13px] font-medium text-ink-muted transition-colors duration-fast hover:bg-ink/[0.05] hover:text-ink"
+              className="group -mr-2 inline-flex shrink-0 items-center gap-1 rounded-xl px-2.5 py-1.5 text-[13px] font-medium text-ink-muted transition-colors duration-fast hover:bg-ink/[0.05] hover:text-ink"
             >
               {action.label}
               <ArrowRight className="size-3.5 transition-transform duration-base ease-out group-hover:translate-x-0.5" aria-hidden />

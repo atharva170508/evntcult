@@ -10,6 +10,7 @@ import { siteHost } from "@/lib/organizer/page-data";
 import { slugify } from "@/lib/organizer/shared";
 import { PrintButton } from "@/components/certificates/PrintButton";
 import "./certificate.css";
+import { svgSrc } from "@/lib/svg-src";
 
 export const dynamic = "force-dynamic";
 
@@ -61,7 +62,10 @@ export default async function CertificatePage({ params }: Props) {
               <p className="cert-org">{c.organizerName}, Organizer</p>
             </div>
             <div className="cert-check">
-              <div className="cert-qr" dangerouslySetInnerHTML={{ __html: qr }} />
+              <div className="cert-qr">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={svgSrc(qr)} alt="Verification QR code" style={{ display: "block", width: "100%", height: "100%" }} />
+              </div>
               <div>
                 <p className="cert-code">{c.publicCode}</p>
                 <p className="cert-at">

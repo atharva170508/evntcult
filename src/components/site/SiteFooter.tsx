@@ -47,10 +47,10 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
           {columns.map((c, i) => (
             <div key={c.title} className={i > 0 ? "border-t border-line-strong pt-8 md:border-0 md:pt-0" : undefined}>
               <h2 className="text-[14px] font-semibold text-ink">{c.title}</h2>
-              <ul className="mt-4 space-y-3">
+              <ul className="mt-2">
                 {c.links.map((l) => (
                   <li key={l.href}>
-                    <Link href={l.href} className="text-[14px] text-ink-2 hover:underline hover:underline-offset-2">
+                    <Link href={l.href} className="inline-flex min-h-11 items-center text-[14px] text-ink-2 hover:underline hover:underline-offset-2">
                       {l.label}
                     </Link>
                   </li>

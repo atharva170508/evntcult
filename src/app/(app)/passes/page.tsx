@@ -15,6 +15,7 @@ import { PageHero } from "@/components/brand/PageHero";
 import { SavePassButton } from "@/components/passes/SavePassButton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
+import { svgSrc } from "@/lib/svg-src";
 
 export const metadata: Metadata = { title: "My passes" };
 export const dynamic = "force-dynamic";
@@ -169,7 +170,10 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
 
         <div className="flex gap-4">
           {r.status === "registered" && qrSvg ? (
-            <div className="w-[116px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line [&>svg]:size-full" role="img" aria-label={`QR code for pass ${r.pass_code}`} dangerouslySetInnerHTML={{ __html: qrSvg }} />
+            <div className="w-[116px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={svgSrc(qrSvg)} alt={`QR code for pass ${r.pass_code}`} className="block aspect-square w-full" />
+            </div>
           ) : (
             <div className="grid w-[116px] shrink-0 place-items-center rounded-xl border border-dashed border-line-strong bg-sunken/50 p-3 text-center text-[11.5px] text-ink-muted">
               <Hourglass className="mb-1 size-4" aria-hidden />

@@ -63,7 +63,7 @@ export default async function VaultPage() {
                 <li key={id} className={i === 0 ? "col-span-2 row-span-2 overflow-hidden rounded-card bg-sunken" : "aspect-square overflow-hidden rounded-tile bg-sunken"}>
                   <a href={`/api/photos/${id}`} target="_blank" rel="noopener" aria-label="Open full size" className="group block size-full">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/api/photos/${id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-slow ease-out group-hover:scale-[1.03]" />
+                    <img src={`/api/photos/${id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-slow ease-out" />
                   </a>
                 </li>
               ))}

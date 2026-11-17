@@ -84,7 +84,7 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
                 href={href(range.key, t.view)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "rounded-[10px] px-4 py-1.5 text-[13.5px] font-medium transition-[background-color,color,box-shadow] duration-fast",
+                  "rounded-xl px-4 py-1.5 text-[13.5px] font-medium transition-[background-color,color,box-shadow] duration-fast",
                   active ? "bg-surface text-ink shadow-card" : "text-ink-muted hover:text-ink",
                 )}
               >
@@ -147,16 +147,16 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
         </div>
         <p className="flex flex-wrap gap-x-5 gap-y-1.5 border-t border-line px-4 py-3 text-[12px] text-ink-muted">
           <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-[3px] bg-night" /> Going
+            <span className="size-2.5 rounded-sm bg-night" /> Going
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-[3px] bg-warn-soft ring-1 ring-inset ring-warn/30" /> Waitlist
+            <span className="size-2.5 rounded-sm bg-warn-soft ring-1 ring-inset ring-warn/30" /> Waitlist
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-[3px] bg-accent-soft ring-1 ring-inset ring-accent/30" /> Hosting
+            <span className="size-2.5 rounded-sm bg-accent-soft ring-1 ring-inset ring-accent/30" /> Hosting
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-[3px] bg-sunken ring-1 ring-inset ring-line-strong" /> All events
+            <span className="size-2.5 rounded-sm bg-sunken ring-1 ring-inset ring-line-strong" /> All events
           </span>
         </p>
       </section>

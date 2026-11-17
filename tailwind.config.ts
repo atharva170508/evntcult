@@ -108,9 +108,10 @@ const config: Config = {
         apple: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       transitionDuration: {
-        fast: "160ms",
-        base: "240ms",
-        slow: "420ms",
+        /* antislop-design motion table: hover 150ms, entrances 200–250ms. */
+        fast: "150ms",
+        base: "200ms",
+        slow: "250ms",
       },
       keyframes: {
         "caret-blink": {

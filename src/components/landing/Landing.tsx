@@ -4,17 +4,13 @@ import { Bell, Check, Plus, ScanLine, Search } from "lucide-react";
 import type { LandingData } from "@/lib/data/landing";
 import { Accordion } from "@/components/motion/Accordion";
 import { Magnetic } from "@/components/motion/Magnetic";
-import { Entrance, MaskedLines } from "@/components/motion/MaskedLines";
 import { Reveal } from "@/components/motion/Reveal";
 import { Spotlight } from "@/components/motion/Spotlight";
 import { EventCard } from "./EventCard";
 import { KindRail } from "./KindRail";
 import { Row } from "./Row";
-import { AppBand, Closing, Featured, HowItWorks, KindBento, Numbers, Ticker, Venues } from "./Sections";
-
-const cta =
-  "inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-lavender px-6 text-[16px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink transition-[background-color,transform] duration-fast hover:bg-lavender-hover active:scale-[0.97]";
-const ghost = "inline-flex h-12 items-center justify-center gap-2 rounded-xl px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-[background-color,transform] duration-fast hover:bg-ink/[0.04] active:scale-[0.97]";
+import { AppBand, Closing, Featured, Hero, HowItWorks, KindBento, Numbers, Venues } from "./Sections";
+import { EventArt } from "@/components/ui/EventArt";
 
 const FAQ: [string, string][] = [
   ["Do I need to print my pass?", "No. Show the QR on your phone at the gate. A saved image of it works without internet too."],
@@ -27,17 +23,47 @@ const FAQ: [string, string][] = [
 
 const nf = new Intl.NumberFormat("en-IN");
 
+/** A shelf of events. Browsing content is shown immediately — no entrance animation (antislop MO1). */
 const shelf = (r: LandingData["rows"][number]) => (
-  <Reveal key={r.key}>
-    <Row title={r.title} href={r.href}>
-      {r.events.map((e) => (
-        <li key={e.id}>
-          <EventCard e={e} />
-        </li>
-      ))}
-    </Row>
-  </Reveal>
+  <Row key={r.key} title={r.title} href={r.href}>
+    {r.events.map((e) => (
+      <li key={e.id}>
+        <EventCard e={e} />
+      </li>
+    ))}
+  </Row>
 );
+
+/** Nothing scheduled and nothing recent: say so, and offer the next step. */
+function EmptyCampus({ isOrganizer }: { isOrganizer: boolean }) {
+  return (
+    <section aria-labelledby="empty-h" className="my-6 grid overflow-hidden rounded-3xl border border-line-strong bg-white md:grid-cols-[1fr_1.2fr]">
+      <div className="relative min-h-[200px]">
+        <EventArt accent="pink" seed="empty-campus" scrim={false} />
+      </div>
+      <div className="p-8 md:p-12">
+        <h2 id="empty-h" className="font-display text-[44px] leading-[0.95] tracking-[-0.03em] text-ink">
+          The board is <em>clear.</em>
+        </h2>
+        <p className="mt-4 max-w-[40ch] text-[16px] text-ink-2">No events are scheduled right now. New ones appear here the moment an organizer publishes them.</p>
+        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+          {isOrganizer ? (
+            <Link href="/organizer/events/new" className="inline-flex h-12 items-center gap-2 rounded-xl bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover">
+              <Plus className="size-4" strokeWidth={2.6} aria-hidden /> Create an event
+            </Link>
+          ) : (
+            <Link href="/calendar" className="inline-flex h-12 items-center rounded-xl bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover">
+              Open the calendar
+            </Link>
+          )}
+          <a href="mailto:evntcult@gmail.com?subject=Event%20on%20EvntCult" className="text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] hover:decoration-ink">
+            Tell us about an event
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 /** The homepage: welcome, what's on, the featured event, shelves, kinds, venues, hosting, app, questions. */
 export function Landing({ data, signedIn = false, isOrganizer = false }: { data: LandingData; signedIn?: boolean; isOrganizer?: boolean }) {
@@ -45,28 +71,7 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
 
   return (
     <div className="pb-6">
-      {!signedIn && (
-        <section aria-labelledby="hero-h" className="relative pb-10 pt-12 text-center md:pb-16 md:pt-20">
-          <h1 id="hero-h" className="mx-auto max-w-[13ch] font-display text-[clamp(56px,9vw,112px)] leading-[0.92] tracking-[-0.035em]">
-            <MaskedLines lines={["Every event,", <em key="l2">one pass.</em>]} />
-          </h1>
-          <Entrance delay={0.45}>
-            <p className="mx-auto mt-7 max-w-[34ch] text-[18px] leading-snug text-ink-2 md:text-[20px]">Find it, register in a tap, walk in with a scan.</p>
-          </Entrance>
-          <Entrance delay={0.6} className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Magnetic>
-              <Link href="/signin?mode=signup" className={cta}>
-                Get your pass
-              </Link>
-            </Magnetic>
-            <Link href="/events" className={ghost}>
-              Browse events
-            </Link>
-          </Entrance>
-        </section>
-      )}
-
-      <Ticker events={data.ticker} />
+      {!signedIn && <Hero upNext={data.ticker} recent={data.recent} />}
 
       {/* Phones: the header has no room for the big bar, so search lives here. */}
       <form action="/events" method="get" role="search" className="pt-5 md:hidden">
@@ -76,7 +81,7 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
         </label>
       </form>
 
-      <div className="border-b border-line">
+      <div className="mt-6 border-b border-line">
         <Suspense>
           <KindRail />
         </Suspense>
@@ -85,14 +90,10 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
       {data.featured && <Featured e={data.featured} />}
 
       <div className="pt-6">
-        {data.rows.length === 0 ? (
-          <p className="py-24 text-center text-[16px] text-ink-muted">No upcoming events yet.</p>
-        ) : (
-          data.rows.slice(0, 2).map(shelf)
-        )}
+        {data.rows.length === 0 ? <EmptyCampus isOrganizer={isOrganizer} /> : data.rows.slice(0, 2).map(shelf)}
       </div>
 
-      {!signedIn && <HowItWorks />}
+      <HowItWorks />
 
       <KindBento kinds={data.kinds} />
 
@@ -127,14 +128,14 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
 
           <Reveal className="mt-12 grid gap-4 md:grid-cols-4 md:grid-rows-[auto_auto]">
             {/* Scanner — the large tile */}
-            <Spotlight className="flex flex-col overflow-hidden rounded-[24px] bg-white/[0.04] p-7 shadow-glow md:col-span-2 md:row-span-2">
+            <Spotlight className="flex flex-col overflow-hidden rounded-3xl bg-white/[0.04] p-7 shadow-glow md:col-span-2 md:row-span-2">
               <div className="relative z-[2]">
                 <h3 className="text-[22px] font-semibold text-cream">Passes and a gate scanner</h3>
                 <p className="mt-2 max-w-[36ch] text-[15px] leading-relaxed text-cream/65">Every guest gets a pass. Any phone becomes the door, and it keeps working offline.</p>
               </div>
               <div className="relative z-[2] mt-8 flex flex-1 items-end justify-center">
-                <div className="relative w-[230px] rounded-[30px] border border-white/10 bg-[#111] p-3 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)]">
-                  <div className="rounded-[22px] bg-[#1d1d1d] p-4">
+                <div className="relative w-[230px] rounded-3xl border border-white/10 bg-[#111] p-3 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)]">
+                  <div className="rounded-[20px] bg-[#1d1d1d] p-4">
                     <div className="flex items-center justify-between text-[11px] font-semibold text-cream/60">
                       <span>Gate</span>
                       <span className="inline-flex items-center gap-1 text-[#5EE0A8]">
@@ -143,7 +144,7 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
                     </div>
                     <div className="relative mx-auto mt-4 grid size-[132px] grid-cols-7 gap-[3px] overflow-hidden rounded-xl bg-white p-2.5" aria-hidden>
                       {Array.from({ length: 49 }, (_, i) => (
-                        <span key={i} className={(i * 7 + (i % 5) * 3) % 3 === 0 || [0, 1, 7, 8, 5, 6, 12, 13, 35, 36, 42, 43].includes(i) ? "rounded-[1px] bg-ink" : "bg-transparent"} />
+                        <span key={i} className={(i * 7 + (i % 5) * 3) % 3 === 0 || [0, 1, 7, 8, 5, 6, 12, 13, 35, 36, 42, 43].includes(i) ? "rounded-sm bg-ink" : "bg-transparent"} />
                       ))}
                       <span className="absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-accent/0 via-accent/40 to-accent/0 opacity-0 group-hover/spot:opacity-100 motion-safe:group-hover/spot:animate-[scan_1.6s_ease-in-out_infinite]" />
                     </div>
@@ -161,7 +162,7 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
             </Spotlight>
 
             {/* UPI */}
-            <Spotlight className="overflow-hidden rounded-[24px] bg-white/[0.04] p-7 shadow-glow">
+            <Spotlight className="overflow-hidden rounded-3xl bg-white/[0.04] p-7 shadow-glow">
               <div className="relative z-[2]">
                 <h3 className="text-[18px] font-semibold text-cream">Free or paid</h3>
                 <p className="mt-1.5 text-[14px] text-cream/65">Collect by UPI, confirm from one list.</p>
@@ -178,7 +179,7 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
             </Spotlight>
 
             {/* Updates */}
-            <Spotlight className="overflow-hidden rounded-[24px] bg-white/[0.04] p-7 shadow-glow">
+            <Spotlight className="overflow-hidden rounded-3xl bg-white/[0.04] p-7 shadow-glow">
               <div className="relative z-[2]">
                 <h3 className="text-[18px] font-semibold text-cream">One message, every pass</h3>
                 <p className="mt-1.5 text-[14px] text-cream/65">Time or venue changed? Everyone hears.</p>
@@ -193,7 +194,7 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
             </Spotlight>
 
             {/* After the night */}
-            <Spotlight className="overflow-hidden rounded-[24px] bg-white/[0.04] p-7 shadow-glow md:col-span-2">
+            <Spotlight className="overflow-hidden rounded-3xl bg-white/[0.04] p-7 shadow-glow md:col-span-2">
               <div className="relative z-[2] flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h3 className="text-[18px] font-semibold text-cream">After the night</h3>
@@ -205,7 +206,7 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
                       <span key={c} className="size-11 rounded-lg" style={{ background: c }} />
                     ))}
                   </div>
-                  <div className="w-[150px] rotate-[3deg] rounded-xl bg-cream p-3 text-ink shadow-[0_20px_40px_-16px_rgba(0,0,0,0.7)] transition-transform duration-slow ease-out group-hover/spot:rotate-0">
+                  <div className="w-[150px] rotate-[3deg] rounded-xl bg-cream p-3 text-ink shadow-[0_20px_40px_-16px_rgba(0,0,0,0.7)] transition-transform duration-slow ease-out">
                     <p className="text-[9px] font-semibold text-ink-muted">Certificate of participation</p>
                     <p className="mt-1 font-display text-[18px] italic leading-none">Your name</p>
                     <div className="mt-3 flex items-center justify-between">
@@ -217,13 +218,13 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
               </div>
             </Spotlight>
           </Reveal>
+          <p className="mt-4 text-[12.5px] text-cream/50">Example screens. Your own events show your guests, payments and messages.</p>
         </div>
       </section>
 
       <AppBand />
 
-      {!signedIn && (
-        <section aria-labelledby="faq-h" className="grid gap-10 py-20 md:grid-cols-[1fr_1.4fr] md:py-28">
+      <section aria-labelledby="faq-h" className="grid gap-10 py-20 md:grid-cols-[1fr_1.4fr] md:py-28">
           <Reveal>
             <h2 id="faq-h" className="font-display text-[clamp(44px,6vw,72px)] leading-none tracking-[-0.03em]">
               Good <em>questions.</em>
@@ -233,7 +234,6 @@ export function Landing({ data, signedIn = false, isOrganizer = false }: { data:
             <Accordion items={FAQ} />
           </Reveal>
         </section>
-      )}
 
       {!signedIn && <Closing />}
     </div>

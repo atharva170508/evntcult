@@ -6,6 +6,7 @@ import { Check, Copy, Hourglass } from "lucide-react";
 import { Button, buttonClass } from "@/components/ui/Button";
 import { Input, Notice } from "@/components/ui/Field";
 import { formatINR } from "@/lib/money";
+import { svgSrc } from "@/lib/svg-src";
 
 export interface UpiPayProps {
   regId: string;
@@ -70,7 +71,10 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected }: Up
       <div className="space-y-4 p-4">
         {rejected && <Notice tone="danger">The organizer couldn&apos;t find that payment. Check the transaction ID.</Notice>}
         <div className="flex items-center gap-4">
-          <div className="w-[128px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line [&>svg]:size-full" role="img" aria-label="UPI payment QR code" dangerouslySetInnerHTML={{ __html: qrSvg }} />
+          <div className="w-[128px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={svgSrc(qrSvg)} alt="UPI payment QR code" className="block aspect-square w-full" />
+          </div>
           <div className="min-w-0 space-y-2">
             <p className="text-[12.5px] text-ink-muted">Scan with any UPI app, or pay to</p>
             <div className="flex items-center gap-1.5">

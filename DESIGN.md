@@ -224,9 +224,9 @@ Three planes, lit from above.
 2. **Card** — white, a 1px {colors.outline} edge and a 1px white inner highlight on the top edge,
    so the card catches light.
 3. **Float** — menus, the header on scroll, the booking panel: a soft shadow tinted warm
-   (`rgba(60, 40, 10, 0.10)`), never cold grey, plus a backdrop blur for the header.
+   (`rgba(60, 40, 10, 0.10)`), never cold grey. The header is solid cream, never glass.
 
-On hover a card lifts 2px and a soft light follows the cursor across it.
+On hover a card lifts 2px (never scales) and a soft light follows the cursor across it.
 
 ## Shapes
 
@@ -245,7 +245,11 @@ buttons are circles.
   "Search" while you're choosing.
 - **Tabs and category bar:** the current item has an ink underline that slides between items.
 - **Questions:** an accordion whose answers open smoothly; the plus turns into a cross.
-- **Ticker:** a single line of what's on next, gliding under the welcome; pauses on hover.
+- **Hero (visitors):** split — the serif line, one lavender action and a text link on the
+  left; the real "Up next on campus" list on the right (recent events when nothing is
+  scheduled). Never centred with two equal buttons.
+- **Empty states:** designed panels with a cover, a serif line and one next step — "The board is
+  *clear.*", "No passes *yet.*".
 - **Featured event:** the homepage's big card — cover, a live countdown in the serif,
   when/where, a seats bar and the lavender Register.
 - **Bentos:** kinds (one large tile, four small, real counts), hosting (a scanner preview tile
@@ -259,23 +263,32 @@ previews and tabular figures, Linear's top-edge highlight, Superhuman's closing 
 
 ## Motion
 
+Timings follow the antislop-design motion table.
+
 | Role | Duration | Curve |
 |---|---|---|
-| Feedback (hover, press, toggle, tab switch) | 160ms | `cubic-bezier(0.16, 1, 0.3, 1)` |
-| Content (menus, sheets, accordion) | 450ms | same |
-| Reveal (first entrance of a section) | 700ms, 70ms stagger | same |
+| Hover and press | 150ms | `cubic-bezier(0.16, 1, 0.3, 1)` |
+| Entrances (sections, menus, accordion open, tab underline) | 200–250ms | same |
+| Exits | ~170ms | `cubic-bezier(0.4, 0, 1, 1)` (ease-in, faster than entrances) |
+| Route change | 200ms fade | same |
+| Homepage hero lines | 400ms, 80ms apart | same — `OVERRIDE: canonical motion limit → 400ms [craft tier §5]` |
 
-Motion answers people. One out-expo curve everywhere — nothing bounces, nothing lingers. There is **one** orchestrated
+Motion answers people. Only `transform` and `opacity` animate; nothing scales on hover,
+nothing loops, nothing bounces. There is **one** orchestrated
 entrance per page: the homepage welcome rises line by line, sharpening from a slight blur.
 Below the fold, sections appear once as you reach them, never again. Under
 `prefers-reduced-motion` everything is shown in its final state with no movement.
 
 ## Do's and Don'ts
 
+- **Do** run the antislop-design Pre-Delivery Audit (`.claude/skills/antislop-design`) before
+  shipping UI.
 - **Do** keep red for search, the logo and live states only.
 - **Do** put the italic on the whole second phrase of a serif headline.
 - **Do** show real data — counts, seats left, prices — and nothing invented.
 - **Don't** add taglines or explanatory paragraphs; titles are two or three words.
-- **Don't** stack fade-ups on every block or loop anything except the live dot and the ticker.
+- **Don't** animate individual cards or shelves into view; only whole sections, once.
+- **Don't** pair two equal buttons; one primary action, then a text link.
+- **Don't** show sample UI content without an "Example" label.
 - **Don't** use grey shadows, gradients as decoration, or all-caps labels.
 - **Don't** put more than one badge on a card.
