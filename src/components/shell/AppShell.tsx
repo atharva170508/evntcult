@@ -14,7 +14,7 @@ export type { NavViewer };
 
 /**
  * The frame around every page: one header bar, the page, the footer on attendee and public
- * pages, and the phone tab bar for signed-in people. Pages that need full-width bands
+ * pages, and the phone tab bar. Pages that need full-width bands
  * break out of the column with the `.bleed` class.
  */
 export function AppShell({
@@ -59,7 +59,7 @@ export function AppShell({
         {children}
       </main>
       {ws === "attend" && <SiteFooter viewer={viewer} />}
-      {viewer && <TabBar />}
+      <TabBar signedIn={!!viewer} />
       <SearchDialog open={searchOpen} onClose={closeSearch} />
       <EnterCodeDialog open={codeOpen} onClose={() => setCodeOpen(false)} />
     </div>

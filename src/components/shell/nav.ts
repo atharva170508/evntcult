@@ -4,9 +4,7 @@ import {
   CalendarRange,
   Compass,
   House,
-  Images,
   LayoutGrid,
-  MapPinned,
   ShieldCheck,
   Ticket,
   type LucideIcon,
@@ -25,15 +23,25 @@ export interface NavItem {
 /** The three areas of the product. Attend is the default; Host is for running events; Admin is staff-only. */
 export type Workspace = "attend" | "host" | "admin";
 
+/**
+ * The five main destinations, in the header on laptops and the tab bar on phones. Photo Vault,
+ * Venues and Profile live in the account menu.
+ */
 export const ATTEND_NAV: NavItem[] = [
   { href: "/dashboard", label: "Home", icon: House },
   { href: "/events", label: "Discover", icon: Compass },
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
-  { href: "/passes", label: "Passes", icon: Ticket },
-  { href: "/vault", label: "Photos", icon: Images },
+  { href: "/passes", label: "My Passes", short: "Passes", icon: Ticket },
   { href: "/certificates", label: "Certificates", short: "Certs", icon: Award },
-  { href: "/venues", label: "Venues", icon: MapPinned },
 ];
+
+/** Signed-out visitors see the campus calendar on the homepage itself, so Calendar points there. */
+export const VISITOR_HREF: Record<string, string> = { "/calendar": "/dashboard#calendar" };
+
+/** Home stays lit on the homepage only; every other item matches its own section. */
+export function isMainActive(pathname: string, href: string) {
+  return href === "/dashboard" ? pathname === "/dashboard" : pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export const HOST_NAV: NavItem[] = [
   { href: "/organizer", label: "Events", icon: LayoutGrid, exact: true },
@@ -41,14 +49,6 @@ export const HOST_NAV: NavItem[] = [
 ];
 
 export const ADMIN_NAV: NavItem[] = [{ href: "/admin", label: "Overview", icon: ShieldCheck }];
-
-/** Links for signed-out visitors. */
-export const PUBLIC_NAV: { href: string; label: string }[] = [
-  { href: "/events", label: "Discover" },
-  { href: "/dashboard#onepass", label: "OnePass" },
-  { href: "/calendar", label: "Calendar" },
-  { href: "/venues", label: "Venues" },
-];
 
 export function workspaceFor(pathname: string): Workspace {
   if (pathname.startsWith("/admin")) return "admin";

@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import {
-  Award,
   Download,
+  Images,
   KeyRound,
   LogOut,
   MapPinned,
@@ -20,16 +20,17 @@ import { cn, initials } from "@/lib/utils";
 import { m } from "motion/react";
 import { EASE } from "@/components/motion/MotionProvider";
 import { NotificationBell } from "@/components/shell/NotificationBell";
-import { isActive, workspaceFor, type Workspace } from "@/components/shell/nav";
+import { ATTEND_NAV, VISITOR_HREF, isActive, isMainActive, workspaceFor, type Workspace } from "@/components/shell/nav";
 import { BrandLogo } from "./Brand";
 import { ModalDialog } from "@/components/ui/ModalDialog";
 import { CompactSearch, HeaderSearch } from "./HeaderSearch";
 import {
   CalendarIcon,
+  CertificateIcon,
   EventsIcon,
+  HomeIcon,
   HostIcon,
   PassIcon,
-  PhotosIcon,
 } from "./TabIcons";
 
 export interface NavViewer {
@@ -52,12 +53,15 @@ type Tab = {
   exact?: boolean;
 };
 
-const ATTEND_TABS: Tab[] = [
-  { href: "/events", label: "Events", icon: EventsIcon },
-  { href: "/calendar", label: "Calendar", icon: CalendarIcon },
-  { href: "/passes", label: "Passes", icon: PassIcon },
-  { href: "/vault", label: "Photos", icon: PhotosIcon },
-];
+const TAB_ICONS: Record<string, Tab["icon"]> = {
+  "/dashboard": HomeIcon,
+  "/events": EventsIcon,
+  "/calendar": CalendarIcon,
+  "/passes": PassIcon,
+  "/certificates": CertificateIcon,
+};
+/** Home · Discover · Calendar · My Passes · Certificates, with the illustrated icons. */
+const ATTEND_TABS: Tab[] = ATTEND_NAV.map((n) => ({ href: n.href, label: n.label, icon: TAB_ICONS[n.href] }));
 const HOST_TABS: Tab[] = [
   { href: "/organizer", label: "Your events", icon: HostIcon, exact: true },
   { href: "/organizer/calendar", label: "Calendar", icon: CalendarIcon },
@@ -163,20 +167,20 @@ export function SiteHeader({
               ) : (
                 <nav aria-label="Main" className="flex items-center gap-2">
                   {tabs.map((t) => {
-                    const active = isActive(pathname, t);
+                    const active = ws === "attend" ? isMainActive(pathname, t.href) : isActive(pathname, t);
                     return (
                       <Link
                         key={t.href}
-                        href={t.href}
+                        href={!viewer && VISITOR_HREF[t.href] ? VISITOR_HREF[t.href] : t.href}
                         aria-current={active ? "page" : undefined}
                         className={cn(
-                          "group relative flex h-14 items-center gap-2 px-3 text-[15px] transition-colors duration-fast",
+                          "group relative flex h-14 items-center gap-2 whitespace-nowrap px-2.5 text-[15px] transition-colors duration-fast xl:px-3",
                           active
                             ? "font-semibold text-ink"
                             : "font-medium text-ink-muted hover:text-ink",
                         )}
                       >
-                        <t.icon className="size-9 transition-transform duration-base ease-out" />
+                        <t.icon className="hidden size-9 transition-transform duration-base ease-out lg:block" />
                         {t.label}
                         {active ? (
                           <m.span
@@ -215,19 +219,28 @@ export function SiteHeader({
                     Create event
                   </Link>
                 </>
-              ) : ws === "attend" ? (
+              ) : ws === "attend" && viewer?.isOrganizer ? (
                 <Link
-                  href={
-                    viewer?.isOrganizer
-                      ? "/organizer"
-                      : viewer
-                        ? "/organizer/events/new"
-                        : `/signin?next=${encodeURIComponent("/organizer/events/new")}`
-                  }
-                  className="hidden h-10 items-center rounded-lg px-3.5 text-[14px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken lg:flex"
+                  href="/organizer"
+                  className="hidden h-10 items-center rounded-lg px-3.5 text-[14px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
                 >
-                  {viewer?.isOrganizer ? "Switch to hosting" : "Host an event"}
+                  Switch to hosting
                 </Link>
+              ) : !viewer ? (
+                <>
+                  <Link
+                    href="/signin"
+                    className="hidden h-10 items-center whitespace-nowrap rounded-lg px-3 text-[14px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/signin?mode=signup"
+                    className="mr-1 hidden h-10 items-center whitespace-nowrap rounded-lg bg-lavender px-4 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover md:flex"
+                  >
+                    Sign up
+                  </Link>
+                </>
               ) : null}
 
               <button
@@ -373,35 +386,33 @@ function AccountMenu({
               <Sep />
               <Link
                 role="menuitem"
-                href="/passes"
-                className={cn(menuItem, "font-semibold")}
-              >
-                Passes
-              </Link>
-              <Link
-                role="menuitem"
                 href="/vault"
                 className={cn(menuItem, "font-semibold")}
               >
-                Photos
+                Photo Vault
               </Link>
               <Link
                 role="menuitem"
-                href="/certificates"
+                href="/venues"
                 className={cn(menuItem, "font-semibold")}
               >
-                Certificates
+                Venues
+              </Link>
+              <Link
+                role="menuitem"
+                href="/profile"
+                className={cn(menuItem, "font-semibold")}
+              >
+                Profile
               </Link>
               <Sep />
               {ws === "attend" ? (
                 <Link
                   role="menuitem"
-                  href={
-                    viewer.isOrganizer ? "/organizer" : "/organizer/events/new"
-                  }
+                  href={viewer.isOrganizer ? "/organizer" : "/host"}
                   className={menuItem}
                 >
-                  {viewer.isOrganizer ? "Switch to hosting" : "Host an event"}
+                  {viewer.isOrganizer ? "Switch to hosting" : "Apply to host events"}
                 </Link>
               ) : (
                 <Link role="menuitem" href="/dashboard" className={menuItem}>
@@ -413,9 +424,6 @@ function AccountMenu({
                   Admin
                 </Link>
               )}
-              <Link role="menuitem" href="/venues" className={menuItem}>
-                Venues
-              </Link>
               <button
                 role="menuitem"
                 onClick={() => {
@@ -426,9 +434,6 @@ function AccountMenu({
               >
                 Enter an event code
               </button>
-              <Link role="menuitem" href="/profile" className={menuItem}>
-                Profile
-              </Link>
               <Sep />
               <button role="menuitem" onClick={logout} className={menuItem}>
                 Log out
@@ -447,13 +452,6 @@ function AccountMenu({
                 Log in
               </Link>
               <Sep />
-              <Link
-                role="menuitem"
-                href={`/signin?next=${encodeURIComponent("/organizer/events/new")}`}
-                className={menuItem}
-              >
-                Host an event
-              </Link>
               <Link role="menuitem" href="/venues" className={menuItem}>
                 Venues
               </Link>
@@ -538,9 +536,9 @@ function MenuSheet({
                 }}
               >
                 <Link
-                  href={t.href}
-                  aria-current={isActive(pathname, t) ? "page" : undefined}
-                  className={cn(row, isActive(pathname, t) && "font-semibold")}
+                  href={!viewer && VISITOR_HREF[t.href] ? VISITOR_HREF[t.href] : t.href}
+                  aria-current={(ws === "attend" ? isMainActive(pathname, t.href) : isActive(pathname, t)) ? "page" : undefined}
+                  className={cn(row, (ws === "attend" ? isMainActive(pathname, t.href) : isActive(pathname, t)) && "font-semibold")}
                 >
                   <t.icon className="size-8" />
                   {t.label}
@@ -550,9 +548,9 @@ function MenuSheet({
             {ws === "attend" && (
               <>
                 <li>
-                  <Link href="/certificates" className={row}>
-                    <Award className="mx-1 size-6 text-ink-muted" aria-hidden />{" "}
-                    Certificates
+                  <Link href="/vault" className={row}>
+                    <Images className="mx-1 size-6 text-ink-muted" aria-hidden />{" "}
+                    Photo Vault
                   </Link>
                 </li>
                 <li>
@@ -587,14 +585,10 @@ function MenuSheet({
                   </>
                 ) : (
                   <Link
-                    href={
-                      viewer.isOrganizer
-                        ? "/organizer"
-                        : "/organizer/events/new"
-                    }
+                    href={viewer.isOrganizer ? "/organizer" : "/host"}
                     className="flex h-12 items-center justify-center rounded-lg border border-ink text-[16px] font-semibold"
                   >
-                    {viewer.isOrganizer ? "Switch to hosting" : "Host an event"}
+                    {viewer.isOrganizer ? "Switch to hosting" : "Apply to host events"}
                   </Link>
                 )}
                 <button

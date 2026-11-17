@@ -6,6 +6,8 @@ import { getViewer } from "@/lib/rbac";
 import { getDashboardData } from "@/lib/data/dashboard";
 import { getLandingData } from "@/lib/data/landing";
 import { Landing } from "@/components/landing/Landing";
+import { getDB } from "@/lib/db";
+import { calendarMonth } from "@/lib/data/calendar";
 import { EventArt } from "@/components/ui/EventArt";
 import { AddPhoneCard } from "@/components/profile/AddPhoneCard";
 import { UpiPending } from "@/components/dashboard/sections";
@@ -20,8 +22,8 @@ export default async function DashboardPage({
   searchParams: Promise<{ denied?: string }>;
 }) {
   const viewer = await getViewer();
-  const landing = await getLandingData();
-  if (!viewer) return <Landing data={landing} />;
+  const [landing, month] = await Promise.all([getLandingData(), getDB().then((db) => calendarMonth(db, viewer?.id ?? null))]);
+  if (!viewer) return <Landing data={landing} month={month} />;
 
   const [data, params] = await Promise.all([
     getDashboardData(viewer),
@@ -213,7 +215,7 @@ export default async function DashboardPage({
         )}
       </section>
 
-      <Landing data={landing} signedIn isOrganizer={viewer.verifiedOrganizer} />
+      <Landing data={landing} month={month} signedIn isOrganizer={viewer.verifiedOrganizer} />
 
       {!viewer.phone && (
         <div className="pt-6">

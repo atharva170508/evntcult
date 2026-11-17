@@ -65,3 +65,30 @@ export function HostIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function HomeIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 32" className={className} aria-hidden>
+      <path d="M7 15 16 7.5l9 7.5v11a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 7 26Z" fill="#fff" stroke="#D7D7D7" strokeWidth="1.2" />
+      <path d="M4.5 15.6 16 6l11.5 9.6" stroke="#E3264F" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <rect x="13.2" y="18.5" width="5.6" height="9" rx="1.2" fill="#3A7BF0" />
+      <circle cx="17.4" cy="23.2" r=".7" fill="#fff" />
+      <rect x="21" y="7.5" width="2.6" height="5" rx=".6" fill="#9B1636" />
+    </svg>
+  );
+}
+
+export function CertificateIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 32" className={className} aria-hidden>
+      <g transform="rotate(-6 16 16)">
+        <rect x="4" y="6" width="24" height="17" rx="2" fill="#fff" stroke="#D7D7D7" strokeWidth="1.2" />
+        <rect x="8" y="10" width="11" height="1.8" rx=".9" fill="#222" opacity=".8" />
+        <rect x="8" y="13.6" width="8" height="1.6" rx=".8" fill="#222" opacity=".35" />
+        <path d="m19.5 21 -1.6 6.2 3.1-1.6 3.1 1.6L22.5 21Z" fill="#E3264F" />
+        <circle cx="21" cy="18.5" r="4.2" fill="#F4B740" />
+        <circle cx="21" cy="18.5" r="2.4" fill="none" stroke="#C97F10" strokeWidth="1.2" />
+      </g>
+    </svg>
+  );
+}

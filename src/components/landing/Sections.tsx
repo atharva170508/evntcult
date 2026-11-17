@@ -17,8 +17,9 @@ const cta =
 /* ── Hero: split, text left, the real "up next" list right (antislop layouts §17a) ── */
 
 /**
- * The visitor's first screen. Left: the line, one primary action, a text link. Right: the
- * product itself — the next events on campus, or the most recent ones when nothing is scheduled.
+ * The visitor's first screen, about EvntCult as a whole: every campus event in one place, one
+ * calendar, live updates. Left: the line, Sign up, a link to this month. Right: the product itself —
+ * the next events on campus, or the most recent ones when nothing is scheduled.
  */
 export function Hero({ upNext, recent }: { upNext: EventSummary[]; recent: EventSummary[] }) {
   const list = (upNext.length ? upNext : recent).slice(0, 4);
@@ -27,19 +28,19 @@ export function Hero({ upNext, recent }: { upNext: EventSummary[]; recent: Event
     <section aria-labelledby="hero-h" className="grid items-center gap-12 pb-12 pt-10 md:pt-16 lg:grid-cols-[1.15fr_1fr] lg:gap-16 lg:pb-20 lg:pt-20">
       <div>
         <h1 id="hero-h" className="font-display text-[clamp(56px,8.5vw,108px)] leading-[0.92] tracking-[-0.035em] text-ink">
-          <MaskedLines lines={["Every event,", <em key="l2">one pass.</em>]} />
+          <MaskedLines lines={["Every campus event,", <em key="l2">in one place.</em>]} />
         </h1>
         <Entrance delay={0.3}>
-          <p className="mt-7 max-w-[34ch] text-[18px] leading-snug text-ink-2 md:text-[20px]">Register once. Walk in with a scan.</p>
+          <p className="mt-7 max-w-[34ch] text-[18px] leading-snug text-ink-2 md:text-[20px]">Every club on one calendar, with live updates when plans change.</p>
         </Entrance>
         <Entrance delay={0.38} className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
           <Magnetic>
             <Link href="/signin?mode=signup" className={cta}>
-              Get your pass
+              Sign up free
             </Link>
           </Magnetic>
-          <Link href="/events" className="text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors duration-fast hover:decoration-ink">
-            Browse events
+          <Link href="#calendar" className="text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors duration-fast hover:decoration-ink">
+            See this month
           </Link>
         </Entrance>
       </div>
@@ -165,6 +166,7 @@ export function Featured({ e }: { e: EventSummary }) {
 
 /* ── How it works (a real sequence, so it's numbered) ───── */
 
+/** OnePass: one pass for every event, from finding it to the scan at the gate. */
 export function HowItWorks() {
   const steps = [
     {
@@ -212,9 +214,9 @@ export function HowItWorks() {
   ];
   return (
     <Reveal as="section" className="grid gap-10 py-16 md:py-24 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
-      <div id="how" className="scroll-mt-28 lg:sticky lg:top-[calc(var(--header-h)+40px)] lg:self-start">
+      <div id="onepass" className="scroll-mt-28 lg:sticky lg:top-[calc(var(--header-h)+40px)] lg:self-start">
         <h2 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-          From the poster <em>to the gate.</em>
+          OnePass. <em>One pass for every gate.</em>
         </h2>
       </div>
       <figure>
@@ -396,7 +398,7 @@ export function Closing() {
         <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
           <Magnetic>
             <Link href="/signin?mode=signup" className={cta}>
-              Get your pass
+              Sign up free
             </Link>
           </Magnetic>
           <Link href="/events" className="text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors duration-fast hover:decoration-ink">
