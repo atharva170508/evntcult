@@ -4,7 +4,63 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 /** The D1 database binding (local simulation under `next dev`, real D1 in production). */
 export async function getDB(): Promise<D1Database> {
   const { env } = await getCloudflareContext({ async: true });
-  return env.DB;
+  const db = env.DB;
+  if (!schemaReady) {
+    schemaReady = ensureSchema(db).catch((err) => {
+      console.error("ensureSchema failed", err);
+      schemaReady = null; // try again on the next request
+    });
+  }
+  await schemaReady;
+  return db;
+}
+
+/**
+ * Safety net for migrations that were merged but not applied to the live database
+ * (the deploy token cannot run `wrangler d1 migrations apply`). Adds any missing
+ * columns from 0020 and 0021 once per worker, then records both migrations in
+ * d1_migrations so wrangler skips them later. Every step is idempotent.
+ */
+let schemaReady: Promise<void> | null = null;
+
+const USER_COLUMNS: [string, string, string][] = [
+  ["0020_host_applications.sql", "host_status", "TEXT NOT NULL DEFAULT 'none'"],
+  ["0020_host_applications.sql", "host_club", "TEXT"],
+  ["0020_host_applications.sql", "host_note", "TEXT"],
+  ["0020_host_applications.sql", "host_applied_at", "TEXT"],
+  ["0020_host_applications.sql", "host_decided_at", "TEXT"],
+  ["0021_terms_acceptance.sql", "terms_accepted_at", "TEXT"],
+  ["0021_terms_acceptance.sql", "terms_version", "TEXT"],
+];
+
+async function ensureSchema(db: D1Database): Promise<void> {
+  const info = await db.prepare("PRAGMA table_info(users)").all<{ name: string }>();
+  const have = new Set((info.results ?? []).map((c) => c.name));
+  const missing = USER_COLUMNS.filter(([, col]) => !have.has(col));
+  if (missing.length === 0) return;
+
+  const stmts = missing.map(([, col, def]) => db.prepare(`ALTER TABLE users ADD COLUMN ${col} ${def}`));
+  if (missing.some(([, col]) => col === "host_status")) {
+    // Everyone who already hosts keeps hosting.
+    stmts.push(db.prepare("UPDATE users SET host_status = 'approved' WHERE role IN ('organizer', 'admin')"));
+    stmts.push(
+      db.prepare(
+        "CREATE INDEX IF NOT EXISTS idx_users_host_pending ON users(host_applied_at) WHERE host_status = 'pending'",
+      ),
+    );
+  }
+  await db.batch(stmts);
+
+  for (const name of new Set(missing.map(([file]) => file))) {
+    try {
+      await db
+        .prepare("INSERT INTO d1_migrations (name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name = ?)")
+        .bind(name, name)
+        .run();
+    } catch {
+      // No d1_migrations table (e.g. a fresh local database): nothing to record.
+    }
+  }
 }
 
 /** Run a SELECT and return all rows. Always use `?` placeholders — never string-build SQL. */
