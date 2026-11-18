@@ -21,7 +21,10 @@ export async function getDashboardData(viewer: Viewer): Promise<DashboardData> {
   const now = new Date();
   const nowIso = now.toISOString();
   const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1) - 5.5 * 3_600_000).toISOString();
-  const monthEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1) - 5.5 * 3_600_000).toISOString();
+  // The month, stretched to cover the next 7 days so the week strip never runs off the end of it.
+  const monthEnd = new Date(
+    Math.max(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1) - 5.5 * 3_600_000, +now + 8 * 86_400_000),
+  ).toISOString();
 
   const [mine, campus, updates, attended, photosOfYou, monthRows] = await Promise.all([
     all<EventRowWithCount & { reg_id: string; pass_code: string; pass_token: string; payment_status: string }>(
