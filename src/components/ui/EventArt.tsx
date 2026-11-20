@@ -190,3 +190,4 @@ export function EventArt({
 }
 
 export const accentHex = (accent: string) => (palettes[accent] ?? palettes.blue).bg;
+export const accentInk = (accent: string) => (palettes[accent] ?? palettes.blue).c;

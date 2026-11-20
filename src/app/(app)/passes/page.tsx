@@ -10,16 +10,16 @@ import { formatINR } from "@/lib/money";
 import { fmtDate, fmtRange, fmtTime } from "@/lib/utils";
 import { Chip } from "@/components/ui/Chip";
 import { accentFor } from "@/lib/data/events";
-import { EventArt } from "@/components/ui/EventArt";
+import { EventArt, accentHex, accentInk } from "@/components/ui/EventArt";
 import { PageHero } from "@/components/brand/PageHero";
 import { SavePassButton } from "@/components/passes/SavePassButton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
 import { HoloPass } from "@/components/passes/HoloPass";
+import { qrArtSvg } from "@/lib/qr-art";
 
 export const metadata: Metadata = { title: "My passes" };
 
-const KIND: Record<string, string> = { GAMING: "Gaming", SPORTS: "Sports", TECH: "Tech", CULTURAL: "Cultural", WORKSHOP: "Workshop", TALK: "Talk", PARTY: "Party" };
 
 /** A short serial printed on the pass, derived from the pass code and event (FNV-1a). */
 function serialFor(code: string, eventId: string) {
@@ -112,23 +112,26 @@ export default async function PassesPage() {
             const ends = new Date(r.ends_at);
             const cancelled = r.event_status === "cancelled";
             const qrSvg = qr.get(r.id) ?? null;
+            const accent = accentFor({ id: r.event_id, category: r.category });
+            const qrArt = qrSvg ? qrArtSvg(passQrPayload(r.pass_token), { ink: accentInk(accent), accent: accentHex(accent) }) : null;
             return (
               <div key={r.id} className="flex w-full flex-col items-center">
                 <HoloPass
                   regId={r.id}
                   slug={r.slug}
                   title={r.title}
-                  kind={KIND[r.category] ?? "Event"}
                   weekday={fmtDate(starts, { weekday: "short" })}
                   day={fmtDate(starts, { day: "numeric" })}
                   month={fmtDate(starts, { month: "short" })}
+                  time={fmtTime(starts)}
                   timeRange={fmtRange(starts, ends)}
                   venue={r.venue}
                   holder={viewer.name}
                   passCode={r.pass_code}
                   serial={serialFor(r.pass_code, r.event_id)}
-                  qrSvg={qrSvg}
-                  accent={accentFor({ id: r.event_id, category: r.category })}
+                  qrArt={qrArt}
+                  accent={accent}
+                  ink={accentInk(accent)}
                   seed={r.event_id}
                   state={cancelled ? "cancelled" : r.status === "waitlisted" ? "waitlist" : Date.parse(r.starts_at) <= now ? "live" : "confirmed"}
                   waitlistNote={
