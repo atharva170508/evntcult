@@ -68,5 +68,36 @@ export function buildIcs(e: IcsEvent): string {
   return lines.map(foldLine).join("\r\n") + "\r\n";
 }
 
+/** A subscribable calendar with many events (no alarms: calendar apps refetch it every few hours). */
+export function buildCalendar(name: string, events: IcsEvent[], now = new Date()): string {
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//EvntCult//Campus calendar//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    `X-WR-CALNAME:${icsEscape(name)}`,
+    "X-WR-TIMEZONE:Asia/Kolkata",
+    "REFRESH-INTERVAL;VALUE=DURATION:PT4H",
+    "X-PUBLISHED-TTL:PT4H",
+  ];
+  for (const e of events) {
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${e.uid}`,
+      `DTSTAMP:${icsDate(now.toISOString())}`,
+      `DTSTART:${icsDate(e.startsAt)}`,
+      `DTEND:${icsDate(e.endsAt)}`,
+      `SUMMARY:${icsEscape(e.title)}`,
+      ...(e.location ? [`LOCATION:${icsEscape(e.location)}`] : []),
+      ...(e.description ? [`DESCRIPTION:${icsEscape(e.description)}`] : []),
+      ...(e.url ? [`URL:${e.url}`] : []),
+      "END:VEVENT",
+    );
+  }
+  lines.push("END:VCALENDAR");
+  return lines.map(foldLine).join("\r\n") + "\r\n";
+}
+
 /** A safe download file name from an event title. */
 export const icsFileName = (title: string) => `${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "event"}.ics`;

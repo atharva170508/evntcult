@@ -34,6 +34,18 @@ const USER_COLUMNS: [string, string, string][] = [
 ];
 
 async function ensureSchema(db: D1Database): Promise<void> {
+  // 0022: "Interested" saves. Idempotent, so it is safe on every cold start.
+  await db.batch([
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS event_saves (
+         user_id TEXT NOT NULL REFERENCES users(id),
+         event_id TEXT NOT NULL REFERENCES events(id),
+         created_at TEXT NOT NULL,
+         PRIMARY KEY (user_id, event_id))`,
+    ),
+    db.prepare("CREATE INDEX IF NOT EXISTS idx_event_saves_event ON event_saves(event_id)"),
+  ]);
+
   const info = await db.prepare("PRAGMA table_info(users)").all<{ name: string }>();
   const have = new Set((info.results ?? []).map((c) => c.name));
   const missing = USER_COLUMNS.filter(([, col]) => !have.has(col));

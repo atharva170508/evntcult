@@ -8,7 +8,7 @@ import { readSessionValue, SESSION_COOKIE } from "@/lib/session";
  * Only verifies the cookie signature; roles are checked against the database in each page / route.
  * Also passes the path on as x-path, so layouts can send people back after accepting the terms.
  */
-const PROTECTED = ["/passes", "/vault", "/organizer", "/events", "/calendar", "/venues", "/certificates", "/profile", "/host", "/e", "/c", "/verify"];
+const PROTECTED = ["/passes", "/vault", "/organizer", "/events", "/calendar", "/venues", "/certificates", "/profile", "/host", "/hosts", "/e", "/c", "/verify"];
 
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;

@@ -65,6 +65,27 @@ export async function readSessionValue(value: string | undefined | null, now = D
 }
 
 /* Owner panel: a separate cookie, signed for a different purpose, so a student session can never open it. */
+/**
+ * Private calendar-feed link: calendar apps can't sign in, so the URL itself carries a signed,
+ * non-expiring proof of who it belongs to. Reveals nothing beyond the user's id.
+ */
+export async function calendarFeedToken(userId: string): Promise<string> {
+  return `${b64url(enc.encode(userId))}.${(await hmac(`cal:${userId}`)).slice(0, 32)}`;
+}
+
+export async function readCalendarFeedToken(token: string): Promise<string | null> {
+  const [idPart, sig] = token.split(".");
+  if (!idPart || !sig) return null;
+  let userId: string;
+  try {
+    userId = fromB64url(idPart);
+  } catch {
+    return null;
+  }
+  const expected = (await hmac(`cal:${userId}`)).slice(0, 32);
+  return safeEqual(sig, expected) ? userId : null;
+}
+
 export const ADMIN_COOKIE = "ec_admin";
 const ADMIN_HOURS = 8;
 

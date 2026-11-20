@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { X } from "lucide-react";
+import { LayoutGrid, List, X } from "lucide-react";
 import { listEvents } from "@/lib/data/events";
 import { listQuerySchema } from "@/lib/validation";
 import { EventCard } from "@/components/landing/EventCard";
 import { KindRail } from "@/components/landing/KindRail";
 import { CATEGORY_NAMES } from "@/components/site/categories";
 import { cn } from "@/lib/utils";
+import { EventTimeline } from "@/components/events/EventTimeline";
 
 export const metadata: Metadata = { title: "Events" };
 export const dynamic = "force-dynamic";
@@ -20,11 +21,12 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
   const parsed = listQuerySchema.safeParse(Object.fromEntries(Object.entries(raw).filter(([, v]) => v)));
   const q = parsed.success ? parsed.data : {};
   const { events, nextCursor } = await listEvents(q);
+  const view = raw.view === "list" ? "list" : "grid";
 
   /** URL that keeps the other filters and drops the cursor. */
   const href = (patch: Record<string, string | undefined>) => {
     const p = new URLSearchParams();
-    const merged = { type: q.type, when: q.when, price: q.price, q: q.q, ...patch };
+    const merged = { type: q.type, when: q.when, price: q.price, q: q.q, view: view === "list" ? "list" : undefined, ...patch };
     for (const [k, v] of Object.entries(merged)) if (v) p.set(k, v);
     const s = p.toString();
     return s ? `/events?${s}` : "/events";
@@ -70,11 +72,35 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
         )}
       </div>
 
-      <h1 className="mt-8 text-[22px] font-semibold text-ink" role="status">
-        {events.length === 0
-          ? "No events found"
-          : `${events.length}${nextCursor ? "+" : ""} ${title.length ? `${title.join(" · ")} ` : ""}event${events.length === 1 ? "" : "s"}`}
-      </h1>
+      <div className="mt-8 flex items-center justify-between gap-4">
+        <h1 className="text-[22px] font-semibold text-ink" role="status">
+          {events.length === 0
+            ? "No events found"
+            : `${events.length}${nextCursor ? "+" : ""} ${title.length ? `${title.join(", ")} ` : ""}event${events.length === 1 ? "" : "s"}`}
+        </h1>
+        {events.length > 0 && (
+          <div role="group" aria-label="Layout" className="inline-flex shrink-0 rounded-lg border border-line-strong bg-white p-0.5">
+            {[
+              { v: "grid", label: "Grid", Icon: LayoutGrid },
+              { v: "list", label: "List", Icon: List },
+            ].map(({ v, label, Icon }) => (
+              <Link
+                key={v}
+                href={href({ view: v === "list" ? "list" : undefined })}
+                aria-label={`${label} view`}
+                aria-current={view === v ? "true" : undefined}
+                className={cn(
+                  "inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-[13.5px] font-medium transition-colors duration-fast",
+                  view === v ? "bg-ink text-white" : "text-ink-2 hover:bg-sunken",
+                )}
+              >
+                <Icon className="size-4" aria-hidden />
+                <span className="hidden sm:inline">{label}</span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
 
       {events.length === 0 ? (
         <div className="py-16 text-center">
@@ -83,6 +109,8 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
             Show all events
           </Link>
         </div>
+      ) : view === "list" ? (
+        <EventTimeline events={events} />
       ) : (
         <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:gap-x-6 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {events.map((e) => (

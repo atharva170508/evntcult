@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import QRCode from "qrcode";
-import { Award, CalendarPlus, CheckCircle2, Clock, Hourglass, MapPin, Ticket } from "lucide-react";
+import { Award, CalendarPlus, CheckCircle2, ChevronRight, Clock, Hourglass, MapPin, Star, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { all } from "@/lib/db";
 import { passQrPayload } from "@/lib/tokens";
@@ -63,6 +63,18 @@ export default async function PassesPage() {
     viewer.id,
   );
 
+  // Partiful's "Interested": saved, not registered, still to come.
+  const saved = await all<{ slug: string; title: string; event_id: string; category: string; starts_at: string; venue: string; price_paise: number; full: number }>(
+    `SELECT e.slug, e.title, e.id AS event_id, e.category, e.starts_at, COALESCE(e.venue, 'Venue TBA') AS venue, e.price_paise,
+            (e.capacity IS NOT NULL AND (SELECT COUNT(*) FROM registrations x WHERE x.event_id = e.id AND x.status = 'registered') >= e.capacity) AS full
+       FROM event_saves s JOIN events e ON e.id = s.event_id
+      WHERE s.user_id = ?1 AND e.status = 'published' AND e.ends_at > ?2
+        AND NOT EXISTS (SELECT 1 FROM registrations r WHERE r.event_id = e.id AND r.user_id = ?1 AND r.status IN ('registered','waitlisted'))
+      ORDER BY e.starts_at`,
+    viewer.id,
+    new Date().toISOString(),
+  );
+
   const now = Date.now();
   const upcoming = rows.filter((r) => Date.parse(r.ends_at) > now);
   const past = rows.filter((r) => Date.parse(r.ends_at) <= now).reverse();
@@ -86,6 +98,36 @@ export default async function PassesPage() {
             <PassCard key={r.id} r={r} qrSvg={qr.get(r.id) ?? null} />
           ))}
         </div>
+      )}
+
+      {saved.length > 0 && (
+        <section aria-labelledby="saved-heading" className="space-y-4">
+          <h2 id="saved-heading" className="flex items-center gap-2 text-[22px] font-semibold">
+            <Star className="size-5 fill-[#FFD166] text-[#FFD166]" aria-hidden /> Interested
+          </h2>
+          <ul className="grid gap-3 md:grid-cols-2">
+            {saved.map((e) => (
+              <li key={e.slug}>
+                <Link
+                  href={`/events/${e.slug}#register`}
+                  className="group flex items-center gap-4 rounded-2xl border border-line-strong bg-white p-3 pr-4 transition-shadow duration-fast hover:shadow-raised"
+                >
+                  <div className="relative size-14 shrink-0 overflow-hidden rounded-xl">
+                    <EventArt accent={accentFor({ id: e.event_id, category: e.category })} seed={e.event_id} scrim={false} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[15.5px] font-semibold text-ink">{e.title}</p>
+                    <p className="truncate text-[13.5px] text-ink-muted">
+                      {fmtDate(new Date(e.starts_at), { weekday: "short", day: "numeric", month: "short" })}, {fmtTime(new Date(e.starts_at))}, {e.venue}
+                    </p>
+                  </div>
+                  <span className={`shrink-0 text-[13.5px] font-semibold ${e.full ? "text-danger" : "text-ink"}`}>{e.full ? "Full" : "Register"}</span>
+                  <ChevronRight className="size-4 shrink-0 text-ink-subtle" aria-hidden />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {past.length > 0 && (
