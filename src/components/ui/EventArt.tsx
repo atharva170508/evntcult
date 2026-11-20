@@ -181,7 +181,7 @@ export function EventArt({
     <div aria-hidden className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} style={{ background: p.bg }}>
       {!flat && (
         <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full">
-          <Draw p={p} r={r} />
+          {Draw({ p, r })}
         </svg>
       )}
       {scrim && <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/40 to-transparent" />}

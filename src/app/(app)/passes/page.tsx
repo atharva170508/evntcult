@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import QRCode from "qrcode";
-import { Award, CalendarPlus, CheckCircle2, ChevronRight, Clock, Hourglass, MapPin, Star, Ticket } from "lucide-react";
+import { Award, CalendarPlus, ChevronRight, Star, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { all } from "@/lib/db";
 import { passQrPayload } from "@/lib/tokens";
@@ -15,9 +15,22 @@ import { PageHero } from "@/components/brand/PageHero";
 import { SavePassButton } from "@/components/passes/SavePassButton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
-import { svgSrc } from "@/lib/svg-src";
+import { HoloPass } from "@/components/passes/HoloPass";
 
 export const metadata: Metadata = { title: "My passes" };
+
+const KIND: Record<string, string> = { GAMING: "Gaming", SPORTS: "Sports", TECH: "Tech", CULTURAL: "Cultural", WORKSHOP: "Workshop", TALK: "Talk", PARTY: "Party" };
+
+/** A short serial printed on the pass, derived from the pass code and event (FNV-1a). */
+function serialFor(code: string, eventId: string) {
+  let h = 0x811c9dc5;
+  for (const ch of `${code}|${eventId}`) {
+    h ^= ch.charCodeAt(0);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  const hex = h.toString(16).toUpperCase().padStart(8, "0");
+  return `${hex.slice(0, 4)}-${hex.slice(4)}`;
+}
 export const dynamic = "force-dynamic";
 
 interface PassRow {
@@ -93,10 +106,75 @@ export default async function PassesPage() {
       {upcoming.length === 0 ? (
         <EmptyState icon={Ticket} title="No upcoming passes" action={{ label: "Find an event", href: "/events" }} />
       ) : (
-        <div className="grid gap-5 lg:grid-cols-2">
-          {upcoming.map((r) => (
-            <PassCard key={r.id} r={r} qrSvg={qr.get(r.id) ?? null} />
-          ))}
+        <div className="grid justify-items-center gap-x-8 gap-y-16 sm:grid-cols-2 xl:grid-cols-3">
+          {upcoming.map((r) => {
+            const starts = new Date(r.starts_at);
+            const ends = new Date(r.ends_at);
+            const cancelled = r.event_status === "cancelled";
+            const qrSvg = qr.get(r.id) ?? null;
+            return (
+              <div key={r.id} className="flex w-full flex-col items-center">
+                <HoloPass
+                  regId={r.id}
+                  slug={r.slug}
+                  title={r.title}
+                  kind={KIND[r.category] ?? "Event"}
+                  weekday={fmtDate(starts, { weekday: "short" })}
+                  day={fmtDate(starts, { day: "numeric" })}
+                  month={fmtDate(starts, { month: "short" })}
+                  timeRange={fmtRange(starts, ends)}
+                  venue={r.venue}
+                  holder={viewer.name}
+                  passCode={r.pass_code}
+                  serial={serialFor(r.pass_code, r.event_id)}
+                  qrSvg={qrSvg}
+                  accent={accentFor({ id: r.event_id, category: r.category })}
+                  seed={r.event_id}
+                  state={cancelled ? "cancelled" : r.status === "waitlisted" ? "waitlist" : Date.parse(r.starts_at) <= now ? "live" : "confirmed"}
+                  waitlistNote={
+                    r.status === "waitlisted"
+                      ? r.hold_expires_at
+                        ? `A seat is held for you until ${fmtTime(new Date(r.hold_expires_at))}. Confirm it on the event page.`
+                        : `On the waitlist${r.waitlist_position ? `, #${r.waitlist_position}` : ""}. If someone cancels, you'll get a seat to confirm.`
+                      : null
+                  }
+                  pay={
+                    r.status === "registered" && r.price_paise > 0
+                      ? r.payment_status === "paid"
+                        ? { text: "Paid", tone: "ok" }
+                        : r.upi_utr
+                          ? { text: "Payment being checked", tone: "warn" }
+                          : r.organizer_upi_id
+                            ? { text: `Pay ${formatINR(r.price_paise)} by UPI`, tone: "warn", href: `/events/${r.slug}#register` }
+                            : { text: `${formatINR(r.price_paise)} at the desk`, tone: "warn" }
+                      : null
+                  }
+                  admittedAt={r.checked_in_at ? fmtTime(new Date(r.checked_in_at)) : null}
+                />
+                <div className="mt-3 flex w-full max-w-[360px] flex-wrap items-center justify-center gap-x-1 gap-y-1">
+                  {r.status === "registered" && qrSvg && (
+                    <SavePassButton
+                      title={r.title}
+                      dateLabel={fmtDate(starts, { weekday: "short", day: "numeric", month: "short" })}
+                      timeLabel={fmtRange(starts, ends)}
+                      venue={r.venue}
+                      passCode={r.pass_code}
+                      qrSvg={qrSvg}
+                      className="h-10 border-0 bg-transparent px-3 text-[13.5px] hover:bg-sunken"
+                    />
+                  )}
+                  <a href={`/api/registrations/${r.id}/ics`} className={buttonClass("ghost", "sm", "h-10 text-[13.5px]")}>
+                    <CalendarPlus className="size-3.5" aria-hidden /> Add to calendar
+                  </a>
+                  {r.cert_id && (
+                    <Link href={`/certificates/${r.cert_id}`} className={buttonClass("ghost", "sm", "h-10 text-[13.5px]")}>
+                      <Award className="size-3.5" aria-hidden /> Certificate
+                    </Link>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -162,134 +240,5 @@ export default async function PassesPage() {
         </section>
       )}
     </div>
-  );
-}
-
-function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
-  const starts = new Date(r.starts_at);
-  const ends = new Date(r.ends_at);
-  const live = Date.parse(r.starts_at) <= Date.now();
-  const cancelled = r.event_status === "cancelled";
-
-  return (
-    <article aria-label={`Pass for ${r.title}`} className="flex flex-col overflow-hidden rounded-[20px] border border-line-strong bg-white shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:flex-row">
-      {/* Stub: poster strip with date */}
-      <div className="relative isolate flex shrink-0 flex-row items-end justify-between gap-3 p-5 text-white sm:w-[176px] sm:flex-col sm:items-start">
-        <EventArt accent={accentFor({ id: r.event_id, category: r.category })} seed={r.event_id} flat scrim={false} />
-        <div className="relative">
-          <p className="text-[13px] font-semibold text-white/85">{fmtDate(starts, { weekday: "long" })}</p>
-          <p className="font-display text-[56px] leading-none">{fmtDate(starts, { day: "numeric" })}</p>
-          <p className="text-[13px] font-semibold text-white/85">{fmtDate(starts, { month: "long" })}</p>
-        </div>
-        <div className="relative">
-          {cancelled ? (
-            <Chip tone="danger">Event cancelled</Chip>
-          ) : r.status === "waitlisted" ? (
-            <Chip tone="warn">Waitlist{r.waitlist_position ? ` · #${r.waitlist_position}` : ""}</Chip>
-          ) : live ? (
-            <Chip tone="white" pulse>
-              Happening now
-            </Chip>
-          ) : (
-            <Chip tone="white">Confirmed</Chip>
-          )}
-        </div>
-      </div>
-
-      {/* Perforation: a torn-ticket edge, horizontal on phones and vertical on wide screens */}
-      <div aria-hidden className="relative h-0 border-t border-dashed border-line-strong sm:hidden">
-        <span className="absolute -left-3 -top-3 size-6 rounded-full border border-line-strong bg-canvas [clip-path:inset(0_0_0_50%)]" />
-        <span className="absolute -right-3 -top-3 size-6 rounded-full border border-line-strong bg-canvas [clip-path:inset(0_50%_0_0)]" />
-      </div>
-      <div aria-hidden className="relative hidden w-0 border-l border-dashed border-line-strong sm:block" />
-
-      <div className="flex min-w-0 flex-1 flex-col gap-4 p-5">
-        <div className="min-w-0">
-          <h2 className="truncate text-[20px] font-semibold">{r.title}</h2>
-          <p className="mt-1.5 flex items-center gap-1.5 text-[13px] text-ink-2">
-            <Clock className="size-3.5 text-ink-subtle" aria-hidden /> {fmtRange(starts, ends)} <span className="text-ink-subtle">IST</span>
-          </p>
-          <p className="mt-1 flex items-center gap-1.5 text-[13px] text-ink-2">
-            <MapPin className="size-3.5 text-ink-subtle" aria-hidden /> {r.venue}
-          </p>
-        </div>
-
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
-          {r.status === "registered" && qrSvg ? (
-            <div className="w-[208px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line sm:w-[116px]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={svgSrc(qrSvg)} alt={`QR code for pass ${r.pass_code}`} className="block aspect-square w-full" />
-            </div>
-          ) : (
-            <div className="grid w-full shrink-0 place-items-center rounded-xl border border-dashed sm:w-[116px] border-line-strong bg-sunken/50 p-3 text-center text-[11.5px] text-ink-muted">
-              <Hourglass className="mb-1 size-4" aria-hidden />
-              {cancelled ? "No entry" : "QR once you get a seat"}
-            </div>
-          )}
-          <div className="min-w-0 flex-1 space-y-1.5 text-center text-[13px] sm:text-left">
-            {r.status === "registered" && (
-              <>
-                <p className="text-[12.5px] font-semibold text-ink-muted">Pass</p>
-                <p className="font-mono text-[15px] font-medium tracking-[0.1em]">{r.pass_code}</p>
-              </>
-            )}
-            {r.checked_in_at && (
-              <p className="flex items-center gap-1.5 font-medium text-live">
-                <CheckCircle2 className="size-4" aria-hidden /> Checked in at {fmtTime(new Date(r.checked_in_at))}
-              </p>
-            )}
-            {r.cert_id && (
-              <Link href={`/certificates/${r.cert_id}`} className="link inline-flex items-center gap-1">
-                <Award className="size-3.5" aria-hidden /> Your certificate
-              </Link>
-            )}
-            {r.status === "registered" && r.price_paise > 0 && (
-              <p className={r.payment_status === "paid" ? "font-medium text-live" : "font-medium text-warn"}>
-                {r.payment_status === "paid" ? "Paid" : r.upi_utr ? "Payment being checked" : `Unpaid · ${formatINR(r.price_paise)}${r.organizer_upi_id ? "" : " at the desk"}`}
-                {r.payment_status !== "paid" && !r.upi_utr && r.organizer_upi_id && (
-                  <>
-                    {" "}
-                    <Link href={`/events/${r.slug}#register`} className="underline underline-offset-2">
-                      Pay now
-                    </Link>
-                  </>
-                )}
-              </p>
-            )}
-            {r.status === "waitlisted" &&
-              (r.hold_expires_at ? (
-                <p className="rounded-lg bg-warn-soft px-2.5 py-2 font-medium text-warn">
-                  A seat is held for you until {fmtTime(new Date(r.hold_expires_at))}.{" "}
-                  <Link href={`/events/${r.slug}`} className="underline underline-offset-2">
-                    Confirm it
-                  </Link>
-                </p>
-              ) : (
-                <p className="text-ink-muted">If someone cancels, you&apos;ll get a seat to confirm.</p>
-              ))}
-          </div>
-        </div>
-
-        <div className="mt-auto flex flex-wrap gap-2 border-t border-line pt-4">
-          {r.status === "registered" && qrSvg && (
-            <SavePassButton
-              title={r.title}
-              dateLabel={fmtDate(starts, { weekday: "short", day: "numeric", month: "short" })}
-              timeLabel={fmtRange(starts, ends)}
-              venue={r.venue}
-              passCode={r.pass_code}
-              qrSvg={qrSvg}
-              className="h-8 px-3 text-[13px]"
-            />
-          )}
-          <a href={`/api/registrations/${r.id}/ics`} className={buttonClass("ghost", "sm")}>
-            <CalendarPlus className="size-3.5" aria-hidden /> Add to calendar
-          </a>
-          <Link href={`/events/${r.slug}`} className={buttonClass("ghost", "sm", "ml-auto")}>
-            View event
-          </Link>
-        </div>
-      </div>
-    </article>
   );
 }
