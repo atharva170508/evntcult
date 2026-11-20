@@ -19,6 +19,8 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState<number | null>(null);
+  const [onlyMine, setOnlyMine] = useState(false);
+  const [loaded, setLoaded] = useState<Record<string, boolean>>({});
   const dialog = useRef<HTMLDialogElement>(null);
 
   useEffect(() => setMine(Object.fromEntries(photos.map((p) => [p.id, p.mine]))), [photos]);
@@ -55,7 +57,9 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
     router.refresh();
   }
 
-  const current = open !== null ? photos[open] : null;
+  const list = onlyMine ? photos.filter((p) => mine[p.id]) : photos;
+  const myCount = photos.filter((p) => mine[p.id]).length;
+  const current = open !== null ? list[open] : null;
   const tagButton = (id: string, big = false) =>
     canTag && (
       <button
@@ -85,17 +89,60 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
           {error}
         </p>
       )}
-      <ul className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-4">
-        {photos.map((p, i) => (
-          <li key={p.id} className="group relative aspect-square overflow-hidden rounded-tile bg-sunken">
-            <button onClick={() => setOpen(i)} className="block size-full" aria-label={`Open photo ${i + 1}${mine[p.id] ? " (you're tagged)" : ""}`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/api/photos/${p.id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-slow ease-out" />
-            </button>
-            <div className="pointer-events-none absolute inset-x-2 bottom-2 flex justify-start [&>*]:pointer-events-auto">{tagButton(p.id)}</div>
-          </li>
-        ))}
-      </ul>
+      {canTag && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div role="group" aria-label="Show" className="inline-flex rounded-lg border border-line-strong bg-white p-0.5">
+            {[
+              { on: !onlyMine, label: "Everyone", n: photos.length, set: false },
+              { on: onlyMine, label: "Only me", n: myCount, set: true },
+            ].map((t) => (
+              <button
+                key={t.label}
+                type="button"
+                aria-pressed={t.on}
+                onClick={() => {
+                  setOnlyMine(t.set);
+                  setOpen(null);
+                }}
+                className={cn("inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-[13.5px] font-medium transition-colors duration-fast", t.on ? "bg-ink text-white" : "text-ink-2 hover:bg-sunken")}
+              >
+                {t.label}
+                <span className={cn("font-mono text-[12px] tabular-nums", t.on ? "text-white/70" : "text-ink-subtle")}>{t.n}</span>
+              </button>
+            ))}
+          </div>
+          <p className="text-[13px] text-ink-muted">Tap “Tag me” on photos you&apos;re in to collect them here.</p>
+        </div>
+      )}
+      {onlyMine && list.length === 0 ? (
+        <p className="rounded-2xl border border-dashed border-line-strong px-6 py-12 text-center text-[14.5px] text-ink-muted">
+          You haven&apos;t tagged yourself yet. Switch to Everyone and tap “Tag me” on photos you&apos;re in.
+        </p>
+      ) : (
+        <ul className="columns-2 gap-1.5 sm:columns-3 lg:columns-4">
+          {list.map((p, i) => (
+            <li
+              key={p.id}
+              className="group relative mb-1.5 break-inside-avoid overflow-hidden rounded-tile bg-sunken"
+              style={{ aspectRatio: p.width && p.height ? `${p.width} / ${p.height}` : "1 / 1" }}
+            >
+              {!loaded[p.id] && <span className="absolute inset-0 bg-gradient-to-r from-sunken via-[#f3efe4] to-sunken motion-safe:animate-pulse" aria-hidden />}
+              <button onClick={() => setOpen(i)} className="relative block size-full" aria-label={`Open photo ${i + 1}${mine[p.id] ? " (you're tagged)" : ""}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/api/photos/${p.id}?size=thumb`}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  onLoad={() => setLoaded((l) => ({ ...l, [p.id]: true }))}
+                  className={cn("size-full object-cover transition-opacity duration-base", loaded[p.id] ? "opacity-100" : "opacity-0")}
+                />
+              </button>
+              <div className="pointer-events-none absolute inset-x-2 bottom-2 flex justify-start [&>*]:pointer-events-auto">{tagButton(p.id)}</div>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <dialog
         ref={dialog}
@@ -103,25 +150,25 @@ export function PhotoGrid({ photos, canTag, canManage }: { photos: GridPhoto[]; 
         onClick={(e) => e.target === dialog.current && setOpen(null)}
         onKeyDown={(e) => {
           if (open === null) return;
-          if (e.key === "ArrowLeft") setOpen((o) => (o! > 0 ? o! - 1 : photos.length - 1));
-          if (e.key === "ArrowRight") setOpen((o) => (o! < photos.length - 1 ? o! + 1 : 0));
+          if (e.key === "ArrowLeft") setOpen((o) => (o! > 0 ? o! - 1 : list.length - 1));
+          if (e.key === "ArrowRight") setOpen((o) => (o! < list.length - 1 ? o! + 1 : 0));
         }}
         aria-label="Photo viewer"
-        className="m-auto max-h-[94dvh] w-[min(96vw,1120px)] overflow-hidden rounded-panel bg-[#0c0c0b] p-0 text-white shadow-pop backdrop:bg-ink/80 backdrop:backdrop-blur-sm open:animate-scale-in"
+        className="m-auto max-h-[94dvh] w-[min(96vw,1120px)] overflow-hidden rounded-panel bg-[#0c0c0b] p-0 text-white shadow-pop backdrop:bg-ink/85 open:animate-scale-in"
       >
         {current && (
           <div className="relative flex flex-col">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`/api/photos/${current.id}`} alt={`Photo ${open! + 1} of ${photos.length}`} className="max-h-[80dvh] w-full object-contain" />
+            <img src={`/api/photos/${current.id}`} alt={`Photo ${open! + 1} of ${list.length}`} className="max-h-[80dvh] w-full object-contain" />
             <div className="flex flex-wrap items-center gap-2 border-t border-white/10 p-3">
-              <button onClick={() => setOpen((o) => (o! > 0 ? o! - 1 : photos.length - 1))} aria-label="Previous photo" className={iconBtn}>
+              <button onClick={() => setOpen((o) => (o! > 0 ? o! - 1 : list.length - 1))} aria-label="Previous photo" className={iconBtn}>
                 <ChevronLeft className="size-5" />
               </button>
-              <button onClick={() => setOpen((o) => (o! < photos.length - 1 ? o! + 1 : 0))} aria-label="Next photo" className={iconBtn}>
+              <button onClick={() => setOpen((o) => (o! < list.length - 1 ? o! + 1 : 0))} aria-label="Next photo" className={iconBtn}>
                 <ChevronRight className="size-5" />
               </button>
               <span className="px-1 font-mono text-[12.5px] tabular-nums text-white/60">
-                {open! + 1} / {photos.length}
+                {open! + 1} / {list.length}
               </span>
               <span className="flex-1" />
               {tagButton(current.id, true)}

@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Clock, Hourglass, Ticket, XCircle } from "lucide-react";
+import { CheckCircle2, Clock, Hourglass, IndianRupee, Ticket, XCircle } from "lucide-react";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { Input, Notice, Select } from "@/components/ui/Field";
 import { formatINR } from "@/lib/money";
 import { UpiPay, type UpiPayProps } from "@/components/events/UpiPay";
 import type { Question } from "@/lib/data/questions";
 import { svgSrc } from "@/lib/svg-src";
+import { Sheet } from "@/components/ui/Sheet";
+import { PassPrinter } from "@/components/events/PassPrinter";
 
 interface Reg {
   id: string;
@@ -36,12 +38,29 @@ export function RegisterPanel(props: {
   upi?: UpiPayProps | null;
   /** Registration API is live (M2). Pass false to show passes read-only. */
   actionsLive?: boolean;
+  /** What the printed pass shows after registering or paying. */
+  ticket?: { title: string; dateLabel: string; timeLabel: string; venue: string; holder: string; accent: string; seed: string };
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fullOffer, setFullOffer] = useState<number | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [paying, setPaying] = useState(false);
+  const [justRegistered, setJustRegistered] = useState(false);
+  const [printing, setPrinting] = useState(false);
+  const [afterPay, setAfterPay] = useState(false);
+
+  // After a fresh registration lands: paid-by-UPI events go straight to the payment sheet,
+  // everything else prints the pass.
+  const regStatus = props.registration?.status;
+  const needsUpi = !!props.upi && !props.upi.utr;
+  useEffect(() => {
+    if (!justRegistered || regStatus !== "registered") return;
+    setJustRegistered(false);
+    if (needsUpi) setPaying(true);
+    else setPrinting(true);
+  }, [justRegistered, regStatus, needsUpi]);
 
   async function call(url: string, init: RequestInit) {
     setBusy(true);
@@ -65,7 +84,10 @@ export function RegisterPanel(props: {
     const data = await call(`/api/events/${props.slug}/register`, { method: "POST", body: JSON.stringify({ waitlist, answers, ...(props.code ? { code: props.code } : {}) }) });
     if (!data) return;
     if (data.full) setFullOffer(data.waitlist_position ?? 1);
-    else router.refresh();
+    else {
+      if (!waitlist) setJustRegistered(true);
+      router.refresh();
+    }
   }
 
   async function cancel() {
@@ -130,7 +152,53 @@ export function RegisterPanel(props: {
             <p className="text-[12.5px] text-ink-muted">Show the QR at the gate.</p>
           </div>
         </div>
-        {props.upi && props.open && !r.checkedInAt && <UpiPay {...props.upi} />}
+        {props.upi &&
+          props.open &&
+          !r.checkedInAt &&
+          (props.upi.utr ? (
+            <UpiPay {...props.upi} />
+          ) : (
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-warn/30 bg-warn-soft px-4 py-3">
+              <div>
+                <p className="text-[14px] font-semibold text-ink">{props.upi.rejected ? "Payment not found" : "Payment due"}</p>
+                <p className="text-[13px] tabular-nums text-ink-2">{formatINR(props.pricePaise)} by UPI</p>
+              </div>
+              <Button onClick={() => setPaying(true)} variant="primary">
+                <IndianRupee className="size-4" aria-hidden /> Pay now
+              </Button>
+            </div>
+          ))}
+        {paying && props.upi && (
+          <Sheet title="Pay by UPI" onClose={() => setPaying(false)}>
+            <UpiPay
+              {...props.upi}
+              onDone={() => {
+                setPaying(false);
+                setAfterPay(true);
+                setPrinting(true);
+              }}
+            />
+          </Sheet>
+        )}
+        {printing && props.ticket && (
+          <PassPrinter
+            onClose={() => setPrinting(false)}
+            pass={{
+              ...props.ticket,
+              passCode: r.passCode,
+              qrSvg: props.qrSvg,
+              amountLabel: props.pricePaise > 0 ? formatINR(props.pricePaise) : "Free",
+              payNote:
+                props.pricePaise === 0 || r.paid
+                  ? null
+                  : afterPay || props.upi?.utr
+                    ? "UPI payment being checked"
+                    : props.upi
+                      ? "Payment due by UPI"
+                      : "Pay at the desk",
+            }}
+          />
+        )}
         {err}
         <div className="grid gap-2">
           <LinkButton href="/passes" size="lg" className="w-full">

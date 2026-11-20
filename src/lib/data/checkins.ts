@@ -17,7 +17,7 @@ export type ScanColor = "green" | "amber" | "red";
 
 export type ScanResult =
   | { result: "admitted"; color: "green"; name: string; passCode: string; scannedAt: string; replay: boolean }
-  | { result: "already_in"; color: "amber"; name: string; passCode: string; scannedAt: string }
+  | { result: "already_in"; color: "red"; name: string; passCode: string; scannedAt: string }
   | { result: "unpaid"; color: "amber"; name: string; passCode: string; amountPaise: number; claimedUtr: string | null }
   | { result: "invalid"; color: "red"; reason: InvalidReason; message: string };
 
@@ -95,7 +95,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
 
   // 3. Already inside? (Checked before the payment question, so the volunteer isn't asked to collect twice.)
   const existing = await db.prepare("SELECT scanned_at FROM checkins WHERE registration_id = ?").bind(pass.reg_id).first<{ scanned_at: string }>();
-  if (existing) return { result: "already_in", color: "amber", name: pass.name, passCode: pass.pass_code, scannedAt: existing.scanned_at };
+  if (existing) return { result: "already_in", color: "red", name: pass.name, passCode: pass.pass_code, scannedAt: existing.scanned_at };
 
   // 4. Paid event, not paid yet: the volunteer collects the fee, then taps Admit (acceptUnpaid).
   const unpaid = pass.price_paise > 0 && pass.payment_status !== "paid";
@@ -129,7 +129,7 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
   if (winner?.client_scan_id === input.clientScanId) {
     return { result: "admitted", color: "green", name: pass.name, passCode: pass.pass_code, scannedAt: winner.scanned_at, replay: true };
   }
-  if (winner) return { result: "already_in", color: "amber", name: pass.name, passCode: pass.pass_code, scannedAt: winner.scanned_at };
+  if (winner) return { result: "already_in", color: "red", name: pass.name, passCode: pass.pass_code, scannedAt: winner.scanned_at };
   return invalid("cancelled", "This registration changed while scanning. Scan again.");
 }
 

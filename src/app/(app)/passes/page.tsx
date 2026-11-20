@@ -112,7 +112,7 @@ export default async function PassesPage() {
                     <Award className="size-3.5" aria-hidden /> Certificate
                   </LinkButton>
                 ) : (
-                  <Chip>{r.status === "waitlisted" ? "Didn't get a seat" : r.checked_in_at ? "Checked in" : "Not checked in"}</Chip>
+                  <Chip className="shrink-0 whitespace-nowrap">{r.status === "waitlisted" ? "Didn't get a seat" : r.checked_in_at ? "Checked in" : "Missed"}</Chip>
                 )}
               </li>
             ))}
@@ -154,7 +154,11 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
         </div>
       </div>
 
-      {/* Perforation (vertical on wide, horizontal on phones) */}
+      {/* Perforation: a torn-ticket edge, horizontal on phones and vertical on wide screens */}
+      <div aria-hidden className="relative h-0 border-t border-dashed border-line-strong sm:hidden">
+        <span className="absolute -left-3 -top-3 size-6 rounded-full border border-line-strong bg-canvas [clip-path:inset(0_0_0_50%)]" />
+        <span className="absolute -right-3 -top-3 size-6 rounded-full border border-line-strong bg-canvas [clip-path:inset(0_50%_0_0)]" />
+      </div>
       <div aria-hidden className="relative hidden w-0 border-l border-dashed border-line-strong sm:block" />
 
       <div className="flex min-w-0 flex-1 flex-col gap-4 p-5">
@@ -168,19 +172,19 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
           </p>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
           {r.status === "registered" && qrSvg ? (
-            <div className="w-[116px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line">
+            <div className="w-[208px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line sm:w-[116px]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={svgSrc(qrSvg)} alt={`QR code for pass ${r.pass_code}`} className="block aspect-square w-full" />
             </div>
           ) : (
-            <div className="grid w-[116px] shrink-0 place-items-center rounded-xl border border-dashed border-line-strong bg-sunken/50 p-3 text-center text-[11.5px] text-ink-muted">
+            <div className="grid w-full shrink-0 place-items-center rounded-xl border border-dashed sm:w-[116px] border-line-strong bg-sunken/50 p-3 text-center text-[11.5px] text-ink-muted">
               <Hourglass className="mb-1 size-4" aria-hidden />
               {cancelled ? "No entry" : "QR once you get a seat"}
             </div>
           )}
-          <div className="min-w-0 flex-1 space-y-1.5 text-[13px]">
+          <div className="min-w-0 flex-1 space-y-1.5 text-center text-[13px] sm:text-left">
             {r.status === "registered" && (
               <>
                 <p className="text-[12.5px] font-semibold text-ink-muted">Pass</p>
@@ -200,6 +204,14 @@ function PassCard({ r, qrSvg }: { r: PassRow; qrSvg: string | null }) {
             {r.status === "registered" && r.price_paise > 0 && (
               <p className={r.payment_status === "paid" ? "font-medium text-live" : "font-medium text-warn"}>
                 {r.payment_status === "paid" ? "Paid" : r.upi_utr ? "Payment being checked" : `Unpaid · ${formatINR(r.price_paise)}${r.organizer_upi_id ? "" : " at the desk"}`}
+                {r.payment_status !== "paid" && !r.upi_utr && r.organizer_upi_id && (
+                  <>
+                    {" "}
+                    <Link href={`/events/${r.slug}#register`} className="underline underline-offset-2">
+                      Pay now
+                    </Link>
+                  </>
+                )}
               </p>
             )}
             {r.status === "waitlisted" &&

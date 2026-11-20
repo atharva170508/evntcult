@@ -49,7 +49,7 @@ interface MerchLine {
 type Verdict =
   | { color: "green"; title: string; name?: string; code?: string; note?: string; merch?: MerchLine[]; token?: string }
   | { color: "amber"; title: string; name?: string; code?: string; note?: string; collect?: { amountPaise: number; scan: QueuedScan }; merch?: MerchLine[]; token?: string }
-  | { color: "red"; title: string; note?: string };
+  | { color: "red"; title: string; name?: string; code?: string; note?: string; merch?: MerchLine[]; token?: string };
 
 interface ServerVerdict {
   result: "admitted" | "already_in" | "unpaid" | "invalid";
@@ -106,7 +106,7 @@ function toVerdict(v: ServerVerdict, scan: QueuedScan, pricePaise: number): Verd
     case "admitted":
       return { color: "green", title: "Admitted", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token };
     case "already_in":
-      return { color: "amber", title: "Already checked in", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token, note: v.scannedAt ? `First scanned at ${fmtTime(new Date(v.scannedAt))}` : undefined };
+      return { color: "red", title: "Already in. Don't admit", name: v.name, code: v.passCode, merch: v.merch, token: scan.pass_token, note: v.scannedAt ? `This pass was first scanned at ${fmtTime(new Date(v.scannedAt))}.` : "This pass was already used." };
     case "unpaid":
       return { color: "amber", title: `Collect ${formatINR(v.amountPaise ?? pricePaise)}`, name: v.name, code: v.passCode, note: v.claimedUtr ? `Says paid by UPI, ID ${v.claimedUtr}. Not confirmed yet.` : "Not paid yet. Take the fee, then admit.", collect: { amountPaise: v.amountPaise ?? pricePaise, scan } };
     default:
@@ -313,7 +313,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
       if (!guestRef.current.size) return { color: "red", title: "Can't check offline", note: "The guest list hasn't been saved on this phone yet. Connect once to download it." };
       if (!entry) return { color: "red", title: "Not on the guest list", note: "Not a pass for this event (checked offline)." };
       const offlineMerch = merchRef.current.map((i) => ({ ...i, claimedAt: entry.m?.[i.id] ?? null }));
-      if (entry.in || seenRef.current.has(h)) return { color: "amber", title: "Already checked in", name: entry.name, code: entry.code, merch: offlineMerch, token: scan.pass_token, note: entry.in ? `First scanned at ${fmtTime(new Date(entry.in))}` : "Scanned on this phone earlier." };
+      if (entry.in || seenRef.current.has(h)) return { color: "red", title: "Already in. Don't admit", name: entry.name, code: entry.code, merch: offlineMerch, token: scan.pass_token, note: entry.in ? `This pass was first scanned at ${fmtTime(new Date(entry.in))}.` : "Scanned on this phone earlier." };
       if (entry.unpaid && !scan.accept_unpaid) {
         return { color: "amber", title: `Collect ${formatINR(event.pricePaise)}`, name: entry.name, code: entry.code, note: "Not paid yet. Take the fee, then admit.", collect: { amountPaise: event.pricePaise, scan } };
       }
@@ -558,14 +558,14 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
         )}
 
         {verdict && (
-          <div className={`absolute inset-0 flex flex-col items-center justify-center gap-3 overflow-y-auto p-6 text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
+          <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 overflow-y-auto px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))] text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
             <Icon className="size-16" strokeWidth={2.2} />
             <p className="shout text-[32px] leading-tight">{verdict.title}</p>
             {"name" in verdict && verdict.name && <p className="text-[20px] font-bold">{verdict.name}</p>}
             {"code" in verdict && verdict.code && <p className="font-mono text-[14px] font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
             {verdict.note && <p className="max-w-xs text-[14px] font-medium opacity-90">{verdict.note}</p>}
 
-            {verdict.color !== "red" && verdict.token && !!verdict.merch?.length && (
+            {verdict.token && !!verdict.merch?.length && (
               <ul className="w-full max-w-xs space-y-2 text-left text-[14px]" aria-label="Goodies">
                 {verdict.merch.map((line) => (
                   <li key={line.id} className="flex items-center justify-between gap-3 rounded-tile bg-black/25 px-3 py-2">
@@ -594,7 +594,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
               </div>
             ) : (
               (verdict.color !== "green" || !!verdict.merch?.length) && (
-                <button onClick={() => setVerdict(null)} className="mt-2 rounded-xl bg-black/25 px-6 py-3 text-[15px] font-bold">
+                <button onClick={() => setVerdict(null)} className="mt-4 h-14 w-full max-w-xs rounded-xl bg-black/25 px-6 text-[17px] font-bold">
                   Scan next
                 </button>
               )

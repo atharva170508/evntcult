@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Copy, Hourglass } from "lucide-react";
+import { Check, CheckCircle2, Copy, Hourglass } from "lucide-react";
 import { Button, buttonClass } from "@/components/ui/Button";
 import { Input, Notice } from "@/components/ui/Field";
 import { formatINR } from "@/lib/money";
@@ -19,7 +19,7 @@ export interface UpiPayProps {
 }
 
 /** Pay the organizer by UPI, then hand in the transaction ID for them to check. */
-export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected }: UpiPayProps) {
+export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected, onDone }: UpiPayProps & { onDone?: () => void }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState("");
@@ -37,6 +37,7 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected }: Up
     if (!res?.ok) return setError(data.error?.message ?? (res ? "Didn't save. Try again." : "You seem to be offline. Try again."));
     setEditing(false);
     setValue("");
+    onDone?.();
     router.refresh();
   }
 
@@ -62,65 +63,99 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected }: Up
     );
   }
 
+  const digits = value.replace(/\s/g, "");
+  const valid = /^\d{12}$/.test(digits);
+  const badChars = /[^\d\s]/.test(value);
+
   return (
-    <section aria-label={`Pay ${formatINR(pricePaise)} by UPI`} className="overflow-hidden rounded-card ring-1 ring-line">
-      <div className="flex items-center justify-between bg-sunken/60 px-4 py-3">
-        <p className="text-[14px] font-semibold">Pay by UPI</p>
-        <p className="font-mono text-[15px] font-medium tabular-nums">{formatINR(pricePaise)}</p>
+    <section aria-label={`Pay ${formatINR(pricePaise)} by UPI`} className="space-y-6">
+      {rejected && <Notice tone="danger">The organizer couldn&apos;t find that payment. Check the transaction ID and send it again.</Notice>}
+
+      <div className="text-center">
+        <p className="text-[13.5px] text-ink-muted">Amount to pay</p>
+        <p className="mt-1 font-display text-[44px] leading-none tabular-nums text-ink">{formatINR(pricePaise)}</p>
       </div>
-      <div className="space-y-4 p-4">
-        {rejected && <Notice tone="danger">The organizer couldn&apos;t find that payment. Check the transaction ID.</Notice>}
-        <div className="flex items-center gap-4">
-          <div className="w-[128px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={svgSrc(qrSvg)} alt="UPI payment QR code" className="block aspect-square w-full" />
-          </div>
-          <div className="min-w-0 space-y-2">
-            <p className="text-[12.5px] text-ink-muted">Scan with any UPI app, or pay to</p>
-            <div className="flex items-center gap-1.5">
-              <span className="min-w-0 truncate font-mono text-[13px]">{vpa}</span>
-              <button type="button" onClick={copy} className={buttonClass("secondary", "sm", "h-7 shrink-0 px-2.5 text-[12px]")}>
+
+      <ol className="space-y-6">
+        <li>
+          <p className="flex items-center gap-2 text-[14px] font-semibold text-ink">
+            <span className="grid size-6 place-items-center rounded-full bg-ink text-[12px] text-white" aria-hidden>
+              1
+            </span>
+            Pay with any UPI app
+          </p>
+          <div className="mt-3 flex flex-col items-center gap-3 rounded-2xl border border-line-strong bg-white p-4">
+            <div className="w-[188px] rounded-xl bg-white p-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={svgSrc(qrSvg)} alt={`UPI QR code to pay ${formatINR(pricePaise)} to ${vpa}`} className="block aspect-square w-full" />
+            </div>
+            <div className="flex max-w-full items-center gap-2 rounded-lg bg-sunken px-3 py-1.5">
+              <span className="min-w-0 truncate font-mono text-[13px] text-ink">{vpa}</span>
+              <button type="button" onClick={copy} className={buttonClass("secondary", "sm", "h-8 shrink-0 px-2.5 text-[12.5px]")}>
                 {copied ? <Check className="size-3.5" aria-hidden /> : <Copy className="size-3.5" aria-hidden />}
                 {copied ? "Copied" : "Copy"}
               </button>
             </div>
+            <a href={uri} className={buttonClass("primary", "lg", "w-full md:hidden")}>
+              Open UPI app
+            </a>
           </div>
-        </div>
-        <a href={uri} className={buttonClass("primary", "md", "w-full md:hidden")}>
-          Open UPI app
-        </a>
-        <form onSubmit={submit} className="space-y-2 border-t border-line pt-4">
-          <label htmlFor="upi-utr" className="block text-[13px] font-medium">
-            UPI transaction ID
-          </label>
-          <Input
-            id="upi-utr"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            inputMode="numeric"
-            autoComplete="off"
-            placeholder="12 digits"
-            maxLength={20}
-            aria-invalid={!!error || undefined}
-            className="font-mono"
-          />
-          {error && (
-            <p role="alert" className="text-[12.5px] font-medium text-danger">
-              {error}
+        </li>
+        <li>
+          <form onSubmit={submit} noValidate>
+            <label htmlFor="upi-utr" className="flex items-center gap-2 text-[14px] font-semibold text-ink">
+              <span className="grid size-6 place-items-center rounded-full bg-ink text-[12px] text-white" aria-hidden>
+                2
+              </span>
+              Enter the transaction ID
+            </label>
+            <p id="upi-utr-help" className="mt-1.5 pl-8 text-[13px] text-ink-muted">
+              The 12-digit UTR or UPI reference from your payment app&apos;s receipt.
             </p>
-          )}
-          <div className="flex items-center gap-2 pt-1">
-            <Button type="submit" loading={busy} disabled={!value.trim()}>
-              I&apos;ve paid
-            </Button>
-            {editing && (
-              <Button type="button" variant="ghost" onClick={() => setEditing(false)}>
-                Cancel
-              </Button>
+            <div className="relative mt-3">
+              <Input
+                id="upi-utr"
+                value={value}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                  setError(null);
+                }}
+                inputMode="numeric"
+                autoComplete="off"
+                maxLength={20}
+                aria-describedby="upi-utr-help upi-utr-state"
+                aria-invalid={!!error || badChars || undefined}
+                className="h-12 pr-20 font-mono text-[16px] tracking-[0.08em]"
+              />
+              <span id="upi-utr-state" className="pointer-events-none absolute inset-y-0 right-3 flex items-center gap-1 text-[12.5px] tabular-nums" aria-live="polite">
+                {valid ? (
+                  <span className="flex items-center gap-1 font-semibold text-live">
+                    <CheckCircle2 className="size-4" aria-hidden /> Looks right
+                  </span>
+                ) : (
+                  <span className={badChars || digits.length > 12 ? "font-semibold text-danger" : "text-ink-muted"}>{digits.length}/12</span>
+                )}
+              </span>
+            </div>
+            {(error || badChars) && (
+              <p role="alert" className="mt-2 text-[13px] font-medium text-danger">
+                {error ?? "Only numbers. The transaction ID is 12 digits."}
+              </p>
             )}
-          </div>
-        </form>
-      </div>
+            <div className="mt-4 flex items-center gap-2">
+              <Button type="submit" size="lg" loading={busy} disabled={!valid} className="flex-1">
+                I&apos;ve paid, send for checking
+              </Button>
+              {editing && (
+                <Button type="button" size="lg" variant="ghost" onClick={() => setEditing(false)}>
+                  Cancel
+                </Button>
+              )}
+            </div>
+            <p className="mt-3 text-center text-[12.5px] text-ink-muted">The host checks the ID against their UPI app, then your pass shows Paid.</p>
+          </form>
+        </li>
+      </ol>
     </section>
   );
 }

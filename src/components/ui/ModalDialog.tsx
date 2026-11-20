@@ -29,7 +29,7 @@ export function ModalDialog({ label, onClose, className, children }: { label: st
         e.preventDefault();
         onClose();
       }}
-      className={cn("fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-visible bg-transparent p-0 text-ink backdrop:bg-transparent", className)}
+      className={cn("fixed inset-0 !m-0 h-dvh max-h-none w-full max-w-none overflow-visible bg-transparent p-0 text-ink backdrop:bg-transparent", className)}
     >
       {children}
     </dialog>

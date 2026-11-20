@@ -20,6 +20,7 @@ import { PaymentCell } from "@/components/organizer/PaymentCell";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
 import { Meter } from "@/components/ui/Meter";
 import { Notice } from "@/components/ui/Field";
+import { SlashFocus } from "@/components/organizer/SlashFocus";
 
 export const metadata: Metadata = { title: "Manage event" };
 export const dynamic = "force-dynamic";
@@ -28,8 +29,8 @@ const WA_LABEL: Record<string, string> = { event_reminder: "reminder", event_soo
 const UPDATE_LABEL: Record<string, string> = { schedule: "Schedule change", venue: "Venue change", update: "Update" };
 const PAGE = 100;
 
-export default async function ManageEventPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ q?: string; all?: string }> }) {
-  const [{ id }, { q, all: showAll }] = await Promise.all([params, searchParams]);
+export default async function ManageEventPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ q?: string; all?: string; f?: string }> }) {
+  const [{ id }, { q, all: showAll, f: filterParam }] = await Promise.all([params, searchParams]);
   const viewer = await getViewer();
   if (!viewer) redirect(`/signin?next=/organizer/events/${encodeURIComponent(id)}/manage`);
   if (!viewer.verifiedOrganizer) redirect("/dashboard");
@@ -69,7 +70,23 @@ export default async function ManageEventPage({ params, searchParams }: { params
   const s = { registered: stats?.registered ?? 0, waitlisted: stats?.waitlisted ?? 0, checkedIn: stats?.checked_in ?? 0, paid: stats?.paid ?? 0, unpaid: stats?.unpaid ?? 0, toVerify: stats?.to_verify ?? 0 };
   const paidEvent = e.price_paise > 0;
   const connected = whatsappConnected();
-  const shown = showAll ? attendees : attendees.slice(0, PAGE);
+  // Filter tabs, Linear style: counted from the same list so the numbers always match the rows.
+  const isVerify = (a: (typeof attendees)[number]) => a.status === "registered" && a.payment_status === "unpaid" && !!a.upi_utr;
+  const FILTERS = [
+    { key: "all", label: "All", test: () => true },
+    { key: "in", label: "Checked in", test: (a: (typeof attendees)[number]) => !!a.checked_in_at },
+    { key: "out", label: "Not in yet", test: (a: (typeof attendees)[number]) => a.status === "registered" && !a.checked_in_at },
+    ...(paidEvent ? [{ key: "verify", label: "To verify", test: isVerify }] : []),
+    { key: "wait", label: "Waitlist", test: (a: (typeof attendees)[number]) => a.status === "waitlisted" },
+  ];
+  const filter = FILTERS.find((x) => x.key === filterParam) ?? FILTERS[0];
+  const filtered = attendees.filter(filter.test);
+  const shown = showAll ? filtered : filtered.slice(0, PAGE);
+  const filterHref = (key: string) => {
+    const p = new URLSearchParams({ ...(q ? { q } : {}), ...(key !== "all" ? { f: key } : {}) });
+    const str = p.toString();
+    return str ? `?${str}` : "?";
+  };
 
   const statusTone = e.status === "published" ? "live" : e.status === "draft" ? "warn" : e.status === "cancelled" ? "danger" : "neutral";
   const th = "px-4 py-3 font-mono text-[10.5px] font-medium uppercase tracking-[0.08em]";
@@ -140,13 +157,18 @@ export default async function ManageEventPage({ params, searchParams }: { params
       </header>
 
       {/* KPIs */}
-      <dl className={`mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-card bg-line shadow-card sm:grid-cols-3 ${kpis.length === 5 ? "lg:grid-cols-5" : "lg:grid-cols-4"}`}>
-        {kpis.map((k) => (
-          <div key={k.l} className="bg-surface p-5">
+      <dl className="mt-6 grid grid-cols-2 overflow-hidden rounded-2xl border border-line-strong bg-white sm:flex sm:divide-x sm:divide-line">
+        {kpis.map((k, i) => (
+          <div
+            key={k.l}
+            className={`min-w-0 px-4 py-3.5 sm:flex-1 ${i % 2 ? "border-l border-line sm:border-l-0" : ""} ${i > 1 ? "border-t border-line sm:border-t-0" : ""} ${i === kpis.length - 1 && kpis.length % 2 ? "col-span-2 sm:col-span-1" : ""}`}
+          >
             <dt className="text-[12.5px] text-ink-muted">{k.l}</dt>
-            <dd className={`mt-3 font-mono text-[26px] font-medium leading-none tracking-[-0.04em] tabular-nums ${k.tone === "warn" ? "text-warn" : ""}`}>{k.v}</dd>
-            {k.meter && <Meter value={k.meter[0]} max={k.meter[1]} className="mt-3" />}
-            {k.sub && <p className="mt-2 text-[12px] text-ink-subtle">{k.sub}</p>}
+            <dd className="mt-1 flex items-baseline gap-2">
+              <span className={`font-mono text-[22px] font-medium leading-none tracking-[-0.03em] tabular-nums ${k.tone === "warn" ? "text-warn" : "text-ink"}`}>{k.v}</span>
+              {k.sub && <span className="truncate text-[12px] text-ink-subtle">{k.sub}</span>}
+            </dd>
+            {k.meter && <Meter value={k.meter[0]} max={k.meter[1]} className="mt-2.5" />}
           </div>
         ))}
       </dl>
@@ -165,7 +187,11 @@ export default async function ManageEventPage({ params, searchParams }: { params
             <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
               <form role="search" className="flex h-9 flex-1 items-center gap-2 rounded-full bg-sunken/70 pl-3.5 pr-1 transition-[background-color,box-shadow] focus-within:bg-surface focus-within:shadow-card sm:flex-none">
                 <Search className="size-4 shrink-0 text-ink-subtle" aria-hidden />
-                <input name="q" type="search" defaultValue={q} placeholder="Name, email or pass code" aria-label="Search attendees" className="w-full min-w-0 bg-transparent text-[13.5px] focus:outline-none sm:w-52" />
+                {filter.key !== "all" && <input type="hidden" name="f" value={filter.key} />}
+                <input id="att-search" name="q" type="search" defaultValue={q} placeholder="Name, email, pass or UTR" aria-label="Search attendees" aria-keyshortcuts="/" className="w-full min-w-0 bg-transparent text-[13.5px] focus:outline-none sm:w-52" />
+                <kbd className="hidden rounded border border-line-strong bg-white px-1.5 font-mono text-[11px] text-ink-muted md:inline" aria-hidden>
+                  /
+                </kbd>
                 <button className={buttonClass("primary", "sm", "h-7")}>Search</button>
               </form>
               <a href={`/api/events/${e.id}/attendees?format=csv${q ? `&q=${encodeURIComponent(q)}` : ""}`} className={buttonClass("secondary", "sm", "h-9")}>
@@ -174,13 +200,34 @@ export default async function ManageEventPage({ params, searchParams }: { params
             </div>
           </div>
 
-          {attendees.length === 0 ? (
+          <nav aria-label="Filter attendees" className="flex gap-1 overflow-x-auto border-b border-line px-3 py-2 md:px-4">
+            {FILTERS.map((x) => {
+              const n = attendees.filter(x.test).length;
+              const on = x.key === filter.key;
+              return (
+                <Link
+                  key={x.key}
+                  href={filterHref(x.key)}
+                  aria-current={on ? "page" : undefined}
+                  className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg px-3 text-[13.5px] font-medium transition-colors duration-fast ${on ? "bg-ink text-white" : "text-ink-2 hover:bg-sunken"}`}
+                >
+                  {x.label}
+                  <span className={`font-mono text-[12px] tabular-nums ${on ? "text-white/70" : x.key === "verify" && n ? "font-semibold text-warn" : "text-ink-subtle"}`}>{n}</span>
+                </Link>
+              );
+            })}
+          </nav>
+          <SlashFocus target="att-search" />
+
+          {filtered.length === 0 ? (
             <div className="flex flex-col items-center px-6 py-14 text-center">
               <span className="grid size-11 place-items-center rounded-tile bg-sunken text-ink-muted">
                 <Users className="size-5" aria-hidden />
               </span>
-              <p className="mt-4 text-h4 font-semibold">{q ? `Nobody matches “${q}”` : "No registrations yet"}</p>
-              {!q && e.status === "published" && <p className="mt-1 text-small text-ink-muted">Share the event link to get your first sign-ups.</p>}
+              <p className="mt-4 text-h4 font-semibold">
+                {q ? `Nobody matches “${q}”` : attendees.length === 0 ? "No registrations yet" : filter.key === "verify" ? "No payments to check" : `Nobody in “${filter.label}”`}
+              </p>
+              {!q && attendees.length === 0 && e.status === "published" && <p className="mt-1 text-small text-ink-muted">Share the event link to get your first sign-ups.</p>}
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -209,7 +256,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
                             </p>
                           ))}
                       </td>
-                      <td className="px-4 py-3 font-mono text-[12.5px] tracking-[0.06em]">{a.pass_code}</td>
+                      <td className="whitespace-nowrap px-4 py-3 font-mono text-[12.5px] tracking-[0.06em]">{a.pass_code}</td>
                       <td className="px-4 py-3">{a.status === "registered" ? <Chip tone="outline">Registered</Chip> : a.hold_expires_at ? <Chip tone="warn">Seat held</Chip> : <Chip>Waitlist</Chip>}</td>
                       <td className="px-4 py-3">{a.checked_in_at ? <span className="font-mono font-medium text-live">{fmtTime(new Date(a.checked_in_at))}</span> : <span className="text-ink-subtle">—</span>}</td>
                       <td className="px-4 py-3">{a.checked_in_at ? <AttendeeCert regId={a.id} certs={certs.filter((c) => c.registrationId === a.id)} /> : <span className="text-ink-subtle">—</span>}</td>
@@ -224,10 +271,10 @@ export default async function ManageEventPage({ params, searchParams }: { params
               </table>
             </div>
           )}
-          {attendees.length > shown.length && (
+          {filtered.length > shown.length && (
             <p className="border-t border-line px-5 py-4 text-[13px] text-ink-muted">
-              Showing <span className="font-mono">{shown.length}</span> of <span className="font-mono">{attendees.length}</span>.{" "}
-              <Link href={`?${new URLSearchParams({ ...(q ? { q } : {}), all: "1" })}`} className="link">
+              Showing <span className="font-mono">{shown.length}</span> of <span className="font-mono">{filtered.length}</span>.{" "}
+              <Link href={`?${new URLSearchParams({ ...(q ? { q } : {}), ...(filter.key !== "all" ? { f: filter.key } : {}), all: "1" })}`} className="link">
                 Show all
               </Link>{" "}
               or download the CSV.

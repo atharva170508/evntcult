@@ -48,7 +48,7 @@ describe("gate check-in", { timeout: 30_000 }, () => {
 
   it("amber: scanning the same pass again says 'already in' with the original time", async () => {
     const r = await checkIn(db, { eventId: "free", passToken: tok("asha"), clientScanId: scanId(), now: new Date(T0.getTime() + 60_000) });
-    expect(r).toMatchObject({ result: "already_in", color: "amber", scannedAt: T0.toISOString() });
+    expect(r).toMatchObject({ result: "already_in", color: "red", scannedAt: T0.toISOString() });
     expect((await gateCounts(db, "free")).checkedIn).toBe(1);
   });
 
