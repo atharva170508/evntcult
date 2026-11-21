@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 
 /* Figtree for the interface, EB Garamond for big headlines, JetBrains Mono for pass codes.
@@ -24,6 +25,16 @@ const mono = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  openGraph: {
+    type: "website",
+    siteName: "EvntCult",
+    locale: "en_IN",
+    title: "EvntCult — Every campus event, one pass",
+    description: "Hackathons, cricket, garba and workshops from every club. Register in a tap, walk in with your phone.",
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "EvntCult: every campus event, one pass" }],
+  },
+  twitter: { card: "summary_large_image", images: ["/og.jpg"] },
   title: { default: "EvntCult — Every event, one pass", template: "%s · EvntCult" },
   description: "Every campus event, one pass. Find what's on, register, and walk in with a scan.",
   applicationName: "EvntCult",

@@ -30,6 +30,8 @@ import { choiceTallies, teamRoster } from "@/lib/data/questions";
 import { TeamsCard } from "@/components/organizer/TeamsCard";
 import { RequestsCard } from "@/components/organizer/RequestsCard";
 import { WalkInCard } from "@/components/organizer/WalkInCard";
+import { EventAnalyticsCard } from "@/components/organizer/EventAnalyticsCard";
+import { eventAnalytics } from "@/lib/data/analytics";
 import { kindFor, parseConfig, teamRule } from "@/lib/categories";
 
 export const metadata: Metadata = { title: "Manage event" };
@@ -84,6 +86,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
   const tallies = await choiceTallies(await getDB(), e.id);
   // Hackathons and tournaments: group sign-ups into teams by the team name they gave.
   const kind = kindFor(e.category);
+  const analytics = await eventAnalytics(await getDB(), e.id);
   const walkIns = await count("SELECT COUNT(*) AS n FROM checkins WHERE event_id = ? AND device_id = 'walk-in'", e.id);
   const requests = e.requires_approval
     ? await all<{ id: string; name: string; email: string; created_at: string }>(
@@ -196,6 +199,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
           </div>
         ))}
       </dl>
+
+      <EventAnalyticsCard data={analytics} />
 
       <div className="mt-6 grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
         {/* Attendees — the main job */}

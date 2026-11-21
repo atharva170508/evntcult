@@ -62,7 +62,7 @@ export function AppShell({
       </main>
       {ws === "attend" && <SiteFooter viewer={viewer} />}
       <TabBar signedIn={!!viewer} />
-      <SearchDialog open={searchOpen} onClose={closeSearch} />
+      <SearchDialog open={searchOpen} onClose={closeSearch} isOrganizer={!!viewer?.isOrganizer} />
       <EnterCodeDialog open={codeOpen} onClose={() => setCodeOpen(false)} />
     </div>
   );
