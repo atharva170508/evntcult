@@ -1,5 +1,7 @@
 "use client";
 
+import { Select } from "@/components/ui/Select";
+
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -224,14 +226,13 @@ export function CalendarView({ initialView, month, today, initials, events, clas
                   {l}
                 </button>
               ))}
-              <select aria-label="Venue" className="o-select" value={venue} onChange={(e) => setVenue(e.target.value)}>
-                <option value="">All venues</option>
-                {venues.map((v) => (
-                  <option key={v} value={v}>
-                    {v}
-                  </option>
-                ))}
-              </select>
+              <Select
+                label="Venue"
+                size="sm"
+                value={venue}
+                onChange={setVenue}
+                options={[{ value: "", label: "All venues" }, ...venues.map((v) => ({ value: v, label: v }))]}
+              />
             </div>
 
             {showAgenda ? (

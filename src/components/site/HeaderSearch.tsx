@@ -1,5 +1,7 @@
 "use client";
 
+import { Select } from "@/components/ui/Select";
+
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Search } from "lucide-react";
@@ -81,37 +83,21 @@ export function HeaderSearch({ className }: { className?: string }) {
       <Divider hidden={active === "q" || active === "when"} />
       <label className={seg("when")} onClick={() => setActive("when")}>
         <span className="text-[12px] font-semibold text-ink">When</span>
-        <select
-          name="when"
-          value={when}
-          onChange={(e) => setWhen(e.target.value)}
-          onFocus={() => setActive("when")}
-          className={cn("w-full cursor-pointer appearance-none truncate bg-transparent text-[14px] outline-none", when ? "text-ink" : "text-ink-subtle")}
-        >
-          {WHEN.map(([v, l]) => (
-            <option key={v} value={v}>
-              {l}
-            </option>
-          ))}
-        </select>
+        <Select bare name="when" label="When" size="sm" value={when} onChange={setWhen} onOpenChange={(o) => o && setActive("when")} options={WHEN.map(([v, l]) => ({ value: v, label: l }))} />
       </label>
       <Divider hidden={active === "when" || active === "type"} />
       <label className={cn(seg("type"), "pr-[72px]")} onClick={() => setActive("type")}>
         <span className="text-[12px] font-semibold text-ink">Kind</span>
-        <select
+        <Select
+          bare
           name="type"
+          label="Kind"
+          size="sm"
           value={type}
-          onChange={(e) => setType(e.target.value)}
-          onFocus={() => setActive("type")}
-          className={cn("w-full cursor-pointer appearance-none truncate bg-transparent text-[14px] outline-none", type ? "text-ink" : "text-ink-subtle")}
-        >
-          <option value="">Any kind</option>
-          {Object.entries(CATEGORY_NAMES).map(([v, l]) => (
-            <option key={v} value={v}>
-              {l}
-            </option>
-          ))}
-        </select>
+          onChange={setType}
+          onOpenChange={(o) => o && setActive("type")}
+          options={[{ value: "", label: "Any kind" }, ...Object.entries(CATEGORY_NAMES).map(([v, l]) => ({ value: v, label: l }))]}
+        />
       </label>
       <button
         type="submit"

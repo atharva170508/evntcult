@@ -1,5 +1,7 @@
 "use client";
 
+import { Select } from "@/components/ui/Select";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -64,18 +66,16 @@ export function AttendeeCert({ regId, certs }: { regId: string; certs: { id: str
         </span>
       ))}
       {missing.length > 0 && (
-        <select
-          aria-label="Add a certificate"
-          value=""
+        <Select
+          label="Add a certificate"
+          size="sm"
+          bare
           disabled={busy}
-          onChange={(e) => e.target.value && run(`/api/registrations/${regId}/certificate`, { kind: e.target.value })}
-          className="h-6 rounded-xl bg-surface px-2 text-[12px] shadow-card"
-        >
-          <option value="">Add</option>
-          {missing.map(([k, l]) => (
-            <option key={k} value={k}>{l}</option>
-          ))}
-        </select>
+          triggerClassName="h-6 rounded-xl bg-surface px-2 text-[12px] shadow-card"
+          value=""
+          onChange={(v) => v && run(`/api/registrations/${regId}/certificate`, { kind: v })}
+          options={[{ value: "", label: "Add" }, ...missing.map(([k, l]) => ({ value: k, label: l }))]}
+        />
       )}
       <button disabled={busy} onClick={() => confirm("Undo this check-in? Their attendance certificate is withdrawn.") && run(`/api/registrations/${regId}/undo-checkin`)} className="font-medium text-ink-muted underline decoration-line-strong underline-offset-2 hover:text-danger">
         Undo check-in

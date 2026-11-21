@@ -1,5 +1,7 @@
 "use client";
 
+import { Select } from "@/components/ui/Select";
+
 import { useState } from "react";
 import { Check, Copy, Link2, MessageCircle, ScanLine, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -119,19 +121,18 @@ export function VolunteerLinks({ eventId, eventTitle, initial }: { eventId: stri
                 <ShoppingBag className="size-4" aria-hidden /> Entry, merch and meals
               </button>
             </div>
-            <label className="sr-only" htmlFor="vol-exp">
-              Link ends
-            </label>
-            <select
-              id="vol-exp"
+            <Select
+              label="Link ends"
+              size="sm"
+              triggerClassName="!h-11"
               value={expires}
-              onChange={(e) => setExpires(e.target.value as typeof expires)}
-              className="h-11 rounded-lg border border-line-strong bg-white px-3 text-[14px] text-ink focus:border-ink focus:outline-none"
-            >
-              <option value="event_end">Ends after the event</option>
-              <option value="12h">Ends in 12 hours</option>
-              <option value="24h">Ends in 24 hours</option>
-            </select>
+              onChange={(v) => setExpires(v)}
+              options={[
+                { value: "event_end", label: "Ends after the event" },
+                { value: "12h", label: "Ends in 12 hours" },
+                { value: "24h", label: "Ends in 24 hours" },
+              ]}
+            />
           </div>
           {error && (
             <p role="alert" className="text-[13px] font-medium text-danger">

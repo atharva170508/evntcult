@@ -33,6 +33,10 @@ export function Select<T extends string>({
   className,
   size = "md",
   align = "start",
+  bare = false,
+  triggerClassName,
+  onOpenChange,
+  disabled,
 }: {
   value: T;
   onChange: (v: T) => void;
@@ -43,6 +47,11 @@ export function Select<T extends string>({
   className?: string;
   size?: "sm" | "md";
   align?: "start" | "end";
+  /** No field chrome: just the value, for use inside an existing control (the header search). */
+  bare?: boolean;
+  triggerClassName?: string;
+  onOpenChange?: (open: boolean) => void;
+  disabled?: boolean;
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
@@ -73,6 +82,10 @@ export function Select<T extends string>({
     );
     setOpen(true);
   };
+
+  useEffect(() => {
+    onOpenChange?.(open);
+  }, [open, onOpenChange]);
 
   // Keep focus in the list while open, and close on outside press.
   useEffect(() => {
@@ -143,6 +156,7 @@ export function Select<T extends string>({
         aria-expanded={open}
         aria-controls={open ? `${id}-list` : undefined}
         aria-label={`${label}: ${current?.label}`}
+        disabled={disabled}
         onClick={() => (open ? close() : show())}
         onKeyDown={(e) => {
           if (e.key === "ArrowDown" || e.key === "ArrowUp") {
@@ -151,19 +165,21 @@ export function Select<T extends string>({
           }
         }}
         className={cn(
-          "ui-field ui-select-trigger",
-          size === "sm" ? "h-9 px-3 text-[13.5px]" : "h-11 px-4 text-[14.5px]",
+          bare
+            ? "flex w-full items-center gap-1 rounded-md text-left text-[14px]"
+            : cn("ui-field ui-select-trigger", size === "sm" ? "h-9 px-3 text-[13.5px]" : "h-11 px-4 text-[14.5px]"),
+          "disabled:opacity-50",
+          triggerClassName,
         )}
       >
-        {size === "md" && <span className="text-ink-muted">{label}</span>}
-        <span className="font-semibold text-ink">{current?.label}</span>
-        <ChevronDown
-          className={cn(
-            "ml-auto size-4 text-ink-muted transition-transform duration-[220ms] ease-[var(--ease-enter)]",
-            open && "rotate-180",
-          )}
-          aria-hidden
-        />
+        {size === "md" && !bare && <span className="text-ink-muted">{label}</span>}
+        <span className={cn("truncate", bare ? (value ? "text-ink" : "text-ink-subtle") : "font-semibold text-ink")}>{current?.label}</span>
+        {!bare && (
+          <ChevronDown
+            className={cn("ml-auto size-4 text-ink-muted transition-transform duration-[220ms] ease-[var(--ease-enter)]", open && "rotate-180")}
+            aria-hidden
+          />
+        )}
       </button>
 
       {open && (
