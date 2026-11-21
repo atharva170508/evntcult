@@ -2,7 +2,6 @@ import { kindFor } from "@/lib/categories";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import QRCode from "qrcode";
 import { Award, CalendarPlus, ChevronRight, Star, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { all } from "@/lib/db";
@@ -17,7 +16,7 @@ import { SavePassButton } from "@/components/passes/SavePassButton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
 import { HoloPass } from "@/components/passes/HoloPass";
-import { qrArtSvg } from "@/lib/qr-art";
+import { brandQr, qrArtSvg } from "@/lib/qr-art";
 import { directionsUrl } from "@/lib/organizer/shared";
 
 export const metadata: Metadata = { title: "My passes" };
@@ -127,7 +126,7 @@ export default async function PassesPage() {
   const qr = new Map<string, string>();
   for (const r of upcoming) {
     if (r.status === "registered" && r.event_status !== "cancelled") {
-      qr.set(r.id, await QRCode.toString(passQrPayload(r.pass_token), { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#222222", light: "#ffffff" } }));
+      qr.set(r.id, brandQr(passQrPayload(r.pass_token), { kind: "pass", accent: accentHex(accentFor({ id: r.event_id, category: r.category })) }));
     }
   }
 

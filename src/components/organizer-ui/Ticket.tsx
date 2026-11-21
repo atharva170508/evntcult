@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import QRCode from "qrcode";
+import { useEffect, useMemo, useState } from "react";
+import { brandQr } from "@/lib/qr-art";
 import { Odometer } from "./primitives";
 import { svgSrc } from "@/lib/svg-src";
 
@@ -23,18 +23,10 @@ const has = (v: string | null | undefined): v is string => !!v && v.trim() !== "
 
 /** The one physical object on the page. Everything on it comes from props; empty renders nothing. */
 export function Ticket(p: TicketProps) {
-  const [qr, setQr] = useState<string | null>(null);
-  useEffect(() => {
-    let live = true;
-    if (!p.qrValue) {
-      setQr(null);
-      return;
-    }
-    QRCode.toString(p.qrValue, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#222222", light: "#ffffff" } }).then((s) => live && setQr(s));
-    return () => {
-      live = false;
-    };
-  }, [p.qrValue]);
+  // Drawn on the client only (the value depends on the browser's host), so no hydration mismatch.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const qr = useMemo(() => (mounted && p.qrValue ? brandQr(p.qrValue, { kind: "link" }) : null), [mounted, p.qrValue]);
 
   return (
     <div className="o-ticket" role="group" aria-label="Pass preview">

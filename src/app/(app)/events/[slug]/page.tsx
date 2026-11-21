@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import QRCode from "qrcode";
+import { brandQr } from "@/lib/qr-art";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -76,12 +76,7 @@ export default async function EventPage({
   const ended = new Date(e.ends_at) <= new Date();
   const qrSvg =
     reg?.status === "registered"
-      ? await QRCode.toString(passQrPayload(reg.pass_token), {
-          type: "svg",
-          margin: 0,
-          errorCorrectionLevel: "M",
-          color: { dark: "#222222", light: "#ffffff" },
-        })
+      ? brandQr(passQrPayload(reg.pass_token), { kind: "pass", accent: accentHex(s.accent) })
       : null;
 
   // What this guest owes: their ticket type or promo price, else the event price.
@@ -99,12 +94,7 @@ export default async function EventPage({
         })
       : null;
   const upiQr = upiUrl
-    ? await QRCode.toString(upiUrl, {
-        type: "svg",
-        margin: 0,
-        errorCorrectionLevel: "M",
-        color: { dark: "#222222", light: "#ffffff" },
-      })
+    ? brandQr(upiUrl, { kind: "upi" })
     : null;
 
   const waitlistPosition =

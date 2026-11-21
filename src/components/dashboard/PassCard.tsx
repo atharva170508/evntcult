@@ -1,4 +1,4 @@
-import QRCode from "qrcode";
+import { brandQr } from "@/lib/qr-art";
 import { CalendarPlus } from "lucide-react";
 import { SavePassButton } from "@/components/passes/SavePassButton";
 import type { NextUp } from "@/lib/data/types";
@@ -14,12 +14,7 @@ const payLabel = { PAID: "Paid", PENDING: "Payment pending", FAILED: "Payment fa
 
 /** The pass as a ticket: ink header, QR, perforation, stub with date · time · fee. */
 export async function PassCard({ pass }: { pass: NextUp }) {
-  const svg = await QRCode.toString(pass.passToken, {
-    type: "svg",
-    margin: 0,
-    errorCorrectionLevel: "M",
-    color: { dark: "#222222", light: "#ffffff" },
-  });
+  const svg = brandQr(pass.passToken, { kind: "pass" });
 
   return (
     <article aria-label={`Pass for ${pass.title}`} className="card flex h-full flex-col overflow-hidden">

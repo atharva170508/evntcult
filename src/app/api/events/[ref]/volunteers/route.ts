@@ -1,5 +1,5 @@
 import { z } from "zod";
-import QRCode from "qrcode";
+import { brandQr } from "@/lib/qr-art";
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { first } from "@/lib/db";
 import { requireEventOwner } from "@/lib/rbac";
@@ -36,7 +36,7 @@ export const POST = handle(async (req: Request, { params }: Ctx) => {
     b.expires === "event_end" ? new Date(Math.max(Date.parse(e.ends_at) + 4 * 3_600_000, now + 3_600_000)) : new Date(now + (b.expires === "12h" ? 12 : 24) * 3_600_000);
   const { id, token } = await createVolunteerLink({ eventId: ref, label: b.label, role: b.role, expiresAt, createdBy: viewer.id });
   const url = new URL(`/v/${token}`, req.url).toString();
-  const qrSvg = await QRCode.toString(url, { type: "svg", margin: 1, errorCorrectionLevel: "M", color: { dark: "#1A1A1A", light: "#FFFFFF" } });
+  const qrSvg = brandQr(url, { kind: "volunteer" });
   return Response.json({ id, url, qrSvg, expiresAt: expiresAt.toISOString() }, { status: 201 });
 });
 

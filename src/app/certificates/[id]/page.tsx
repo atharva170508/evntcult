@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import QRCode from "qrcode";
+import { brandQr } from "@/lib/qr-art";
 import { getDB } from "@/lib/db";
 import { getViewer } from "@/lib/rbac";
 import { requireTermsAccepted } from "@/lib/terms-gate";
@@ -36,7 +36,7 @@ export default async function CertificatePage({ params }: Props) {
   if (!c) notFound();
 
   const scheme = host.startsWith("localhost") ? "http" : "https";
-  const qr = await QRCode.toString(`${scheme}://${host}/verify/${c.publicCode}`, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#222222", light: "#ffffff" } });
+  const qr = brandQr(`${scheme}://${host}/verify/${c.publicCode}`, { kind: "verify" });
 
   return (
     <main className="cert-page">
