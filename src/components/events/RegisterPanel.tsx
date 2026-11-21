@@ -44,7 +44,9 @@ export function RegisterPanel(props: {
   /** The host approves each sign-up: requests wait instead of getting a pass. */
   approval?: boolean;
   /** Ticket types to choose from (Stag, Couple, VIP…). */
-  tiers?: { id: string; name: string; pricePaise: number }[];
+  tiers?: { id: string; name: string; pricePaise: number; capacity?: number | null }[];
+  /** Seats left for ticket types with their own limit, by id. */
+  tierLeft?: Record<string, number>;
   /** The event has promo codes: show a code field. */
   hasPromos?: boolean;
 }) {
@@ -57,7 +59,7 @@ export function RegisterPanel(props: {
   const [justRegistered, setJustRegistered] = useState(false);
   const [printing, setPrinting] = useState(false);
   const [afterPay, setAfterPay] = useState(false);
-  const [tier, setTier] = useState(props.tiers?.[0]?.id ?? "");
+  const [tier, setTier] = useState(props.tiers?.find((t) => props.tierLeft?.[t.id] !== 0)?.id ?? props.tiers?.[0]?.id ?? "");
   const [codeInput, setCodeInput] = useState("");
   const [promo, setPromo] = useState<{ code: string; amountPaise: number; label: string } | null>(null);
   const [promoErr, setPromoErr] = useState<string | null>(null);
@@ -172,22 +174,26 @@ export function RegisterPanel(props: {
         <div role="radiogroup" aria-label="Ticket type" className="grid gap-2">
           {props.tiers.map((t) => {
             const on = tier === t.id;
+            const left = props.tierLeft?.[t.id];
+            const soldOut = left === 0;
             return (
               <button
                 key={t.id}
                 type="button"
                 role="radio"
                 aria-checked={on}
+                disabled={soldOut}
                 onClick={() => (setTier(t.id), setPromo(null))}
-                className={`ui-press flex min-h-12 items-center justify-between rounded-[14px] px-4 text-left ring-inset transition-shadow ${on ? "bg-lavender/60 ring-2 ring-ink" : "bg-white ring-1 ring-line-strong hover:ring-ink/40"}`}
+                className={`ui-press flex min-h-12 items-center justify-between rounded-[14px] px-4 text-left ring-inset transition-shadow disabled:cursor-not-allowed disabled:opacity-50 ${on ? "bg-lavender/60 ring-2 ring-ink" : "bg-white ring-1 ring-line-strong hover:ring-ink/40"}`}
               >
                 <span className="flex items-center gap-2.5 text-[15px] font-semibold text-ink">
                   <span className={`grid size-4 place-items-center rounded-full ring-2 ${on ? "ring-ink" : "ring-line-strong"}`} aria-hidden>
                     {on && <span className="size-2 rounded-full bg-ink" />}
                   </span>
                   {t.name}
+                  {left !== undefined && left > 0 && left <= 20 && <span className="text-[12.5px] font-medium text-accent-ink">{left} left</span>}
                 </span>
-                <span className="text-[15px] font-semibold tabular-nums text-ink">{t.pricePaise ? formatINR(t.pricePaise) : "Free"}</span>
+                <span className="text-[15px] font-semibold tabular-nums text-ink">{soldOut ? "Sold out" : t.pricePaise ? formatINR(t.pricePaise) : "Free"}</span>
               </button>
             );
           })}

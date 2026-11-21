@@ -8,6 +8,8 @@ export interface Tier {
   id: string;
   name: string;
   pricePaise: number;
+  /** Seats for this type; empty = only the event's capacity applies. */
+  capacity?: number | null;
 }
 
 export interface Promo {
@@ -46,7 +48,9 @@ export function cleanTiers(input: unknown): Tier[] {
     if (!name || seen.has(name.toLowerCase()) || !Number.isFinite(price) || price < 0 || price > 10_000_000) continue;
     seen.add(name.toLowerCase());
     const id = String((t as Tier)?.id ?? "").replace(/[^a-z0-9]/gi, "").slice(0, 12) || name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 12) || `t${out.length}`;
-    out.push({ id, name, pricePaise: price });
+    const capRaw = (t as Tier)?.capacity;
+    const cap = capRaw == null || (capRaw as unknown) === "" ? null : Math.max(1, Math.min(1_000_000, Math.round(Number(capRaw))));
+    out.push({ id, name, pricePaise: price, ...(cap && Number.isFinite(cap) ? { capacity: cap } : {}) });
   }
   return out;
 }

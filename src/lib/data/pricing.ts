@@ -1,6 +1,6 @@
 import "server-only";
 import { ApiError } from "@/lib/api";
-import { first } from "@/lib/db";
+import { all, first } from "@/lib/db";
 import { applyPromo, normalizeCode, parsePromos, parseTiers, promoLabel } from "@/lib/tickets";
 
 export interface Priced {
@@ -26,6 +26,14 @@ export async function resolvePrice(
   if (tiers.length) {
     const t = tierId ? tiers.find((x) => x.id === tierId) : tiers[0];
     if (!t) throw new ApiError(400, "bad_tier", "Pick a ticket type.");
+    if (t.capacity) {
+      const sold = await first<{ n: number }>(
+        "SELECT COUNT(*) AS n FROM registrations WHERE event_id = ? AND tier = ? AND status IN ('registered','waitlisted')",
+        e.id,
+        t.name,
+      );
+      if ((sold?.n ?? 0) >= t.capacity) throw new ApiError(409, "tier_sold_out", `${t.name} is sold out. Pick another ticket type.`);
+    }
     base = t.pricePaise;
     tier = t.name;
   }
@@ -42,4 +50,16 @@ export async function resolvePrice(
     if ((used?.n ?? 0) >= promo.maxUses) throw new ApiError(400, "promo_used_up", "That code has been used up.");
   }
   return { amountPaise: applyPromo(base, promo), basePaise: base, tier, promo: c, promoLabel: promoLabel(promo) };
+}
+
+/** Seats left per ticket type that has its own limit: { "VIP": 3 }. */
+export async function tierSeatsLeft(eventId: string, tiersRaw: string | null): Promise<Record<string, number>> {
+  const limited = parseTiers(tiersRaw).filter((t) => t.capacity);
+  if (!limited.length) return {};
+  const rows = await all<{ tier: string; n: number }>(
+    "SELECT tier, COUNT(*) AS n FROM registrations WHERE event_id = ? AND tier IS NOT NULL AND status IN ('registered','waitlisted') GROUP BY tier",
+    eventId,
+  );
+  const sold = new Map(rows.map((r) => [r.tier, r.n]));
+  return Object.fromEntries(limited.map((t) => [t.id, Math.max(0, t.capacity! - (sold.get(t.name) ?? 0))]));
 }

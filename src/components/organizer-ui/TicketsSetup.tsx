@@ -6,10 +6,10 @@ import { Button, Section, apiJson } from "./primitives";
 import { Select } from "@/components/ui/Select";
 import type { Promo, Tier } from "@/lib/tickets";
 
-type TierDraft = { id?: string; name: string; rupees: string };
+type TierDraft = { id?: string; name: string; rupees: string; seats: string };
 type PromoDraft = { code: string; kind: "pct" | "amt"; value: string; maxUses: string };
 
-const toTierDraft = (t: Tier): TierDraft => ({ id: t.id, name: t.name, rupees: String(t.pricePaise / 100) });
+const toTierDraft = (t: Tier): TierDraft => ({ id: t.id, name: t.name, rupees: String(t.pricePaise / 100), seats: t.capacity ? String(t.capacity) : "" });
 const toPromoDraft = (p: Promo): PromoDraft => ({
   code: p.code,
   kind: p.percentOff ? "pct" : "amt",
@@ -42,7 +42,7 @@ export function TicketsSetup({ eventId }: { eventId: string }) {
     setBusy(true);
     setMsg(null);
     const r = await apiJson<{ tiers: Tier[]; promos: Promo[]; uses: Record<string, number> }>(`/api/events/${eventId}/tickets`, "PUT", {
-      tiers: tiers.filter((t) => t.name.trim()).map((t) => ({ id: t.id, name: t.name, pricePaise: Math.round(Number(t.rupees || 0) * 100) })),
+      tiers: tiers.filter((t) => t.name.trim()).map((t) => ({ id: t.id, name: t.name, pricePaise: Math.round(Number(t.rupees || 0) * 100), capacity: t.seats ? Number(t.seats) : null })),
       promos: promos
         .filter((p) => p.code.trim())
         .map((p) => ({
@@ -73,6 +73,15 @@ export function TicketsSetup({ eventId }: { eventId: string }) {
                 <input aria-label="Ticket type name" className="o-input" style={{ flex: 1, minWidth: 0 }} placeholder="Couple" maxLength={30} value={t.name} onChange={(e) => setTiers(tiers.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)))} />
                 <span className="o-meta">₹</span>
                 <input aria-label={`Price for ${t.name || "ticket type"}`} className="o-input o-mono" style={{ width: 96 }} inputMode="numeric" placeholder="0" value={t.rupees} onChange={(e) => setTiers(tiers.map((x, j) => (j === i ? { ...x, rupees: e.target.value.replace(/[^\d.]/g, "") } : x)))} />
+                <input
+                  aria-label={`Seats for ${t.name || "ticket type"}`}
+                  className="o-input o-mono"
+                  style={{ width: 96 }}
+                  inputMode="numeric"
+                  placeholder="Any seats"
+                  value={t.seats}
+                  onChange={(e) => setTiers(tiers.map((x, j) => (j === i ? { ...x, seats: e.target.value.replace(/\D/g, "") } : x)))}
+                />
                 <button type="button" aria-label={`Remove ${t.name || "ticket type"}`} className="o-link" onClick={() => setTiers(tiers.filter((_, j) => j !== i))}>
                   <X className="size-4" aria-hidden />
                 </button>
@@ -80,7 +89,7 @@ export function TicketsSetup({ eventId }: { eventId: string }) {
             ))}
           </div>
           {tiers.length < 6 && (
-            <button type="button" className="o-link" style={{ marginTop: 10, fontSize: 13.5, display: "inline-flex", alignItems: "center", gap: 4 }} onClick={() => setTiers([...tiers, { name: "", rupees: "" }])}>
+            <button type="button" className="o-link" style={{ marginTop: 10, fontSize: 13.5, display: "inline-flex", alignItems: "center", gap: 4 }} onClick={() => setTiers([...tiers, { name: "", rupees: "", seats: "" }])}>
               <Plus className="size-3.5" aria-hidden /> Add a ticket type
             </button>
           )}

@@ -39,6 +39,7 @@ import { InterestedButton } from "@/components/events/InterestedButton";
 import { FlyerAura } from "@/components/events/FlyerAura";
 import { CategoryPills, CategorySections } from "@/components/events/CategoryFacts";
 import { parsePromos, parseTiers } from "@/lib/tickets";
+import { tierSeatsLeft } from "@/lib/data/pricing";
 import { buttonClass } from "@/components/ui/Button";
 import { Odometer } from "@/components/ui/Odometer";
 
@@ -554,7 +555,8 @@ export default async function EventPage({
                   code={code ?? null}
                   open={e.status === "published" && !ended && !regClosed}
                   approval={!!e.requires_approval}
-                  tiers={parseTiers(e.tiers)}
+                  tiers={tierList}
+                  tierLeft={await tierSeatsLeft(e.id, e.tiers ?? null)}
                   hasPromos={parsePromos(e.promos).length > 0}
                   closedReason={
                     ended
