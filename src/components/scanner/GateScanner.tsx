@@ -114,7 +114,8 @@ function toVerdict(v: ServerVerdict, scan: QueuedScan, pricePaise: number): Verd
   }
 }
 
-export function GateScanner({ event, initialCounts }: { event: EventInfo; initialCounts: Counts }) {
+export function GateScanner({ event, initialCounts, volunteer = null }: { event: EventInfo; initialCounts: Counts; volunteer?: { label: string; canMerch: boolean } | null }) {
+  const canMerch = !volunteer || volunteer.canMerch;
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -502,11 +503,17 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
   return (
     <main className="mx-auto flex min-h-dvh max-w-lg flex-col gap-4 px-4 pb-8 pt-[max(1rem,env(safe-area-inset-top))]">
       <header className="flex items-center gap-3">
+        {volunteer ? (
+          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-[13px] font-semibold" aria-hidden>
+            {volunteer.label.trim().charAt(0).toUpperCase()}
+          </span>
+        ) : (
         <Link href={`/events/${event.slug}`} aria-label="Back to the event" className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 transition-colors hover:bg-white/15">
           <ArrowLeft className="size-5" />
         </Link>
+        )}
         <div className="min-w-0 flex-1">
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">Gate scanner</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">{volunteer ? `Volunteer · ${volunteer.label}` : "Gate scanner"}</p>
           <h1 className="truncate text-[19px] font-semibold leading-tight tracking-[-0.01em]">{event.title}</h1>
         </div>
         <span
@@ -521,7 +528,14 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
 
       {authProblem && (
         <p role="alert" className="rounded-tile bg-[#e5484d]/20 px-4 py-3 text-[14px] font-semibold text-[#ffb4b6]">
-          {authProblem} <Link href={`/signin?next=/organizer/scan/${event.id}`} className="underline">Sign in</Link>
+          {authProblem}{" "}
+          {volunteer ? (
+            "Ask the organizer for a new volunteer link."
+          ) : (
+            <Link href={`/signin?next=/organizer/scan/${event.id}`} className="underline">
+              Sign in
+            </Link>
+          )}
         </p>
       )}
 
@@ -565,7 +579,7 @@ export function GateScanner({ event, initialCounts }: { event: EventInfo; initia
             {"code" in verdict && verdict.code && <p className="font-mono text-[14px] font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
             {verdict.note && <p className="max-w-xs text-[14px] font-medium opacity-90">{verdict.note}</p>}
 
-            {verdict.token && !!verdict.merch?.length && (
+            {canMerch && verdict.token && !!verdict.merch?.length && (
               <ul className="w-full max-w-xs space-y-2 text-left text-[14px]" aria-label="Goodies">
                 {verdict.merch.map((line) => (
                   <li key={line.id} className="flex items-center justify-between gap-3 rounded-tile bg-black/25 px-3 py-2">

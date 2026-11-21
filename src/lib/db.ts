@@ -44,6 +44,15 @@ async function ensureSchema(db: D1Database): Promise<void> {
          PRIMARY KEY (user_id, event_id))`,
     ),
     db.prepare("CREATE INDEX IF NOT EXISTS idx_event_saves_event ON event_saves(event_id)"),
+    // 0023: volunteer gate links.
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS volunteer_links (
+         id TEXT PRIMARY KEY, event_id TEXT NOT NULL REFERENCES events(id), token_hash TEXT NOT NULL UNIQUE,
+         label TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'gate', created_by TEXT NOT NULL REFERENCES users(id),
+         created_at TEXT NOT NULL, expires_at TEXT NOT NULL, revoked_at TEXT, last_used_at TEXT,
+         scans INTEGER NOT NULL DEFAULT 0)`,
+    ),
+    db.prepare("CREATE INDEX IF NOT EXISTS idx_volunteer_links_event ON volunteer_links(event_id)"),
   ]);
 
   const info = await db.prepare("PRAGMA table_info(users)").all<{ name: string }>();

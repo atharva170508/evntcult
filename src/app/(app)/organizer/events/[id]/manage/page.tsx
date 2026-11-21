@@ -21,6 +21,9 @@ import { LinkButton, buttonClass } from "@/components/ui/Button";
 import { Meter } from "@/components/ui/Meter";
 import { Notice } from "@/components/ui/Field";
 import { SlashFocus } from "@/components/organizer/SlashFocus";
+import { VolunteerLinks } from "@/components/organizer/VolunteerLinks";
+import { listVolunteerLinks } from "@/lib/volunteers";
+import { choiceTallies } from "@/lib/data/questions";
 
 export const metadata: Metadata = { title: "Manage event" };
 export const dynamic = "force-dynamic";
@@ -70,6 +73,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
   const s = { registered: stats?.registered ?? 0, waitlisted: stats?.waitlisted ?? 0, checkedIn: stats?.checked_in ?? 0, paid: stats?.paid ?? 0, unpaid: stats?.unpaid ?? 0, toVerify: stats?.to_verify ?? 0 };
   const paidEvent = e.price_paise > 0;
   const connected = whatsappConnected();
+  const tallies = await choiceTallies(await getDB(), e.id);
+
   // Filter tabs, Linear style: counted from the same list so the numbers always match the rows.
   const isVerify = (a: (typeof attendees)[number]) => a.status === "registered" && a.payment_status === "unpaid" && !!a.upi_utr;
   const FILTERS = [
@@ -284,6 +289,47 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
         {/* Side panels */}
         <div className="space-y-5">
+          {tallies.length > 0 && (
+            <section aria-labelledby="counts-h" className="rounded-2xl border border-line-strong bg-white">
+              <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
+                <div>
+                  <h2 id="counts-h" className="text-[16px] font-semibold text-ink">
+                    Counts for vendors
+                  </h2>
+                  <p className="mt-0.5 text-[13.5px] text-ink-muted">From confirmed guests&apos; answers. Hand these to the caterer or merch vendor.</p>
+                </div>
+                <a href={`/api/events/${e.id}/counts.csv`} className={buttonClass("secondary", "sm", "h-9 shrink-0")}>
+                  <Download className="size-3.5" aria-hidden /> Sheet
+                </a>
+              </div>
+              <div className="divide-y divide-line">
+                {tallies.map((t) => {
+                  const max = Math.max(1, ...t.counts.map((c) => c.n));
+                  return (
+                    <div key={t.question.id} className="px-5 py-4">
+                      <p className="text-[14px] font-semibold text-ink">{t.question.label}</p>
+                      <p className="mt-0.5 font-mono text-[12.5px] tabular-nums text-ink-2">
+                        {t.counts.filter((c) => c.n > 0).map((c) => `${c.n} ${c.option}`).join("  |  ") || "No answers yet"}
+                      </p>
+                      <ul className="mt-3 space-y-1.5">
+                        {t.counts.map((c) => (
+                          <li key={c.option} className="grid grid-cols-[88px_minmax(0,1fr)_40px] items-center gap-3 text-[13px]">
+                            <span className="truncate text-ink-2">{c.option}</span>
+                            <span className="h-2 overflow-hidden rounded-full bg-sunken">
+                              <span className="block h-full rounded-full bg-ink" style={{ width: `${(c.n / max) * 100}%` }} />
+                            </span>
+                            <span className="text-right font-mono tabular-nums text-ink">{c.n}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      {t.total > t.answered && <p className="mt-2 text-[12px] text-ink-subtle">{t.total - t.answered} confirmed guests didn&apos;t answer.</p>}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+          {e.status !== "draft" && e.status !== "cancelled" && <VolunteerLinks eventId={e.id} eventTitle={e.title} initial={await listVolunteerLinks(e.id)} />}
           <section aria-labelledby="upd-h" className="card p-5">
             <h2 id="upd-h" className="flex items-center gap-2 text-h4 font-semibold">
               <Megaphone className="size-4 text-ink-subtle" aria-hidden /> Post an update

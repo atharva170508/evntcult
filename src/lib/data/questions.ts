@@ -64,3 +64,40 @@ export async function eventAnswers(db: D1Database, eventId: string): Promise<Map
   for (const r of rows.results ?? []) map.set(r.registration_id, { ...map.get(r.registration_id), [r.question_id]: r.value });
   return map;
 }
+
+export interface ChoiceTally {
+  question: Question;
+  counts: { option: string; n: number }[];
+  /** Confirmed guests who answered, and all confirmed guests. */
+  answered: number;
+  total: number;
+}
+
+/**
+ * Exact counts for every choice question (meals, sizes, years) across confirmed guests, in the
+ * order the organizer wrote the options, so they can hand a caterer or a vendor real numbers.
+ */
+export async function choiceTallies(db: D1Database, eventId: string): Promise<ChoiceTally[]> {
+  const questions = (await listQuestions(db, eventId)).filter((q) => q.kind === "choice");
+  if (questions.length === 0) return [];
+  const [rows, total] = await Promise.all([
+    db
+      .prepare(
+        `SELECT a.question_id, a.value, COUNT(*) AS n
+           FROM registration_answers a
+           JOIN registrations r ON r.id = a.registration_id
+          WHERE r.event_id = ? AND r.status = 'registered'
+          GROUP BY a.question_id, a.value`,
+      )
+      .bind(eventId)
+      .all<{ question_id: string; value: string; n: number }>(),
+    db.prepare("SELECT COUNT(*) AS n FROM registrations WHERE event_id = ? AND status = 'registered'").bind(eventId).first<{ n: number }>(),
+  ]);
+  return questions.map((q) => {
+    const mine = (rows.results ?? []).filter((r) => r.question_id === q.id);
+    const counts = q.options.map((option) => ({ option, n: mine.find((r) => r.value === option)?.n ?? 0 }));
+    // Answers that no longer match an option (the organizer edited the list) still count.
+    for (const r of mine) if (!q.options.includes(r.value)) counts.push({ option: r.value, n: r.n });
+    return { question: q, counts, answered: mine.reduce((s, r) => s + r.n, 0), total: total?.n ?? 0 };
+  });
+}

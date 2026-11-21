@@ -4,6 +4,18 @@ import { useEffect, useState } from "react";
 import { Button, Section, Segmented, apiJson } from "./primitives";
 import type { Question } from "@/lib/data/questions";
 
+/** One-click questions college fests and hackathons ask for, ready to count and export. */
+const PRESETS: { name: string; label: string; kind: "text" | "choice"; options?: string[]; required: boolean }[] = [
+  { name: "Food", label: "Food preference", kind: "choice", options: ["Veg", "Non-veg", "Jain", "Vegan", "Eggetarian"], required: true },
+  { name: "Allergies", label: "Allergies or food you can't eat", kind: "text", required: false },
+  { name: "T-shirt size", label: "T-shirt size", kind: "choice", options: ["XS", "S", "M", "L", "XL", "XXL"], required: true },
+  { name: "College", label: "College", kind: "text", required: true },
+  { name: "Year", label: "Year of study", kind: "choice", options: ["1st year", "2nd year", "3rd year", "4th year", "Other"], required: true },
+  { name: "Roll number", label: "Roll number", kind: "text", required: false },
+  { name: "GitHub or LinkedIn", label: "GitHub or LinkedIn", kind: "text", required: false },
+  { name: "Team name", label: "Team name", kind: "text", required: false },
+];
+
 export function QuestionsSetup({ eventId }: { eventId: string }) {
   const [items, setItems] = useState<Question[]>([]);
   const [label, setLabel] = useState("");
@@ -35,6 +47,15 @@ export function QuestionsSetup({ eventId }: { eventId: string }) {
     void load();
   }
 
+  async function addPreset(p: (typeof PRESETS)[number]) {
+    setBusy(true);
+    setError(null);
+    const r = await apiJson(`/api/events/${eventId}/questions`, "POST", { label: p.label, kind: p.kind, options: p.options ?? [], required: p.required });
+    setBusy(false);
+    if (!r.ok) return setError(r.data.error?.message ?? "Couldn't add it.");
+    void load();
+  }
+
   async function remove(id: string) {
     const r = await apiJson(`/api/events/${eventId}/questions?id=${encodeURIComponent(id)}`, "DELETE");
     if (!r.ok) return setError(r.data.error?.message ?? "Couldn't remove it.");
@@ -43,6 +64,16 @@ export function QuestionsSetup({ eventId }: { eventId: string }) {
 
   return (
     <Section n="07" label="Questions">
+      <div className="o-row">
+        <span className="o-label">Quick add</span>
+        <div className="o-chips" role="group" aria-label="Common questions">
+          {PRESETS.filter((p) => !items.some((q) => q.label === p.label)).map((p) => (
+            <button key={p.name} type="button" className="o-chip" disabled={busy} onClick={() => addPreset(p)}>
+              + {p.name}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="o-row">
         <span className="o-label">Add question</span>
         <div>

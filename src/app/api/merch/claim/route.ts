@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { getDB } from "@/lib/db";
-import { requireEventOwner } from "@/lib/rbac";
+import { requireGateAccess, touchVolunteer } from "@/lib/volunteers";
 import { claimMerch, merchItemEvent } from "@/lib/data/merch";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +14,8 @@ export const POST = handle(async (req: Request) => {
   const db = await getDB();
   const eventId = await merchItemEvent(db, b.item_id);
   if (!eventId) throw new ApiError(404, "not_found", "That item no longer exists.");
-  const viewer = await requireEventOwner(eventId);
-  return Response.json(await claimMerch(db, { token: b.token, itemId: b.item_id, clientClaimId: b.client_claim_id, actorId: viewer.id, claimedAt: b.claimed_at ? new Date(b.claimed_at) : undefined }));
+  const actor = await requireGateAccess(eventId, { merch: true });
+  const result = await claimMerch(db, { token: b.token, itemId: b.item_id, clientClaimId: b.client_claim_id, actorId: actor.actorId, claimedAt: b.claimed_at ? new Date(b.claimed_at) : undefined });
+  if (actor.volunteer) await touchVolunteer(actor.volunteer.id, false);
+  return Response.json(result);
 });
