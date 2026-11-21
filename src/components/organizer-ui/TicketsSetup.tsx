@@ -78,7 +78,7 @@ export function TicketsSetup({ eventId }: { eventId: string }) {
                   className="o-input o-mono"
                   style={{ width: 96 }}
                   inputMode="numeric"
-                  placeholder="Any seats"
+                  placeholder="Seats"
                   value={t.seats}
                   onChange={(e) => setTiers(tiers.map((x, j) => (j === i ? { ...x, seats: e.target.value.replace(/\D/g, "") } : x)))}
                 />

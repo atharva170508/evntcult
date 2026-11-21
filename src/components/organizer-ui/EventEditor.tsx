@@ -12,6 +12,7 @@ import { CategorySetup } from "./CategorySetup";
 import { SignupRules } from "./SignupRules";
 import { TicketsSetup } from "./TicketsSetup";
 import { PosterSetup } from "./PosterSetup";
+import { SectionRail } from "./SectionRail";
 import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, isValidLink, LINK_ERROR, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
 
 export interface EditorInitial {
@@ -443,6 +444,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
             </Section>
             </div>
 
+            {id && <PosterSetup eventId={id} title={f.title} />}
             <div id="sec-schedule">
             <Section n="02" label="Schedule">
               <Field label="Starts">
@@ -602,6 +604,8 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
             </Section>
             </div>
 
+            {id && <TicketsSetup eventId={id} />}
+
             <Section n="05" label="Access">
               <div className="o-row">
                 <span className="o-label">Visibility</span>
@@ -637,12 +641,10 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
               )}
             </Section>
 
-          {id && <CategorySetup eventId={id} category={f.category} />}
-          {id && <MerchSetup eventId={id} />}
-            {id && <QuestionsSetup eventId={id} />}
             {id && <SignupRules eventId={id} />}
-            {id && <TicketsSetup eventId={id} />}
-            {id && <PosterSetup eventId={id} title={f.title} />}
+            {id && <CategorySetup eventId={id} category={f.category} />}
+            {id && <QuestionsSetup eventId={id} />}
+            {id && <MerchSetup eventId={id} />}
           </div>
 
           <div className="o-sticky">
@@ -668,12 +670,13 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                   <span className={ok ? "" : "todo"}>{label}</span>
                   {!ok && (
                     <button type="button" className="o-check-add" onClick={() => goTo(section)}>
-                      Add →
+                      Add
                     </button>
                   )}
                 </div>
               ))}
             </section>
+            <SectionRail />
             {status !== "published" && blockers.length > 0 && <p className="o-reason o-col-reason">needs {blockers.join(", ")}</p>}
             {id ? (
               <a className="o-btn o-wide" href={`/events/${slug}`} target="_blank" rel="noopener noreferrer">

@@ -97,8 +97,11 @@ function ScannerDemo() {
   ];
   const [pick, setPick] = useState(0);
 
+  const [log, setLog] = useState<{ name: string; ok: boolean; at: string; offline: boolean; key: number }[]>([]);
   const scan = () => {
     const g = guests[pick];
+    const at = new Date().toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
+    setLog((l) => [{ name: g.name, ok: !admitted.has(g.id), at, offline: !online, key: Date.now() }, ...l].slice(0, 3));
     if (admitted.has(g.id))
       setResult({ kind: "dup", name: g.name, key: Date.now() });
     else {
@@ -119,7 +122,7 @@ function ScannerDemo() {
       }
     } else setOnline(false);
   };
-  const reset = () => (setAdmitted(new Set()), setQueued(0), setResult(null));
+  const reset = () => (setAdmitted(new Set()), setQueued(0), setResult(null), setLog([]));
 
   return (
     <div className="flex flex-col gap-5 sm:flex-row sm:items-end">
@@ -249,7 +252,23 @@ function ScannerDemo() {
             <RotateCcw className="size-4" aria-hidden />
           </button>
         </div>
-        <p className="text-[12.5px] text-cream/45">Scan the same pass twice.</p>
+        {log.length === 0 ? (
+          <p className="text-[12.5px] text-cream/45">Scan the same pass twice.</p>
+        ) : (
+          <ul className="mt-1 space-y-1" aria-label="Door log">
+            {log.map((l) => (
+              <li key={l.key} className="flex items-center justify-between gap-2 rounded-[10px] bg-white/[0.04] px-3 py-1.5 text-[12px] motion-safe:animate-[ui-menu-in_200ms_var(--ease-enter)]">
+                <span className="flex min-w-0 items-center gap-2">
+                  <span className={`size-1.5 shrink-0 rounded-full ${l.ok ? "bg-[#5EE0A8]" : "bg-[#FF7A8A]"}`} aria-hidden />
+                  <span className="truncate text-cream/80">
+                    {l.name.split(" ")[0]} {l.ok ? "admitted" : "refused, already in"}
+                  </span>
+                </span>
+                <span className="shrink-0 tabular-nums text-cream/45">{l.offline ? "queued" : l.at}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

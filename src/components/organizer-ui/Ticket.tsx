@@ -39,7 +39,7 @@ export function Ticket(p: TicketProps) {
   return (
     <div className="o-ticket" role="group" aria-label="Pass preview">
       <div className="o-ticket-left">
-        {has(p.category) && <div className="o-ticket-cat">{p.category.toUpperCase()}</div>}
+        {has(p.category) && <div className="o-ticket-cat">{p.category}</div>}
         {has(p.title) && <div className="o-ticket-title">{p.title}</div>}
         {(has(p.dateLabel) || has(p.time)) && (
           <div className="o-ticket-meta">

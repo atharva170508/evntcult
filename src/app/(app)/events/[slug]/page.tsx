@@ -37,7 +37,9 @@ import { ShareEvent } from "@/components/events/ShareEvent";
 import { WhatsAppPrompt } from "@/components/events/WhatsAppPrompt";
 import { InterestedButton } from "@/components/events/InterestedButton";
 import { FlyerAura } from "@/components/events/FlyerAura";
-import { CategoryPills, CategorySections } from "@/components/events/CategoryFacts";
+import { CategoryPills, CategorySections, categorySectionList } from "@/components/events/CategoryFacts";
+import { EventSectionNav } from "@/components/events/EventSectionNav";
+import { ReadMore } from "@/components/events/ReadMore";
 import { parsePromos, parseTiers } from "@/lib/tickets";
 import { tierSeatsLeft } from "@/lib/data/pricing";
 import { buttonClass } from "@/components/ui/Button";
@@ -161,6 +163,12 @@ export default async function EventPage({
   const canRegister =
     !!viewer && !d.isOwner && !reg && e.status === "published" && !ended;
   const isPublic = e.status === "published" && e.access === "public";
+  const pageSections = [
+    ...((updates.results ?? []).length ? [{ id: "updates", label: "Updates" }] : []),
+    ...(e.description ? [{ id: "about", label: "About" }] : []),
+    ...(e.agenda ? [{ id: "agenda", label: "Agenda" }] : []),
+    ...categorySectionList(e.category, e.category_config),
+  ];
   const regClosed = !!e.reg_closes_at && Date.parse(e.reg_closes_at) <= Date.now();
   const canSell = e.status === "published" && !ended && !regClosed;
   const confirmedVenue =
@@ -662,9 +670,11 @@ export default async function EventPage({
             </div>
           )}
 
+          <EventSectionNav sections={pageSections} />
+
           {/* Updates from the host */}
           {(updates.results ?? []).length > 0 && (
-            <section aria-labelledby="upd-h" className="mt-10">
+            <section id="updates" aria-labelledby="upd-h" className="mt-10 scroll-mt-36">
               <h2 id="upd-h" className="text-[20px] font-semibold text-ink">
                 Updates from the host
               </h2>
@@ -702,20 +712,21 @@ export default async function EventPage({
 
           {e.description && (
             <section
+              id="about"
               aria-labelledby="about-h"
-              className="mt-10 border-t border-line pt-8"
+              className="mt-10 scroll-mt-36 border-t border-line pt-8"
             >
               <h2 id="about-h" className="text-[20px] font-semibold text-ink">
                 About this event
               </h2>
-              <div className="mt-4 max-w-prose whitespace-pre-line text-[16px] leading-[1.7] text-ink-2">
-                {e.description}
-              </div>
+              <ReadMore>
+                <div className="mt-4 max-w-prose whitespace-pre-line text-[16px] leading-[1.7] text-ink-2">{e.description}</div>
+              </ReadMore>
             </section>
           )}
 
           {e.agenda && (
-            <section aria-labelledby="agenda-h" className="mt-10 border-t border-line pt-8">
+            <section id="agenda" aria-labelledby="agenda-h" className="mt-10 scroll-mt-36 border-t border-line pt-8">
               <h2 id="agenda-h" className="text-[20px] font-semibold text-ink">
                 Agenda
               </h2>

@@ -17,7 +17,6 @@ import {
   Numbers,
   Venues,
 } from "./Sections";
-import { DashboardPreview } from "./DashboardPreview";
 import { DiscoverFeed } from "./DiscoverFeed";
 import { OrganizerBento } from "./OrganizerBento";
 import { EventArt } from "@/components/ui/EventArt";
@@ -147,7 +146,6 @@ export function PublicHome() {
     <div className="pb-6">
       <Hero />
       <HowItWorks />
-      <DashboardPreview />
       <HostsBand />
       <AppBand />
       <Questions />

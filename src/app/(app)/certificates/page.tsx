@@ -23,7 +23,7 @@ export default async function CertificatesPage() {
         title="Certificates"
       />
       {certs.length === 0 ? (
-        <EmptyState icon={Award} title="No certificates yet" action={{ label: "Find an event", href: "/events" }} />
+        <EmptyState art="certificate" icon={Award} title="No certificates yet." body="Workshops and hackathons that give certificates send them here after you attend. Each one has a link anyone can verify." action={{ label: "Find a workshop", href: "/events?type=WORKSHOP" }} />
       ) : (
         <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {certs.map((c) => (

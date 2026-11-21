@@ -40,8 +40,10 @@ export default async function VaultPage() {
 
       {byEvent.size === 0 ? (
         <EmptyState
+          art="photos"
           icon={Images}
-          title="Nothing here yet"
+          title="No photos of you yet."
+          body="When an event you went to uploads its photos, take one selfie and we'll find the ones you're in."
           action={galleries.length ? { label: "Browse your galleries", href: `/events/${galleries[0].slug}/photos` } : { label: "Find an event", href: "/events" }}
         />
       ) : (

@@ -138,6 +138,21 @@ export function CategorySections({
   );
 }
 
+/** The category sections this event will show, for the page's jump bar. */
+export function categorySectionList(category: string | null, raw: string | null | undefined): { id: string; label: string }[] {
+  const kind = kindFor(category);
+  if (!kind) return [];
+  const c = parseConfig(raw);
+  const out: { id: string; label: string }[] = [];
+  if (kind.key === "hackathon" && Array.isArray(c.tracks) && c.tracks.length) out.push({ id: "tracks", label: "Tracks" });
+  if (kind.key === "party" && typeof c.lineup === "string") out.push({ id: "lineup", label: "Lineup" });
+  if (kind.key === "workshop" && typeof c.speakers === "string") out.push({ id: "speakers", label: "Speakers" });
+  if (kind.key === "workshop" && (typeof c.prereq === "string" || c.laptop)) out.push({ id: "prep", label: "Before you come" });
+  return out;
+}
+
+const BLOCK_ID: Record<string, string> = { Tracks: "tracks", Lineup: "lineup", Speakers: "speakers", "Before you come": "prep" };
+
 function Block({
   icon: Icon,
   title,
@@ -148,7 +163,7 @@ function Block({
   children: React.ReactNode;
 }) {
   return (
-    <section aria-label={title}>
+    <section id={BLOCK_ID[title]} aria-label={title} className="scroll-mt-36">
       <h2 className="flex items-center gap-2 text-[20px] font-semibold text-ink">
         <Icon className="size-5 text-ink-subtle" aria-hidden /> {title}
       </h2>

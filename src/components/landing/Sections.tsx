@@ -456,7 +456,7 @@ export function Numbers({
 
 export function AppBand() {
   return (
-    <Reveal as="section" className="my-16">
+    <Reveal as="section" className="my-24 md:my-32">
       <div className="grid items-center gap-10 overflow-hidden rounded-3xl bg-lavender/60 px-7 pt-10 ring-1 ring-inset ring-[#E2C8F7] md:grid-cols-2 md:px-14 md:pt-0">
         <div className="md:py-14">
           <h2 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">

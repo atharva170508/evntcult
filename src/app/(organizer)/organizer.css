@@ -298,3 +298,108 @@
 }
 @media (prefers-reduced-motion: reduce) { .o-root *, .o-toast { transition-duration: 1ms !important; animation-duration: 1ms !important; } }
 
+
+/* ══ Aligned with the attendee side (2026-11) ═══════════════════════════════════════════════
+ * Same warm palette, the same fields, chips, buttons, focus halo and Garamond headlines as the
+ * rest of EvntCult, so hosting doesn't feel like a different product. Overrides only. */
+.o-root {
+  --sunken: #f6f3ea;
+  --hair: #ece8dd;
+  --hair-2: #f1ede3;
+  --hair-strong: #dcd6c6;
+  --text: #1a1a1a;
+  --text-2: #3f3f3f;
+  --muted: #6a6a6a;
+  --dim: #717171;
+  --ink: #1a1a1a;
+  --radius: 12px;
+  --radius-lg: 22px;
+  --shadow-card: 0 0 0 1px rgba(26, 26, 26, 0.07), 0 1px 2px rgba(60, 40, 10, 0.04);
+  --shadow-raised: 0 0 0 1px rgba(26, 26, 26, 0.07), 0 2px 4px rgba(60, 40, 10, 0.05), 0 16px 36px -14px rgba(60, 40, 10, 0.2);
+}
+:where(.o-root) :focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* Headlines in Garamond, like every attendee page. */
+.o-title,
+.o-edit-head h1,
+.o-cal-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+.o-edit-head h1 { font-size: clamp(34px, 3.4vw, 46px); line-height: 1.02; }
+.o-title { font-size: clamp(38px, 4vw, 54px); line-height: 0.98; }
+
+/* Meta text in the interface font, not mono (mono stays for codes and numbers via .o-mono). */
+.o-meta { font-family: var(--font-sans); font-size: 12.5px; color: var(--muted); }
+.o-hint { font-size: 13px; color: var(--muted); line-height: 1.45; }
+
+/* Sections: softer cards, numbered automatically in reading order. */
+.o-form-col { counter-reset: osec; }
+.o-section { border-radius: var(--radius-lg); padding: 24px 26px 26px; margin-top: 18px; scroll-margin-top: calc(var(--header-h) + var(--toolbar-h) + 16px); }
+.o-form-col .o-section { counter-increment: osec; }
+.o-section-head { margin-bottom: 20px; gap: 12px; }
+.o-section-n { width: 26px; height: 26px; border-radius: 999px; background: var(--ink); color: #fff; font-family: var(--font-sans); font-size: 12px; font-weight: 700; }
+.o-form-col .o-section-n { font-size: 0; }
+.o-form-col .o-section-n::before { content: counter(osec); font-size: 12px; }
+.o-section-label { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
+.o-row { grid-template-columns: 150px minmax(0, 1fr); padding: 14px 0; }
+.o-label { font-size: 14px; font-weight: 600; color: var(--text); }
+
+/* Fields: white, a hairline ring and a top highlight; focus is the ink ring with a lavender halo. */
+.o-input,
+.o-area {
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(26, 26, 26, 0.1), 0 1px 2px rgba(60, 40, 10, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  font-variant-numeric: tabular-nums;
+}
+.o-input { height: 44px; padding: 0 14px; }
+.o-input:hover,
+.o-area:hover { box-shadow: 0 0 0 1px rgba(26, 26, 26, 0.18), 0 1px 2px rgba(60, 40, 10, 0.06); }
+.o-input:focus,
+.o-area:focus,
+.o-input:focus-visible,
+.o-area:focus-visible { box-shadow: var(--focus-field); border-color: transparent; }
+.o-input[aria-invalid="true"],
+.o-area[aria-invalid="true"] { box-shadow: 0 0 0 1.5px var(--bad); }
+.o-input.o-mono { font-size: 14.5px; }
+
+/* Chips and segmented controls match the attendee chips. */
+.o-chip { height: 36px; padding: 0 14px; border-radius: 11px; font-weight: 600; font-size: 13.5px; background: #fff; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--hair-strong); transition: box-shadow 160ms var(--ease), background-color 160ms var(--ease), color 160ms var(--ease), transform 90ms var(--ease); }
+.o-chip:hover { background: #fff; color: var(--text); box-shadow: inset 0 0 0 1px rgba(26, 26, 26, 0.4); }
+.o-chip:active { transform: scale(0.975); }
+.o-chip[aria-pressed="true"],
+.o-chip[aria-checked="true"] { background: var(--ink); color: #fff; box-shadow: 0 6px 14px -8px rgba(26, 26, 26, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+.o-seg { border-radius: 14px; padding: 4px; box-shadow: inset 0 0 0 1px var(--hair); }
+.o-seg-thumb { top: 4px; bottom: 4px; left: 4px; border-radius: 10px; }
+.o-seg button { height: 34px; font-weight: 600; font-size: 13.5px; }
+
+/* Buttons: same press and lift as the rest of the site; primary is ink, not navy. */
+.o-btn { height: 38px; border-radius: 12px; font-weight: 600; font-size: 13.5px; }
+@media (hover: hover) { .o-btn:not(:disabled):hover { transform: translateY(-1px); } }
+.o-btn:active { transform: scale(0.975); }
+.o-btn-primary:hover { background: #000; }
+
+/* Preview ticket: no mono capitals on the band. */
+.o-ticket-cat,
+.o-ticket-left:not(:has(.o-ticket-cat))::before { font-family: var(--font-sans); font-size: 12.5px; letter-spacing: 0; text-transform: none; font-weight: 600; color: rgba(255, 255, 255, 0.8); }
+.o-ticket-title { font-family: var(--font-serif); font-weight: 500; font-size: 30px; letter-spacing: -0.025em; }
+.o-dow { font-family: var(--font-sans); letter-spacing: 0; text-transform: none; font-size: 12px; font-weight: 600; }
+.o-pill { font-family: var(--font-sans); letter-spacing: 0; font-size: 12px; font-weight: 600; }
+.o-status,
+.o-status-pill { border-radius: 999px; height: 24px; padding: 0 10px; }
+
+/* Section rail in the sticky column: jump to any section; the one on screen is marked. */
+.o-rail { margin-top: 16px; background: var(--panel); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 14px 10px 10px; }
+.o-rail-head { padding: 0 10px 6px; font-size: 13.5px; font-weight: 600; color: var(--text); }
+.o-rail a { position: relative; display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 10px; font-size: 13.5px; color: var(--muted); transition: background-color 160ms var(--ease), color 160ms var(--ease); }
+.o-rail a:hover { background: var(--sunken); color: var(--text); }
+.o-rail a[aria-current="true"] { background: var(--sunken); color: var(--text); font-weight: 600; }
+.o-rail a span { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 999px; background: var(--hair); color: var(--text-2); font-size: 11px; font-weight: 700; flex: none; }
+.o-rail a[aria-current="true"] span { background: var(--ink); color: #fff; }
+.o-sticky { max-height: calc(100dvh - var(--header-h) - var(--toolbar-h) - 32px); overflow-y: auto; scrollbar-width: none; padding: 2px 4px 12px; margin: -2px -4px 0; }
+.o-sticky::-webkit-scrollbar { display: none; }
+.o-form-col .o-section-n::before { line-height: 1; }
+.o-agenda-wd,
+.a-table th { font-family: var(--font-sans); letter-spacing: 0; text-transform: none; font-size: 12.5px; font-weight: 600; }
