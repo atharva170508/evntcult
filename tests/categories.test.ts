@@ -74,3 +74,24 @@ describe("categories", () => {
     expect(parseConfig("[1]")).toEqual({});
   });
 });
+
+import { applyPromo, cleanPromos, cleanTiers, normalizeCode, promoLabel } from "@/lib/tickets";
+
+describe("tickets", () => {
+  it("cleans ticket types", () => {
+    expect(cleanTiers([{ name: " Stag ", pricePaise: 49900 }, { name: "stag", pricePaise: 1 }, { name: "", pricePaise: 5 }, { name: "VIP", pricePaise: -1 }])).toEqual([{ id: "stag", name: "Stag", pricePaise: 49900 }]);
+  });
+  it("cleans promo codes", () => {
+    expect(cleanPromos([{ code: "club-20", percentOff: 120 }, { code: "CLUB20", percentOff: 5 }, { code: "x", percentOff: 5 }, { code: "FLAT", amountOffPaise: 10000, maxUses: 0 }])).toEqual([
+      { code: "CLUB20", percentOff: 100, maxUses: null },
+      { code: "FLAT", amountOffPaise: 10000, maxUses: 1 },
+    ]);
+    expect(normalizeCode(" early bird ")).toBe("EARLYBIRD");
+  });
+  it("applies discounts without going below zero", () => {
+    expect(applyPromo(49900, { code: "A", percentOff: 20 })).toBe(39900);
+    expect(applyPromo(5000, { code: "B", amountOffPaise: 10000 })).toBe(0);
+    expect(applyPromo(5000, null)).toBe(5000);
+    expect(promoLabel({ code: "B", amountOffPaise: 10000 })).toBe("₹100 off");
+  });
+});

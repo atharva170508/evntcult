@@ -23,6 +23,8 @@ export const registerSchema = z
     waitlist: z.boolean().default(false),
     code: z.string().trim().max(20).optional(),
     answers: z.record(z.string(), z.string().max(500)).optional(),
+    tier: z.string().max(12).optional(),
+    promo: z.string().max(24).optional(),
   })
   .strict();
 

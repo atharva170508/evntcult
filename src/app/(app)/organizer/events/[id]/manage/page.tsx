@@ -54,10 +54,11 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
   const db = await getDB();
   const [stats, attendees, updates, outbox, optedIn, certs, merch, collected, questions, answers] = await Promise.all([
-    first<{ registered: number; waitlisted: number; checked_in: number; paid: number; unpaid: number; to_verify: number }>(
+    first<{ registered: number; waitlisted: number; checked_in: number; paid: number; unpaid: number; to_verify: number; collected: number | null }>(
       `SELECT SUM(r.status = 'registered') AS registered, SUM(r.status = 'waitlisted') AS waitlisted,
               (SELECT COUNT(*) FROM checkins c WHERE c.event_id = ?1) AS checked_in,
               SUM(r.status = 'registered' AND r.payment_status = 'paid') AS paid,
+              SUM(CASE WHEN r.status = 'registered' AND r.payment_status = 'paid' THEN COALESCE(r.amount_paise, (SELECT price_paise FROM events WHERE id = ?1)) ELSE 0 END) AS collected,
               SUM(r.status = 'registered' AND r.payment_status = 'unpaid') AS unpaid,
               SUM(r.status = 'registered' AND r.payment_status = 'unpaid' AND r.upi_utr IS NOT NULL) AS to_verify
          FROM registrations r WHERE r.event_id = ?1`,
@@ -119,7 +120,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
     { l: "Waitlist", v: String(s.waitlisted) },
     ...(paidEvent
       ? [
-          { l: "Collected", v: s.paid ? formatINR(s.paid * e.price_paise) : "₹0", sub: `${s.paid} paid` },
+          { l: "Collected", v: formatINR(stats?.collected ?? 0), sub: `${s.paid} paid` },
           { l: "To verify", v: String(s.toVerify), sub: `${s.unpaid - s.toVerify} unpaid`, tone: s.toVerify ? ("warn" as const) : undefined },
         ]
       : [{ l: "Entry", v: "Free" }]),

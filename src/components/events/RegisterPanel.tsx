@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Clock, Hourglass, IndianRupee, Ticket, XCircle } from "lucide-react";
 import { Button, LinkButton } from "@/components/ui/Button";
-import { Input, Notice, Select } from "@/components/ui/Field";
+import { Input, Notice } from "@/components/ui/Field";
+import { Select as Dropdown } from "@/components/ui/Select";
 import { formatINR } from "@/lib/money";
 import { UpiPay, type UpiPayProps } from "@/components/events/UpiPay";
 import type { Question } from "@/lib/data/questions";
@@ -42,6 +43,10 @@ export function RegisterPanel(props: {
   ticket?: { title: string; dateLabel: string; timeLabel: string; venue: string; holder: string; accent: string; seed: string };
   /** The host approves each sign-up: requests wait instead of getting a pass. */
   approval?: boolean;
+  /** Ticket types to choose from (Stag, Couple, VIP…). */
+  tiers?: { id: string; name: string; pricePaise: number }[];
+  /** The event has promo codes: show a code field. */
+  hasPromos?: boolean;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -52,6 +57,22 @@ export function RegisterPanel(props: {
   const [justRegistered, setJustRegistered] = useState(false);
   const [printing, setPrinting] = useState(false);
   const [afterPay, setAfterPay] = useState(false);
+  const [tier, setTier] = useState(props.tiers?.[0]?.id ?? "");
+  const [codeInput, setCodeInput] = useState("");
+  const [promo, setPromo] = useState<{ code: string; amountPaise: number; label: string } | null>(null);
+  const [promoErr, setPromoErr] = useState<string | null>(null);
+  const basePrice = props.tiers?.find((t) => t.id === tier)?.pricePaise ?? props.pricePaise;
+  const price = promo ? promo.amountPaise : basePrice;
+
+  async function applyCode() {
+    setPromoErr(null);
+    if (!codeInput.trim()) return;
+    const q = new URLSearchParams({ code: codeInput.trim(), ...(tier ? { tier } : {}) });
+    const res = await fetch(`/api/events/${props.slug}/promo?${q}`).catch(() => null);
+    const data = (await res?.json().catch(() => ({}))) as { amountPaise?: number; promo?: string; promoLabel?: string; error?: { message: string } } | undefined;
+    if (!res?.ok || !data?.promo) return setPromoErr(data?.error?.message ?? "Couldn't check that code.");
+    setPromo({ code: data.promo, amountPaise: data.amountPaise ?? 0, label: data.promoLabel ?? "" });
+  }
 
   // After a fresh registration lands: paid-by-UPI events go straight to the payment sheet,
   // everything else prints the pass.
@@ -83,7 +104,7 @@ export function RegisterPanel(props: {
   }
 
   async function register(waitlist = false) {
-    const data = await call(`/api/events/${props.slug}/register`, { method: "POST", body: JSON.stringify({ waitlist, answers, ...(props.code ? { code: props.code } : {}) }) });
+    const data = await call(`/api/events/${props.slug}/register`, { method: "POST", body: JSON.stringify({ waitlist, answers, ...(props.code ? { code: props.code } : {}), ...(tier ? { tier } : {}), ...(promo ? { promo: promo.code } : {}) }) });
     if (!data) return;
     if (data.full) setFullOffer(data.waitlist_position ?? 1);
     else {
@@ -106,25 +127,93 @@ export function RegisterPanel(props: {
   const questionFields = !!props.questions?.length && (
     <div className="space-y-3">
       {props.questions.map((q) => (
-        <label key={q.id} className="block">
+        <div key={q.id} className="block">
           <span className="text-[13px] font-medium text-ink">
             {q.label}
             {q.required ? <span className="text-accent-ink"> *</span> : ""}
           </span>
-          {q.kind === "choice" ? (
-            <Select required={q.required} value={answers[q.id] ?? ""} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} className="mt-1.5">
-              <option value="">Choose</option>
-              {q.options.map((o) => (
-                <option key={o} value={o}>
-                  {o}
-                </option>
-              ))}
-            </Select>
+          {q.kind === "choice" && q.options.length <= 6 ? (
+            <span role="radiogroup" aria-label={q.label} className="mt-1.5 flex flex-wrap gap-1.5">
+              {q.options.map((o) => {
+                const on = answers[q.id] === o;
+                return (
+                  <button
+                    key={o}
+                    type="button"
+                    role="radio"
+                    aria-checked={on}
+                    onClick={() => setAnswers((a) => ({ ...a, [q.id]: on && !q.required ? "" : o }))}
+                    className={`ui-press h-10 rounded-[11px] px-3.5 text-[14px] font-semibold ring-1 ring-inset ${on ? "bg-ink text-white ring-ink" : "bg-white text-ink ring-line-strong hover:ring-ink/40"}`}
+                  >
+                    {o}
+                  </button>
+                );
+              })}
+            </span>
+          ) : q.kind === "choice" ? (
+            <Dropdown
+              label={q.label}
+              size="sm"
+              className="mt-1.5 w-full"
+              value={answers[q.id] ?? ""}
+              onChange={(v) => setAnswers((a) => ({ ...a, [q.id]: v }))}
+              options={[{ value: "", label: "Choose" }, ...q.options.map((o) => ({ value: o, label: o }))]}
+            />
           ) : (
-            <Input maxLength={500} value={answers[q.id] ?? ""} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} className="mt-1.5" />
+            <Input aria-label={q.label} maxLength={500} value={answers[q.id] ?? ""} onChange={(e) => setAnswers((a) => ({ ...a, [q.id]: e.target.value }))} className="mt-1.5" />
           )}
-        </label>
+        </div>
       ))}
+    </div>
+  );
+  const ticketFields = (!!props.tiers?.length || props.hasPromos) && (
+    <div className="space-y-3">
+      {!!props.tiers?.length && (
+        <div role="radiogroup" aria-label="Ticket type" className="grid gap-2">
+          {props.tiers.map((t) => {
+            const on = tier === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                onClick={() => (setTier(t.id), setPromo(null))}
+                className={`ui-press flex min-h-12 items-center justify-between rounded-[14px] px-4 text-left ring-inset transition-shadow ${on ? "bg-lavender/60 ring-2 ring-ink" : "bg-white ring-1 ring-line-strong hover:ring-ink/40"}`}
+              >
+                <span className="flex items-center gap-2.5 text-[15px] font-semibold text-ink">
+                  <span className={`grid size-4 place-items-center rounded-full ring-2 ${on ? "ring-ink" : "ring-line-strong"}`} aria-hidden>
+                    {on && <span className="size-2 rounded-full bg-ink" />}
+                  </span>
+                  {t.name}
+                </span>
+                <span className="text-[15px] font-semibold tabular-nums text-ink">{t.pricePaise ? formatINR(t.pricePaise) : "Free"}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+      {props.hasPromos &&
+        (promo ? (
+          <p className="flex items-center justify-between rounded-[12px] bg-sunken px-3.5 py-2.5 text-[14px]">
+            <span>
+              <span className="font-mono font-semibold tracking-[0.06em] text-ink">{promo.code}</span> <span className="text-ink-2">{promo.label}</span>
+            </span>
+            <button type="button" className="text-[13px] font-semibold text-ink-muted underline underline-offset-2 hover:text-ink" onClick={() => setPromo(null)}>
+              Remove
+            </button>
+          </p>
+        ) : (
+          <div>
+            <div className="flex gap-2">
+              <Input aria-label="Promo code" placeholder="Promo code" value={codeInput} onChange={(e) => setCodeInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applyCode())} className="flex-1 font-mono uppercase" maxLength={24} />
+              <Button variant="secondary" onClick={applyCode} className="h-11 shrink-0">
+                Apply
+              </Button>
+            </div>
+            {promoErr && <p className="mt-1.5 text-[13px] text-danger">{promoErr}</p>}
+          </div>
+        ))}
     </div>
   );
   const live = props.actionsLive ?? true;
@@ -286,10 +375,11 @@ export function RegisterPanel(props: {
   if (props.approval) {
     return (
       <div className="space-y-3">
+        {ticketFields}
         {questionFields}
         {err}
         <Button onClick={() => register(false)} loading={busy} variant="accent" size="lg" className="w-full">
-          Request to join{props.pricePaise > 0 ? ` · ${formatINR(props.pricePaise)}` : ""}
+          Request to join{price > 0 ? ` · ${formatINR(price)}` : ""}
         </Button>
         <p className="text-center text-[12.5px] text-ink-muted">The host approves each guest. You pay only once you&apos;re in.</p>
       </div>
@@ -309,6 +399,7 @@ export function RegisterPanel(props: {
             "."
           )}
         </Notice>
+        {ticketFields}
         {questionFields}
         {err}
         <Button onClick={() => register(true)} loading={busy} size="lg" className="w-full">
@@ -320,10 +411,11 @@ export function RegisterPanel(props: {
 
   return (
     <div className="space-y-3">
+      {ticketFields}
       {questionFields}
       {err}
       <Button onClick={() => register(false)} loading={busy} variant="accent" size="lg" className="w-full">
-        Register{props.pricePaise > 0 ? ` · ${formatINR(props.pricePaise)}${props.hasUpi ? "" : " at the desk"}` : " · free"}
+        Register{price > 0 ? ` · ${formatINR(price)}${props.hasUpi ? "" : " at the desk"}` : " · free"}
       </Button>
       <p className="text-center text-[12.5px] text-ink-muted">Your pass is ready the moment you register.</p>
     </div>

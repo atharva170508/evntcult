@@ -53,6 +53,11 @@ async function ensureSchema(db: D1Database): Promise<void> {
          scans INTEGER NOT NULL DEFAULT 0)`,
     ),
     db.prepare("CREATE INDEX IF NOT EXISTS idx_volunteer_links_event ON volunteer_links(event_id)"),
+    // 0027: event posters.
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS event_posters (
+         event_id TEXT PRIMARY KEY REFERENCES events(id), mime TEXT NOT NULL, data BLOB NOT NULL, updated_at TEXT NOT NULL)`,
+    ),
   ]);
 
   // 0024: category setup JSON on events.
@@ -78,6 +83,25 @@ async function ensureSchema(db: D1Database): Promise<void> {
     await db.batch(addRules.map(([c, def]) => db.prepare(`ALTER TABLE events ADD COLUMN ${c} ${def}`)));
     try {
       await db.prepare("INSERT INTO d1_migrations (name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name = ?)").bind("0025_signup_rules.sql", "0025_signup_rules.sql").run();
+    } catch {
+      // no d1_migrations table locally
+    }
+  }
+
+  // 0026: ticket types, promo codes, and per-guest amount.
+  const regCols = await db.prepare("PRAGMA table_info(registrations)").all<{ name: string }>();
+  const regHave = new Set((regCols.results ?? []).map((c) => c.name));
+  const add26 = [
+    ...(evHave.has("tiers") ? [] : ["ALTER TABLE events ADD COLUMN tiers TEXT"]),
+    ...(evHave.has("promos") ? [] : ["ALTER TABLE events ADD COLUMN promos TEXT"]),
+    ...(regHave.has("amount_paise") ? [] : ["ALTER TABLE registrations ADD COLUMN amount_paise INTEGER"]),
+    ...(regHave.has("tier") ? [] : ["ALTER TABLE registrations ADD COLUMN tier TEXT"]),
+    ...(regHave.has("promo_code") ? [] : ["ALTER TABLE registrations ADD COLUMN promo_code TEXT"]),
+  ];
+  if (add26.length) {
+    await db.batch(add26.map((q) => db.prepare(q)));
+    try {
+      await db.prepare("INSERT INTO d1_migrations (name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name = ?)").bind("0026_tiers_promos.sql", "0026_tiers_promos.sql").run();
     } catch {
       // no d1_migrations table locally
     }

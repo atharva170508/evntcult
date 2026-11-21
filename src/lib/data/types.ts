@@ -51,6 +51,9 @@ export interface EventRow {
   reg_closes_at?: string | null;
   requires_approval?: number | null;
   agenda?: string | null;
+  /** Ticket types and promo codes, JSON (migration 0026). */
+  tiers?: string | null;
+  promos?: string | null;
   venue_place_id: string | null;
   venue_lat: number | null;
   venue_lng: number | null;
@@ -80,6 +83,8 @@ export interface EventSummary {
   accent: string; // gradient key, see components/ui/EventArt
   /** Category facts for cards: "Teams of 2 to 4", "6v6 Turf", "21+ only". */
   badges?: string[];
+  /** Uploaded poster, if any. */
+  bannerUrl?: string | null;
   /** Initials of a few people going (signed-in views only). */
   going?: string[];
 }

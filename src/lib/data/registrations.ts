@@ -49,6 +49,10 @@ export interface RegistrationRow {
   hold_expires_at: string | null;
   created_at: string;
   cancelled_at: string | null;
+  /** What this guest owes, when it differs from the event price (ticket type or promo). */
+  amount_paise?: number | null;
+  tier?: string | null;
+  promo_code?: string | null;
 }
 
 /** A rule was broken. API routes turn this into { error: { code, message } }. */

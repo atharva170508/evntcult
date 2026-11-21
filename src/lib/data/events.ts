@@ -44,6 +44,7 @@ export function toSummary(e: EventRowWithCount): EventSummary {
     feePaise: e.price_paise,
     accent: accentFor(e),
     badges: cardBadges(e.category, e.category_config),
+    bannerUrl: e.banner_url ?? null,
   };
 }
 
@@ -161,6 +162,8 @@ export interface MyRegistration {
   checked_in_at: string | null;
   upi_utr: string | null;
   upi_rejected_at: string | null;
+  amount_paise?: number | null;
+  tier?: string | null;
 }
 
 export interface EventDetail {
@@ -188,7 +191,7 @@ export async function getEventDetail(
 
   const myRegistration = viewer
     ? await first<MyRegistration>(
-        `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.hold_expires_at, r.upi_utr, r.upi_rejected_at,
+        `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.hold_expires_at, r.upi_utr, r.upi_rejected_at, r.amount_paise, r.tier,
                 (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id) AS checked_in_at
            FROM registrations r WHERE r.event_id = ? AND r.user_id = ?`,
         event.id,

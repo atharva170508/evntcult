@@ -50,7 +50,7 @@ export async function registrationEvent(db: D1Database, regId: string) {
   return (
     (await db
       .prepare(
-        "SELECT r.id, r.event_id, r.status, r.payment_status, e.price_paise FROM registrations r JOIN events e ON e.id = r.event_id WHERE r.id = ?",
+        "SELECT r.id, r.event_id, r.status, r.payment_status, COALESCE(r.amount_paise, e.price_paise) AS price_paise FROM registrations r JOIN events e ON e.id = r.event_id WHERE r.id = ?",
       )
       .bind(regId)
       .first<{
@@ -131,7 +131,7 @@ export async function claimUpiPayment(
 ) {
   const reg = await db
     .prepare(
-      "SELECT r.user_id, r.event_id, r.status, r.payment_status, e.price_paise, e.organizer_upi_id FROM registrations r JOIN events e ON e.id = r.event_id WHERE r.id = ?",
+      "SELECT r.user_id, r.event_id, r.status, r.payment_status, COALESCE(r.amount_paise, e.price_paise) AS price_paise, e.organizer_upi_id FROM registrations r JOIN events e ON e.id = r.event_id WHERE r.id = ?",
     )
     .bind(regId)
     .first<{

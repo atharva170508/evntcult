@@ -7,6 +7,7 @@ import { register, type EventForRegistration } from "@/lib/data/registrations";
 import { withRegistrations } from "@/lib/data/registration-api";
 import { withOrganizerActions } from "@/lib/data/organizer-api";
 import { cleanAnswers, listQuestions, saveAnswers } from "@/lib/data/questions";
+import { resolvePrice } from "@/lib/data/pricing";
 
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ ref: string }> };
@@ -23,8 +24,8 @@ export const POST = handle(async (req: Request, { params }: Ctx) => {
   const { ref } = await params;
   const body = await parseBody(req, registerSchema);
 
-  const event = await first<EventForRegistration & { access: string; access_code: string | null; organizer_id: string }>(
-    "SELECT id, slug, capacity, status, starts_at, ends_at, access, access_code, organizer_id, reg_closes_at, requires_approval FROM events WHERE slug = ? OR id = ?",
+  const event = await first<EventForRegistration & { access: string; access_code: string | null; organizer_id: string; price_paise: number; tiers: string | null; promos: string | null }>(
+    "SELECT id, slug, capacity, status, starts_at, ends_at, access, access_code, organizer_id, reg_closes_at, requires_approval, price_paise, tiers, promos FROM events WHERE slug = ? OR id = ?",
     ref,
     ref,
   );
@@ -43,8 +44,23 @@ export const POST = handle(async (req: Request, { params }: Ctx) => {
   const questions = await listQuestions(db, event.id);
   const answers = await withOrganizerActions(async () => cleanAnswers(questions, body.answers));
 
+  // Ticket type and promo code: checked first, so a bad code never takes a seat.
+  const price = event.tiers || body.promo ? await resolvePrice(event, body.tier, body.promo) : null;
+
   const result = await withRegistrations((d) => register(d, event, viewer.id, { waitlist: body.waitlist }));
-  if (result.kind !== "full") await saveAnswers(db, result.registration.id, answers);
+  if (result.kind !== "full") {
+    await saveAnswers(db, result.registration.id, answers);
+    // Record what this guest owes, once (a repeat call keeps the first price). Free after a promo = paid.
+    if (price)
+      await db
+        .prepare(
+          `UPDATE registrations SET amount_paise = ?1, tier = ?2, promo_code = ?3,
+                  payment_status = CASE WHEN ?1 = 0 THEN 'paid' ELSE payment_status END
+            WHERE id = ?4 AND amount_paise IS NULL`,
+        )
+        .bind(price.amountPaise, price.tier, price.promo, result.registration.id)
+        .run();
+  }
 
   if (result.kind === "full") return Response.json({ full: true, waitlist_position: result.position });
   if (result.kind === "waitlisted") {

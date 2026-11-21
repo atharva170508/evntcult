@@ -38,6 +38,7 @@ import { WhatsAppPrompt } from "@/components/events/WhatsAppPrompt";
 import { InterestedButton } from "@/components/events/InterestedButton";
 import { FlyerAura } from "@/components/events/FlyerAura";
 import { CategoryPills, CategorySections } from "@/components/events/CategoryFacts";
+import { parsePromos, parseTiers } from "@/lib/tickets";
 import { buttonClass } from "@/components/ui/Button";
 import { Odometer } from "@/components/ui/Odometer";
 
@@ -80,15 +81,17 @@ export default async function EventPage({
         })
       : null;
 
+  // What this guest owes: their ticket type or promo price, else the event price.
+  const owe = reg?.amount_paise ?? e.price_paise;
   const upiUrl =
     reg?.status === "registered" &&
-    e.price_paise > 0 &&
+    owe > 0 &&
     reg.payment_status !== "paid" &&
     e.organizer_upi_id
       ? upiUri({
           vpa: e.organizer_upi_id,
           payeeName: e.title,
-          amountPaise: e.price_paise,
+          amountPaise: owe,
           note: reg.pass_code,
         })
       : null;
@@ -151,7 +154,9 @@ export default async function EventPage({
     : 0;
 
   const kind = e.category ? (LABEL[e.category] ?? e.category) : "Event";
-  const priceLabel = e.price_paise ? formatINR(e.price_paise) : "Free";
+  const tierList = parseTiers(e.tiers);
+  const fromPaise = tierList.length ? Math.min(...tierList.map((t) => t.pricePaise)) : e.price_paise;
+  const priceLabel = fromPaise ? `${tierList.length > 1 ? "From " : ""}${formatINR(fromPaise)}` : tierList.length > 1 ? "From free" : "Free";
   const canRegister =
     !!viewer && !d.isOwner && !reg && e.status === "published" && !ended;
   const isPublic = e.status === "published" && e.access === "public";
@@ -466,7 +471,7 @@ export default async function EventPage({
                     {priceLabel}
                   </p>
                   <p className="text-[13.5px] text-ink-muted">
-                    {e.price_paise
+                    {e.price_paise || tierList.some((t) => t.pricePaise > 0)
                       ? e.organizer_upi_id
                         ? "Pay by UPI after you register"
                         : "Pay at the desk"
@@ -549,6 +554,8 @@ export default async function EventPage({
                   code={code ?? null}
                   open={e.status === "published" && !ended && !regClosed}
                   approval={!!e.requires_approval}
+                  tiers={parseTiers(e.tiers)}
+                  hasPromos={parsePromos(e.promos).length > 0}
                   closedReason={
                     ended
                       ? "This event has ended."
@@ -602,7 +609,7 @@ export default async function EventPage({
                     upiUrl && upiQr && reg
                       ? {
                           regId: reg.id,
-                          pricePaise: e.price_paise,
+                          pricePaise: owe,
                           vpa: e.organizer_upi_id!,
                           uri: upiUrl,
                           qrSvg: upiQr,

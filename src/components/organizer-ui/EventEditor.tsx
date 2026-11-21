@@ -10,6 +10,8 @@ import { MerchSetup } from "./MerchSetup";
 import { QuestionsSetup } from "./QuestionsSetup";
 import { CategorySetup } from "./CategorySetup";
 import { SignupRules } from "./SignupRules";
+import { TicketsSetup } from "./TicketsSetup";
+import { PosterSetup } from "./PosterSetup";
 import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, isValidLink, LINK_ERROR, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
 
 export interface EditorInitial {
@@ -639,6 +641,8 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
           {id && <MerchSetup eventId={id} />}
             {id && <QuestionsSetup eventId={id} />}
             {id && <SignupRules eventId={id} />}
+            {id && <TicketsSetup eventId={id} />}
+            {id && <PosterSetup eventId={id} title={f.title} />}
           </div>
 
           <div className="o-sticky">

@@ -221,7 +221,12 @@ function FeedCard({ e }: { e: Ev & { s: Date; en: Date } }) {
         />
         <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-sunken shadow-[0_0_0_1px_rgba(26,26,26,0.06)] transition-transform duration-300 ease-[var(--ease-enter)] group-hover:-translate-y-1">
           <div className="absolute inset-0 transition-transform duration-700 ease-[var(--ease-enter)] group-hover:scale-[1.03]">
-            <EventArt accent={e.accent} seed={e.id} scrim={false} />
+            {e.bannerUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={e.bannerUrl} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />
+            ) : (
+              <EventArt accent={e.accent} seed={e.id} scrim={false} />
+            )}
           </div>
           <span className="absolute right-3 top-3 z-[2] rounded-full bg-white/95 px-2.5 py-1 text-[13px] font-semibold tabular-nums text-ink shadow-[0_2px_8px_rgba(0,0,0,0.12)] backdrop-blur">
             {e.feePaise ? formatINR(e.feePaise) : "Free"}
