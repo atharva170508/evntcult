@@ -128,6 +128,16 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
             <div className="relative mx-auto size-36 shrink-0 overflow-hidden rounded-card shadow-raised md:mx-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={preview} alt="Your selfie (stays on this device)" className="size-full object-cover" />
+              {phase.kind === "working" && (
+                <span aria-hidden className="pointer-events-none absolute inset-0">
+                  {/* Face scan: a laser line sweeping over a faint grid */}
+                  <span className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.12)_1px,transparent_1px)] bg-[size:12px_12px]" />
+                  <span className="scanline absolute inset-x-0 top-0 h-[10%]">
+                    <span className="absolute inset-x-0 bottom-0 h-[2px] bg-[#F0D7FF] shadow-[0_0_12px_3px_rgba(240,215,255,0.9)]" />
+                    <span className="absolute inset-0 bg-gradient-to-b from-transparent to-[#F0D7FF]/35" />
+                  </span>
+                </span>
+              )}
               <span className="absolute inset-x-2 bottom-2 flex items-center justify-center gap-1 rounded-full bg-black/60 py-1 text-[10.5px] font-semibold text-white">
                 <ShieldCheck className="size-3" aria-hidden /> Stays on device
               </span>
@@ -159,7 +169,7 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
       {phase.kind === "done" && phase.matches.length > 0 && (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {phase.matches.map((m, i) => (
-            <li key={m.photoId}>
+            <li key={m.photoId} className="rise-in" style={{ ["--i" as string]: Math.min(i, 12) }}>
               <PhotoMatchCard match={m} index={i} />
             </li>
           ))}

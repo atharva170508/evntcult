@@ -15,6 +15,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import jsQR from "jsqr";
+import { Odometer } from "@/components/ui/Odometer";
 import { AlertTriangle, ArrowLeft, Camera, CheckCircle2, CloudOff, Loader2, RefreshCw, Wifi, XCircle } from "lucide-react";
 import type { Manifest, ManifestEntry } from "@/lib/data/checkins";
 import { extractPassToken } from "@/lib/tokens";
@@ -544,7 +545,9 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
       <section aria-label="Gate count" className="rounded-card bg-white/[0.06] p-5 ring-1 ring-inset ring-white/[0.06]">
         <div className="flex items-end justify-between">
           <p>
-            <span className="font-mono text-[44px] font-medium leading-none tracking-[-0.03em] tabular-nums">{counts.checkedIn}</span>
+            <span className="font-mono text-[44px] font-medium leading-none tracking-[-0.03em] tabular-nums">
+              <Odometer value={counts.checkedIn} />
+            </span>
             <span className="ml-1.5 text-[15px] text-white/60">in · of {counts.registered}</span>
           </p>
           <p className="font-mono text-[11.5px] text-white/50">{liveMode === "live" ? "● Live" : "Updates every 5 s"}</p>
@@ -575,8 +578,15 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
 
         {verdict && (
           <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 overflow-y-auto px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))] text-center ${colors[verdict.color]}`} role="alert" aria-live="assertive">
-            <Icon className="size-16" strokeWidth={2.2} />
-            <p className="shout text-[32px] leading-tight">{verdict.title}</p>
+            {/* Peripheral feedback a volunteer catches without reading: a shockwave for in, an edge flash for stop */}
+            {verdict.color === "green" && (
+              <span aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+                <span className="shockwave absolute left-1/2 top-1/2 size-[80vmax] rounded-full border-[24px] border-white/40" />
+              </span>
+            )}
+            {verdict.color === "red" && <span aria-hidden className="edge-flash pointer-events-none absolute inset-0 shadow-[inset_0_0_0_10px_#FF2D3D,inset_0_0_80px_20px_rgba(255,45,61,0.65)]" />}
+            <Icon className={`size-16 ${verdict.color === "red" ? "shake" : ""}`} strokeWidth={2.2} />
+            <p className={`shout text-[32px] leading-tight ${verdict.color === "red" ? "shake" : ""}`}>{verdict.title}</p>
             {"name" in verdict && verdict.name && <p className="text-[20px] font-bold">{verdict.name}</p>}
             {"code" in verdict && verdict.code && <p className="font-mono text-[14px] font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
             {verdict.note && <p className="max-w-xs text-[14px] font-medium opacity-90">{verdict.note}</p>}

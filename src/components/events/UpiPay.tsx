@@ -7,6 +7,8 @@ import { Button, buttonClass } from "@/components/ui/Button";
 import { Input, Notice } from "@/components/ui/Field";
 import { formatINR } from "@/lib/money";
 import { svgSrc } from "@/lib/svg-src";
+import { Viewfinder } from "@/components/ui/Viewfinder";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 
 export interface UpiPayProps {
   regId: string;
@@ -27,6 +29,8 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected, onDo
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [back, setBack] = useState(false); // returned from a payment app
+  const [sent, setSent] = useState(false); // success tick before the printer
+  const reduce = useReducedMotion();
   const left = useRef(false);
 
   // Came back from GPay / PhonePe / Paytm: bring the transaction ID box forward, ready to paste.
@@ -65,10 +69,18 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected, onDo
     const data = ((await res?.json().catch(() => ({}))) ?? {}) as { error?: { message: string } };
     setBusy(false);
     if (!res?.ok) return setError(data.error?.message ?? (res ? "Didn't save. Try again." : "You seem to be offline. Try again."));
-    setEditing(false);
-    setValue("");
-    onDone?.();
-    router.refresh();
+    // A beat for the tick to draw, then hand off to the pass printer.
+    setSent(true);
+    setTimeout(
+      () => {
+        setSent(false);
+        setEditing(false);
+        setValue("");
+        onDone?.();
+        router.refresh();
+      },
+      reduce ? 0 : 650,
+    );
   }
 
   async function copy() {
@@ -115,7 +127,8 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected, onDo
             Pay with any UPI app
           </p>
           <div className="mt-3 flex flex-col items-center gap-3 rounded-2xl border border-line-strong bg-white p-4">
-            <div className="w-[188px] rounded-xl bg-white p-1">
+            <div className="relative w-[188px] rounded-xl bg-white p-1">
+              <Viewfinder />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={svgSrc(qrSvg)} alt={`UPI QR code to pay ${formatINR(pricePaise)} to ${vpa}`} className="block aspect-square w-full" />
             </div>
@@ -182,9 +195,7 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected, onDo
               </p>
             )}
             <div className="mt-4 flex items-center gap-2">
-              <Button type="submit" size="lg" loading={busy} disabled={!valid} className="flex-1">
-                I&apos;ve paid, send for checking
-              </Button>
+              <SubmitMorph busy={busy} sent={sent} disabled={!valid} />
               {editing && (
                 <Button type="button" size="lg" variant="ghost" onClick={() => setEditing(false)}>
                   Cancel
@@ -196,5 +207,49 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected, onDo
         </li>
       </ol>
     </section>
+  );
+}
+
+/**
+ * The submit button morphs: label to a compact pill with a spinner while sending, then a tick
+ * draws itself. clip-path does the shrinking, so nothing reflows.
+ */
+function SubmitMorph({ busy, sent, disabled }: { busy: boolean; sent: boolean; disabled: boolean }) {
+  const state = sent ? "sent" : busy ? "busy" : "idle";
+  return (
+    <m.button
+      type="submit"
+      disabled={disabled || state !== "idle"}
+      aria-busy={state === "busy"}
+      className="relative h-12 flex-1 bg-ink text-[16px] font-semibold text-white disabled:cursor-default"
+      initial={false}
+      animate={{
+        clipPath: state === "idle" ? "inset(0px 0px round 12px)" : "inset(0px calc(50% - 24px) round 999px)",
+        backgroundColor: state === "sent" ? "#0F8A5F" : disabled && state === "idle" ? "#9C988C" : "#1A1A1A",
+      }}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {state === "idle" && (
+          <m.span key="l" className="block" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.1 } }}>
+            I&apos;ve paid, send for checking
+          </m.span>
+        )}
+        {state === "busy" && (
+          <m.span key="b" className="absolute inset-0 grid place-items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.1 } }}>
+            <span className="size-5 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden />
+            <span className="sr-only">Sending</span>
+          </m.span>
+        )}
+        {state === "sent" && (
+          <m.span key="s" className="absolute inset-0 grid place-items-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <svg viewBox="0 0 24 24" className="size-6" aria-hidden>
+              <path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" className="draw-check" />
+            </svg>
+            <span className="sr-only">Sent</span>
+          </m.span>
+        )}
+      </AnimatePresence>
+    </m.button>
   );
 }

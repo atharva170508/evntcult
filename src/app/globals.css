@@ -13,6 +13,14 @@
     /* One navigation bar; the shell keeps this in sync with its real height. */
     --header-h: 80px;
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    /* Motion tokens (DESIGN.md "Motion"): composited properties only. */
+    --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* small overshoot, for stamps and snaps */
+    --dur-tap: 160ms;
+    --dur-ui: 220ms;
+    --dur-enter: 280ms;
+    --dur-ambient: 9s;
   }
   @media (min-width: 768px) {
     :root {
@@ -263,7 +271,50 @@
   }
 }
 
+/* ---------- Motion suites ---------- */
+
+/* Rolling digits */
+.odo { display: inline-flex; font-variant-numeric: tabular-nums; line-height: 1; }
+.odo-col { display: inline-block; height: 1em; overflow: hidden; }
+.odo-strip { display: flex; flex-direction: column; transition: transform var(--dur-enter) var(--ease-enter); will-change: transform; }
+.odo-strip > span { height: 1em; line-height: 1; }
+
+/* "Who's going": cascade in, and neighbours nudge aside on hover */
+@keyframes av-in { from { opacity: 0; transform: translateX(-6px) scale(0.92); } to { opacity: 1; transform: none; } }
+.avstack > * { animation: av-in var(--dur-enter) var(--ease-enter) both; animation-delay: calc(var(--i, 0) * 35ms); transition: transform var(--dur-ui) var(--ease-enter); }
+.avstack > *:hover { transform: translateY(-3px); z-index: 1; }
+.avstack > *:hover ~ * { transform: translateX(5px); }
+.avstack > *:has(~ *:hover) { transform: translateX(-3px); }
+
+/* Ambient aura behind the event header */
+@keyframes aura { 0%, 100% { opacity: 0.55; transform: translate(-50%, 0) scale(1); } 50% { opacity: 0.85; transform: translate(-50%, -2%) scale(1.06); } }
+.aura { animation: aura var(--dur-ambient) ease-in-out infinite; will-change: transform, opacity; }
+
+/* Face scan sweep */
+@keyframes scanline { 0% { transform: translateY(-10%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(1000%); opacity: 0; } }
+.scanline { animation: scanline 1.6s var(--ease-enter) infinite; }
+@keyframes rise-in { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: none; } }
+.rise-in { animation: rise-in var(--dur-enter) var(--ease-enter) both; animation-delay: calc(var(--i, 0) * 45ms); }
+
+/* Gate verdicts */
+@keyframes shockwave { from { opacity: 0.55; transform: translate(-50%, -50%) scale(0.2); } to { opacity: 0; transform: translate(-50%, -50%) scale(3.2); } }
+.shockwave { animation: shockwave 700ms var(--ease-enter) both; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 15% { transform: translateX(-14px); } 30% { transform: translateX(11px); } 45% { transform: translateX(-7px); } 60% { transform: translateX(4px); } 75% { transform: translateX(-2px); } }
+.shake { animation: shake 480ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+@keyframes edge-flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
+.edge-flash { animation: edge-flash 900ms var(--ease-exit) both; }
+
+/* Sonar ping next to a live counter */
+@keyframes sonar { from { opacity: 0.6; transform: scale(1); } to { opacity: 0; transform: scale(3.4); } }
+.sonar { animation: sonar 900ms var(--ease-enter) both; }
+
+/* Tick drawn on success */
+@keyframes draw { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+.draw-check { stroke-dasharray: 24; animation: draw 320ms var(--ease-enter) both; }
+
 @media (prefers-reduced-motion: reduce) {
+  .aura, .scanline { animation: none !important; }
+  .avstack > *:hover, .avstack > *:hover ~ *, .avstack > *:has(~ *:hover) { transform: none; }
   *,
   *::before,
   *::after {

@@ -36,7 +36,9 @@ import { listQuestions } from "@/lib/data/questions";
 import { ShareEvent } from "@/components/events/ShareEvent";
 import { WhatsAppPrompt } from "@/components/events/WhatsAppPrompt";
 import { InterestedButton } from "@/components/events/InterestedButton";
+import { FlyerAura } from "@/components/events/FlyerAura";
 import { buttonClass } from "@/components/ui/Button";
+import { Odometer } from "@/components/ui/Odometer";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Event" };
@@ -223,12 +225,12 @@ export default async function EventPage({
         </p>
         {goingInitials.length > 0 ? (
           <div className="mt-2.5 flex items-center">
-            <div className="flex -space-x-2">
+            <div className="avstack flex -space-x-2">
               {goingInitials.map((ini, i) => (
                 <span
                   key={i}
-                  className="grid size-9 place-items-center rounded-full border-2 border-canvas text-[12px] font-semibold text-ink"
-                  style={{ background: AVATAR_TINTS[i % AVATAR_TINTS.length] }}
+                  className="relative grid size-9 place-items-center rounded-full border-2 border-canvas text-[12px] font-semibold text-ink"
+                  style={{ background: AVATAR_TINTS[i % AVATAR_TINTS.length], ["--i" as string]: i }}
                   aria-hidden
                 >
                   {ini}
@@ -288,14 +290,8 @@ export default async function EventPage({
 
   return (
     <div className="relative isolate pb-28 pt-6 md:pb-12 md:pt-10">
-      {/* Luma-style: the page picks up the event's own colour, fading into the canvas. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[560px] w-screen -translate-x-1/2"
-        style={{
-          background: `linear-gradient(to bottom, ${accentHex(s.accent)}2E, ${accentHex(s.accent)}0F 45%, transparent)`,
-        }}
-      />
+      {/* Luma-style: the page picks up the event's colour (from the flyer when there is one) and breathes slowly. */}
+      <FlyerAura src={e.banner_url} fallback={accentHex(s.accent)} />
       <Link
         href="/events"
         className="inline-flex min-h-11 items-center gap-1.5 text-[14px] font-medium text-ink-muted transition-colors duration-fast hover:text-ink md:hidden"
@@ -455,10 +451,7 @@ export default async function EventPage({
                   <span className="font-semibold text-danger">Full</span>
                 ) : (
                   <>
-                    <span className="font-semibold text-ink">
-                      {d.seatsLeft}
-                    </span>{" "}
-                    of {e.capacity} seats left
+                    <Odometer value={d.seatsLeft ?? 0} className="font-semibold text-ink" /> of {e.capacity} seats left
                   </>
                 )}
               </p>

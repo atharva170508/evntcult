@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Chip } from "@/components/ui/Chip";
+import { Odometer } from "@/components/ui/Odometer";
 
 /**
  * Live check-in ring (Zoho Backstage "checked in vs not yet" idea). Connects to the
@@ -113,12 +114,19 @@ export function LiveHeadcount({
           <div>
             <div
               className="font-mono text-[36px] font-medium leading-none tracking-[-0.05em] tabular-nums transition-transform duration-base ease-spring"
-              style={{ transform: bump ? "scale(1.08)" : "scale(1)" }}
+              style={{ transform: bump ? "scale(1.06)" : "scale(1)" }}
               aria-live="polite"
             >
-              {count}
+              <Odometer value={count} />
             </div>
-            <div className="mt-1.5 text-[12px] text-ink-muted">checked in</div>
+            <div className="mt-1.5 flex items-center justify-center gap-1.5 text-[12px] text-ink-muted">
+              {/* Sonar ping each time a new scan lands */}
+              <span className="relative inline-flex size-1.5" aria-hidden>
+                <span className="absolute inset-0 rounded-full bg-live" />
+                {bump && <span key={count} className="sonar absolute inset-0 rounded-full bg-live" />}
+              </span>
+              checked in
+            </div>
           </div>
         </div>
       </div>
