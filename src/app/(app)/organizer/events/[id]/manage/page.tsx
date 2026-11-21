@@ -26,7 +26,9 @@ import { ShareFirst } from "@/components/organizer/ShareFirst";
 import { siteHost } from "@/lib/organizer/page-data";
 import { VolunteerLinks } from "@/components/organizer/VolunteerLinks";
 import { listVolunteerLinks } from "@/lib/volunteers";
-import { choiceTallies } from "@/lib/data/questions";
+import { choiceTallies, teamRoster } from "@/lib/data/questions";
+import { TeamsCard } from "@/components/organizer/TeamsCard";
+import { kindFor, parseConfig, teamRule } from "@/lib/categories";
 
 export const metadata: Metadata = { title: "Manage event" };
 export const dynamic = "force-dynamic";
@@ -42,8 +44,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
   if (!viewer.verifiedOrganizer) redirect("/dashboard");
   if (!(await canManageEvent(viewer, id))) notFound();
 
-  const e = await first<{ id: string; slug: string; title: string; status: string; venue: string; starts_at: string; ends_at: string; capacity: number; price_paise: number; access: string; access_code: string | null; certificates_enabled: number }>(
-    "SELECT id, slug, title, status, COALESCE(venue, 'Venue TBA') AS venue, starts_at, ends_at, capacity, price_paise, access, access_code, certificates_enabled FROM events WHERE id = ?",
+  const e = await first<{ id: string; slug: string; title: string; status: string; venue: string; starts_at: string; ends_at: string; capacity: number; price_paise: number; access: string; access_code: string | null; certificates_enabled: number; category: string | null; category_config: string | null }>(
+    "SELECT id, slug, title, status, COALESCE(venue, 'Venue TBA') AS venue, starts_at, ends_at, capacity, price_paise, access, access_code, certificates_enabled, category, category_config FROM events WHERE id = ?",
     id,
   );
   if (!e) notFound();
@@ -77,6 +79,9 @@ export default async function ManageEventPage({ params, searchParams }: { params
   const paidEvent = e.price_paise > 0;
   const connected = whatsappConnected();
   const tallies = await choiceTallies(await getDB(), e.id);
+  // Hackathons and tournaments: group sign-ups into teams by the team name they gave.
+  const kind = kindFor(e.category);
+  const teams = kind?.teams && questions.some((qq) => /team/i.test(qq.label)) ? await teamRoster(await getDB(), e.id) : null;
 
   // Filter tabs, Linear style: counted from the same list so the numbers always match the rows.
   const isVerify = (a: (typeof attendees)[number]) => a.status === "registered" && a.payment_status === "unpaid" && !!a.upi_utr;
@@ -307,6 +312,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
         {/* Side panels */}
         <div className="space-y-5">
+          {teams && kind && <TeamsCard teams={teams} rule={teamRule(kind, parseConfig(e.category_config))} noun={kind.key === "tournament" ? "Squads" : "Teams"} />}
           {tallies.length > 0 && (
             <section aria-labelledby="counts-h" className="rounded-2xl border border-line-strong bg-white">
               <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">

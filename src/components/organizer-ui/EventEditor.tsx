@@ -8,6 +8,7 @@ import { Ticket } from "./Ticket";
 import { VenueInput } from "./VenueInput";
 import { MerchSetup } from "./MerchSetup";
 import { QuestionsSetup } from "./QuestionsSetup";
+import { CategorySetup } from "./CategorySetup";
 import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, isValidLink, LINK_ERROR, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
 
 export interface EditorInitial {
@@ -633,6 +634,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
               )}
             </Section>
 
+          {id && <CategorySetup eventId={id} category={f.category} />}
           {id && <MerchSetup eventId={id} />}
             {id && <QuestionsSetup eventId={id} />}
           </div>

@@ -63,7 +63,7 @@ export function QuestionsSetup({ eventId }: { eventId: string }) {
   }
 
   return (
-    <Section n="07" label="Questions">
+    <Section n="08" label="Questions">
       <div className="o-row">
         <span className="o-label">Quick add</span>
         <div className="o-chips" role="group" aria-label="Common questions">

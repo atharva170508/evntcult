@@ -101,3 +101,38 @@ export async function choiceTallies(db: D1Database, eventId: string): Promise<Ch
     return { question: q, counts, answered: mine.reduce((s, r) => s + r.n, 0), total: total?.n ?? 0 };
   });
 }
+
+export interface Team {
+  name: string;
+  members: { name: string; checkedIn: boolean; role: string | null }[];
+}
+
+/**
+ * Confirmed guests grouped by their "Team name" answer. Names are matched loosely (case and spacing),
+ * so "Byte Me" and "byte me " land in one team. Guests who didn't name a team aren't included.
+ */
+export async function teamRoster(db: D1Database, eventId: string): Promise<Team[]> {
+  const rows = await db
+    .prepare(
+      `SELECT a.value AS team, u.name, r.id AS reg,
+              (SELECT 1 FROM checkins c WHERE c.registration_id = r.id LIMIT 1) AS checked_in,
+              (SELECT a2.value FROM registration_answers a2 JOIN event_questions q2 ON q2.id = a2.question_id
+                WHERE a2.registration_id = r.id AND (lower(q2.label) LIKE '%role%' OR lower(q2.label) = 'track') LIMIT 1) AS role
+         FROM registration_answers a
+         JOIN event_questions q ON q.id = a.question_id
+         JOIN registrations r ON r.id = a.registration_id
+         JOIN users u ON u.id = r.user_id
+        WHERE q.event_id = ? AND lower(q.label) LIKE '%team%' AND r.status = 'registered' AND trim(a.value) <> ''
+        ORDER BY r.created_at`,
+    )
+    .bind(eventId)
+    .all<{ team: string; name: string | null; reg: string; checked_in: number | null; role: string | null }>();
+  const teams = new Map<string, Team>();
+  for (const r of rows.results ?? []) {
+    const key = r.team.trim().replace(/\s+/g, " ").toLowerCase();
+    const t = teams.get(key) ?? { name: r.team.trim().replace(/\s+/g, " "), members: [] };
+    t.members.push({ name: r.name ?? "Guest", checkedIn: !!r.checked_in, role: r.role });
+    teams.set(key, t);
+  }
+  return [...teams.values()].sort((a, b) => b.members.length - a.members.length || a.name.localeCompare(b.name));
+}

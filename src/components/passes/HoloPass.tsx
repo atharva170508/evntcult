@@ -94,7 +94,11 @@ const shortLabel = (l: string) =>
       ? "Size"
       : /team/i.test(l)
         ? "Team"
-        : l.split(/\s+/)[0];
+        : /jersey/i.test(l)
+          ? "No."
+          : /pass type|ticket type/i.test(l)
+            ? "Pass"
+            : l.split(/\s+/)[0];
 
 /**
  * An event badge on a lanyard. It hangs, swings a little when it arrives, tilts toward the

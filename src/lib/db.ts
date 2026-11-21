@@ -55,6 +55,17 @@ async function ensureSchema(db: D1Database): Promise<void> {
     db.prepare("CREATE INDEX IF NOT EXISTS idx_volunteer_links_event ON volunteer_links(event_id)"),
   ]);
 
+  // 0024: category setup JSON on events.
+  const evCols = await db.prepare("PRAGMA table_info(events)").all<{ name: string }>();
+  if (!(evCols.results ?? []).some((c) => c.name === "category_config")) {
+    await db.prepare("ALTER TABLE events ADD COLUMN category_config TEXT").run();
+    try {
+      await db.prepare("INSERT INTO d1_migrations (name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name = ?)").bind("0024_category_config.sql", "0024_category_config.sql").run();
+    } catch {
+      // no d1_migrations table locally
+    }
+  }
+
   const info = await db.prepare("PRAGMA table_info(users)").all<{ name: string }>();
   const have = new Set((info.results ?? []).map((c) => c.name));
   const missing = USER_COLUMNS.filter(([, col]) => !have.has(col));

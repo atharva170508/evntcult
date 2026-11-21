@@ -37,6 +37,8 @@ export interface EventRow {
   drive_folder_url: string | null;
   banner_url: string | null;
   link_url: string | null;
+  /** Category setup JSON (see src/lib/categories.ts); null until the organizer fills it. */
+  category_config?: string | null;
   venue_place_id: string | null;
   venue_lat: number | null;
   venue_lng: number | null;

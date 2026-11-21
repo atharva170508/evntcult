@@ -37,6 +37,7 @@ import { ShareEvent } from "@/components/events/ShareEvent";
 import { WhatsAppPrompt } from "@/components/events/WhatsAppPrompt";
 import { InterestedButton } from "@/components/events/InterestedButton";
 import { FlyerAura } from "@/components/events/FlyerAura";
+import { CategoryPills, CategorySections } from "@/components/events/CategoryFacts";
 import { buttonClass } from "@/components/ui/Button";
 import { Odometer } from "@/components/ui/Odometer";
 
@@ -337,6 +338,7 @@ export default async function EventPage({
                 {s.tagline}
               </p>
             )}
+            <CategoryPills category={e.category} raw={e.category_config} />
           </Entrance>
 
           {/* When and where, as tiles */}
@@ -693,6 +695,8 @@ export default async function EventPage({
               </div>
             </section>
           )}
+
+          <CategorySections category={e.category} raw={e.category_config} />
 
           {side("mt-10 border-t border-line pt-8 lg:hidden")}
         </div>

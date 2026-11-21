@@ -49,7 +49,7 @@ export function MerchSetup({ eventId }: { eventId: string }) {
   }
 
   return (
-    <Section n="06" label="Merch">
+    <Section n="07" label="Merch">
       <div className="o-row">
         <span className="o-label">Add item</span>
         <div>

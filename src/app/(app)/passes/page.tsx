@@ -1,3 +1,4 @@
+import { kindFor } from "@/lib/categories";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -87,12 +88,24 @@ export default async function PassesPage() {
     `SELECT a.registration_id, q.label, a.value FROM registration_answers a
        JOIN event_questions q ON q.id = a.question_id
        JOIN registrations r ON r.id = a.registration_id
-      WHERE r.user_id = ? AND r.status IN ('registered','waitlisted') AND (q.kind = 'choice' OR q.label LIKE '%team%')
+      WHERE r.user_id = ? AND r.status IN ('registered','waitlisted') AND (q.kind = 'choice' OR q.label LIKE '%team%' OR q.label LIKE '%jersey%')
       ORDER BY q.created_at`,
     viewer.id,
   );
+  // Order by what this event's category puts first on a pass (team and track for a hackathon, team,
+  // role and jersey for a tournament, pass type for a party), then keep four.
+  const catOf = new Map(rows.map((r) => [r.id, r.category]));
+  const byReg = new Map<string, { label: string; value: string }[]>();
+  for (const a of answerRows) byReg.set(a.registration_id, [...(byReg.get(a.registration_id) ?? []), { label: a.label, value: a.value }]);
   const logistics = new Map<string, { label: string; value: string }[]>();
-  for (const a of answerRows) logistics.set(a.registration_id, [...(logistics.get(a.registration_id) ?? []), { label: a.label, value: a.value }].slice(0, 4));
+  for (const [reg, items] of byReg) {
+    const order = kindFor(catOf.get(reg))?.passBadges ?? [];
+    const rank = (l: string) => {
+      const i = order.findIndex((o) => l.toLowerCase().includes(o));
+      return i === -1 ? order.length : i;
+    };
+    logistics.set(reg, [...items].sort((x, y) => rank(x.label) - rank(y.label)).slice(0, 4));
+  }
 
   // Partiful's "Interested": saved, not registered, still to come.
   const saved = await all<{ slug: string; title: string; event_id: string; category: string; starts_at: string; venue: string; price_paise: number; full: number }>(
