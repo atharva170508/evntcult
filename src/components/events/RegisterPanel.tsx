@@ -40,6 +40,8 @@ export function RegisterPanel(props: {
   actionsLive?: boolean;
   /** What the printed pass shows after registering or paying. */
   ticket?: { title: string; dateLabel: string; timeLabel: string; venue: string; holder: string; accent: string; seed: string };
+  /** The host approves each sign-up: requests wait instead of getting a pass. */
+  approval?: boolean;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -214,6 +216,23 @@ export function RegisterPanel(props: {
     );
   }
 
+  if (r?.status === "waitlisted" && props.approval) {
+    return (
+      <div className="space-y-4">
+        <Notice tone="warn" icon={Hourglass}>
+          <p>Request sent</p>
+          <p className="mt-1 font-normal text-ink-2">The host approves each guest. Your pass appears here once they say yes.</p>
+        </Notice>
+        {err}
+        {live && (
+          <Button onClick={cancel} disabled={busy} variant="ghost" className="w-full text-ink-muted hover:bg-danger-soft hover:text-danger">
+            Withdraw request
+          </Button>
+        )}
+      </div>
+    );
+  }
+
   if (r?.status === "waitlisted") {
     return (
       <div className="space-y-4">
@@ -262,6 +281,19 @@ export function RegisterPanel(props: {
 
   if (!props.open) {
     return <Notice icon={Clock}>{props.closedReason ?? "Registration is closed."}</Notice>;
+  }
+
+  if (props.approval) {
+    return (
+      <div className="space-y-3">
+        {questionFields}
+        {err}
+        <Button onClick={() => register(false)} loading={busy} variant="accent" size="lg" className="w-full">
+          Request to join{props.pricePaise > 0 ? ` · ${formatINR(props.pricePaise)}` : ""}
+        </Button>
+        <p className="text-center text-[12.5px] text-ink-muted">The host approves each guest. You pay only once you&apos;re in.</p>
+      </div>
+    );
   }
 
   if (props.full || fullOffer !== null) {

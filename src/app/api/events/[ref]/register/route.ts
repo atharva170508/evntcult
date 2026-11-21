@@ -24,7 +24,7 @@ export const POST = handle(async (req: Request, { params }: Ctx) => {
   const body = await parseBody(req, registerSchema);
 
   const event = await first<EventForRegistration & { access: string; access_code: string | null; organizer_id: string }>(
-    "SELECT id, slug, capacity, status, starts_at, ends_at, access, access_code, organizer_id FROM events WHERE slug = ? OR id = ?",
+    "SELECT id, slug, capacity, status, starts_at, ends_at, access, access_code, organizer_id, reg_closes_at, requires_approval FROM events WHERE slug = ? OR id = ?",
     ref,
     ref,
   );
@@ -51,6 +51,7 @@ export const POST = handle(async (req: Request, { params }: Ctx) => {
     return Response.json(
       {
         status: "waitlisted",
+        approval: !!event.requires_approval,
         registration: { id: result.registration.id },
         waitlist_position: result.position,
         hold_expires_at: result.registration.hold_expires_at,

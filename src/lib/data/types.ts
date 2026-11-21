@@ -47,6 +47,10 @@ export interface EventRow {
   link_url: string | null;
   /** Category setup JSON (see src/lib/categories.ts); null until the organizer fills it. */
   category_config?: string | null;
+  /** Sign-up rules (migration 0025). */
+  reg_closes_at?: string | null;
+  requires_approval?: number | null;
+  agenda?: string | null;
   venue_place_id: string | null;
   venue_lat: number | null;
   venue_lng: number | null;

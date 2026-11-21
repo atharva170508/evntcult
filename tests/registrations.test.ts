@@ -7,6 +7,8 @@ import { testDatabase } from "./helpers/d1";
 import {
   cancel,
   confirmHold,
+  decideRequest,
+  addWalkIn,
   holdExpiry,
   promoteWaitlist,
   register,
@@ -233,5 +235,55 @@ describe("cancel and re-register", { timeout: 30_000 }, () => {
     if (ra.kind !== "registered" || rb.kind !== "registered") throw new Error("expected registered");
     expect(ra.registration.pass_code).toBe("EC-ROBO-0001");
     expect(rb.registration.pass_code).toBe("EC-ROBO-0002");
+  });
+});
+
+describe("sign-up rules", () => {
+  it("refuses new sign-ups after the cutoff, but keeps existing ones", async () => {
+    const e = { ...(await addEvent(10)), reg_closes_at: at(30).toISOString() };
+    const before = await register(db, e, "u1", { now: at(10) });
+    expect(before.kind).toBe("registered");
+    await expect(register(db, e, "u2", { now: at(31) })).rejects.toMatchObject({ code: "closed" });
+    // Asking again for an existing registration still returns it.
+    expect((await register(db, e, "u1", { now: at(40) })).kind).toBe("registered");
+  });
+
+  it("with host approval, sign-ups wait, nobody moves up alone, and approval respects capacity", async () => {
+    const base = await addEvent(1);
+    await db.prepare("UPDATE events SET requires_approval = 1 WHERE id = ?").bind(base.id).run();
+    const e = { ...base, requires_approval: 1 };
+    const a = await register(db, e, "u1", { now: at(0) });
+    const b = await register(db, e, "u2", { now: at(1) });
+    expect(a.kind).toBe("waitlisted");
+    expect(b.kind).toBe("waitlisted");
+    expect(await promoteWaitlist(db, e.id, at(2))).toHaveLength(0);
+    expect((await counts(e.id)).held).toBe(0);
+
+    const ra = await regOf(e.id, "u1");
+    const rb = await regOf(e.id, "u2");
+    expect(await decideRequest(db, e.id, ra.id, "approve", "org", at(3))).toBe("approved");
+    expect(await decideRequest(db, e.id, rb.id, "approve", "org", at(4))).toBe("full");
+    expect(await decideRequest(db, e.id, rb.id, "decline", "org", at(5))).toBe("declined");
+    expect(await decideRequest(db, e.id, rb.id, "decline", "org", at(6))).toBe("not_found");
+    expect((await regOf(e.id, "u1")).status).toBe("registered");
+    expect((await regOf(e.id, "u2")).status).toBe("cancelled");
+  });
+});
+
+describe("walk-ins", () => {
+  it("registers and checks in a new guest, even past capacity, and is safe to repeat", async () => {
+    const e = await addEvent(1);
+    await register(db, e, "u1", { now: at(0) });
+    const w = await addWalkIn(db, e, { name: "Door Guest" }, "org", at(1));
+    expect(w.alreadyIn).toBe(false);
+    expect(w.registration.status).toBe("registered");
+    expect((await counts(e.id)).registered).toBe(2);
+    const checked = await db.prepare("SELECT COUNT(*) AS n FROM checkins WHERE event_id = ?").bind(e.id).first<{ n: number }>();
+    expect(checked!.n).toBe(1);
+    // An existing account by email is reused; adding them twice just says they're in.
+    const a = await addWalkIn(db, e, { name: "U2", email: "u2@college.edu" }, "org", at(2));
+    const b = await addWalkIn(db, e, { name: "U2", email: "U2@college.edu" }, "org", at(3));
+    expect(a.registration.user_id).toBe("u2");
+    expect(b.alreadyIn).toBe(true);
   });
 });

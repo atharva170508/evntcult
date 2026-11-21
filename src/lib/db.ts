@@ -66,6 +66,23 @@ async function ensureSchema(db: D1Database): Promise<void> {
     }
   }
 
+  // 0025: sign-up rules (cutoff, host approval, agenda).
+  const evHave = new Set((evCols.results ?? []).map((c) => c.name));
+  const rules: [string, string][] = [
+    ["reg_closes_at", "TEXT"],
+    ["requires_approval", "INTEGER NOT NULL DEFAULT 0"],
+    ["agenda", "TEXT"],
+  ];
+  const addRules = rules.filter(([c]) => !evHave.has(c));
+  if (addRules.length) {
+    await db.batch(addRules.map(([c, def]) => db.prepare(`ALTER TABLE events ADD COLUMN ${c} ${def}`)));
+    try {
+      await db.prepare("INSERT INTO d1_migrations (name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name = ?)").bind("0025_signup_rules.sql", "0025_signup_rules.sql").run();
+    } catch {
+      // no d1_migrations table locally
+    }
+  }
+
   const info = await db.prepare("PRAGMA table_info(users)").all<{ name: string }>();
   const have = new Set((info.results ?? []).map((c) => c.name));
   const missing = USER_COLUMNS.filter(([, col]) => !have.has(col));

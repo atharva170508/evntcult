@@ -28,6 +28,8 @@ import { VolunteerLinks } from "@/components/organizer/VolunteerLinks";
 import { listVolunteerLinks } from "@/lib/volunteers";
 import { choiceTallies, teamRoster } from "@/lib/data/questions";
 import { TeamsCard } from "@/components/organizer/TeamsCard";
+import { RequestsCard } from "@/components/organizer/RequestsCard";
+import { WalkInCard } from "@/components/organizer/WalkInCard";
 import { kindFor, parseConfig, teamRule } from "@/lib/categories";
 
 export const metadata: Metadata = { title: "Manage event" };
@@ -44,8 +46,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
   if (!viewer.verifiedOrganizer) redirect("/dashboard");
   if (!(await canManageEvent(viewer, id))) notFound();
 
-  const e = await first<{ id: string; slug: string; title: string; status: string; venue: string; starts_at: string; ends_at: string; capacity: number; price_paise: number; access: string; access_code: string | null; certificates_enabled: number; category: string | null; category_config: string | null }>(
-    "SELECT id, slug, title, status, COALESCE(venue, 'Venue TBA') AS venue, starts_at, ends_at, capacity, price_paise, access, access_code, certificates_enabled, category, category_config FROM events WHERE id = ?",
+  const e = await first<{ id: string; slug: string; title: string; status: string; venue: string; starts_at: string; ends_at: string; capacity: number; price_paise: number; access: string; access_code: string | null; certificates_enabled: number; category: string | null; category_config: string | null; requires_approval: number | null }>(
+    "SELECT id, slug, title, status, COALESCE(venue, 'Venue TBA') AS venue, starts_at, ends_at, capacity, price_paise, access, access_code, certificates_enabled, category, category_config, requires_approval FROM events WHERE id = ?",
     id,
   );
   if (!e) notFound();
@@ -81,6 +83,14 @@ export default async function ManageEventPage({ params, searchParams }: { params
   const tallies = await choiceTallies(await getDB(), e.id);
   // Hackathons and tournaments: group sign-ups into teams by the team name they gave.
   const kind = kindFor(e.category);
+  const walkIns = await count("SELECT COUNT(*) AS n FROM checkins WHERE event_id = ? AND device_id = 'walk-in'", e.id);
+  const requests = e.requires_approval
+    ? await all<{ id: string; name: string; email: string; created_at: string }>(
+        `SELECT r.id, u.name, u.email, r.created_at FROM registrations r JOIN users u ON u.id = r.user_id
+          WHERE r.event_id = ? AND r.status = 'waitlisted' ORDER BY r.created_at LIMIT 200`,
+        e.id,
+      )
+    : null;
   const teams = kind?.teams && questions.some((qq) => /team/i.test(qq.label)) ? await teamRoster(await getDB(), e.id) : null;
 
   // Filter tabs, Linear style: counted from the same list so the numbers always match the rows.
@@ -90,7 +100,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
     { key: "in", label: "Checked in", test: (a: (typeof attendees)[number]) => !!a.checked_in_at },
     { key: "out", label: "Not in yet", test: (a: (typeof attendees)[number]) => a.status === "registered" && !a.checked_in_at },
     ...(paidEvent ? [{ key: "verify", label: "To verify", test: isVerify }] : []),
-    { key: "wait", label: "Waitlist", test: (a: (typeof attendees)[number]) => a.status === "waitlisted" },
+    { key: "wait", label: e.requires_approval ? "Requests" : "Waitlist", test: (a: (typeof attendees)[number]) => a.status === "waitlisted" },
   ];
   const filter = FILTERS.find((x) => x.key === filterParam) ?? FILTERS[0];
   const filtered = attendees.filter(filter.test);
@@ -312,6 +322,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
         {/* Side panels */}
         <div className="space-y-5">
+          {requests && <RequestsCard eventId={e.id} initial={requests} />}
+          {e.status === "published" && <WalkInCard eventId={e.id} count={walkIns} />}
           {teams && kind && <TeamsCard teams={teams} rule={teamRule(kind, parseConfig(e.category_config))} noun={kind.key === "tournament" ? "Squads" : "Teams"} />}
           {tallies.length > 0 && (
             <section aria-labelledby="counts-h" className="rounded-2xl border border-line-strong bg-white">

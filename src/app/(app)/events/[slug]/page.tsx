@@ -155,7 +155,8 @@ export default async function EventPage({
   const canRegister =
     !!viewer && !d.isOwner && !reg && e.status === "published" && !ended;
   const isPublic = e.status === "published" && e.access === "public";
-  const canSell = e.status === "published" && !ended;
+  const regClosed = !!e.reg_closes_at && Date.parse(e.reg_closes_at) <= Date.now();
+  const canSell = e.status === "published" && !ended && !regClosed;
   const confirmedVenue =
     e.event_type !== "virtual" && e.venue && e.venue_status === "confirmed";
 
@@ -476,6 +477,11 @@ export default async function EventPage({
               {e.capacity !== null && !reg && !d.isOwner && canSell && (
                 <Meter value={e.taken} max={e.capacity} className="mb-5" />
               )}
+              {e.reg_closes_at && !regClosed && !reg && canSell && (
+                <p className="-mt-2 mb-4 text-[13.5px] tabular-nums text-ink-muted">
+                  Registration closes {fmtDate(new Date(e.reg_closes_at), { weekday: "short", day: "numeric", month: "short" })}, {fmtTime(new Date(e.reg_closes_at))}
+                </p>
+              )}
               {!viewer ? (
                 <div className="space-y-3">
                   <LinkButton
@@ -541,10 +547,13 @@ export default async function EventPage({
                 <RegisterPanel
                   slug={e.slug}
                   code={code ?? null}
-                  open={e.status === "published" && !ended}
+                  open={e.status === "published" && !ended && !regClosed}
+                  approval={!!e.requires_approval}
                   closedReason={
                     ended
                       ? "This event has ended."
+                      : regClosed
+                        ? "Registration has closed."
                       : e.status === "cancelled"
                         ? "This event was cancelled."
                         : e.status !== "published"
@@ -693,6 +702,33 @@ export default async function EventPage({
               <div className="mt-4 max-w-prose whitespace-pre-line text-[16px] leading-[1.7] text-ink-2">
                 {e.description}
               </div>
+            </section>
+          )}
+
+          {e.agenda && (
+            <section aria-labelledby="agenda-h" className="mt-10 border-t border-line pt-8">
+              <h2 id="agenda-h" className="text-[20px] font-semibold text-ink">
+                Agenda
+              </h2>
+              <ol className="relative mt-5 space-y-4 border-l border-line-strong pl-6">
+                {e.agenda.split("\n").map((l, i) => {
+                  const [when, ...what] = l.split(",");
+                  const has = what.length > 0;
+                  return (
+                    <li key={i} className="relative">
+                      <span className="absolute -left-[29px] top-[7px] size-2.5 rounded-full bg-canvas ring-2 ring-ink" aria-hidden />
+                      {has ? (
+                        <>
+                          <span className="block text-[13.5px] font-semibold tabular-nums text-ink-muted">{when.trim()}</span>
+                          <span className="block text-[16px] text-ink">{what.join(",").trim()}</span>
+                        </>
+                      ) : (
+                        <span className="block text-[16px] text-ink">{l}</span>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
             </section>
           )}
 

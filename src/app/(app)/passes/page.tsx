@@ -57,6 +57,7 @@ interface PassRow {
   event_status: string;
   checked_in_at: string | null;
   waitlist_position: number | null;
+  requires_approval: number | null;
   event_type: string;
   venue_place_id: string | null;
   venue_lat: number | null;
@@ -70,7 +71,7 @@ export default async function PassesPage() {
   const rows = await all<PassRow>(
     `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.upi_utr, r.hold_expires_at, r.created_at, e.organizer_upi_id,
             e.id AS event_id, e.slug, e.title, e.category, COALESCE(e.venue, 'Venue TBA') AS venue, e.starts_at, e.ends_at, e.price_paise, e.status AS event_status,
-            e.event_type, e.venue_place_id, e.venue_lat, e.venue_lng,
+            e.event_type, e.venue_place_id, e.venue_lat, e.venue_lng, e.requires_approval,
             (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id) AS checked_in_at,
             (SELECT ct.id FROM certificates ct WHERE ct.registration_id = r.id AND ct.revoked_at IS NULL ORDER BY ct.kind = 'participation' LIMIT 1) AS cert_id,
             CASE WHEN r.status = 'waitlisted' THEN
@@ -167,7 +168,9 @@ export default async function PassesPage() {
                   state={cancelled ? "cancelled" : r.status === "waitlisted" ? "waitlist" : Date.parse(r.starts_at) <= now ? "live" : "confirmed"}
                   waitlistNote={
                     r.status === "waitlisted"
-                      ? r.hold_expires_at
+                      ? r.requires_approval
+                        ? "Request sent. The host approves each guest; your pass appears here once they say yes."
+                        : r.hold_expires_at
                         ? `A seat is held for you until ${fmtTime(new Date(r.hold_expires_at))}. Confirm it on the event page.`
                         : `On the waitlist${r.waitlist_position ? `, #${r.waitlist_position}` : ""}. If someone cancels, you'll get a seat to confirm.`
                       : null

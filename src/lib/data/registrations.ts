@@ -32,6 +32,10 @@ export interface EventForRegistration {
   status: string;
   starts_at: string;
   ends_at: string;
+  /** Sign-ups close at this time (ISO). */
+  reg_closes_at?: string | null;
+  /** 1 = every sign-up waits for the host to approve it. */
+  requires_approval?: number;
 }
 
 export interface RegistrationRow {
@@ -232,6 +236,21 @@ export async function register(
   if (existing && existing.status !== "cancelled")
     return describe(db, existing);
 
+  if (event.reg_closes_at && Date.parse(event.reg_closes_at) <= now.getTime())
+    throw new RegistrationError(409, "closed", "Registration has closed for this event.");
+
+  // Host approval: every request waits in the queue until the organizer approves it.
+  if (event.requires_approval) {
+    if ((await upsertRegistration(db, event, userId, "waitlisted", false, now)) === 0) {
+      const raced = await findMine(db, event.id, userId);
+      if (raced && raced.status !== "cancelled") return describe(db, raced);
+      throw new RegistrationError(409, "not_open", "Registration isn't open for this event.");
+    }
+    const req = (await findMine(db, event.id, userId))!;
+    await audit(db, userId, "request", req.id, { event_id: event.id, status: "waitlisted" }, now);
+    return { kind: "waitlisted", registration: req, position: await waitlistPosition(db, req) };
+  }
+
   // Free seats may be waiting for the next person (e.g. the organizer raised capacity).
   await promoteWaitlist(db, event.id, now);
 
@@ -322,7 +341,7 @@ export async function promoteWaitlist(
 ): Promise<RegistrationRow[]> {
   const event = await db
     .prepare(
-      "SELECT id, slug, title, capacity, status, starts_at, ends_at FROM events WHERE id = ?",
+      "SELECT id, slug, title, capacity, status, starts_at, ends_at, requires_approval FROM events WHERE id = ?",
     )
     .bind(eventId)
     .first<{
@@ -333,7 +352,10 @@ export async function promoteWaitlist(
       status: string;
       starts_at: string;
       ends_at: string;
+      requires_approval: number | null;
     }>();
+  // With host approval on, nobody moves up on their own: the host approves each request.
+  if (event?.requires_approval) return [];
   if (
     !event ||
     event.status !== "published" ||
@@ -521,4 +543,83 @@ export async function sweepHolds(
   for (const e of events.results ?? [])
     promoted += (await promoteWaitlist(db, e.id, now)).length;
   return { expired: expired.results?.length ?? 0, promoted };
+}
+
+/**
+ * Host approval: approve or decline a waiting request. Approving checks capacity in the same
+ * statement, so two approvals at once can't overfill the event. Returns false when it's full.
+ */
+export async function decideRequest(
+  db: D1Database,
+  eventId: string,
+  regId: string,
+  action: "approve" | "decline",
+  actorId: string,
+  now = new Date(),
+): Promise<"approved" | "declined" | "full" | "not_found"> {
+  if (action === "decline") {
+    const res = await db
+      .prepare("UPDATE registrations SET status = 'cancelled', cancelled_at = ?, hold_expires_at = NULL WHERE id = ? AND event_id = ? AND status = 'waitlisted'")
+      .bind(iso(now), regId, eventId)
+      .run();
+    if (!res.meta.changes) return "not_found";
+    await audit(db, actorId, "request_declined", regId, { event_id: eventId }, now);
+    return "declined";
+  }
+  const res = await db
+    .prepare(
+      `UPDATE registrations SET status = 'registered', hold_expires_at = NULL
+        WHERE id = ? AND event_id = ? AND status = 'waitlisted'
+          AND (SELECT COUNT(*) FROM registrations r WHERE r.event_id = ? AND r.status = 'registered')
+              < COALESCE((SELECT capacity FROM events WHERE id = ?), 1e18)`,
+    )
+    .bind(regId, eventId, eventId, eventId)
+    .run();
+  if (!res.meta.changes) {
+    const reg = await getRegistration(db, regId);
+    return reg && reg.event_id === eventId && reg.status === "waitlisted" ? "full" : "not_found";
+  }
+  const reg = (await getRegistration(db, regId))!;
+  await audit(db, actorId, "request_approved", regId, { event_id: eventId }, now);
+  await enqueueOne(db, reg.user_id, eventId, "pass_confirmed", `pass_confirmed:${reg.id}`, now);
+  return "approved";
+}
+
+/**
+ * A walk-in: someone who turns up without registering. They get a registration and are checked in
+ * at once, so every count (guests, check-ins, the door) stays consistent. With an email that
+ * matches an account, that account is used; otherwise a guest record is made from the name.
+ * Walk-ins can go over capacity: the person is already at the door.
+ */
+export async function addWalkIn(
+  db: D1Database,
+  event: EventForRegistration,
+  guest: { name: string; email?: string | null },
+  actorId: string,
+  now = new Date(),
+): Promise<{ registration: RegistrationRow; alreadyIn: boolean }> {
+  if (Date.parse(event.ends_at) <= now.getTime()) throw new RegistrationError(409, "ended", "This event has ended.");
+  const email = guest.email?.trim().toLowerCase() || null;
+  let userId = email ? (await db.prepare("SELECT id FROM users WHERE email = ?").bind(email).first<{ id: string }>())?.id : undefined;
+  if (!userId) {
+    userId = newId();
+    await db
+      .prepare("INSERT INTO users (id, email, name, role, created_at) VALUES (?, ?, ?, 'attendee', ?)")
+      .bind(userId, email ?? `walkin+${userId}@walkin.invalid`, guest.name.trim().slice(0, 80), iso(now))
+      .run();
+  }
+  let reg = await findMine(db, event.id, userId);
+  if (!reg || reg.status === "cancelled" || reg.status === "waitlisted") {
+    if (reg?.status === "waitlisted") await db.prepare("UPDATE registrations SET status = 'registered', hold_expires_at = NULL WHERE id = ?").bind(reg.id).run();
+    else await upsertRegistration(db, event, userId, "registered", false, now);
+    const fresh = await findMine(db, event.id, userId);
+    if (!fresh || fresh.status !== "registered") throw new RegistrationError(409, "not_open", "Couldn't add them. Is the event published?");
+    reg = fresh;
+  }
+  const res = await db
+    .prepare("INSERT OR IGNORE INTO checkins (id, registration_id, event_id, scanned_at, device_id, method) VALUES (?, ?, ?, ?, 'walk-in', 'manual')")
+    .bind(newId(), reg.id, event.id, iso(now))
+    .run();
+  await audit(db, actorId, "walk_in", reg.id, { event_id: event.id }, now);
+  return { registration: reg, alreadyIn: !res.meta.changes };
 }
