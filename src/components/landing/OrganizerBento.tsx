@@ -379,7 +379,7 @@ function UpiDemo() {
                   onClick={() => setStep(3)}
                   className={cn(
                     btn,
-                    "mt-3 h-9 w-full bg-cream text-ink hover:bg-white",
+                    "mt-3 h-9 w-full bg-cream text-[#1a1a1a] hover:bg-white",
                   )}
                 >
                   Confirm payment
@@ -538,7 +538,7 @@ function KindsDemo() {
             className={cn(
               "rounded-full px-4 py-2 text-[13.5px] font-semibold ring-1 ring-inset transition-colors duration-200",
               i === j
-                ? "bg-cream text-ink ring-cream"
+                ? "bg-cream text-[#1a1a1a] ring-cream"
                 : "text-cream/70 ring-white/15 hover:text-cream",
             )}
           >

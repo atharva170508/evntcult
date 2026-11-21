@@ -39,7 +39,7 @@ export default async function CertificatePage({ params }: Props) {
   const qr = brandQr(`${scheme}://${host}/verify/${c.publicCode}`, { kind: "verify" });
 
   return (
-    <main className="cert-page">
+    <main className="cert-page paper-keep">
       <div className="cert-actions">
         <Link href="/certificates" className="group inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink">
           <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" aria-hidden /> All certificates

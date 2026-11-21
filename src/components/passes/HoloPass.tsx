@@ -212,7 +212,7 @@ export function HoloPass(p: HoloPassProps) {
         onPointerMove={move}
         onPointerLeave={leave}
         onPointerDown={(e) => e.pointerType === "touch" && askGyro()}
-        className="relative w-full max-w-[340px] [perspective:1400px]"
+        className="paper-keep relative w-full max-w-[340px] [perspective:1400px]"
       >
         {/* Hangs from the top: a short swing when it arrives, then follows the pointer. */}
         <m.div

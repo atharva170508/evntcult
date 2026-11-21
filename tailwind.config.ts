@@ -15,39 +15,42 @@ import type { Config } from "tailwindcss";
  */
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
+  darkMode: "class",
   theme: {
     extend: {
+      /* Colours are CSS variables (RGB channels) so they switch with the theme: see :root and
+         .dark in globals.css. Opacity modifiers (bg-canvas/80) keep working. */
       colors: {
-        canvas: "#FFFEF6",
-        surface: "#FFFFFF",
-        sunken: "#F6F3EA",
-        mist: "#ECE8DC",
-        line: { DEFAULT: "#ECE8DD", strong: "#DCD6C6" },
+        canvas: "rgb(var(--c-canvas) / <alpha-value>)",
+        surface: "rgb(var(--c-surface) / <alpha-value>)",
+        sunken: "rgb(var(--c-sunken) / <alpha-value>)",
+        mist: "rgb(var(--c-mist) / <alpha-value>)",
+        line: { DEFAULT: "rgb(var(--c-line) / <alpha-value>)", strong: "rgb(var(--c-line-strong) / <alpha-value>)" },
         cream: "#FFFFEB",
-        lavender: { DEFAULT: "#F0D7FF", hover: "#E6C4FB" },
+        lavender: { DEFAULT: "rgb(var(--c-lavender) / <alpha-value>)", hover: "rgb(var(--c-lavender-hover) / <alpha-value>)" },
         ink: {
-          DEFAULT: "#1A1A1A",
-          2: "#3F3F3F",
-          muted: "#6A6A6A",
-          subtle: "#717171",
+          DEFAULT: "rgb(var(--c-ink) / <alpha-value>)",
+          2: "rgb(var(--c-ink-2) / <alpha-value>)",
+          muted: "rgb(var(--c-ink-muted) / <alpha-value>)",
+          subtle: "rgb(var(--c-ink-subtle) / <alpha-value>)",
           inverse: "#FFFFFF",
         },
         night: { DEFAULT: "#1A1A1A", 2: "#262626", 3: "#000000", line: "rgba(255,255,255,0.12)" },
         accent: {
           DEFAULT: "#E3264F",
           hover: "#C81E44",
-          soft: "#FDECEF",
-          ink: "#B8173F",
+          soft: "rgb(var(--c-accent-soft) / <alpha-value>)",
+          ink: "rgb(var(--c-accent-ink) / <alpha-value>)",
         },
-        gold: { DEFAULT: "#C9A45C", soft: "#F7F0E1", ink: "#7A5D1F" },
-        live: { DEFAULT: "#0B7A54", soft: "#E3F3EC", dot: "#12A56F" },
-        warn: { DEFAULT: "#8A5300", soft: "#FBF0DC" },
-        danger: { DEFAULT: "#B42318", soft: "#FDECEA" },
+        gold: { DEFAULT: "#C9A45C", soft: "rgb(var(--c-gold-soft) / <alpha-value>)", ink: "rgb(var(--c-gold-ink) / <alpha-value>)" },
+        live: { DEFAULT: "rgb(var(--c-live) / <alpha-value>)", soft: "rgb(var(--c-live-soft) / <alpha-value>)", dot: "#12A56F" },
+        warn: { DEFAULT: "rgb(var(--c-warn) / <alpha-value>)", soft: "rgb(var(--c-warn-soft) / <alpha-value>)" },
+        danger: { DEFAULT: "rgb(var(--c-danger) / <alpha-value>)", soft: "rgb(var(--c-danger-soft) / <alpha-value>)" },
 
         /* aliases */
         volt: { DEFAULT: "#E3264F", hover: "#C81E44" },
-        brand: { DEFAULT: "#E3264F", hover: "#C81E44", soft: "#FDECEF", ink: "#B8173F" },
-        sun: "#8A5300",
+        brand: { DEFAULT: "#E3264F", hover: "#C81E44", soft: "rgb(var(--c-accent-soft) / <alpha-value>)", ink: "rgb(var(--c-accent-ink) / <alpha-value>)" },
+        sun: "rgb(var(--c-warn) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
@@ -89,11 +92,11 @@ const config: Config = {
       },
       boxShadow: {
         /* Warm-tinted, lit from above (DESIGN.md › Elevation & Depth). */
-        card: "0 0 0 1px #DCD6C6, inset 0 1px 0 rgba(255,255,255,0.9)",
+        card: "0 0 0 1px rgb(var(--c-line-strong)), inset 0 1px 0 var(--edge-hi-c)",
         raised: "0 1px 2px rgba(60,40,10,0.06), 0 10px 28px -8px rgba(60,40,10,0.16)",
         pop: "0 0 0 1px rgba(60,40,10,0.06), 0 16px 40px -10px rgba(60,40,10,0.22)",
         search: "0 1px 2px rgba(60,40,10,0.06), 0 6px 18px -4px rgba(60,40,10,0.14)",
-        inset: "inset 0 1px 0 rgba(255,255,255,0.9)",
+        inset: "inset 0 1px 0 var(--edge-hi-c)",
         button: "inset 0 1px 0 rgba(255,255,255,0.5)",
         accent: "inset 0 1px 0 rgba(255,255,255,0.5)",
         brand: "none",

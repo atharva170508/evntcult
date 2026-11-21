@@ -30,7 +30,7 @@ function qrCells(seed: number) {
 function Ticket({ n, className, style }: { n: number; className?: string; style?: React.CSSProperties }) {
   const t = TICKETS[n % TICKETS.length];
   return (
-    <div className={cn("hp-paper absolute inset-x-0 bottom-0 mx-auto w-[118px] px-3 pb-4 pt-3", className)} style={style}>
+    <div className={cn("paper-keep hp-paper absolute inset-x-0 bottom-0 mx-auto w-[118px] px-3 pb-4 pt-3", className)} style={style}>
       <div className="flex items-center justify-between">
         <BrandMark className="size-3.5" />
         <span className="text-[8.5px] font-semibold text-ink-muted">Admit one</span>

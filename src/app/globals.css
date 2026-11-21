@@ -2,6 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Theme colours (RGB channels, used by tailwind.config.ts) ─────────────────────────────── */
+:root {
+  --c-canvas: 255 254 246;
+  --c-surface: 255 255 255;
+  --c-sunken: 246 243 234;
+  --c-mist: 236 232 220;
+  --c-line: 236 232 221;
+  --c-line-strong: 220 214 198;
+  --c-lavender: 240 215 255;
+  --c-lavender-hover: 230 196 251;
+  --c-ink: 26 26 26;
+  --c-ink-2: 63 63 63;
+  --c-ink-muted: 106 106 106;
+  --c-ink-subtle: 113 113 113;
+  --c-accent-soft: 253 236 239;
+  --c-accent-ink: 184 23 63;
+  --c-gold-soft: 247 240 225;
+  --c-gold-ink: 122 93 31;
+  --c-live: 11 122 84;
+  --c-live-soft: 227 243 236;
+  --c-warn: 138 83 0;
+  --c-warn-soft: 251 240 220;
+  --c-danger: 180 35 24;
+  --c-danger-soft: 253 236 234;
+  --edge-hi-c: rgba(255, 255, 255, 0.9);
+  color-scheme: light;
+}
+.dark {
+  /* Warm charcoal, not pure black; ink becomes warm off-white. */
+  --c-canvas: 20 19 17;
+  --c-surface: 29 27 24;
+  --c-sunken: 37 35 31;
+  --c-mist: 46 43 38;
+  --c-line: 44 41 36;
+  --c-line-strong: 62 58 51;
+  --c-lavender: 214 180 245;
+  --c-lavender-hover: 226 199 250;
+  --c-ink: 241 237 228;
+  --c-ink-2: 214 209 198;
+  --c-ink-muted: 166 160 148;
+  --c-ink-subtle: 150 144 133;
+  --c-accent-soft: 58 22 31;
+  --c-accent-ink: 255 138 160;
+  --c-gold-soft: 52 43 25;
+  --c-gold-ink: 226 196 132;
+  --c-live: 94 224 168;
+  --c-live-soft: 18 50 38;
+  --c-warn: 255 194 102;
+  --c-warn-soft: 56 41 16;
+  --c-danger: 255 133 122;
+  --c-danger-soft: 60 24 22;
+  --edge-hi-c: rgba(255, 255, 255, 0.04);
+  --hair: rgba(255, 255, 255, 0.08);
+  --hair-strong: rgba(255, 255, 255, 0.14);
+  --focus-ring: 0 0 0 2px #141311, 0 0 0 3.5px #f1ede4, 0 0 0 8px rgba(214, 180, 245, 0.35);
+  --focus-field: 0 0 0 1px #f1ede4, 0 0 0 5px rgba(214, 180, 245, 0.3);
+  --lift-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--hair);
+  --lift-2: 0 16px 40px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--hair);
+  color-scheme: dark;
+}
+
+
 /*
  * EvntCult. Tokens live in tailwind.config.ts; the rules here are the few
  * patterns that are easier to express as classes than as utility strings.
@@ -602,3 +664,72 @@ body::after {
 @keyframes month-in-right { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
 @keyframes month-in-left { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .month-in-right, .month-in-left { animation: none; } }
+
+/* ══ Dark mode compatibility ════════════════════════════════════════════════════════════════
+ * Tokens switch on their own (see .dark above). These rules cover the few hard-coded values
+ * in components: white cards become the dark surface, ink buttons turn light with dark text,
+ * and the primitives get dark fills. Passes, tickets, printed paper and QR codes keep their
+ * paper white on purpose: they are objects, and QR codes need it to scan. */
+.dark .bg-white { background-color: rgb(var(--c-surface)); }
+.dark .bg-white\/95,
+.dark .bg-white\/90 { background-color: rgb(var(--c-surface) / 0.92); }
+.dark .bg-ink.text-white,
+.dark .bg-ink .text-white,
+.dark .bg-ink.text-white svg { color: rgb(20 19 17); }
+.dark .hover\:bg-black:hover { background-color: #fff; }
+.dark .ring-canvas { --tw-ring-color: rgb(var(--c-canvas)); }
+.dark .shadow-card { box-shadow: 0 0 0 1px rgb(var(--c-line-strong)); }
+.dark .ui-field { background: rgb(var(--c-surface)); }
+.dark .ui-field:hover { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--hair-strong); }
+.dark .ui-menu { background: rgb(var(--c-surface)); }
+.dark .ui-menu-pill { background: rgb(var(--c-sunken)); }
+.dark .ui-seg { background: rgb(var(--c-sunken)); }
+.dark .ui-seg-item { color: rgb(var(--c-ink-muted)); }
+.dark .ui-seg-item:hover { color: rgb(var(--c-ink)); }
+.dark .ui-seg-pill { background: rgb(var(--c-ink)); box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.6); }
+.dark .ui-seg-item[aria-checked="true"],
+.dark .ui-seg-item[aria-current="true"],
+.dark .ui-seg-item[aria-selected="true"] { color: rgb(20 19 17) !important; }
+.dark .skeleton { background-image: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.06) 50%, transparent 100%); }
+.dark .ui-sheen::after { background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.12), transparent 70%); }
+.dark body::after { opacity: 0.035; mix-blend-mode: screen; }
+.dark .kbd { background: rgb(var(--c-sunken)); color: rgb(var(--c-ink-2)); border-color: rgb(var(--c-line-strong)); }
+/* Things that are paper on purpose (passes, printed tickets, certificates) keep the light
+   palette inside, whatever the theme. */
+.dark .paper-keep {
+  --c-canvas: 255 254 246;
+  --c-surface: 255 255 255;
+  --c-sunken: 246 243 234;
+  --c-mist: 236 232 220;
+  --c-line: 236 232 221;
+  --c-line-strong: 220 214 198;
+  --c-lavender: 240 215 255;
+  --c-lavender-hover: 230 196 251;
+  --c-ink: 26 26 26;
+  --c-ink-2: 63 63 63;
+  --c-ink-muted: 106 106 106;
+  --c-ink-subtle: 113 113 113;
+  --c-accent-soft: 253 236 239;
+  --c-accent-ink: 184 23 63;
+  --c-gold-soft: 247 240 225;
+  --c-gold-ink: 122 93 31;
+  --c-live: 11 122 84;
+  --c-live-soft: 227 243 236;
+  --c-warn: 138 83 0;
+  --c-warn-soft: 251 240 220;
+  --c-danger: 180 35 24;
+  --c-danger-soft: 253 236 234;
+  --edge-hi-c: rgba(255, 255, 255, 0.9);
+  color-scheme: light;
+}
+.dark .paper-keep .bg-white { background-color: #fff; }
+/* Lavender (and cream) fills keep dark text in both themes. */
+.dark .bg-lavender,
+.dark .bg-lavender .text-ink,
+.dark .bg-lavender.text-ink,
+.dark [class*="bg-lavender/"] .text-ink { color: rgb(20 19 17); }
+.dark .bg-lavender svg { color: rgb(20 19 17); }
+.dark .bg-night { background-color: #0e0d0c; }
+.dark .ring-ink { --tw-ring-color: rgb(var(--c-ink) / 0.9); }
+.dark .bg-ink [class*="text-white/"] { color: rgb(20 19 17 / 0.7); }
+.dark .avstack > * { color: rgb(20 19 17); }

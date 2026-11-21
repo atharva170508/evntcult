@@ -70,7 +70,7 @@ export function HeroShowcase({ qr }: { qr: string }) {
           onPointerLeave={rest}
           onKeyDown={onKey}
           onBlur={rest}
-          className="relative overflow-hidden rounded-[24px] bg-white shadow-[0_40px_80px_-30px_rgba(60,40,10,0.45),0_0_0_1px_rgba(26,26,26,0.06)] outline-none [transform-style:preserve-3d] focus-visible:shadow-[var(--focus-ring)]"
+          className="paper-keep relative overflow-hidden rounded-[24px] bg-white shadow-[0_40px_80px_-30px_rgba(60,40,10,0.45),0_0_0_1px_rgba(26,26,26,0.06)] outline-none [transform-style:preserve-3d] focus-visible:shadow-[var(--focus-ring)]"
           style={{
             transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
             transition: tilt.active

@@ -575,7 +575,7 @@ export default async function EventPage({
                           : null
                   }
                   full={d.seatsLeft === 0}
-                  pricePaise={e.price_paise}
+                  pricePaise={reg && reg.status !== "cancelled" ? owe : e.price_paise}
                   registration={
                     reg && reg.status !== "cancelled"
                       ? {

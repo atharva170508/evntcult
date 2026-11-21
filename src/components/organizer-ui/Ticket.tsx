@@ -43,7 +43,7 @@ export function Ticket(p: TicketProps) {
         {has(p.tagline) && <div className="o-ticket-tag">{p.tagline}</div>}
       </div>
       <div className="o-ticket-right">
-        <div className="o-qr" aria-label={qr ? "QR code" : "QR code appears after the first save"}>
+        <div className="o-qr" role="img" aria-label={qr ? "QR code" : "QR code appears after the first save"}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           {qr ? <img src={svgSrc(qr)} alt="Pass QR code" style={{ display: "block", width: "100%", height: "100%" }} /> : null}
         </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ThemeSwitch } from "./ThemeSwitch";
 import type { NavViewer } from "./SiteHeader";
 
 /** Light grey footer: three columns of destinations and a quiet bottom line. */
@@ -72,6 +73,7 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
               evntcult@gmail.com
             </a>
           </p>
+          <ThemeSwitch className="w-full max-w-[280px] sm:w-[280px]" />
           <p className="sm:text-right">
             <span className="block font-semibold text-ink">Made by Synchronous Labs</span>
             <span className="block text-ink-muted">Many minds. One momentum.</span>

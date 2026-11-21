@@ -51,7 +51,7 @@ export function HeaderSearch({ className }: { className?: string }) {
   const seg = (f: Field) =>
     cn(
       "relative flex h-full min-w-0 flex-1 cursor-pointer flex-col justify-center rounded-full px-8 text-left transition-colors duration-fast",
-      active === f ? "bg-white shadow-[0_6px_20px_rgba(0,0,0,0.18)]" : active ? "hover:bg-[#DDDDDD]/60" : "hover:bg-[#EBEBEB]",
+      active === f ? "bg-white shadow-[0_6px_20px_rgba(0,0,0,0.18)]" : active ? "hover:bg-line-strong/60" : "hover:bg-sunken",
     );
 
   return (
@@ -64,7 +64,7 @@ export function HeaderSearch({ className }: { className?: string }) {
       onSubmit={submit}
       className={cn(
         "relative flex h-[66px] w-full items-center rounded-full border border-line-strong shadow-search transition-colors duration-base",
-        active ? "bg-[#EBEBEB]" : "bg-white",
+        active ? "bg-mist" : "bg-white",
         className,
       )}
     >

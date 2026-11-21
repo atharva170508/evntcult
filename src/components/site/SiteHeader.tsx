@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ThemeSwitch } from "./ThemeSwitch";
 import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import {
@@ -440,6 +441,11 @@ function AccountMenu({
                 Enter an event code
               </button>
               <Sep />
+              <div className="px-3 py-2">
+                <p className="mb-1.5 text-[12px] font-semibold text-ink-muted">Appearance</p>
+                <ThemeSwitch />
+              </div>
+              <Sep />
               <button role="menuitem" onClick={logout} className={menuItem}>
                 Log out
               </button>
@@ -620,6 +626,7 @@ function MenuSheet({
                 >
                   <Download className="size-4" aria-hidden /> Get the app
                 </Link>
+                <ThemeSwitch className="mt-1" />
                 <button
                   onClick={logout}
                   className="mt-1 flex h-12 items-center justify-center gap-2 text-[15px] font-semibold text-ink-muted underline underline-offset-4"

@@ -274,7 +274,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
             <div className="overflow-x-auto">
               {paidEvent && <TriageKeys tableId="att-table" />}
               <table id="att-table" className="w-full min-w-[760px] text-left text-[13.5px]">
-                <thead className="border-b border-line bg-[#faf9f7] text-ink-subtle">
+                <thead className="border-b border-line bg-sunken/60 text-ink-subtle">
                   <tr>
                     <th scope="col" className={th}>Name</th>
                     <th scope="col" className={th}>Pass</th>
@@ -292,7 +292,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
                       data-reg={a.id}
                       data-name={a.name}
                       data-utr={a.status === "registered" && a.payment_status === "unpaid" && a.upi_utr ? a.upi_utr : undefined}
-                      className="scroll-mt-24 align-top transition-colors hover:bg-[#faf9f7] data-[selected=true]:bg-lavender/30 data-[selected=true]:shadow-[inset_3px_0_0_#1A1A1A]"
+                      className="scroll-mt-24 align-top transition-colors hover:bg-sunken/60 data-[selected=true]:bg-lavender/30 data-[selected=true]:shadow-[inset_3px_0_0_#1A1A1A]"
                     >
                       <td className="px-4 py-3">
                         <p className="font-medium">{a.name}</p>

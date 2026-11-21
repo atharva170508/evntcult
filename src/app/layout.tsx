@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
+import { THEME_SCRIPT } from "@/components/site/ThemeSwitch";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 
 /* Figtree for the interface, EB Garamond for big headlines, JetBrains Mono for pass codes.
@@ -46,12 +47,15 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#FFFEF6",
-  colorScheme: "light",
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
+    <html lang="en-IN" className={`${sans.variable} ${serif.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body>
         <a
           href="#main"

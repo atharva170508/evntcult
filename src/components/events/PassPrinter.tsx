@@ -135,7 +135,7 @@ export function PassPrinter({ pass, onClose }: { pass: PrintedPass; onClose: () 
           </m.div>
 
           {/* Paper: clipped at the slot so it comes out of the printer */}
-          <div className="relative -mt-3 overflow-hidden px-4 pb-6 pt-3">{phase !== "confirm" && <Paper pass={pass} reduce={!!reduce} />}</div>
+          <div className="paper-keep relative -mt-3 overflow-hidden px-4 pb-6 pt-3">{phase !== "confirm" && <Paper pass={pass} reduce={!!reduce} />}</div>
 
           <AnimatePresence>
             {phase === "done" && (
