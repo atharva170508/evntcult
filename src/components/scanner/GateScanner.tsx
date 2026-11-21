@@ -83,7 +83,11 @@ const writeClaims = (q: QueuedClaim[]) => {
 const SAME_CODE_PAUSE_MS = 3000;
 const GREEN_AUTO_DISMISS_MS = 1600;
 
-function beep(ok: boolean) {
+/** Sound plus a haptic signature volunteers can feel without looking: one tap in, a long double buzz for "stop". */
+function beep(color: "green" | "amber" | "red") {
+  const ok = color === "green";
+  // Haptics first: they matter most when the venue is too loud for the beep.
+  navigator.vibrate?.(color === "green" ? [40] : color === "red" ? [80, 50, 120] : [50, 60, 50]);
   try {
     const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     const ctx = new Ctx();
@@ -95,7 +99,6 @@ function beep(ok: boolean) {
     osc.start();
     osc.stop(ctx.currentTime + (ok ? 0.12 : 0.35));
     osc.onended = () => ctx.close();
-    navigator.vibrate?.(ok ? 60 : [80, 60, 80]);
   } catch {
     // sound is a nice-to-have
   }
@@ -302,7 +305,7 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
 
   const show = useCallback((v: Verdict) => {
     setVerdict(v);
-    beep(v.color === "green");
+    beep(v.color);
     if (v.color === "green" && !v.merch?.length) setTimeout(() => setVerdict((cur) => (cur === v ? null : cur)), GREEN_AUTO_DISMISS_MS);
   }, []);
 
@@ -521,8 +524,7 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
           role="status"
         >
           {online ? <Wifi className="size-3.5" /> : <CloudOff className="size-3.5" />}
-          {online ? "Online" : "Offline"}
-          {queued > 0 && ` · ${queued} to sync`}
+          {online ? (queued > 0 ? `Online · syncing ${queued}` : "Online · Synced") : `Offline${queued > 0 ? ` · ${queued} queued` : " mode"}`}
         </span>
       </header>
 

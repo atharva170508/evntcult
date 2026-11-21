@@ -96,6 +96,17 @@ export async function rejectUpiClaim(db: D1Database, regId: string, actorId: str
   return { id: regId, payment_status: "unpaid" as const };
 }
 
+/** Undo of rejectUpiClaim: restores the transaction ID so the payment is "to verify" again. */
+export async function restoreUpiClaim(db: D1Database, regId: string, actorId: string, utr: string, now = new Date()) {
+  const res = await db
+    .prepare("UPDATE registrations SET upi_utr = ?, upi_claimed_at = ?, upi_rejected_at = NULL WHERE id = ? AND payment_status = 'unpaid' AND upi_utr IS NULL RETURNING event_id")
+    .bind(utr, now.toISOString(), regId)
+    .first<{ event_id: string }>();
+  if (!res) throw new ActionError(409, "no_claim", "Couldn't undo: this payment changed since.");
+  await audit(db, actorId, "upi_restore", regId, { event_id: res.event_id }, now);
+  return { id: regId, payment_status: "unpaid" as const };
+}
+
 /* ─── Event updates ─────────────────────────────────────────────────────── */
 
 export type UpdateKind = "schedule" | "venue" | "update";

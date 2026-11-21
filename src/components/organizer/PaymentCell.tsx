@@ -55,6 +55,7 @@ export function PaymentCell({ regId, paid, method, refCode, utr }: { regId: stri
         <span className="font-mono text-[12px]">{utr}</span>
         <Button size="sm" loading={busy} onClick={() => send({ status: "paid", method: "upi" })} className="h-7 px-3 text-[12px]">
           Received
+          <kbd className="ml-1 hidden rounded border border-white/30 px-1 font-mono text-[10px] md:inline">A</kbd>
         </Button>
         <button
           onClick={() => send({ status: "rejected" })}
@@ -62,6 +63,7 @@ export function PaymentCell({ regId, paid, method, refCode, utr }: { regId: stri
           className={buttonClass("secondary", "sm", "h-7 px-3 text-[12px] hover:text-danger")}
         >
           Not received
+          <kbd className="ml-1 hidden rounded border border-line-strong px-1 font-mono text-[10px] text-ink-muted md:inline">R</kbd>
         </button>
         {err && (
           <span role="alert" className="w-full text-[12px] text-danger">

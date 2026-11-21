@@ -21,6 +21,9 @@ import { LinkButton, buttonClass } from "@/components/ui/Button";
 import { Meter } from "@/components/ui/Meter";
 import { Notice } from "@/components/ui/Field";
 import { SlashFocus } from "@/components/organizer/SlashFocus";
+import { TriageKeys } from "@/components/organizer/TriageKeys";
+import { ShareFirst } from "@/components/organizer/ShareFirst";
+import { siteHost } from "@/lib/organizer/page-data";
 import { VolunteerLinks } from "@/components/organizer/VolunteerLinks";
 import { listVolunteerLinks } from "@/lib/volunteers";
 import { choiceTallies } from "@/lib/data/questions";
@@ -232,11 +235,19 @@ export default async function ManageEventPage({ params, searchParams }: { params
               <p className="mt-4 text-h4 font-semibold">
                 {q ? `Nobody matches “${q}”` : attendees.length === 0 ? "No registrations yet" : filter.key === "verify" ? "No payments to check" : `Nobody in “${filter.label}”`}
               </p>
-              {!q && attendees.length === 0 && e.status === "published" && <p className="mt-1 text-small text-ink-muted">Share the event link to get your first sign-ups.</p>}
+              {!q && attendees.length === 0 && e.status === "published" && (
+                <>
+                  <p className="mt-1 max-w-[42ch] text-small text-ink-muted">Drop the link in your class and club groups to get the first sign-ups.</p>
+                  <ShareFirst url={`https://${await siteHost()}/events/${e.slug}`} title={e.title} />
+                </>
+              )}
+              {!q && attendees.length === 0 && e.status === "draft" && <p className="mt-1 text-small text-ink-muted">Publish the event, then share its link to get your first sign-ups.</p>}
+              {!q && attendees.length > 0 && filter.key === "verify" && <p className="mt-1 text-small text-ink-muted">Every UPI payment has been checked. New ones show up here.</p>}
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[760px] text-left text-[13.5px]">
+              {paidEvent && <TriageKeys tableId="att-table" />}
+              <table id="att-table" className="w-full min-w-[760px] text-left text-[13.5px]">
                 <thead className="border-b border-line bg-[#faf9f7] text-ink-subtle">
                   <tr>
                     <th scope="col" className={th}>Name</th>
@@ -249,7 +260,14 @@ export default async function ManageEventPage({ params, searchParams }: { params
                 </thead>
                 <tbody className="divide-y divide-line/70">
                   {shown.map((a) => (
-                    <tr key={a.id} className="align-top transition-colors hover:bg-[#faf9f7]">
+                    <tr
+                      key={a.id}
+                      data-triage-row
+                      data-reg={a.id}
+                      data-name={a.name}
+                      data-utr={a.status === "registered" && a.payment_status === "unpaid" && a.upi_utr ? a.upi_utr : undefined}
+                      className="scroll-mt-24 align-top transition-colors hover:bg-[#faf9f7] data-[selected=true]:bg-lavender/30 data-[selected=true]:shadow-[inset_3px_0_0_#1A1A1A]"
+                    >
                       <td className="px-4 py-3">
                         <p className="font-medium">{a.name}</p>
                         <p className="text-[12px] text-ink-muted">{a.email}</p>

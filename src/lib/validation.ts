@@ -56,6 +56,8 @@ export const paymentSchema = z.discriminatedUnion("status", [
     .strict(),
   z.object({ status: z.literal("unpaid") }).strict(),
   z.object({ status: z.literal("rejected") }).strict(),
+  /** Undo a "not received": put the attendee's transaction ID back for checking. */
+  z.object({ status: z.literal("restore_claim"), utr: z.string().trim().regex(/^[A-Za-z0-9]{6,35}$/) }).strict(),
 ]);
 
 /** POST /api/registrations/:id/upi — the student hands in their UPI transaction ID. */

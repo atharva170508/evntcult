@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { m, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
-import { CheckCircle2, Hourglass, Maximize2, RotateCw, Sun, X } from "lucide-react";
+import { CheckCircle2, Hourglass, Maximize2, Navigation, RotateCw, Share2, Sun, X } from "lucide-react";
 import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { ModalDialog } from "@/components/ui/ModalDialog";
 import { svgSrc } from "@/lib/svg-src";
@@ -31,7 +31,41 @@ export interface HoloPassProps {
   waitlistNote?: string | null;
   pay?: { text: string; tone: "ok" | "warn"; href?: string } | null;
   admittedAt?: string | null;
+  startsAt: string;
+  endsAt: string;
+  /** Google Maps directions to the venue, when there's a real place. */
+  directions?: string | null;
+  /** Answers the gate and food counter read: food, size, team. */
+  logistics?: { label: string; value: string }[];
 }
+
+/** Ticks once a second, but only while the event is within 2 hours or on. Null until mounted. */
+function useSoon(startsAt: string, endsAt: string) {
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    setNow(Date.now());
+    const start = Date.parse(startsAt);
+    const id = setInterval(() => {
+      const t = Date.now();
+      setNow(t);
+      if (t > Date.parse(endsAt)) clearInterval(id);
+    }, start - Date.now() < 2 * 3_600_000 + 60_000 ? 1000 : 30_000);
+    return () => clearInterval(id);
+  }, [startsAt, endsAt]);
+  if (now === null) return null;
+  const start = Date.parse(startsAt);
+  const end = Date.parse(endsAt);
+  if (now >= end || start - now > 2 * 3_600_000) return null;
+  if (now >= start) return { live: true, label: "Happening now" };
+  const left = Math.max(0, Math.floor((start - now) / 1000));
+  const h = Math.floor(left / 3600);
+  const mm = String(Math.floor((left % 3600) / 60)).padStart(2, "0");
+  const ss = String(left % 60).padStart(2, "0");
+  return { live: false, label: `Starts in ${h ? `${h}:${mm}` : Number(mm)}:${ss}` };
+}
+
+/** Short label for a logistics answer: "Food preference" -> "Food". */
+const shortLabel = (l: string) => (/food|diet|meal/i.test(l) ? "Food" : /size|t-?shirt|hoodie/i.test(l) ? "Size" : /team/i.test(l) ? "Team" : l.split(/\s+/)[0]);
 
 /**
  * An event badge on a lanyard. It hangs, swings a little when it arrives, tilts toward the
@@ -71,6 +105,9 @@ export function HoloPass(p: HoloPassProps) {
   }
 
   const canEnter = (p.state === "confirmed" || p.state === "live") && !!p.qrArt;
+  const soon = useSoon(p.startsAt, p.endsAt);
+  const artRef = useRef<HTMLDivElement>(null);
+  const [sharing, setSharing] = useState(false);
   const access = p.state === "waitlist" ? "Waitlist" : p.state === "cancelled" ? "Cancelled" : "Attendee";
 
   return (
@@ -94,7 +131,7 @@ export function HoloPass(p: HoloPassProps) {
                   <div className={cn("col-start-1 row-start-1 [backface-visibility:hidden]", flipped && "pointer-events-none")} aria-hidden={flipped} inert={flipped}>
                     <Card>
                       {/* Artwork header with the lanyard slot punched through it */}
-                      <div className="relative h-[176px] overflow-hidden">
+                      <div ref={artRef} className="relative h-[176px] overflow-hidden">
                         <EventArt accent={p.accent} seed={p.seed} />
                         {!reduce && <m.div aria-hidden className="absolute inset-0 mix-blend-soft-light" style={{ background: glare }} />}
                         <span aria-hidden className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-black/55 via-black/20 to-transparent" />
@@ -132,6 +169,33 @@ export function HoloPass(p: HoloPassProps) {
 
                       {/* Stub: the QR is the point of the whole thing */}
                       <div className="relative flex flex-col items-center px-5 pb-6 pt-5">
+                        {soon && canEnter && (
+                          <div className="mb-4 w-full space-y-2">
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={cn(
+                                  "inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-lg px-3 text-[14px] font-semibold tabular-nums",
+                                  soon.live ? "bg-accent text-white" : "bg-ink text-white",
+                                )}
+                                role="timer"
+                              >
+                                {soon.live && <span className="size-1.5 rounded-full bg-white motion-safe:animate-pulse" aria-hidden />}
+                                {soon.label}
+                              </span>
+                              {p.directions && (
+                                <a
+                                  href={p.directions}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line-strong bg-white px-3 text-[13.5px] font-semibold text-ink transition-colors duration-fast hover:border-ink"
+                                >
+                                  <Navigation className="size-4" aria-hidden /> Directions
+                                </a>
+                              )}
+                            </div>
+                            {!!p.logistics?.length && <LogisticsPills items={p.logistics} ink={p.ink} />}
+                          </div>
+                        )}
                         {canEnter ? (
                           <button
                             type="button"
@@ -227,6 +291,20 @@ export function HoloPass(p: HoloPassProps) {
         >
           <RotateCw className="size-4" aria-hidden /> {flipped ? "Front" : "Flip"}
         </button>
+        <button
+          type="button"
+          onClick={async () => {
+            setSharing(true);
+            await shareStory(p, artRef.current).catch(() => undefined);
+            setSharing(false);
+          }}
+          disabled={sharing}
+          aria-label="Share to your story"
+          title="Share to your story (QR hidden)"
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-line-strong bg-white text-ink transition-colors duration-fast hover:border-ink disabled:opacity-60"
+        >
+          <Share2 className="size-4" aria-hidden />
+        </button>
       </div>
 
       {gate && p.qrArt && <GateView {...p} qrArt={p.qrArt} onClose={() => setGate(false)} />}
@@ -317,6 +395,7 @@ function Stamp({ color, time, animate }: { color: string; time: string; animate:
 }
 
 function GateView(p: HoloPassProps & { qrArt: string; onClose: () => void }) {
+  useWakeLock();
   return (
     <ModalDialog label={`Pass for ${p.title}`} onClose={p.onClose}>
       <div className="absolute inset-0 flex flex-col items-center overflow-y-auto bg-white px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] text-center">
@@ -337,6 +416,11 @@ function GateView(p: HoloPassProps & { qrArt: string; onClose: () => void }) {
           </div>
           <p className="mt-6 text-[18px] font-semibold text-ink">{p.holder}</p>
           <p className="mt-1 font-mono text-[15px] tracking-[0.16em] text-ink-2">{p.passCode}</p>
+          {!!p.logistics?.length && (
+            <div className="mt-4 w-full">
+              <LogisticsPills items={p.logistics} ink={p.ink} />
+            </div>
+          )}
           {p.admittedAt ? (
             <p className="mt-5 inline-flex items-center gap-1.5 text-[14px] font-semibold text-live">
               <CheckCircle2 className="size-4" aria-hidden /> Checked in at {p.admittedAt}
@@ -350,4 +434,230 @@ function GateView(p: HoloPassProps & { qrArt: string; onClose: () => void }) {
       </div>
     </ModalDialog>
   );
+}
+
+/** High-contrast labels a volunteer can read at arm's length: FOOD Veg, SIZE L, TEAM Byte Club. */
+function LogisticsPills({ items, ink }: { items: { label: string; value: string }[]; ink: string }) {
+  return (
+    <ul className="flex flex-wrap justify-center gap-1.5" aria-label="Your choices">
+      {items.map((it) => (
+        <li key={it.label} className="inline-flex items-center overflow-hidden rounded-lg border text-[13px] font-semibold" style={{ borderColor: ink }}>
+          <span className="px-2 py-1 text-white" style={{ background: ink }}>
+            {shortLabel(it.label)}
+          </span>
+          <span className="max-w-[140px] truncate bg-white px-2 py-1 text-ink">{it.value}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Keep the screen on while the QR is up, so the phone doesn't lock in the queue. */
+function useWakeLock() {
+  useEffect(() => {
+    let lock: { release: () => Promise<void> } | null = null;
+    let alive = true;
+    const nav = navigator as Navigator & { wakeLock?: { request: (t: "screen") => Promise<{ release: () => Promise<void> }> } };
+    const get = async () => {
+      if (!nav.wakeLock || document.visibilityState !== "visible") return;
+      try {
+        lock = await nav.wakeLock.request("screen");
+        if (!alive) void lock.release();
+      } catch {
+        // Not allowed (battery saver, old browser). The pass still works.
+      }
+    };
+    void get();
+    const onVis = () => document.visibilityState === "visible" && void get();
+    document.addEventListener("visibilitychange", onVis);
+    return () => {
+      alive = false;
+      document.removeEventListener("visibilitychange", onVis);
+      void lock?.release().catch(() => undefined);
+    };
+  }, []);
+}
+
+/**
+ * A 1080x1920 story image of the pass, drawn on a canvas in the browser. The real QR is never
+ * drawn: a decorative pattern stands in, so a screenshot of the story can't get anyone in.
+ */
+async function shareStory(p: HoloPassProps, artEl: HTMLDivElement | null) {
+  const W = 1080;
+  const H = 1920;
+  const c = document.createElement("canvas");
+  c.width = W;
+  c.height = H;
+  const g = c.getContext("2d");
+  if (!g) return;
+  await document.fonts?.ready;
+  const display = getComputedStyle(document.querySelector(".font-display") ?? document.body).fontFamily;
+  const sans = getComputedStyle(document.body).fontFamily;
+  const tone = accentHex(p.accent);
+
+  // Background: the event colour, with a soft vignette.
+  g.fillStyle = tone;
+  g.fillRect(0, 0, W, H);
+  const vg = g.createRadialGradient(W / 2, H * 0.35, 100, W / 2, H * 0.5, H * 0.8);
+  vg.addColorStop(0, "rgba(255,255,255,0.10)");
+  vg.addColorStop(1, "rgba(0,0,0,0.28)");
+  g.fillStyle = vg;
+  g.fillRect(0, 0, W, H);
+
+  // Card
+  const cx = 110;
+  const cy = 250;
+  const cw = W - 220;
+  const ch = 1360;
+  g.save();
+  g.shadowColor = "rgba(0,0,0,0.35)";
+  g.shadowBlur = 60;
+  g.shadowOffsetY = 30;
+  round(g, cx, cy, cw, ch, 48);
+  g.fillStyle = "#FFFDF6";
+  g.fill();
+  g.restore();
+
+  // Artwork, taken from the pass on screen
+  const artH = 560;
+  g.save();
+  round(g, cx, cy, cw, ch, 48);
+  g.clip();
+  // The art's background colour lives on its wrapper, not in the SVG: paint it first.
+  g.fillStyle = artEl ? getComputedStyle(artEl.firstElementChild ?? artEl).backgroundColor || tone : tone;
+  if (g.fillStyle === "rgba(0, 0, 0, 0)" || g.fillStyle === "#000000") g.fillStyle = tone;
+  g.fillRect(cx, cy, cw, artH);
+  const svg = artEl?.querySelector("svg");
+  if (svg) {
+    const clone = svg.cloneNode(true) as SVGSVGElement;
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    clone.setAttribute("width", String(cw));
+    clone.setAttribute("height", String(artH));
+    const img = new Image();
+    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(new XMLSerializer().serializeToString(clone))}`;
+    await img.decode().catch(() => undefined);
+    if (img.complete && img.naturalWidth) g.drawImage(img, cx, cy, cw, artH);
+  } else {
+    g.fillStyle = tone;
+    g.fillRect(cx, cy, cw, artH);
+  }
+  const sh = g.createLinearGradient(0, cy + artH * 0.35, 0, cy + artH);
+  sh.addColorStop(0, "rgba(0,0,0,0)");
+  sh.addColorStop(1, "rgba(0,0,0,0.55)");
+  g.fillStyle = sh;
+  g.fillRect(cx, cy, cw, artH);
+  g.restore();
+
+  // Title over the art
+  g.fillStyle = "#fff";
+  g.font = `92px ${display}`;
+  wrap(g, p.title, cx + 56, cy + artH - 60, cw - 112, 96, 2, true);
+
+  // Holder and details
+  g.fillStyle = "#6B6656";
+  g.font = `500 34px ${sans}`;
+  g.fillText("Attendee", cx + 56, cy + artH + 90);
+  g.fillStyle = "#1A1A1A";
+  g.font = `76px ${display}`;
+  wrap(g, p.holder, cx + 56, cy + artH + 180, cw - 112, 80, 1);
+  g.font = `600 38px ${sans}`;
+  g.fillText(`${p.weekday} ${p.day} ${p.month}, ${p.time}`, cx + 56, cy + artH + 260);
+  g.fillStyle = "#6B6656";
+  g.font = `400 36px ${sans}`;
+  wrap(g, p.venue, cx + 56, cy + artH + 312, cw - 112, 40, 1);
+
+  // Perforation
+  const py = cy + artH + 380;
+  g.strokeStyle = "#D8D2C2";
+  g.setLineDash([14, 12]);
+  g.lineWidth = 3;
+  g.beginPath();
+  g.moveTo(cx + 40, py);
+  g.lineTo(cx + cw - 40, py);
+  g.stroke();
+  g.setLineDash([]);
+  for (const x of [cx, cx + cw]) {
+    g.beginPath();
+    g.arc(x, py, 26, 0, Math.PI * 2);
+    g.fillStyle = tone;
+    g.fill();
+  }
+
+  // Stand-in QR: decorative, deliberately not a code
+  const qs = 260;
+  const qx = cx + 56;
+  const qy = py + 50;
+  g.fillStyle = "#fff";
+  round(g, qx - 16, qy - 16, qs + 32, qs + 32, 28);
+  g.fill();
+  let seed = [...p.passCode].reduce((a, ch2) => a * 31 + ch2.charCodeAt(0), 7) >>> 0;
+  const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+  const n = 13;
+  const m = qs / n;
+  g.fillStyle = "#E3DED0";
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (rnd() > 0.5) { round(g, qx + k * m + 2, qy + r * m + 2, m - 4, m - 4, 5); g.fill(); }
+  g.fillStyle = "rgba(255,253,246,0.9)";
+  round(g, qx + qs / 2 - 92, qy + qs / 2 - 28, 184, 56, 14);
+  g.fill();
+  g.fillStyle = "#6B6656";
+  g.font = `600 26px ${sans}`;
+  g.textAlign = "center";
+  g.fillText("QR hidden", qx + qs / 2, qy + qs / 2 + 9);
+  g.textAlign = "left";
+
+  // Ticket number
+  const num = `#${p.passCode.split("-").pop() ?? p.passCode}`;
+  g.fillStyle = "#1A1A1A";
+  g.font = `110px ${display}`;
+  g.fillText(num, qx + qs + 60, qy + 120);
+  g.fillStyle = "#6B6656";
+  g.font = `500 32px ${sans}`;
+  g.fillText("Pass number", qx + qs + 64, qy + 170);
+
+  // Branding
+  g.fillStyle = "rgba(255,255,255,0.92)";
+  g.font = `64px ${display}`;
+  g.textAlign = "center";
+  g.fillText("evntcult", W / 2, H - 150);
+  g.fillStyle = "rgba(255,255,255,0.7)";
+  g.font = `500 32px ${sans}`;
+  g.fillText("Every campus event, one pass.", W / 2, H - 98);
+  g.textAlign = "left";
+
+  const blob = await new Promise<Blob | null>((res) => c.toBlob(res, "image/png"));
+  if (!blob) return;
+  const file = new File([blob], `${p.title.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}-story.png`, { type: "image/png" });
+  if (navigator.canShare?.({ files: [file] })) {
+    await navigator.share({ files: [file], title: p.title }).catch(() => undefined);
+  } else {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(file);
+    a.download = file.name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }
+}
+
+function round(g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  g.beginPath();
+  g.roundRect(x, y, w, h, r);
+}
+
+/** Draws text wrapped to maxLines; bottomUp anchors the last line at y (for titles over art). */
+function wrap(g: CanvasRenderingContext2D, text: string, x: number, y: number, max: number, lh: number, maxLines: number, bottomUp = false) {
+  const words = text.split(/\s+/);
+  const lines: string[] = [];
+  let line = "";
+  for (const w of words) {
+    const t = line ? `${line} ${w}` : w;
+    if (g.measureText(t).width > max && line) {
+      lines.push(line);
+      line = w;
+    } else line = t;
+  }
+  if (line) lines.push(line);
+  const out = lines.slice(0, maxLines);
+  if (lines.length > maxLines) out[maxLines - 1] = out[maxLines - 1].replace(/\s*\S+$/, "") + "…";
+  const start = bottomUp ? y - (out.length - 1) * lh : y;
+  out.forEach((l, i) => g.fillText(l, x, start + i * lh));
 }

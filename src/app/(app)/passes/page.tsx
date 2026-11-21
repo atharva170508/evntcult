@@ -17,6 +17,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
 import { HoloPass } from "@/components/passes/HoloPass";
 import { qrArtSvg } from "@/lib/qr-art";
+import { directionsUrl } from "@/lib/organizer/shared";
 
 export const metadata: Metadata = { title: "My passes" };
 
@@ -55,6 +56,10 @@ interface PassRow {
   event_status: string;
   checked_in_at: string | null;
   waitlist_position: number | null;
+  event_type: string;
+  venue_place_id: string | null;
+  venue_lat: number | null;
+  venue_lng: number | null;
 }
 
 export default async function PassesPage() {
@@ -64,6 +69,7 @@ export default async function PassesPage() {
   const rows = await all<PassRow>(
     `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.upi_utr, r.hold_expires_at, r.created_at, e.organizer_upi_id,
             e.id AS event_id, e.slug, e.title, e.category, COALESCE(e.venue, 'Venue TBA') AS venue, e.starts_at, e.ends_at, e.price_paise, e.status AS event_status,
+            e.event_type, e.venue_place_id, e.venue_lat, e.venue_lng,
             (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id) AS checked_in_at,
             (SELECT ct.id FROM certificates ct WHERE ct.registration_id = r.id AND ct.revoked_at IS NULL ORDER BY ct.kind = 'participation' LIMIT 1) AS cert_id,
             CASE WHEN r.status = 'waitlisted' THEN
@@ -75,6 +81,18 @@ export default async function PassesPage() {
       ORDER BY e.starts_at`,
     viewer.id,
   );
+
+  // Answers the gate and food counter care about (food, size, team), for the labels above the QR.
+  const answerRows = await all<{ registration_id: string; label: string; value: string }>(
+    `SELECT a.registration_id, q.label, a.value FROM registration_answers a
+       JOIN event_questions q ON q.id = a.question_id
+       JOIN registrations r ON r.id = a.registration_id
+      WHERE r.user_id = ? AND r.status IN ('registered','waitlisted') AND (q.kind = 'choice' OR q.label LIKE '%team%')
+      ORDER BY q.created_at`,
+    viewer.id,
+  );
+  const logistics = new Map<string, { label: string; value: string }[]>();
+  for (const a of answerRows) logistics.set(a.registration_id, [...(logistics.get(a.registration_id) ?? []), { label: a.label, value: a.value }].slice(0, 4));
 
   // Partiful's "Interested": saved, not registered, still to come.
   const saved = await all<{ slug: string; title: string; event_id: string; category: string; starts_at: string; venue: string; price_paise: number; full: number }>(
@@ -153,6 +171,10 @@ export default async function PassesPage() {
                       : null
                   }
                   admittedAt={r.checked_in_at ? fmtTime(new Date(r.checked_in_at)) : null}
+                  startsAt={r.starts_at}
+                  endsAt={r.ends_at}
+                  directions={r.event_type !== "virtual" && r.venue !== "Venue TBA" ? directionsUrl({ venue: r.venue, venue_place_id: r.venue_place_id, venue_lat: r.venue_lat, venue_lng: r.venue_lng }) : null}
+                  logistics={logistics.get(r.id) ?? []}
                 />
                 <div className="mt-3 flex w-full max-w-[360px] flex-wrap items-center justify-center gap-x-1 gap-y-1">
                   {r.status === "registered" && qrSvg && (
