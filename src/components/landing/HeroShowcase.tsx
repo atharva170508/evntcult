@@ -92,19 +92,19 @@ export function HeroShowcase({ qr }: { qr: string }) {
           <div className="grid grid-cols-[1fr_auto] gap-4 p-5">
             <div className="min-w-0">
               <p className="text-[12px] text-ink-muted">Admit one</p>
-              <p className="mt-0.5 font-display text-[26px] leading-none text-ink">
+              <p className="mt-0.5 font-display text-[26px] leading-none text-ink truncate">
                 Your name
               </p>
-              <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[12.5px]">
+              <dl className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 text-[12.5px]">
                 <div>
                   <dt className="text-ink-muted">Date</dt>
-                  <dd className="font-semibold tabular-nums text-ink">
+                  <dd className="whitespace-nowrap font-semibold tabular-nums text-ink">
                     Fri 12 Dec
                   </dd>
                 </div>
                 <div>
                   <dt className="text-ink-muted">Doors</dt>
-                  <dd className="font-semibold tabular-nums text-ink">
+                  <dd className="whitespace-nowrap font-semibold tabular-nums text-ink">
                     7:30 pm
                   </dd>
                 </div>
