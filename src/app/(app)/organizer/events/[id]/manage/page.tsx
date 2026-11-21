@@ -195,7 +195,11 @@ export default async function ManageEventPage({ params, searchParams }: { params
               <span className={`font-mono text-[22px] font-medium leading-none tracking-[-0.03em] tabular-nums ${k.tone === "warn" ? "text-warn" : "text-ink"}`}>{k.v}</span>
               {k.sub && <span className="truncate text-[12px] text-ink-subtle">{k.sub}</span>}
             </dd>
-            {k.meter && <Meter value={k.meter[0]} max={k.meter[1]} className="mt-2.5" />}
+            {k.meter && (
+              <dd>
+                <Meter value={k.meter[0]} max={k.meter[1]} className="mt-2.5" />
+              </dd>
+            )}
           </div>
         ))}
       </dl>

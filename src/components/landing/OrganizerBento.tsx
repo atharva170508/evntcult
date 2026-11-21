@@ -210,13 +210,13 @@ function ScannerDemo() {
                 "flex-1 rounded-[10px] px-3 py-2 text-left text-[12.5px] ring-1 ring-inset transition-colors",
                 pick === i
                   ? "bg-white/10 text-cream ring-white/25"
-                  : "text-cream/55 ring-white/10 hover:text-cream",
+                  : "text-cream/70 ring-white/10 hover:text-cream",
               )}
             >
               <span className="block font-semibold">
                 {g.name.split(" ")[0]}
               </span>
-              <span className="font-mono text-[11px] opacity-70">
+              <span className="font-mono text-[11px]">
                 {admitted.has(g.id) ? "Inside" : "Not in"}
               </span>
             </button>
@@ -253,7 +253,7 @@ function ScannerDemo() {
           </button>
         </div>
         {log.length === 0 ? (
-          <p className="text-[12.5px] text-cream/45">Scan the same pass twice.</p>
+          <p className="text-[12.5px] text-cream/65">Scan the same pass twice.</p>
         ) : (
           <ul className="mt-1 space-y-1" aria-label="Door log">
             {log.map((l) => (
@@ -264,7 +264,7 @@ function ScannerDemo() {
                     {l.name.split(" ")[0]} {l.ok ? "admitted" : "refused, already in"}
                   </span>
                 </span>
-                <span className="shrink-0 tabular-nums text-cream/45">{l.offline ? "queued" : l.at}</span>
+                <span className="shrink-0 tabular-nums text-cream/65">{l.offline ? "queued" : l.at}</span>
               </li>
             ))}
           </ul>
@@ -300,7 +300,7 @@ function UpiDemo() {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       <div className="rounded-[18px] bg-white/[0.05] p-4 ring-1 ring-inset ring-white/10">
-        <p className="text-[12px] text-cream/50">Guest</p>
+        <p className="text-[12px] text-cream/65">Guest</p>
         <div className="mt-2 flex items-center justify-between">
           <span className="text-[22px] font-semibold tabular-nums text-cream">
             ₹199
@@ -315,7 +315,7 @@ function UpiDemo() {
             step === 1 ? "ring-lavender/70" : "ring-white/10",
           )}
         >
-          <span className={utr ? "text-cream" : "text-cream/35"}>
+          <span className={utr ? "text-cream" : "text-cream/60"}>
             {utr || "UTR, 12 digits"}
           </span>
           {step === 1 && (
@@ -349,7 +349,7 @@ function UpiDemo() {
         </button>
       </div>
       <div className="rounded-[18px] bg-white/[0.05] p-4 ring-1 ring-inset ring-white/10">
-        <p className="text-[12px] text-cream/50">You, the organizer</p>
+        <p className="text-[12px] text-cream/65">You, the organizer</p>
         <div
           className={cn(
             "mt-2 rounded-[12px] p-3 transition-colors duration-300",
@@ -357,7 +357,7 @@ function UpiDemo() {
           )}
         >
           {step < 2 ? (
-            <p className="py-3 text-center text-[13px] text-cream/40">
+            <p className="py-3 text-center text-[13px] text-cream/60">
               Payments to check show up here.
             </p>
           ) : (
@@ -370,7 +370,7 @@ function UpiDemo() {
                   ₹199
                 </span>
               </div>
-              <p className="mt-0.5 font-mono text-[11.5px] tabular-nums text-cream/50">
+              <p className="mt-0.5 font-mono text-[11.5px] tabular-nums text-cream/65">
                 UTR {FULL}
               </p>
               {step === 2 ? (
@@ -552,7 +552,7 @@ function KindsDemo() {
       >
         {k.fields.map(([l, v]) => (
           <div key={l} className="bg-night px-4 py-3">
-            <dt className="text-[11.5px] text-cream/45">{l}</dt>
+            <dt className="text-[11.5px] text-cream/65">{l}</dt>
             <dd className="mt-0.5 truncate text-[14px] font-semibold text-cream">
               {v}
             </dd>

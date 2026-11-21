@@ -66,7 +66,7 @@ export function PosterSetup({ eventId, title }: { eventId: string; title: string
   return (
     <Section n="11" label="Poster">
       <div className="o-row">
-        <span className="o-label">Poster</span>
+        <span className="o-label">Image</span>
         <div className="grid gap-4 sm:grid-cols-[180px_1fr] sm:items-start">
           {/* Live preview: how it looks on a card */}
           <div className="w-[180px]">
@@ -98,7 +98,7 @@ export function PosterSetup({ eventId, title }: { eventId: string; title: string
               <span className="text-[14px] font-semibold text-ink">{busy ? "Uploading…" : "Drop a poster, or choose one"}</span>
               <span className="text-[12.5px] text-ink-muted">Portrait works best (4:5). We resize it for you.</span>
             </button>
-            <input ref={input} type="file" accept="image/*" className="sr-only" onChange={(e) => void upload(e.target.files?.[0] ?? undefined)} />
+            <input ref={input} type="file" accept="image/*" aria-label="Choose a poster image" tabIndex={-1} className="sr-only" onChange={(e) => void upload(e.target.files?.[0] ?? undefined)} />
             <div className="o-inline" style={{ marginTop: 10, gap: 12 }}>
               {has && url && (
                 <Button onClick={remove} disabled={busy}>

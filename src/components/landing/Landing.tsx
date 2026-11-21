@@ -280,7 +280,7 @@ export function HostsBand({ isOrganizer = false }: { isOrganizer?: boolean }) {
         </Reveal>
 
         <OrganizerBento />
-        <p className="mt-4 text-[12.5px] text-cream/50">
+        <p className="mt-4 text-[12.5px] text-cream/65">
           Example data. Try them: your own events show your real guests,
           payments and photos.
         </p>

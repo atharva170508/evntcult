@@ -58,7 +58,8 @@ export function Segmented<T extends string>({ value, options, onChange, label, f
 /** Digits roll to their new value. Anything that isn't a digit is printed as is. */
 export function Odometer({ value }: { value: string }) {
   return (
-    <span aria-label={value}>
+    <span>
+      <span className="sr-only">{value}</span>
       {[...value].map((ch, i) =>
         /\d/.test(ch) ? (
           <span key={`${value.length}-${i}`} className="o-odo" aria-hidden>

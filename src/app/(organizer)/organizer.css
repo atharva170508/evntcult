@@ -343,7 +343,8 @@
 .o-form-col .o-section-n { font-size: 0; }
 .o-form-col .o-section-n::before { content: counter(osec); font-size: 12px; }
 .o-section-label { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
-.o-row { grid-template-columns: 150px minmax(0, 1fr); padding: 14px 0; }
+.o-row { padding: 14px 0; }
+@media (min-width: 641px) { .o-row { grid-template-columns: 150px minmax(0, 1fr); } }
 .o-label { font-size: 14px; font-weight: 600; color: var(--text); }
 
 /* Fields: white, a hairline ring and a top highlight; focus is the ink ring with a lavender halo. */
@@ -403,3 +404,11 @@
 .o-form-col .o-section-n::before { line-height: 1; }
 .o-agenda-wd,
 .a-table th { font-family: var(--font-sans); letter-spacing: 0; text-transform: none; font-size: 12.5px; font-weight: 600; }
+
+/* Phones: sections breathe less, the sticky column scrolls with the page, label sits above field. */
+@media (max-width: 640px) {
+  .o-section { padding: 18px 16px 20px; border-radius: 18px; }
+  .o-label { padding-top: 0; }
+  .o-sticky { max-height: none; overflow: visible; }
+}
+@media (max-width: 1120px) { .o-sticky { max-height: none; overflow: visible; } }
