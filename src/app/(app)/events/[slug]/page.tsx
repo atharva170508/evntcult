@@ -42,6 +42,8 @@ import { EventSectionNav } from "@/components/events/EventSectionNav";
 import { ReadMore } from "@/components/events/ReadMore";
 import { parsePromos, parseTiers } from "@/lib/tickets";
 import { tierSeatsLeft } from "@/lib/data/pricing";
+import { myTeam } from "@/lib/data/teams";
+import { kindFor, parseConfig, teamMode } from "@/lib/categories";
 import { buttonClass } from "@/components/ui/Button";
 import { Odometer } from "@/components/ui/Odometer";
 
@@ -63,9 +65,9 @@ export default async function EventPage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ code?: string }>;
+  searchParams: Promise<{ code?: string; team?: string }>;
 }) {
-  const [{ slug }, { code }] = await Promise.all([params, searchParams]);
+  const [{ slug }, { code, team: teamCode }] = await Promise.all([params, searchParams]);
   const viewer = await getViewer();
   const d = await getEventDetail(slug, viewer, code);
   if (!d) notFound();
@@ -153,6 +155,8 @@ export default async function EventPage({
   const canRegister =
     !!viewer && !d.isOwner && !reg && e.status === "published" && !ended;
   const isPublic = e.status === "published" && e.access === "public";
+  const teamRules = teamMode(kindFor(e.category), parseConfig(e.category_config));
+  const viewerTeam = teamRules && reg && reg.status !== "cancelled" ? await myTeam(await getDB(), reg.id, viewer?.id ?? "") : null;
   const pageSections = [
     ...((updates.results ?? []).length ? [{ id: "updates", label: "Updates" }] : []),
     ...(e.description ? [{ id: "about", label: "About" }] : []),
@@ -553,6 +557,9 @@ export default async function EventPage({
                   code={code ?? null}
                   open={e.status === "published" && !ended && !regClosed}
                   approval={!!e.requires_approval}
+                  teamSignup={teamRules ?? undefined}
+                  myTeam={viewerTeam}
+                  teamCode={teamCode}
                   tiers={tierList}
                   tierLeft={await tierSeatsLeft(e.id, e.tiers ?? null)}
                   hasPromos={parsePromos(e.promos).length > 0}
@@ -588,7 +595,7 @@ export default async function EventPage({
                   }
                   qrSvg={qrSvg}
                   hasUpi={!!e.organizer_upi_id}
-                  questions={questions}
+                  questions={teamRules ? questions.filter((q) => !/team name|squad name/i.test(q.label)) : questions}
                   ticket={{
                     title: e.title,
                     dateLabel: fmtDate(s.startsAt, {

@@ -263,7 +263,26 @@ export async function teamRoster(
       role: string | null;
     }>();
   const teams = new Map<string, Team>();
+  // Teams made through team sign-up come first; typed team names fill in for everyone else.
+  const real = await db
+    .prepare(
+      `SELECT t.name AS team, u.name, r.id AS reg, (SELECT 1 FROM checkins c WHERE c.registration_id = r.id LIMIT 1) AS checked_in,
+              CASE WHEN t.captain_id = r.user_id THEN 'Captain' END AS role
+         FROM registrations r JOIN teams t ON t.id = r.team_id JOIN users u ON u.id = r.user_id
+        WHERE t.event_id = ? AND r.status = 'registered' ORDER BY r.created_at`,
+    )
+    .bind(eventId)
+    .all<{ team: string; name: string | null; reg: string; checked_in: number | null; role: string | null }>();
+  const seen = new Set<string>();
+  for (const r of real.results ?? []) {
+    seen.add(r.reg);
+    const key = r.team.trim().toLowerCase();
+    const t = teams.get(key) ?? { name: r.team, members: [] };
+    t.members.push({ name: r.name ?? "Guest", checkedIn: !!r.checked_in, role: r.role });
+    teams.set(key, t);
+  }
   for (const r of rows.results ?? []) {
+    if (seen.has(r.reg)) continue;
     const key = r.team.trim().replace(/\s+/g, " ").toLowerCase();
     const t = teams.get(key) ?? {
       name: r.team.trim().replace(/\s+/g, " "),

@@ -4,6 +4,7 @@
  */
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { testDatabase } from "./helpers/d1";
+import { createTeam, joinTeam, myTeam, teamByCode, teamNameTaken } from "@/lib/data/teams";
 import {
   cancel,
   confirmHold,
@@ -285,5 +286,37 @@ describe("walk-ins", () => {
     const b = await addWalkIn(db, e, { name: "U2", email: "U2@college.edu" }, "org", at(3));
     expect(a.registration.user_id).toBe("u2");
     expect(b.alreadyIn).toBe(true);
+  });
+});
+
+describe("team sign-up", () => {
+  it("captain creates a team with a code; teammates join until it's full", async () => {
+    const e = await addEvent(50);
+    for (const n of [1, 2, 3, 4]) await addUser(1000 + n).catch(() => {});
+    const reg = async (u: string, m: number) => {
+      const r = await register(db, e, u, { now: at(m) });
+      if (r.kind === "full") throw new Error("full");
+      return r;
+    };
+    const cap = await reg("u1001", 0);
+    const team = await createTeam(db, e.id, "u1001", cap.registration.id, "  Byte   Me ");
+    expect(team.name).toBe("Byte Me");
+    expect(team.join_code).toMatch(/^[A-Z0-9]{6}$/);
+    expect(await teamNameTaken(db, e.id, "byte me")).toBe(true);
+    await expect(createTeam(db, e.id, "u1001", cap.registration.id, "BYTE ME")).rejects.toThrow("name_taken");
+
+    const found = await teamByCode(db, e.id, team.join_code.toLowerCase());
+    expect(found?.members).toBe(1);
+    const r2 = await reg("u1002", 1);
+    const r3 = await reg("u1003", 2);
+    expect(await joinTeam(db, team.id, r2.registration.id, 2)).toBe(true);
+    expect(await joinTeam(db, team.id, r3.registration.id, 2)).toBe(false); // max 2: full
+
+    const mine = await myTeam(db, r2.registration.id, "u1002");
+    expect(mine?.members.map((m) => [m.captain, m.you])).toEqual([
+      [true, false],
+      [false, true],
+    ]);
+    expect(mine?.isCaptain).toBe(false);
   });
 });

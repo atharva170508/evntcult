@@ -53,6 +53,14 @@ async function ensureSchema(db: D1Database): Promise<void> {
          scans INTEGER NOT NULL DEFAULT 0)`,
     ),
     db.prepare("CREATE INDEX IF NOT EXISTS idx_volunteer_links_event ON volunteer_links(event_id)"),
+    // 0028: teams.
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS teams (
+         id TEXT PRIMARY KEY, event_id TEXT NOT NULL REFERENCES events(id), name TEXT NOT NULL,
+         join_code TEXT NOT NULL, captain_id TEXT NOT NULL, created_at TEXT NOT NULL)`,
+    ),
+    db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS idx_teams_code ON teams(event_id, join_code)"),
+    db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS idx_teams_name ON teams(event_id, lower(name))"),
     // 0027: event posters.
     db.prepare(
       `CREATE TABLE IF NOT EXISTS event_posters (
@@ -97,6 +105,7 @@ async function ensureSchema(db: D1Database): Promise<void> {
     ...(regHave.has("amount_paise") ? [] : ["ALTER TABLE registrations ADD COLUMN amount_paise INTEGER"]),
     ...(regHave.has("tier") ? [] : ["ALTER TABLE registrations ADD COLUMN tier TEXT"]),
     ...(regHave.has("promo_code") ? [] : ["ALTER TABLE registrations ADD COLUMN promo_code TEXT"]),
+    ...(regHave.has("team_id") ? [] : ["ALTER TABLE registrations ADD COLUMN team_id TEXT"]),
   ];
   if (add26.length) {
     await db.batch(add26.map((q) => db.prepare(q)));

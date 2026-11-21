@@ -25,6 +25,10 @@ export const registerSchema = z
     answers: z.record(z.string(), z.string().max(500)).optional(),
     tier: z.string().max(12).optional(),
     promo: z.string().max(24).optional(),
+    /** Team sign-up: create a team by name, or join one with its code. */
+    team: z
+      .union([z.object({ create: z.string().trim().min(2, "Give your team a name.").max(40) }).strict(), z.object({ join: z.string().trim().min(4).max(12) }).strict()])
+      .optional(),
   })
   .strict();
 

@@ -32,7 +32,7 @@ import { RequestsCard } from "@/components/organizer/RequestsCard";
 import { WalkInCard } from "@/components/organizer/WalkInCard";
 import { EventAnalyticsCard } from "@/components/organizer/EventAnalyticsCard";
 import { eventAnalytics } from "@/lib/data/analytics";
-import { kindFor, parseConfig, teamRule } from "@/lib/categories";
+import { kindFor, parseConfig, teamMode, teamRule } from "@/lib/categories";
 
 export const metadata: Metadata = { title: "Manage event" };
 export const dynamic = "force-dynamic";
@@ -95,7 +95,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
         e.id,
       )
     : null;
-  const teams = kind?.teams && questions.some((qq) => /team/i.test(qq.label)) ? await teamRoster(await getDB(), e.id) : null;
+  const teamSignupOn = !!teamMode(kind, parseConfig(e.category_config));
+  const teams = kind?.teams && (teamSignupOn || questions.some((qq) => /team/i.test(qq.label))) ? await teamRoster(await getDB(), e.id) : null;
 
   // Filter tabs, Linear style: counted from the same list so the numbers always match the rows.
   const isVerify = (a: (typeof attendees)[number]) => a.status === "registered" && a.payment_status === "unpaid" && !!a.upi_utr;

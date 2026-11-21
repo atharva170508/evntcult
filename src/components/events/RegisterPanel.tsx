@@ -6,6 +6,7 @@ import { CheckCircle2, Clock, Hourglass, IndianRupee, Ticket, XCircle } from "lu
 import { Button, LinkButton } from "@/components/ui/Button";
 import { Input, Notice } from "@/components/ui/Field";
 import { Select as Dropdown } from "@/components/ui/Select";
+import { Segmented } from "@/components/ui/Segmented";
 import { formatINR } from "@/lib/money";
 import { UpiPay, type UpiPayProps } from "@/components/events/UpiPay";
 import type { Question } from "@/lib/data/questions";
@@ -49,6 +50,12 @@ export function RegisterPanel(props: {
   tierLeft?: Record<string, number>;
   /** The event has promo codes: show a code field. */
   hasPromos?: boolean;
+  /** Team sign-up is on: create a team or join one with a code. */
+  teamSignup?: { noun: "team" | "squad"; min: number; max: number; teamPays: boolean };
+  /** The viewer's team, once registered. */
+  myTeam?: { name: string; code: string; isCaptain: boolean; members: { name: string; captain: boolean; you: boolean }[] } | null;
+  /** A join code from a shared link (?team=). */
+  teamCode?: string;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -59,6 +66,10 @@ export function RegisterPanel(props: {
   const [justRegistered, setJustRegistered] = useState(false);
   const [printing, setPrinting] = useState(false);
   const [afterPay, setAfterPay] = useState(false);
+  const [teamPick, setTeamPick] = useState<"create" | "join">(props.teamCode ? "join" : "create");
+  const [teamName, setTeamName] = useState("");
+  const [teamJoin, setTeamJoin] = useState(props.teamCode ?? "");
+  const [copied, setCopied] = useState(false);
   const [tier, setTier] = useState(props.tiers?.find((t) => props.tierLeft?.[t.id] !== 0)?.id ?? props.tiers?.[0]?.id ?? "");
   const [codeInput, setCodeInput] = useState("");
   const [promo, setPromo] = useState<{ code: string; amountPaise: number; label: string } | null>(null);
@@ -106,7 +117,7 @@ export function RegisterPanel(props: {
   }
 
   async function register(waitlist = false) {
-    const data = await call(`/api/events/${props.slug}/register`, { method: "POST", body: JSON.stringify({ waitlist, answers, ...(props.code ? { code: props.code } : {}), ...(tier ? { tier } : {}), ...(promo ? { promo: promo.code } : {}) }) });
+    const data = await call(`/api/events/${props.slug}/register`, { method: "POST", body: JSON.stringify({ waitlist, answers, ...(props.code ? { code: props.code } : {}), ...(tier ? { tier } : {}), ...(promo ? { promo: promo.code } : {}), ...(props.teamSignup ? { team: teamPick === "create" ? { create: teamName } : { join: teamJoin } } : {}) }) });
     if (!data) return;
     if (data.full) setFullOffer(data.waitlist_position ?? 1);
     else {
@@ -166,6 +177,77 @@ export function RegisterPanel(props: {
           )}
         </div>
       ))}
+    </div>
+  );
+  const teamFields = props.teamSignup && (
+    <div className="space-y-2.5">
+      <Segmented
+        label={`Your ${props.teamSignup.noun}`}
+        value={teamPick}
+        onChange={setTeamPick}
+        options={[
+          { value: "create", label: `Create a ${props.teamSignup.noun}` },
+          { value: "join", label: "Join with a code" },
+        ]}
+      />
+      {teamPick === "create" ? (
+        <Input aria-label={`${props.teamSignup.noun === "squad" ? "Squad" : "Team"} name`} placeholder={props.teamSignup.noun === "squad" ? "Squad name, like Strikers XI" : "Team name, like Byte Me"} value={teamName} onChange={(e) => setTeamName(e.target.value)} maxLength={40} />
+      ) : (
+        <Input aria-label="Join code" placeholder="Code from your captain" value={teamJoin} onChange={(e) => setTeamJoin(e.target.value.toUpperCase())} maxLength={12} className="font-mono uppercase tracking-[0.12em]" />
+      )}
+      <p className="text-[12.5px] text-ink-muted">
+        {teamPick === "create"
+          ? `You'll get a code to share. ${props.teamSignup.noun === "squad" ? "Squads" : "Teams"} of ${props.teamSignup.min === props.teamSignup.max ? props.teamSignup.max : `${props.teamSignup.min} to ${props.teamSignup.max}`}.${props.teamSignup.teamPays && props.pricePaise > 0 ? " You pay once for everyone." : ""}`
+          : props.teamSignup.teamPays && props.pricePaise > 0
+            ? "Your captain has paid for the team, so you join free."
+            : `Ask your captain for the ${props.teamSignup.noun} code.`}
+      </p>
+    </div>
+  );
+  const teamCard = props.myTeam && (
+    <div className="rounded-2xl border border-line-strong bg-white p-4">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="min-w-0 truncate text-[16px] font-semibold text-ink">{props.myTeam.name}</p>
+        {props.teamSignup && (
+          <p className={`shrink-0 text-[13px] tabular-nums ${props.myTeam.members.length < props.teamSignup.min ? "text-warn" : "text-ink-muted"}`}>
+            {props.myTeam.members.length} of {props.teamSignup.max}
+          </p>
+        )}
+      </div>
+      <ul className="mt-2 flex flex-wrap gap-1.5">
+        {props.myTeam.members.map((m, i) => (
+          <li key={i} className="rounded-lg bg-sunken px-2.5 py-1 text-[13px] text-ink-2">
+            {m.you ? "You" : m.name.split(" ")[0]}
+            {m.captain && <span className="text-ink-muted"> (captain)</span>}
+          </li>
+        ))}
+      </ul>
+      <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-lavender/50 px-3 py-2.5">
+        <div>
+          <p className="text-[12px] text-ink-muted">Join code</p>
+          <p className="font-mono text-[18px] font-medium tracking-[0.16em] text-ink">{props.myTeam.code}</p>
+        </div>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={async () => {
+            const url = `${window.location.origin}/events/${props.slug}?team=${props.myTeam!.code}`;
+            const text = `Join ${props.myTeam!.name} on EvntCult. Code ${props.myTeam!.code}: ${url}`;
+            try {
+              if (navigator.share) await navigator.share({ text });
+              else {
+                await navigator.clipboard.writeText(text);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 1800);
+              }
+            } catch {
+              // cancelled
+            }
+          }}
+        >
+          {copied ? "Copied" : "Invite"}
+        </Button>
+      </div>
     </div>
   );
   const ticketFields = (!!props.tiers?.length || props.hasPromos) && (
@@ -231,6 +313,7 @@ export function RegisterPanel(props: {
         <Notice tone="live" icon={CheckCircle2}>
           {r.checkedInAt ? `Checked in at ${r.checkedInAt}` : "You're registered. See you there."}
         </Notice>
+        {teamCard}
         <div className="flex items-center gap-4">
           {props.qrSvg && (
             <div className="w-[112px] shrink-0 rounded-xl bg-white p-2 ring-1 ring-line">
@@ -381,6 +464,7 @@ export function RegisterPanel(props: {
   if (props.approval) {
     return (
       <div className="space-y-3">
+        {teamFields}
         {ticketFields}
         {questionFields}
         {err}
@@ -405,6 +489,7 @@ export function RegisterPanel(props: {
             "."
           )}
         </Notice>
+        {teamFields}
         {ticketFields}
         {questionFields}
         {err}
@@ -417,6 +502,7 @@ export function RegisterPanel(props: {
 
   return (
     <div className="space-y-3">
+      {teamFields}
       {ticketFields}
       {questionFields}
       {err}

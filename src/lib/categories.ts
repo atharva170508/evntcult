@@ -114,6 +114,18 @@ export const KINDS: Record<KindKey, Kind> = {
         max: 8,
       },
       {
+        key: "teamSignup",
+        type: "toggle",
+        label: "Teams sign up together",
+        hint: "A captain creates the team and gets a code; teammates join with it, up to the team size above.",
+      },
+      {
+        key: "teamPays",
+        type: "toggle",
+        label: "Captain pays once",
+        hint: "With a price set, the captain pays for the whole team; teammates join free.",
+      },
+      {
         key: "overnight",
         type: "toggle",
         label: "Runs overnight",
@@ -170,12 +182,18 @@ export const KINDS: Record<KindKey, Kind> = {
         hint: "Squads with fewer players show as incomplete.",
       },
       {
+        key: "teamSignup",
+        type: "toggle",
+        label: "Squads sign up together",
+        hint: "A captain creates the squad and gets a code; players join with it, up to the squad size above.",
+      },
+      {
         key: "entry",
         type: "choice",
-        label: "Who registers",
+        label: "Who pays",
         options: [
-          ["team", "One entry per team"],
-          ["player", "Each player"],
+          ["team", "Captain pays once for the squad"],
+          ["player", "Each player pays"],
         ],
       },
       {
@@ -426,4 +444,16 @@ export function teamRule(
   return Array.isArray(v) && v.length === 2
     ? [Number(v[0]), Number(v[1])]
     : null;
+}
+
+/** Team sign-up rules for an event, or null when guests sign up on their own. */
+export function teamMode(kind: Kind | null, c: CategoryConfig): { min: number; max: number; teamPays: boolean; noun: "team" | "squad" } | null {
+  if (!kind?.teams || c.teamSignup !== true) return null;
+  const rule = teamRule(kind, c) ?? [1, kind.key === "hackathon" ? 4 : 11];
+  return {
+    min: rule[0],
+    max: rule[1],
+    teamPays: kind.key === "hackathon" ? c.teamPays === true : c.entry === "team",
+    noun: kind.key === "tournament" ? "squad" : "team",
+  };
 }

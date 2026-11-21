@@ -57,6 +57,7 @@ interface PassRow {
   checked_in_at: string | null;
   waitlist_position: number | null;
   requires_approval: number | null;
+  team_name: string | null;
   event_type: string;
   venue_place_id: string | null;
   venue_lat: number | null;
@@ -71,6 +72,7 @@ export default async function PassesPage() {
     `SELECT r.id, r.status, r.pass_code, r.pass_token, r.payment_status, r.upi_utr, r.hold_expires_at, r.created_at, e.organizer_upi_id,
             e.id AS event_id, e.slug, e.title, e.category, COALESCE(e.venue, 'Venue TBA') AS venue, e.starts_at, e.ends_at, COALESCE(r.amount_paise, e.price_paise) AS price_paise, e.status AS event_status,
             e.event_type, e.venue_place_id, e.venue_lat, e.venue_lng, e.requires_approval,
+            (SELECT t.name FROM teams t WHERE t.id = r.team_id) AS team_name,
             (SELECT c.scanned_at FROM checkins c WHERE c.registration_id = r.id) AS checked_in_at,
             (SELECT ct.id FROM certificates ct WHERE ct.registration_id = r.id AND ct.revoked_at IS NULL ORDER BY ct.kind = 'participation' LIMIT 1) AS cert_id,
             CASE WHEN r.status = 'waitlisted' THEN
@@ -96,7 +98,12 @@ export default async function PassesPage() {
   // role and jersey for a tournament, pass type for a party), then keep four.
   const catOf = new Map(rows.map((r) => [r.id, r.category]));
   const byReg = new Map<string, { label: string; value: string }[]>();
-  for (const a of answerRows) byReg.set(a.registration_id, [...(byReg.get(a.registration_id) ?? []), { label: a.label, value: a.value }]);
+  // A real team (team sign-up) comes first, over any typed team name answer.
+  for (const r of rows) if (r.team_name) byReg.set(r.id, [{ label: "Team", value: r.team_name }]);
+  for (const a of answerRows) {
+    if (/team/i.test(a.label) && rows.find((r) => r.id === a.registration_id)?.team_name) continue;
+    byReg.set(a.registration_id, [...(byReg.get(a.registration_id) ?? []), { label: a.label, value: a.value }]);
+  }
   const logistics = new Map<string, { label: string; value: string }[]>();
   for (const [reg, items] of byReg) {
     const order = kindFor(catOf.get(reg))?.passBadges ?? [];

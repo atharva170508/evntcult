@@ -73,6 +73,8 @@ export function CategorySetup({
     let added = 0;
     for (const q of kind.questions) {
       if (labels.has(q.label.toLowerCase())) continue;
+      // With team sign-up on, the team comes from the sign-up itself.
+      if (q.label === "Team name" && config.teamSignup === true) continue;
       // Tracks come from what you set above.
       const options =
         q.label === "Track"
