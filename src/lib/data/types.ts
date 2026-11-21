@@ -1,6 +1,14 @@
 import type { Clash } from "@/lib/clash";
 
-export const CATEGORIES = ["GAMING", "SPORTS", "TECH", "CULTURAL", "WORKSHOP", "TALK", "PARTY"] as const;
+export const CATEGORIES = [
+  "GAMING",
+  "SPORTS",
+  "TECH",
+  "CULTURAL",
+  "WORKSHOP",
+  "TALK",
+  "PARTY",
+] as const;
 export type EventCategory = (typeof CATEGORIES)[number];
 export type EventStatus = "draft" | "published" | "closed" | "cancelled";
 export type EventAccess = "public" | "code";
@@ -66,6 +74,10 @@ export interface EventSummary {
   registered: number;
   feePaise: number;
   accent: string; // gradient key, see components/ui/EventArt
+  /** Category facts for cards: "Teams of 2 to 4", "6v6 Turf", "21+ only". */
+  badges?: string[];
+  /** Initials of a few people going (signed-in views only). */
+  going?: string[];
 }
 
 export interface NextUp extends EventSummary {
@@ -100,13 +112,24 @@ export interface HostedEvent {
 }
 
 export interface OrganizerPanel {
-  live: { id: string; title: string; capacity: number | null; registered: number; checkedIn: number } | null;
+  live: {
+    id: string;
+    title: string;
+    capacity: number | null;
+    registered: number;
+    checkedIn: number;
+  } | null;
   hosted: HostedEvent[];
   clashes: (Clash & { forEvent: string })[];
 }
 
 export interface DashboardData {
-  stats: { registered: number; thisWeek: number; attended: number; photosOfYou: number };
+  stats: {
+    registered: number;
+    thisWeek: number;
+    attended: number;
+    photosOfYou: number;
+  };
   /** Up to 6 photo ids I've tagged myself in, newest first (thumbnails for the Vault card). */
   vaultPreview: string[];
   nextUp: NextUp | null;

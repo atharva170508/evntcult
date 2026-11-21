@@ -1,4 +1,5 @@
 import "server-only";
+import { headlinePills, kindFor, parseConfig } from "@/lib/categories";
 import { all, first } from "@/lib/db";
 import type { Viewer } from "@/lib/rbac";
 import type { ListQuery } from "@/lib/validation";
@@ -17,7 +18,8 @@ const CATEGORY_ACCENT: Record<string, string> = {
 
 /** Stable poster colour per event. */
 export const accentFor = (e: { id: string; category: string | null }) =>
-  CATEGORY_ACCENT[e.category ?? ""] ?? ACCENTS[[...e.id].reduce((s, c) => s + c.charCodeAt(0), 0) % ACCENTS.length];
+  CATEGORY_ACCENT[e.category ?? ""] ??
+  ACCENTS[[...e.id].reduce((s, c) => s + c.charCodeAt(0), 0) % ACCENTS.length];
 
 /** Seats taken = registered + waitlisted holds (the same count the atomic insert uses). */
 export const SEATS_TAKEN_SQL =
@@ -41,7 +43,17 @@ export function toSummary(e: EventRowWithCount): EventSummary {
     registered: e.taken,
     feePaise: e.price_paise,
     accent: accentFor(e),
+    badges: cardBadges(e.category, e.category_config),
   };
+}
+
+function cardBadges(category: string | null, raw: string | null | undefined) {
+  const kind = kindFor(category);
+  if (!kind) return undefined;
+  const pills = headlinePills(kind, parseConfig(raw)).filter(
+    (p) => !p.startsWith("Dress code") && !p.startsWith("₹"),
+  );
+  return pills.length ? pills.slice(0, 2) : undefined;
 }
 
 function firstLine(d: string | null) {
@@ -56,14 +68,21 @@ export const PAGE_SIZE = 12;
 const IST = 5.5 * 3_600_000;
 
 /** [from, to) UTC range for a "when" filter, computed on IST calendar days. */
-function whenRange(when: NonNullable<ListQuery["when"]>, now = Date.now()): [string, string] {
+function whenRange(
+  when: NonNullable<ListQuery["when"]>,
+  now = Date.now(),
+): [string, string] {
   const ist = new Date(now + IST);
-  const midnight = Date.UTC(ist.getUTCFullYear(), ist.getUTCMonth(), ist.getUTCDate()) - IST;
+  const midnight =
+    Date.UTC(ist.getUTCFullYear(), ist.getUTCMonth(), ist.getUTCDate()) - IST;
   const day = 86_400_000;
   const dow = (ist.getUTCDay() + 6) % 7; // Monday = 0
   const ranges = {
     today: [midnight, midnight + day],
-    weekend: [midnight + (5 - Math.min(dow, 5)) * day, midnight + (7 - dow) * day],
+    weekend: [
+      midnight + (5 - Math.min(dow, 5)) * day,
+      midnight + (7 - dow) * day,
+    ],
     week: [midnight, midnight + 7 * day],
     month: [midnight, midnight + 31 * day],
   } as const;
@@ -71,7 +90,8 @@ function whenRange(when: NonNullable<ListQuery["when"]>, now = Date.now()): [str
   return [new Date(a).toISOString(), new Date(b).toISOString()];
 }
 
-const encodeCursor = (e: { starts_at: string; id: string }) => btoa(`${e.starts_at}|${e.id}`);
+const encodeCursor = (e: { starts_at: string; id: string }) =>
+  btoa(`${e.starts_at}|${e.id}`);
 function decodeCursor(c: string): [string, string] | null {
   try {
     const [s, id] = atob(c).split("|");
@@ -82,8 +102,14 @@ function decodeCursor(c: string): [string, string] | null {
 }
 
 /** Published, public, not-yet-ended events. Private (code) events are only shown to people who unlocked them. */
-export async function listEvents(q: ListQuery): Promise<{ events: EventSummary[]; nextCursor: string | null }> {
-  const where = ["e.status = 'published'", "e.access = 'public'", "e.ends_at > ?"];
+export async function listEvents(
+  q: ListQuery,
+): Promise<{ events: EventSummary[]; nextCursor: string | null }> {
+  const where = [
+    "e.status = 'published'",
+    "e.access = 'public'",
+    "e.ends_at > ?",
+  ];
   const args: unknown[] = [new Date().toISOString()];
   if (q.type) {
     where.push("e.category = ?");
@@ -97,7 +123,9 @@ export async function listEvents(q: ListQuery): Promise<{ events: EventSummary[]
     args.push(to, from);
   }
   if (q.q) {
-    where.push("(e.title LIKE ? ESCAPE '\\' OR e.venue LIKE ? ESCAPE '\\' OR e.description LIKE ? ESCAPE '\\')");
+    where.push(
+      "(e.title LIKE ? ESCAPE '\\' OR e.venue LIKE ? ESCAPE '\\' OR e.description LIKE ? ESCAPE '\\')",
+    );
     const like = `%${q.q.replace(/[\\%_]/g, (m) => `\\${m}`)}%`;
     args.push(like, like, like);
   }
@@ -114,7 +142,11 @@ export async function listEvents(q: ListQuery): Promise<{ events: EventSummary[]
     PAGE_SIZE + 1,
   );
   const page = rows.slice(0, PAGE_SIZE);
-  return { events: page.map(toSummary), nextCursor: rows.length > PAGE_SIZE ? encodeCursor(page[page.length - 1]) : null };
+  return {
+    events: page.map(toSummary),
+    nextCursor:
+      rows.length > PAGE_SIZE ? encodeCursor(page[page.length - 1]) : null,
+  };
 }
 
 /* ─── Detail ───────────────────────────────────────────────────────────── */
@@ -140,14 +172,19 @@ export interface EventDetail {
 }
 
 /** By id or slug. Drafts are visible to their owner only; code events need the code, a registration, or ownership. */
-export async function getEventDetail(ref: string, viewer: Viewer | null, code?: string | null): Promise<EventDetail | null> {
+export async function getEventDetail(
+  ref: string,
+  viewer: Viewer | null,
+  code?: string | null,
+): Promise<EventDetail | null> {
   const event = await first<EventRowWithCount>(
     `SELECT e.*, ${SEATS_TAKEN_SQL} AS taken FROM events e WHERE e.slug = ? OR e.id = ?`,
     ref,
     ref,
   );
   if (!event) return null;
-  const isOwner = !!viewer && (viewer.role === "admin" || event.organizer_id === viewer.id);
+  const isOwner =
+    !!viewer && (viewer.role === "admin" || event.organizer_id === viewer.id);
 
   const myRegistration = viewer
     ? await first<MyRegistration>(
@@ -161,14 +198,19 @@ export async function getEventDetail(ref: string, viewer: Viewer | null, code?: 
 
   if (event.status === "draft" && !isOwner) return null;
   if (event.access === "code" && !isOwner && !myRegistration) {
-    const ok = !!code && !!event.access_code && code.trim().toUpperCase() === event.access_code;
+    const ok =
+      !!code &&
+      !!event.access_code &&
+      code.trim().toUpperCase() === event.access_code;
     if (!ok) return null;
   }
 
   // Online events: the join link is only for the organizer and people holding a pass.
   // Strip it here so it can't leak into any page or client component for everyone else.
-  if (!isOwner && myRegistration?.status !== "registered") event.meeting_url = null;
+  if (!isOwner && myRegistration?.status !== "registered")
+    event.meeting_url = null;
   // seatsLeft null = unlimited; never compare it as a number.
-  const seatsLeft = event.capacity === null ? null : Math.max(0, event.capacity - event.taken);
+  const seatsLeft =
+    event.capacity === null ? null : Math.max(0, event.capacity - event.taken);
   return { event, seatsLeft, myRegistration, isOwner };
 }

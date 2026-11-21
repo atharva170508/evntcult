@@ -15,7 +15,17 @@ interface CardProps {
 }
 
 /** Paper card: optional mono eyebrow, title and a quiet "See all →" link. */
-export function Card({ eyebrow, title, icon: Icon, action, className, bodyClassName, children, style, as: Tag = "section" }: CardProps) {
+export function Card({
+  eyebrow,
+  title,
+  icon: Icon,
+  action,
+  className,
+  bodyClassName,
+  children,
+  style,
+  as: Tag = "section",
+}: CardProps) {
   const hasHeader = !!(eyebrow || title || action);
   return (
     <Tag className={cn("card flex flex-col", className)} style={style}>
@@ -29,7 +39,11 @@ export function Card({ eyebrow, title, icon: Icon, action, className, bodyClassN
             )}
             <div className="min-w-0">
               {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-              {title && <h2 className="mt-0.5 truncate text-h4 font-semibold text-ink">{title}</h2>}
+              {title && (
+                <h2 className="mt-0.5 truncate text-h4 font-semibold text-ink">
+                  {title}
+                </h2>
+              )}
             </div>
           </div>
           {action && (
@@ -38,12 +52,23 @@ export function Card({ eyebrow, title, icon: Icon, action, className, bodyClassN
               className="group -mr-2 inline-flex shrink-0 items-center gap-1 rounded-xl px-2.5 py-1.5 text-[13px] font-medium text-ink-muted transition-colors duration-fast hover:bg-ink/[0.05] hover:text-ink"
             >
               {action.label}
-              <ArrowRight className="size-3.5 transition-transform duration-base ease-out group-hover:translate-x-0.5" aria-hidden />
+              <ArrowRight
+                className="size-3.5 transition-transform duration-base ease-out group-hover:translate-x-0.5"
+                aria-hidden
+              />
             </Link>
           )}
         </header>
       )}
-      <div className={cn("flex-1 p-5 md:p-6", hasHeader && "pt-4 md:pt-4", bodyClassName)}>{children}</div>
+      <div
+        className={cn(
+          "flex-1 p-5 md:p-6",
+          hasHeader && "pt-4 md:pt-4",
+          bodyClassName,
+        )}
+      >
+        {children}
+      </div>
     </Tag>
   );
 }

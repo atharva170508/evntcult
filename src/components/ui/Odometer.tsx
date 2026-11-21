@@ -4,7 +4,15 @@
  * when a refresh changes the value, React patches the transform and CSS animates it.
  * Screen readers get the plain number.
  */
-export function Odometer({ value, locale = "en-IN", className }: { value: number; locale?: string; className?: string }) {
+export function Odometer({
+  value,
+  locale = "en-IN",
+  className,
+}: {
+  value: number;
+  locale?: string;
+  className?: string;
+}) {
   const text = value.toLocaleString(locale);
   return (
     <span className={`odo ${className ?? ""}`}>
@@ -14,7 +22,10 @@ export function Odometer({ value, locale = "en-IN", className }: { value: number
           /\d/.test(ch) ? (
             // Keyed from the right, so digits keep their column as the number grows.
             <span key={`d${text.length - i}`} className="odo-col">
-              <span className="odo-strip" style={{ transform: `translateY(-${Number(ch) * 10}%)` }}>
+              <span
+                className="odo-strip"
+                style={{ transform: `translateY(-${Number(ch) * 10}%)` }}
+              >
                 {DIGITS.map((d) => (
                   <span key={d}>{d}</span>
                 ))}

@@ -67,7 +67,11 @@ export type RegisterResult =
 const iso = (d: Date) => d.toISOString();
 
 /** When a hold given at `now` runs out. */
-export function holdExpiry(now: Date, startsAt: string, endsAt: string): string {
+export function holdExpiry(
+  now: Date,
+  startsAt: string,
+  endsAt: string,
+): string {
   const t = now.getTime();
   const start = Date.parse(startsAt);
   const end = Date.parse(endsAt);
@@ -78,29 +82,63 @@ export function holdExpiry(now: Date, startsAt: string, endsAt: string): string 
 
 /** "EC-VALO-" — the number is added inside the INSERT so it can't race. */
 function passCodePrefix(slug: string) {
-  const p = slug.replace(/[^a-z0-9]/gi, "").slice(0, 4).toUpperCase() || "EVNT";
+  const p =
+    slug
+      .replace(/[^a-z0-9]/gi, "")
+      .slice(0, 4)
+      .toUpperCase() || "EVNT";
   return `EC-${p}-`;
 }
 
-async function audit(db: D1Database, actorId: string | null, action: string, targetId: string, meta?: Record<string, unknown>, now = new Date()) {
+async function audit(
+  db: D1Database,
+  actorId: string | null,
+  action: string,
+  targetId: string,
+  meta?: Record<string, unknown>,
+  now = new Date(),
+) {
   await db
-    .prepare("INSERT INTO audit_log (id, actor_id, action, target_id, meta, created_at) VALUES (?, ?, ?, ?, ?, ?)")
-    .bind(newId(), actorId, action, targetId, meta ? JSON.stringify(meta) : null, iso(now))
+    .prepare(
+      "INSERT INTO audit_log (id, actor_id, action, target_id, meta, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+    )
+    .bind(
+      newId(),
+      actorId,
+      action,
+      targetId,
+      meta ? JSON.stringify(meta) : null,
+      iso(now),
+    )
     .run();
 }
 
-export async function getRegistration(db: D1Database, id: string): Promise<RegistrationRow | null> {
-  return (await db.prepare("SELECT * FROM registrations WHERE id = ?").bind(id).first<RegistrationRow>()) ?? null;
+export async function getRegistration(
+  db: D1Database,
+  id: string,
+): Promise<RegistrationRow | null> {
+  return (
+    (await db
+      .prepare("SELECT * FROM registrations WHERE id = ?")
+      .bind(id)
+      .first<RegistrationRow>()) ?? null
+  );
 }
 
 async function findMine(db: D1Database, eventId: string, userId: string) {
   return (
-    (await db.prepare("SELECT * FROM registrations WHERE event_id = ? AND user_id = ?").bind(eventId, userId).first<RegistrationRow>()) ?? null
+    (await db
+      .prepare("SELECT * FROM registrations WHERE event_id = ? AND user_id = ?")
+      .bind(eventId, userId)
+      .first<RegistrationRow>()) ?? null
   );
 }
 
 /** 1-based place in the queue (oldest first). */
-export async function waitlistPosition(db: D1Database, reg: Pick<RegistrationRow, "id" | "event_id" | "created_at">): Promise<number> {
+export async function waitlistPosition(
+  db: D1Database,
+  reg: Pick<RegistrationRow, "id" | "event_id" | "created_at">,
+): Promise<number> {
   const row = await db
     .prepare(
       `SELECT COUNT(*) AS n FROM registrations
@@ -112,7 +150,12 @@ export async function waitlistPosition(db: D1Database, reg: Pick<RegistrationRow
 }
 
 async function waitlistLength(db: D1Database, eventId: string) {
-  const row = await db.prepare("SELECT COUNT(*) AS n FROM registrations WHERE event_id = ? AND status = 'waitlisted'").bind(eventId).first<{ n: number }>();
+  const row = await db
+    .prepare(
+      "SELECT COUNT(*) AS n FROM registrations WHERE event_id = ? AND status = 'waitlisted'",
+    )
+    .bind(eventId)
+    .first<{ n: number }>();
   return row?.n ?? 0;
 }
 
@@ -150,7 +193,15 @@ async function upsertRegistration(
               upi_utr = NULL, upi_claimed_at = NULL, upi_rejected_at = NULL
         WHERE registrations.status = 'cancelled'`,
     )
-    .bind(newId(), userId, status, passCodePrefix(event.slug), newPassToken(), iso(now), event.id)
+    .bind(
+      newId(),
+      userId,
+      status,
+      passCodePrefix(event.slug),
+      newPassToken(),
+      iso(now),
+      event.id,
+    )
     .run();
   return res.meta.changes ?? 0;
 }
@@ -168,19 +219,42 @@ export async function register(
   opts: { waitlist?: boolean; now?: Date } = {},
 ): Promise<RegisterResult> {
   const now = opts.now ?? new Date();
-  if (event.status !== "published") throw new RegistrationError(409, "not_open", "Registration isn't open for this event.");
-  if (Date.parse(event.ends_at) <= now.getTime()) throw new RegistrationError(409, "ended", "This event has ended.");
+  if (event.status !== "published")
+    throw new RegistrationError(
+      409,
+      "not_open",
+      "Registration isn't open for this event.",
+    );
+  if (Date.parse(event.ends_at) <= now.getTime())
+    throw new RegistrationError(409, "ended", "This event has ended.");
 
   const existing = await findMine(db, event.id, userId);
-  if (existing && existing.status !== "cancelled") return describe(db, existing);
+  if (existing && existing.status !== "cancelled")
+    return describe(db, existing);
 
   // Free seats may be waiting for the next person (e.g. the organizer raised capacity).
   await promoteWaitlist(db, event.id, now);
 
-  if ((await upsertRegistration(db, event, userId, "registered", true, now)) === 1) {
+  if (
+    (await upsertRegistration(db, event, userId, "registered", true, now)) === 1
+  ) {
     const reg = (await findMine(db, event.id, userId))!;
-    await audit(db, userId, "register", reg.id, { event_id: event.id, status: "registered" }, now);
-    await enqueueOne(db, userId, event.id, "pass_confirmed", `pass_confirmed:${reg.id}`, now);
+    await audit(
+      db,
+      userId,
+      "register",
+      reg.id,
+      { event_id: event.id, status: "registered" },
+      now,
+    );
+    await enqueueOne(
+      db,
+      userId,
+      event.id,
+      "pass_confirmed",
+      `pass_confirmed:${reg.id}`,
+      now,
+    );
     return { kind: "registered", registration: reg };
   }
 
@@ -188,23 +262,50 @@ export async function register(
   const again = await findMine(db, event.id, userId);
   if (again && again.status !== "cancelled") return describe(db, again);
 
-  if (!opts.waitlist) return { kind: "full", position: (await waitlistLength(db, event.id)) + 1 };
+  if (!opts.waitlist)
+    return { kind: "full", position: (await waitlistLength(db, event.id)) + 1 };
 
-  if ((await upsertRegistration(db, event, userId, "waitlisted", false, now)) === 0) {
+  if (
+    (await upsertRegistration(db, event, userId, "waitlisted", false, now)) ===
+    0
+  ) {
     const raced = await findMine(db, event.id, userId);
     if (raced && raced.status !== "cancelled") return describe(db, raced);
-    throw new RegistrationError(409, "not_open", "Registration isn't open for this event.");
+    throw new RegistrationError(
+      409,
+      "not_open",
+      "Registration isn't open for this event.",
+    );
   }
   const reg = (await findMine(db, event.id, userId))!;
-  await audit(db, userId, "register", reg.id, { event_id: event.id, status: "waitlisted" }, now);
+  await audit(
+    db,
+    userId,
+    "register",
+    reg.id,
+    { event_id: event.id, status: "waitlisted" },
+    now,
+  );
   // A seat might have opened between the two statements; if so this person gets a hold.
   await promoteWaitlist(db, event.id, now);
   const fresh = (await getRegistration(db, reg.id))!;
-  return { kind: "waitlisted", registration: fresh, position: await waitlistPosition(db, fresh) };
+  return {
+    kind: "waitlisted",
+    registration: fresh,
+    position: await waitlistPosition(db, fresh),
+  };
 }
 
-async function describe(db: D1Database, reg: RegistrationRow): Promise<RegisterResult> {
-  if (reg.status === "waitlisted") return { kind: "waitlisted", registration: reg, position: await waitlistPosition(db, reg) };
+async function describe(
+  db: D1Database,
+  reg: RegistrationRow,
+): Promise<RegisterResult> {
+  if (reg.status === "waitlisted")
+    return {
+      kind: "waitlisted",
+      registration: reg,
+      position: await waitlistPosition(db, reg),
+    };
   return { kind: "registered", registration: reg };
 }
 
@@ -214,12 +315,31 @@ async function describe(db: D1Database, reg: RegistrationRow): Promise<RegisterR
  * Each hand-over is one guarded UPDATE, so running this twice at once can't over-assign.
  * Returns the registrations that just got a hold (for notifications in M4).
  */
-export async function promoteWaitlist(db: D1Database, eventId: string, now = new Date()): Promise<RegistrationRow[]> {
+export async function promoteWaitlist(
+  db: D1Database,
+  eventId: string,
+  now = new Date(),
+): Promise<RegistrationRow[]> {
   const event = await db
-    .prepare("SELECT id, slug, title, capacity, status, starts_at, ends_at FROM events WHERE id = ?")
+    .prepare(
+      "SELECT id, slug, title, capacity, status, starts_at, ends_at FROM events WHERE id = ?",
+    )
     .bind(eventId)
-    .first<{ id: string; slug: string; title: string; capacity: number | null; status: string; starts_at: string; ends_at: string }>();
-  if (!event || event.status !== "published" || Date.parse(event.ends_at) <= now.getTime()) return [];
+    .first<{
+      id: string;
+      slug: string;
+      title: string;
+      capacity: number | null;
+      status: string;
+      starts_at: string;
+      ends_at: string;
+    }>();
+  if (
+    !event ||
+    event.status !== "published" ||
+    Date.parse(event.ends_at) <= now.getTime()
+  )
+    return [];
 
   const promoted: RegistrationRow[] = [];
   for (let i = 0; i < 10_000; i++) {
@@ -240,19 +360,35 @@ export async function promoteWaitlist(db: D1Database, eventId: string, now = new
                   WHERE r.event_id = ? AND (r.status = 'registered' OR (r.status = 'waitlisted' AND r.hold_expires_at IS NOT NULL)))
                 < COALESCE((SELECT capacity FROM events WHERE id = ?), 1e18)`,
       )
-      .bind(holdExpiry(now, event.starts_at, event.ends_at), head.id, eventId, eventId)
+      .bind(
+        holdExpiry(now, event.starts_at, event.ends_at),
+        head.id,
+        eventId,
+        eventId,
+      )
       .run();
     if ((res.meta.changes ?? 0) === 0) break; // no free seat (or someone else just promoted this person)
     const held = (await getRegistration(db, head.id))!;
     promoted.push(held);
-    await audit(db, null, "hold_offered", held.id, { event_id: eventId, until: held.hold_expires_at }, now);
+    await audit(
+      db,
+      null,
+      "hold_offered",
+      held.id,
+      { event_id: eventId, until: held.hold_expires_at },
+      now,
+    );
     // WhatsApp (queued; only if they opted in). The sender adds the site address to the link.
     await notifyUser(
       db,
       held.user_id,
       eventId,
       "waitlist_offer",
-      { event_title: event.title, confirm_by: istLabel(held.hold_expires_at!), link: `/events/${event.slug}` },
+      {
+        event_title: event.title,
+        confirm_by: istLabel(held.hold_expires_at!),
+        link: `/events/${event.slug}`,
+      },
       `hold:${held.id}:${held.hold_expires_at}`,
       now,
     );
@@ -261,7 +397,12 @@ export async function promoteWaitlist(db: D1Database, eventId: string, now = new
 }
 
 /** Cancel my registration or leave the waitlist. Frees the seat for the next person in line. */
-export async function cancel(db: D1Database, regId: string, userId: string, now = new Date()): Promise<RegistrationRow> {
+export async function cancel(
+  db: D1Database,
+  regId: string,
+  userId: string,
+  now = new Date(),
+): Promise<RegistrationRow> {
   const res = await db
     .prepare(
       `UPDATE registrations SET status = 'cancelled', cancelled_at = ?, hold_expires_at = NULL
@@ -273,11 +414,25 @@ export async function cancel(db: D1Database, regId: string, userId: string, now 
     .run();
 
   const reg = await getRegistration(db, regId);
-  if (!reg || reg.user_id !== userId) throw new RegistrationError(404, "not_found", "Registration not found.");
+  if (!reg || reg.user_id !== userId)
+    throw new RegistrationError(404, "not_found", "Registration not found.");
   if ((res.meta.changes ?? 0) === 0) {
-    if (reg.status === "cancelled") throw new RegistrationError(409, "already_cancelled", "This registration is already cancelled.");
-    const checkedIn = await db.prepare("SELECT 1 AS x FROM checkins WHERE registration_id = ?").bind(regId).first();
-    if (checkedIn) throw new RegistrationError(409, "checked_in", "You've already checked in, so this can't be cancelled.");
+    if (reg.status === "cancelled")
+      throw new RegistrationError(
+        409,
+        "already_cancelled",
+        "This registration is already cancelled.",
+      );
+    const checkedIn = await db
+      .prepare("SELECT 1 AS x FROM checkins WHERE registration_id = ?")
+      .bind(regId)
+      .first();
+    if (checkedIn)
+      throw new RegistrationError(
+        409,
+        "checked_in",
+        "You've already checked in, so this can't be cancelled.",
+      );
     throw new RegistrationError(409, "ended", "This event has ended.");
   }
   await audit(db, userId, "cancel", regId, { event_id: reg.event_id }, now);
@@ -286,7 +441,12 @@ export async function cancel(db: D1Database, regId: string, userId: string, now 
 }
 
 /** The waitlist head takes their held seat. */
-export async function confirmHold(db: D1Database, regId: string, userId: string, now = new Date()): Promise<RegistrationRow> {
+export async function confirmHold(
+  db: D1Database,
+  regId: string,
+  userId: string,
+  now = new Date(),
+): Promise<RegistrationRow> {
   const res = await db
     .prepare(
       `UPDATE registrations SET status = 'registered', hold_expires_at = NULL
@@ -295,13 +455,30 @@ export async function confirmHold(db: D1Database, regId: string, userId: string,
     .bind(regId, userId, iso(now))
     .run();
   const reg = await getRegistration(db, regId);
-  if (!reg || reg.user_id !== userId) throw new RegistrationError(404, "not_found", "Registration not found.");
+  if (!reg || reg.user_id !== userId)
+    throw new RegistrationError(404, "not_found", "Registration not found.");
   if ((res.meta.changes ?? 0) === 0) {
     if (reg.status === "registered") return reg; // double-click: already confirmed
-    if (reg.status === "waitlisted" && !reg.hold_expires_at) throw new RegistrationError(409, "no_hold", "No seat is being held for you yet.");
-    throw new RegistrationError(410, "hold_expired", "Sorry, the held seat expired and went to the next person.");
+    if (reg.status === "waitlisted" && !reg.hold_expires_at)
+      throw new RegistrationError(
+        409,
+        "no_hold",
+        "No seat is being held for you yet.",
+      );
+    throw new RegistrationError(
+      410,
+      "hold_expired",
+      "Sorry, the held seat expired and went to the next person.",
+    );
   }
-  await audit(db, userId, "waitlist_confirm", regId, { event_id: reg.event_id }, now);
+  await audit(
+    db,
+    userId,
+    "waitlist_confirm",
+    regId,
+    { event_id: reg.event_id },
+    now,
+  );
   return reg;
 }
 
@@ -309,7 +486,10 @@ export async function confirmHold(db: D1Database, regId: string, userId: string,
  * The cron job: cancel holds that ran out, then fill every free seat from the queue.
  * Also catches seats freed by other means (e.g. the organizer raised the capacity).
  */
-export async function sweepHolds(db: D1Database, now = new Date()): Promise<{ expired: number; promoted: number }> {
+export async function sweepHolds(
+  db: D1Database,
+  now = new Date(),
+): Promise<{ expired: number; promoted: number }> {
   const expired = await db
     .prepare(
       `UPDATE registrations SET status = 'cancelled', cancelled_at = ?1, hold_expires_at = NULL
@@ -319,7 +499,14 @@ export async function sweepHolds(db: D1Database, now = new Date()): Promise<{ ex
     .bind(iso(now))
     .all<{ id: string; event_id: string; user_id: string }>();
   for (const r of expired.results ?? []) {
-    await audit(db, null, "hold_expired", r.id, { event_id: r.event_id, user_id: r.user_id }, now);
+    await audit(
+      db,
+      null,
+      "hold_expired",
+      r.id,
+      { event_id: r.event_id, user_id: r.user_id },
+      now,
+    );
   }
 
   // Every live event with people waiting for a seat that nobody is holding.
@@ -331,6 +518,7 @@ export async function sweepHolds(db: D1Database, now = new Date()): Promise<{ ex
     .bind(iso(now))
     .all<{ id: string }>();
   let promoted = 0;
-  for (const e of events.results ?? []) promoted += (await promoteWaitlist(db, e.id, now)).length;
+  for (const e of events.results ?? [])
+    promoted += (await promoteWaitlist(db, e.id, now)).length;
   return { expired: expired.results?.length ?? 0, promoted };
 }

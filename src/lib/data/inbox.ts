@@ -53,7 +53,8 @@ function describe(r: Row): string {
     case "checked_in":
       return `You're checked in at ${r.title}.`;
     case "event_update": {
-      const message = (JSON.parse(r.payload || "{}") as { message?: string }).message;
+      const message = (JSON.parse(r.payload || "{}") as { message?: string })
+        .message;
       return message ? `${r.title}: ${message}` : `Update for ${r.title}.`;
     }
     default:
@@ -61,7 +62,11 @@ function describe(r: Row): string {
   }
 }
 
-export async function inbox(db: D1Database, userId: string, now = new Date()): Promise<{ items: InboxItem[]; unread: number }> {
+export async function inbox(
+  db: D1Database,
+  userId: string,
+  now = new Date(),
+): Promise<{ items: InboxItem[]; unread: number }> {
   const rows = await db
     .prepare(
       `SELECT n.id, n.template, n.payload, n.scheduled_for, n.read_at, e.title, e.slug, e.starts_at, e.venue, e.venue_status,
@@ -75,13 +80,25 @@ export async function inbox(db: D1Database, userId: string, now = new Date()): P
   const items = (rows.results ?? []).map((r) => ({
     id: r.id,
     text: describe(r),
-    href: r.template === "certificate_ready" && r.cert_id ? `/certificates/${r.cert_id}` : `/events/${r.slug}`,
+    href:
+      r.template === "certificate_ready" && r.cert_id
+        ? `/certificates/${r.cert_id}`
+        : `/events/${r.slug}`,
     at: r.scheduled_for,
     read: !!r.read_at,
   }));
   return { items, unread: items.filter((i) => !i.read).length };
 }
 
-export async function markAllRead(db: D1Database, userId: string, now = new Date()) {
-  await db.prepare("UPDATE notifications SET read_at = ? WHERE user_id = ? AND read_at IS NULL AND scheduled_for <= ?").bind(now.toISOString(), userId, now.toISOString()).run();
+export async function markAllRead(
+  db: D1Database,
+  userId: string,
+  now = new Date(),
+) {
+  await db
+    .prepare(
+      "UPDATE notifications SET read_at = ? WHERE user_id = ? AND read_at IS NULL AND scheduled_for <= ?",
+    )
+    .bind(now.toISOString(), userId, now.toISOString())
+    .run();
 }

@@ -16,12 +16,33 @@ import { enqueueCheckedIn } from "@/lib/whatsapp";
 export type ScanColor = "green" | "amber" | "red";
 
 export type ScanResult =
-  | { result: "admitted"; color: "green"; name: string; passCode: string; scannedAt: string; replay: boolean }
-  | { result: "already_in"; color: "red"; name: string; passCode: string; scannedAt: string }
-  | { result: "unpaid"; color: "amber"; name: string; passCode: string; amountPaise: number; claimedUtr: string | null }
+  | {
+      result: "admitted";
+      color: "green";
+      name: string;
+      passCode: string;
+      scannedAt: string;
+      replay: boolean;
+    }
+  | {
+      result: "already_in";
+      color: "red";
+      name: string;
+      passCode: string;
+      scannedAt: string;
+    }
+  | {
+      result: "unpaid";
+      color: "amber";
+      name: string;
+      passCode: string;
+      amountPaise: number;
+      claimedUtr: string | null;
+    }
   | { result: "invalid"; color: "red"; reason: InvalidReason; message: string };
 
-export type InvalidReason = "unknown" | "other_event" | "cancelled" | "waitlisted" | "event_closed";
+export type InvalidReason =
+  "unknown" | "other_event" | "cancelled" | "waitlisted" | "event_closed";
 
 export interface CheckInInput {
   eventId: string;
@@ -49,16 +70,30 @@ interface PassLookup {
   upi_utr: string | null;
 }
 
-const invalid = (reason: InvalidReason, message: string): ScanResult => ({ result: "invalid", color: "red", reason, message });
+const invalid = (reason: InvalidReason, message: string): ScanResult => ({
+  result: "invalid",
+  color: "red",
+  reason,
+  message,
+});
 
 /** Offline scans may report an earlier time, but never the future or more than a day back. */
 function clampScanTime(scannedAt: Date | undefined, now: Date): string {
   const t = scannedAt?.getTime();
-  if (t === undefined || Number.isNaN(t) || t > now.getTime() || t < now.getTime() - 86_400_000) return now.toISOString();
+  if (
+    t === undefined ||
+    Number.isNaN(t) ||
+    t > now.getTime() ||
+    t < now.getTime() - 86_400_000
+  )
+    return now.toISOString();
   return new Date(t).toISOString();
 }
 
-export async function checkIn(db: D1Database, input: CheckInInput): Promise<ScanResult> {
+export async function checkIn(
+  db: D1Database,
+  input: CheckInInput,
+): Promise<ScanResult> {
   const now = input.now ?? new Date();
   const token = extractPassToken(input.passToken);
 
@@ -70,13 +105,26 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
         WHERE c.client_scan_id = ?`,
     )
     .bind(input.clientScanId)
-    .first<{ scanned_at: string; pass_code: string; name: string; event_id: string }>();
+    .first<{
+      scanned_at: string;
+      pass_code: string;
+      name: string;
+      event_id: string;
+    }>();
   if (replay && replay.event_id === input.eventId) {
-    return { result: "admitted", color: "green", name: replay.name, passCode: replay.pass_code, scannedAt: replay.scanned_at, replay: true };
+    return {
+      result: "admitted",
+      color: "green",
+      name: replay.name,
+      passCode: replay.pass_code,
+      scannedAt: replay.scanned_at,
+      replay: true,
+    };
   }
 
   // 2. Is it a real pass, for this event, with a seat?
-  if (!isWellFormedPassToken(token)) return invalid("unknown", "Not an EvntCult pass.");
+  if (!isWellFormedPassToken(token))
+    return invalid("unknown", "Not an EvntCult pass.");
   const pass = await db
     .prepare(
       `SELECT r.id AS reg_id, r.event_id, r.status, r.payment_status, r.pass_code, u.name, e.price_paise, e.title AS event_title, r.upi_utr
@@ -85,22 +133,56 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
     )
     .bind(token)
     .first<PassLookup>();
-  if (!pass) return invalid("unknown", "Not a valid pass. It may be fake or an old cancelled pass.");
-  if (pass.event_id !== input.eventId) return invalid("other_event", `This pass is for a different event: ${pass.event_title}.`);
-  if (pass.status === "cancelled") return invalid("cancelled", `${pass.name} cancelled this registration.`);
-  if (pass.status === "waitlisted") return invalid("waitlisted", `${pass.name} is on the waitlist and doesn't have a seat.`);
+  if (!pass)
+    return invalid(
+      "unknown",
+      "Not a valid pass. It may be fake or an old cancelled pass.",
+    );
+  if (pass.event_id !== input.eventId)
+    return invalid(
+      "other_event",
+      `This pass is for a different event: ${pass.event_title}.`,
+    );
+  if (pass.status === "cancelled")
+    return invalid("cancelled", `${pass.name} cancelled this registration.`);
+  if (pass.status === "waitlisted")
+    return invalid(
+      "waitlisted",
+      `${pass.name} is on the waitlist and doesn't have a seat.`,
+    );
 
-  const event = await db.prepare("SELECT status FROM events WHERE id = ?").bind(input.eventId).first<{ status: string }>();
-  if (!event || event.status !== "published") return invalid("event_closed", "This event isn't open for check-in.");
+  const event = await db
+    .prepare("SELECT status FROM events WHERE id = ?")
+    .bind(input.eventId)
+    .first<{ status: string }>();
+  if (!event || event.status !== "published")
+    return invalid("event_closed", "This event isn't open for check-in.");
 
   // 3. Already inside? (Checked before the payment question, so the volunteer isn't asked to collect twice.)
-  const existing = await db.prepare("SELECT scanned_at FROM checkins WHERE registration_id = ?").bind(pass.reg_id).first<{ scanned_at: string }>();
-  if (existing) return { result: "already_in", color: "red", name: pass.name, passCode: pass.pass_code, scannedAt: existing.scanned_at };
+  const existing = await db
+    .prepare("SELECT scanned_at FROM checkins WHERE registration_id = ?")
+    .bind(pass.reg_id)
+    .first<{ scanned_at: string }>();
+  if (existing)
+    return {
+      result: "already_in",
+      color: "red",
+      name: pass.name,
+      passCode: pass.pass_code,
+      scannedAt: existing.scanned_at,
+    };
 
   // 4. Paid event, not paid yet: the volunteer collects the fee, then taps Admit (acceptUnpaid).
   const unpaid = pass.price_paise > 0 && pass.payment_status !== "paid";
   if (unpaid && !input.acceptUnpaid) {
-    return { result: "unpaid", color: "amber", name: pass.name, passCode: pass.pass_code, amountPaise: pass.price_paise, claimedUtr: pass.upi_utr };
+    return {
+      result: "unpaid",
+      color: "amber",
+      name: pass.name,
+      passCode: pass.pass_code,
+      amountPaise: pass.price_paise,
+      claimedUtr: pass.upi_utr,
+    };
   }
 
   // 5. Admit. One statement; the UNIQUE constraints make a second scan a no-op.
@@ -111,30 +193,80 @@ export async function checkIn(db: D1Database, input: CheckInInput): Promise<Scan
        SELECT ?, r.id, r.event_id, ?, ?, ?, 'qr' FROM registrations r WHERE r.id = ? AND r.status = 'registered'
        ON CONFLICT DO NOTHING`,
     )
-    .bind(newId(), scannedAt, input.deviceId ?? null, input.clientScanId, pass.reg_id)
+    .bind(
+      newId(),
+      scannedAt,
+      input.deviceId ?? null,
+      input.clientScanId,
+      pass.reg_id,
+    )
     .run();
 
   if ((res.meta.changes ?? 0) === 1) {
     await db
-      .prepare("INSERT INTO audit_log (id, actor_id, action, target_id, meta, created_at) VALUES (?, ?, 'checkin', ?, ?, ?)")
-      .bind(newId(), input.actorId ?? null, pass.reg_id, JSON.stringify({ event_id: input.eventId, client_scan_id: input.clientScanId, ...(unpaid ? { unpaid_admitted: true } : {}) }), now.toISOString())
+      .prepare(
+        "INSERT INTO audit_log (id, actor_id, action, target_id, meta, created_at) VALUES (?, ?, 'checkin', ?, ?, ?)",
+      )
+      .bind(
+        newId(),
+        input.actorId ?? null,
+        pass.reg_id,
+        JSON.stringify({
+          event_id: input.eventId,
+          client_scan_id: input.clientScanId,
+          ...(unpaid ? { unpaid_admitted: true } : {}),
+        }),
+        now.toISOString(),
+      )
       .run();
     await issueOnCheckIn(db, pass.reg_id, input.eventId, now);
     await enqueueCheckedIn(db, pass.reg_id, now);
-    return { result: "admitted", color: "green", name: pass.name, passCode: pass.pass_code, scannedAt, replay: false };
+    return {
+      result: "admitted",
+      color: "green",
+      name: pass.name,
+      passCode: pass.pass_code,
+      scannedAt,
+      replay: false,
+    };
   }
 
   // Lost a race: another device admitted this pass a moment ago (or this same scan id did).
-  const winner = await db.prepare("SELECT scanned_at, client_scan_id FROM checkins WHERE registration_id = ?").bind(pass.reg_id).first<{ scanned_at: string; client_scan_id: string | null }>();
+  const winner = await db
+    .prepare(
+      "SELECT scanned_at, client_scan_id FROM checkins WHERE registration_id = ?",
+    )
+    .bind(pass.reg_id)
+    .first<{ scanned_at: string; client_scan_id: string | null }>();
   if (winner?.client_scan_id === input.clientScanId) {
-    return { result: "admitted", color: "green", name: pass.name, passCode: pass.pass_code, scannedAt: winner.scanned_at, replay: true };
+    return {
+      result: "admitted",
+      color: "green",
+      name: pass.name,
+      passCode: pass.pass_code,
+      scannedAt: winner.scanned_at,
+      replay: true,
+    };
   }
-  if (winner) return { result: "already_in", color: "red", name: pass.name, passCode: pass.pass_code, scannedAt: winner.scanned_at };
-  return invalid("cancelled", "This registration changed while scanning. Scan again.");
+  if (winner)
+    return {
+      result: "already_in",
+      color: "red",
+      name: pass.name,
+      passCode: pass.pass_code,
+      scannedAt: winner.scanned_at,
+    };
+  return invalid(
+    "cancelled",
+    "This registration changed while scanning. Scan again.",
+  );
 }
 
 /** How many people are inside, and how many have a seat. */
-export async function gateCounts(db: D1Database, eventId: string): Promise<{ checkedIn: number; registered: number }> {
+export async function gateCounts(
+  db: D1Database,
+  eventId: string,
+): Promise<{ checkedIn: number; registered: number }> {
   const row = await db
     .prepare(
       `SELECT (SELECT COUNT(*) FROM checkins WHERE event_id = ?1) AS checkedIn,
@@ -149,8 +281,13 @@ export async function gateCounts(db: D1Database, eventId: string): Promise<{ che
 
 /** SHA-256 of a pass token, hex. The scanner compares hashes, so the list can't be used to make passes. */
 export async function tokenHash(token: string): Promise<string> {
-  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(extractPassToken(token)));
-  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(extractPassToken(token)),
+  );
+  return [...new Uint8Array(digest)]
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export interface ManifestEntry {
@@ -176,8 +313,15 @@ export interface Manifest {
 }
 
 /** Everyone with a seat, for offline checking. No phone numbers, no emails, no raw tokens. */
-export async function buildManifest(db: D1Database, eventId: string, now = new Date()): Promise<Manifest | null> {
-  const event = await db.prepare("SELECT id, title, price_paise FROM events WHERE id = ?").bind(eventId).first<{ id: string; title: string; price_paise: number }>();
+export async function buildManifest(
+  db: D1Database,
+  eventId: string,
+  now = new Date(),
+): Promise<Manifest | null> {
+  const event = await db
+    .prepare("SELECT id, title, price_paise FROM events WHERE id = ?")
+    .bind(eventId)
+    .first<{ id: string; title: string; price_paise: number }>();
   if (!event) return null;
   const rows = await db
     .prepare(
@@ -186,14 +330,37 @@ export async function buildManifest(db: D1Database, eventId: string, now = new D
         WHERE r.event_id = ? AND r.status = 'registered'`,
     )
     .bind(eventId)
-    .all<{ id: string; pass_token: string; pass_code: string; payment_status: string; name: string; scanned_at: string | null }>();
-  const items = await db.prepare("SELECT id, name, variant, stock FROM merch_items WHERE event_id = ? ORDER BY created_at, id").bind(eventId).all<{ id: string; name: string; variant: string | null; stock: number | null }>();
+    .all<{
+      id: string;
+      pass_token: string;
+      pass_code: string;
+      payment_status: string;
+      name: string;
+      scanned_at: string | null;
+    }>();
+  const items = await db
+    .prepare(
+      "SELECT id, name, variant, stock FROM merch_items WHERE event_id = ? ORDER BY created_at, id",
+    )
+    .bind(eventId)
+    .all<{
+      id: string;
+      name: string;
+      variant: string | null;
+      stock: number | null;
+    }>();
   const claims = await db
-    .prepare("SELECT c.registration_id, c.item_id, c.claimed_at FROM merch_claims c JOIN merch_items m ON m.id = c.item_id WHERE m.event_id = ?")
+    .prepare(
+      "SELECT c.registration_id, c.item_id, c.claimed_at FROM merch_claims c JOIN merch_items m ON m.id = c.item_id WHERE m.event_id = ?",
+    )
     .bind(eventId)
     .all<{ registration_id: string; item_id: string; claimed_at: string }>();
   const claimed = new Map<string, Record<string, string>>();
-  for (const c of claims.results ?? []) claimed.set(c.registration_id, { ...claimed.get(c.registration_id), [c.item_id]: c.claimed_at });
+  for (const c of claims.results ?? [])
+    claimed.set(c.registration_id, {
+      ...claimed.get(c.registration_id),
+      [c.item_id]: c.claimed_at,
+    });
   const entries = await Promise.all(
     (rows.results ?? []).map(async (r) => ({
       h: await tokenHash(r.pass_token),
@@ -204,5 +371,16 @@ export async function buildManifest(db: D1Database, eventId: string, now = new D
       m: claimed.get(r.id),
     })),
   );
-  return { eventId: event.id, title: event.title, pricePaise: event.price_paise, generatedAt: now.toISOString(), entries, merch: (items.results ?? []).map((i) => ({ id: i.id, label: i.variant ? `${i.name} · ${i.variant}` : i.name, left: i.stock })) };
+  return {
+    eventId: event.id,
+    title: event.title,
+    pricePaise: event.price_paise,
+    generatedAt: now.toISOString(),
+    entries,
+    merch: (items.results ?? []).map((i) => ({
+      id: i.id,
+      label: i.variant ? `${i.name} · ${i.variant}` : i.name,
+      left: i.stock,
+    })),
+  };
 }

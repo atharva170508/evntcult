@@ -22,7 +22,7 @@ export default async function DashboardPage({
   const viewer = await getViewer();
   // Visitors get the public homepage only: no event data is loaded for them at all.
   if (!viewer) return <PublicHome />;
-  const [landing, month] = await Promise.all([getLandingData(), getDB().then((db) => calendarMonth(db, viewer.id))]);
+  const [landing, month] = await Promise.all([getLandingData({ withPeople: true }), getDB().then((db) => calendarMonth(db, viewer.id))]);
 
   const [data, params] = await Promise.all([
     getDashboardData(viewer),

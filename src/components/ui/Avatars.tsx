@@ -16,9 +16,22 @@ export function Avatars({
   onDark?: boolean;
 }) {
   return (
-    <span className={cn("inline-flex items-center gap-1.5 text-[13px]", onDark ? "text-white/85" : "text-ink-muted", className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 text-[13px]",
+        onDark ? "text-white/85" : "text-ink-muted",
+        className,
+      )}
+    >
       <Users className="size-3.5" aria-hidden />
-      <span className={cn("font-mono font-medium tabular-nums", onDark ? "text-white" : "text-ink")}>{count.toLocaleString("en-IN")}</span>
+      <span
+        className={cn(
+          "font-mono font-medium tabular-nums",
+          onDark ? "text-white" : "text-ink",
+        )}
+      >
+        {count.toLocaleString("en-IN")}
+      </span>
       {label}
     </span>
   );

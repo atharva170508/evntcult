@@ -2,31 +2,74 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Cpu, Drama, Gamepad2, LayoutGrid, Mic, PartyPopper, Ticket, Trophy, Wrench, type LucideIcon } from "lucide-react";
+import {
+  Cpu,
+  Drama,
+  Gamepad2,
+  LayoutGrid,
+  Mic,
+  PartyPopper,
+  Ticket,
+  Trophy,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { m } from "motion/react";
 import { EASE } from "@/components/motion/MotionProvider";
 
-const KINDS: { key: string; label: string; icon: LucideIcon; href: string }[] = [
-  { key: "", label: "All", icon: LayoutGrid, href: "/events" },
-  { key: "TECH", label: "Tech", icon: Cpu, href: "/events?type=TECH" },
-  { key: "CULTURAL", label: "Cultural", icon: Drama, href: "/events?type=CULTURAL" },
-  { key: "SPORTS", label: "Sports", icon: Trophy, href: "/events?type=SPORTS" },
-  { key: "GAMING", label: "Gaming", icon: Gamepad2, href: "/events?type=GAMING" },
-  { key: "WORKSHOP", label: "Workshops", icon: Wrench, href: "/events?type=WORKSHOP" },
-  { key: "TALK", label: "Talks", icon: Mic, href: "/events?type=TALK" },
-  { key: "PARTY", label: "Parties", icon: PartyPopper, href: "/events?type=PARTY" },
-  { key: "free", label: "Free", icon: Ticket, href: "/events?price=free" },
-];
+const KINDS: { key: string; label: string; icon: LucideIcon; href: string }[] =
+  [
+    { key: "", label: "All", icon: LayoutGrid, href: "/events" },
+    { key: "TECH", label: "Tech", icon: Cpu, href: "/events?type=TECH" },
+    {
+      key: "CULTURAL",
+      label: "Cultural",
+      icon: Drama,
+      href: "/events?type=CULTURAL",
+    },
+    {
+      key: "SPORTS",
+      label: "Sports",
+      icon: Trophy,
+      href: "/events?type=SPORTS",
+    },
+    {
+      key: "GAMING",
+      label: "Gaming",
+      icon: Gamepad2,
+      href: "/events?type=GAMING",
+    },
+    {
+      key: "WORKSHOP",
+      label: "Workshops",
+      icon: Wrench,
+      href: "/events?type=WORKSHOP",
+    },
+    { key: "TALK", label: "Talks", icon: Mic, href: "/events?type=TALK" },
+    {
+      key: "PARTY",
+      label: "Parties",
+      icon: PartyPopper,
+      href: "/events?type=PARTY",
+    },
+    { key: "free", label: "Free", icon: Ticket, href: "/events?price=free" },
+  ];
 
 /** Category bar: icon over label, dark underline on the current one. */
 export function KindRail() {
   const pathname = usePathname();
   const params = useSearchParams();
-  const current = pathname === "/events" ? (params.get("type") ?? (params.get("price") === "free" ? "free" : "")) : null;
+  const current =
+    pathname === "/events"
+      ? (params.get("type") ?? (params.get("price") === "free" ? "free" : ""))
+      : null;
 
   return (
-    <nav aria-label="Browse by kind" className="no-scrollbar -mx-gutter flex gap-8 overflow-x-auto px-gutter sm:mx-0 sm:px-0 md:gap-10">
+    <nav
+      aria-label="Browse by kind"
+      className="no-scrollbar -mx-gutter flex gap-8 overflow-x-auto px-gutter sm:mx-0 sm:px-0 md:gap-10"
+    >
       {KINDS.map((k) => {
         const active = current === k.key;
         return (
@@ -39,12 +82,24 @@ export function KindRail() {
               active ? "text-ink" : "text-ink-muted hover:text-ink",
             )}
           >
-            <k.icon className="size-6 transition-transform duration-base ease-out group-hover:-translate-y-0.5" strokeWidth={1.6} aria-hidden />
+            <k.icon
+              className="size-6 transition-transform duration-base ease-out group-hover:-translate-y-0.5"
+              strokeWidth={1.6}
+              aria-hidden
+            />
             {k.label}
             {active ? (
-              <m.span layoutId="kind-underline" aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] bg-ink" transition={{ duration: 0.25, ease: EASE }} />
+              <m.span
+                layoutId="kind-underline"
+                aria-hidden
+                className="absolute inset-x-0 bottom-0 h-[2px] bg-ink"
+                transition={{ duration: 0.25, ease: EASE }}
+              />
             ) : (
-              <span aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] bg-line-strong opacity-0 transition-opacity group-hover:opacity-100" />
+              <span
+                aria-hidden
+                className="absolute inset-x-0 bottom-0 h-[2px] bg-line-strong opacity-0 transition-opacity group-hover:opacity-100"
+              />
             )}
           </Link>
         );

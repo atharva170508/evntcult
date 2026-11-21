@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { SearchDialog } from "@/components/site/SearchDialog";
 import { TabBar } from "@/components/site/TabBar";
 import { EnterCodeDialog } from "./EnterCodeDialog";
+import { SheenTracker } from "@/components/ui/SheenTracker";
 import { workspaceFor } from "./nav";
 
 export type { NavViewer };
@@ -51,6 +52,7 @@ export function AppShell({
 
   return (
     <div className="flex min-h-dvh flex-col overflow-x-clip">
+      <SheenTracker />
       <SiteHeader viewer={viewer} wide={wide} onSearch={() => setSearchOpen(true)} onEnterCode={() => setCodeOpen(true)} />
       <main
         id="main"

@@ -33,7 +33,13 @@ const IST_OFFSET_MS = 5.5 * 3_600_000;
 export function monthRange(ym: string | undefined, now: Date = new Date()) {
   let y: number, m: number; // m is 0-based
   const match = ym?.match(/^(\d{4})-(\d{2})$/);
-  if (match && +match[2] >= 1 && +match[2] <= 12 && +match[1] >= 2000 && +match[1] <= 2100) {
+  if (
+    match &&
+    +match[2] >= 1 &&
+    +match[2] <= 12 &&
+    +match[1] >= 2000 &&
+    +match[1] <= 2100
+  ) {
     y = +match[1];
     m = +match[2] - 1;
   } else {
@@ -47,12 +53,24 @@ export function monthRange(ym: string | undefined, now: Date = new Date()) {
     const d = new Date(Date.UTC(yy, mm, 1));
     return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
   };
-  return { year: y, month: m, start, end, key: key(y, m), prev: key(y, m - 1), next: key(y, m + 1) };
+  return {
+    year: y,
+    month: m,
+    start,
+    end,
+    key: key(y, m),
+    prev: key(y, m - 1),
+    next: key(y, m + 1),
+  };
 }
 
-const istDay = (iso: string) => new Date(Date.parse(iso) + IST_OFFSET_MS).toISOString().slice(0, 10);
+const istDay = (iso: string) =>
+  new Date(Date.parse(iso) + IST_OFFSET_MS).toISOString().slice(0, 10);
 
-export async function monthEvents(db: D1Database, opts: { viewerId: string | null; start: Date; end: Date; onlyMine?: boolean }): Promise<CalendarEvent[]> {
+export async function monthEvents(
+  db: D1Database,
+  opts: { viewerId: string | null; start: Date; end: Date; onlyMine?: boolean },
+): Promise<CalendarEvent[]> {
   const rows = await db
     .prepare(
       `SELECT e.id, e.slug, e.title, COALESCE(e.category, 'TALK') AS category, COALESCE(e.venue, 'TBA') AS venue, e.starts_at, e.ends_at, e.status, e.access, e.price_paise,
@@ -110,7 +128,10 @@ export function monthGrid(year: number, month: number): (string | null)[] {
   const days = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
   const lead = (first.getUTCDay() + 6) % 7;
   const cells: (string | null)[] = Array(lead).fill(null);
-  for (let d = 1; d <= days; d++) cells.push(`${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`);
+  for (let d = 1; d <= days; d++)
+    cells.push(
+      `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`,
+    );
   while (cells.length % 7) cells.push(null);
   return cells;
 }
@@ -123,19 +144,68 @@ export interface MonthPayload {
   label: string;
   today: string;
   cells: (string | null)[];
-  events: Pick<CalendarEvent, "id" | "slug" | "title" | "venue" | "startsAt" | "day" | "mine" | "hosting" | "status" | "pricePaise">[];
+  events: Pick<
+    CalendarEvent,
+    | "id"
+    | "slug"
+    | "title"
+    | "venue"
+    | "startsAt"
+    | "day"
+    | "mine"
+    | "hosting"
+    | "status"
+    | "pricePaise"
+  >[];
 }
 
-export async function calendarMonth(db: D1Database, viewerId: string | null, ym?: string, now: Date = new Date()): Promise<MonthPayload> {
+export async function calendarMonth(
+  db: D1Database,
+  viewerId: string | null,
+  ym?: string,
+  now: Date = new Date(),
+): Promise<MonthPayload> {
   const r = monthRange(ym, now);
-  const events = await monthEvents(db, { viewerId, start: r.start, end: r.end });
+  const events = await monthEvents(db, {
+    viewerId,
+    start: r.start,
+    end: r.end,
+  });
   return {
     key: r.key,
     prev: r.prev,
     next: r.next,
-    label: new Intl.DateTimeFormat("en-IN", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(r.year, r.month, 1))),
+    label: new Intl.DateTimeFormat("en-IN", {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(new Date(Date.UTC(r.year, r.month, 1))),
     today: istDay(now.toISOString()),
     cells: monthGrid(r.year, r.month),
-    events: events.map(({ id, slug, title, venue, startsAt, day, mine, hosting, status, pricePaise }) => ({ id, slug, title, venue, startsAt, day, mine, hosting, status, pricePaise })),
+    events: events.map(
+      ({
+        id,
+        slug,
+        title,
+        venue,
+        startsAt,
+        day,
+        mine,
+        hosting,
+        status,
+        pricePaise,
+      }) => ({
+        id,
+        slug,
+        title,
+        venue,
+        startsAt,
+        day,
+        mine,
+        hosting,
+        status,
+        pricePaise,
+      }),
+    ),
   };
 }

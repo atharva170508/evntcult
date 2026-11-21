@@ -9,7 +9,15 @@ import { EASE } from "@/components/motion/MotionProvider";
  * A native <dialog> that rises from the bottom on phones and slides in from the right on
  * larger screens. Focus is trapped, the page behind is inert, Escape and the backdrop close it.
  */
-export function Sheet({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+export function Sheet({
+  title,
+  onClose,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <ModalDialog label={title} onClose={onClose}>
       <m.button

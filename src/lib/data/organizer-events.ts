@@ -11,7 +11,16 @@ import { detectClashes, type Clash } from "@/lib/clash";
 import { bufferFor } from "@/lib/venues";
 import { newAccessCode, newId } from "@/lib/tokens";
 import type { EventRow } from "@/lib/data/types";
-import { istToIso, istDate, istTime, missingForPublish, normalizeCode, slugify, type CalendarEvent, type PublishField } from "@/lib/organizer/shared";
+import {
+  istToIso,
+  istDate,
+  istTime,
+  missingForPublish,
+  normalizeCode,
+  slugify,
+  type CalendarEvent,
+  type PublishField,
+} from "@/lib/organizer/shared";
 
 export class OrganizerError extends Error {
   constructor(
@@ -52,50 +61,115 @@ export interface EventFields {
   venueAddress?: string | null;
 }
 
-const SEATS = "(SELECT COUNT(*) FROM registrations r WHERE r.event_id = events.id AND r.status IN ('registered','waitlisted'))";
+const SEATS =
+  "(SELECT COUNT(*) FROM registrations r WHERE r.event_id = events.id AND r.status IN ('registered','waitlisted'))";
 
-async function audit(db: D1Database, actor: string, action: string, target: string, meta: Record<string, unknown>, now: Date) {
-  await db.prepare("INSERT INTO audit_log (id, actor_id, action, target_id, meta, created_at) VALUES (?, ?, ?, ?, ?, ?)").bind(newId(), actor, action, target, JSON.stringify(meta), now.toISOString()).run();
+async function audit(
+  db: D1Database,
+  actor: string,
+  action: string,
+  target: string,
+  meta: Record<string, unknown>,
+  now: Date,
+) {
+  await db
+    .prepare(
+      "INSERT INTO audit_log (id, actor_id, action, target_id, meta, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+    )
+    .bind(
+      newId(),
+      actor,
+      action,
+      target,
+      JSON.stringify(meta),
+      now.toISOString(),
+    )
+    .run();
 }
 
-const isUnique = (e: unknown, what: string) => e instanceof Error && /UNIQUE/i.test(e.message) && e.message.includes(what);
+const isUnique = (e: unknown, what: string) =>
+  e instanceof Error && /UNIQUE/i.test(e.message) && e.message.includes(what);
 
-async function freeSlug(db: D1Database, wanted: string, exceptId?: string): Promise<string> {
+async function freeSlug(
+  db: D1Database,
+  wanted: string,
+  exceptId?: string,
+): Promise<string> {
   const base = slugify(wanted);
   for (let n = 1; n < 500; n++) {
     const candidate = n === 1 ? base : `${base.slice(0, 56)}-${n}`;
-    const row = await db.prepare("SELECT id FROM events WHERE slug = ?").bind(candidate).first<{ id: string }>();
+    const row = await db
+      .prepare("SELECT id FROM events WHERE slug = ?")
+      .bind(candidate)
+      .first<{ id: string }>();
     if (!row || row.id === exceptId) return candidate;
   }
-  throw new OrganizerError(409, "slug_taken", "Pick a different link for this event.");
+  throw new OrganizerError(
+    409,
+    "slug_taken",
+    "Pick a different link for this event.",
+  );
 }
 
 /** The venue this organizer used last, so a new event starts with it filled in. */
-export async function lastVenue(db: D1Database, ownerId: string): Promise<string | null> {
+export async function lastVenue(
+  db: D1Database,
+  ownerId: string,
+): Promise<string | null> {
   const row = await db
-    .prepare("SELECT venue FROM events WHERE organizer_id = ? AND venue IS NOT NULL AND venue_status = 'confirmed' ORDER BY created_at DESC, rowid DESC LIMIT 1")
+    .prepare(
+      "SELECT venue FROM events WHERE organizer_id = ? AND venue IS NOT NULL AND venue_status = 'confirmed' ORDER BY created_at DESC, rowid DESC LIMIT 1",
+    )
     .bind(ownerId)
     .first<{ venue: string }>();
   return row?.venue ?? null;
 }
 
-export async function defaultPayoutUpi(db: D1Database, ownerId: string): Promise<string | null> {
-  return (await db.prepare("SELECT default_payout_upi AS u FROM users WHERE id = ?").bind(ownerId).first<{ u: string | null }>())?.u ?? null;
+export async function defaultPayoutUpi(
+  db: D1Database,
+  ownerId: string,
+): Promise<string | null> {
+  return (
+    (
+      await db
+        .prepare("SELECT default_payout_upi AS u FROM users WHERE id = ?")
+        .bind(ownerId)
+        .first<{ u: string | null }>()
+    )?.u ?? null
+  );
 }
 
 /** First save of a new event. Hosting makes an attendee an organizer, so the tools for their own events work. */
-export async function createDraft(db: D1Database, owner: Owner, input: EventFields & { title: string }, now = new Date()) {
-  if (owner.role !== "organizer" && owner.role !== "admin") throw new OrganizerError(403, "not_approved", "Hosting is for approved organizers. Apply from your account menu.");
+export async function createDraft(
+  db: D1Database,
+  owner: Owner,
+  input: EventFields & { title: string },
+  now = new Date(),
+) {
+  if (owner.role !== "organizer" && owner.role !== "admin")
+    throw new OrganizerError(
+      403,
+      "not_approved",
+      "Hosting is for approved organizers. Apply from your account menu.",
+    );
   const date = input.date ?? istDate(now);
   const time = input.time ?? "18:00";
   const startsAt = istToIso(date, time);
-  const endsAt = new Date(Date.parse(startsAt) + (input.durationMinutes ?? 120) * 60_000).toISOString();
+  const endsAt = new Date(
+    Date.parse(startsAt) + (input.durationMinutes ?? 120) * 60_000,
+  ).toISOString();
   const id = newId();
   const slug = await freeSlug(db, input.slug || input.title);
-  const venue = input.venue === undefined ? await lastVenue(db, owner.id) : input.venue;
+  const venue =
+    input.venue === undefined ? await lastVenue(db, owner.id) : input.venue;
   const capacity = input.capacity === undefined ? 100 : input.capacity;
   const access = input.access ?? "public";
-  const code = access === "code" ? (input.accessCode ? normalizeCode(input.accessCode) : newAccessCode()) : null;
+  const code =
+    access === "code"
+      ? input.accessCode
+        ? normalizeCode(input.accessCode)
+        : newAccessCode()
+      : null;
   const iso = now.toISOString();
   try {
     await db
@@ -104,36 +178,90 @@ export async function createDraft(db: D1Database, owner: Owner, input: EventFiel
                              price_paise, organizer_upi_id, access, access_code, link_url, venue_place_id, venue_lat, venue_lng, venue_address, status, version, created_at, updated_at)
          VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?18,?19,?20,?21,?22,'draft',1,?17,?17)`,
       )
-      .bind(id, slug, owner.id, input.title, input.tagline ?? null, input.description ?? null, input.category ?? null, venue, input.venueStatus ?? "confirmed", startsAt, endsAt, capacity, input.pricePaise ?? 0, input.payoutUpi ?? null, access, code, iso, input.linkUrl ?? null, input.venuePlaceId ?? null, input.venueLat ?? null, input.venueLng ?? null, input.venueAddress ?? null)
+      .bind(
+        id,
+        slug,
+        owner.id,
+        input.title,
+        input.tagline ?? null,
+        input.description ?? null,
+        input.category ?? null,
+        venue,
+        input.venueStatus ?? "confirmed",
+        startsAt,
+        endsAt,
+        capacity,
+        input.pricePaise ?? 0,
+        input.payoutUpi ?? null,
+        access,
+        code,
+        iso,
+        input.linkUrl ?? null,
+        input.venuePlaceId ?? null,
+        input.venueLat ?? null,
+        input.venueLng ?? null,
+        input.venueAddress ?? null,
+      )
       .run();
   } catch (e) {
-    if (isUnique(e, "access_code")) throw new OrganizerError(409, "code_taken", "That code is taken. Try another.");
+    if (isUnique(e, "access_code"))
+      throw new OrganizerError(
+        409,
+        "code_taken",
+        "That code is taken. Try another.",
+      );
     throw e;
   }
   await audit(db, owner.id, "event_create", id, { slug, draft: true }, now);
   return { id, slug, version: 1, access_code: code };
 }
 
-const getRow = (db: D1Database, id: string) => db.prepare("SELECT * FROM events WHERE id = ?").bind(id).first<EventRow>();
+const getRow = (db: D1Database, id: string) =>
+  db.prepare("SELECT * FROM events WHERE id = ?").bind(id).first<EventRow>();
 
 /** Autosave and every other edit. Fields left out keep their current value. */
-export async function saveEvent(db: D1Database, owner: Owner, id: string, version: number, input: EventFields, now = new Date()) {
+export async function saveEvent(
+  db: D1Database,
+  owner: Owner,
+  id: string,
+  version: number,
+  input: EventFields,
+  now = new Date(),
+) {
   const cur = await getRow(db, id);
   if (!cur) throw new OrganizerError(404, "not_found", "Event not found.");
 
   const curStart = new Date(cur.starts_at);
-  const curMinutes = Math.round((Date.parse(cur.ends_at) - curStart.getTime()) / 60_000);
-  const startsAt = input.date || input.time ? istToIso(input.date ?? istDate(curStart), input.time ?? istTime(curStart)) : cur.starts_at;
-  const endsAt = new Date(Date.parse(startsAt) + (input.durationMinutes ?? curMinutes) * 60_000).toISOString();
+  const curMinutes = Math.round(
+    (Date.parse(cur.ends_at) - curStart.getTime()) / 60_000,
+  );
+  const startsAt =
+    input.date || input.time
+      ? istToIso(
+          input.date ?? istDate(curStart),
+          input.time ?? istTime(curStart),
+        )
+      : cur.starts_at;
+  const endsAt = new Date(
+    Date.parse(startsAt) + (input.durationMinutes ?? curMinutes) * 60_000,
+  ).toISOString();
 
-  const pick = <T,>(v: T | undefined, c: T) => (v === undefined ? c : v);
+  const pick = <T>(v: T | undefined, c: T) => (v === undefined ? c : v);
   const access = input.access ?? cur.access;
-  const wantedCode = input.accessCode === undefined ? cur.access_code : input.accessCode ? normalizeCode(input.accessCode) : null;
+  const wantedCode =
+    input.accessCode === undefined
+      ? cur.access_code
+      : input.accessCode
+        ? normalizeCode(input.accessCode)
+        : null;
   // Switching to Code without typing one yet: generate it, so the row is always valid.
   const code = access === "code" ? (wantedCode ?? newAccessCode()) : wantedCode;
   const next = {
     title: input.title ?? cur.title,
-    slug: input.slug && input.slug !== cur.slug ? await freeSlug(db, input.slug, id) : cur.slug,
+    slug:
+      input.slug && input.slug !== cur.slug
+        ? await freeSlug(db, input.slug, id)
+        : cur.slug,
     tagline: pick(input.tagline, cur.tagline),
     description: pick(input.description, cur.description),
     category: pick(input.category, cur.category),
@@ -152,12 +280,45 @@ export async function saveEvent(db: D1Database, owner: Owner, id: string, versio
   if (cur.status === "published") {
     // Only what this edit newly breaks. Older events can predate these rules and must stay editable.
     const before = missingForPublish(cur);
-    const missing = missingForPublish({ ...cur, title: next.title, category: next.category, venue: next.venue, venue_status: next.venueStatus, description: next.description, price_paise: next.price, organizer_upi_id: next.upi, access, access_code: code }).filter((m) => !before.includes(m));
-    if (missing.length) throw new OrganizerError(422, "incomplete", "A published event needs these filled in.", { missing });
-    const slotMoved = startsAt !== cur.starts_at || endsAt !== cur.ends_at || next.venue !== cur.venue;
+    const missing = missingForPublish({
+      ...cur,
+      title: next.title,
+      category: next.category,
+      venue: next.venue,
+      venue_status: next.venueStatus,
+      description: next.description,
+      price_paise: next.price,
+      organizer_upi_id: next.upi,
+      access,
+      access_code: code,
+    }).filter((m) => !before.includes(m));
+    if (missing.length)
+      throw new OrganizerError(
+        422,
+        "incomplete",
+        "A published event needs these filled in.",
+        { missing },
+      );
+    const slotMoved =
+      startsAt !== cur.starts_at ||
+      endsAt !== cur.ends_at ||
+      next.venue !== cur.venue;
     if (slotMoved && next.venue) {
-      const hard = (await clashesFor(db, { id, venue: next.venue, startsAt, endsAt, category: next.category })).filter((c) => c.severity === "hard");
-      if (hard.length) throw new OrganizerError(409, "venue_clash", `${hard[0].reason} Pick another time or venue.`);
+      const hard = (
+        await clashesFor(db, {
+          id,
+          venue: next.venue,
+          startsAt,
+          endsAt,
+          category: next.category,
+        })
+      ).filter((c) => c.severity === "hard");
+      if (hard.length)
+        throw new OrganizerError(
+          409,
+          "venue_clash",
+          `${hard[0].reason} Pick another time or venue.`,
+        );
     }
   }
 
@@ -172,36 +333,135 @@ export async function saveEvent(db: D1Database, owner: Owner, id: string, versio
         WHERE id=?1 AND version=?17 AND COALESCE(?11, 1e18) >= ${SEATS} ${ownerClause}
         RETURNING version`,
     );
-    const args = [id, next.title, next.slug, next.tagline, next.description, next.category, next.venue, next.venueStatus, startsAt, endsAt, next.capacity, next.price, next.upi, access, code, iso, version, next.link, next.placeId, next.lat, next.lng, next.address];
-    row = await (owner.role === "admin" ? stmt.bind(...args) : stmt.bind(...args, owner.id)).first<{ version: number }>();
+    const args = [
+      id,
+      next.title,
+      next.slug,
+      next.tagline,
+      next.description,
+      next.category,
+      next.venue,
+      next.venueStatus,
+      startsAt,
+      endsAt,
+      next.capacity,
+      next.price,
+      next.upi,
+      access,
+      code,
+      iso,
+      version,
+      next.link,
+      next.placeId,
+      next.lat,
+      next.lng,
+      next.address,
+    ];
+    row = await (
+      owner.role === "admin" ? stmt.bind(...args) : stmt.bind(...args, owner.id)
+    ).first<{ version: number }>();
   } catch (e) {
-    if (isUnique(e, "access_code")) throw new OrganizerError(409, "code_taken", "That code is taken. Try another.");
-    if (isUnique(e, "slug")) throw new OrganizerError(409, "slug_taken", "That link is taken. Try another.");
+    if (isUnique(e, "access_code"))
+      throw new OrganizerError(
+        409,
+        "code_taken",
+        "That code is taken. Try another.",
+      );
+    if (isUnique(e, "slug"))
+      throw new OrganizerError(
+        409,
+        "slug_taken",
+        "That link is taken. Try another.",
+      );
     throw e;
   }
-  if (row && cur.status === "published" && (startsAt !== cur.starts_at || endsAt !== cur.ends_at || next.venue !== cur.venue)) await onMaterialChange(db, id, startsAt, now);
+  if (
+    row &&
+    cur.status === "published" &&
+    (startsAt !== cur.starts_at ||
+      endsAt !== cur.ends_at ||
+      next.venue !== cur.venue)
+  )
+    await onMaterialChange(db, id, startsAt, now);
   if (!row) {
     const now2 = await getRow(db, id);
-    if (now2 && now2.version !== version) throw new OrganizerError(409, "version_conflict", "This event changed somewhere else. Reload to get the latest.", { version: now2.version });
-    const taken = await db.prepare(`SELECT ${SEATS} AS n FROM events WHERE id = ?`).bind(id).first<{ n: number }>();
-    if (next.capacity !== null && taken && next.capacity < taken.n) throw new OrganizerError(409, "capacity_below_registrations", `Capacity can't go below the ${taken.n} seats already taken.`);
-    throw new OrganizerError(403, "forbidden", "You can only manage your own events.");
+    if (now2 && now2.version !== version)
+      throw new OrganizerError(
+        409,
+        "version_conflict",
+        "This event changed somewhere else. Reload to get the latest.",
+        { version: now2.version },
+      );
+    const taken = await db
+      .prepare(`SELECT ${SEATS} AS n FROM events WHERE id = ?`)
+      .bind(id)
+      .first<{ n: number }>();
+    if (next.capacity !== null && taken && next.capacity < taken.n)
+      throw new OrganizerError(
+        409,
+        "capacity_below_registrations",
+        `Capacity can't go below the ${taken.n} seats already taken.`,
+      );
+    throw new OrganizerError(
+      403,
+      "forbidden",
+      "You can only manage your own events.",
+    );
   }
-  await audit(db, owner.id, "event_update", id, { fields: Object.keys(input), version: row.version }, now);
+  await audit(
+    db,
+    owner.id,
+    "event_update",
+    id,
+    { fields: Object.keys(input), version: row.version },
+    now,
+  );
   if (next.price > 0 && next.upi && next.upi !== cur.organizer_upi_id) {
-    await db.prepare("UPDATE users SET default_payout_upi = ? WHERE id = ?").bind(next.upi, owner.id).run();
+    await db
+      .prepare("UPDATE users SET default_payout_upi = ? WHERE id = ?")
+      .bind(next.upi, owner.id)
+      .run();
   }
   return { version: row.version, slug: next.slug, access_code: code };
 }
 
-export async function clashesFor(db: D1Database, slot: { id?: string; venue: string | null; startsAt: string; endsAt: string; category: string | null }): Promise<Clash[]> {
+export async function clashesFor(
+  db: D1Database,
+  slot: {
+    id?: string;
+    venue: string | null;
+    startsAt: string;
+    endsAt: string;
+    category: string | null;
+  },
+): Promise<Clash[]> {
   const DAY = 86_400_000;
   const rows = await db
-    .prepare(`SELECT id, title, venue, starts_at, ends_at, category, capacity FROM events WHERE status = 'published' AND id != ? AND starts_at < ? AND ends_at > ?`)
-    .bind(slot.id ?? "", new Date(Date.parse(slot.endsAt) + DAY).toISOString(), new Date(Date.parse(slot.startsAt) - DAY).toISOString())
-    .all<{ id: string; title: string; venue: string | null; starts_at: string; ends_at: string; category: string | null; capacity: number | null }>();
+    .prepare(
+      `SELECT id, title, venue, starts_at, ends_at, category, capacity FROM events WHERE status = 'published' AND id != ? AND starts_at < ? AND ends_at > ?`,
+    )
+    .bind(
+      slot.id ?? "",
+      new Date(Date.parse(slot.endsAt) + DAY).toISOString(),
+      new Date(Date.parse(slot.startsAt) - DAY).toISOString(),
+    )
+    .all<{
+      id: string;
+      title: string;
+      venue: string | null;
+      starts_at: string;
+      ends_at: string;
+      category: string | null;
+      capacity: number | null;
+    }>();
   return detectClashes(
-    { id: slot.id, venueId: slot.venue ?? "(no venue yet)", startsAt: new Date(slot.startsAt), endsAt: new Date(slot.endsAt), category: slot.category ?? "" },
+    {
+      id: slot.id,
+      venueId: slot.venue ?? "(no venue yet)",
+      startsAt: new Date(slot.startsAt),
+      endsAt: new Date(slot.endsAt),
+      category: slot.category ?? "",
+    },
     rows.results.map((r) => ({
       id: r.id,
       title: r.title,
@@ -218,19 +478,48 @@ export async function clashesFor(db: D1Database, slot: { id?: string; venue: str
 }
 
 /** Returns the list of what's missing, never a generic error. */
-export async function publishEvent(db: D1Database, owner: Owner, id: string, version: number, opts: { acknowledgeSoftClashes?: boolean } = {}, now = new Date()) {
+export async function publishEvent(
+  db: D1Database,
+  owner: Owner,
+  id: string,
+  version: number,
+  opts: { acknowledgeSoftClashes?: boolean } = {},
+  now = new Date(),
+) {
   const cur = await getRow(db, id);
   if (!cur) throw new OrganizerError(404, "not_found", "Event not found.");
   const missing: PublishField[] = missingForPublish(cur);
-  if (missing.length) throw new OrganizerError(422, "incomplete", "Fill these in to publish.", { missing });
-  if (Date.parse(cur.ends_at) <= now.getTime()) throw new OrganizerError(422, "ended", "This event is already over. Pick a later date to publish it.");
+  if (missing.length)
+    throw new OrganizerError(422, "incomplete", "Fill these in to publish.", {
+      missing,
+    });
+  if (Date.parse(cur.ends_at) <= now.getTime())
+    throw new OrganizerError(
+      422,
+      "ended",
+      "This event is already over. Pick a later date to publish it.",
+    );
 
   const online = cur.venue_status !== "confirmed";
-  const clashes = (await clashesFor(db, { id, venue: online ? null : cur.venue, startsAt: cur.starts_at, endsAt: cur.ends_at, category: cur.category })).filter((c) => !(online && c.severity === "hard"));
+  const clashes = (
+    await clashesFor(db, {
+      id,
+      venue: online ? null : cur.venue,
+      startsAt: cur.starts_at,
+      endsAt: cur.ends_at,
+      category: cur.category,
+    })
+  ).filter((c) => !(online && c.severity === "hard"));
   const hard = clashes.find((c) => c.severity === "hard");
-  if (hard) throw new OrganizerError(409, "venue_clash", `${hard.reason} Pick another time or venue.`);
+  if (hard)
+    throw new OrganizerError(
+      409,
+      "venue_clash",
+      `${hard.reason} Pick another time or venue.`,
+    );
   const soft = clashes.find((c) => c.severity === "soft");
-  if (soft && !opts.acknowledgeSoftClashes) throw new OrganizerError(409, "soft_clash", soft.reason);
+  if (soft && !opts.acknowledgeSoftClashes)
+    throw new OrganizerError(409, "soft_clash", soft.reason);
 
   const iso = now.toISOString();
   const res = await db
@@ -239,27 +528,67 @@ export async function publishEvent(db: D1Database, owner: Owner, id: string, ver
     )
     .bind(id, version, iso)
     .first<{ version: number; slug: string }>();
-  if (!res) throw new OrganizerError(409, "version_conflict", "This event changed somewhere else. Reload to get the latest.");
+  if (!res)
+    throw new OrganizerError(
+      409,
+      "version_conflict",
+      "This event changed somewhere else. Reload to get the latest.",
+    );
   await audit(db, owner.id, "event_publish", id, { version: res.version }, now);
   await enqueueSchedule(db, id, now);
   return res;
 }
 
 /** Back to draft. The join code is kept. Refused once people hold passes, so nobody's pass silently vanishes. */
-export async function unpublishEvent(db: D1Database, owner: Owner, id: string, version: number, now = new Date()) {
-  const held = await db.prepare("SELECT COUNT(*) AS n FROM registrations WHERE event_id = ? AND status IN ('registered','waitlisted')").bind(id).first<{ n: number }>();
-  if (held && held.n > 0) throw new OrganizerError(409, "has_registrations", `${held.n} ${held.n === 1 ? "person holds a pass" : "people hold passes"}, so this can't go back to draft.`);
+export async function unpublishEvent(
+  db: D1Database,
+  owner: Owner,
+  id: string,
+  version: number,
+  now = new Date(),
+) {
+  const held = await db
+    .prepare(
+      "SELECT COUNT(*) AS n FROM registrations WHERE event_id = ? AND status IN ('registered','waitlisted')",
+    )
+    .bind(id)
+    .first<{ n: number }>();
+  if (held && held.n > 0)
+    throw new OrganizerError(
+      409,
+      "has_registrations",
+      `${held.n} ${held.n === 1 ? "person holds a pass" : "people hold passes"}, so this can't go back to draft.`,
+    );
   const res = await db
-    .prepare("UPDATE events SET status='draft', updated_at=?3, version=version+1 WHERE id=?1 AND version=?2 AND status='published' RETURNING version")
+    .prepare(
+      "UPDATE events SET status='draft', updated_at=?3, version=version+1 WHERE id=?1 AND version=?2 AND status='published' RETURNING version",
+    )
     .bind(id, version, now.toISOString())
     .first<{ version: number }>();
-  if (!res) throw new OrganizerError(409, "version_conflict", "This event changed somewhere else. Reload to get the latest.");
-  await audit(db, owner.id, "event_unpublish", id, { version: res.version }, now);
+  if (!res)
+    throw new OrganizerError(
+      409,
+      "version_conflict",
+      "This event changed somewhere else. Reload to get the latest.",
+    );
+  await audit(
+    db,
+    owner.id,
+    "event_unpublish",
+    id,
+    { version: res.version },
+    now,
+  );
   return res;
 }
 
 /** A prefilled draft in one call. A join code is never copied: codes are unique. */
-export async function duplicateEvent(db: D1Database, owner: Owner, id: string, now = new Date()) {
+export async function duplicateEvent(
+  db: D1Database,
+  owner: Owner,
+  id: string,
+  now = new Date(),
+) {
   const cur = await getRow(db, id);
   if (!cur) throw new OrganizerError(404, "not_found", "Event not found.");
   const newEventId = newId();
@@ -276,36 +605,96 @@ export async function duplicateEvent(db: D1Database, owner: Owner, id: string, n
     )
     .bind(newEventId, slug, owner.id, title, iso, id)
     .run();
-  await audit(db, owner.id, "event_create", newEventId, { slug, duplicateOf: id }, now);
+  await audit(
+    db,
+    owner.id,
+    "event_create",
+    newEventId,
+    { slug, duplicateOf: id },
+    now,
+  );
   return { id: newEventId, slug, version: 1 };
 }
 
-export async function codeAvailable(db: D1Database, code: string, eventId?: string): Promise<boolean> {
-  const row = await db.prepare("SELECT id FROM events WHERE access_code = ?").bind(normalizeCode(code)).first<{ id: string }>();
+export async function codeAvailable(
+  db: D1Database,
+  code: string,
+  eventId?: string,
+): Promise<boolean> {
+  const row = await db
+    .prepare("SELECT id FROM events WHERE access_code = ?")
+    .bind(normalizeCode(code))
+    .first<{ id: string }>();
   return !row || row.id === eventId;
 }
 
 export const CODE_MISS_LIMIT = 20;
 
 /** /c/:code lookup. Null means no such event; throws once an IP has guessed wrong too often. */
-export async function resolveShortCode(db: D1Database, code: string, ip: string, now = new Date()): Promise<string | null> {
+export async function resolveShortCode(
+  db: D1Database,
+  code: string,
+  ip: string,
+  now = new Date(),
+): Promise<string | null> {
   const since = new Date(now.getTime() - 60_000).toISOString();
-  const misses = (await db.prepare("SELECT COUNT(*) AS n FROM link_code_misses WHERE ip = ? AND at > ?").bind(ip, since).first<{ n: number }>())?.n ?? 0;
-  if (misses >= CODE_MISS_LIMIT) throw new OrganizerError(429, "rate_limited", "Too many wrong codes. Wait a minute and try again.");
+  const misses =
+    (
+      await db
+        .prepare(
+          "SELECT COUNT(*) AS n FROM link_code_misses WHERE ip = ? AND at > ?",
+        )
+        .bind(ip, since)
+        .first<{ n: number }>()
+    )?.n ?? 0;
+  if (misses >= CODE_MISS_LIMIT)
+    throw new OrganizerError(
+      429,
+      "rate_limited",
+      "Too many wrong codes. Wait a minute and try again.",
+    );
   const normal = normalizeCode(code);
-  const row = await db.prepare("SELECT slug FROM events WHERE access_code = ? AND status IN ('published','closed')").bind(normal).first<{ slug: string }>();
+  const row = await db
+    .prepare(
+      "SELECT slug FROM events WHERE access_code = ? AND status IN ('published','closed')",
+    )
+    .bind(normal)
+    .first<{ slug: string }>();
   if (row) return `/events/${row.slug}?code=${encodeURIComponent(normal)}`;
   await db.batch([
-    db.prepare("INSERT INTO link_code_misses (ip, at) VALUES (?, ?)").bind(ip, now.toISOString()),
-    db.prepare("DELETE FROM link_code_misses WHERE at < ?").bind(new Date(now.getTime() - 3_600_000).toISOString()),
+    db
+      .prepare("INSERT INTO link_code_misses (ip, at) VALUES (?, ?)")
+      .bind(ip, now.toISOString()),
+    db
+      .prepare("DELETE FROM link_code_misses WHERE at < ?")
+      .bind(new Date(now.getTime() - 3_600_000).toISOString()),
   ]);
   return null;
 }
 
-type WindowRow = { id: string; slug: string; title: string; category: string | null; venue: string | null; venue_status: string; starts_at: string; ends_at: string; status: string; price_paise: number; capacity: number | null; version: number; taken: number };
+type WindowRow = {
+  id: string;
+  slug: string;
+  title: string;
+  category: string | null;
+  venue: string | null;
+  venue_status: string;
+  starts_at: string;
+  ends_at: string;
+  status: string;
+  price_paise: number;
+  capacity: number | null;
+  version: number;
+  taken: number;
+};
 
 /** This organizer's events overlapping [from, to), plus a clash flag for each. */
-export async function calendarWindow(db: D1Database, ownerId: string, from: string, to: string) {
+export async function calendarWindow(
+  db: D1Database,
+  ownerId: string,
+  from: string,
+  to: string,
+) {
   const rows = await db
     .prepare(
       `SELECT id, slug, title, category, venue, venue_status, starts_at, ends_at, status, price_paise, capacity, version, ${SEATS} AS taken
@@ -315,12 +704,37 @@ export async function calendarWindow(db: D1Database, ownerId: string, from: stri
     .bind(ownerId, from, to)
     .all<WindowRow>();
 
-  const clashes: { eventId: string; title: string; other: string; venue: string | null; severity: string }[] = [];
-  const events: (CalendarEvent & { category: string | null; venue_status: string })[] = [];
+  const clashes: {
+    eventId: string;
+    title: string;
+    other: string;
+    venue: string | null;
+    severity: string;
+  }[] = [];
+  const events: (CalendarEvent & {
+    category: string | null;
+    venue_status: string;
+  })[] = [];
   for (const r of rows.results) {
-    const found = r.venue && r.venue_status === "confirmed" ? await clashesFor(db, { id: r.id, venue: r.venue, startsAt: r.starts_at, endsAt: r.ends_at, category: r.category }) : [];
+    const found =
+      r.venue && r.venue_status === "confirmed"
+        ? await clashesFor(db, {
+            id: r.id,
+            venue: r.venue,
+            startsAt: r.starts_at,
+            endsAt: r.ends_at,
+            category: r.category,
+          })
+        : [];
     const hard = found.filter((c) => c.severity === "hard");
-    for (const c of hard) clashes.push({ eventId: r.id, title: r.title, other: c.title, venue: r.venue, severity: c.severity });
+    for (const c of hard)
+      clashes.push({
+        eventId: r.id,
+        title: r.title,
+        other: c.title,
+        venue: r.venue,
+        severity: c.severity,
+      });
     events.push({ ...r, clash: hard.length > 0 });
   }
   return { events, clashes };
@@ -330,7 +744,15 @@ export interface HomeEvent extends EventRow {
   taken: number;
 }
 
-export async function organizerEvents(db: D1Database, ownerId: string): Promise<HomeEvent[]> {
-  const rows = await db.prepare(`SELECT events.*, ${SEATS} AS taken FROM events WHERE organizer_id = ? ORDER BY starts_at`).bind(ownerId).all<HomeEvent>();
+export async function organizerEvents(
+  db: D1Database,
+  ownerId: string,
+): Promise<HomeEvent[]> {
+  const rows = await db
+    .prepare(
+      `SELECT events.*, ${SEATS} AS taken FROM events WHERE organizer_id = ? ORDER BY starts_at`,
+    )
+    .bind(ownerId)
+    .all<HomeEvent>();
   return rows.results;
 }

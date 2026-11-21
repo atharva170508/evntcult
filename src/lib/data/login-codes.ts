@@ -21,7 +21,12 @@ export const LIMITS = {
 export class LoginCodeError extends Error {
   constructor(
     public status: number,
-    public code: "rate_limited" | "invalid_code" | "code_expired" | "too_many_tries" | "no_code",
+    public code:
+      | "rate_limited"
+      | "invalid_code"
+      | "code_expired"
+      | "too_many_tries"
+      | "no_code",
     message: string,
     public retryAfterSec?: number,
     public triesLeft?: number,
@@ -39,10 +44,26 @@ export function generateCode(): string {
   return String(buf[0] % 1_000_000).padStart(6, "0");
 }
 
-export async function hashCode(secret: string, email: string, code: string): Promise<string> {
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  const mac = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`login:${email}:${code}`));
-  return [...new Uint8Array(mac)].map((b) => b.toString(16).padStart(2, "0")).join("");
+export async function hashCode(
+  secret: string,
+  email: string,
+  code: string,
+): Promise<string> {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const mac = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    new TextEncoder().encode(`login:${email}:${code}`),
+  );
+  return [...new Uint8Array(mac)]
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 /** Compare two equal-length hex strings without stopping at the first difference. */
@@ -53,9 +74,16 @@ function sameHash(a: string, b: string): boolean {
   return diff === 0;
 }
 
-async function countSince(db: D1Database, column: "email" | "ip", value: string, since: Date): Promise<number> {
+async function countSince(
+  db: D1Database,
+  column: "email" | "ip",
+  value: string,
+  since: Date,
+): Promise<number> {
   const row = await db
-    .prepare(`SELECT COUNT(*) AS n FROM login_codes WHERE ${column} = ? AND created_at > ?`)
+    .prepare(
+      `SELECT COUNT(*) AS n FROM login_codes WHERE ${column} = ? AND created_at > ?`,
+    )
     .bind(value, since.toISOString())
     .first<{ n: number }>();
   return row?.n ?? 0;
@@ -73,67 +101,164 @@ export async function issueCode(
   const hourAgo = new Date(now.getTime() - 3_600_000);
 
   const last = await db
-    .prepare("SELECT created_at FROM login_codes WHERE email = ? ORDER BY created_at DESC LIMIT 1")
+    .prepare(
+      "SELECT created_at FROM login_codes WHERE email = ? ORDER BY created_at DESC LIMIT 1",
+    )
     .bind(opts.email)
     .first<{ created_at: string }>();
   if (last) {
-    const wait = Date.parse(last.created_at) + LIMITS.resendGapMs - now.getTime();
-    if (wait > 0) throw new LoginCodeError(429, "rate_limited", "We just sent you a code. Wait a few seconds before asking for another.", Math.ceil(wait / 1000));
+    const wait =
+      Date.parse(last.created_at) + LIMITS.resendGapMs - now.getTime();
+    if (wait > 0)
+      throw new LoginCodeError(
+        429,
+        "rate_limited",
+        "We just sent you a code. Wait a few seconds before asking for another.",
+        Math.ceil(wait / 1000),
+      );
   }
-  if ((await countSince(db, "email", opts.email, hourAgo)) >= LIMITS.perEmailPerHour)
-    throw new LoginCodeError(429, "rate_limited", "Too many codes for this email. Try again in an hour.", 3600);
-  if (opts.ip && (await countSince(db, "ip", opts.ip, hourAgo)) >= LIMITS.perIpPerHour)
-    throw new LoginCodeError(429, "rate_limited", "Too many login attempts from this network. Try again later.", 3600);
+  if (
+    (await countSince(db, "email", opts.email, hourAgo)) >=
+    LIMITS.perEmailPerHour
+  )
+    throw new LoginCodeError(
+      429,
+      "rate_limited",
+      "Too many codes for this email. Try again in an hour.",
+      3600,
+    );
+  if (
+    opts.ip &&
+    (await countSince(db, "ip", opts.ip, hourAgo)) >= LIMITS.perIpPerHour
+  )
+    throw new LoginCodeError(
+      429,
+      "rate_limited",
+      "Too many login attempts from this network. Try again later.",
+      3600,
+    );
 
   const code = generateCode();
   const id = newId();
   const expiresAt = new Date(now.getTime() + CODE_TTL_MS).toISOString();
   await db.batch([
     // Only the newest code works: retire older unused ones.
-    db.prepare("UPDATE login_codes SET used_at = ? WHERE email = ? AND used_at IS NULL").bind(now.toISOString(), opts.email),
     db
-      .prepare("INSERT INTO login_codes (id, email, code_hash, ip, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)")
-      .bind(id, opts.email, await hashCode(opts.secret, opts.email, code), opts.ip, now.toISOString(), expiresAt),
+      .prepare(
+        "UPDATE login_codes SET used_at = ? WHERE email = ? AND used_at IS NULL",
+      )
+      .bind(now.toISOString(), opts.email),
+    db
+      .prepare(
+        "INSERT INTO login_codes (id, email, code_hash, ip, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)",
+      )
+      .bind(
+        id,
+        opts.email,
+        await hashCode(opts.secret, opts.email, code),
+        opts.ip,
+        now.toISOString(),
+        expiresAt,
+      ),
   ]);
   return { id, code, expiresAt };
 }
 
 /** The newest unused code for this email, if any (does not use up a try). */
-export async function pendingCode(db: D1Database, email: string, now: Date = new Date()) {
+export async function pendingCode(
+  db: D1Database,
+  email: string,
+  now: Date = new Date(),
+) {
   const row = await db
-    .prepare("SELECT id, expires_at, attempts FROM login_codes WHERE email = ? AND used_at IS NULL ORDER BY created_at DESC LIMIT 1")
+    .prepare(
+      "SELECT id, expires_at, attempts FROM login_codes WHERE email = ? AND used_at IS NULL ORDER BY created_at DESC LIMIT 1",
+    )
     .bind(email)
     .first<{ id: string; expires_at: string; attempts: number }>();
   if (!row) return null;
-  return { ...row, expired: Date.parse(row.expires_at) <= now.getTime(), locked: row.attempts >= MAX_TRIES };
+  return {
+    ...row,
+    expired: Date.parse(row.expires_at) <= now.getTime(),
+    locked: row.attempts >= MAX_TRIES,
+  };
 }
 
 /** Check a code. Every check uses up one try. On success the code is used up and can't be used again. */
-export async function verifyCode(db: D1Database, opts: { email: string; code: string; secret: string; now?: Date }): Promise<void> {
+export async function verifyCode(
+  db: D1Database,
+  opts: { email: string; code: string; secret: string; now?: Date },
+): Promise<void> {
   const now = opts.now ?? new Date();
   const row = await pendingCode(db, opts.email, now);
-  if (!row) throw new LoginCodeError(400, "no_code", "Ask for a login code first.");
-  if (row.expired) throw new LoginCodeError(400, "code_expired", "That code has expired. Ask for a new one.");
+  if (!row)
+    throw new LoginCodeError(400, "no_code", "Ask for a login code first.");
+  if (row.expired)
+    throw new LoginCodeError(
+      400,
+      "code_expired",
+      "That code has expired. Ask for a new one.",
+    );
 
   // Take a try atomically, so parallel guesses can't get more than 5 between them.
   const took = await db
-    .prepare("UPDATE login_codes SET attempts = attempts + 1 WHERE id = ? AND attempts < ? AND used_at IS NULL RETURNING attempts")
+    .prepare(
+      "UPDATE login_codes SET attempts = attempts + 1 WHERE id = ? AND attempts < ? AND used_at IS NULL RETURNING attempts",
+    )
     .bind(row.id, MAX_TRIES)
     .first<{ attempts: number }>();
-  if (!took) throw new LoginCodeError(429, "too_many_tries", "Too many wrong tries. Ask for a new code.");
+  if (!took)
+    throw new LoginCodeError(
+      429,
+      "too_many_tries",
+      "Too many wrong tries. Ask for a new code.",
+    );
 
-  const stored = await db.prepare("SELECT code_hash FROM login_codes WHERE id = ?").bind(row.id).first<{ code_hash: string }>();
-  const ok = !!stored && /^\d{6}$/.test(opts.code) && sameHash(stored.code_hash, await hashCode(opts.secret, opts.email, opts.code));
+  const stored = await db
+    .prepare("SELECT code_hash FROM login_codes WHERE id = ?")
+    .bind(row.id)
+    .first<{ code_hash: string }>();
+  const ok =
+    !!stored &&
+    /^\d{6}$/.test(opts.code) &&
+    sameHash(
+      stored.code_hash,
+      await hashCode(opts.secret, opts.email, opts.code),
+    );
   if (!ok) {
     const left = MAX_TRIES - took.attempts;
-    if (left <= 0) throw new LoginCodeError(429, "too_many_tries", "Too many wrong tries. Ask for a new code.");
-    throw new LoginCodeError(400, "invalid_code", `That code isn't right. ${left} ${left === 1 ? "try" : "tries"} left.`, undefined, left);
+    if (left <= 0)
+      throw new LoginCodeError(
+        429,
+        "too_many_tries",
+        "Too many wrong tries. Ask for a new code.",
+      );
+    throw new LoginCodeError(
+      400,
+      "invalid_code",
+      `That code isn't right. ${left} ${left === 1 ? "try" : "tries"} left.`,
+      undefined,
+      left,
+    );
   }
-  const used = await db.prepare("UPDATE login_codes SET used_at = ? WHERE id = ? AND used_at IS NULL").bind(now.toISOString(), row.id).run();
-  if (!used.meta.changes) throw new LoginCodeError(400, "no_code", "That code was already used. Ask for a new one.");
+  const used = await db
+    .prepare(
+      "UPDATE login_codes SET used_at = ? WHERE id = ? AND used_at IS NULL",
+    )
+    .bind(now.toISOString(), row.id)
+    .run();
+  if (!used.meta.changes)
+    throw new LoginCodeError(
+      400,
+      "no_code",
+      "That code was already used. Ask for a new one.",
+    );
 }
 
 /** Delete old rows (called by the cron) so the table stays small. Keeps a day for the rate-limit window. */
 export async function purgeOldCodes(db: D1Database, now: Date = new Date()) {
-  await db.prepare("DELETE FROM login_codes WHERE created_at < ?").bind(new Date(now.getTime() - 86_400_000).toISOString()).run();
+  await db
+    .prepare("DELETE FROM login_codes WHERE created_at < ?")
+    .bind(new Date(now.getTime() - 86_400_000).toISOString())
+    .run();
 }

@@ -37,7 +37,12 @@ export function Chip({
         className,
       )}
     >
-      {pulse && <span className="size-1.5 rounded-full bg-live-dot motion-safe:animate-pulse-dot" aria-hidden />}
+      {pulse && (
+        <span
+          className="size-1.5 rounded-full bg-live-dot motion-safe:animate-pulse-dot"
+          aria-hidden
+        />
+      )}
       {children}
     </span>
   );

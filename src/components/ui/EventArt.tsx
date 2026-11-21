@@ -17,12 +17,23 @@ const palettes: Record<string, Palette> = {
   red: { bg: "#C2392B", a: "#DE5B47", b: "#FFD9A0", c: "#7E1F15" },
 };
 
-type Scene = "court" | "circuit" | "pixels" | "diyas" | "talk" | "party" | "hills";
+type Scene =
+  "court" | "circuit" | "pixels" | "diyas" | "talk" | "party" | "hills";
 /** Palette keys follow the event's category (see accentFor), so this picks the scene by kind. */
-const SCENE: Record<string, Scene> = { orange: "court", blue: "circuit", red: "pixels", pink: "diyas", teal: "talk", violet: "party", green: "hills" };
+const SCENE: Record<string, Scene> = {
+  orange: "court",
+  blue: "circuit",
+  red: "pixels",
+  pink: "diyas",
+  teal: "talk",
+  violet: "party",
+  green: "hills",
+};
 
-const hash = (s: string) => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
-const rng = (seed: number) => () => (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
+const hash = (s: string) =>
+  [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+const rng = (seed: number) => () =>
+  (seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296;
 
 type Props = { p: Palette; r: () => number };
 
@@ -45,17 +56,59 @@ function Court({ p, r }: Props) {
 
 function Circuit({ p, r }: Props) {
   const dots = [];
-  for (let i = 0; i < 6; i++) for (let j = 0; j < 6; j++) dots.push(<circle key={`${i}-${j}`} cx={8 + i * 17} cy={8 + j * 17} r="0.9" fill="#fff" opacity="0.25" />);
-  const n = [0, 1, 2, 3].map(() => [8 + Math.floor(r() * 6) * 17, 8 + Math.floor(r() * 6) * 17]);
+  for (let i = 0; i < 6; i++)
+    for (let j = 0; j < 6; j++)
+      dots.push(
+        <circle
+          key={`${i}-${j}`}
+          cx={8 + i * 17}
+          cy={8 + j * 17}
+          r="0.9"
+          fill="#fff"
+          opacity="0.25"
+        />,
+      );
+  const n = [0, 1, 2, 3].map(() => [
+    8 + Math.floor(r() * 6) * 17,
+    8 + Math.floor(r() * 6) * 17,
+  ]);
   return (
     <>
       {dots}
-      <path d={`M${n[0][0]} ${n[0][1]}H${n[1][0]}V${n[1][1]}H${n[2][0]}V${n[2][1]}`} stroke={p.b} strokeWidth="1.6" fill="none" />
-      <path d={`M${n[1][0]} ${n[1][1]}V${n[3][1]}H${n[3][0]}`} stroke="#fff" strokeOpacity="0.6" strokeWidth="1.2" fill="none" />
-      <rect x="34" y="36" width="32" height="28" rx="4" fill={p.c} stroke={p.a} strokeWidth="1.4" />
+      <path
+        d={`M${n[0][0]} ${n[0][1]}H${n[1][0]}V${n[1][1]}H${n[2][0]}V${n[2][1]}`}
+        stroke={p.b}
+        strokeWidth="1.6"
+        fill="none"
+      />
+      <path
+        d={`M${n[1][0]} ${n[1][1]}V${n[3][1]}H${n[3][0]}`}
+        stroke="#fff"
+        strokeOpacity="0.6"
+        strokeWidth="1.2"
+        fill="none"
+      />
+      <rect
+        x="34"
+        y="36"
+        width="32"
+        height="28"
+        rx="4"
+        fill={p.c}
+        stroke={p.a}
+        strokeWidth="1.4"
+      />
       <rect x="41" y="43" width="18" height="14" rx="2" fill={p.a} />
       {n.map(([x, y], i) => (
-        <circle key={i} cx={x} cy={y} r={i === 2 ? 4.5 : 3} fill={i === 2 ? p.b : p.c} stroke="#fff" strokeWidth="1.2" />
+        <circle
+          key={i}
+          cx={x}
+          cy={y}
+          r={i === 2 ? 4.5 : 3}
+          fill={i === 2 ? p.b : p.c}
+          stroke="#fff"
+          strokeWidth="1.2"
+        />
       ))}
     </>
   );
@@ -66,14 +119,30 @@ function Pixels({ p, r }: Props) {
   for (let i = 0; i < 10; i++)
     for (let j = 0; j < 10; j++) {
       const v = r();
-      if (v > 0.8) cells.push(<rect key={`${i}-${j}`} x={i * 10} y={j * 10} width="10" height="10" fill={v > 0.94 ? p.b : p.a} opacity={v > 0.94 ? 1 : 0.6} />);
+      if (v > 0.8)
+        cells.push(
+          <rect
+            key={`${i}-${j}`}
+            x={i * 10}
+            y={j * 10}
+            width="10"
+            height="10"
+            fill={v > 0.94 ? p.b : p.a}
+            opacity={v > 0.94 ? 1 : 0.6}
+          />,
+        );
     }
   return (
     <>
       {cells}
       <g transform="translate(26 34)">
         <rect x="0" y="6" width="48" height="24" rx="12" fill={p.c} />
-        <path d="M10 18h10M15 13v10" stroke="#fff" strokeWidth="3" strokeLinecap="round" />
+        <path
+          d="M10 18h10M15 13v10"
+          stroke="#fff"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
         <circle cx="34" cy="15" r="2.6" fill={p.b} />
         <circle cx="40" cy="21" r="2.6" fill="#fff" />
       </g>
@@ -85,9 +154,22 @@ function Diyas({ p, r }: Props) {
   const count = 3 + Math.floor(r() * 2);
   return (
     <>
-      <path d="M-5 4C30 22 70 22 105 4" stroke={p.b} strokeOpacity="0.5" strokeWidth="0.8" fill="none" />
+      <path
+        d="M-5 4C30 22 70 22 105 4"
+        stroke={p.b}
+        strokeOpacity="0.5"
+        strokeWidth="0.8"
+        fill="none"
+      />
       {Array.from({ length: 9 }, (_, i) => (
-        <circle key={i} cx={i * 12.5} cy={6 + Math.sin((i / 8) * Math.PI) * 10} r="1.6" fill={p.b} opacity="0.9" />
+        <circle
+          key={i}
+          cx={i * 12.5}
+          cy={6 + Math.sin((i / 8) * Math.PI) * 10}
+          r="1.6"
+          fill={p.b}
+          opacity="0.9"
+        />
       ))}
       <rect x="-5" y="72" width="110" height="40" fill={p.c} />
       {Array.from({ length: count }, (_, i) => {
@@ -128,16 +210,42 @@ function Party({ p, r }: Props) {
     const y = r() * 100;
     const rot = r() * 180;
     const col = [p.b, p.a, "#fff"][i % 3];
-    return i % 2 ? <rect key={i} x={x} y={y} width="5" height="2" rx="1" fill={col} transform={`rotate(${rot} ${x} ${y})`} /> : <circle key={i} cx={x} cy={y} r="1.5" fill={col} />;
+    return i % 2 ? (
+      <rect
+        key={i}
+        x={x}
+        y={y}
+        width="5"
+        height="2"
+        rx="1"
+        fill={col}
+        transform={`rotate(${rot} ${x} ${y})`}
+      />
+    ) : (
+      <circle key={i} cx={x} cy={y} r="1.5" fill={col} />
+    );
   });
   return (
     <>
       <path d="M50 0V22" stroke="#fff" strokeOpacity="0.6" strokeWidth="0.8" />
       <circle cx="50" cy="44" r="22" fill={p.c} />
       {Array.from({ length: 5 }, (_, i) => (
-        <path key={i} d={`M30 ${36 + i * 4}H70`} stroke={p.a} strokeWidth="1.2" opacity="0.7" />
+        <path
+          key={i}
+          d={`M30 ${36 + i * 4}H70`}
+          stroke={p.a}
+          strokeWidth="1.2"
+          opacity="0.7"
+        />
       ))}
-      <circle cx="50" cy="44" r="22" fill="none" stroke={p.b} strokeWidth="1.2" />
+      <circle
+        cx="50"
+        cy="44"
+        r="22"
+        fill="none"
+        stroke={p.b}
+        strokeWidth="1.2"
+      />
       {bits}
     </>
   );
@@ -148,13 +256,27 @@ function Hills({ p, r }: Props) {
   return (
     <>
       <circle cx={x} cy={32 + r() * 8} r="13" fill={p.b} />
-      <path d="M0 60 C 16 51, 30 57, 48 54 S 80 47, 100 56 V100 H0Z" fill={p.a} />
-      <path d="M0 74 C 20 66, 40 76, 60 70 S 88 64, 100 72 V100 H0Z" fill={p.c} />
+      <path
+        d="M0 60 C 16 51, 30 57, 48 54 S 80 47, 100 56 V100 H0Z"
+        fill={p.a}
+      />
+      <path
+        d="M0 74 C 20 66, 40 76, 60 70 S 88 64, 100 72 V100 H0Z"
+        fill={p.c}
+      />
     </>
   );
 }
 
-const SCENES: Record<Scene, (props: Props) => React.ReactElement> = { court: Court, circuit: Circuit, pixels: Pixels, diyas: Diyas, talk: Talk, party: Party, hills: Hills };
+const SCENES: Record<Scene, (props: Props) => React.ReactElement> = {
+  court: Court,
+  circuit: Circuit,
+  pixels: Pixels,
+  diyas: Diyas,
+  talk: Talk,
+  party: Party,
+  hills: Hills,
+};
 
 export function EventArt({
   accent,
@@ -178,16 +300,31 @@ export function EventArt({
   const r = rng(hash(seed ?? accent));
 
   return (
-    <div aria-hidden className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)} style={{ background: p.bg }}>
+    <div
+      aria-hidden
+      className={cn(
+        "pointer-events-none absolute inset-0 overflow-hidden",
+        className,
+      )}
+      style={{ background: p.bg }}
+    >
       {!flat && (
-        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full">
+        <svg
+          viewBox="0 0 100 100"
+          preserveAspectRatio="xMidYMid slice"
+          className="absolute inset-0 size-full"
+        >
           {Draw({ p, r })}
         </svg>
       )}
-      {scrim && <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/40 to-transparent" />}
+      {scrim && (
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/40 to-transparent" />
+      )}
     </div>
   );
 }
 
-export const accentHex = (accent: string) => (palettes[accent] ?? palettes.blue).bg;
-export const accentInk = (accent: string) => (palettes[accent] ?? palettes.blue).c;
+export const accentHex = (accent: string) =>
+  (palettes[accent] ?? palettes.blue).bg;
+export const accentInk = (accent: string) =>
+  (palettes[accent] ?? palettes.blue).c;

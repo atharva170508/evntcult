@@ -18,19 +18,42 @@ export function Field({
   error?: string | null;
   optional?: boolean;
   className?: string;
-  children: (props: { id: string; "aria-describedby"?: string; "aria-invalid"?: boolean }) => React.ReactNode;
+  children: (props: {
+    id: string;
+    "aria-describedby"?: string;
+    "aria-invalid"?: boolean;
+  }) => React.ReactNode;
 }) {
   const id = useId();
   const descId = hint || error ? `${id}-desc` : undefined;
   return (
     <div className={cn("block", className)}>
-      <label htmlFor={id} className="flex items-baseline justify-between gap-2 text-[13px] font-medium text-ink">
+      <label
+        htmlFor={id}
+        className="flex items-baseline justify-between gap-2 text-[13px] font-medium text-ink"
+      >
         {label}
-        {optional && <span className="text-[12px] font-normal text-ink-subtle">Optional</span>}
+        {optional && (
+          <span className="text-[12px] font-normal text-ink-subtle">
+            Optional
+          </span>
+        )}
       </label>
-      <div className="mt-1.5">{children({ id, "aria-describedby": descId, "aria-invalid": error ? true : undefined })}</div>
+      <div className="mt-1.5">
+        {children({
+          id,
+          "aria-describedby": descId,
+          "aria-invalid": error ? true : undefined,
+        })}
+      </div>
       {(error || hint) && (
-        <p id={descId} className={cn("mt-1.5 text-[12.5px]", error ? "font-medium text-danger" : "text-ink-subtle")}>
+        <p
+          id={descId}
+          className={cn(
+            "mt-1.5 text-[12.5px]",
+            error ? "font-medium text-danger" : "text-ink-subtle",
+          )}
+        >
           {error || hint}
         </p>
       )}
@@ -38,15 +61,30 @@ export function Field({
   );
 }
 
-export function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
+export function Input({
+  className,
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cn("field", className)} {...props} />;
 }
 
-export function Textarea({ className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea className={cn("field min-h-[120px] resize-y leading-relaxed", className)} {...props} />;
+export function Textarea({
+  className,
+  ...props
+}: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <textarea
+      className={cn("field min-h-[120px] resize-y leading-relaxed", className)}
+      {...props}
+    />
+  );
 }
 
-export function Select({ className, children, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
+export function Select({
+  className,
+  children,
+  ...props
+}: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
       className={cn(
@@ -81,7 +119,14 @@ export function Notice({
     accent: "bg-accent-soft text-accent-ink",
   } as const;
   return (
-    <div role={tone === "danger" ? "alert" : "status"} className={cn("flex items-start gap-2.5 rounded-tile px-3.5 py-3 text-[13.5px] font-medium", tones[tone], className)}>
+    <div
+      role={tone === "danger" ? "alert" : "status"}
+      className={cn(
+        "flex items-start gap-2.5 rounded-tile px-3.5 py-3 text-[13.5px] font-medium",
+        tones[tone],
+        className,
+      )}
+    >
       {Icon && <Icon className="mt-[1px] size-4 shrink-0" />}
       <div className="min-w-0">{children}</div>
     </div>

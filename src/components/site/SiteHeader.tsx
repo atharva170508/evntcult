@@ -127,7 +127,7 @@ export function SiteHeader({
           // Search pages: fixed over a spacer of the expanded height, so folding the search on
           // scroll never moves the page (CLS 0). Elsewhere: sticky in the flow.
           hasSearch ? "fixed inset-x-0 top-0" : "sticky top-0",
-          "z-40 border-b border-line bg-canvas transition-shadow duration-base ease-out print:hidden",
+          "z-40 border-b border-line/80 bg-canvas/80 backdrop-blur-xl backdrop-saturate-150 transition-shadow duration-base ease-out supports-[not(backdrop-filter:blur(1px))]:bg-canvas print:hidden",
           scrolled && "shadow-[0_8px_24px_-12px_rgba(60,40,10,0.18)]",
         )}
       >

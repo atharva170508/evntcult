@@ -17,14 +17,29 @@ export function EmptyState({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center rounded-card border border-dashed border-line-strong px-6 py-10 text-center", className)}>
-      <span className="grid size-11 place-items-center rounded-tile bg-surface text-ink-muted shadow-card" aria-hidden>
+    <div
+      className={cn(
+        "flex flex-col items-center rounded-card border border-dashed border-line-strong px-6 py-10 text-center",
+        className,
+      )}
+    >
+      <span
+        className="grid size-11 place-items-center rounded-tile bg-surface text-ink-muted shadow-card"
+        aria-hidden
+      >
         <Icon className="size-5" />
       </span>
       <p className="mt-4 text-h4 font-semibold">{title}</p>
-      {body && <p className="mt-1 max-w-xs text-small text-ink-muted">{body}</p>}
+      {body && (
+        <p className="mt-1 max-w-xs text-small text-ink-muted">{body}</p>
+      )}
       {action && (
-        <LinkButton href={action.href} size="sm" variant="secondary" className="mt-5">
+        <LinkButton
+          href={action.href}
+          size="sm"
+          variant="secondary"
+          className="mt-5"
+        >
           {action.label}
         </LinkButton>
       )}

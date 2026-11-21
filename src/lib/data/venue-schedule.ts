@@ -12,7 +12,10 @@ export interface VenueEvent {
   live: boolean;
 }
 
-export async function upcomingByVenue(db: D1Database, opts: { viewerId: string | null; now?: Date }) {
+export async function upcomingByVenue(
+  db: D1Database,
+  opts: { viewerId: string | null; now?: Date },
+) {
   const now = opts.now ?? new Date();
   const rows = await db
     .prepare(
@@ -25,10 +28,25 @@ export async function upcomingByVenue(db: D1Database, opts: { viewerId: string |
         LIMIT 300`,
     )
     .bind(opts.viewerId, now.toISOString())
-    .all<{ id: string; slug: string; title: string; venue: string; starts_at: string; ends_at: string }>();
+    .all<{
+      id: string;
+      slug: string;
+      title: string;
+      venue: string;
+      starts_at: string;
+      ends_at: string;
+    }>();
   const map = new Map<string, VenueEvent[]>();
   for (const r of rows.results) {
-    const ev: VenueEvent = { id: r.id, slug: r.slug, title: r.title, venue: r.venue, startsAt: r.starts_at, endsAt: r.ends_at, live: Date.parse(r.starts_at) <= now.getTime() };
+    const ev: VenueEvent = {
+      id: r.id,
+      slug: r.slug,
+      title: r.title,
+      venue: r.venue,
+      startsAt: r.starts_at,
+      endsAt: r.ends_at,
+      live: Date.parse(r.starts_at) <= now.getTime(),
+    };
     map.set(r.venue, [...(map.get(r.venue) ?? []), ev]);
   }
   return map;

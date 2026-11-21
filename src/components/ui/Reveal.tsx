@@ -22,7 +22,8 @@ export function Reveal({
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+      return;
     const r = el.getBoundingClientRect();
     if (r.top < window.innerHeight * 0.92) return; // already on screen: no flash
     el.dataset.reveal = "out";
@@ -44,7 +45,11 @@ export function Reveal({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ref={ref as any}
       className={cn(className)}
-      style={delay ? ({ "--reveal-delay": `${delay}ms` } as React.CSSProperties) : undefined}
+      style={
+        delay
+          ? ({ "--reveal-delay": `${delay}ms` } as React.CSSProperties)
+          : undefined
+      }
     >
       {children}
     </Tag>
