@@ -90,6 +90,7 @@ export function SiteHeader({
   const ws = workspaceFor(pathname);
   const hasSearch = ws === "attend" && SEARCH_PAGES.includes(pathname);
   const [scrolled, setScrolled] = useState(false);
+  const [hoverTab, setHoverTab] = useState<string | null>(null);
   const [sheet, setSheet] = useState(false);
   const ref = useRef<HTMLElement>(null);
 
@@ -165,7 +166,7 @@ export function SiteHeader({
                   <CompactSearch onOpen={onSearch} />
                 </div>
               ) : (
-                <nav aria-label="Main" className="flex items-center gap-2">
+                <nav aria-label="Main" className="flex items-center gap-2" onPointerLeave={() => setHoverTab(null)}>
                   {tabs.map((t) => {
                     const active = ws === "attend" ? isMainActive(pathname, t.href) : isActive(pathname, t);
                     return (
@@ -173,6 +174,7 @@ export function SiteHeader({
                         key={t.href}
                         href={!viewer && VISITOR_HREF[t.href] ? VISITOR_HREF[t.href] : t.href}
                         aria-current={active ? "page" : undefined}
+                        onPointerEnter={() => setHoverTab(t.href)}
                         className={cn(
                           "group relative flex h-14 items-center gap-2 whitespace-nowrap px-2.5 text-[15px] transition-colors duration-fast xl:px-3",
                           active
@@ -180,7 +182,15 @@ export function SiteHeader({
                             : "font-medium text-ink-muted hover:text-ink",
                         )}
                       >
-                        <t.icon className="hidden size-9 transition-transform duration-base ease-out lg:block" />
+                        {hoverTab === t.href && (
+                          <m.span
+                            layoutId="nav-hover"
+                            aria-hidden
+                            className="absolute inset-x-0 inset-y-2 -z-10 rounded-xl bg-sunken"
+                            transition={{ type: "spring", stiffness: 520, damping: 40 }}
+                          />
+                        )}
+                        <t.icon className="hidden size-9 transition-transform duration-base ease-out group-hover:-rotate-6 group-hover:scale-105 lg:block" />
                         {t.label}
                         {active ? (
                           <m.span
@@ -189,12 +199,7 @@ export function SiteHeader({
                             className="absolute inset-x-3 bottom-0 h-[2px] rounded-full bg-ink"
                             transition={{ duration: 0.25, ease: EASE }}
                           />
-                        ) : (
-                          <span
-                            aria-hidden
-                            className="absolute inset-x-3 bottom-0 h-[2px] rounded-full bg-ink opacity-0 transition-opacity duration-base group-hover:opacity-20"
-                          />
-                        )}
+                        ) : null}
                       </Link>
                     );
                   })}

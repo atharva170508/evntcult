@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, X } from "lucide-react";
+import { AnimatePresence, m } from "motion/react";
 
 interface Req {
   id: string;
@@ -47,8 +48,14 @@ export function RequestsCard({ eventId, initial }: { eventId: string; initial: R
       </div>
       {list.length > 0 && (
         <ul className="max-h-[420px] divide-y divide-line overflow-y-auto">
+          <AnimatePresence initial={false}>
           {list.map((r) => (
-            <li key={r.id} className="flex items-center gap-3 px-5 py-3">
+            <m.li
+              key={r.id}
+              layout
+              exit={{ opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0, transition: { duration: 0.28, ease: [0.16, 1, 0.3, 1] } }}
+              className="flex items-center gap-3 overflow-hidden px-5 py-3"
+            >
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[14.5px] font-semibold text-ink">{r.name}</p>
                 <p className="truncate text-[12.5px] text-ink-muted">{r.email}</p>
@@ -70,8 +77,9 @@ export function RequestsCard({ eventId, initial }: { eventId: string; initial: R
               >
                 <Check className="size-4" strokeWidth={2.6} aria-hidden /> Approve
               </button>
-            </li>
+            </m.li>
           ))}
+          </AnimatePresence>
         </ul>
       )}
       {msg && (

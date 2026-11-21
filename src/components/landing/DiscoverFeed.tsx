@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { Segmented } from "@/components/ui/Segmented";
 import { Select } from "@/components/ui/Select";
@@ -47,6 +47,16 @@ export function DiscoverFeed({ events }: { events: Ev[] }) {
   const [when, setWhen] = useState<When>("any");
   const [price, setPrice] = useState<Price>("any");
   const [limit, setLimit] = useState(8);
+  // Animate the cards in only after the first filter change, never on page load.
+  const [changed, setChanged] = useState(false);
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    setChanged(true);
+  }, [kind, sort, when, price]);
 
   const all = useMemo(
     () =>
@@ -178,9 +188,9 @@ export function DiscoverFeed({ events }: { events: Ev[] }) {
           </button>
         </div>
       ) : (
-        <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 xl:grid-cols-4">
-          {shown.slice(0, limit).map((e) => (
-            <li key={e.id}>
+        <ul key={`${kind}-${sort}-${when}-${price}`} className="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 xl:grid-cols-4">
+          {shown.slice(0, limit).map((e, i) => (
+            <li key={e.id} className={changed ? "feed-in" : undefined} style={changed ? { animationDelay: `${Math.min(i, 8) * 35}ms` } : undefined}>
               <FeedCard e={e} />
             </li>
           ))}

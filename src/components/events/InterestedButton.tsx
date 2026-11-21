@@ -12,6 +12,7 @@ export function InterestedButton({ slug, saved: initial, signedIn, className }: 
   const [saved, setSaved] = useState(initial);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
+  const [burst, setBurst] = useState(0);
 
   async function toggle() {
     if (!signedIn) {
@@ -20,6 +21,7 @@ export function InterestedButton({ slug, saved: initial, signedIn, className }: 
     }
     const next = !saved;
     setSaved(next); // optimistic
+    if (next) setBurst((b) => b + 1);
     setBusy(true);
     setError(false);
     const res = await fetch(`/api/events/${slug}/save`, { method: next ? "POST" : "DELETE" }).catch(() => null);
@@ -45,7 +47,18 @@ export function InterestedButton({ slug, saved: initial, signedIn, className }: 
         className,
       )}
     >
-      <m.span key={String(saved)} initial={{ scale: saved ? 0.6 : 1 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 520, damping: 18 }} className="inline-flex">
+      <m.span key={String(saved)} initial={{ scale: saved ? 0.6 : 1 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 520, damping: 18 }} className="relative inline-flex">
+        {burst > 0 && saved && (
+          <span key={burst} aria-hidden className="pointer-events-none absolute left-1/2 top-1/2">
+            {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+              <span
+                key={i}
+                className="star-spark absolute size-[5px] rounded-full"
+                style={{ background: i % 2 ? "#FFD166" : "#F0D7FF", "--a": `${i * 45}deg` } as React.CSSProperties}
+              />
+            ))}
+          </span>
+        )}
         <Star className={cn("size-[18px]", saved && "fill-[#FFD166] text-[#FFD166]")} strokeWidth={1.9} aria-hidden />
       </m.span>
       {error ? "Try again" : saved ? "Interested" : "I'm interested"}

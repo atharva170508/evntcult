@@ -1,3 +1,4 @@
+import { MonthSlide } from "@/components/calendar/MonthSlide";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarDays, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
@@ -158,6 +159,7 @@ export default async function CalendarPage({
             </div>
           ))}
         </div>
+        <MonthSlide month={`${range.year}-${String(range.month + 1).padStart(2, "0")}`}>
         <div className="grid grid-cols-7 gap-px bg-line">
           {cells.map((day, i) => {
             if (!day)
@@ -234,6 +236,7 @@ export default async function CalendarPage({
             );
           })}
         </div>
+        </MonthSlide>
         <p className="flex flex-wrap gap-x-5 gap-y-1.5 border-t border-line px-4 py-3 text-[12px] text-ink-muted">
           <span className="flex items-center gap-1.5">
             <span className="size-2.5 rounded-sm bg-night" /> Going
