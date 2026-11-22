@@ -73,6 +73,18 @@ async function ensureSchema(db: D1Database): Promise<void> {
          post_id TEXT NOT NULL REFERENCES event_posts(id), user_id TEXT NOT NULL REFERENCES users(id), emoji TEXT NOT NULL,
          PRIMARY KEY (post_id, user_id, emoji))`,
     ),
+    // 0030: follows and reports.
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS host_follows (
+         user_id TEXT NOT NULL REFERENCES users(id), host_id TEXT NOT NULL REFERENCES users(id), created_at TEXT NOT NULL,
+         PRIMARY KEY (user_id, host_id))`,
+    ),
+    db.prepare("CREATE INDEX IF NOT EXISTS idx_host_follows_host ON host_follows(host_id)"),
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS event_reports (
+         id TEXT PRIMARY KEY, event_id TEXT NOT NULL REFERENCES events(id), user_id TEXT REFERENCES users(id),
+         reason TEXT NOT NULL, details TEXT, created_at TEXT NOT NULL)`,
+    ),
     // 0027: event posters.
     db.prepare(
       `CREATE TABLE IF NOT EXISTS event_posters (
@@ -82,6 +94,15 @@ async function ensureSchema(db: D1Database): Promise<void> {
 
   // 0024: category setup JSON on events.
   const evCols = await db.prepare("PRAGMA table_info(events)").all<{ name: string }>();
+  // 0030: refund policy.
+  if (!(evCols.results ?? []).some((c) => c.name === "refund_policy")) {
+    await db.prepare("ALTER TABLE events ADD COLUMN refund_policy TEXT").run();
+    try {
+      await db.prepare("INSERT INTO d1_migrations (name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name = ?)").bind("0030_follow_refund_report.sql", "0030_follow_refund_report.sql").run();
+    } catch {
+      // no d1_migrations table locally
+    }
+  }
   // 0029: page effect.
   if (!(evCols.results ?? []).some((c) => c.name === "effect")) {
     await db.prepare("ALTER TABLE events ADD COLUMN effect TEXT").run();

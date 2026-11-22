@@ -47,6 +47,7 @@ import { kindFor, parseConfig, teamMode } from "@/lib/categories";
 import { buttonClass } from "@/components/ui/Button";
 import { Odometer } from "@/components/ui/Odometer";
 import { GuestWall } from "@/components/events/GuestWall";
+import { FollowHost, ReportEvent } from "@/components/events/HostActions";
 import { EventEffect } from "@/components/events/EventEffect";
 import { EventCard } from "@/components/landing/EventCard";
 import { listEvents } from "@/lib/data/events";
@@ -115,11 +116,15 @@ export default async function EventPage({
   const [hostRow, going, updates, saves] = await Promise.all([
     db
       .prepare(
-        `SELECT u.name, (SELECT COUNT(*) FROM events x WHERE x.organizer_id = u.id AND x.status IN ('published','closed')) AS hosted
+        `SELECT u.name, u.created_at,
+                (SELECT COUNT(*) FROM events x WHERE x.organizer_id = u.id AND x.status IN ('published','closed')) AS hosted,
+                (SELECT COUNT(*) FROM registrations r JOIN events x ON x.id = r.event_id WHERE x.organizer_id = u.id AND r.status = 'registered') AS guests,
+                (SELECT COUNT(*) FROM host_follows f WHERE f.host_id = u.id) AS followers,
+                (SELECT COUNT(*) FROM host_follows f WHERE f.host_id = u.id AND f.user_id = ?) AS mine
            FROM users u WHERE u.id = ?`,
       )
-      .bind(e.organizer_id)
-      .first<{ name: string; hosted: number }>(),
+      .bind(viewer?.id ?? "", e.organizer_id)
+      .first<{ name: string; created_at: string; hosted: number; guests: number; followers: number; mine: number }>(),
     db
       .prepare(
         `SELECT u.name FROM registrations r JOIN users u ON u.id = r.user_id
@@ -229,6 +234,18 @@ export default async function EventPage({
             aria-hidden
           />
         </Link>
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <p className="text-[12.5px] tabular-nums text-ink-muted">
+            {[
+              hostRow?.followers ? `${hostRow.followers.toLocaleString("en-IN")} ${hostRow.followers === 1 ? "follower" : "followers"}` : null,
+              hostRow?.guests ? `${hostRow.guests.toLocaleString("en-IN")} guests hosted` : null,
+              hostRow?.created_at ? `since ${new Date(hostRow.created_at).getFullYear()}` : null,
+            ]
+              .filter(Boolean)
+              .join(", ")}
+          </p>
+          <FollowHost hostId={e.organizer_id} initial={!!hostRow?.mine} signedIn={!!viewer} self={viewer?.id === e.organizer_id} />
+        </div>
       </div>
 
       <div className="border-b border-line py-5">
@@ -307,6 +324,9 @@ export default async function EventPage({
           <ShareEvent url={shareUrl} title={e.title} />
         </div>
       )}
+      <div className="mt-3 border-t border-line pt-1">
+        <ReportEvent slug={e.slug} />
+      </div>
     </div>
   );
 
@@ -763,6 +783,36 @@ export default async function EventPage({
           )}
 
           <CategorySections category={e.category} raw={e.category_config} />
+
+          <section aria-labelledby="know-h" className="mt-10 border-t border-line pt-8">
+            <h2 id="know-h" className="text-[20px] font-semibold text-ink">
+              Good to know
+            </h2>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {[
+                (() => {
+                  const mins = Math.round((Date.parse(e.ends_at) - Date.parse(e.starts_at)) / 60000);
+                  return mins >= 1440 ? `${Math.round(mins / 1440)} days` : mins >= 60 ? `${Math.round(mins / 60)} ${Math.round(mins / 60) === 1 ? "hour" : "hours"}` : `${mins} min`;
+                })(),
+                e.event_type === "virtual" ? "Online" : "In person",
+                e.price_paise > 0 || tierList.length ? "Paid entry" : "Free entry",
+                ...(e.requires_approval ? ["Host approves each guest"] : []),
+                ...(e.capacity ? [`${e.capacity.toLocaleString("en-IN")} seats`] : []),
+              ].map((t) => (
+                <li key={t} className="rounded-full bg-sunken px-3 py-1.5 text-[13.5px] font-medium text-ink-2">
+                  {t}
+                </li>
+              ))}
+            </ul>
+            {(e.refund_policy || e.price_paise > 0 || tierList.length > 0) && (
+              <div className="mt-5 rounded-2xl border border-line p-4">
+                <p className="text-[14px] font-semibold text-ink">Refund policy</p>
+                <p className="mt-1 whitespace-pre-line text-[14px] leading-relaxed text-ink-2">
+                  {e.refund_policy || "The host hasn't set a refund policy. Ask them before you pay if you're unsure."}
+                </p>
+              </div>
+            )}
+          </section>
 
           {e.status !== "draft" && (
             <section id="wall" aria-labelledby="wall-h" className="mt-10 scroll-mt-36 border-t border-line pt-8">

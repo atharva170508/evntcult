@@ -11,6 +11,7 @@ interface Rules {
   requiresApproval: boolean;
   agenda: string | null;
   effect?: string | null;
+  refundPolicy?: string | null;
 }
 
 /** ISO -> "YYYY-MM-DDTHH:mm" in IST, for a datetime-local input. */
@@ -103,6 +104,24 @@ export function SignupRules({ eventId }: { eventId: string }) {
           />
           <p className="o-meta" style={{ marginTop: 6 }}>
             One item per line: time, then what happens.
+          </p>
+        </div>
+      </div>
+      <div className="o-row">
+        <span className="o-label">Refunds</span>
+        <div>
+          <textarea
+            aria-label="Refund policy"
+            className="o-input"
+            rows={2}
+            maxLength={600}
+            defaultValue={rules.refundPolicy ?? ""}
+            placeholder="Full refund until 24 hours before. No refunds after that."
+            onBlur={(e) => e.target.value.trim() !== (rules.refundPolicy ?? "") && save({ ...rules, refundPolicy: e.target.value.trim() || null }, 0)}
+            style={{ height: "auto", paddingTop: 10, paddingBottom: 10, lineHeight: 1.5 }}
+          />
+          <p className="o-meta" style={{ marginTop: 6 }}>
+            Shown under Good to know on your event page. Leave empty for free events.
           </p>
         </div>
       </div>
