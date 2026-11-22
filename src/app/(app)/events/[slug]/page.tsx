@@ -48,6 +48,7 @@ import { buttonClass } from "@/components/ui/Button";
 import { Odometer } from "@/components/ui/Odometer";
 import { GuestWall } from "@/components/events/GuestWall";
 import { FollowHost, ReportEvent } from "@/components/events/HostActions";
+import { TITLE_FONTS, parseLook } from "@/lib/effects";
 import { EventEffect } from "@/components/events/EventEffect";
 import { EventCard } from "@/components/landing/EventCard";
 import { listEvents } from "@/lib/data/events";
@@ -159,6 +160,7 @@ export default async function EventPage({
 
   const kind = e.category ? (LABEL[e.category] ?? e.category) : "Event";
   const tierList = parseTiers(e.tiers);
+  const look = parseLook(e.look);
   const fromPaise = tierList.length ? Math.min(...tierList.map((t) => t.pricePaise)) : e.price_paise;
   const priceLabel = fromPaise ? `${tierList.length > 1 ? "From " : ""}${formatINR(fromPaise)}` : tierList.length > 1 ? "From free" : "Free";
   const canRegister =
@@ -333,7 +335,19 @@ export default async function EventPage({
   return (
     <div className="relative isolate pb-28 pt-6 md:pb-12 md:pt-10">
       {/* Luma-style: the page picks up the event's colour (from the flyer when there is one) and breathes slowly. */}
-      <FlyerAura src={e.banner_url} fallback={accentHex(s.accent)} />
+      {look.style === "glow" && <FlyerAura src={e.banner_url} fallback={accentHex(s.accent)} />}
+      {look.style === "mesh" && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 -z-10 opacity-70 dark:opacity-40"
+          style={{
+            background: `radial-gradient(60% 50% at 15% 10%, ${accentHex(s.accent)}55, transparent 70%), radial-gradient(50% 45% at 90% 30%, #F0D7FF99, transparent 70%), radial-gradient(55% 50% at 50% 100%, ${accentHex(s.accent)}33, transparent 70%)`,
+          }}
+        />
+      )}
+      {look.style === "dots" && (
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(rgb(var(--c-line-strong))_1px,transparent_1.2px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
+      )}
       <EventEffect effect={e.effect ?? null} />
       <Link
         href="/events"
@@ -372,7 +386,7 @@ export default async function EventPage({
               {e.status === "cancelled" && <Chip tone="danger">Cancelled</Chip>}
               {ended && e.status !== "cancelled" && <Chip>Ended</Chip>}
             </div>
-            <h1 className="mt-3 font-display text-[40px] leading-[1.02] tracking-[-0.025em] text-ink md:text-[52px]">
+            <h1 className={`mt-3 text-[40px] leading-[1.02] text-ink md:text-[52px] ${TITLE_FONTS[look.font].cls}`}>
               {e.title}
             </h1>
             {s.tagline && (

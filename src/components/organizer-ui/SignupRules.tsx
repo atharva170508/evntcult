@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Section, apiJson } from "./primitives";
 import { DatePicker, TimePicker } from "@/components/ui/DatePicker";
 import { Switch } from "@/components/ui/Switch";
-import { EFFECTS, EFFECT_KEYS } from "@/lib/effects";
+import { EFFECTS, EFFECT_KEYS, PAGE_STYLES, PAGE_STYLE_KEYS, TITLE_FONTS, TITLE_FONT_KEYS, parseLook } from "@/lib/effects";
 
 interface Rules {
   regClosesAt: string | null;
@@ -12,6 +12,7 @@ interface Rules {
   agenda: string | null;
   effect?: string | null;
   refundPolicy?: string | null;
+  look?: string | null;
 }
 
 /** ISO -> "YYYY-MM-DDTHH:mm" in IST, for a datetime-local input. */
@@ -122,6 +123,28 @@ export function SignupRules({ eventId }: { eventId: string }) {
           />
           <p className="o-meta" style={{ marginTop: 6 }}>
             Shown under Good to know on your event page. Leave empty for free events.
+          </p>
+        </div>
+      </div>
+      <div className="o-row">
+        <span className="o-label">Page look</span>
+        <div>
+          <div className="o-chips" role="group" aria-label="Background">
+            {PAGE_STYLE_KEYS.map((k) => (
+              <button key={k} type="button" className="o-chip" title={PAGE_STYLES[k].hint} aria-pressed={parseLook(rules.look).style === k} onClick={() => save({ ...rules, look: `${k}:${parseLook(rules.look).font}` }, 0)}>
+                {PAGE_STYLES[k].label}
+              </button>
+            ))}
+          </div>
+          <div className="o-chips" role="group" aria-label="Title font" style={{ marginTop: 8 }}>
+            {TITLE_FONT_KEYS.map((k) => (
+              <button key={k} type="button" className={`o-chip ${TITLE_FONTS[k].cls}`} style={{ fontSize: 14 }} aria-pressed={parseLook(rules.look).font === k} onClick={() => save({ ...rules, look: `${parseLook(rules.look).style}:${k}` }, 0)}>
+                {TITLE_FONTS[k].label}
+              </button>
+            ))}
+          </div>
+          <p className="o-meta" style={{ marginTop: 6 }}>
+            The background behind your event page and the type of its title.
           </p>
         </div>
       </div>

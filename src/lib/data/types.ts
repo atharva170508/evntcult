@@ -55,6 +55,8 @@ export interface EventRow {
   effect?: string | null;
   /** Refund policy in the organizer's words (migration 0030). */
   refund_policy?: string | null;
+  /** Page look "style:font" (migration 0031). */
+  look?: string | null;
   /** Ticket types and promo codes, JSON (migration 0026). */
   tiers?: string | null;
   promos?: string | null;

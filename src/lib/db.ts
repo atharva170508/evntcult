@@ -94,6 +94,15 @@ async function ensureSchema(db: D1Database): Promise<void> {
 
   // 0024: category setup JSON on events.
   const evCols = await db.prepare("PRAGMA table_info(events)").all<{ name: string }>();
+  // 0031: page look.
+  if (!(evCols.results ?? []).some((c) => c.name === "look")) {
+    await db.prepare("ALTER TABLE events ADD COLUMN look TEXT").run();
+    try {
+      await db.prepare("INSERT INTO d1_migrations (name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name = ?)").bind("0031_event_look.sql", "0031_event_look.sql").run();
+    } catch {
+      // no d1_migrations table locally
+    }
+  }
   // 0030: refund policy.
   if (!(evCols.results ?? []).some((c) => c.name === "refund_policy")) {
     await db.prepare("ALTER TABLE events ADD COLUMN refund_policy TEXT").run();
