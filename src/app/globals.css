@@ -827,3 +827,7 @@ tr[data-picked] { background: rgb(240 215 255 / 0.35); }
   .hero-stub::before { left: -15px; top: -14px; }
   .hero-stub::after { left: -15px; right: auto; top: auto; bottom: -14px; }
 }
+
+/* Empty home ticket: the typing caret and the chip that shows when the next kind comes up. */
+@keyframes caret { 50% { opacity: 0; } }
+@keyframes chip-timer { from { transform: scaleX(0); } to { transform: scaleX(1); } }

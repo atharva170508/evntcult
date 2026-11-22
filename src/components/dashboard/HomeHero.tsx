@@ -6,6 +6,7 @@ import { m, useReducedMotion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { EASE } from "@/components/motion/MotionProvider";
+import { EmptyTicket } from "./EmptyTicket";
 
 export type HeroEvent = {
   id: string;
@@ -39,22 +40,11 @@ function useNow() {
  * poster and the name; the perforated stub carries a live countdown and the one action. With no
  * pass yet, the stub offers the best event coming up instead ("Claim your seat").
  */
-export function HomeHero({ e, mine, dateLine }: { e: HeroEvent | null; mine: boolean; dateLine: string }) {
+export function HomeHero({ e, mine, dateLine, name }: { e: HeroEvent | null; mine: boolean; dateLine: string; name: string }) {
   const now = useNow();
   const reduce = useReducedMotion();
 
-  if (!e) {
-    return (
-      <section className="pt-8 md:pt-12">
-        <p className="text-[15px] font-medium text-ink-muted">{dateLine}</p>
-        <h1 className="mt-3 max-w-[16ch] font-display text-[clamp(44px,6vw,80px)] leading-[0.98] tracking-[-0.03em] text-ink">Nothing on the calendar yet.</h1>
-        <p className="mt-4 max-w-[46ch] text-[17px] text-ink-2">When an event goes live it shows up here first, with a countdown to the door.</p>
-        <Link href="/events" className="mt-7 inline-flex h-12 items-center rounded-xl bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink">
-          Browse events
-        </Link>
-      </section>
-    );
-  }
+  if (!e) return <EmptyTicket name={name} dateLine={dateLine} />;
 
   const start = Date.parse(e.startsAt);
   const end = Date.parse(e.endsAt);

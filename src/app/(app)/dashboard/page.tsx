@@ -43,6 +43,7 @@ export default async function DashboardPage({
   return (
     <div>
       <HomeHero
+        name={viewer.name}
         mine={!!next}
         dateLine={new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", weekday: "long", day: "numeric", month: "long" }).format(new Date())}
         e={
