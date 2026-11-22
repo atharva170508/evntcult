@@ -181,7 +181,7 @@ export async function getLandingData({
   if (recent.length)
     out.push({
       key: "recent",
-      title: "Recently on campus",
+      title: "Recently happened",
       href: "/events",
       events: recent,
     });

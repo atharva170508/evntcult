@@ -22,8 +22,8 @@ export function TodayLine({ calendar, now = new Date() }: { calendar: Record<str
       {fmtDate(now, { weekday: "long", day: "numeric", month: "long" })}.{" "}
       <span className="text-ink-muted">
         {week === 0
-          ? "Nothing on campus in the next 7 days yet."
-          : `${week} ${week === 1 ? "event" : "events"} on campus in the next 7 days.`}
+          ? "Nothing coming up in the next 7 days yet."
+          : `${week} ${week === 1 ? "event" : "events"} in the next 7 days.`}
       </span>
     </p>
   );
@@ -91,7 +91,7 @@ export function FirstPass({ campus }: { campus: EventSummary[] }) {
 
       {picks.length > 0 && (
         <div className="border-t border-line">
-          <h3 className="px-6 pt-4 text-[14px] font-semibold text-ink sm:px-7">Coming up on campus</h3>
+          <h3 className="px-6 pt-4 text-[14px] font-semibold text-ink sm:px-7">Coming up</h3>
           <ul className="mt-1 pb-2">
             {picks.map((e) => (
               <li key={e.id}>
@@ -128,7 +128,7 @@ export function AlsoOn({ campus }: { campus: EventSummary[] }) {
     <section aria-labelledby="also-on" className="overflow-hidden rounded-[20px] border border-line-strong bg-white">
       <div className="flex items-baseline justify-between px-6 pt-5 sm:px-7">
         <h2 id="also-on" className="text-[16px] font-semibold text-ink">
-          Also on campus
+          Also coming up
         </h2>
         <Link
           href="/events"
@@ -241,7 +241,7 @@ export function WeekStrip({ calendar, now = new Date() }: { calendar: Record<str
         {days.map((d, i) => {
           const c = calendar[istYmd(d)] ?? { campus: 0, mine: 0 };
           const label = `${fmtDate(d, { weekday: "long", day: "numeric", month: "long" })}: ${
-            c.campus === 0 ? "nothing on" : `${c.campus} on campus${c.mine ? `, ${c.mine} yours` : ""}`
+            c.campus === 0 ? "nothing on" : `${c.campus} ${c.campus === 1 ? "event" : "events"}${c.mine ? `, ${c.mine} yours` : ""}`
           }`;
           return (
             <li
@@ -274,7 +274,7 @@ export function WeekStrip({ calendar, now = new Date() }: { calendar: Record<str
           <span className="size-1.5 rounded-full bg-accent" aria-hidden /> Yours
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="size-1.5 rounded-full bg-ink-subtle/50" aria-hidden /> On campus
+          <span className="size-1.5 rounded-full bg-ink-subtle/50" aria-hidden /> Other events
         </span>
       </p>
     </section>

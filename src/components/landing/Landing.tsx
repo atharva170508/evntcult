@@ -108,7 +108,7 @@ function EmptyCampus({ isOrganizer }: { isOrganizer: boolean }) {
   );
 }
 
-/** Your month: your registrations and events you host, plus campus events. */
+/** Your month: your registrations and events you host, plus other events. */
 function CampusCalendar({ month }: { month: MonthPayload }) {
   return (
     <section

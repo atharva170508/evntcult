@@ -66,12 +66,12 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         {/* Hosting is for approved organizers only. New applications wait here. */}
         <h2 className="o-section-label a-head">Host applications{applicants.length ? ` · ${applicants.length} waiting` : ""}</h2>
         {applicants.length === 0 ? (
-          <p className="o-meta">No one is waiting. Students apply from their account menu.</p>
+          <p className="o-meta">No one is waiting. People apply from their account menu.</p>
         ) : (
           <div className="a-scroll">
             <table className="a-table">
               <thead>
-                <tr><th>Name</th><th>Club or group</th><th>What they plan to run</th><th>Applied</th><th /></tr>
+                <tr><th>Name</th><th>Organization</th><th>What they plan to run</th><th>Applied</th><th /></tr>
               </thead>
               <tbody>
                 {applicants.map((a) => (

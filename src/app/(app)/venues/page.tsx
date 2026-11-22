@@ -14,7 +14,7 @@ import { buttonClass } from "@/components/ui/Button";
 export const metadata: Metadata = { title: "Venues" };
 export const dynamic = "force-dynamic";
 
-/** Every campus venue with what's on there next, and directions where the location has been added. */
+/** Every venue with what's on there next, and directions where the location has been added. */
 export default async function VenuesPage({ searchParams }: { searchParams: Promise<{ to?: string }> }) {
   const [viewer, { to }] = await Promise.all([getViewer(), searchParams]);
   const byVenue = await upcomingByVenue(await getDB(), { viewerId: viewer?.id ?? null });

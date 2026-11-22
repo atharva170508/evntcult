@@ -202,7 +202,7 @@ export function MonthCalendar({ initial, signedIn, className }: { initial: Month
               <span className="size-2 rounded-full bg-ink" aria-hidden /> Yours: going, waitlist or hosting
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <span className="size-2 rounded-full ring-1 ring-inset ring-ink-subtle" aria-hidden /> Other campus events
+              <span className="size-2 rounded-full ring-1 ring-inset ring-ink-subtle" aria-hidden /> Other events
             </span>
           </p>
         )}

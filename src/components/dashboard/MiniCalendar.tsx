@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-/** Month at a glance. Ink fill = today; accent dot = you're registered; grey dot = campus event. */
+/** Month at a glance. Ink fill = today; accent dot = you're registered; grey dot = other event. */
 export function MiniCalendar({ data }: { data: Record<string, { campus: number; mine: number }> }) {
   const tz = "Asia/Kolkata";
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: tz }).format(new Date());

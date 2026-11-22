@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 type Phase = "idle" | "warm" | "feed" | "tear";
 
 const TICKETS = [
-  { title: "Freshers' Night", tag: "Couple", accent: "#4B2E86" },
+  { title: "Sunset Sessions", tag: "Couple", accent: "#4B2E86" },
   { title: "RoboWars 2026", tag: "Team Byte Me", accent: "#2346A8" },
   { title: "Garba Night", tag: "Stag", accent: "#C7457A" },
   { title: "Box Cricket", tag: "Strikers XI", accent: "#11796D" },

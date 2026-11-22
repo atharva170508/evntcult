@@ -17,7 +17,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     body: (
       <>
         <p>
-          EvntCult is a campus events app built and run by <b>Synchronous Labs</b>, a student development group. These Terms &amp; Conditions and User Rules apply to everyone who uses
+          EvntCult is an events app built and run by <b>Synchronous Labs</b>, a student development group. These Terms &amp; Conditions and User Rules apply to everyone who uses
           EvntCult: students who browse and register, organizers who host events, and anyone scanning passes at a gate.
         </p>
         <p>By creating an account or using EvntCult, you agree to them. If you don&apos;t agree, please don&apos;t use EvntCult.</p>
@@ -31,7 +31,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
       <>
         <p>EvntCult is a tool. It lists events, lets you register, gives you a pass, and helps organizers check people in, share updates, photos and certificates.</p>
         <p>
-          <b>Events are run by their organizers</b> (clubs, societies and students), not by EvntCult or Synchronous Labs. The organizer is responsible for the event itself: what
+          <b>Events are run by their organizers</b> (people, clubs, communities and companies), not by EvntCult or Synchronous Labs. The organizer is responsible for the event itself: what
           happens there, its timing, venue, safety, pricing, refunds and any changes or cancellations.
         </p>
       </>
@@ -90,9 +90,9 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
         <p>For everyone, on the app and at events:</p>
         <ul>
           <li>Treat people with respect. No harassment, bullying, threats, hate or discrimination, in person or online.</li>
-          <li>Follow your college&apos;s rules and the organizer&apos;s and volunteers&apos; instructions at every event.</li>
-          <li>Carry your college ID if the event or venue asks for it.</li>
-          <li>Never bring alcohol, drugs, weapons or anything else your college or the venue doesn&apos;t allow.</li>
+          <li>Follow the venue&apos;s rules and the organizer&apos;s and volunteers&apos; instructions at every event.</li>
+          <li>Carry a photo ID if the event or venue asks for it.</li>
+          <li>Never bring alcohol, drugs, weapons or anything else the venue doesn&apos;t allow.</li>
           <li>Only use your own pass. Don&apos;t forge, edit, resell or screenshot-share passes to get someone else in.</li>
           <li>Ask before taking or sharing photos of people. If you see a photo of yourself you don&apos;t want up, tell the organizer.</li>
           <li>Look after the venue. You&apos;re responsible for damage you cause.</li>
@@ -100,11 +100,11 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
         </ul>
         <p>For organizers, as well:</p>
         <ul>
-          <li>Hosting is for approved organizers. Post only real events your club or group is running, with accurate dates, venue, price and seats.</li>
+          <li>Hosting is for approved organizers. Post only real events you or your group are running, with accurate dates, venue, price and seats.</li>
           <li>Be clear about payment, refunds and what&apos;s included before people register, and keep the promises you make.</li>
           <li>Tell attendees quickly about changes and cancellations, using EvntCult&apos;s updates.</li>
           <li>Use attendee details only to run your event. Don&apos;t share or sell them.</li>
-          <li>Have the permissions your college needs for your event and venue.</li>
+          <li>Have the permissions your event and venue need.</li>
         </ul>
       </>
     ),

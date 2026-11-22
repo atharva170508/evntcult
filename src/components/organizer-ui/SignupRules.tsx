@@ -118,7 +118,7 @@ export function SignupRules({ eventId }: { eventId: string }) {
             rows={2}
             maxLength={500}
             defaultValue={rules.confirmMessage ?? ""}
-            placeholder="Bring your college ID. Gates open at 6:30 pm, use Gate 3."
+            placeholder="Bring a photo ID. Doors open at 6:30 pm, use Gate 3."
             onBlur={(e) => e.target.value.trim() !== (rules.confirmMessage ?? "") && save({ ...rules, confirmMessage: e.target.value.trim() || null }, 0)}
             style={{ height: "auto", paddingTop: 10, paddingBottom: 10, lineHeight: 1.5 }}
           />

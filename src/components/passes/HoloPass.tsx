@@ -1057,7 +1057,7 @@ async function shareStory(p: HoloPassProps, artEl: HTMLDivElement | null) {
   g.fillText("evntcult", W / 2, H - 150);
   g.fillStyle = "rgba(255,255,255,0.7)";
   g.font = `500 32px ${sans}`;
-  g.fillText("Every campus event, one pass.", W / 2, H - 98);
+  g.fillText("Every event, one pass.", W / 2, H - 98);
   g.textAlign = "left";
 
   const blob = await new Promise<Blob | null>((res) =>

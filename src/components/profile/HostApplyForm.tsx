@@ -14,7 +14,7 @@ export function HostApplyForm() {
   const [error, setError] = useState<string | null>(null);
   const [tried, setTried] = useState(false);
 
-  const clubError = club.trim().length < 2 ? "Add your club or group name." : null;
+  const clubError = club.trim().length < 2 ? "Add your organization or group name." : null;
   const noteError = note.trim().length < 10 ? "Say a little about what you'll run (at least 10 characters)." : null;
 
   async function submit(e: React.FormEvent) {
@@ -36,7 +36,7 @@ export function HostApplyForm() {
 
   return (
     <form onSubmit={submit} noValidate className="card space-y-5 p-5 md:p-6">
-      <Field label="Club or group" error={tried ? clubError : null}>
+      <Field label="Organization or group" error={tried ? clubError : null}>
         {(p) => <Input {...p} value={club} onChange={(e) => setClub(e.target.value)} maxLength={80} autoComplete="organization" />}
       </Field>
       <Field label="What will you run?" hint="For example: monthly build nights and a demo day." error={tried ? noteError : null}>

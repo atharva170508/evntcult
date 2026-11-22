@@ -73,7 +73,7 @@ export function buildCalendar(name: string, events: IcsEvent[], now = new Date()
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//EvntCult//Campus calendar//EN",
+    "PRODID:-//EvntCult//Events calendar//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     `X-WR-CALNAME:${icsEscape(name)}`,

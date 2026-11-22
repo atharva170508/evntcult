@@ -29,7 +29,7 @@ export const GET = handle(async (req: Request, { params }: Ctx) => {
   );
   const origin = new URL(req.url).origin;
   const ics = buildCalendar(
-    "EvntCult campus events",
+    "EvntCult events",
     rows.map((e) => ({
       uid: `${e.id}@evntcult`,
       title: e.mine ? `✓ ${e.title}` : e.title,

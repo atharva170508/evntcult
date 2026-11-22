@@ -40,7 +40,7 @@ export function HeroSearch() {
         <input
           name="q"
           type="search"
-          placeholder="Robowars, garba, cricket…"
+          placeholder="Concerts, meetups, workshops…"
           className="h-10 min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none focus-visible:shadow-none placeholder:text-ink-subtle [&::-webkit-search-cancel-button]:hidden"
         />
       </label>

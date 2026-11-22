@@ -84,7 +84,7 @@ export function layout(o: { title: string; preheader: string; heading: string; b
 <h1 style="margin:0 0 16px;font-family:${SERIF};font-weight:400;font-size:34px;line-height:1.08;letter-spacing:-0.5px;color:${INK}">${esc(o.heading)}</h1>
 ${o.body}
 </td></tr>
-<tr><td style="padding:18px 8px 0;font-family:${SANS};font-size:12px;line-height:1.6;color:#8A857A">${o.footer}<br>EvntCult, campus events in one place.</td></tr>
+<tr><td style="padding:18px 8px 0;font-family:${SANS};font-size:12px;line-height:1.6;color:#8A857A">${o.footer}<br>EvntCult. Every event, one pass.</td></tr>
 </table></td></tr></table>
 </body></html>`;
 }

@@ -267,7 +267,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
               </p>
               {!q && attendees.length === 0 && e.status === "published" && (
                 <>
-                  <p className="mt-1 max-w-[42ch] text-small text-ink-muted">Drop the link in your class and club groups to get the first sign-ups.</p>
+                  <p className="mt-1 max-w-[42ch] text-small text-ink-muted">Drop the link in your WhatsApp groups and socials to get the first sign-ups.</p>
                   <ShareFirst url={`https://${await siteHost()}/events/${e.slug}`} title={e.title} />
                 </>
               )}

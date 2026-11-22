@@ -142,7 +142,7 @@ export default async function PassesPage() {
       <PageHero title="Passes" />
 
       {upcoming.length === 0 ? (
-        <EmptyState art="pass" icon={Ticket} title="Your next pass goes here." body="Register for anything on campus and your pass appears here, ready to scan at the gate, even offline." action={{ label: "Find an event", href: "/events" }} secondary={{ label: "Open the calendar", href: "/calendar" }} />
+        <EmptyState art="pass" icon={Ticket} title="Your next pass goes here." body="Register for any event and your pass appears here, ready to scan at the gate, even offline." action={{ label: "Find an event", href: "/events" }} secondary={{ label: "Open the calendar", href: "/calendar" }} />
       ) : (
         <div className="grid justify-items-center gap-x-8 gap-y-16 sm:grid-cols-2 xl:grid-cols-3">
           {upcoming.map((r) => {

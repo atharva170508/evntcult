@@ -12,7 +12,7 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
         { href: "/events?when=today", label: "Happening today" },
         { href: "/events?when=weekend", label: "This weekend" },
         { href: "/events?price=free", label: "Free events" },
-        { href: "/calendar", label: "Campus calendar" },
+        { href: "/calendar", label: "Events calendar" },
         { href: "/venues", label: "Venues and directions" },
       ],
     },

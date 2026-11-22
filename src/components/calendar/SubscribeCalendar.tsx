@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { CalendarPlus, Check, Copy } from "lucide-react";
 import { buttonClass } from "@/components/ui/Button";
 
-/** Luma's "Subscribe": the campus calendar as a live feed in Google, Apple or Outlook Calendar. */
+/** Luma's "Subscribe": the events calendar as a live feed in Google, Apple or Outlook Calendar. */
 export function SubscribeCalendar({ feedUrl }: { feedUrl: string }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -39,7 +39,7 @@ export function SubscribeCalendar({ feedUrl }: { feedUrl: string }) {
       </button>
       {open && (
         <div className="absolute right-0 top-full z-30 mt-2 w-[280px] rounded-2xl border border-line-strong bg-white p-2 shadow-pop">
-          <p className="px-3 pb-2 pt-1 text-[13px] text-ink-muted">New campus events appear in your calendar on their own.</p>
+          <p className="px-3 pb-2 pt-1 text-[13px] text-ink-muted">New events appear in your calendar on their own.</p>
           <a href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(webcal)}`} target="_blank" rel="noopener noreferrer" className={item}>
             Google Calendar
           </a>

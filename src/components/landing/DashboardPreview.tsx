@@ -135,7 +135,7 @@ export function DashboardPreview() {
                       This week
                     </p>
                     <p className="text-[12.5px] text-ink-muted">
-                      2 yours · 9 on campus
+                      2 yours, 9 nearby
                     </p>
                   </div>
                   <ol className="mt-3 grid grid-cols-7 gap-1.5">

@@ -47,12 +47,12 @@ export function Hero() {
           className="font-display text-[clamp(52px,7.4vw,104px)] leading-[0.9] tracking-[-0.04em] text-ink"
         >
           <MaskedLines
-            lines={["Every campus event,", "one pass."]}
+            lines={["Every event,", "one pass."]}
           />
         </h1>
         <Entrance delay={0.3}>
           <p className="mt-7 max-w-[38ch] text-[18px] leading-snug text-ink-2 md:text-[20px]">
-            Hackathons, cricket, garba and workshops from every club on one
+            Concerts, meetups, workshops, parties and hackathons, all on one
             calendar. Register in a tap and walk in with your phone.
           </p>
         </Entrance>
@@ -360,7 +360,7 @@ export function Venues({ venues }: { venues: VenueCount[] }) {
           id="venues-h"
           className="text-[22px] font-semibold tracking-[-0.01em] text-ink"
         >
-          Around campus
+          Venues near you
         </h2>
         <Link
           href="/venues"

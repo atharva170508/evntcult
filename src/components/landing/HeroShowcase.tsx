@@ -65,7 +65,7 @@ export function HeroShowcase({ qr }: { qr: string }) {
           ref={card}
           tabIndex={0}
           role="img"
-          aria-label="Example EvntCult pass for Freshers' Night. Hover or use the arrow keys to tilt it."
+          aria-label="Example EvntCult pass for Sunset Sessions. Hover or use the arrow keys to tilt it."
           onPointerMove={onMove}
           onPointerLeave={rest}
           onKeyDown={onKey}
@@ -82,7 +82,7 @@ export function HeroShowcase({ qr }: { qr: string }) {
             <EventArt accent="violet" seed="hero-pass" scrim={false} />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-5 pt-12">
               <p className="font-display text-[30px] leading-none text-white">
-                Freshers&apos; Night
+                Sunset Sessions
               </p>
             </div>
             <span className="absolute left-4 top-4 rounded-lg bg-white/90 px-2.5 py-1 text-[11.5px] font-semibold text-ink">
@@ -111,7 +111,7 @@ export function HeroShowcase({ qr }: { qr: string }) {
                 <div className="col-span-2">
                   <dt className="text-ink-muted">Venue</dt>
                   <dd className="truncate font-semibold text-ink">
-                    Main Auditorium
+                    Riverside Lawn
                   </dd>
                 </div>
               </dl>

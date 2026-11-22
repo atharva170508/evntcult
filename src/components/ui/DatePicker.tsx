@@ -225,13 +225,13 @@ function parseTyped(t: string): string | null {
   const min = Number(m[2] ?? 0);
   if (m[3]?.startsWith("p") && h < 12) h += 12;
   if (m[3]?.startsWith("a") && h === 12) h = 0;
-  if (!m[3] && h >= 1 && h <= 7) h += 12; // campus events: "7" means evening
+  if (!m[3] && h >= 1 && h <= 7) h += 12; // most events: "7" means evening
   return h < 24 && min < 60 ? `${String(h).padStart(2, "0")}:${String(min).padStart(2, "0")}` : null;
 }
 
 /**
  * A time field: a list of 15-minute slots that opens scrolled to the current time, plus typing
- * ("7:30", "730p", "19:30" all work; a bare 1 to 7 means evening, since that's when campus
+ * ("7:30", "730p", "19:30" all work; a bare 1 to 7 means evening, since that's when most
  * events happen). Arrows move, Enter picks, Escape closes.
  */
 export function TimePicker({ value, onChange, label, className }: { value: string; onChange: (v: string) => void; label: string; className?: string }) {

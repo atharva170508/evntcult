@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 const body = z
   .object({
-    club: z.string().trim().min(2, "Name the club or group you host for.").max(80),
+    club: z.string().trim().min(2, "Name the organization or group you host for.").max(80),
     note: z.string().trim().min(10, "Say in a sentence what you plan to run.").max(500),
   })
   .strict();
