@@ -464,7 +464,7 @@ export function RegisterPanel(props: {
             On the waitlist
             {r.waitlistPosition ? (
               <>
-                {" "}
+                
                , <span className="font-mono">#{r.waitlistPosition}</span>
               </>
             ) : (

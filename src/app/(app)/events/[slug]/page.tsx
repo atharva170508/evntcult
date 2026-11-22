@@ -15,6 +15,7 @@ import {
   Navigation,
   Pencil,
   ScanLine,
+  Ticket,
   Video,
 } from "lucide-react";
 import { LinkButton } from "@/components/ui/Button";
@@ -50,6 +51,7 @@ import { EventEffect } from "@/components/events/EventEffect";
 import { ViewBeacon } from "@/components/events/ViewBeacon";
 import { FeedbackCard } from "@/components/events/FeedbackCard";
 import { EventCard } from "@/components/landing/EventCard";
+import { passName } from "@/lib/pass-name";
 import { listEvents } from "@/lib/data/events";
 
 export const dynamic = "force-dynamic";
@@ -875,7 +877,7 @@ export default async function EventPage({
               </h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {related.map((r) => (
-                  <EventCard key={r.id} e={r} />
+                  <EventCard key={r.id} e={r} rows />
                 ))}
               </div>
             </section>
@@ -884,6 +886,24 @@ export default async function EventPage({
           {side("mt-10 border-t border-line pt-8 lg:hidden")}
         </div>
       </div>
+
+      {/* Phones, already going: the pass stays one tap away. */}
+      {reg && reg.status !== "cancelled" && !ended && (
+        <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-line/70 bg-canvas/90 px-gutter pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 backdrop-blur-xl lg:hidden">
+          <div className="min-w-0">
+            <p className="truncate font-serif text-[20px] leading-tight text-ink">{passName(reg.pass_code).name}</p>
+            <p className="text-[13px] text-ink-muted">
+              {reg.status === "waitlisted" ? "On the waitlist" : reg.checked_in_at ? "Checked in" : `Your pass, ${fmtDate(s.startsAt, { day: "numeric", month: "short" })}`}
+            </p>
+          </div>
+          <Link
+            href="/passes"
+            className="inline-flex h-12 shrink-0 items-center gap-2 whitespace-nowrap rounded-xl bg-ink px-5 text-[16px] font-semibold text-white active:scale-[0.97]"
+          >
+            <Ticket className="size-[18px]" aria-hidden /> Show pass
+          </Link>
+        </div>
+      )}
 
       {/* Phones: price and the main action stay in reach. */}
       {(canRegister || !viewer) && (

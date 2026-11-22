@@ -64,10 +64,10 @@ export default async function HostPage({ params }: { params: Promise<{ id: strin
         {upcoming.length === 0 ? (
           <p className="mt-3 text-[15px] text-ink-muted">Nothing scheduled right now. Check back soon.</p>
         ) : (
-          <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:gap-x-6 lg:grid-cols-4">
+          <ul className="mt-5 grid grid-cols-1 gap-y-4 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-10 md:gap-x-6 lg:grid-cols-4">
             {upcoming.map((e) => (
               <li key={e.id}>
-                <EventCard e={e} />
+                <EventCard e={e} rows />
               </li>
             ))}
           </ul>

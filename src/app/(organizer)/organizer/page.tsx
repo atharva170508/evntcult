@@ -5,7 +5,7 @@ import { getViewer } from "@/lib/rbac";
 import { formatINR } from "@/lib/money";
 import { organizerEvents, type HomeEvent } from "@/lib/data/organizer-events";
 import { MISSING_LABEL, istTime, missingForPublish, ticketDate } from "@/lib/organizer/shared";
-import { ArrowRight, CalendarPlus, CalendarRange, Plus } from "lucide-react";
+import { ArrowRight, CalendarPlus, Plus } from "lucide-react";
 import { DuplicateButton } from "@/components/organizer-ui/EventActions";
 import { EventArt } from "@/components/ui/EventArt";
 import { Chip } from "@/components/ui/Chip";
@@ -115,14 +115,6 @@ export default async function OrganizerHome() {
         <h1 className="font-display text-[clamp(40px,5vw,56px)] leading-none tracking-[-0.03em]">
           Welcome back, {firstName}
         </h1>
-        <div className="flex flex-wrap gap-2 md:hidden">
-          <LinkButton href="/organizer/calendar" variant="secondary">
-            <CalendarRange className="size-4" aria-hidden /> Calendar
-          </LinkButton>
-          <Link href="/organizer/events/new" className={buttonClass("primary", "md")}>
-            <Plus className="size-4" aria-hidden /> Create event
-          </Link>
-        </div>
       </header>
 
       <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-card bg-line shadow-card lg:grid-cols-4">

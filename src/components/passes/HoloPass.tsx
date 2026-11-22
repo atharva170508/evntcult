@@ -245,7 +245,7 @@ export function HoloPass(p: HoloPassProps) {
                       ? { duration: 0 }
                       : { type: "spring", stiffness: 130, damping: 17 }
                   }
-                  className="relative grid [transform-style:preserve-3d]"
+                  className="relative grid grid-cols-[minmax(0,1fr)] [transform-style:preserve-3d]"
                   onDoubleClick={() => setFlipped((f) => !f)}
                 >
                   {/* ---------------- Front ---------------- */}

@@ -166,7 +166,7 @@ export default async function CalendarPage({
               return (
                 <div
                   key={`b${i}`}
-                  className="min-h-[56px] bg-canvas/60 md:min-h-[124px]"
+                  className="min-h-[50px] bg-canvas/60 md:min-h-[124px]"
                 />
               );
             const list = byDay.get(day) ?? [];
@@ -175,13 +175,16 @@ export default async function CalendarPage({
               <div
                 key={day}
                 className={cn(
-                  "min-h-[56px] bg-surface p-1.5 md:min-h-[124px] md:p-2",
+                  "relative min-h-[50px] bg-surface py-1.5 md:min-h-[124px] md:p-2",
                   isToday && "bg-accent-soft/40",
                 )}
               >
+                {list.length > 0 && (
+                  <a href={`#d-${day}`} aria-label={`Go to ${Number(day.slice(8))} in the agenda`} className="absolute inset-0 z-[1] active:bg-ink/5 md:hidden" />
+                )}
                 <p
                   className={cn(
-                    "grid size-6 place-items-center rounded-full font-mono text-[12px] tabular-nums",
+                    "mx-auto grid size-7 place-items-center rounded-full text-[13px] tabular-nums md:mx-0 md:size-6 md:font-mono md:text-[12px]",
                     isToday
                       ? "bg-night font-medium text-white"
                       : list.length
@@ -195,7 +198,7 @@ export default async function CalendarPage({
                 {/* Phones: dots. Laptops: event pills. */}
                 {list.length > 0 && (
                   <div
-                    className="mt-1 flex flex-wrap gap-1 px-0.5 md:hidden"
+                    className="mt-1 flex flex-wrap justify-center gap-1 md:hidden"
                     aria-label={`${list.length} event${list.length > 1 ? "s" : ""}`}
                   >
                     {list.slice(0, 4).map((e) => (
@@ -279,7 +282,8 @@ export default async function CalendarPage({
             {[...byDay.entries()].map(([day, list]) => (
               <div
                 key={day}
-                className="grid gap-3 p-4 md:grid-cols-[112px_1fr] md:gap-6 md:p-5"
+                id={`d-${day}`}
+                className="grid scroll-mt-[calc(var(--header-h)+16px)] gap-3 p-4 target:bg-accent-soft/30 md:grid-cols-[112px_1fr] md:gap-6 md:p-5"
               >
                 <div className="flex items-baseline gap-2 md:block">
                   <p

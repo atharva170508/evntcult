@@ -15,7 +15,8 @@ import {
   Search,
   ShieldCheck,
   UserRound,
-  X,
+  ChevronRight,
+  Repeat,
 } from "lucide-react";
 import { cn, initials } from "@/lib/utils";
 import { m } from "motion/react";
@@ -23,7 +24,7 @@ import { EASE } from "@/components/motion/MotionProvider";
 import { NotificationBell } from "@/components/shell/NotificationBell";
 import { ATTEND_NAV, VISITOR_HREF, isActive, isMainActive, workspaceFor, type Workspace } from "@/components/shell/nav";
 import { BrandLogo } from "./Brand";
-import { ModalDialog } from "@/components/ui/ModalDialog";
+import { BottomSheet } from "@/components/ui/BottomSheet";
 import { CompactSearch, HeaderSearch } from "./HeaderSearch";
 import {
   CalendarIcon,
@@ -139,7 +140,7 @@ export function SiteHeader({
             wide ? "max-w-[1440px]" : "max-w-[1360px]",
           )}
         >
-          <div className="grid h-20 grid-cols-[auto_1fr_auto] items-center gap-4 md:grid-cols-[1fr_auto_1fr]">
+          <div className="grid h-14 grid-cols-[auto_1fr_auto] items-center gap-4 md:h-20 md:grid-cols-[1fr_auto_1fr]">
             <div className="flex items-center gap-3">
               <Link
                 href={
@@ -152,7 +153,7 @@ export function SiteHeader({
                 aria-label="EvntCult home"
                 className="rounded-lg py-1"
               >
-                <BrandLogo className="text-[24px]" />
+                <BrandLogo className="text-[20px] md:text-[24px]" />
               </Link>
               {ws !== "attend" && (
                 <span className="hidden rounded-lg bg-sunken px-2.5 py-1 text-[12px] font-semibold text-ink-2 sm:inline">
@@ -251,9 +252,9 @@ export function SiteHeader({
               <button
                 onClick={onSearch}
                 aria-label="Search events"
-                className="grid size-11 place-items-center rounded-full bg-sunken text-ink transition-colors duration-fast hover:bg-mist md:hidden"
+                className="grid size-10 place-items-center rounded-full text-ink transition-colors duration-fast active:bg-sunken md:hidden"
               >
-                <Search className="size-[18px]" strokeWidth={2.2} aria-hidden />
+                <Search className="size-[20px]" strokeWidth={2.1} aria-hidden />
               </button>
               {viewer && (
                 <span className="hidden md:block">
@@ -261,13 +262,22 @@ export function SiteHeader({
                 </span>
               )}
               <AccountMenu viewer={viewer} ws={ws} onEnterCode={onEnterCode} />
-              <button
-                onClick={() => setSheet(true)}
-                aria-label="Open menu"
-                className="grid size-11 place-items-center rounded-full transition-colors duration-fast hover:bg-sunken md:hidden"
-              >
-                <Menu className="size-[20px]" aria-hidden />
-              </button>
+              {viewer ? (
+                <button
+                  onClick={() => setSheet(true)}
+                  aria-label="Account and more"
+                  className="ml-0.5 grid size-10 place-items-center rounded-full transition-transform duration-fast active:scale-95 md:hidden"
+                >
+                  <Avatar name={viewer.name} className="size-8 text-[12px]" />
+                </button>
+              ) : (
+                <Link
+                  href="/signin"
+                  className="ml-1 flex h-9 items-center whitespace-nowrap rounded-xl bg-lavender px-3.5 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink md:hidden"
+                >
+                  Log in
+                </Link>
+              )}
             </div>
           </div>
 
@@ -284,8 +294,8 @@ export function SiteHeader({
           )}
         </div>
       </header>
-      {hasSearch && <div aria-hidden className="h-[81px] md:h-[175px] print:hidden" />}
-      {sheet && (
+      {hasSearch && <div aria-hidden className="h-[57px] md:h-[175px] print:hidden" />}
+      {sheet && viewer && (
         <MenuSheet
           viewer={viewer}
           ws={ws}
@@ -488,169 +498,96 @@ function MenuSheet({
   onClose,
   onEnterCode,
 }: {
-  viewer: NavViewer | null;
+  viewer: NavViewer;
   ws: Workspace;
   pathname: string;
   tabs: Tab[];
   onClose: () => void;
   onEnterCode: () => void;
 }) {
-  const row =
-    "flex h-14 items-center gap-4 border-b border-line text-[16px] text-ink";
+  const row = "flex min-h-[52px] w-full items-center gap-3.5 text-left text-[16px] text-ink active:opacity-60";
+  const ic = "size-[20px] shrink-0 text-ink-muted";
 
   return (
-    <ModalDialog label="Menu" onClose={onClose} className="md:hidden">
-      <m.div
-        initial={{ opacity: 0, y: -12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25, ease: EASE }}
-        className="fixed inset-0 z-50 flex flex-col bg-canvas text-ink md:hidden"
-      >
-        <div className="flex h-16 shrink-0 items-center justify-between border-b border-line px-gutter">
-          <BrandLogo className="text-[22px]" />
-          <button
-            onClick={onClose}
-            aria-label="Close menu"
-            className="grid size-10 place-items-center rounded-full hover:bg-sunken"
-          >
-            <X className="size-[20px]" aria-hidden />
-          </button>
-        </div>
-        <div className="flex-1 overflow-y-auto px-gutter pb-10 pt-2">
-          {viewer && (
-            <Link
-              href="/profile"
-              className="flex items-center gap-3 border-b border-line py-4"
-            >
-              <Avatar name={viewer.name} className="size-12 text-[15px]" />
-              <span className="min-w-0">
-                <span className="block truncate text-[17px] font-semibold">
-                  {viewer.name}
-                </span>
-                <span className="block text-[13.5px] text-ink-subtle">
-                  Show profile
-                </span>
-              </span>
+    <BottomSheet label="Account and more" onClose={onClose}>
+      <Link href="/profile" className="mt-1 flex items-center gap-3.5 rounded-2xl bg-white p-3.5 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-line active:bg-sunken">
+        <Avatar name={viewer.name} className="size-12 text-[15px]" />
+        <span className="min-w-0 flex-1">
+          <span className="block truncate font-serif text-[22px] leading-tight">{viewer.name}</span>
+          <span className="block text-[13.5px] text-ink-subtle">Profile and settings</span>
+        </span>
+        <ChevronRight className="size-5 text-ink-subtle" aria-hidden />
+      </Link>
+
+      {ws === "host" ? (
+        <Link href="/organizer/events/new" className="mt-3 flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-lavender text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink">
+          <Plus className="size-4" strokeWidth={2.6} aria-hidden /> Create event
+        </Link>
+      ) : null}
+
+      <ul className="mt-2 divide-y divide-line">
+        {ws === "admin" &&
+          tabs.map((t) => (
+            <li key={t.href}>
+              <Link href={t.href} aria-current={isActive(pathname, t) ? "page" : undefined} className={cn(row, isActive(pathname, t) && "font-semibold")}>
+                {t.label}
+              </Link>
+            </li>
+          ))}
+        <li>
+          {ws === "host" ? (
+            <Link href="/dashboard" className={row}>
+              <Repeat className={ic} aria-hidden /> Switch to attending
+            </Link>
+          ) : (
+            <Link href={viewer.isOrganizer ? "/organizer" : "/host"} className={row}>
+              <Repeat className={ic} aria-hidden /> {viewer.isOrganizer ? "Switch to hosting" : "Host an event"}
             </Link>
           )}
-          <ul>
-            {tabs.map((t, i) => (
-              <m.li
-                key={t.href}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{
-                  duration: 0.2,
-                  ease: EASE,
-                  delay: 0.04 + i * 0.03,
-                }}
-              >
-                <Link
-                  href={!viewer && VISITOR_HREF[t.href] ? VISITOR_HREF[t.href] : t.href}
-                  aria-current={(ws === "attend" ? isMainActive(pathname, t.href) : isActive(pathname, t)) ? "page" : undefined}
-                  className={cn(row, (ws === "attend" ? isMainActive(pathname, t.href) : isActive(pathname, t)) && "font-semibold")}
-                >
-                  {t.label}
-                </Link>
-              </m.li>
-            ))}
-            {ws === "attend" && (
-              <>
-                <li>
-                  <Link href="/vault" className={row}>
-                    <Images className="mx-1 size-6 text-ink-muted" aria-hidden />{" "}
-                    Photo Vault
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/venues" className={row}>
-                    <MapPinned
-                      className="mx-1 size-6 text-ink-muted"
-                      aria-hidden
-                    />{" "}
-                    Venues
-                  </Link>
-                </li>
-              </>
-            )}
-          </ul>
-          <div className="mt-6 grid gap-2.5">
-            {viewer ? (
-              <>
-                {ws === "host" ? (
-                  <>
-                    <Link
-                      href="/organizer/events/new"
-                      className="flex h-12 items-center justify-center gap-2 rounded-xl whitespace-nowrap bg-lavender ring-2 ring-inset ring-ink text-[16px] font-semibold text-ink"
-                    >
-                      <Plus className="size-4" aria-hidden /> Create event
-                    </Link>
-                    <Link
-                      href="/dashboard"
-                      className="flex h-12 items-center justify-center rounded-lg border border-ink text-[16px] font-semibold"
-                    >
-                      Switch to attending
-                    </Link>
-                  </>
-                ) : (
-                  <Link
-                    href={viewer.isOrganizer ? "/organizer" : "/host"}
-                    className="flex h-12 items-center justify-center rounded-lg border border-ink text-[16px] font-semibold"
-                  >
-                    {viewer.isOrganizer ? "Switch to hosting" : "Apply to host events"}
-                  </Link>
-                )}
-                <button
-                  onClick={() => {
-                    onClose();
-                    onEnterCode();
-                  }}
-                  className="flex h-12 items-center justify-center gap-2 rounded-lg border border-line-strong text-[16px] font-semibold"
-                >
-                  <KeyRound className="size-4" aria-hidden /> Enter an event
-                  code
-                </button>
-                {viewer.isAdmin && (
-                  <Link
-                    href="/admin"
-                    className="flex h-12 items-center justify-center gap-2 rounded-lg border border-line-strong text-[16px] font-semibold"
-                  >
-                    <ShieldCheck className="size-4" aria-hidden /> Admin
-                  </Link>
-                )}
-                <Link
-                  href="/get-app"
-                  className="flex h-12 items-center justify-center gap-2 rounded-lg border border-line-strong text-[16px] font-semibold"
-                >
-                  <Download className="size-4" aria-hidden /> Get the app
-                </Link>
-                <ThemeSwitch className="mt-1" />
-                <button
-                  onClick={logout}
-                  className="mt-1 flex h-12 items-center justify-center gap-2 text-[15px] font-semibold text-ink-muted underline underline-offset-4"
-                >
-                  <LogOut className="size-4" aria-hidden /> Log out
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  href="/signin?mode=signup"
-                  className="flex h-12 items-center justify-center rounded-xl whitespace-nowrap bg-lavender ring-2 ring-inset ring-ink text-[16px] font-semibold text-ink"
-                >
-                  Sign up
-                </Link>
-                <Link
-                  href="/signin"
-                  className="flex h-12 items-center justify-center rounded-lg border border-ink text-[16px] font-semibold"
-                >
-                  Log in
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </m.div>
-    </ModalDialog>
+        </li>
+        <li>
+          <button
+            onClick={() => {
+              onClose();
+              onEnterCode();
+            }}
+            className={row}
+          >
+            <KeyRound className={ic} aria-hidden /> Enter an event code
+          </button>
+        </li>
+        {ws === "attend" && (
+          <>
+            <li>
+              <Link href="/vault" className={row}>
+                <Images className={ic} aria-hidden /> Photo Vault
+              </Link>
+            </li>
+            <li>
+              <Link href="/venues" className={row}>
+                <MapPinned className={ic} aria-hidden /> Venues
+              </Link>
+            </li>
+          </>
+        )}
+        {viewer.isAdmin && ws !== "admin" && (
+          <li>
+            <Link href="/admin" className={row}>
+              <ShieldCheck className={ic} aria-hidden /> Admin
+            </Link>
+          </li>
+        )}
+        <li>
+          <Link href="/get-app" className={row}>
+            <Download className={ic} aria-hidden /> Get the app
+          </Link>
+        </li>
+      </ul>
+
+      <ThemeSwitch className="mt-3" />
+      <button onClick={logout} className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[15px] font-semibold text-ink-muted active:bg-sunken">
+        <LogOut className="size-4" aria-hidden /> Log out
+      </button>
+    </BottomSheet>
   );
 }

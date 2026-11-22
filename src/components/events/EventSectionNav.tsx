@@ -29,7 +29,14 @@ export function EventSectionNav({ sections }: { sections: { id: string; label: s
     const el = wrap.current?.querySelector<HTMLElement>(`[data-id="${active}"]`);
     if (!el) return;
     setPill({ x: el.offsetLeft, w: el.offsetWidth });
-    el.scrollIntoView({ block: "nearest", inline: "nearest" });
+    // Scroll only the tab strip sideways; scrollIntoView would also drag the page down to it.
+    const strip = el.closest<HTMLElement>(".ui-seg-scroll");
+    if (strip) {
+      const l = el.offsetLeft - 12;
+      const r = el.offsetLeft + el.offsetWidth + 12 - strip.clientWidth;
+      if (strip.scrollLeft > l) strip.scrollTo({ left: l });
+      else if (strip.scrollLeft < r) strip.scrollTo({ left: r });
+    }
   }, [active]);
 
   if (sections.length < 3) return null;

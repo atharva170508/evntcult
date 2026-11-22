@@ -115,10 +115,10 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
           {view === "list" ? (
             <EventTimeline events={events} />
           ) : (
-            <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:gap-x-6 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+            <ul className="mt-4 grid grid-cols-1 gap-y-4 sm:mt-6 sm:grid-cols-3 sm:gap-x-4 sm:gap-y-10 md:gap-x-6 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
               {events.map((e) => (
                 <li key={e.id} data-peek={e.slug}>
-                  <EventCard e={e} />
+                  <EventCard e={e} rows />
                 </li>
               ))}
             </ul>

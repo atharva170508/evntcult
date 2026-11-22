@@ -461,3 +461,15 @@
 .dark .a-table th { background: #1a1816; }
 .dark .o-chip[aria-pressed="true"],
 .dark .o-chip[aria-checked="true"] { background: var(--ink); }
+
+/* Phones: one-row toolbar, a back arrow instead of the breadcrumb, extra actions in the More sheet. */
+.o-phone-only { display: none; }
+.o-back { width: 40px; height: 40px; margin-left: -10px; place-items: center; border-radius: 999px; color: var(--text); flex-shrink: 0; }
+.o-back:active { background: var(--sunken); }
+@media (max-width: 767px) {
+  .o-top { flex-wrap: nowrap; padding-top: 8px; padding-bottom: 8px; min-height: 56px; background: color-mix(in srgb, var(--page) 90%, transparent); backdrop-filter: blur(20px); }
+  .o-phone-only { display: grid; }
+  .o-hide-phone { display: none !important; }
+  .o-crumb { font-size: 15px; flex: 1 1 auto; }
+  .o-top .o-reason { display: none; }
+}

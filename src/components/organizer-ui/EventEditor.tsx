@@ -12,6 +12,8 @@ import { CategorySetup } from "./CategorySetup";
 import { SignupRules } from "./SignupRules";
 import { TicketsSetup } from "./TicketsSetup";
 import { PosterSetup } from "./PosterSetup";
+import { MoreSheet } from "./MoreSheet";
+import { ChevronLeft } from "lucide-react";
 import { SectionRail } from "./SectionRail";
 import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, isValidLink, LINK_ERROR, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
 import { DatePicker, TimePicker } from "@/components/ui/DatePicker";
@@ -336,21 +338,40 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
   return (
     <>
       <header className="o-top">
+        <Link href="/organizer" aria-label="Back to events" className="o-back o-phone-only">
+          <ChevronLeft size={20} aria-hidden />
+        </Link>
         <div className="o-crumb">
-          <Link href="/organizer">Events</Link> / <b>{f.title.trim() || "New event"}</b>
+          <Link href="/organizer" className="o-hide-phone">Events</Link>
+          <span className="o-hide-phone"> / </span>
+          <b>{f.title.trim() || "New event"}</b>
         </div>
         <span className="o-spacer" />
         {status !== "published" && blockers.length > 0 && <span className="o-reason o-narrow-only">needs {blockers.join(", ")}</span>}
         {id && status === "published" && (
-          <button type="button" className="o-text-btn" onClick={unpublish}>
+          <button type="button" className="o-text-btn o-hide-phone" onClick={unpublish}>
             Unpublish
           </button>
         )}
-        {id && <Button onClick={duplicate}>Duplicate</Button>}
         {id && (
-          <Link className="o-btn" href={`/organizer/events/${id}/manage`}>
+          <Button className="o-hide-phone" onClick={duplicate}>
+            Duplicate
+          </Button>
+        )}
+        {id && (
+          <Link className="o-btn o-hide-phone" href={`/organizer/events/${id}/manage`}>
             Attendees
           </Link>
+        )}
+        {id && (
+          <MoreSheet
+            title={f.title.trim() || "Event"}
+            items={[
+              { label: "Attendees", icon: "users", href: `/organizer/events/${id}/manage` },
+              { label: "Duplicate", icon: "copy", onSelect: () => void duplicate() },
+              ...(status === "published" ? [{ label: "Unpublish", icon: "eye" as const, onSelect: () => void unpublish() }] : []),
+            ]}
+          />
         )}
         {status === "published" ? (
           <Link className="o-btn o-btn-primary" href={`/organizer/events/${id}/published`}>

@@ -49,8 +49,8 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
 
   return (
     <footer className="border-t border-line bg-sunken print:hidden">
-      <div className="mx-auto max-w-[1360px] px-gutter pb-28 pt-12 md:pb-8">
-        <nav aria-label="Footer" className="grid gap-y-8 md:grid-cols-3 md:gap-x-12">
+      <div className="mx-auto max-w-[1360px] px-gutter pb-28 pt-6 md:pb-8 md:pt-12">
+        <nav aria-label="Footer" className="hidden gap-y-8 md:grid md:grid-cols-3 md:gap-x-12">
           {columns.map((c, i) => (
             <div key={c.title} className={i > 0 ? "border-t border-line-strong pt-8 md:border-0 md:pt-0" : undefined}>
               <h2 className="text-[14px] font-semibold text-ink">{c.title}</h2>
@@ -66,12 +66,15 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
             </div>
           ))}
         </nav>
-        <div className="mt-12 flex flex-col gap-4 border-t border-line-strong pt-6 text-[14px] text-ink-2 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-4 text-[14px] text-ink-2 sm:flex-row sm:items-start sm:justify-between md:mt-12 md:border-t md:border-line-strong md:pt-6">
           <p>
             © {new Date().getFullYear()} EvntCult.{" "}
             <a href="mailto:evntcult@gmail.com" className="hover:underline hover:underline-offset-2">
               evntcult@gmail.com
             </a>
+            <Link href="/terms" className="ml-3 underline-offset-2 hover:underline md:hidden">
+              Terms
+            </Link>
           </p>
           <ThemeSwitch className="w-full max-w-[280px] sm:w-[280px]" />
           <p className="sm:text-right">

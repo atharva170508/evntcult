@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { Award, CalendarDays, Camera, Download, KeyRound, MapPin, Megaphone, MessageCircle, Pencil, ScanLine, Search, Shirt, Users } from "lucide-react";
+import { Award, CalendarDays, Camera, ChevronLeft, Download, KeyRound, MapPin, Megaphone, MessageCircle, Pencil, ScanLine, Search, Shirt, Users } from "lucide-react";
 import { canManageEvent, getViewer } from "@/lib/rbac";
 import { all, count, first, getDB } from "@/lib/db";
 import { listAttendees } from "@/lib/data/organizer-actions";
@@ -15,6 +15,7 @@ import { AttendeeCert, CertPanel } from "@/components/organizer/CertControls";
 import { formatINR } from "@/lib/money";
 import { fmtDate, fmtRange, fmtTime, relative } from "@/lib/utils";
 import { Chip } from "@/components/ui/Chip";
+import { MoreSheet } from "@/components/organizer-ui/MoreSheet";
 import { UpdateComposer } from "@/components/organizer/UpdateComposer";
 import { PaymentCell } from "@/components/organizer/PaymentCell";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
@@ -138,8 +139,11 @@ export default async function ManageEventPage({ params, searchParams }: { params
   return (
     <div className="pb-8">
       {/* Toolbar */}
-      <div className="sticky top-[var(--header-h)] z-20 -mx-gutter flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-line bg-canvas px-gutter py-3">
-        <nav aria-label="Breadcrumb" className="flex min-w-0 items-center gap-1.5 text-[13.5px] text-ink-muted">
+      <div className="sticky top-[var(--header-h)] z-20 -mx-gutter flex items-center gap-x-3 gap-y-2 border-b border-line bg-canvas/90 px-gutter py-2 backdrop-blur-xl md:flex-wrap md:bg-canvas md:py-3">
+        <Link href="/organizer" aria-label="Back to events" className="-ml-2 grid size-10 place-items-center rounded-full text-ink active:bg-sunken md:hidden">
+          <ChevronLeft className="size-5" aria-hidden />
+        </Link>
+        <nav aria-label="Breadcrumb" className="hidden min-w-0 items-center gap-1.5 text-[13.5px] text-ink-muted md:flex">
           <Link href="/organizer" className="transition-colors hover:text-ink">
             Events
           </Link>
@@ -148,7 +152,19 @@ export default async function ManageEventPage({ params, searchParams }: { params
         </nav>
         <Chip tone={statusTone}>{e.status[0].toUpperCase() + e.status.slice(1)}</Chip>
         <span className="flex-1" />
-        <div className="flex flex-wrap gap-2">
+        {e.status === "published" && (
+          <LinkButton href={`/organizer/scan/${e.id}`} size="sm" className="md:hidden">
+            <ScanLine className="size-3.5" aria-hidden /> Scan
+          </LinkButton>
+        )}
+        <MoreSheet
+          title={e.title}
+          items={[
+            ...(e.status !== "draft" ? [{ label: "View event page", icon: "eye" as const, href: `/events/${e.slug}` }, { label: "Photos", icon: "camera" as const, href: `/events/${e.slug}/photos` }] : []),
+            { label: "Edit event", icon: "pencil" as const, href: `/organizer/events/${e.id}` },
+          ]}
+        />
+        <div className="hidden flex-wrap gap-2 md:flex">
           {e.status !== "draft" && (
             <LinkButton href={`/events/${e.slug}`} variant="ghost" size="sm">
               View page
@@ -413,7 +429,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
                   {updates.map((u) => (
                     <li key={u.id} className="text-[13.5px]">
                       <p>
-                        <span className="font-medium">{UPDATE_LABEL[u.kind] ?? "Update"}</span>{" "}
+                        <span className="font-medium">{UPDATE_LABEL[u.kind] ?? "Update"}</span>
                         <span className="text-ink-subtle">
                          , {relative(new Date(u.created_at))}
                           {u.notified ? ", WhatsApp" : ""}
