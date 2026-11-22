@@ -107,7 +107,7 @@ export function QuestionsSetup({ eventId }: { eventId: string }) {
             {items.map((q) => (
               <div className="o-merch-row" key={q.id}>
                 <span>{q.label}</span>
-                <span className="o-meta">{q.kind === "choice" ? q.options.join(", ") : "text"}{q.required ? " · required" : ""}</span>
+                <span className="o-meta">{q.kind === "choice" ? q.options.join(", ") : "text"}{q.required ? ", required" : ""}</span>
                 <button type="button" className="o-link" style={{ fontSize: 12.5 }} onClick={() => remove(q.id)}>Remove</button>
               </div>
             ))}

@@ -190,7 +190,7 @@ export function CalendarView({ initialView, month, today, initials, events, clas
                   {MONTHS[m - 1]} <span>{y}</span>
                 </div>
                 <div className="o-meta" style={{ fontSize: 12.5, color: "var(--dim)", marginTop: 5, height: 14 }}>
-                  {loading ? <span className="o-skel" /> : `${events.length} events · ${draftCount} drafts · times in IST`}
+                  {loading ? <span className="o-skel" /> : `${events.length} events, ${draftCount} drafts, times in IST`}
                 </div>
               </div>
               <span className="o-spacer" />

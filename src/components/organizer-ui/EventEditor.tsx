@@ -41,6 +41,8 @@ export interface EditorInitial {
   access: "public" | "code";
   accessCode: string;
   taken: number;
+  /** Uploaded poster URL, or null when the event uses its drawn cover. */
+  poster: string | null;
 }
 
 interface Props {
@@ -309,7 +311,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
     else setToast({ message: r.data.error?.message ?? "Couldn't duplicate." });
   }
 
-  const pill = status === "published" ? "PUBLISHED" : status === "closed" || status === "cancelled" ? "CLOSED" : "DRAFT";
+  const pill = status === "published" ? "Published" : status === "closed" || status === "cancelled" ? "Closed" : "Draft";
   const goTo = (section: string) => {
     const el = document.getElementById(section);
     el?.scrollIntoView({ block: "start" });
@@ -444,7 +446,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
             </Section>
             </div>
 
-            {id && <PosterSetup eventId={id} title={f.title} />}
+            {id && <PosterSetup eventId={id} title={f.title} initial={initial?.poster ?? null} />}
             <div id="sec-schedule">
             <Section n="02" label="Schedule">
               <Field label="Starts">
@@ -657,7 +659,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
               tagline={f.tagline}
               qrValue={id ? `${host.startsWith("localhost") ? "http" : "https"}://${host}/e/${slug}` : null}
               passCode={previewSlug ? `EC-${previewSlug.replace(/[^a-z0-9]/gi, "").slice(0, 4).toUpperCase()}-${String(taken + 1).padStart(4, "0")}` : null}
-              priceLabel={f.paid && pricePaise > 0 ? `₹${Math.round(pricePaise / 100)}` : f.paid ? "PAID" : "FREE"}
+              priceLabel={f.paid && pricePaise > 0 ? `₹${Math.round(pricePaise / 100)}` : f.paid ? "Paid" : "Free"}
               seatsLabel={cap === null ? "Unlimited" : `${Math.max(0, cap - taken)} / ${cap}`}
             />
             <section className="o-check" aria-label="Ready to publish">

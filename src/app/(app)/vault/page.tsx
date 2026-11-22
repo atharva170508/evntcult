@@ -52,7 +52,7 @@ export default async function VaultPage() {
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <p className="eyebrow">
-                  {fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })} · {g.ids.length} of you
+                  {fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })}, {g.ids.length} of you
                 </p>
                 <h2 className="mt-2 text-display-md font-semibold">{g.title}</h2>
               </div>
@@ -88,7 +88,7 @@ export default async function VaultPage() {
                   <span className="min-w-0 truncate text-[15px] font-medium">{g.title}</span>
                   <span className="flex shrink-0 items-center gap-3 text-[12.5px] text-ink-muted">
                     <span>
-                      <span className="font-mono tabular-nums text-ink">{g.photos}</span> photos · you&apos;re in <span className="font-mono tabular-nums text-ink">{g.mine}</span>
+                      <span className="font-mono tabular-nums text-ink">{g.photos}</span> photos, you&apos;re in <span className="font-mono tabular-nums text-ink">{g.mine}</span>
                     </span>
                     <ArrowUpRight className="size-4 text-ink-subtle transition-transform duration-base ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
                   </span>

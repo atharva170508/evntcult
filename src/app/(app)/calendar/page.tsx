@@ -292,7 +292,7 @@ export default async function CalendarPage({
                       weekday: "short",
                       timeZone: "UTC",
                     }).format(new Date(`${day}T00:00:00Z`))}
-                    {day === today && " · Today"}
+                    {day === today && ", Today"}
                   </p>
                   <p className="text-[32px] font-semibold leading-none tracking-[-0.04em] tabular-nums">
                     {Number(day.slice(8))}

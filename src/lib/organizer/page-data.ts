@@ -51,5 +51,6 @@ export function toEditorInitial(e: EventRow & { taken: number }): EditorInitial 
     access: e.access,
     accessCode: e.access_code?.toLowerCase() ?? "",
     taken: e.taken,
+    poster: e.banner_url && /^\/api\/events\/[^/]+\/poster/.test(e.banner_url) ? e.banner_url : null,
   };
 }

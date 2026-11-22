@@ -28,7 +28,7 @@ export function CertPanel({ eventId, issued, checkedIn, enabled }: { eventId: st
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <span className="text-[14px]"><b className="font-mono font-medium tabular-nums">{issued}</b> issued · <span className="font-mono tabular-nums">{checkedIn}</span> checked in</span>
+      <span className="text-[14px]"><b className="font-mono font-medium tabular-nums">{issued}</b> issued, <span className="font-mono tabular-nums">{checkedIn}</span> checked in</span>
       <button disabled={busy} onClick={() => run(`/api/events/${eventId}/certificates/issue`)} className="inline-flex h-8 items-center rounded-xl bg-night px-3.5 text-[13px] font-medium text-white shadow-button transition-colors hover:bg-night-3 disabled:opacity-50">
         Issue certificates
       </button>

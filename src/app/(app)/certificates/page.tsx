@@ -39,8 +39,8 @@ export default async function CertificatesPage() {
                   <Award className="size-5 shrink-0 text-ink-subtle" aria-hidden />
                   <p className="min-w-0 flex-1 truncate text-[13px] text-ink-muted">
                     <span className="font-mono">{fmtDate(new Date(c.startsAt), { day: "numeric", month: "short", year: "numeric" })}</span>
-                    {c.venue ? ` · ${c.venue}` : ""}
-                    {c.kind !== "participation" ? ` · ${c.kind}` : ""}
+                    {c.venue ? `, ${c.venue}` : ""}
+                    {c.kind !== "participation" ? `, ${c.kind}` : ""}
                   </p>
                   <ArrowUpRight className="size-4 shrink-0 text-ink-subtle transition-transform duration-base ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
                 </div>

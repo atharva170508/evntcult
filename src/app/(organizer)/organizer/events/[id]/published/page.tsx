@@ -57,7 +57,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
             </div>
             {e.access === "code" && e.access_code && (
               <p className="mt-3 text-[13px] text-ink-muted">
-                Private event · join code <span className="font-mono font-medium tracking-[0.12em] text-ink">{e.access_code.toLowerCase()}</span>
+                Private event, join code <span className="font-mono font-medium tracking-[0.12em] text-ink">{e.access_code.toLowerCase()}</span>
               </p>
             )}
           </section>
@@ -94,7 +94,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
             tagline={e.tagline}
             qrValue={link}
             passCode={`EC-${e.slug.replace(/[^a-z0-9]/gi, "").slice(0, 4).toUpperCase()}-${String(e.taken + 1).padStart(4, "0")}`}
-            priceLabel={e.price_paise ? `₹${Math.round(e.price_paise / 100)}` : "FREE"}
+            priceLabel={e.price_paise ? `₹${Math.round(e.price_paise / 100)}` : "Free"}
             seatsLabel={e.capacity === null ? "Unlimited" : `${Math.max(0, e.capacity - e.taken)} / ${e.capacity}`}
           />
         </div>

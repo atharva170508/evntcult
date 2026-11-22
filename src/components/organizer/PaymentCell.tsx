@@ -30,7 +30,7 @@ export function PaymentCell({ regId, paid, method, refCode, utr }: { regId: stri
   if (paid) {
     return (
       <div className="flex flex-wrap items-center gap-2">
-        <Chip tone="live">Paid{method ? ` · ${method === "upi" ? "UPI" : "Cash"}` : ""}</Chip>
+        <Chip tone="live">Paid{method ? `, ${method === "upi" ? "UPI" : "Cash"}` : ""}</Chip>
         {refCode && <span className="font-mono text-[11.5px] text-ink-muted">{refCode}</span>}
         <button
           onClick={() => confirm("Mark this pass as unpaid again?") && send({ status: "unpaid" })}

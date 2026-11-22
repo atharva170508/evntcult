@@ -288,7 +288,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
                     {h.title}
                   </Link>
                   <p className="text-[12.5px] text-ink-subtle">
-                    {fmtDate(h.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(h.startsAt)}
+                    {fmtDate(h.startsAt, { weekday: "short", day: "numeric", month: "short" })}, {fmtTime(h.startsAt)}
                   </p>
                 </div>
                 <div className="col-span-7 sm:col-span-4">
@@ -332,8 +332,8 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
                   </p>
                   <p className="mt-0.5 text-[13px] text-ink-2">{c.reason}</p>
                   <p className="mt-1 text-[12px] text-ink-muted">
-                    {fmtDate(c.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtRange(c.startsAt, c.endsAt)}
-                    <span className={cn("font-medium", c.severity === "hard" ? "text-danger" : "text-warn")}>{c.severity === "hard" ? " · Blocks publishing" : " · Warning only"}</span>
+                    {fmtDate(c.startsAt, { weekday: "short", day: "numeric", month: "short" })}, {fmtRange(c.startsAt, c.endsAt)}
+                    <span className={cn("font-medium", c.severity === "hard" ? "text-danger" : "text-warn")}>{c.severity === "hard" ? ", Blocks publishing" : ", Warning only"}</span>
                   </p>
                 </div>
               </li>
@@ -413,7 +413,7 @@ export function Announcements({ items }: { items: AnnouncementItem[] }) {
                 {i === 0 && <Chip tone="accent">New</Chip>}
                 <Chip tone={kindTone[a.kind]}>{kindLabel[a.kind]}</Chip>
                 <span className="text-[12px] text-ink-subtle">
-                  {a.eventTitle} · {relative(a.createdAt)}
+                  {a.eventTitle}, {relative(a.createdAt)}
                 </span>
               </div>
               <p className="mt-2 text-[15px] font-medium leading-snug">{a.title}</p>
@@ -483,7 +483,7 @@ export function UpcomingList({ events }: { events: EventSummary[] }) {
                   <p className="truncate text-[14.5px] font-medium">{e.title}</p>
                   <p className="truncate text-[12.5px] text-ink-muted">
                     {fmtTime(e.startsAt)}
-                    {e.venueName ? ` · ${e.venueName}` : ""}
+                    {e.venueName ? `, ${e.venueName}` : ""}
                   </p>
                 </div>
                 <ArrowUpRight className="size-4 shrink-0 text-ink-subtle transition-transform duration-base ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
@@ -545,7 +545,7 @@ export function EventCard({ e }: { e: EventSummary }) {
         </div>
         <div className="flex flex-1 flex-col p-4">
           <p className="text-[12.5px] text-ink-subtle">
-            {fmtDate(e.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(e.startsAt)}
+            {fmtDate(e.startsAt, { weekday: "short", day: "numeric", month: "short" })}, {fmtTime(e.startsAt)}
           </p>
           <h3 className="mt-1.5 text-[17px] font-semibold leading-snug tracking-[-0.02em]">{e.title}</h3>
           {e.tagline && <p className="mt-1 line-clamp-1 text-[13px] text-ink-muted">{e.tagline}</p>}
@@ -623,7 +623,7 @@ export function UpiPending({ amountPaise }: { amountPaise: number }) {
     <div role="status" className="flex items-center gap-3 rounded-tile bg-warn-soft px-4 py-3 text-[13.5px]">
       <Sparkles className="size-4 shrink-0 text-warn" aria-hidden />
       <span className="text-ink-2">
-        <span className="font-mono font-medium text-warn">{formatINR(amountPaise)}</span> due · UPI payments are coming soon. Pay the organizer at the desk for now.
+        <span className="font-mono font-medium text-warn">{formatINR(amountPaise)}</span> due, UPI payments are coming soon. Pay the organizer at the desk for now.
       </span>
     </div>
   );

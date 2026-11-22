@@ -196,9 +196,10 @@ describe("pure rules", () => {
     expect(slugify("a".repeat(90)).length).toBe(60);
   });
   it("ends label", () => {
-    expect(endsLabel("2026-11-07", "18:00", 120)).toBe("ends 20:00");
-    expect(endsLabel("2026-11-07", "18:00", 180)).toBe("ends 21:00");
-    expect(endsLabel("2026-11-07", "23:00", 180)).toBe("ends 02:00 +1");
+    expect(endsLabel("2026-11-07", "18:00", 120)).toBe("Ends 8:00 pm");
+    expect(endsLabel("2026-11-07", "18:00", 180)).toBe("Ends 9:00 pm");
+    expect(endsLabel("2026-11-07", "23:00", 180)).toBe("Ends 2:00 am the next day");
+    expect(endsLabel("2026-11-07", "10:00", 72 * 60)).toBe("Ends Tue, 10 Nov, 10:00 am");
   });
   it("UPI", () => {
     expect(isValidUpi("club.lead@okaxis")).toBe(true);

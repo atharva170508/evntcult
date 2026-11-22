@@ -15,7 +15,7 @@ export function Agenda({ multi, byDay, today, cursor, empty }: { multi: Calendar
         <div key={e.id} style={{ borderTop: "1px solid var(--hair)", padding: "10px 0" }}>
           <Link href={`/organizer/events/${e.id}`} className="o-agenda-bar">
             <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              {e.title.toUpperCase()} · {spanDays(e)} days{e.venue ? ` · ${e.venue}` : ""}
+              {e.title}, {spanDays(e)} days{e.venue ? `, ${e.venue}` : ""}
             </span>
             <span className="o-mono" style={{ fontSize: 12.5, whiteSpace: "nowrap" }}>
               {spanRange(e)}
@@ -41,7 +41,7 @@ export function Agenda({ multi, byDay, today, cursor, empty }: { multi: Calendar
                 </span>
                 <span className="o-agenda-venue">{e.venue ?? "TBA"}</span>
                 <span className="o-agenda-cap" style={isSoldOut(e) ? { color: "var(--warn)" } : undefined}>
-                  {e.status === "draft" ? <span className="o-pill">DRAFT</span> : seatsLabel(e)}
+                  {e.status === "draft" ? <span className="o-pill">Draft</span> : seatsLabel(e)}
                 </span>
               </Link>
             ))}

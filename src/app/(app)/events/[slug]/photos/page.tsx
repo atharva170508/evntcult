@@ -69,13 +69,17 @@ export default async function EventPhotosPage({ params, searchParams }: { params
       {back}
       <PageHero
         className="pt-0 md:pt-0"
-        eyebrow={`Photos · ${fmtDate(new Date(event.starts_at), { day: "numeric", month: "short", year: "numeric" })}`}
+        eyebrow={`Photos, ${fmtDate(new Date(event.starts_at), { day: "numeric", month: "short", year: "numeric" })}`}
         title={event.title}
         sub={
-          <>
-            <span className="font-mono tabular-nums">{photos.length}</span> photo{photos.length === 1 ? "" : "s"}
-            {access.tag && <> · you&apos;re in <span className="font-mono tabular-nums">{tagged}</span></>}
-          </>
+          photos.length === 0 ? (
+            "No photos yet."
+          ) : (
+            <span className="tabular-nums">
+              {photos.length.toLocaleString("en-IN")} {photos.length === 1 ? "photo" : "photos"}
+              {access.tag && tagged > 0 && <>, you&apos;re in {tagged}</>}
+            </span>
+          )
         }
       />
 

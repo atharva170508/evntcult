@@ -36,7 +36,7 @@ function EventRow({ e, draft }: { e: HomeEvent; draft?: boolean }) {
         </Link>
         <p className="mt-0.5 truncate text-[12.5px] text-ink-muted">
           <span className="font-mono">{istTime(start)}</span>
-          {" · "}
+          {", "}
           {draft ? (missing.length ? <span className="text-warn">Needs {missing.join(", ").toLowerCase()}</span> : "Ready to publish") : e.venue_status === "tba" ? "Venue TBA" : e.venue}
         </p>
       </div>

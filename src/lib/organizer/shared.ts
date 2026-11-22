@@ -74,7 +74,10 @@ export function endsLabel(date: string, time: string, minutes: number): string {
   const start = new Date(istToIso(date, time));
   const end = new Date(start.getTime() + minutes * 60_000);
   const days = Math.round((Date.parse(`${istDate(end)}T00:00:00Z`) - Date.parse(`${istDate(start)}T00:00:00Z`)) / 86_400_000);
-  return `ends ${istTime(end)}${days > 0 ? ` +${days}` : ""}`;
+  const t = end.toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit" }).toLowerCase();
+  if (days <= 0) return `Ends ${t}`;
+  if (days === 1) return `Ends ${t} the next day`;
+  return `Ends ${end.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", weekday: "short", day: "numeric", month: "short" })}, ${t}`;
 }
 
 export type PublishField = "name" | "category" | "venue" | "description" | "payout" | "code";

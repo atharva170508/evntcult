@@ -146,7 +146,7 @@ export default async function TermsPage({ searchParams }: { searchParams: Promis
 
   return (
     <div className="pb-12">
-      <PageHero title="Terms & Conditions" sub={`Terms & Conditions and User Rules · version of ${version}`} />
+      <PageHero title="Terms & Conditions" sub={`Terms & Conditions and User Rules, version of ${version}`} />
 
       {viewer && !viewer.termsAccepted && (
         <div className="mb-10 max-w-[760px]">

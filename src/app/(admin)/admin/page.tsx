@@ -64,7 +64,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         </dl>
 
         {/* Hosting is for approved organizers only. New applications wait here. */}
-        <h2 className="o-section-label a-head">Host applications{applicants.length ? ` · ${applicants.length} waiting` : ""}</h2>
+        <h2 className="o-section-label a-head">Host applications{applicants.length ? `, ${applicants.length} waiting` : ""}</h2>
         {applicants.length === 0 ? (
           <p className="o-meta">No one is waiting. People apply from their account menu.</p>
         ) : (

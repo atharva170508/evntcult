@@ -357,7 +357,7 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
         v = await decideOffline(scan);
       }
       show(v);
-      const label = "name" in v && v.name ? `${v.title} · ${v.name}` : v.title;
+      const label = "name" in v && v.name ? `${v.title}, ${v.name}` : v.title;
       addRecent(v.color, label, offline);
     },
     [decideOffline, event.pricePaise, show],
@@ -477,7 +477,7 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
       const r = (await res.json()) as { result: string; claimedAt?: string; left?: number | null; message?: string; claimed?: number };
       if (r.result === "claimed") updateLine(line.id, { claimedAt: r.claimedAt ?? claim.claimed_at, left: r.left ?? null, note: undefined });
       else if (r.result === "already_claimed") updateLine(line.id, { claimedAt: r.claimedAt ?? null, note: `Already collected at ${fmtTime(new Date(r.claimedAt ?? claim.claimed_at))}` });
-      else if (r.result === "sold_out") updateLine(line.id, { left: 0, note: `${r.message} · ${r.claimed ?? 0} given` });
+      else if (r.result === "sold_out") updateLine(line.id, { left: 0, note: `${r.message}, ${r.claimed ?? 0} given` });
       else updateLine(line.id, { note: r.message });
     } catch {
       writeClaims([...readClaims(), claim]);
@@ -518,7 +518,7 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
         </Link>
         )}
         <div className="min-w-0 flex-1">
-          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">{volunteer ? `Volunteer · ${volunteer.label}` : "Gate scanner"}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-white/50">{volunteer ? `Volunteer, ${volunteer.label}` : "Gate scanner"}</p>
           <h1 className="truncate text-[19px] font-semibold leading-tight tracking-[-0.01em]">{event.title}</h1>
         </div>
         <span
@@ -526,7 +526,7 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
           role="status"
         >
           {online ? <Wifi className="size-3.5" /> : <CloudOff className="size-3.5" />}
-          {online ? (queued > 0 ? `Online · syncing ${queued}` : "Online · Synced") : `Offline${queued > 0 ? ` · ${queued} queued` : " mode"}`}
+          {online ? (queued > 0 ? `Online, syncing ${queued}` : "Online, Synced") : `Offline${queued > 0 ? `, ${queued} queued` : " mode"}`}
         </span>
       </header>
 
@@ -549,7 +549,7 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
             <span className="font-mono text-[44px] font-medium leading-none tracking-[-0.03em] tabular-nums">
               <Odometer value={counts.checkedIn} />
             </span>
-            <span className="ml-1.5 text-[15px] text-white/60">in · of {counts.registered}</span>
+            <span className="ml-1.5 text-[15px] text-white/60">of {counts.registered} in</span>
           </p>
           <p className="font-mono text-[11.5px] text-white/50">{liveMode === "live" ? "● Live" : "Updates every 5 s"}</p>
         </div>
@@ -613,7 +613,7 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
             {verdict.color === "amber" && verdict.collect ? (
               <div className="mt-2 flex w-full max-w-xs flex-col gap-2">
                 <button onClick={admitUnpaid} className="rounded-full bg-[#1a1203] py-3.5 text-[16px] font-bold text-white">
-                  Collected {formatINR(verdict.collect.amountPaise)} · Admit
+                  Collected {formatINR(verdict.collect.amountPaise)}, Admit
                 </button>
                 <button onClick={() => setVerdict(null)} className="rounded-full border-2 border-[#1a1203]/40 py-3 text-[15px] font-bold">
                   Don&apos;t admit
@@ -633,7 +633,7 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
       <section className="space-y-1 text-[12.5px] text-white/60">
         {guestList ? (
           <p className="flex items-center justify-between gap-2">
-            <span>Guest list saved for offline use · {guestList.size} passes · {fmtTime(new Date(guestList.savedAt))}</span>
+            <span>Guest list saved for offline use, {guestList.size} passes, {fmtTime(new Date(guestList.savedAt))}</span>
             <button onClick={refreshGuestList} aria-label="Refresh the saved guest list" className="rounded-full p-1.5 hover:bg-white/10"><RefreshCw className="size-3.5" /></button>
           </p>
         ) : (

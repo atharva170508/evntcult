@@ -36,7 +36,7 @@ export function Rail(props: { events: CalendarEvent[]; clashes: RailClash[]; dra
                 <span className="o-clash">! </span>
                 {c.title} and {c.other}
                 <span className="o-rail-sub">
-                  {at ? `${ticketDate(at)} · ` : ""}
+                  {at ? `${ticketDate(at)}, ` : ""}
                   {c.venue}
                 </span>
                 <span className="o-rail-go">Resolve →</span>
@@ -53,7 +53,7 @@ export function Rail(props: { events: CalendarEvent[]; clashes: RailClash[]; dra
               ○ {d.title}
               <span className="o-rail-sub">
                 {ticketDate(d.starts_at)}
-                {d.missing.length ? ` · needs ${d.missing.join(", ")}` : " · ready"}
+                {d.missing.length ? `, needs ${d.missing.join(", ")}` : ", ready"}
               </span>
               <span className="o-rail-go">Finish setup →</span>
             </Link>
@@ -67,7 +67,7 @@ export function Rail(props: { events: CalendarEvent[]; clashes: RailClash[]; dra
             <Link key={e.id} className="o-rail-row" href={`/organizer/events/${e.id}`}>
               {e.title}
               <span className="o-rail-sub">
-                {ticketDate(e.starts_at).slice(0, 3)} {istTime(new Date(e.starts_at))} · {seatsLabel(e)}
+                {ticketDate(e.starts_at).slice(0, 3)} {istTime(new Date(e.starts_at))}, {seatsLabel(e)}
               </span>
             </Link>
           ))}

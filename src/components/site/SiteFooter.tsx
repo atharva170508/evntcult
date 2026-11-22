@@ -68,7 +68,7 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
         </nav>
         <div className="mt-12 flex flex-col gap-4 border-t border-line-strong pt-6 text-[14px] text-ink-2 sm:flex-row sm:items-start sm:justify-between">
           <p>
-            © {new Date().getFullYear()} EvntCult ·{" "}
+            © {new Date().getFullYear()} EvntCult.{" "}
             <a href="mailto:evntcult@gmail.com" className="hover:underline hover:underline-offset-2">
               evntcult@gmail.com
             </a>

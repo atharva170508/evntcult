@@ -95,7 +95,7 @@ export function MonthGrid(props: { label: string; weeks: MonthWeek[]; overCell: 
                 <>
                   {b.event.title}
                   <span className="o-bar-meta">
-                    {spanDays(b.event)} days{b.event.venue ? ` · ${b.event.venue}` : ""}
+                    {spanDays(b.event)} days{b.event.venue ? `, ${b.event.venue}` : ""}
                   </span>
                 </>
               )}

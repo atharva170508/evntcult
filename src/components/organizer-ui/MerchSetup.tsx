@@ -68,7 +68,7 @@ export function MerchSetup({ eventId }: { eventId: string }) {
           <div>
             {items.map((i) => (
               <div className="o-merch-row" key={i.id}>
-                <span>{i.variant ? `${i.name} · ${i.variant}` : i.name}</span>
+                <span>{i.variant ? `${i.name}, ${i.variant}` : i.name}</span>
                 <span className="o-meta">{i.left === null ? "unlimited" : `${i.left} left`}</span>
                 {i.claimed === 0 ? (
                   <button type="button" className="o-link" style={{ fontSize: 12.5 }} onClick={() => remove(i.id)}>Remove</button>

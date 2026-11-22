@@ -66,7 +66,7 @@ export function EventCard({ e }: { e: EventSummary }) {
             day: "numeric",
             month: "short",
           })}{" "}
-          · {fmtTime(e.startsAt)}
+         , {fmtTime(e.startsAt)}
         </p>
         <p className="truncate text-[14px] text-ink-muted">
           {e.venueName ?? "Venue TBA"}
@@ -76,12 +76,12 @@ export function EventCard({ e }: { e: EventSummary }) {
             {e.feePaise ? formatINR(e.feePaise) : "Free"}
           </span>
           {state === "ended" ? (
-            <span className="text-ink-muted"> · {e.registered} went</span>
+            <span className="text-ink-muted">, {e.registered} went</span>
           ) : (
             left !== null &&
             state !== "full" &&
             state !== "live" &&
-            left <= 50 && <span className="text-ink-muted"> · {left} left</span>
+            left <= 50 && <span className="text-ink-muted">, {left} left</span>
           )}
         </p>
       </div>

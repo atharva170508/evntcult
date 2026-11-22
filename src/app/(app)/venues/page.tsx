@@ -74,7 +74,7 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
                         className={cn("group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors duration-fast hover:bg-sunken/70", e.slug === to && "bg-accent-soft/60")}
                       >
                         <span className="w-[92px] shrink-0 text-[12.5px] text-ink-muted">
-                          {fmtDate(new Date(e.startsAt), { day: "numeric", month: "short" })} · {fmtTime(new Date(e.startsAt))}
+                          {fmtDate(new Date(e.startsAt), { day: "numeric", month: "short" })}, {fmtTime(new Date(e.startsAt))}
                         </span>
                         <span className="min-w-0 flex-1 truncate text-[14px] font-medium">{e.title}</span>
                         <ArrowUpRight className="size-3.5 shrink-0 text-ink-subtle transition-transform duration-base ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />

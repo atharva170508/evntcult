@@ -24,9 +24,10 @@ async function shrink(file: File): Promise<Blob> {
  * The event poster: drop or pick an image, see it on the event card straight away, and it
  * replaces the drawn cover on the event page. Saved on its own.
  */
-export function PosterSetup({ eventId, title }: { eventId: string; title: string }) {
-  const [url, setUrl] = useState<string | null>(`/api/events/${eventId}/poster?v=current`);
-  const [has, setHas] = useState(true);
+export function PosterSetup({ eventId, title, initial }: { eventId: string; title: string; initial: string | null }) {
+  // The server says whether a poster exists, so a missing one never shows as a broken image.
+  const [url, setUrl] = useState<string | null>(initial);
+  const [has, setHas] = useState(initial !== null);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [over, setOver] = useState(false);

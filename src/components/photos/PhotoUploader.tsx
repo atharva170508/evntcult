@@ -105,7 +105,7 @@ export function PhotoUploader({ eventId }: { eventId: string }) {
           <ImagePlus className="size-5" aria-hidden />
         </span>
         <span className="mt-2 text-[15px] font-medium">Add photos</span>
-        <span className="text-[12.5px] text-ink-muted">JPEG, PNG or WebP · up to 10 MB each · location data is removed</span>
+        <span className="text-[12.5px] text-ink-muted">JPEG, PNG or WebP, up to 10 MB each, location data is removed</span>
         <input ref={input} type="file" accept="image/jpeg,image/png,image/webp" multiple className="sr-only" onChange={(e) => upload(e.target.files)} disabled={busy} />
       </label>
       {items.length > 0 && (

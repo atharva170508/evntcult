@@ -162,8 +162,8 @@ export function Featured({ e }: { e: EventSummary }) {
               <Magnetic>
                 <Link href={`/events/${e.slug}#register`} className={cta}>
                   {e.feePaise
-                    ? `Register · ${formatINR(e.feePaise)}`
-                    : "Register · free"}
+                    ? `Register, ${formatINR(e.feePaise)}`
+                    : "Register free"}
                 </Link>
               </Magnetic>
               <Link
@@ -377,7 +377,7 @@ export function Venues({ venues }: { venues: VenueCount[] }) {
                   {v.name}
                 </span>
                 <span className="block truncate text-[13.5px] text-ink-muted">
-                  {v.count} upcoming · next {v.next.title}
+                  {v.count} upcoming, next {v.next.title}
                 </span>
               </span>
               <Navigation

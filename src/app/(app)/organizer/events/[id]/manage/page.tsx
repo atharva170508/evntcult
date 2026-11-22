@@ -176,7 +176,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
         <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] text-ink-muted">
           <span className="inline-flex items-center gap-1.5">
             <CalendarDays className="size-4 text-ink-subtle" aria-hidden />
-            {fmtDate(new Date(e.starts_at), { weekday: "short", day: "numeric", month: "short" })} · {fmtRange(new Date(e.starts_at), new Date(e.ends_at))}
+            {fmtDate(new Date(e.starts_at), { weekday: "short", day: "numeric", month: "short" })}, {fmtRange(new Date(e.starts_at), new Date(e.ends_at))}
           </span>
           <span className="inline-flex items-center gap-1.5">
             <MapPin className="size-4 text-ink-subtle" aria-hidden /> {e.venue}
@@ -227,11 +227,11 @@ export default async function ManageEventPage({ params, searchParams }: { params
               <form role="search" className="flex h-9 flex-1 items-center gap-2 rounded-full bg-sunken/70 pl-3.5 pr-1 transition-[background-color,box-shadow] focus-within:bg-surface focus-within:shadow-card sm:flex-none">
                 <Search className="size-4 shrink-0 text-ink-subtle" aria-hidden />
                 {filter.key !== "all" && <input type="hidden" name="f" value={filter.key} />}
-                <input id="att-search" name="q" type="search" defaultValue={q} placeholder="Name, email, pass or UTR" aria-label="Search attendees" aria-keyshortcuts="/" className="w-full min-w-0 bg-transparent text-[13.5px] focus:outline-none sm:w-52" />
+                <input id="att-search" name="q" type="search" defaultValue={q} placeholder="Search guests" aria-label="Search attendees" aria-keyshortcuts="/" className="w-full min-w-0 bg-transparent text-[13.5px] focus:outline-none sm:w-52" />
                 <kbd className="hidden rounded border border-line-strong bg-white px-1.5 font-mono text-[11px] text-ink-muted md:inline" aria-hidden>
                   /
                 </kbd>
-                <button className={buttonClass("primary", "sm", "h-7")}>Search</button>
+                <button className={buttonClass("primary", "sm", "hidden h-7 sm:inline-flex")}>Search</button>
               </form>
               <a href={`/api/events/${e.id}/attendees?format=csv${q ? `&q=${encodeURIComponent(q)}` : ""}`} className={buttonClass("secondary", "sm", "h-9")}>
                 <Download className="size-3.5" aria-hidden /> CSV
@@ -415,8 +415,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
                       <p>
                         <span className="font-medium">{UPDATE_LABEL[u.kind] ?? "Update"}</span>{" "}
                         <span className="text-ink-subtle">
-                          · {relative(new Date(u.created_at))}
-                          {u.notified ? " · WhatsApp" : ""}
+                         , {relative(new Date(u.created_at))}
+                          {u.notified ? ", WhatsApp" : ""}
                         </span>
                       </p>
                       <p className="mt-0.5 text-ink-2">{u.body}</p>
@@ -488,9 +488,9 @@ export default async function ManageEventPage({ params, searchParams }: { params
               <ul className="divide-y divide-line/70 text-[13.5px]">
                 {merch.map((m) => (
                   <li key={m.id} className="flex flex-wrap items-center justify-between gap-3 py-2.5">
-                    <span className="font-medium">{m.variant ? `${m.name} · ${m.variant}` : m.name}</span>
+                    <span className="font-medium">{m.variant ? `${m.name}, ${m.variant}` : m.name}</span>
                     <span className="font-mono text-[12.5px] text-ink-muted">
-                      {m.claimed} claimed · {m.left === null ? "unlimited" : `${m.left} left`}
+                      {m.claimed} claimed, {m.left === null ? "unlimited" : `${m.left} left`}
                       {m.left === 0 && <b className="ml-2 font-medium text-warn">Sold out</b>}
                     </span>
                   </li>

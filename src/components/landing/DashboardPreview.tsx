@@ -109,13 +109,13 @@ export function DashboardPreview() {
                   </div>
                   <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5">
                     <p className="text-[12.5px] font-semibold text-accent">
-                      Your next event · in 2 days
+                      Your next event, in 2 days
                     </p>
                     <p className="mt-1 truncate text-[17px] font-semibold leading-snug text-ink sm:text-[19px]">
                       Robotics Build Night
                     </p>
                     <p className="mt-1 text-[13.5px] text-ink-muted">
-                      Friday · 7:00 pm · Block D Hall
+                      Friday, 7:00 pm, Block D Hall
                     </p>
                     <div className="mt-auto flex flex-wrap items-center gap-2 pt-4">
                       <span className="inline-flex h-9 items-center rounded-lg bg-ink px-3.5 text-[13px] font-semibold text-white">
@@ -171,7 +171,7 @@ export function DashboardPreview() {
                       className="size-2 rounded-full bg-[#5EE0A8]"
                       aria-hidden
                     />{" "}
-                    Live now · Lantern Fest
+                    Live now, Lantern Fest
                   </p>
                   <p className="mt-4 flex items-baseline gap-2">
                     <span className="font-display text-[56px] leading-none tracking-[-0.03em] tabular-nums">

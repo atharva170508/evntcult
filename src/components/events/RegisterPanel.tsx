@@ -332,7 +332,7 @@ export function RegisterPanel(props: {
             <p className="text-[13px] tabular-nums text-ink-muted">No. {passName(r.passCode).no}</p>
             {props.pricePaise > 0 && (
               <p className={r.paid ? "text-[13px] font-medium text-live" : "text-[13px] font-medium text-warn"}>
-                {r.paid ? "Paid" : props.upi ? (props.upi.utr ? "Payment being checked" : `Unpaid · ${formatINR(props.pricePaise)}`) : `Unpaid · ${formatINR(props.pricePaise)} at the desk`}
+                {r.paid ? "Paid" : props.upi ? (props.upi.utr ? "Payment being checked" : `Unpaid, ${formatINR(props.pricePaise)}`) : `Unpaid, ${formatINR(props.pricePaise)} at the desk`}
               </p>
             )}
             <p className="text-[12.5px] text-ink-muted">Show the QR at the gate.</p>
@@ -465,7 +465,7 @@ export function RegisterPanel(props: {
             {r.waitlistPosition ? (
               <>
                 {" "}
-                · <span className="font-mono">#{r.waitlistPosition}</span>
+               , <span className="font-mono">#{r.waitlistPosition}</span>
               </>
             ) : (
               ""
@@ -514,7 +514,7 @@ export function RegisterPanel(props: {
         {questionFields}
         {err}
         <Button onClick={() => register(false)} loading={busy} variant="accent" size="lg" className="w-full">
-          Request to join{price > 0 ? ` · ${formatINR(price)}` : ""}
+          Request to join{price > 0 ? `, ${formatINR(price)}` : ""}
         </Button>
         <p className="text-center text-[12.5px] text-ink-muted">The host approves each guest. You pay only once you&apos;re in.</p>
       </div>
@@ -525,7 +525,7 @@ export function RegisterPanel(props: {
     return (
       <div className="space-y-3">
         <Notice tone="danger">
-          Full · every seat is taken
+          Full, every seat is taken
           {fullOffer !== null ? (
             <>
               . You&apos;d be <span className="font-mono">#{fullOffer}</span> on the waitlist.
@@ -552,7 +552,7 @@ export function RegisterPanel(props: {
       {questionFields}
       {err}
       <Button onClick={() => register(false)} loading={busy} variant="accent" size="lg" className="w-full">
-        Register{price > 0 ? ` · ${formatINR(price)}${props.hasUpi ? "" : " at the desk"}` : " · free"}
+        Register{price > 0 ? `, ${formatINR(price)}${props.hasUpi ? "" : " at the desk"}` : ", free"}
       </Button>
       <p className="text-center text-[12.5px] text-ink-muted">Your pass is ready the moment you register.</p>
     </div>
