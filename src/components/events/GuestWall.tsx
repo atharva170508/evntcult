@@ -71,8 +71,8 @@ export function GuestWall({ slug, signedIn, registerHref }: { slug: string; sign
         </div>
         <div className="absolute inset-0 grid place-items-center bg-gradient-to-b from-canvas/30 to-canvas/80 p-6 text-center">
           <div>
-            <span className="mx-auto grid size-11 place-items-center rounded-full bg-ink text-white shadow-button">
-              <Lock className="size-4" aria-hidden />
+            <span className="mx-auto grid place-items-center text-ink">
+              <Lock className="size-5" aria-hidden />
             </span>
             <p className="mt-3 text-[16px] font-semibold text-ink">Only guests can see the wall</p>
             <p className="mt-1 text-[13.5px] text-ink-muted">
@@ -139,7 +139,7 @@ export function GuestWall({ slug, signedIn, registerHref }: { slug: string; sign
                 <div className="min-w-0 flex-1">
                   <p className="flex items-center gap-2 text-[13.5px]">
                     <span className="font-semibold text-ink">{p.name}</span>
-                    {p.host && <span className="rounded-full bg-lavender px-2 py-px text-[11px] font-semibold text-ink">Host</span>}
+                    {p.host && <span className="rounded-lg bg-lavender px-2 py-px text-[11px] font-semibold text-ink">Host</span>}
                     <time dateTime={p.at} className="text-ink-subtle">
                       {ago(p.at)}
                     </time>
@@ -166,7 +166,7 @@ export function GuestWall({ slug, signedIn, registerHref }: { slug: string; sign
                           aria-label={`React ${em}${r ? `, ${r.n}` : ""}`}
                           onClick={() => void send("POST", { react: p.id, emoji: em })}
                           className={cn(
-                            "inline-flex h-7 items-center gap-1 rounded-full px-2 text-[13px] tabular-nums transition-all active:scale-90",
+                            "inline-flex h-7 items-center gap-1 rounded-lg px-2 text-[13px] tabular-nums transition-all active:scale-90",
                             r?.mine ? "bg-lavender font-semibold text-ink ring-1 ring-inset ring-ink/20" : r ? "bg-sunken text-ink-2" : "text-ink-subtle opacity-0 hover:bg-sunken focus-visible:opacity-100 group-hover:opacity-100 max-sm:opacity-60",
                           )}
                         >

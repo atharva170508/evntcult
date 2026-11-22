@@ -43,7 +43,7 @@ export default async function EventPhotosPage({ params, searchParams }: { params
       <div className="space-y-8 pb-8 pt-6 md:pt-8">
         {back}
         <section className="card flex flex-col items-start p-8 md:p-12">
-          <span className="grid size-11 place-items-center rounded-tile bg-sunken text-ink-2">
+          <span className="grid size-11 place-items-center text-ink-2">
             <Lock className="size-5" aria-hidden />
           </span>
           <h1 className="mt-6 max-w-lg text-display-md font-semibold">Photos are for people who registered.</h1>
@@ -101,7 +101,7 @@ export default async function EventPhotosPage({ params, searchParams }: { params
           <AIFaceMatcher eventId={event.id} eventTitle={event.title} />
         ) : (
           <section className="card flex flex-col items-start p-8 md:p-10">
-            <span className="grid size-11 place-items-center rounded-tile bg-sunken text-ink-2">
+            <span className="grid size-11 place-items-center text-ink-2">
               <ScanFace className="size-5" aria-hidden />
             </span>
             <h2 className="mt-6 text-display-md font-semibold">AI Face Search isn&apos;t on yet.</h2>

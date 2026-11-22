@@ -25,7 +25,7 @@ export function FollowHost({ hostId, initial, signedIn, self }: { hostId: string
   };
   if (!signedIn)
     return (
-      <a href={`/signin?next=${encodeURIComponent(typeof location === "undefined" ? "/" : location.pathname)}`} className="inline-flex h-8 items-center gap-1.5 rounded-full border border-line-strong px-3 text-[13px] font-semibold text-ink hover:bg-sunken">
+      <a href={`/signin?next=${encodeURIComponent(typeof location === "undefined" ? "/" : location.pathname)}`} className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-line-strong px-3 text-[13px] font-semibold text-ink hover:bg-sunken">
         <UserPlus className="size-3.5" aria-hidden /> Follow
       </a>
     );
@@ -39,7 +39,7 @@ export function FollowHost({ hostId, initial, signedIn, self }: { hostId: string
         void set(!on);
       }}
       className={cn(
-        "inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-[13px] font-semibold transition-colors",
+        "inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-[13px] font-semibold transition-colors",
         on ? "bg-sunken text-ink-2" : "bg-ink text-white hover:bg-black",
       )}
     >
@@ -76,7 +76,7 @@ export function ReportEvent({ slug }: { slug: string }) {
                   role="radio"
                   aria-checked={reason === r}
                   onClick={() => setReason(r)}
-                  className={cn("h-9 rounded-full px-3.5 text-[13.5px] font-medium ring-1 ring-inset transition-colors", reason === r ? "bg-ink text-white ring-ink" : "text-ink-2 ring-line-strong hover:bg-sunken")}
+                  className={cn("h-9 rounded-lg px-3.5 text-[13.5px] font-medium ring-1 ring-inset transition-colors", reason === r ? "bg-ink text-white ring-ink" : "text-ink-2 ring-line-strong hover:bg-sunken")}
                 >
                   {r}
                 </button>

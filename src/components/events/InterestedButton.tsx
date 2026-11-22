@@ -42,8 +42,8 @@ export function InterestedButton({ slug, saved: initial, signedIn, className }: 
       aria-pressed={saved}
       title={error ? "Didn't save. Try again." : undefined}
       className={cn(
-        "inline-flex h-11 items-center justify-center gap-2 rounded-xl border px-4 text-[15px] font-semibold transition-colors duration-fast disabled:opacity-70",
-        saved ? "border-ink bg-ink text-white" : "border-line-strong bg-white text-ink hover:border-ink",
+        "inline-flex h-10 items-center justify-center gap-2 rounded-lg px-3 text-[14.5px] font-semibold transition-colors duration-fast disabled:opacity-70",
+        saved ? "bg-sunken text-ink" : "text-ink-2 hover:bg-sunken hover:text-ink",
         className,
       )}
     >

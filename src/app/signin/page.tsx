@@ -27,11 +27,11 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
             <h1 className="font-display text-[34px] leading-tight tracking-[-0.02em] text-ink">
               {signup ? (
                 <>
-                  Get your <em>pass.</em>
+                  Get your pass.
                 </>
               ) : (
                 <>
-                  Welcome <em>back.</em>
+                  Welcome back.
                 </>
               )}
             </h1>

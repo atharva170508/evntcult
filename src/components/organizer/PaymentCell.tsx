@@ -114,7 +114,7 @@ export function PaymentCell({ regId, paid, method, refCode, utr }: { regId: stri
           placeholder="UPI ref (optional)"
           aria-label="UPI reference (optional)"
           maxLength={35}
-          className="h-7 w-36 rounded-full border border-line bg-surface px-3 font-mono text-[12px] focus:border-ink focus:outline-none"
+          className="h-7 w-36 rounded-lg border border-line bg-surface px-3 font-mono text-[12px] focus:border-ink focus:outline-none"
         />
       )}
       <Button type="submit" size="sm" loading={busy} className="h-7 px-3 text-[12px]">

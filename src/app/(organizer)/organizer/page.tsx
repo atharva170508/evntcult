@@ -26,7 +26,7 @@ function EventRow({ e, draft }: { e: HomeEvent; draft?: boolean }) {
       <div className="relative isolate grid h-14 w-14 place-items-center overflow-hidden rounded-xl text-center text-white">
         <EventArt accent={CAT_ACCENT[e.category ?? ""] ?? "blue"} seed={e.id} scrim={false} flat />
         <div className="relative leading-none">
-          <div className="font-mono text-[9.5px] uppercase tracking-[0.08em]">{ticketDate(e.starts_at).split(" ")[2]}</div>
+          <div className="text-[12.5px] ">{ticketDate(e.starts_at).split(" ")[2]}</div>
           <div className="mt-0.5 text-[19px] font-semibold tabular-nums">{ticketDate(e.starts_at).split(" ")[1]}</div>
         </div>
       </div>
@@ -113,7 +113,7 @@ export default async function OrganizerHome() {
     <div className="pb-8 pt-8 md:pt-12">
       <header className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
         <h1 className="font-display text-[clamp(40px,5vw,56px)] leading-none tracking-[-0.03em]">
-          Welcome back, <em>{firstName}</em>
+          Welcome back, {firstName}
         </h1>
         <div className="flex flex-wrap gap-2 md:hidden">
           <LinkButton href="/organizer/calendar" variant="secondary">
@@ -142,11 +142,11 @@ export default async function OrganizerHome() {
       {events.length === 0 ? (
         <section className="card relative isolate mt-10 flex flex-col items-start overflow-hidden p-8 md:p-12">
           <div aria-hidden className="dot-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_70%_80%_at_100%_0%,black,transparent_70%)]" />
-          <span className="grid size-11 place-items-center rounded-tile bg-sunken text-ink-2">
+          <span className="grid size-11 place-items-center text-ink-2">
             <CalendarPlus className="size-5" aria-hidden />
           </span>
           <h2 className="mt-6 max-w-md text-display-md font-semibold">
-            Host your first <em>event.</em>
+            Host your first event.
           </h2>
           <p className="mt-3 max-w-md text-body text-ink-muted">Set the time and place, choose free or paid, publish. Registrations, passes and the gate scanner are ready the moment it goes live.</p>
           <Link href="/organizer/events/new" className={buttonClass("primary", "lg", "mt-7")}>

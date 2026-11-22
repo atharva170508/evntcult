@@ -119,7 +119,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
   };
 
   const statusTone = e.status === "published" ? "live" : e.status === "draft" ? "warn" : e.status === "cancelled" ? "danger" : "neutral";
-  const th = "px-4 py-3 font-mono text-[10.5px] font-medium uppercase tracking-[0.08em]";
+  const th = "px-4 py-3 text-[12.5px] font-medium ";
   const kpis: { l: string; v: string; sub?: string; meter?: [number, number | null]; tone?: "warn" }[] = [
     { l: "Registered", v: String(s.registered), sub: e.capacity === null ? "No limit" : `of ${e.capacity}`, meter: [s.registered, e.capacity] },
     { l: "Checked in", v: String(s.checkedIn), sub: s.registered ? `${Math.round((s.checkedIn / Math.max(1, s.registered)) * 100)}% of registered` : "—", meter: [s.checkedIn, Math.max(1, s.registered)] },
@@ -257,7 +257,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center px-6 py-14 text-center">
-              <span className="grid size-11 place-items-center rounded-tile bg-sunken text-ink-muted">
+              <span className="grid size-11 place-items-center text-ink-muted">
                 <Users className="size-5" aria-hidden />
               </span>
               <p className="mt-4 text-h4 font-semibold">

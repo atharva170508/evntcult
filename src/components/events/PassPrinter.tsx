@@ -56,7 +56,6 @@ export function PassPrinter({ pass, onClose }: { pass: PrintedPass; onClose: () 
     <ModalDialog label="Your pass" onClose={onClose}>
       <m.div className="absolute inset-0 overflow-y-auto bg-canvas text-ink" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
         {/* Soft lavender light behind the printer */}
-        <div aria-hidden className="pointer-events-none absolute left-1/2 top-[-10%] h-[70vh] w-[140vw] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(closest-side,rgba(240,215,255,0.9),rgba(240,215,255,0))]" />
 
         <div className="relative mx-auto flex min-h-full w-full max-w-[400px] flex-col px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))]">
           <div className="flex items-center justify-end">

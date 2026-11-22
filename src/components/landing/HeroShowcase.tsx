@@ -85,7 +85,7 @@ export function HeroShowcase({ qr }: { qr: string }) {
                 Freshers&apos; Night
               </p>
             </div>
-            <span className="absolute left-4 top-4 rounded-full bg-white/90 px-2.5 py-1 text-[11.5px] font-semibold text-ink">
+            <span className="absolute left-4 top-4 rounded-lg bg-white/90 px-2.5 py-1 text-[11.5px] font-semibold text-ink">
               Example pass
             </span>
           </div>
@@ -121,15 +121,6 @@ export function HeroShowcase({ qr }: { qr: string }) {
               dangerouslySetInnerHTML={{ __html: qr }}
             />
           </div>
-          {/* Foil: a light that follows the pointer across the card. */}
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 mix-blend-soft-light transition-opacity duration-300"
-            style={{
-              opacity: tilt.active ? 1 : 0,
-              background: `radial-gradient(420px circle at ${tilt.mx}% ${tilt.my}%, rgba(255,255,255,0.75), rgba(240,215,255,0.35) 30%, transparent 60%)`,
-            }}
-          />
         </div>
       </div>
 

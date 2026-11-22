@@ -153,7 +153,7 @@ export default async function CalendarPage({
           {WEEKDAYS.map((d) => (
             <div
               key={d}
-              className="py-3 text-center font-mono text-[11px] uppercase tracking-[0.08em] text-ink-subtle"
+              className="py-3 text-center text-[12.5px] text-ink-subtle"
             >
               {d}
             </div>
@@ -284,7 +284,7 @@ export default async function CalendarPage({
                 <div className="flex items-baseline gap-2 md:block">
                   <p
                     className={cn(
-                      "font-mono text-[11px] uppercase tracking-[0.08em]",
+                      "text-[12.5px] ",
                       day === today ? "text-accent-ink" : "text-ink-subtle",
                     )}
                   >

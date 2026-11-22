@@ -33,7 +33,7 @@ export function Card({
         <header className="flex items-start justify-between gap-4 px-5 pt-5 md:px-6 md:pt-6">
           <div className="flex min-w-0 items-center gap-3">
             {Icon && (
-              <span className="grid size-9 shrink-0 place-items-center rounded-tile bg-sunken text-ink-2">
+              <span className="grid size-9 shrink-0 place-items-center text-ink-2">
                 <Icon className="size-[17px]" />
               </span>
             )}

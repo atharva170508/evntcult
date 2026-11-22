@@ -46,7 +46,7 @@ export function Countdown({ to, endsAt, compact }: { to: Date; endsAt: Date; com
           <div className={cn("font-mono font-medium leading-none tracking-[-0.04em] tabular-nums text-ink", compact ? "text-[17px]" : "text-[22px]")}>
             {String(c.v).padStart(2, "0")}
           </div>
-          <div className="mt-1 font-mono text-[9.5px] uppercase tracking-[0.08em] text-ink-subtle">{c.l}</div>
+          <div className="mt-1 text-[12.5px] text-ink-subtle">{c.l}</div>
         </div>
       ))}
     </div>

@@ -52,7 +52,7 @@ export default async function DashboardPage({
     <div>
       <Entrance delay={0.02} className="pt-8 md:pt-10">
         <h1 className="font-display text-[clamp(40px,5vw,60px)] leading-none tracking-[-0.03em] text-ink">
-          {greeting}, <em>{firstName}.</em>
+          {greeting}, {firstName}.
         </h1>
         <TodayLine calendar={data.calendar} />
       </Entrance>

@@ -10,30 +10,27 @@ import { cn } from "@/lib/utils";
  */
 export function OrganizerBento() {
   return (
-    <div className="mt-12 grid gap-px overflow-hidden rounded-[28px] bg-white/10 ring-1 ring-white/10 md:grid-cols-6">
+    <div className="mt-12 divide-y divide-white/10 border-y border-white/10">
       <Tile
-        className="md:col-span-3 md:row-span-2"
         title="A door that can't be fooled"
         body="Any phone is a scanner. A pass works once, even with no signal: scans queue offline and sync later."
       >
         <ScannerDemo />
       </Tile>
       <Tile
-        className="md:col-span-3"
         title="UPI straight to you"
         body="No payment gateway, no fee. Guests pay your UPI ID and paste the UTR; you confirm from one list."
       >
         <UpiDemo />
       </Tile>
       <Tile
-        className="md:col-span-3"
         title="Photos that find their people"
         body="Upload the night's photos. Guests take one selfie and see only the ones they're in."
       >
         <VaultDemo />
       </Tile>
       <Tile
-        className="md:col-span-6"
+        wide
         title="Set up for your kind of event"
         body="Pick hackathon, tournament, party or workshop and the form, the pass and your dashboard change with it."
       >
@@ -48,28 +45,27 @@ function Tile({
   body,
   className,
   center,
+  wide,
   children,
 }: {
   title: string;
   body: string;
   className?: string;
   center?: boolean;
+  wide?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <section className={cn("flex flex-col bg-night p-6 md:p-8", className)}>
-      <h3 className="text-[20px] font-semibold tracking-[-0.01em] text-cream">
-        {title}
-      </h3>
-      <p className="mt-1.5 max-w-[44ch] text-[14.5px] leading-relaxed text-cream/60">
-        {body}
-      </p>
-      <div
-        className={cn(
-          "mt-7 flex flex-1 flex-col",
-          center ? "justify-center" : "justify-end",
-        )}
-      >
+    <section className={cn("grid gap-6 py-10 md:gap-14 md:py-14", wide ? "md:gap-8" : "md:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]", className)}>
+      <div>
+        <h3 className="text-[22px] font-semibold leading-snug tracking-[-0.01em] text-cream">
+          {title}
+        </h3>
+        <p className="mt-2 max-w-[40ch] text-[15px] leading-relaxed text-cream/65">
+          {body}
+        </p>
+      </div>
+      <div className={cn("flex flex-col", center ? "justify-center" : "justify-start")}>
         {children}
       </div>
     </section>
@@ -536,7 +532,7 @@ function KindsDemo() {
             aria-checked={i === j}
             onClick={() => setI(j)}
             className={cn(
-              "rounded-full px-4 py-2 text-[13.5px] font-semibold ring-1 ring-inset transition-colors duration-200",
+              "rounded-lg px-4 py-2 text-[13.5px] font-semibold ring-1 ring-inset transition-colors duration-200",
               i === j
                 ? "bg-cream text-[#1a1a1a] ring-cream"
                 : "text-cream/70 ring-white/15 hover:text-cream",

@@ -55,7 +55,7 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
     >
       <form onSubmit={submit} className="p-6 md:p-7">
         <div className="flex items-start justify-between">
-          <span className="grid size-10 place-items-center rounded-tile bg-sunken text-ink">
+          <span className="grid size-10 place-items-center text-ink">
             <KeyRound className="size-[18px]" />
           </span>
           <button type="button" onClick={onClose} aria-label="Close" className="-mr-2 -mt-2 grid size-9 place-items-center rounded-full text-ink-muted transition-colors hover:bg-ink/[0.05] hover:text-ink">

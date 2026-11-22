@@ -85,7 +85,7 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
               <ScanFace className="size-4" aria-hidden /> AI Face Search
             </p>
             <h2 id="ai-search-title" className="mt-3 text-display-md font-semibold">
-              Find every photo <em>you&apos;re in</em>
+              Find every photo you&apos;re in
             </h2>
             <p className="mt-2 max-w-xl text-[14.5px] text-ink-muted">
               Take a selfie and we&apos;ll find you in the photos from {eventTitle}.

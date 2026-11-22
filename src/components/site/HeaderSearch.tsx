@@ -50,7 +50,7 @@ export function HeaderSearch({ className }: { className?: string }) {
 
   const seg = (f: Field) =>
     cn(
-      "relative flex h-full min-w-0 flex-1 cursor-pointer flex-col justify-center rounded-full px-8 text-left transition-colors duration-fast",
+      "relative flex h-full min-w-0 flex-1 cursor-pointer flex-col justify-center rounded-2xl px-8 text-left transition-colors duration-fast",
       active === f ? "bg-white shadow-[0_6px_20px_rgba(0,0,0,0.18)]" : active ? "hover:bg-line-strong/60" : "hover:bg-sunken",
     );
 
@@ -63,7 +63,7 @@ export function HeaderSearch({ className }: { className?: string }) {
       aria-label="Find events"
       onSubmit={submit}
       className={cn(
-        "relative flex h-[66px] w-full items-center rounded-full border border-line-strong shadow-search transition-colors duration-base",
+        "relative flex h-[66px] w-full items-center rounded-2xl border border-line-strong shadow-search transition-colors duration-base",
         active ? "bg-mist" : "bg-white",
         className,
       )}
@@ -103,7 +103,7 @@ export function HeaderSearch({ className }: { className?: string }) {
         type="submit"
         aria-label="Search"
         className={cn(
-          "absolute right-2 top-1/2 flex h-12 -translate-y-1/2 items-center justify-center gap-2 rounded-full bg-accent text-white transition-[width,background-color] duration-base ease-out hover:bg-accent-hover",
+          "absolute right-2 top-1/2 flex h-12 -translate-y-1/2 items-center justify-center gap-2 rounded-xl bg-accent text-white transition-[width,background-color] duration-base ease-out hover:bg-accent-hover",
           active ? "w-[116px] px-5" : "w-12",
         )}
       >
@@ -123,7 +123,7 @@ export function CompactSearch({ onOpen }: { onOpen: () => void }) {
   return (
     <button
       onClick={onOpen}
-      className="flex h-12 items-center rounded-full border border-line-strong bg-white pl-6 pr-2 text-[14px] shadow-search transition-shadow hover:shadow-raised"
+      className="flex h-12 items-center rounded-2xl border border-line-strong bg-white pl-6 pr-2 text-[14px] shadow-search transition-shadow hover:shadow-raised"
       aria-label="Search events"
     >
       <span className="font-semibold text-ink">Any event</span>
@@ -131,7 +131,7 @@ export function CompactSearch({ onOpen }: { onOpen: () => void }) {
       <span className="font-semibold text-ink">Any day</span>
       <span className="mx-4 h-6 w-px bg-line-strong" aria-hidden />
       <span className="text-ink-subtle">Any kind</span>
-      <span className="ml-3 grid size-8 place-items-center rounded-full bg-accent text-white">
+      <span className="ml-3 grid size-8 place-items-center rounded-lg bg-accent text-white">
         <Search className="size-3.5" strokeWidth={3} aria-hidden />
       </span>
     </button>

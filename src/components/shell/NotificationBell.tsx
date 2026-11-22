@@ -57,7 +57,7 @@ export function NotificationBell({ tone = "light" }: { tone?: "light" | "dark" }
     <div ref={box} className="sm:relative">
       <button onClick={toggle} aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"} aria-expanded={open} className={`relative grid size-10 place-items-center rounded-full transition-colors duration-fast ${tone === "dark" ? "text-white/80 hover:bg-white/[0.08] hover:text-white aria-expanded:bg-white/[0.1]" : "text-ink-2 hover:bg-sunken hover:text-ink aria-expanded:bg-sunken"}`}>
         <Bell className="size-[18px]" aria-hidden />
-        {unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-[17px] min-w-[17px] place-items-center rounded-full bg-accent px-1 font-mono text-[10px] font-medium text-white ring-2 ring-white">{unread > 9 ? "9+" : unread}</span>}
+        {unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-[17px] min-w-[17px] place-items-center rounded-lg bg-accent px-1 font-mono text-[10px] font-medium text-white ring-2 ring-white">{unread > 9 ? "9+" : unread}</span>}
       </button>
       {open && (
         <div className="absolute inset-x-3 top-[60px] z-40 max-h-[70dvh] overflow-y-auto rounded-card bg-surface shadow-pop motion-safe:animate-scale-in origin-top-right sm:inset-x-auto sm:right-0 sm:top-12 sm:w-[360px] text-ink">

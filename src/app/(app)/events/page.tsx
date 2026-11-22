@@ -34,7 +34,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
   };
   const chip = (active: boolean) =>
     cn(
-      "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-4 text-[14px] transition-colors duration-fast",
+      "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-4 text-[14px] transition-colors duration-fast",
       active ? "border-ink bg-ink font-semibold text-white" : "border-line-strong bg-white text-ink hover:border-ink",
     );
   const nextHref = nextCursor ? `${href({})}${href({}).includes("?") ? "&" : "?"}cursor=${encodeURIComponent(nextCursor)}` : null;

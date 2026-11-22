@@ -31,7 +31,7 @@ export function MiniCalendar({ data }: { data: Record<string, { campus: number; 
       </div>
       <div className="grid grid-cols-7 gap-y-0.5 text-center">
         {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
-          <div key={i} className="pb-1.5 font-mono text-[10.5px] uppercase text-ink-subtle">
+          <div key={i} className="pb-1.5 text-[12.5px] text-ink-subtle">
             {d}
           </div>
         ))}

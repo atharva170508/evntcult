@@ -45,7 +45,7 @@ export function EventCard({ e }: { e: EventSummary }) {
           className="transition-transform duration-500 ease-out"
         />
         {badge && (
-          <span className="absolute left-3 top-3 z-[2] inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[12.5px] font-semibold text-ink shadow-[0_0_0_1px_rgba(0,0,0,0.02),0_2px_6px_rgba(0,0,0,0.04),0_4px_8px_rgba(0,0,0,0.1)]">
+          <span className="absolute left-3 top-3 z-[2] inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1 text-[12.5px] font-semibold text-ink shadow-[0_0_0_1px_rgba(0,0,0,0.02),0_2px_6px_rgba(0,0,0,0.04),0_4px_8px_rgba(0,0,0,0.1)]">
             {state === "live" && (
               <span
                 className="size-1.5 rounded-full bg-accent motion-safe:animate-pulse"

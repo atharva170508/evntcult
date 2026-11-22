@@ -21,7 +21,7 @@ export default async function HostPage() {
     <div className="mx-auto max-w-[640px] pb-12">
       <header className="pb-6 pt-8 md:pt-12">
         <h1 className="font-display text-[clamp(40px,5vw,56px)] leading-none tracking-[-0.03em] text-ink">
-          Host <em>on EvntCult.</em>
+          Host on EvntCult.
         </h1>
         <p className="mt-3 text-[16px] text-ink-2">Organizer accounts are approved by EvntCult, so every event on campus comes from a real club.</p>
       </header>

@@ -44,7 +44,6 @@ export function EmptyState({
 
   return (
     <div className={cn("relative flex flex-col items-center overflow-hidden rounded-[28px] bg-white px-6 pb-12 pt-10 text-center shadow-[0_0_0_1px_rgba(26,26,26,0.06)] md:pb-14", className)}>
-      <span aria-hidden className="pointer-events-none absolute left-1/2 top-6 size-56 -translate-x-1/2 rounded-full bg-lavender/60 blur-3xl" />
       <div className="relative">{ART[art]}</div>
       <h2 className="relative mt-6 font-display text-[clamp(28px,3.4vw,38px)] leading-[1.02] tracking-[-0.03em] text-ink">{title}</h2>
       {body && <p className="relative mt-3 max-w-[42ch] text-[16px] leading-relaxed text-ink-2">{body}</p>}
@@ -74,7 +73,7 @@ const ART: Record<Art, React.ReactNode> = {
     <svg width="132" height="150" viewBox="0 0 132 150" fill="none" aria-hidden>
       <rect x="56" y="0" width="20" height="38" rx="2" fill="#E3264F" />
       <rect x="48" y="34" width="36" height="10" rx="5" fill={INK} />
-      <g className="motion-safe:origin-top motion-safe:animate-[es-sway_5s_ease-in-out_infinite]" style={{ transformOrigin: "66px 40px" }}>
+      <g style={{ transformOrigin: "66px 40px" }}>
         <rect x="16" y="40" width="100" height="106" rx="16" fill="#fff" stroke={LINE} strokeWidth="1.5" />
         <rect x="16" y="40" width="100" height="40" rx="16" fill="#4B2E86" />
         <rect x="16" y="64" width="100" height="16" fill="#4B2E86" />

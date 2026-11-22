@@ -14,7 +14,6 @@ import {
   Featured,
   Hero,
   HowItWorks,
-  Numbers,
   Venues,
 } from "./Sections";
 import { DiscoverFeed } from "./DiscoverFeed";
@@ -74,7 +73,7 @@ function EmptyCampus({ isOrganizer }: { isOrganizer: boolean }) {
           id="empty-h"
           className="font-display text-[44px] leading-[0.95] tracking-[-0.03em] text-ink"
         >
-          The board is <em>clear.</em>
+          The board is clear.
         </h2>
         <p className="mt-4 max-w-[40ch] text-[16px] text-ink-2">
           No events are scheduled right now. New ones appear here the moment an
@@ -165,7 +164,7 @@ function Questions() {
           id="faq-h"
           className="font-display text-[clamp(44px,6vw,72px)] leading-none tracking-[-0.03em]"
         >
-          Good <em>questions.</em>
+          Good questions.
         </h2>
       </Reveal>
       <Reveal delay={0.08}>
@@ -199,7 +198,7 @@ export function Landing({
         role="search"
         className="pt-5 md:hidden"
       >
-        <label className="flex h-14 items-center gap-3 rounded-full border border-line-strong bg-white px-5 shadow-search">
+        <label className="flex h-14 items-center gap-3 rounded-lg border border-line-strong bg-white px-5 shadow-search">
           <Search
             className="size-5 shrink-0 text-ink"
             strokeWidth={2.4}
@@ -230,12 +229,6 @@ export function Landing({
 
       <Venues venues={data.venues} />
 
-      <Numbers
-        upcoming={data.upcoming}
-        going={data.going}
-        checkins={data.checkins}
-      />
-
       <HostsBand isOrganizer={isOrganizer} />
 
       <AppBand />
@@ -260,7 +253,7 @@ export function HostsBand({ isOrganizer = false }: { isOrganizer?: boolean }) {
             id="hosts-h"
             className="max-w-[14ch] font-display text-[clamp(44px,6vw,80px)] leading-[0.95] tracking-[-0.03em] text-cream"
           >
-            Why organizers <em>switch.</em>
+            Why organizers switch.
           </h2>
           <Magnetic className="inline-block shrink-0">
             <a

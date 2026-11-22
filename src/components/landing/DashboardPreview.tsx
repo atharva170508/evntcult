@@ -53,7 +53,7 @@ export function DashboardPreview() {
             id="preview-h"
             className="font-display text-[clamp(44px,6vw,80px)] leading-[0.95] tracking-[-0.03em] text-ink"
           >
-            A look <em>inside.</em>
+            A look inside.
           </h2>
           <Magnetic className="inline-block shrink-0">
             <Link href="/signin?mode=signup" className={cta}>
@@ -81,7 +81,7 @@ export function DashboardPreview() {
                 <span>Calendar</span>
                 <span>My Passes</span>
               </span>
-              <span className="ml-auto rounded-full bg-sunken px-2.5 py-1 text-[12px] font-semibold text-ink-2">
+              <span className="ml-auto rounded-lg bg-sunken px-2.5 py-1 text-[12px] font-semibold text-ink-2">
                 Example
               </span>
               <span
@@ -95,7 +95,7 @@ export function DashboardPreview() {
             <div className="grid gap-4 p-4 md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] md:gap-5 md:p-7">
               <div className="flex min-w-0 flex-col gap-4 md:gap-5">
                 <p className="font-display text-[clamp(34px,4.4vw,52px)] leading-none tracking-[-0.03em] text-ink">
-                  Good evening, <em>Zoya.</em>
+                  Good evening, Zoya.
                 </p>
 
                 {/* Next pass */}

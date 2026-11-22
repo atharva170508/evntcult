@@ -304,9 +304,7 @@ export function Updates({ items }: { items: AnnouncementItem[] }) {
             const Icon = KIND_ICON[a.kind as keyof typeof KIND_ICON] ?? Megaphone;
             return (
               <li key={a.id} className="flex gap-3 border-t border-line py-3.5 first:border-t-0">
-                <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-full bg-sunken text-ink-2">
-                  <Icon className="size-[18px]" strokeWidth={1.75} aria-hidden />
-                </span>
+                <Icon className="mt-0.5 size-[18px] shrink-0 text-ink-muted" strokeWidth={1.75} aria-hidden />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-3">
                     <p className="truncate text-[14.5px] font-semibold text-ink">{a.eventTitle}</p>

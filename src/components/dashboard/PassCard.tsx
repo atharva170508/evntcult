@@ -19,7 +19,7 @@ export async function PassCard({ pass }: { pass: NextUp }) {
   return (
     <article aria-label={`Pass for ${pass.title}`} className="card flex h-full flex-col overflow-hidden">
       <div className="flex items-center justify-between gap-3 bg-night px-5 py-3.5 text-white">
-        <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em] text-white/70">
+        <span className="flex items-center gap-2 text-[12.5px] text-white/70">
           <LogoIcon className="size-5" blink={false} /> Your pass
         </span>
         <Chip tone={payTone[pass.paymentStatus]}>{payLabel[pass.paymentStatus]}</Chip>

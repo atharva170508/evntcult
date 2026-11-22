@@ -36,7 +36,6 @@ import { listQuestions } from "@/lib/data/questions";
 import { ShareEvent } from "@/components/events/ShareEvent";
 import { WhatsAppPrompt } from "@/components/events/WhatsAppPrompt";
 import { InterestedButton } from "@/components/events/InterestedButton";
-import { FlyerAura } from "@/components/events/FlyerAura";
 import { CategoryPills, CategorySections, categorySectionList } from "@/components/events/CategoryFacts";
 import { EventSectionNav } from "@/components/events/EventSectionNav";
 import { ReadMore } from "@/components/events/ReadMore";
@@ -335,15 +334,8 @@ export default async function EventPage({
   return (
     <div className="relative isolate pb-28 pt-6 md:pb-12 md:pt-10">
       {/* Luma-style: the page picks up the event's colour (from the flyer when there is one) and breathes slowly. */}
-      {look.style === "glow" && <FlyerAura src={e.banner_url} fallback={accentHex(s.accent)} />}
-      {look.style === "mesh" && (
-        <div
-          aria-hidden
-          className="pointer-events-none fixed inset-0 -z-10 opacity-70 dark:opacity-40"
-          style={{
-            background: `radial-gradient(60% 50% at 15% 10%, ${accentHex(s.accent)}55, transparent 70%), radial-gradient(50% 45% at 90% 30%, #F0D7FF99, transparent 70%), radial-gradient(55% 50% at 50% 100%, ${accentHex(s.accent)}33, transparent 70%)`,
-          }}
-        />
+      {look.style === "ruled" && (
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(rgb(var(--c-line))_1px,transparent_1px)] [background-size:100%_32px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
       )}
       {look.style === "dots" && (
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(rgb(var(--c-line-strong))_1px,transparent_1.2px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
@@ -375,18 +367,16 @@ export default async function EventPage({
           </Entrance>
 
           <Entrance delay={0.06} className="mt-6 lg:mt-0">
-            <div className="flex flex-wrap gap-1.5">
-              <Chip tone="outline">{kind}</Chip>
-              {e.access === "code" && (
-                <Chip tone="dark">Private, code only</Chip>
-              )}
-              {e.status === "draft" && (
-                <Chip tone="warn">Draft, only you can see this</Chip>
-              )}
-              {e.status === "cancelled" && <Chip tone="danger">Cancelled</Chip>}
-              {ended && e.status !== "cancelled" && <Chip>Ended</Chip>}
-            </div>
-            <h1 className={`mt-3 text-[40px] leading-[1.02] text-ink md:text-[52px] ${TITLE_FONTS[look.font].cls}`}>
+            <p className="text-[14.5px] text-ink-muted">
+              <Link href={`/events?type=${e.category}`} className="font-medium text-ink-2 hover:text-ink hover:underline">
+                {kind}
+              </Link>
+              {e.access === "code" && <>, private (code only)</>}
+              {e.status === "draft" && <span className="font-semibold text-warn">. Draft: only you can see this</span>}
+              {e.status === "cancelled" && <span className="font-semibold text-danger">. Cancelled</span>}
+              {ended && e.status !== "cancelled" && <span className="font-semibold text-ink">. This event has ended</span>}
+            </p>
+            <h1 className={`mt-2 text-[40px] leading-[1.02] text-ink md:text-[52px] ${TITLE_FONTS[look.font].cls}`}>
               {e.title}
             </h1>
             {s.tagline && (
@@ -428,7 +418,7 @@ export default async function EventPage({
             <div className="flex items-center gap-4">
               <dt className="sr-only">Where</dt>
               <span
-                className="grid size-12 shrink-0 place-items-center rounded-lg border border-line-strong bg-white text-ink"
+                className="grid w-12 shrink-0 place-items-center text-ink"
                 aria-hidden
               >
                 {e.event_type === "virtual" ? (
@@ -688,24 +678,19 @@ export default async function EventPage({
 
           {/* Partiful-style secondary actions */}
           {(isPublic || (!reg && !d.isOwner && canSell)) && !ended && (
-            <div className="mt-3 grid grid-cols-2 gap-2">
+            <div className="mt-2 flex flex-wrap gap-1">
               {!reg && !d.isOwner && canSell && (
                 <InterestedButton
                   slug={e.slug}
                   saved={iSaved}
                   signedIn={!!viewer}
-                  className={isPublic ? "" : "col-span-2"}
                 />
               )}
               {isPublic && (
                 <a
                   href={`/api/events/${e.slug}/ics`}
                   download
-                  className={buttonClass(
-                    "secondary",
-                    "lg",
-                    `h-11 rounded-xl ${!reg && !d.isOwner && canSell ? "" : "col-span-2"}`,
-                  )}
+                  className="inline-flex h-10 items-center gap-2 rounded-lg px-3 text-[14.5px] font-semibold text-ink-2 transition-colors hover:bg-sunken hover:text-ink"
                 >
                   <CalendarPlus className="size-[18px]" aria-hidden /> Add to
                   calendar
@@ -813,7 +798,7 @@ export default async function EventPage({
                 ...(e.requires_approval ? ["Host approves each guest"] : []),
                 ...(e.capacity ? [`${e.capacity.toLocaleString("en-IN")} seats`] : []),
               ].map((t) => (
-                <li key={t} className="rounded-full bg-sunken px-3 py-1.5 text-[13.5px] font-medium text-ink-2">
+                <li key={t} className="rounded-lg bg-sunken px-3 py-1.5 text-[13.5px] font-medium text-ink-2">
                   {t}
                 </li>
               ))}

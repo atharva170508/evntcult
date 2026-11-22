@@ -155,7 +155,7 @@ export function SiteHeader({
                 <BrandLogo className="text-[24px]" />
               </Link>
               {ws !== "attend" && (
-                <span className="hidden rounded-full bg-sunken px-2.5 py-1 text-[12px] font-semibold text-ink-2 sm:inline">
+                <span className="hidden rounded-lg bg-sunken px-2.5 py-1 text-[12px] font-semibold text-ink-2 sm:inline">
                   {ws === "host" ? "Hosting" : "Admin"}
                 </span>
               )}
@@ -177,7 +177,7 @@ export function SiteHeader({
                         aria-current={active ? "page" : undefined}
                         onPointerEnter={() => setHoverTab(t.href)}
                         className={cn(
-                          "group relative flex h-14 items-center gap-2 whitespace-nowrap px-2.5 text-[15px] transition-colors duration-fast xl:px-3",
+                          "group relative flex h-14 items-center gap-2 whitespace-nowrap px-3 text-[15px] transition-colors duration-fast xl:px-3",
                           active
                             ? "font-semibold text-ink"
                             : "font-medium text-ink-muted hover:text-ink",
@@ -191,7 +191,6 @@ export function SiteHeader({
                             transition={{ type: "spring", stiffness: 520, damping: 40 }}
                           />
                         )}
-                        <t.icon className="hidden size-9 transition-transform duration-base ease-out group-hover:-rotate-6 group-hover:scale-105 lg:block" />
                         {t.label}
                         {active ? (
                           <m.span
@@ -551,7 +550,6 @@ function MenuSheet({
                   aria-current={(ws === "attend" ? isMainActive(pathname, t.href) : isActive(pathname, t)) ? "page" : undefined}
                   className={cn(row, (ws === "attend" ? isMainActive(pathname, t.href) : isActive(pathname, t)) && "font-semibold")}
                 >
-                  <t.icon className="size-8" />
                   {t.label}
                 </Link>
               </m.li>

@@ -47,7 +47,7 @@ export function Hero() {
           className="font-display text-[clamp(52px,7.4vw,104px)] leading-[0.9] tracking-[-0.04em] text-ink"
         >
           <MaskedLines
-            lines={["Every campus event,", <em key="l2">one pass.</em>]}
+            lines={["Every campus event,", "one pass."]}
           />
         </h1>
         <Entrance delay={0.3}>
@@ -105,14 +105,9 @@ export function Featured({ e }: { e: EventSummary }) {
             aria-label={e.title}
           >
             <EventArt accent={e.accent} seed={e.id} scrim={false} />
-            <span className="absolute left-5 top-5 z-[2] rounded-full bg-white px-3 py-1.5 text-[13px] font-semibold text-ink shadow-[0_4px_12px_rgba(0,0,0,0.12)]">
-              {state === "live" ? "Happening now" : "Featured"}
-            </span>
           </Link>
           <div className="relative z-[2] flex flex-col p-7 md:p-10">
-            <p className="text-[14px] font-semibold text-ink-muted">
-              {state === "live" ? "On right now" : "Starts in"}
-            </p>
+            {state !== "live" && <p className="text-[14px] font-semibold text-ink-muted">Starts in</p>}
             <Countdown
               to={e.startsAt.toISOString()}
               end={e.endsAt.toISOString()}
@@ -194,7 +189,7 @@ export function HowItWorks() {
       t: "Find an event",
       b: "Search, or browse by day and kind.",
       art: (
-        <div className="flex h-11 w-full max-w-[300px] items-center gap-2 rounded-full border border-line-strong bg-white px-4 shadow-search">
+        <div className="flex h-11 w-full max-w-[300px] items-center gap-2 rounded-lg border border-line-strong bg-white px-4 shadow-search">
           <Search className="size-4 text-ink" strokeWidth={2.4} aria-hidden />
           <span className="text-[13px] text-ink-2">hackathon</span>
           <span className="ml-auto grid size-7 place-items-center rounded-full bg-accent text-white">
@@ -253,7 +248,7 @@ export function HowItWorks() {
         className="scroll-mt-28 lg:sticky lg:top-[calc(var(--header-h)+40px)] lg:self-start"
       >
         <h2 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-          OnePass. <em>One pass for every gate.</em>
+          OnePass. One pass for every gate.
         </h2>
       </div>
       <figure>
@@ -381,18 +376,7 @@ export function Venues({ venues }: { venues: VenueCount[] }) {
               href={`/venues?to=${encodeURIComponent(v.name)}`}
               className="group flex items-center gap-4 rounded-2xl border border-line-strong bg-white p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] transition-[box-shadow,transform] duration-base hover:-translate-y-0.5 hover:shadow-raised"
             >
-              <span className="relative size-14 shrink-0 overflow-hidden rounded-xl">
-                <EventArt
-                  accent={v.next.accent}
-                  seed={v.next.id}
-                  flat
-                  scrim={false}
-                />
-                <MapPin
-                  className="absolute inset-0 m-auto size-5 text-white"
-                  aria-hidden
-                />
-              </span>
+              <MapPin className="size-5 shrink-0 text-ink-2" strokeWidth={1.75} aria-hidden />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-[16px] font-semibold text-ink">
                   {v.name}
@@ -413,45 +397,6 @@ export function Venues({ venues }: { venues: VenueCount[] }) {
   );
 }
 
-/* ── Numbers ────────────────────────────────────────────── */
-
-export function Numbers({
-  upcoming,
-  going,
-  checkins,
-}: {
-  upcoming: number;
-  going: number;
-  checkins: number;
-}) {
-  const stats = [
-    { n: upcoming, l: upcoming === 1 ? "event coming up" : "events coming up" },
-    { n: going, l: going === 1 ? "person going" : "people going" },
-    {
-      n: checkins,
-      l: checkins === 1 ? "scan at the gate" : "scans at the gate",
-    },
-  ].filter((s) => s.n > 0);
-  if (stats.length < 2) return null;
-  return (
-    <Reveal
-      as="section"
-      className="my-10 grid gap-px overflow-hidden rounded-3xl bg-line-strong sm:grid-cols-3"
-    >
-      <h2 className="sr-only">EvntCult right now</h2>
-      {stats.map((s) => (
-        <div key={s.l} className="bg-white px-7 py-8">
-          <CountUp
-            value={s.n}
-            className="block font-display text-[56px] leading-none tracking-[-0.03em] text-ink tabular-nums"
-          />
-          <p className="mt-2 text-[15px] text-ink-muted">{s.l}</p>
-        </div>
-      ))}
-    </Reveal>
-  );
-}
-
 /* ── App ────────────────────────────────────────────────── */
 
 export function AppBand() {
@@ -460,7 +405,7 @@ export function AppBand() {
       <div className="grid items-center gap-10 overflow-hidden rounded-3xl bg-lavender/60 px-7 pt-10 ring-1 ring-inset ring-[#E2C8F7] md:grid-cols-2 md:px-14 md:pt-0">
         <div className="md:py-14">
           <h2 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-            Your pass, <em>on your home screen.</em>
+            Your pass, on your home screen.
           </h2>
           <ul className="mt-6 space-y-2 text-[16px] text-ink-2">
             <li>Opens straight to your passes</li>
@@ -524,7 +469,7 @@ export function Closing() {
     >
       <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <h2 className="max-w-[14ch] font-display text-[clamp(44px,6vw,84px)] leading-[0.95] tracking-[-0.03em] text-ink">
-          See you <em>at the gate.</em>
+          See you at the gate.
         </h2>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
           <Magnetic>

@@ -116,7 +116,7 @@ export function DiscoverFeed({ events }: { events: Ev[] }) {
           id="discover-h"
           className="font-display text-[clamp(36px,4.4vw,54px)] leading-none tracking-[-0.03em] text-ink"
         >
-          What&apos;s <em>on.</em>
+          What&apos;s on.
         </h2>
         <p
           className="text-[14px] tabular-nums text-ink-muted"
@@ -201,7 +201,7 @@ export function DiscoverFeed({ events }: { events: Ev[] }) {
           <button
             type="button"
             onClick={() => setLimit((l) => l + 8)}
-            className="ui-press ui-sheen relative inline-flex h-11 items-center rounded-full bg-white px-6 text-[14.5px] font-semibold text-ink shadow-[var(--lift-1)]"
+            className="ui-press ui-sheen relative inline-flex h-11 items-center rounded-lg bg-white px-6 text-[14.5px] font-semibold text-ink shadow-[var(--lift-1)]"
           >
             Show {Math.min(8, shown.length - limit)} more
           </button>
@@ -223,12 +223,6 @@ function FeedCard({ e }: { e: Ev & { s: Date; en: Date } }) {
       className="group block rounded-[20px] outline-offset-4"
     >
       <div className="relative">
-        {/* Ambient colour bleed behind the frame on hover. */}
-        <span
-          aria-hidden
-          className="absolute inset-x-4 bottom-0 top-8 -z-0 rounded-[24px] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-60"
-          style={{ background: hex }}
-        />
         <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-sunken shadow-[0_0_0_1px_rgba(26,26,26,0.06)] transition-transform duration-300 ease-[var(--ease-enter)] group-hover:-translate-y-1">
           <div className="absolute inset-0 transition-transform duration-700 ease-[var(--ease-enter)] group-hover:scale-[1.03]">
             {e.bannerUrl ? (
@@ -238,11 +232,11 @@ function FeedCard({ e }: { e: Ev & { s: Date; en: Date } }) {
               <EventArt accent={e.accent} seed={e.id} scrim={false} />
             )}
           </div>
-          <span className="absolute right-3 top-3 z-[2] rounded-full bg-white/95 px-2.5 py-1 text-[13px] font-semibold tabular-nums text-ink shadow-[0_2px_8px_rgba(0,0,0,0.12)] backdrop-blur">
+          <span className="absolute right-3 top-3 z-[2] rounded-lg bg-white/95 px-2.5 py-1 text-[13px] font-semibold tabular-nums text-ink shadow-[0_2px_8px_rgba(0,0,0,0.12)] backdrop-blur">
             {e.feePaise ? formatINR(e.feePaise) : "Free"}
           </span>
           {(live || full) && (
-            <span className="absolute left-3 top-3 z-[2] inline-flex items-center gap-1.5 rounded-full bg-ink px-2.5 py-1 text-[12.5px] font-semibold text-white">
+            <span className="absolute left-3 top-3 z-[2] inline-flex items-center gap-1.5 rounded-lg bg-ink px-2.5 py-1 text-[12.5px] font-semibold text-white">
               {live && (
                 <span
                   className="size-1.5 rounded-full bg-accent motion-safe:animate-pulse"

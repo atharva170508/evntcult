@@ -73,7 +73,7 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
                         href={`/events/${e.slug}`}
                         className={cn("group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors duration-fast hover:bg-sunken/70", e.slug === to && "bg-accent-soft/60")}
                       >
-                        <span className="w-[92px] shrink-0 font-mono text-[11.5px] uppercase tracking-[0.02em] text-ink-muted">
+                        <span className="w-[92px] shrink-0 text-[12.5px] text-ink-muted">
                           {fmtDate(new Date(e.startsAt), { day: "numeric", month: "short" })} · {fmtTime(new Date(e.startsAt))}
                         </span>
                         <span className="min-w-0 flex-1 truncate text-[14px] font-medium">{e.title}</span>

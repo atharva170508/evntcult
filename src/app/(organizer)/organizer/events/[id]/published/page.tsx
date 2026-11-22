@@ -44,7 +44,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
             <CircleCheck className="size-4" aria-hidden /> Your event is live
           </span>
           <h1 className="mt-5 text-display-lg font-semibold">
-            It&apos;s <em>live.</em>
+            It&apos;s live.
           </h1>
           <p className="mt-3 max-w-lg text-lead text-ink-muted">Share the link and people can register straight away. Passes, reminders and the gate scanner are ready.</p>
 
@@ -68,7 +68,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
               <li key={st.title}>
                 <Link href={st.href} className="card card-hover group flex h-full flex-col p-5">
                   <div className="flex items-center justify-between">
-                    <span className="grid size-9 place-items-center rounded-tile bg-sunken text-ink-2">
+                    <span className="grid size-9 place-items-center text-ink-2">
                       <st.icon className="size-[17px]" aria-hidden />
                     </span>
                     <span className="font-mono text-[12px] text-ink-subtle">0{i + 1}</span>

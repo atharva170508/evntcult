@@ -130,7 +130,7 @@ export function EventPeek({ events, children }: { events: EventSummary[]; childr
                     <EventArt accent={e.accent} seed={e.id} scrim={false} />
                   )}
                   {state === "live" && (
-                    <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[12px] font-semibold text-ink shadow">
+                    <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1 text-[12px] font-semibold text-ink shadow">
                       <span className="size-1.5 animate-pulse rounded-full bg-brand" /> Live now
                     </span>
                   )}
@@ -139,7 +139,7 @@ export function EventPeek({ events, children }: { events: EventSummary[]; childr
                 {e.tagline && <p className="mt-1.5 text-[14.5px] text-ink-muted">{e.tagline}</p>}
                 <dl className="mt-4 space-y-3">
                   <div className="flex items-center gap-3">
-                    <dt className="grid size-10 shrink-0 place-items-center rounded-xl border border-line text-ink-2">
+                    <dt className="grid w-6 shrink-0 place-items-center text-ink-2">
                       <CalendarDays className="size-4" aria-label="When" />
                     </dt>
                     <dd>
@@ -153,7 +153,7 @@ export function EventPeek({ events, children }: { events: EventSummary[]; childr
                   </div>
                   {e.venueName && (
                     <div className="flex items-center gap-3">
-                      <dt className="grid size-10 shrink-0 place-items-center rounded-xl border border-line text-ink-2">
+                      <dt className="grid w-6 shrink-0 place-items-center text-ink-2">
                         <MapPin className="size-4" aria-label="Where" />
                       </dt>
                       <dd className="text-[14.5px] font-semibold text-ink">{e.venueName}</dd>

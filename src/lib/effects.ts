@@ -20,10 +20,9 @@ export const WALL_EMOJI = ["🔥", "🙌", "😂", "❤️"] as const;
 
 /** Page look (Luma's theme sheet): the background behind the event page and the title's type. */
 export const PAGE_STYLES = {
-  glow: { label: "Glow", hint: "The poster's colour breathes behind the page" },
-  mesh: { label: "Gradient", hint: "Soft colour wash in the event's colour" },
-  dots: { label: "Dots", hint: "Quiet dot grid" },
   plain: { label: "Minimal", hint: "Just the page" },
+  dots: { label: "Dots", hint: "Quiet dot grid" },
+  ruled: { label: "Ruled", hint: "Notebook lines" },
 } as const;
 export const TITLE_FONTS = {
   classic: { label: "Classic", cls: "font-display tracking-[-0.025em]" },
@@ -38,5 +37,5 @@ export const TITLE_FONT_KEYS = Object.keys(TITLE_FONTS) as [TitleFont, ...TitleF
 /** events.look is "style:font", e.g. "mesh:loud". Unknown parts fall back to the defaults. */
 export function parseLook(v: string | null | undefined): { style: PageStyle; font: TitleFont } {
   const [a, b] = (v ?? "").split(":");
-  return { style: a && a in PAGE_STYLES ? (a as PageStyle) : "glow", font: b && b in TITLE_FONTS ? (b as TitleFont) : "classic" };
+  return { style: a && a in PAGE_STYLES ? (a as PageStyle) : "plain", font: b && b in TITLE_FONTS ? (b as TitleFont) : "classic" };
 }

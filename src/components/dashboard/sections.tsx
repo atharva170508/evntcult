@@ -153,7 +153,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
           {event.visibility === "CODE_ONLY" && <Chip tone="white">Private</Chip>}
         </div>
         <div className="relative">
-          <p className="font-mono text-[11.5px] uppercase tracking-[0.08em] text-white/80">{fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "long" })}</p>
+          <p className="text-[12.5px] text-white/80">{fmtDate(event.startsAt, { weekday: "long", day: "numeric", month: "long" })}</p>
           <h2 id="next-up-title" className="mt-2 text-display-md font-semibold">
             {event.title}
           </h2>
@@ -208,9 +208,7 @@ export function NextUpHero({ event }: { event: NextUp }) {
 function InfoRow({ icon: Icon, title, sub }: { icon: React.ComponentType<{ className?: string }>; title: string; sub?: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="grid size-10 shrink-0 place-items-center rounded-tile bg-sunken text-ink-2">
-        <Icon className="size-[17px]" />
-      </span>
+      <Icon className="size-[17px] shrink-0 text-ink-2" />
       <div className="min-w-0">
         <dt className="sr-only">{Icon === Clock ? "Time" : "Venue"}</dt>
         <dd className="truncate text-[15px] font-medium">{title}</dd>
@@ -227,7 +225,7 @@ export function EmptyNextUp() {
       <span className="eyebrow">Next up</span>
       <div>
         <h2 className="max-w-md text-display-md font-semibold">
-          Nothing on your <em>calendar</em> yet.
+          Nothing on your calendar yet.
         </h2>
         <p className="mt-3 max-w-sm text-body text-ink-muted">Find something worth showing up for. Your pass appears here the moment you register.</p>
         <LinkButton href="/events" className="mt-6">
@@ -289,7 +287,7 @@ export function OrganizerConsole({ data }: { data: OrganizerPanel }) {
                   <Link href={`/organizer/events/${h.id}/manage`} className="block truncate text-[14.5px] font-medium hover:underline hover:decoration-line-strong hover:underline-offset-4">
                     {h.title}
                   </Link>
-                  <p className="font-mono text-[11.5px] uppercase tracking-[0.04em] text-ink-subtle">
+                  <p className="text-[12.5px] text-ink-subtle">
                     {fmtDate(h.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(h.startsAt)}
                   </p>
                 </div>
@@ -446,9 +444,7 @@ export function LinkCard({
   return (
     <Link href={href} className="card card-hover group flex h-full flex-col p-6">
       <div className="flex items-start justify-between">
-        <span className="grid size-10 place-items-center rounded-tile bg-sunken text-ink-2">
-          <Icon className="size-[18px]" />
-        </span>
+        <Icon className="size-[20px] text-ink-2" />
         <ArrowUpRight className="size-4 text-ink-subtle transition-transform duration-base ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
       </div>
       <p className="eyebrow mt-10">{eyebrow}</p>
@@ -465,7 +461,7 @@ export function DateBlock({ date, accent, className }: { date: Date; accent: str
     <div className={cn("relative isolate grid h-14 w-12 shrink-0 place-items-center overflow-hidden rounded-xl text-center text-white", className)}>
       <EventArt accent={accent} />
       <div className="relative leading-none">
-        <div className="font-mono text-[9.5px] uppercase tracking-[0.08em]">{fmtDate(date, { month: "short" })}</div>
+        <div className="text-[12.5px] ">{fmtDate(date, { month: "short" })}</div>
         <div className="mt-0.5 text-[18px] font-semibold tabular-nums">{fmtDate(date, { day: "numeric" })}</div>
       </div>
     </div>
@@ -510,7 +506,7 @@ export function CampusRail({ events }: { events: EventSummary[] }) {
         eyebrow="Happening soon"
         title={
           <>
-            Don&apos;t miss <em>these.</em>
+            Don&apos;t miss these.
           </>
         }
         actions={
@@ -548,7 +544,7 @@ export function EventCard({ e }: { e: EventSummary }) {
           </div>
         </div>
         <div className="flex flex-1 flex-col p-4">
-          <p className="font-mono text-[11.5px] uppercase tracking-[0.06em] text-ink-subtle">
+          <p className="text-[12.5px] text-ink-subtle">
             {fmtDate(e.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(e.startsAt)}
           </p>
           <h3 className="mt-1.5 text-[17px] font-semibold leading-snug tracking-[-0.02em]">{e.title}</h3>

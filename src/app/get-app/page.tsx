@@ -20,7 +20,7 @@ export default function GetAppPage() {
           <div>
             <p className="eyebrow">Install</p>
             <h1 className="mt-3 text-display-lg font-semibold">
-              EvntCult on your <em>home screen.</em>
+              EvntCult on your home screen.
             </h1>
             <p className="mt-4 max-w-md text-lead text-ink-muted">One tap to your passes. Works like an app, no store needed.</p>
           </div>
