@@ -16,7 +16,6 @@ export function EmbedCode({ slug, origin }: { slug: string; origin: string }) {
       <h2 id="emb-h" className="flex items-center gap-2 text-[16px] font-semibold text-ink">
         <Code2 className="size-4" aria-hidden /> Put it on your website
       </h2>
-      <p className="mt-1 text-[13.5px] text-ink-muted">Paste this into your website. Visits from it show up in Insights as Your website.</p>
       <div className="mt-3 flex gap-1" role="radiogroup" aria-label="Embed type">
         {(["card", "button"] as const).map((k) => (
           <button key={k} type="button" role="radio" aria-checked={kind === k} onClick={() => setKind(k)} className={`h-8 rounded-lg px-3 text-[13px] font-semibold ${kind === k ? "bg-ink text-white" : "text-ink-2 hover:bg-sunken"}`}>

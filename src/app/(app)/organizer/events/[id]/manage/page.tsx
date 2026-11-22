@@ -317,7 +317,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
                         <button type="button" data-guest={a.id} className="text-left font-medium underline-offset-4 hover:underline">
                           {a.name}
                         </button>
-                        <p className="text-[12px] text-ink-muted">{a.email}</p>
+                        <p className="text-[12px] text-ink-muted">{a.email.endsWith("@walkin.invalid") ? "Walk-in" : a.email}</p>
                         {questions
                           .filter((qq) => answers.get(a.id)?.[qq.id])
                           .map((qq) => (

@@ -75,7 +75,7 @@ export function PosterSetup({ eventId, title }: { eventId: string; title: string
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={url} alt="" className="absolute inset-0 size-full object-cover" onError={() => setHas(false)} />
               ) : (
-                <span className="absolute inset-0 grid place-items-center px-4 text-center text-[12.5px] text-ink-muted">No poster yet. The drawn cover is used.</span>
+                <span className="absolute inset-0 grid place-items-center px-4 text-center text-[12.5px] text-ink-muted">No poster yet</span>
               )}
             </div>
             <p className="mt-2 truncate text-[13px] font-semibold text-ink">{title || "Your event"}</p>
@@ -96,7 +96,7 @@ export function PosterSetup({ eventId, title }: { eventId: string; title: string
             >
               <ImagePlus className="size-6 text-ink-muted" aria-hidden />
               <span className="text-[14px] font-semibold text-ink">{busy ? "Uploading…" : "Drop a poster, or choose one"}</span>
-              <span className="text-[12.5px] text-ink-muted">Portrait works best (4:5). We resize it for you.</span>
+              <span className="text-[12.5px] text-ink-muted">Portrait, 4:5</span>
             </button>
             <input ref={input} type="file" accept="image/*" aria-label="Choose a poster image" tabIndex={-1} className="sr-only" onChange={(e) => void upload(e.target.files?.[0] ?? undefined)} />
             <div className="o-inline" style={{ marginTop: 10, gap: 12 }}>

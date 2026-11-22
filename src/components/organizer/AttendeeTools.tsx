@@ -188,9 +188,13 @@ export function AttendeeTools({ eventId, tableId, slug }: { eventId: string; tab
                     </span>
                     <div className="min-w-0">
                       <p className="truncate text-[17px] font-semibold text-ink">{guest.name}</p>
-                      <a href={`mailto:${guest.email}`} className="truncate text-[13.5px] text-ink-muted hover:text-ink">
-                        {guest.email}
-                      </a>
+                      {guest.email.endsWith("@walkin.invalid") ? (
+                        <span className="text-[13.5px] text-ink-muted">Walk-in</span>
+                      ) : (
+                        <a href={`mailto:${guest.email}`} className="truncate text-[13.5px] text-ink-muted hover:text-ink">
+                          {guest.email}
+                        </a>
+                      )}
                     </div>
                   </div>
                   <dl className="mt-5 grid grid-cols-2 gap-2 text-[13px]">

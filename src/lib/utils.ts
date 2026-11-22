@@ -21,7 +21,8 @@ export function fmtTime(d: Date) {
 }
 
 export function fmtRange(start: Date, end: Date) {
-  return `${fmtTime(start)} – ${fmtTime(end)}`;
+  const sameDay = fmtDate(start, { day: "numeric", month: "short" }) === fmtDate(end, { day: "numeric", month: "short" });
+  return sameDay ? `${fmtTime(start)} – ${fmtTime(end)}` : `${fmtTime(start)} to ${fmtDate(end, { weekday: "short", day: "numeric", month: "short" })}, ${fmtTime(end)}`;
 }
 
 /** "in 3 days", "in 2 hours", "5 min ago" */

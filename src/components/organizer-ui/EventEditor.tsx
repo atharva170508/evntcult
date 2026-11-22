@@ -420,9 +420,8 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                     />
                   ) : (
                     <>
-                      {host}/e/{previewSlug || "your-event"}{" "}
                       <button type="button" className="o-link" style={{ fontSize: 12.5 }} onClick={() => setSlugEditing(true)}>
-                        edit
+                        Change link
                       </button>
                       {fieldError.slug && <span style={{ color: "var(--bad)" }}> {fieldError.slug}</span>}
                     </>
@@ -623,7 +622,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                 </div>
               </div>
               {f.access === "code" && (
-                <Field label="Join code" error={errors.code ?? (codeFree === false ? "That code is taken. Try another." : null)} hint={code ? `${host}/c/${code.toLowerCase()}` : undefined}>
+                <Field label="Join code" error={errors.code ?? (codeFree === false ? "That code is taken. Try another." : null)} >
                   {(a) => (
                     <div className="o-inline">
                       <input {...a} className="o-input o-mono" maxLength={20} value={f.accessCode} onChange={(e) => set("accessCode", e.target.value)} onBlur={() => blur("code")} />

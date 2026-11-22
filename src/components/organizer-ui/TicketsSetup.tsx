@@ -66,7 +66,6 @@ export function TicketsSetup({ eventId }: { eventId: string }) {
       <div className="o-row">
         <span className="o-label">Ticket types</span>
         <div>
-          {tiers.length === 0 && <p className="o-meta" style={{ marginBottom: 8 }}>One price for everyone. Add types for Stag, Couple, VIP, early bird and so on.</p>}
           <div style={{ display: "grid", gap: 8 }}>
             {tiers.map((t, i) => (
               <div key={i} className="o-inline" style={{ gap: 8 }}>
@@ -98,7 +97,6 @@ export function TicketsSetup({ eventId }: { eventId: string }) {
       <div className="o-row">
         <span className="o-label">Promo codes</span>
         <div>
-          {promos.length === 0 && <p className="o-meta" style={{ marginBottom: 8 }}>Codes for members, early birds or sponsors.</p>}
           <div style={{ display: "grid", gap: 8 }}>
             {promos.map((p, i) => (
               <div key={i} className="o-inline" style={{ gap: 8, flexWrap: "wrap" }}>

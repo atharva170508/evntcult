@@ -187,7 +187,7 @@ export function HowItWorks() {
   const steps = [
     {
       t: "Find an event",
-      b: "Search, or browse by day and kind.",
+      b: "",
       art: (
         <div className="flex h-11 w-full max-w-[300px] items-center gap-2 rounded-lg border border-line-strong bg-white px-4 shadow-search">
           <Search className="size-4 text-ink" strokeWidth={2.4} aria-hidden />
@@ -200,7 +200,7 @@ export function HowItWorks() {
     },
     {
       t: "Register",
-      b: "Your pass is saved to your account and your phone.",
+      b: "",
       art: (
         <div className="flex w-full max-w-[300px] items-center gap-3 rounded-2xl border border-line-strong bg-white p-3 shadow-search">
           <div
@@ -227,7 +227,7 @@ export function HowItWorks() {
     },
     {
       t: "Get scanned at the gate",
-      b: "Show the QR. It works without internet.",
+      b: "",
       art: (
         <div className="flex w-full max-w-[300px] items-center gap-2 rounded-2xl bg-live-soft px-4 py-3.5 text-[14px] font-semibold text-live">
           <span className="grid size-7 place-items-center rounded-full bg-live text-white">
@@ -248,7 +248,7 @@ export function HowItWorks() {
         className="scroll-mt-28 lg:sticky lg:top-[calc(var(--header-h)+40px)] lg:self-start"
       >
         <h2 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-          OnePass. One pass for every gate.
+          One pass for every gate.
         </h2>
       </div>
       <figure>
@@ -266,17 +266,12 @@ export function HowItWorks() {
               </span>
               <div>
                 <h3 className="text-[20px] font-semibold text-ink">{s.t}</h3>
-                <p className="mt-1 max-w-[36ch] text-[15.5px] text-ink-2">
-                  {s.b}
-                </p>
+                {s.b && <p className="mt-1 max-w-[36ch] text-[15.5px] text-ink-2">{s.b}</p>}
               </div>
               <div data-sample="true">{s.art}</div>
             </li>
           ))}
         </ol>
-        <figcaption className="mt-3 text-[12.5px] text-ink-subtle">
-          Example screens. Your pass shows your own event and code.
-        </figcaption>
       </figure>
     </Reveal>
   );

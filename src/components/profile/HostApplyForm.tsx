@@ -39,7 +39,7 @@ export function HostApplyForm() {
       <Field label="Organization or group" error={tried ? clubError : null}>
         {(p) => <Input {...p} value={club} onChange={(e) => setClub(e.target.value)} maxLength={80} autoComplete="organization" />}
       </Field>
-      <Field label="What will you run?" hint="For example: monthly build nights and a demo day." error={tried ? noteError : null}>
+      <Field label="What will you run?" error={tried ? noteError : null}>
         {(p) => <Textarea {...p} value={note} onChange={(e) => setNote(e.target.value)} maxLength={500} />}
       </Field>
       {error && <Notice tone="danger">{error}</Notice>}

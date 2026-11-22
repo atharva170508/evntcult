@@ -77,19 +77,12 @@ export function SignupRules({ eventId }: { eventId: string }) {
               </button>
             )}
           </div>
-          <p className="o-meta" style={{ marginTop: 6 }}>
-            {rules.regClosesAt ? "After this, the Register button is replaced with Registration closed." : "Leave empty to take sign-ups until the event ends."}{" "}
-            <span aria-live="polite">{saved === "saving" ? "Saving…" : saved === "saved" ? "Saved." : saved === "error" ? "Didn't save. Check your connection." : ""}</span>
-          </p>
         </div>
       </div>
       <div className="o-row">
         <span className="o-label">Approval</span>
         <div>
           <Switch label="I approve each sign-up" checked={rules.requiresApproval} onChange={(v) => save({ ...rules, requiresApproval: v }, 0)} className="max-w-[420px]" />
-          <p className="o-meta" style={{ marginTop: 6 }}>
-            Guests send a request instead of getting a pass straight away. Approve or decline them from Manage; approved guests get their pass.
-          </p>
         </div>
       </div>
       <div className="o-row">
@@ -122,9 +115,6 @@ export function SignupRules({ eventId }: { eventId: string }) {
             onBlur={(e) => e.target.value.trim() !== (rules.confirmMessage ?? "") && save({ ...rules, confirmMessage: e.target.value.trim() || null }, 0)}
             style={{ height: "auto", paddingTop: 10, paddingBottom: 10, lineHeight: 1.5 }}
           />
-          <p className="o-meta" style={{ marginTop: 6 }}>
-            Guests see this note from you right after they register, and on their pass.
-          </p>
         </div>
       </div>
       <div className="o-row">
@@ -140,9 +130,6 @@ export function SignupRules({ eventId }: { eventId: string }) {
             onBlur={(e) => e.target.value.trim() !== (rules.refundPolicy ?? "") && save({ ...rules, refundPolicy: e.target.value.trim() || null }, 0)}
             style={{ height: "auto", paddingTop: 10, paddingBottom: 10, lineHeight: 1.5 }}
           />
-          <p className="o-meta" style={{ marginTop: 6 }}>
-            Shown under Good to know on your event page. Leave empty for free events.
-          </p>
         </div>
       </div>
       <div className="o-row">
@@ -162,9 +149,6 @@ export function SignupRules({ eventId }: { eventId: string }) {
               </button>
             ))}
           </div>
-          <p className="o-meta" style={{ marginTop: 6 }}>
-            The background behind your event page and the type of its title.
-          </p>
         </div>
       </div>
       <div className="o-row">
@@ -184,9 +168,6 @@ export function SignupRules({ eventId }: { eventId: string }) {
               </button>
             ))}
           </div>
-          <p className="o-meta" style={{ marginTop: 6 }}>
-            A few emoji drift down your event page. Hidden for people who turn off animations.
-          </p>
         </div>
       </div>
     </Section>

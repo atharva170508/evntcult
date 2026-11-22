@@ -489,9 +489,9 @@ export function HoloPass(p: HoloPassProps) {
                         </h3>
                         <ol className="mt-4 space-y-3 text-[14px] text-ink-2">
                           {[
-                            "Open this pass. It works without internet.",
-                            "The volunteer scans your QR. Green means you're in.",
-                            "One scan, one entry. A second scan shows “Already in”.",
+                            "Open your pass. It works offline.",
+                            "Green on the scanner means you're in.",
+                            "Each pass gets you in once.",
                           ].map((t, i) => (
                             <li key={i} className="flex gap-3">
                               <span

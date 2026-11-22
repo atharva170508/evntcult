@@ -15,29 +15,57 @@ const STEPS = [
     when: "Two weeks out",
     short: "Set up",
     title: "Set it up for your kind of event",
-    body: "Pick hackathon, tournament, party or workshop. The sign-up form, the pass and your dashboard change with it.",
+    body: "Pick the kind. The form, the pass and your dashboard follow.",
     demo: <KindsDemo />,
+    win: "Sign-up form",
+    float: null,
   },
   {
     when: "The week before",
     short: "Payments",
     title: "UPI lands straight with you",
-    body: "No payment gateway, no fee. Guests pay your UPI ID and paste the UTR; you confirm them from one list.",
+    body: "No gateway, no fee. Confirm payments from one list.",
     demo: <UpiDemo />,
+    win: "Payments",
+    float: (
+      <FloatCard>
+        <span className="flex items-center gap-2 text-[12.5px] text-cream/60">
+          <span className="size-1.5 rounded-full bg-[#6EE7A8]" aria-hidden /> UPI, just now
+        </span>
+        <span className="mt-1 block text-[15px] font-semibold text-cream">₹199 from Riya Patil</span>
+        <span className="mt-0.5 block font-mono text-[12px] tracking-[0.04em] text-cream/55">UTR 4071 2286 9913</span>
+      </FloatCard>
+    ),
   },
   {
     when: "7:00 pm",
     short: "Doors",
     title: "A door that can't be fooled",
-    body: "Any phone is a scanner. A pass works once, even with no signal: scans queue offline and sync later.",
+    body: "Any phone scans. Each pass works once, even offline.",
     demo: <ScannerDemo />,
+    win: "Gate 1 scanner",
+    float: (
+      <FloatCard>
+        <span className="flex items-center gap-2 text-[15px] font-semibold text-cream">
+          <Check className="size-4 text-[#6EE7A8]" strokeWidth={3} aria-hidden /> Admitted
+        </span>
+        <span className="mt-0.5 block text-[12.5px] tabular-nums text-cream/55">412 of 600 in, 7:24 pm</span>
+      </FloatCard>
+    ),
   },
   {
     when: "Next morning",
     short: "Photos",
     title: "Photos find their people",
-    body: "Upload the night's photos. Guests take one selfie and see only the ones they're in.",
+    body: "One selfie shows each guest only their photos.",
     demo: <VaultDemo />,
+    win: "Photos",
+    float: (
+      <FloatCard>
+        <span className="block text-[15px] font-semibold text-cream">12 photos of you</span>
+        <span className="mt-0.5 block text-[12.5px] text-cream/55">Found from one selfie</span>
+      </FloatCard>
+    ),
   },
 ];
 
@@ -116,10 +144,41 @@ export function OrganizerBento() {
               {st.title}
             </h3>
             <p className="mt-2 max-w-[48ch] text-[16px] leading-relaxed text-cream/65">{st.body}</p>
-            <div className="mt-8">{st.demo}</div>
+            <div className="relative mt-8 md:mb-10">
+              <Window title={st.win}>{st.demo}</Window>
+              {st.float && <div className="absolute -bottom-14 -right-3 hidden md:block">{st.float}</div>}
+            </div>
           </section>
         ))}
       </div>
+    </div>
+  );
+}
+
+/** An EvntCult app window: a title bar, a hairline frame and a lit top edge. */
+function Window({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="overflow-hidden rounded-[18px] bg-[#1F1E1B] shadow-[0_0_0_1px_rgba(255,254,246,.09),inset_0_1px_0_rgba(255,254,246,.08),0_40px_80px_-40px_rgba(0,0,0,.8)]">
+      <div className="flex items-center justify-between border-b border-cream/[.07] px-4 py-2.5">
+        <span className="flex items-center gap-2 text-[12.5px] font-medium text-cream/70">
+          <span className="font-bold tracking-[-0.02em] text-[#E3264F]">evntcult</span>
+          <span className="text-cream/25">/</span>
+          {title}
+        </span>
+        <span className="flex items-center gap-1.5 text-[12px] text-cream/45">
+          <span className="size-1.5 rounded-full bg-[#6EE7A8]" aria-hidden /> Live
+        </span>
+      </div>
+      <div className="p-4 md:p-5">{children}</div>
+    </div>
+  );
+}
+
+/** The small result card that floats over a window's corner. */
+function FloatCard({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-w-[220px] rounded-2xl bg-[#2A2925]/95 px-4 py-3 shadow-[0_0_0_1px_rgba(255,254,246,.12),inset_0_1px_0_rgba(255,254,246,.1),0_24px_48px_-16px_rgba(0,0,0,.7)] backdrop-blur">
+      {children}
     </div>
   );
 }

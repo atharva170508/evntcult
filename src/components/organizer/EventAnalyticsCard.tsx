@@ -327,7 +327,6 @@ function ViewsBlock({ data }: { data: EventAnalytics }) {
           </li>
         ))}
       </ul>
-      <p className="mt-3 text-[12.5px] text-ink-muted">Tip: add ?ref=whatsapp or ?ref=instagram to the link you share, so each post shows up here by name.</p>
     </div>
   );
 }

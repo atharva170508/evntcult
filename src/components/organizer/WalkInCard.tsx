@@ -38,7 +38,7 @@ export function WalkInCard({ eventId, count }: { eventId: string; count: number 
           Walk-ins
         </h2>
         <p className="mt-0.5 text-[13.5px] text-ink-muted">
-          {count ? `${count} added at the door so far. ` : ""}Turned up without registering? Add them and they&apos;re checked in.
+          {count ? `${count} added at the door` : "Add people who turn up without registering"}
         </p>
       </div>
       <form onSubmit={add} className="space-y-2.5 px-5 py-4">

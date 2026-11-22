@@ -251,9 +251,10 @@ export function HostsBand({ isOrganizer = false }: { isOrganizer?: boolean }) {
         <Reveal className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <h2
             id="hosts-h"
-            className="max-w-[14ch] font-display text-[clamp(44px,6vw,80px)] leading-[0.95] tracking-[-0.03em] text-cream"
+            className="max-w-[30ch] font-display text-[clamp(30px,3.4vw,46px)] leading-[1.12] tracking-[-0.02em] text-cream"
           >
-            How an event runs on EvntCult.
+            Run the whole event from one place.{" "}
+            <span className="text-cream/45">Sign-ups, payments, the door, the photos.</span>
           </h2>
           <Magnetic className="inline-block shrink-0">
             <a
@@ -273,10 +274,6 @@ export function HostsBand({ isOrganizer = false }: { isOrganizer?: boolean }) {
         </Reveal>
 
         <OrganizerBento />
-        <p className="mt-4 text-[12.5px] text-cream/65">
-          Example data. Try them: your own events show your real guests,
-          payments and photos.
-        </p>
       </div>
     </section>
   );

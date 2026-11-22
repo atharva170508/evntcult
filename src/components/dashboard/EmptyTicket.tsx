@@ -114,7 +114,6 @@ export function EmptyTicket({ name, dateLine }: { name: string; dateLine: string
               <span className="font-display text-[28px]">days</span>
             </p>
             <p className="mt-3 font-mono text-[20px] tracking-[0.04em] text-[#C9C2AE]">00:00:00</p>
-            <p className="mt-4 text-[14px] leading-snug text-[#3F3F3F]">Grab a pass and the countdown starts right here.</p>
           </div>
           <div className="mt-8">
             <Link
