@@ -2,7 +2,7 @@
   "name": "evntcult",
   "version": "0.1.0",
   "private": true,
-  "description": "EvntCult \u2014 campus event management, by Synchronous Labs.",
+  "description": "EvntCult — campus event management, by Synchronous Labs.",
   "author": "Synchronous Labs <evntcult@gmail.com>",
   "scripts": {
     "predev": "node scripts/copy-face-models.mjs",
@@ -35,6 +35,7 @@
     "react-dom": "19.1.1",
     "server-only": "0.0.1",
     "tailwind-merge": "3.3.1",
+    "tailwindcss-animate": "1.0.7",
     "zod": "3.25.76"
   },
   "devDependencies": {
@@ -53,6 +54,7 @@
     "eslint-config-next": "15.5.29",
     "jpeg-js": "0.4.4",
     "postcss": "8.5.6",
+    "shadcn": "4.23.0",
     "tailwindcss": "3.4.19",
     "tsx": "4.20.5",
     "typescript": "5.9.2",

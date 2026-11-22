@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 /**
  * EvntCult design tokens.
@@ -41,7 +42,21 @@ const config: Config = {
           hover: "#C81E44",
           soft: "rgb(var(--c-accent-soft) / <alpha-value>)",
           ink: "rgb(var(--c-accent-ink) / <alpha-value>)",
+          // shadcn components pair bg-accent with this; here accent is the brand red.
+          foreground: "#FFFFFF",
         },
+        /* shadcn registry tokens, mapped onto EvntCult colours so pulled-in components land on brand. */
+        background: "rgb(var(--c-canvas) / <alpha-value>)",
+        foreground: "rgb(var(--c-ink) / <alpha-value>)",
+        card: { DEFAULT: "rgb(var(--c-surface) / <alpha-value>)", foreground: "rgb(var(--c-ink) / <alpha-value>)" },
+        popover: { DEFAULT: "rgb(var(--c-surface) / <alpha-value>)", foreground: "rgb(var(--c-ink) / <alpha-value>)" },
+        primary: { DEFAULT: "rgb(var(--c-ink) / <alpha-value>)", foreground: "#FFFFFF" },
+        secondary: { DEFAULT: "rgb(var(--c-sunken) / <alpha-value>)", foreground: "rgb(var(--c-ink) / <alpha-value>)" },
+        muted: { DEFAULT: "rgb(var(--c-sunken) / <alpha-value>)", foreground: "rgb(var(--c-ink-muted) / <alpha-value>)" },
+        destructive: { DEFAULT: "rgb(var(--c-danger) / <alpha-value>)", foreground: "#FFFFFF" },
+        border: "rgb(var(--c-line) / <alpha-value>)",
+        input: "rgb(var(--c-line-strong) / <alpha-value>)",
+        ring: "rgb(var(--c-ink) / <alpha-value>)",
         gold: { DEFAULT: "#C9A45C", soft: "rgb(var(--c-gold-soft) / <alpha-value>)", ink: "rgb(var(--c-gold-ink) / <alpha-value>)" },
         live: { DEFAULT: "rgb(var(--c-live) / <alpha-value>)", soft: "rgb(var(--c-live-soft) / <alpha-value>)", dot: "#12A56F" },
         warn: { DEFAULT: "rgb(var(--c-warn) / <alpha-value>)", soft: "rgb(var(--c-warn-soft) / <alpha-value>)" },
@@ -184,7 +199,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [animate],
 };
 
 export default config;
