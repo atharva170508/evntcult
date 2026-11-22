@@ -10,6 +10,7 @@ import { cleanAnswers, listQuestions, saveAnswers } from "@/lib/data/questions";
 import { resolvePrice } from "@/lib/data/pricing";
 import { createTeam, joinTeam, teamByCode, teamNameTaken } from "@/lib/data/teams";
 import { kindFor, parseConfig, teamMode } from "@/lib/categories";
+import { queueRegisteredEmail } from "@/lib/mailer";
 
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ ref: string }> };
@@ -110,6 +111,7 @@ export const POST = handle(async (req: Request, { params }: Ctx) => {
       await db.prepare("UPDATE registrations SET amount_paise = 0, payment_status = 'paid' WHERE id = ?").bind(result.registration.id).run();
   }
 
+  if (result.kind !== "full") await queueRegisteredEmail(db, viewer.id, event.id).catch(() => undefined);
   if (result.kind === "full") return Response.json({ full: true, waitlist_position: result.position });
   if (result.kind === "waitlisted") {
     return Response.json(

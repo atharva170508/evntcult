@@ -35,6 +35,8 @@ import { eventAnalytics } from "@/lib/data/analytics";
 import { kindFor, parseConfig, teamMode, teamRule } from "@/lib/categories";
 import { AttendeeTools } from "@/components/organizer/AttendeeTools";
 import { CheckMark } from "@/components/ui/Switch";
+import { EmbedCode } from "@/components/organizer/EmbedCode";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Manage event" };
 export const dynamic = "force-dynamic";
@@ -354,6 +356,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
         <div className="space-y-5">
           {requests && <RequestsCard eventId={e.id} initial={requests} />}
           {e.status === "published" && <WalkInCard eventId={e.id} count={walkIns} />}
+          {e.status === "published" && e.access === "public" && <EmbedCode slug={e.slug} origin={SITE_URL} />}
           {teams && kind && <TeamsCard teams={teams} rule={teamRule(kind, parseConfig(e.category_config))} noun={kind.key === "tournament" ? "Squads" : "Teams"} />}
           {tallies.length > 0 && (
             <section aria-labelledby="counts-h" className="rounded-2xl border border-line-strong bg-white">

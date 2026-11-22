@@ -27,10 +27,12 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-Frame-Options", value: "DENY" },
           { key: "Permissions-Policy", value: "camera=(self), geolocation=(self), microphone=()" },
         ],
       },
+      // Every page refuses to be framed, except the Register card clubs embed on their own sites.
+      { source: "/((?!embed/).*)", headers: [{ key: "X-Frame-Options", value: "DENY" }] },
+      { source: "/embed/:path*", headers: [{ key: "Content-Security-Policy", value: "frame-ancestors *" }] },
     ];
   },
 };

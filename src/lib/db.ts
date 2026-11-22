@@ -91,6 +91,12 @@ async function ensureSchema(db: D1Database): Promise<void> {
          event_id TEXT NOT NULL REFERENCES events(id), day TEXT NOT NULL, source TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0,
          PRIMARY KEY (event_id, day, source))`,
     ),
+    // 0033: feedback.
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS event_feedback (
+         event_id TEXT NOT NULL REFERENCES events(id), user_id TEXT NOT NULL REFERENCES users(id), rating INTEGER NOT NULL,
+         comment TEXT, created_at TEXT NOT NULL, PRIMARY KEY (event_id, user_id))`,
+    ),
     // 0027: event posters.
     db.prepare(
       `CREATE TABLE IF NOT EXISTS event_posters (
@@ -100,6 +106,15 @@ async function ensureSchema(db: D1Database): Promise<void> {
 
   // 0024: category setup JSON on events.
   const evCols = await db.prepare("PRAGMA table_info(events)").all<{ name: string }>();
+  // 0033: confirmation message.
+  if (!(evCols.results ?? []).some((c) => c.name === "confirm_message")) {
+    await db.prepare("ALTER TABLE events ADD COLUMN confirm_message TEXT").run();
+    try {
+      await db.prepare("INSERT INTO d1_migrations (name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name = ?)").bind("0033_feedback_confirm.sql", "0033_feedback_confirm.sql").run();
+    } catch {
+      // no d1_migrations table locally
+    }
+  }
   // 0031: page look.
   if (!(evCols.results ?? []).some((c) => c.name === "look")) {
     await db.prepare("ALTER TABLE events ADD COLUMN look TEXT").run();

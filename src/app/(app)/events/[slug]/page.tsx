@@ -50,6 +50,7 @@ import { FollowHost, ReportEvent } from "@/components/events/HostActions";
 import { TITLE_FONTS, parseLook } from "@/lib/effects";
 import { EventEffect } from "@/components/events/EventEffect";
 import { ViewBeacon } from "@/components/events/ViewBeacon";
+import { FeedbackCard } from "@/components/events/FeedbackCard";
 import { EventCard } from "@/components/landing/EventCard";
 import { listEvents } from "@/lib/data/events";
 
@@ -168,6 +169,13 @@ export default async function EventPage({
   const isPublic = e.status === "published" && e.access === "public";
   const teamRules = teamMode(kindFor(e.category), parseConfig(e.category_config));
   const viewerTeam = teamRules && reg && reg.status !== "cancelled" ? await myTeam(await getDB(), reg.id, viewer?.id ?? "") : null;
+  const myFeedback =
+    reg?.status === "registered" && viewer
+      ? await db
+          .prepare("SELECT rating, comment FROM event_feedback WHERE event_id = ? AND user_id = ?")
+          .bind(e.id, viewer.id)
+          .first<{ rating: number; comment: string | null }>()
+      : null;
   const related = ended
     ? []
     : await (async () => {
@@ -481,6 +489,11 @@ export default async function EventPage({
           </dl>
 
           {/* Registration */}
+          {reg?.status === "registered" && Date.parse(e.starts_at) <= Date.now() && (
+            <div className="mb-5">
+              <FeedbackCard slug={e.slug} host={hostRow?.name ?? "The host"} initial={myFeedback} />
+            </div>
+          )}
           <section
             id="register"
             aria-labelledby="reg-h"
@@ -594,6 +607,8 @@ export default async function EventPage({
                 <RegisterPanel
                   slug={e.slug}
                   code={code ?? null}
+                  hostNote={e.confirm_message ? { from: hostRow?.name ?? "the host", text: e.confirm_message } : null}
+                  ready={viewer ? { whatsapp: !!viewer.whatsappOptIn && !!viewer.phone, phone: !!viewer.phone } : null}
                   open={e.status === "published" && !ended && !regClosed}
                   approval={!!e.requires_approval}
                   teamSignup={teamRules ?? undefined}

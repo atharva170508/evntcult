@@ -14,6 +14,8 @@ export interface EventAnalytics {
   /** Where visitors came from, all time, largest first. */
   sources: { source: string; n: number }[];
   viewsTotal: number;
+  /** Post-event ratings: how many of each star, and the latest notes. */
+  feedback: { dist: number[]; count: number; avg: number; notes: { name: string; rating: number; comment: string; at: string }[] };
 }
 
 const IST = "+330 minutes";
@@ -57,6 +59,24 @@ export async function eventAnalytics(db: D1Database, eventId: string, now = new 
   }
   const sum = (from: number, to: number) => daily.slice(Math.max(0, daily.length - to), Math.max(0, daily.length - from)).reduce((s, d) => s + d.added, 0);
 
+  const [fDist, fNotes] = await db.batch<Record<string, unknown>>([
+    db.prepare("SELECT rating, COUNT(*) AS n FROM event_feedback WHERE event_id = ? GROUP BY rating").bind(eventId),
+    db
+      .prepare(
+        `SELECT u.name, f.rating, f.comment, f.created_at AS at FROM event_feedback f JOIN users u ON u.id = f.user_id
+          WHERE f.event_id = ? AND f.comment IS NOT NULL ORDER BY f.created_at DESC LIMIT 6`,
+      )
+      .bind(eventId),
+  ]);
+  const dist = [0, 0, 0, 0, 0];
+  for (const r of (fDist.results ?? []) as { rating: number; n: number }[]) dist[r.rating - 1] = r.n;
+  const fCount = dist.reduce((a, b) => a + b, 0);
+  const feedback = {
+    dist,
+    count: fCount,
+    avg: fCount ? dist.reduce((a, n, i) => a + n * (i + 1), 0) / fCount : 0,
+    notes: (fNotes.results ?? []) as { name: string; rating: number; comment: string; at: string }[],
+  };
   const [vRows, sRows] = await db.batch<Record<string, unknown>>([
     db.prepare("SELECT day, SUM(n) AS n FROM event_views WHERE event_id = ? AND day >= date('now', '+330 minutes', '-13 days') GROUP BY day").bind(eventId),
     db.prepare("SELECT source, SUM(n) AS n FROM event_views WHERE event_id = ? GROUP BY source ORDER BY n DESC").bind(eventId),
@@ -70,6 +90,7 @@ export async function eventAnalytics(db: D1Database, eventId: string, now = new 
   const sources = (sRows.results ?? []) as { source: string; n: number }[];
 
   return {
+    feedback,
     views,
     sources,
     viewsTotal: sources.reduce((a, b) => a + b.n, 0),

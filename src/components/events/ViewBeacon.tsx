@@ -8,7 +8,7 @@ function sourceOf(): string {
   const tag = (q.get("utm_source") || q.get("ref") || q.get("src") || "").toLowerCase();
   const r = document.referrer.toLowerCase();
   const pick = (s: string) =>
-    /whatsapp|wa\.me/.test(s) ? "whatsapp" : /instagram/.test(s) ? "instagram" : /google/.test(s) ? "google" : /linkedin|lnkd/.test(s) ? "linkedin" : /twitter|x\.com|t\.co/.test(s) ? "x" : /qr|poster/.test(s) ? "qr" : "";
+    /whatsapp|wa\.me/.test(s) ? "whatsapp" : /instagram/.test(s) ? "instagram" : /google/.test(s) ? "google" : /linkedin|lnkd/.test(s) ? "linkedin" : /twitter|x\.com|t\.co/.test(s) ? "x" : /qr|poster/.test(s) ? "qr" : /embed/.test(s) ? "embed" : "";
   if (tag) return pick(tag) || "other";
   if (!r) return "direct";
   if (r.includes(location.host)) return "evntcult";

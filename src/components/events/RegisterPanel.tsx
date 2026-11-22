@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Clock, Hourglass, IndianRupee, Ticket, XCircle } from "lucide-react";
+import { Check, CheckCircle2, ChevronDown, Clock, Hourglass, IndianRupee, Ticket, XCircle } from "lucide-react";
 import { Button, LinkButton } from "@/components/ui/Button";
 import { Input, Notice } from "@/components/ui/Field";
 import { Select as Dropdown } from "@/components/ui/Select";
@@ -56,6 +56,10 @@ export function RegisterPanel(props: {
   myTeam?: { name: string; code: string; isCaptain: boolean; members: { name: string; captain: boolean; you: boolean }[] } | null;
   /** A join code from a shared link (?team=). */
   teamCode?: string;
+  /** The host's note shown after sign-up. */
+  hostNote?: { from: string; text: string } | null;
+  /** Luma's "Get ready for the event": what's done and what's left. */
+  ready?: { whatsapp: boolean; phone: boolean } | null;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -380,6 +384,45 @@ export function RegisterPanel(props: {
           />
         )}
         {err}
+        {props.hostNote && (
+          <div className="border-l-2 border-lavender pl-3">
+            <p className="text-[12.5px] text-ink-muted">A note from {props.hostNote.from}</p>
+            <p className="mt-0.5 whitespace-pre-line font-display text-[18px] leading-snug text-ink">{props.hostNote.text}</p>
+          </div>
+        )}
+        {props.ready && (
+          <details className="group rounded-xl border border-line bg-canvas/50 open:bg-white">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3.5 py-3 text-[14px]">
+              <span>
+                <span className="font-semibold text-ink">Get ready for the event</span>
+                <span className="block text-[12.5px] text-ink-muted">
+                  {1 + (props.ready.whatsapp ? 1 : 0)} of 4 done
+                </span>
+              </span>
+              <ChevronDown className="size-4 text-ink-muted transition-transform group-open:rotate-180" aria-hidden />
+            </summary>
+            <ul className="space-y-1 border-t border-line px-2 py-2 text-[14px]">
+              {[
+                { done: true, label: "Pass saved to your account", href: "/passes", cta: "Open" },
+                { done: props.ready.whatsapp, label: props.ready.whatsapp ? "WhatsApp reminders are on" : props.ready.phone ? "Turn on WhatsApp reminders" : "Add your number for WhatsApp reminders", href: "/profile", cta: "Set up" },
+                { done: false, label: "Add it to your calendar", href: `/api/events/${props.slug}/ics`, cta: "Add" },
+                { done: false, label: "Put EvntCult on your home screen", href: "/get-app", cta: "How" },
+              ].map((i) => (
+                <li key={i.label} className="flex min-h-10 items-center gap-2.5 rounded-lg px-1.5">
+                  <span className={`grid size-5 shrink-0 place-items-center rounded-md ${i.done ? "bg-ink text-white" : "ring-1 ring-inset ring-line-strong"}`} aria-hidden>
+                    {i.done && <Check className="size-3" />}
+                  </span>
+                  <span className={`min-w-0 flex-1 ${i.done ? "text-ink-muted" : "text-ink"}`}>{i.label}</span>
+                  {!i.done && (
+                    <a href={i.href} className="shrink-0 rounded-lg px-2.5 py-1 text-[13px] font-semibold text-ink hover:bg-sunken">
+                      {i.cta}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
         <div className="grid gap-2">
           <LinkButton href="/passes" size="lg" className="w-full">
             <Ticket className="size-4" aria-hidden /> My passes

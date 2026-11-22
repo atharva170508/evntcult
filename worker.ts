@@ -22,6 +22,7 @@ import { purgeOldCodes } from "./src/lib/data/login-codes";
 import { purgeFaceSearchLog } from "./src/lib/data/face-search";
 import { gateCounts } from "./src/lib/data/checkins";
 import { enqueueUpcoming, flush, type WaEnv } from "./src/lib/whatsapp";
+import { flushEmail, queueFeedbackEmails } from "./src/lib/mailer";
 import { readSessionValue, SESSION_COOKIE } from "./src/lib/session";
 
 export { EventLive } from "./src/lib/live/event-live";
@@ -72,10 +73,13 @@ export default {
     ctx.waitUntil(
       (async () => {
         const sent = await flush(env.DB, env as unknown as WaEnv, now);
+        const mailed = await flushEmail(env.DB, env as unknown as Record<string, string>, now).catch((e) => (console.error("[email]", e), 0));
+        if (mailed) console.log(`[email] sent ${mailed}`);
         // Everything else only needs doing every 5 minutes.
         if (Math.floor(controller.scheduledTime / 60_000) % 5 === 0) {
           const holds = await sweepHolds(env.DB, now);
           await enqueueUpcoming(env.DB, now);
+          await queueFeedbackEmails(env.DB, now).catch((e) => console.error("[email] feedback queue", e));
           await purgeOldCodes(env.DB, now);
           await purgeFaceSearchLog(env.DB, now);
           console.log(`[cron] holds expired: ${holds.expired}, seats offered: ${holds.promoted}`);

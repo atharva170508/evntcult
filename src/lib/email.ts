@@ -11,6 +11,8 @@
  * If neither is set, code login is OFF and the old email-only login keeps working
  * (the sign-in page shows that the code check is "Planned").
  */
+import { layout, P } from "./mail-kit";
+
 type EmailEnv = { BREVO_API_KEY?: string; EMAIL_FROM?: string; EMAIL_PROVIDER?: string };
 
 export type EmailMode = "brevo" | "log" | "off";
@@ -25,27 +27,23 @@ export const codeLoginOn = (env?: EmailEnv) => emailMode(env) !== "off";
 
 export class EmailError extends Error {}
 
-/** A note from a person on brand paper: dark masthead, and the code marked up with a highlighter. */
+/** The login code on EvntCult paper: the code big and spaced in a ticket-style box. */
 export function loginCodeHtml(code: string): string {
   const shown = `${code.slice(0, 3)} ${code.slice(3)}`;
-  const font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
-  const line = `font-family:${font};font-size:15px;line-height:1.55;color:#2a2a2e;margin:0 0 16px`;
-  return `<!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light only"><title>Your EvntCult code</title></head>
-<body style="margin:0;padding:0;background:#efeee8">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#efeee8" style="background:#efeee8"><tr><td align="center" style="padding:32px 16px">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;border-radius:14px;overflow:hidden">
-<tr><td bgcolor="#08080c" style="background:#08080c;padding:20px 28px;font-family:${font};font-size:22px;font-weight:800;letter-spacing:-0.8px;color:#f2f3f7">ev<span style="color:#dcfe62">|</span>ntcult</td></tr>
-<tr><td bgcolor="#ffffff" style="background:#ffffff;padding:28px">
-<p style="${line}">Hey,</p>
-<p style="${line}">Here's your code to log in:</p>
-<p style="margin:0 0 20px"><span style="display:inline-block;background:#dcfe62;border-radius:6px;padding:8px 14px;font-family:${font};font-size:30px;line-height:1.2;font-weight:700;letter-spacing:1px;color:#08080c">${shown}</span></p>
-<p style="${line}">It works for the next 10 minutes. If this wasn't you, just ignore this email and nothing changes.</p>
-<p style="${line};margin-bottom:0">See you at the next one,<br><b style="color:#08080c">Atharva, Nakul and Abhay</b></p>
-</td></tr>
-</table>
-</td></tr></table>
-</body></html>`;
+  const base = (process.env.NEXT_PUBLIC_SITE_URL || "https://evntcult.caliper.workers.dev").replace(/\/$/, "");
+  return layout({
+    title: "Your EvntCult code",
+    preheader: `${shown} works for the next 10 minutes.`,
+    heading: "Your login code",
+    body:
+      P("Type this on the sign-in page. It works for the next 10 minutes.") +
+      `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:6px 0 22px"><tr><td style="border:1px solid #E4DFD0;border-radius:16px;background:#FFFFFF;padding:18px 26px">
+<span style="font-family:'SFMono-Regular',Menlo,Consolas,monospace;font-size:34px;letter-spacing:8px;color:#1A1A1A">${shown}</span></td></tr></table>` +
+      P("If you didn't ask for this, ignore it. Nobody can log in without the code.", "color:#6A6A6A;font-size:13.5px") +
+      P("See you at the next one,<br><b style=\"color:#1A1A1A\">Atharva, Nakul and Abhay</b>", "margin:0"),
+    footer: "You're getting this because someone asked to log in to EvntCult with this email.",
+    siteUrl: base,
+  });
 }
 
 export async function sendLoginCode(email: string, code: string, env: EmailEnv = process.env as EmailEnv): Promise<void> {

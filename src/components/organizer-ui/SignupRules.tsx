@@ -13,6 +13,7 @@ interface Rules {
   effect?: string | null;
   refundPolicy?: string | null;
   look?: string | null;
+  confirmMessage?: string | null;
 }
 
 /** ISO -> "YYYY-MM-DDTHH:mm" in IST, for a datetime-local input. */
@@ -105,6 +106,24 @@ export function SignupRules({ eventId }: { eventId: string }) {
           />
           <p className="o-meta" style={{ marginTop: 6 }}>
             One item per line: time, then what happens.
+          </p>
+        </div>
+      </div>
+      <div className="o-row">
+        <span className="o-label">After sign-up</span>
+        <div>
+          <textarea
+            aria-label="Message after sign-up"
+            className="o-input"
+            rows={2}
+            maxLength={500}
+            defaultValue={rules.confirmMessage ?? ""}
+            placeholder="Bring your college ID. Gates open at 6:30 pm, use Gate 3."
+            onBlur={(e) => e.target.value.trim() !== (rules.confirmMessage ?? "") && save({ ...rules, confirmMessage: e.target.value.trim() || null }, 0)}
+            style={{ height: "auto", paddingTop: 10, paddingBottom: 10, lineHeight: 1.5 }}
+          />
+          <p className="o-meta" style={{ marginTop: 6 }}>
+            Guests see this note from you right after they register, and on their pass.
           </p>
         </div>
       </div>

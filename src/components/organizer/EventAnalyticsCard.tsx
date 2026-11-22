@@ -37,7 +37,7 @@ function useWidth<T extends HTMLElement>() {
 export function EventAnalyticsCard({ data }: { data: EventAnalytics }) {
   const [tab, setTab] = useState<"signups" | "arrivals">("signups");
   const hasArrivals = data.arrivals.length > 0;
-  if (data.daily.length < 2 && !hasArrivals && !data.viewsTotal) return null;
+  if (data.daily.length < 2 && !hasArrivals && !data.viewsTotal && !data.feedback.count) return null;
   const delta = data.last7 - data.prev7;
 
   return (
@@ -68,6 +68,7 @@ export function EventAnalyticsCard({ data }: { data: EventAnalytics }) {
         {tab === "signups" || !hasArrivals ? <SignupsChart daily={data.daily} /> : <ArrivalsChart arrivals={data.arrivals} />}
         {data.tiers.length > 1 && <TierBars tiers={data.tiers} />}
         {data.viewsTotal > 0 && <ViewsBlock data={data} />}
+        {data.feedback.count > 0 && <FeedbackBlock f={data.feedback} />}
         <details className="mt-4 text-[13.5px]">
           <summary className="cursor-pointer font-semibold text-ink-2 hover:text-ink">Show as a table</summary>
           <table className="mt-3 w-full text-left tabular-nums">
@@ -271,6 +272,7 @@ const SOURCE_NAME: Record<string, string> = {
   x: "X",
   evntcult: "EvntCult",
   qr: "QR poster",
+  embed: "Your website",
   direct: "Direct link",
   other: "Other sites",
 };
@@ -326,6 +328,44 @@ function ViewsBlock({ data }: { data: EventAnalytics }) {
         ))}
       </ul>
       <p className="mt-3 text-[12.5px] text-ink-muted">Tip: add ?ref=whatsapp or ?ref=instagram to the link you share, so each post shows up here by name.</p>
+    </div>
+  );
+}
+
+/** Post-event ratings: the average, a bar per star, and the latest notes (Luma's Event Feedback). */
+function FeedbackBlock({ f }: { f: EventAnalytics["feedback"] }) {
+  const max = Math.max(...f.dist);
+  return (
+    <div className="mt-5 border-t border-line pt-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 className="text-[14px] font-semibold text-ink">Guest ratings</h3>
+        <p className="text-[13px] tabular-nums text-ink-muted">
+          <span className="font-display text-[22px] text-ink">{f.avg.toFixed(1)}</span> out of 5, from {nf.format(f.count)} {f.count === 1 ? "guest" : "guests"}
+        </p>
+      </div>
+      <ul className="mt-3 space-y-1.5" aria-label="Ratings by number of stars">
+        {[5, 4, 3, 2, 1].map((n) => (
+          <li key={n} className="grid grid-cols-[52px_minmax(0,1fr)] items-center gap-3 text-[13px]">
+            <span className="tabular-nums text-ink-2">{n} {n === 1 ? "star" : "stars"}</span>
+            <span className="flex items-center gap-2">
+              <span className="h-2.5 rounded-r-[4px]" style={{ width: `${f.dist[n - 1] ? Math.max(2, (f.dist[n - 1] / max) * 80) : 0}%`, background: HUE }} />
+              <span className="shrink-0 tabular-nums text-ink-muted">{nf.format(f.dist[n - 1])}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+      {f.notes.length > 0 && (
+        <ul className="mt-4 space-y-3">
+          {f.notes.map((n, i) => (
+            <li key={i} className="border-l-2 pl-3" style={{ borderColor: "#F0D7FF" }}>
+              <p className="text-[14px] leading-relaxed text-ink-2">{n.comment}</p>
+              <p className="mt-0.5 text-[12.5px] text-ink-muted">
+                {n.name}, {n.rating} of 5
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

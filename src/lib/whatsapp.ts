@@ -247,7 +247,7 @@ export async function flush(db: D1Database, env: WaEnv, now = new Date()): Promi
     .prepare(
       `SELECT n.id, n.user_id, n.event_id, n.template, n.payload, n.attempts, u.phone, u.whatsapp_opt_in, u.wa_opt_out_at
          FROM notifications n JOIN users u ON u.id = n.user_id
-        WHERE n.status = 'queued' AND n.scheduled_for <= ? ORDER BY n.scheduled_for LIMIT 50`,
+        WHERE n.status = 'queued' AND n.channel = 'whatsapp' AND n.scheduled_for <= ? ORDER BY n.scheduled_for LIMIT 50`,
     )
     .bind(now.toISOString())
     .all<Due>();

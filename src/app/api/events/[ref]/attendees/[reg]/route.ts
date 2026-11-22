@@ -41,7 +41,7 @@ export const GET = handle(async (_req: Request, { params }: Ctx) => {
   );
   if (!r) throw new ApiError(404, "not_found", "Guest not found.");
   const db = await getDB();
-  const [log, posts, other] = await Promise.all([
+  const [log, posts, other, sent] = await Promise.all([
     db
       .prepare(
         `SELECT a.action, a.created_at, a.actor_id, u.name AS actor FROM audit_log a LEFT JOIN users u ON u.id = a.actor_id
@@ -56,12 +56,37 @@ export const GET = handle(async (_req: Request, { params }: Ctx) => {
       ref,
       ref,
     ),
+    db
+      .prepare("SELECT channel, template, status, error, created_at, sent_at FROM notifications WHERE user_id = ? AND event_id = ? ORDER BY created_at")
+      .bind(r.user_id, ref)
+      .all<{ channel: string; template: string; status: string; error: string | null; created_at: string; sent_at: string | null }>(),
   ]);
-  const steps = (log.results ?? []).map((l) => ({
+  const steps: { label: string; at: string; by: string | null; note?: string; kind?: string }[] = (log.results ?? []).map((l) => ({
     label: LABEL[l.action] ?? l.action.replace(/_/g, " ").replace(/^./, (c) => c.toUpperCase()),
     at: l.created_at,
     by: l.actor_id && l.actor_id !== r.user_id ? (l.actor ?? "A volunteer") : null,
   }));
+  const MSG: Record<string, string> = {
+    email_registered: "Confirmation email",
+    email_feedback: "Feedback email",
+    registered: "WhatsApp: you're in",
+    reminder_24h: "WhatsApp: reminder, a day before",
+    reminder_2h: "WhatsApp: reminder, two hours before",
+    checked_in: "WhatsApp: checked in",
+    certificate_ready: "WhatsApp: certificate ready",
+    event_cancelled: "WhatsApp: event cancelled",
+    event_changed: "WhatsApp: event changed",
+  };
+  const STATUS: Record<string, string> = { sent: "Delivered", dry_run: "Not sent: sending is switched off", queued: "Waiting to send", sending: "Sending", failed: "Failed to send" };
+  const SKIP: Record<string, string> = { not_opted_in: "they didn't turn on WhatsApp", no_phone: "no phone number", opted_out: "they opted out", cap: "message limit reached", no_email: "no email address", cancelled: "registration cancelled" };
+  for (const n of sent.results ?? [])
+    steps.push({
+      label: MSG[n.template] ?? `${n.channel === "email" ? "Email" : "WhatsApp"}: ${n.template.replace(/_/g, " ")}`,
+      at: n.sent_at ?? n.created_at,
+      by: null,
+      note: n.status === "skipped" ? `Skipped: ${SKIP[n.error ?? ""] ?? n.error ?? "not needed"}` : (STATUS[n.status] ?? n.status),
+      kind: "message",
+    });
   if (!steps.some((s) => s.label === "Registered")) steps.unshift({ label: "Registered", at: r.created_at, by: null });
   if (r.checked_in_at && !steps.some((s) => s.label === "Checked in")) steps.push({ label: "Checked in", at: r.checked_in_at, by: null });
   steps.sort((a, b) => a.at.localeCompare(b.at));

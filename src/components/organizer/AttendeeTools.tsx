@@ -8,7 +8,7 @@ import { formatINR } from "@/lib/money";
 
 type Guest = {
   name: string; email: string; status: string; pass: string; tier: string | null; amountPaise: number | null; payment: string | null;
-  posts: number; otherEvents: number; steps: { label: string; at: string; by: string | null }[];
+  posts: number; otherEvents: number; steps: { label: string; at: string; by: string | null; note?: string; kind?: string }[];
 };
 
 const when = (iso: string) =>
@@ -213,15 +213,16 @@ export function AttendeeTools({ eventId, tableId, slug }: { eventId: string; tab
                     {guest.steps.map((s, i) => (
                       <li key={i} className="relative">
                         <span className="absolute -left-[27px] top-0.5 grid size-[13px] place-items-center rounded-full bg-white ring-1 ring-line-strong" aria-hidden>
-                          <span className={`size-[7px] rounded-full ${s.label === "Checked in" ? "bg-live" : s.label === "Cancelled" ? "bg-danger" : "bg-ink"}`} />
+                          <span className={`size-[7px] rounded-full ${s.label === "Checked in" ? "bg-live" : s.label === "Cancelled" || s.note?.startsWith("Failed") ? "bg-danger" : s.kind === "message" ? "bg-line-strong" : "bg-ink"}`} />
                         </span>
                         <p className="flex items-center gap-1.5 text-[14px] font-semibold text-ink">
-                          {s.label === "Checked in" ? <CheckCircle2 className="size-3.5 text-live" aria-hidden /> : s.label === "Registered" ? <Ticket className="size-3.5" aria-hidden /> : <Clock className="size-3.5 text-ink-muted" aria-hidden />}
+                          {s.label === "Checked in" ? <CheckCircle2 className="size-3.5 text-live" aria-hidden /> : s.label === "Registered" ? <Ticket className="size-3.5" aria-hidden /> : s.kind === "message" ? <Mail className="size-3.5 text-ink-muted" aria-hidden /> : <Clock className="size-3.5 text-ink-muted" aria-hidden />}
                           {s.label}
                         </p>
                         <p className="text-[12.5px] text-ink-muted">
                           {when(s.at)}
-                          {s.by && <> · by {s.by}</>}
+                          {s.by && <>, by {s.by}</>}
+                          {s.note && <>. {s.note}</>}
                         </p>
                       </li>
                     ))}

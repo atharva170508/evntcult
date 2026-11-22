@@ -6,7 +6,7 @@ import { getViewer } from "@/lib/rbac";
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ ref: string }> };
 
-const SOURCES = ["whatsapp", "instagram", "google", "linkedin", "x", "evntcult", "qr", "direct", "other"] as const;
+const SOURCES = ["whatsapp", "instagram", "google", "linkedin", "x", "evntcult", "qr", "embed", "direct", "other"] as const;
 const body = z.object({ source: z.enum(SOURCES) }).strict();
 
 /** POST — count one page view (the page sends it once per visit). Hosts viewing their own page don't count. */
