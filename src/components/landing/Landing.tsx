@@ -238,7 +238,7 @@ export function Landing({
   );
 }
 
-/** Why organizers switch: a dark band with working demos. Shown to visitors and signed-in people. */
+/** How an event runs on EvntCult: a dark band with a run of show and working demos. Shown to visitors and signed-in people. */
 export function HostsBand({ isOrganizer = false }: { isOrganizer?: boolean }) {
   const hostHref = isOrganizer ? "/organizer/events/new" : "/host";
   return (
@@ -253,7 +253,7 @@ export function HostsBand({ isOrganizer = false }: { isOrganizer?: boolean }) {
             id="hosts-h"
             className="max-w-[14ch] font-display text-[clamp(44px,6vw,80px)] leading-[0.95] tracking-[-0.03em] text-cream"
           >
-            Why organizers switch.
+            How an event runs on EvntCult.
           </h2>
           <Magnetic className="inline-block shrink-0">
             <a

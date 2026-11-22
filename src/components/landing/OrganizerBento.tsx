@@ -1,81 +1,131 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { Check, RotateCcw, WifiOff, Wifi, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Why organizers switch: three things only EvntCult does, each a small working demo you can poke.
- * All example data, labelled as such below the grid.
+ * How an event runs on EvntCult, as a run of show: four moments in time order, each a small
+ * working demo. On wide screens a big clock on the left stays put and changes to the moment
+ * you're reading; on phones each moment carries its own time. All example data, labelled below.
  */
-export function OrganizerBento() {
-  return (
-    <div className="mt-12 divide-y divide-white/10 border-y border-white/10">
-      <Tile
-        title="A door that can't be fooled"
-        body="Any phone is a scanner. A pass works once, even with no signal: scans queue offline and sync later."
-      >
-        <ScannerDemo />
-      </Tile>
-      <Tile
-        title="UPI straight to you"
-        body="No payment gateway, no fee. Guests pay your UPI ID and paste the UTR; you confirm from one list."
-      >
-        <UpiDemo />
-      </Tile>
-      <Tile
-        title="Photos that find their people"
-        body="Upload the night's photos. Guests take one selfie and see only the ones they're in."
-      >
-        <VaultDemo />
-      </Tile>
-      <Tile
-        wide
-        title="Set up for your kind of event"
-        body="Pick hackathon, tournament, party or workshop and the form, the pass and your dashboard change with it."
-      >
-        <KindsDemo />
-      </Tile>
-    </div>
-  );
-}
+const STEPS = [
+  {
+    when: "Two weeks out",
+    short: "Set up",
+    title: "Set it up for your kind of event",
+    body: "Pick hackathon, tournament, party or workshop. The sign-up form, the pass and your dashboard change with it.",
+    demo: <KindsDemo />,
+  },
+  {
+    when: "The week before",
+    short: "Payments",
+    title: "UPI lands straight with you",
+    body: "No payment gateway, no fee. Guests pay your UPI ID and paste the UTR; you confirm them from one list.",
+    demo: <UpiDemo />,
+  },
+  {
+    when: "7:00 pm",
+    short: "Doors",
+    title: "A door that can't be fooled",
+    body: "Any phone is a scanner. A pass works once, even with no signal: scans queue offline and sync later.",
+    demo: <ScannerDemo />,
+  },
+  {
+    when: "Next morning",
+    short: "Photos",
+    title: "Photos find their people",
+    body: "Upload the night's photos. Guests take one selfie and see only the ones they're in.",
+    demo: <VaultDemo />,
+  },
+];
 
-function Tile({
-  title,
-  body,
-  className,
-  center,
-  wide,
-  children,
-}: {
-  title: string;
-  body: string;
-  className?: string;
-  center?: boolean;
-  wide?: boolean;
-  children: React.ReactNode;
-}) {
+export function OrganizerBento() {
+  const [active, setActive] = useState(0);
+  const refs = useRef<(HTMLElement | null)[]>([]);
+
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const en of entries) if (en.isIntersecting) setActive(Number((en.target as HTMLElement).dataset.step));
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+    refs.current.forEach((el) => el && io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section className={cn("grid gap-6 py-10 md:gap-14 md:py-14", wide ? "md:gap-8" : "md:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]", className)}>
+    <div className="mt-14 grid gap-x-16 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+      <div className="hidden lg:block">
+        <div className="sticky top-[calc(var(--header-h)+56px)]">
+          <p className="text-[15px] font-medium text-cream/60">The run of show</p>
+          <div className="relative mt-3 h-[2.1em] font-display text-[clamp(56px,5.4vw,84px)] leading-[1] tracking-[-0.03em] text-cream">
+            <AnimatePresence mode="wait" initial={false}>
+              <m.p
+                key={active}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -14 }}
+                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-x-0 top-0 max-w-[9ch]"
+              >
+                {STEPS[active].when}
+              </m.p>
+            </AnimatePresence>
+          </div>
+          <ol className="mt-10 space-y-1 border-l border-cream/15">
+            {STEPS.map((st, i) => (
+              <li key={st.short}>
+                <button
+                  type="button"
+                  aria-current={active === i ? "step" : undefined}
+                  onClick={() => refs.current[i]?.scrollIntoView({ behavior: "smooth", block: "center" })}
+                  className="group relative flex w-full items-baseline gap-4 py-2.5 pl-6 text-left"
+                >
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "absolute -left-px top-0 h-full w-[2px] transition-colors duration-300",
+                      active === i ? "bg-cream" : i < active ? "bg-cream/40" : "bg-transparent",
+                    )}
+                  />
+                  <span className={cn("w-[132px] shrink-0 text-[14px] tabular-nums transition-colors", active === i ? "text-cream" : "text-cream/45 group-hover:text-cream/75")}>{st.when}</span>
+                  <span className={cn("text-[16px] font-semibold transition-colors", active === i ? "text-cream" : "text-cream/45 group-hover:text-cream/75")}>{st.short}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+
       <div>
-        <h3 className="text-[22px] font-semibold leading-snug tracking-[-0.01em] text-cream">
-          {title}
-        </h3>
-        <p className="mt-2 max-w-[40ch] text-[15px] leading-relaxed text-cream/65">
-          {body}
-        </p>
+        {STEPS.map((st, i) => (
+          <section
+            key={st.short}
+            ref={(el) => {
+              refs.current[i] = el;
+            }}
+            data-step={i}
+            aria-labelledby={`ros-${i}`}
+            className="flex flex-col justify-center border-t border-cream/10 py-12 first:border-t-0 first:pt-0 lg:min-h-[62vh] lg:py-14"
+          >
+            <p className="font-display text-[40px] leading-none tracking-[-0.02em] text-cream lg:hidden">{st.when}</p>
+            <h3 id={`ros-${i}`} className="mt-3 text-[24px] font-semibold leading-snug tracking-[-0.01em] text-cream lg:mt-0 lg:text-[28px]">
+              {st.title}
+            </h3>
+            <p className="mt-2 max-w-[48ch] text-[16px] leading-relaxed text-cream/65">{st.body}</p>
+            <div className="mt-8">{st.demo}</div>
+          </section>
+        ))}
       </div>
-      <div className={cn("flex flex-col", center ? "justify-center" : "justify-start")}>
-        {children}
-      </div>
-    </section>
+    </div>
   );
 }
 
 const btn =
   "ui-press relative inline-flex h-10 items-center justify-center gap-2 rounded-[12px] px-4 text-[14px] font-semibold";
-
-/* ── Scanner: admits once, refuses the second scan, queues offline ── */
 
 function ScannerDemo() {
   const [online, setOnline] = useState(true);
