@@ -85,6 +85,12 @@ async function ensureSchema(db: D1Database): Promise<void> {
          id TEXT PRIMARY KEY, event_id TEXT NOT NULL REFERENCES events(id), user_id TEXT REFERENCES users(id),
          reason TEXT NOT NULL, details TEXT, created_at TEXT NOT NULL)`,
     ),
+    // 0032: page views.
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS event_views (
+         event_id TEXT NOT NULL REFERENCES events(id), day TEXT NOT NULL, source TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0,
+         PRIMARY KEY (event_id, day, source))`,
+    ),
     // 0027: event posters.
     db.prepare(
       `CREATE TABLE IF NOT EXISTS event_posters (

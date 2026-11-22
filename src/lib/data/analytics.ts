@@ -9,6 +9,11 @@ export interface EventAnalytics {
   tiers: { name: string; n: number }[];
   last7: number;
   prev7: number;
+  /** Page views for the last 14 days (IST), oldest first. */
+  views: { day: string; n: number }[];
+  /** Where visitors came from, all time, largest first. */
+  sources: { source: string; n: number }[];
+  viewsTotal: number;
 }
 
 const IST = "+330 minutes";
@@ -52,7 +57,22 @@ export async function eventAnalytics(db: D1Database, eventId: string, now = new 
   }
   const sum = (from: number, to: number) => daily.slice(Math.max(0, daily.length - to), Math.max(0, daily.length - from)).reduce((s, d) => s + d.added, 0);
 
+  const [vRows, sRows] = await db.batch<Record<string, unknown>>([
+    db.prepare("SELECT day, SUM(n) AS n FROM event_views WHERE event_id = ? AND day >= date('now', '+330 minutes', '-13 days') GROUP BY day").bind(eventId),
+    db.prepare("SELECT source, SUM(n) AS n FROM event_views WHERE event_id = ? GROUP BY source ORDER BY n DESC").bind(eventId),
+  ]);
+  const vBy = new Map(((vRows.results ?? []) as { day: string; n: number }[]).map((r) => [r.day, r.n]));
+  const views: EventAnalytics["views"] = [];
+  for (let i = 13; i >= 0; i--) {
+    const key = new Date(now.getTime() + 330 * 60_000 - i * 86_400_000).toISOString().slice(0, 10);
+    views.push({ day: key, n: vBy.get(key) ?? 0 });
+  }
+  const sources = (sRows.results ?? []) as { source: string; n: number }[];
+
   return {
+    views,
+    sources,
+    viewsTotal: sources.reduce((a, b) => a + b.n, 0),
     daily,
     arrivals: (scans.results ?? []) as { at: string; n: number }[],
     tiers: (tiers.results ?? []) as { name: string; n: number }[],

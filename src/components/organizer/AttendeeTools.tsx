@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
-import { CheckCircle2, Clock, Copy, Download, Mail, MessageCircle, Ticket, X } from "lucide-react";
+import { CheckCircle2, ChevronDown, ChevronUp, Clock, Copy, Download, Mail, MessageCircle, Ticket, X } from "lucide-react";
 import { toast } from "@/components/ui/Toaster";
 import { formatINR } from "@/lib/money";
 
@@ -64,11 +64,30 @@ export function AttendeeTools({ eventId, tableId, slug }: { eventId: string; tab
     void fetch(`/api/events/${eventId}/attendees/${open}`)
       .then((r) => (r.ok ? (r.json() as Promise<Guest>) : null))
       .then(setGuest);
-    const key = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
+    const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(null);
+      if ((e.target as HTMLElement).closest("input, textarea")) return;
+      if (e.key === "ArrowDown" || e.key === "j") {
+        e.preventDefault();
+        step(1);
+      }
+      if (e.key === "ArrowUp" || e.key === "k") {
+        e.preventDefault();
+        step(-1);
+      }
+    };
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, eventId]);
 
+  const ids = () => [...document.querySelectorAll<HTMLElement>(`#${tableId} [data-guest]`)].map((b) => b.dataset.guest!);
+  const step = (d: number) => {
+    const list = ids();
+    const i = list.indexOf(open ?? "");
+    const next = list[i + d];
+    if (next) setOpen(next);
+  };
   const rows = () =>
     sel
       .map((id) => document.querySelector<HTMLElement>(`#${tableId} tr[data-reg="${id}"]`))
@@ -143,6 +162,14 @@ export function AttendeeTools({ eventId, tableId, slug }: { eventId: string; tab
             >
               <div className="flex items-center justify-between border-b border-line px-5 py-3">
                 <h2 className="text-[15px] font-semibold text-ink">Guest details</h2>
+                <span className="ml-auto mr-1 flex">
+                  <button type="button" aria-label="Previous guest" aria-keyshortcuts="k ArrowUp" onClick={() => step(-1)} className="grid size-9 place-items-center rounded-lg text-ink-2 hover:bg-sunken">
+                    <ChevronUp className="size-4" aria-hidden />
+                  </button>
+                  <button type="button" aria-label="Next guest" aria-keyshortcuts="j ArrowDown" onClick={() => step(1)} className="grid size-9 place-items-center rounded-lg text-ink-2 hover:bg-sunken">
+                    <ChevronDown className="size-4" aria-hidden />
+                  </button>
+                </span>
                 <button type="button" autoFocus onClick={() => setOpen(null)} aria-label="Close" className="grid size-9 place-items-center rounded-lg text-ink-2 hover:bg-sunken">
                   <X className="size-4" aria-hidden />
                 </button>

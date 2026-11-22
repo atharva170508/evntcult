@@ -37,7 +37,7 @@ function useWidth<T extends HTMLElement>() {
 export function EventAnalyticsCard({ data }: { data: EventAnalytics }) {
   const [tab, setTab] = useState<"signups" | "arrivals">("signups");
   const hasArrivals = data.arrivals.length > 0;
-  if (data.daily.length < 2 && !hasArrivals) return null;
+  if (data.daily.length < 2 && !hasArrivals && !data.viewsTotal) return null;
   const delta = data.last7 - data.prev7;
 
   return (
@@ -67,6 +67,7 @@ export function EventAnalyticsCard({ data }: { data: EventAnalytics }) {
       <div className="px-4 pb-4 pt-5 md:px-5">
         {tab === "signups" || !hasArrivals ? <SignupsChart daily={data.daily} /> : <ArrivalsChart arrivals={data.arrivals} />}
         {data.tiers.length > 1 && <TierBars tiers={data.tiers} />}
+        {data.viewsTotal > 0 && <ViewsBlock data={data} />}
         <details className="mt-4 text-[13.5px]">
           <summary className="cursor-pointer font-semibold text-ink-2 hover:text-ink">Show as a table</summary>
           <table className="mt-3 w-full text-left tabular-nums">
@@ -258,6 +259,73 @@ function TierBars({ tiers }: { tiers: EventAnalytics["tiers"] }) {
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+const SOURCE_NAME: Record<string, string> = {
+  whatsapp: "WhatsApp",
+  instagram: "Instagram",
+  google: "Google",
+  linkedin: "LinkedIn",
+  x: "X",
+  evntcult: "EvntCult",
+  qr: "QR poster",
+  direct: "Direct link",
+  other: "Other sites",
+};
+
+/** Page views for the last 14 days and where visitors came from (Luma Insights, Posh tracking links). */
+function ViewsBlock({ data }: { data: EventAnalytics }) {
+  const [hover, setHover] = useState<number | null>(null);
+  const max = niceMax(Math.max(1, ...data.views.map((v) => v.n)));
+  const recent = data.views.reduce((s, v) => s + v.n, 0);
+  // Only compare like with like: sign-ups and views from the same 14 days, once there are enough views to mean something.
+  const rawRate = recent >= 30 ? Math.round(((data.last7 + data.prev7) / recent) * 100) : null;
+  const rate = rawRate !== null && rawRate <= 100 ? rawRate : null;
+  const smax = Math.max(...data.sources.map((x) => x.n));
+  const h = hover !== null ? data.views[hover] : null;
+  return (
+    <div className="mt-5 border-t border-line pt-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 className="text-[14px] font-semibold text-ink">Page views</h3>
+        <p className="text-[13px] tabular-nums text-ink-muted" aria-live="polite">
+          {h ? `${dayLabel(h.day)}: ${nf.format(h.n)} ${h.n === 1 ? "view" : "views"}` : `${nf.format(recent)} in 14 days${rate !== null ? `, ${rate}% of visitors signed up` : ""}`}
+        </p>
+      </div>
+      <div className="relative mt-3 h-24" role="img" aria-label={`Page views per day for the last 14 days, ${nf.format(recent)} in total`}>
+        <div aria-hidden className="absolute inset-x-0 top-0 border-t border-dashed" style={{ borderColor: GRID }} />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 border-t" style={{ borderColor: GRID }} />
+        <div className="absolute inset-0 flex items-end gap-[2px]">
+          {data.views.map((v, i) => (
+            <div key={v.day} className="flex h-full flex-1 items-end" onPointerEnter={() => setHover(i)} onPointerLeave={() => setHover(null)}>
+              <div
+                className="w-full rounded-t-[4px] transition-opacity"
+                style={{ height: `${v.n ? Math.max(4, (v.n / max) * 100) : 0}%`, background: HUE, opacity: hover === null || hover === i ? 1 : 0.45 }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-1.5 flex justify-between text-[11.5px] tabular-nums text-ink-subtle">
+        <span>{dayLabel(data.views[0].day)}</span>
+        <span>Today</span>
+      </div>
+      <h3 className="mt-5 text-[14px] font-semibold text-ink">Where visitors came from</h3>
+      <ul className="mt-3 space-y-2.5">
+        {data.sources.map((x) => (
+          <li key={x.source} className="grid grid-cols-[96px_minmax(0,1fr)] items-center gap-3 text-[13.5px]">
+            <span className="truncate text-ink-2">{SOURCE_NAME[x.source] ?? x.source}</span>
+            <span className="flex items-center gap-2">
+              <span className="h-3 rounded-r-[4px]" style={{ width: `${Math.max(2, (x.n / smax) * 80)}%`, background: HUE }} />
+              <span className="shrink-0 font-semibold tabular-nums text-ink">
+                {nf.format(x.n)} <span className="font-normal text-ink-muted">({Math.round((x.n / data.viewsTotal) * 100)}%)</span>
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 text-[12.5px] text-ink-muted">Tip: add ?ref=whatsapp or ?ref=instagram to the link you share, so each post shows up here by name.</p>
     </div>
   );
 }

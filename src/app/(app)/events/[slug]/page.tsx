@@ -49,6 +49,7 @@ import { GuestWall } from "@/components/events/GuestWall";
 import { FollowHost, ReportEvent } from "@/components/events/HostActions";
 import { TITLE_FONTS, parseLook } from "@/lib/effects";
 import { EventEffect } from "@/components/events/EventEffect";
+import { ViewBeacon } from "@/components/events/ViewBeacon";
 import { EventCard } from "@/components/landing/EventCard";
 import { listEvents } from "@/lib/data/events";
 
@@ -341,6 +342,7 @@ export default async function EventPage({
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(rgb(var(--c-line-strong))_1px,transparent_1.2px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
       )}
       <EventEffect effect={e.effect ?? null} />
+      {e.status !== "draft" && <ViewBeacon slug={e.slug} />}
       <Link
         href="/events"
         className="inline-flex min-h-11 items-center gap-1.5 text-[14px] font-medium text-ink-muted transition-colors duration-fast hover:text-ink md:hidden"
