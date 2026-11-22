@@ -32,7 +32,7 @@ export function EventTimeline({ events, now = new Date() }: { events: EventSumma
             </h2>
             <ul className="relative space-y-3 border-l border-dashed border-line-strong pl-5 md:pl-6">
               {list.map((e) => (
-                <li key={e.id} className="relative">
+                <li key={e.id} className="relative" data-peek={e.slug}>
                   <span className="absolute -left-[25px] top-6 size-2 rounded-full bg-line-strong ring-4 ring-canvas md:-left-[29px]" aria-hidden />
                   <TimelineRow e={e} />
                 </li>

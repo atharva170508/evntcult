@@ -33,6 +33,8 @@ import { WalkInCard } from "@/components/organizer/WalkInCard";
 import { EventAnalyticsCard } from "@/components/organizer/EventAnalyticsCard";
 import { eventAnalytics } from "@/lib/data/analytics";
 import { kindFor, parseConfig, teamMode, teamRule } from "@/lib/categories";
+import { AttendeeTools } from "@/components/organizer/AttendeeTools";
+import { CheckMark } from "@/components/ui/Switch";
 
 export const metadata: Metadata = { title: "Manage event" };
 export const dynamic = "force-dynamic";
@@ -273,9 +275,16 @@ export default async function ManageEventPage({ params, searchParams }: { params
           ) : (
             <div className="overflow-x-auto">
               {paidEvent && <TriageKeys tableId="att-table" />}
+              <AttendeeTools eventId={e.id} tableId="att-table" slug={e.slug} />
               <table id="att-table" className="w-full min-w-[760px] text-left text-[13.5px]">
                 <thead className="border-b border-line bg-sunken/60 text-ink-subtle">
                   <tr>
+                    <th scope="col" className="w-10 py-2.5 pl-4">
+                      <label className="relative inline-flex cursor-pointer">
+                        <input type="checkbox" data-bulk-all aria-label="Select all shown" className="peer sr-only" />
+                        <CheckMark />
+                      </label>
+                    </th>
                     <th scope="col" className={th}>Name</th>
                     <th scope="col" className={th}>Pass</th>
                     <th scope="col" className={th}>Status</th>
@@ -291,11 +300,21 @@ export default async function ManageEventPage({ params, searchParams }: { params
                       data-triage-row
                       data-reg={a.id}
                       data-name={a.name}
+                      data-email={a.email}
+                      data-pass={a.pass_code}
                       data-utr={a.status === "registered" && a.payment_status === "unpaid" && a.upi_utr ? a.upi_utr : undefined}
                       className="scroll-mt-24 align-top transition-colors hover:bg-sunken/60 data-[selected=true]:bg-lavender/30 data-[selected=true]:shadow-[inset_3px_0_0_#1A1A1A]"
                     >
+                      <td className="py-3 pl-4">
+                        <label className="relative inline-flex cursor-pointer pt-0.5">
+                          <input type="checkbox" data-bulk value={a.id} aria-label={`Select ${a.name}`} className="peer sr-only" />
+                          <CheckMark />
+                        </label>
+                      </td>
                       <td className="px-4 py-3">
-                        <p className="font-medium">{a.name}</p>
+                        <button type="button" data-guest={a.id} className="text-left font-medium underline-offset-4 hover:underline">
+                          {a.name}
+                        </button>
                         <p className="text-[12px] text-ink-muted">{a.email}</p>
                         {questions
                           .filter((qq) => answers.get(a.id)?.[qq.id])

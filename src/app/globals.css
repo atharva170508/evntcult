@@ -808,3 +808,11 @@ body::after {
 /* Live pass band (HoloPass gate view). Keeps moving even with reduced motion: it is the proof. */
 .live-sweep { animation: live-sweep 1.8s linear infinite; }
 @keyframes live-sweep { from { left: -33%; } to { left: 100%; } }
+
+/* Discover quick view: the row that's open in the side panel. */
+[data-peek] { border-radius: 18px; transition: outline-color 160ms; outline: 2px solid transparent; outline-offset: 4px; }
+[data-peek][data-active] { outline-color: rgb(var(--c-ink) / 1); }
+
+/* Attendee table: rows ticked for a bulk action. */
+tr[data-picked] { background: rgb(240 215 255 / 0.35); }
+.dark tr[data-picked] { background: rgb(240 215 255 / 0.08); }

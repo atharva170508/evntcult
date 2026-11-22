@@ -9,6 +9,7 @@ import { KindRail } from "@/components/landing/KindRail";
 import { CATEGORY_NAMES } from "@/components/site/categories";
 import { cn } from "@/lib/utils";
 import { EventTimeline } from "@/components/events/EventTimeline";
+import { EventPeek } from "@/components/events/EventPeek";
 
 export const metadata: Metadata = { title: "Events" };
 export const dynamic = "force-dynamic";
@@ -109,16 +110,20 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
             Show all events
           </Link>
         </div>
-      ) : view === "list" ? (
-        <EventTimeline events={events} />
       ) : (
-        <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:gap-x-6 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-          {events.map((e) => (
-            <li key={e.id}>
-              <EventCard e={e} />
-            </li>
-          ))}
-        </ul>
+        <EventPeek events={events}>
+          {view === "list" ? (
+            <EventTimeline events={events} />
+          ) : (
+            <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 md:gap-x-6 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              {events.map((e) => (
+                <li key={e.id} data-peek={e.slug}>
+                  <EventCard e={e} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </EventPeek>
       )}
 
       {nextHref && (
