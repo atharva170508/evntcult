@@ -7,6 +7,7 @@ import { UpiPending } from "@/components/dashboard/sections";
 import { formatINR } from "@/lib/money";
 import { istYmd } from "@/lib/time";
 import { fmtDate, fmtTime, relative } from "@/lib/utils";
+import { passName } from "@/lib/pass-name";
 
 /**
  * Home, written like a page of a diary (after Things 3's Today): the date set big, a one-line
@@ -172,7 +173,7 @@ function PassRow({ e, serial, pending }: { e: EventSummary; serial: string | nul
           <span className="mt-0.5 block truncate font-display text-[24px] leading-tight text-ink">{e.title}</span>
           <span className="block truncate text-[14px] text-ink-muted">
             {e.venueName ?? "Venue to be announced"}
-            {serial ? <span className="ml-2 font-mono text-[12.5px] tracking-[0.06em] text-ink-subtle">{serial}</span> : null}
+            {serial ? <span className="ml-2 text-ink-subtle">{passName(serial).name}</span> : null}
           </span>
         </span>
         <span className="hidden shrink-0 items-center sm:flex">

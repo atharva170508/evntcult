@@ -22,6 +22,7 @@ import { extractPassToken } from "@/lib/tokens";
 import { formatINR } from "@/lib/money";
 import { fmtTime } from "@/lib/utils";
 import { deviceId, loadGuestList, queueScan, queuedScans, removeQueued, saveGuestList, sha256Hex, type QueuedScan } from "@/lib/scanner/offline-store";
+import { passName } from "@/lib/pass-name";
 
 interface EventInfo {
   id: string;
@@ -588,7 +589,7 @@ export function GateScanner({ event, initialCounts, volunteer = null }: { event:
             <Icon className={`size-16 ${verdict.color === "red" ? "shake" : ""}`} strokeWidth={2.2} />
             <p className={`shout text-[32px] leading-tight ${verdict.color === "red" ? "shake" : ""}`}>{verdict.title}</p>
             {"name" in verdict && verdict.name && <p className="text-[20px] font-bold">{verdict.name}</p>}
-            {"code" in verdict && verdict.code && <p className="font-mono text-[14px] font-semibold tracking-[0.1em] opacity-80">{verdict.code}</p>}
+            {"code" in verdict && verdict.code && <p className="text-[16px] font-semibold opacity-85">{passName(verdict.code).label}</p>}
             {verdict.note && <p className="max-w-xs text-[14px] font-medium opacity-90">{verdict.note}</p>}
 
             {canMerch && verdict.token && !!verdict.merch?.length && (

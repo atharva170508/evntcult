@@ -8,6 +8,7 @@ import { buttonClass } from "@/components/ui/Button";
 import { formatINR } from "@/lib/money";
 import { fmtDate, fmtTime } from "@/lib/utils";
 import { svgSrc } from "@/lib/svg-src";
+import { passName } from "@/lib/pass-name";
 
 const payTone = { PAID: "live", PENDING: "warn", FAILED: "danger", REFUNDED: "neutral", WAIVED: "neutral", NOT_REQUIRED: "neutral" } as const;
 const payLabel = { PAID: "Paid", PENDING: "Payment pending", FAILED: "Payment failed", REFUNDED: "Refunded", WAIVED: "Fee waived", NOT_REQUIRED: "Free entry" } as const;
@@ -33,7 +34,7 @@ export async function PassCard({ pass }: { pass: NextUp }) {
             <img src={svgSrc(svg)} alt="Entry QR code" className="block aspect-square w-full" />
           </>
         </div>
-        <p className="mt-3 text-center font-mono text-[13px] tracking-[0.16em] text-ink-2">{pass.passSerial}</p>
+        <p className="mt-3 text-center font-display text-[18px] text-ink">{passName(pass.passSerial).name}</p>
       </div>
 
       <div className="ticket-cut mt-4" />

@@ -197,8 +197,8 @@ function ScannerDemo() {
   } | null>(null);
   const [syncing, setSyncing] = useState(false);
   const guests = [
-    { id: "EC-NEON-0042", name: "Riya Kulkarni" },
-    { id: "EC-NEON-0117", name: "Kabir Shah" },
+    { id: "Calm Badger", name: "Riya Kulkarni" },
+    { id: "Pearl Rhino", name: "Kabir Shah" },
   ];
   const [pick, setPick] = useState(0);
 
@@ -258,7 +258,7 @@ function ScannerDemo() {
               className="absolute inset-4 rounded-xl border border-dashed border-white/15"
               aria-hidden
             />
-            <span className="font-mono text-[12px] tracking-[0.08em] text-cream/70">
+            <span className="font-display text-[20px] text-cream/85">
               {guests[pick].id}
             </span>
             {result && (

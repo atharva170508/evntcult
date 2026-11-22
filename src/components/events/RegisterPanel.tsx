@@ -13,6 +13,7 @@ import type { Question } from "@/lib/data/questions";
 import { svgSrc } from "@/lib/svg-src";
 import { Sheet } from "@/components/ui/Sheet";
 import { PassPrinter } from "@/components/events/PassPrinter";
+import { passName } from "@/lib/pass-name";
 
 interface Reg {
   id: string;
@@ -327,7 +328,8 @@ export function RegisterPanel(props: {
           )}
           <div className="min-w-0 space-y-1">
             <p className="eyebrow">Pass</p>
-            <p className="font-mono text-[16px] font-medium tracking-[0.12em]">{r.passCode}</p>
+            <p className="font-display text-[22px] leading-tight text-ink">{passName(r.passCode).name}</p>
+            <p className="text-[13px] tabular-nums text-ink-muted">No. {passName(r.passCode).no}</p>
             {props.pricePaise > 0 && (
               <p className={r.paid ? "text-[13px] font-medium text-live" : "text-[13px] font-medium text-warn"}>
                 {r.paid ? "Paid" : props.upi ? (props.upi.utr ? "Payment being checked" : `Unpaid · ${formatINR(props.pricePaise)}`) : `Unpaid · ${formatINR(props.pricePaise)} at the desk`}

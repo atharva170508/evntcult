@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { brandQr } from "@/lib/qr-art";
 import { Odometer } from "./primitives";
 import { svgSrc } from "@/lib/svg-src";
+import { passName } from "@/lib/pass-name";
 
 export interface TicketProps {
   category: string | null;
@@ -47,7 +48,7 @@ export function Ticket(p: TicketProps) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           {qr ? <img src={svgSrc(qr)} alt="Pass QR code" style={{ display: "block", width: "100%", height: "100%" }} /> : null}
         </div>
-        {has(p.passCode) && <div className="o-ticket-code">{p.passCode}</div>}
+        {has(p.passCode) && <div className="o-ticket-code">{passName(p.passCode).label}</div>}
         <div className="o-ticket-price">
           <Odometer value={p.priceLabel} />
         </div>

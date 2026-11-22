@@ -45,7 +45,7 @@ ${
   o.code
     ? `<tr><td style="padding:0 22px"><div style="border-top:2px dashed ${LINE};font-size:0;line-height:0">&nbsp;</div></td></tr>
 <tr><td style="padding:14px 22px 18px"><span style="font-family:${SANS};font-size:12.5px;color:${MUTED}">Pass</span><br>
-<span style="font-family:${MONO};font-size:22px;letter-spacing:3px;color:${INK}">${esc(o.code)}</span></td></tr>`
+<span style="font-family:${SERIF};font-size:26px;line-height:1.2;color:${INK}">${esc(o.code)}</span></td></tr>`
     : ""
 }
 </table>`;

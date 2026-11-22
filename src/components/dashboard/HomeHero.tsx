@@ -7,6 +7,7 @@ import { ArrowUpRight } from "lucide-react";
 import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { EASE } from "@/components/motion/MotionProvider";
 import { EmptyTicket } from "./EmptyTicket";
+import { passName } from "@/lib/pass-name";
 
 export type HeroEvent = {
   id: string;
@@ -135,7 +136,12 @@ export function HomeHero({ e, mine, dateLine, name }: { e: HeroEvent | null; min
           </div>
 
           <div className="mt-8">
-            {mine && e.passSerial && <p className="mb-3 font-mono text-[13px] tracking-[0.12em] text-[#6A6A6A]">{e.passSerial}</p>}
+            {mine && e.passSerial && (
+              <p className="mb-3">
+                <span className="block font-display text-[22px] leading-tight text-[#1A1A1A]">{passName(e.passSerial).name}</span>
+                <span className="block text-[12.5px] tabular-nums text-[#6A6A6A]">No. {passName(e.passSerial).no}</span>
+              </p>
+            )}
             {!mine && (
               <p className="mb-3 text-[13.5px] text-[#6A6A6A]">
                 {e.feePaise > 0 ? `₹${(e.feePaise / 100).toLocaleString("en-IN")}` : "Free"}

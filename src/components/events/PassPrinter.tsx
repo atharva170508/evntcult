@@ -9,6 +9,7 @@ import { EventArt } from "@/components/ui/EventArt";
 import { BrandLogo, BrandMark } from "@/components/site/Brand";
 import { EASE } from "@/components/motion/MotionProvider";
 import { svgSrc } from "@/lib/svg-src";
+import { passName } from "@/lib/pass-name";
 
 export interface PrintedPass {
   title: string;
@@ -219,7 +220,7 @@ function Paper({ pass, reduce }: { pass: PrintedPass; reduce: boolean }) {
 
           <dl className="mt-4 space-y-1.5 border-y border-dashed border-[#CFC9B8] py-3 font-mono text-[12.5px]">
             <Row k="Holder" v={pass.holder} />
-            <Row k="Pass" v={pass.passCode} />
+            <Row k="Pass" v={passName(pass.passCode).name} />
           </dl>
 
           <div className="mt-3 flex items-baseline justify-between">
@@ -232,7 +233,7 @@ function Paper({ pass, reduce }: { pass: PrintedPass; reduce: boolean }) {
             <div className="mt-4 flex flex-col items-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={svgSrc(pass.qrSvg)} alt={`Entry QR code for pass ${pass.passCode}`} className="size-[132px]" />
-              <p className="mt-2 font-mono text-[11.5px] tracking-[0.14em] text-[#55524A]">{pass.passCode}</p>
+              <p className="mt-2 text-[12px] tabular-nums text-[#55524A]">No. {passName(pass.passCode).no}</p>
             </div>
           )}
           <p className="mt-3 text-center text-[11.5px] text-[#8A8577]">Show this at the gate. It works offline.</p>

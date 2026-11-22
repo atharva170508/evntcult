@@ -37,6 +37,7 @@ import { AttendeeTools } from "@/components/organizer/AttendeeTools";
 import { CheckMark } from "@/components/ui/Switch";
 import { EmbedCode } from "@/components/organizer/EmbedCode";
 import { SITE_URL } from "@/lib/site";
+import { passName } from "@/lib/pass-name";
 
 export const metadata: Metadata = { title: "Manage event" };
 export const dynamic = "force-dynamic";
@@ -326,7 +327,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
                             </p>
                           ))}
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3 font-mono text-[12.5px] tracking-[0.06em]">{a.pass_code}</td>
+                      <td className="whitespace-nowrap px-4 py-3"><span className="block text-[14px] font-medium">{passName(a.pass_code).name}</span><span className="block text-[12px] tabular-nums text-ink-muted">No. {passName(a.pass_code).no}</span></td>
                       <td className="px-4 py-3">{a.status === "registered" ? <Chip tone="outline">Registered</Chip> : a.hold_expires_at ? <Chip tone="warn">Seat held</Chip> : <Chip>Waitlist</Chip>}</td>
                       <td className="px-4 py-3">{a.checked_in_at ? <span className="font-mono font-medium text-live">{fmtTime(new Date(a.checked_in_at))}</span> : <span className="text-ink-subtle">—</span>}</td>
                       <td className="px-4 py-3">{a.checked_in_at ? <AttendeeCert regId={a.id} certs={certs.filter((c) => c.registrationId === a.id)} /> : <span className="text-ink-subtle">—</span>}</td>

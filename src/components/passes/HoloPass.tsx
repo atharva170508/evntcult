@@ -24,6 +24,7 @@ import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { ModalDialog } from "@/components/ui/ModalDialog";
 import { svgSrc } from "@/lib/svg-src";
 import { cn } from "@/lib/utils";
+import { passName } from "@/lib/pass-name";
 
 export interface HoloPassProps {
   regId: string;
@@ -435,8 +436,9 @@ export function HoloPass(p: HoloPassProps) {
                                 </span>
                               </div>
                             )}
-                            <p className="mt-3 font-mono text-[13px] tracking-[0.16em] text-ink">
-                              {p.passCode}
+                            <p className="mt-3 text-center">
+                              <span className="block font-display text-[22px] leading-tight text-ink">{passName(p.passCode).name}</span>
+                              <span className="block text-[12.5px] tabular-nums text-ink-muted">No. {passName(p.passCode).no}</span>
                             </p>
                             {p.pay &&
                               (p.pay.href ? (
@@ -806,8 +808,9 @@ function GateView(p: HoloPassProps & { qrArt: string; onClose: () => void }) {
           </div>
           <LiveProof accent={accentHex(p.accent)} />
           <p className="mt-5 text-[18px] font-semibold text-ink">{p.holder}</p>
-          <p className="mt-1 font-mono text-[15px] tracking-[0.16em] text-ink-2">
-            {p.passCode}
+          <p className="mt-1 text-[15px] text-ink-2">
+            <span className="font-display text-[22px] text-ink">{passName(p.passCode).name}</span>
+            <span className="ml-2 tabular-nums">No. {passName(p.passCode).no}</span>
           </p>
           {!!p.logistics?.length && (
             <div className="mt-4 w-full">
@@ -1042,7 +1045,7 @@ async function shareStory(p: HoloPassProps, artEl: HTMLDivElement | null) {
   g.textAlign = "left";
 
   // Ticket number
-  const num = `#${p.passCode.split("-").pop() ?? p.passCode}`;
+  const num = `No. ${passName(p.passCode).no || p.passCode}`;
   g.fillStyle = "#1A1A1A";
   g.font = `110px ${display}`;
   g.fillText(num, qx + qs + 60, qy + 120);

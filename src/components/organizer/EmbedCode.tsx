@@ -23,7 +23,10 @@ export function EmbedCode({ slug, origin }: { slug: string; origin: string }) {
           </button>
         ))}
       </div>
-      <pre className="mt-3 max-h-28 overflow-auto whitespace-pre-wrap break-all rounded-xl bg-sunken p-3 font-mono text-[11.5px] leading-relaxed text-ink-2">{code}</pre>
+      <details className="mt-3">
+        <summary className="cursor-pointer text-[13px] font-medium text-ink-muted hover:text-ink">Show code</summary>
+        <pre className="mt-2 max-h-28 overflow-auto whitespace-pre-wrap break-all rounded-xl bg-sunken p-3 font-mono text-[11.5px] leading-relaxed text-ink-2">{code}</pre>
+      </details>
       <div className="mt-3 flex items-center gap-2">
         <button
           type="button"

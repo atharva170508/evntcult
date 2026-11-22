@@ -5,6 +5,7 @@ import { AnimatePresence, m } from "motion/react";
 import { CheckCircle2, ChevronDown, ChevronUp, Clock, Copy, Download, Mail, MessageCircle, Ticket, X } from "lucide-react";
 import { toast } from "@/components/ui/Toaster";
 import { formatINR } from "@/lib/money";
+import { passName } from "@/lib/pass-name";
 
 type Guest = {
   name: string; email: string; status: string; pass: string; tier: string | null; amountPaise: number | null; payment: string | null;
@@ -199,7 +200,7 @@ export function AttendeeTools({ eventId, tableId, slug }: { eventId: string; tab
                   </div>
                   <dl className="mt-5 grid grid-cols-2 gap-2 text-[13px]">
                     {[
-                      ["Pass", guest.pass],
+                      ["Pass", passName(guest.pass).label],
                       ["Status", guest.status === "registered" ? "Going" : guest.status === "waitlisted" ? "Waitlist" : guest.status],
                       ...(guest.tier ? [["Ticket", guest.tier]] : []),
                       ...(guest.amountPaise ? [["Paid", `${formatINR(guest.amountPaise)}${guest.payment === "paid" ? "" : " (unverified)"}`]] : []),

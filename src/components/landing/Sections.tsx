@@ -218,8 +218,8 @@ export function HowItWorks() {
           </div>
           <div className="min-w-0">
             <p className="text-[13px] font-semibold text-ink">Your pass</p>
-            <p className="font-mono text-[12px] tracking-[0.1em] text-ink-muted">
-              EC-HOOP-0042
+            <p className="font-display text-[16px] text-ink-muted">
+              Calm Badger
             </p>
           </div>
         </div>
@@ -441,8 +441,8 @@ export function AppBand() {
                 </div>
                 <div>
                   <p className="text-[12px] font-semibold text-ink">Pass</p>
-                  <p className="font-mono text-[11px] tracking-[0.08em] text-ink-muted">
-                    EC-0042
+                  <p className="font-display text-[16px] text-ink-muted">
+                    Calm Badger
                   </p>
                 </div>
               </div>

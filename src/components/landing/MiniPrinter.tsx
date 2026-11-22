@@ -45,7 +45,7 @@ function Ticket({ n, className, style }: { n: number; className?: string; style?
           ))}
         </div>
         <span className="font-mono text-[7.5px] leading-tight tabular-nums text-ink-muted">
-          EC-{String(41 + n).padStart(4, "0")}
+          No. {String(41 + n).padStart(4, "0")}
           <br />
           Sat 12 Dec
         </span>

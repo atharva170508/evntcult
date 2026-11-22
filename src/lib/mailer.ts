@@ -4,6 +4,7 @@
  * cron, through Brevo, so a slow mail API never slows down registering.
  */
 import { button, esc, layout, links, note, P, stars, stub } from "./mail-kit";
+import { passName } from "./pass-name";
 
 type MailEnv = { BREVO_API_KEY?: string; EMAIL_FROM?: string; EMAIL_PROVIDER?: string; NEXT_PUBLIC_SITE_URL?: string };
 const site = (env: MailEnv) => (env.NEXT_PUBLIC_SITE_URL || "https://evntcult.caliper.workers.dev").replace(/\/$/, "");
@@ -59,7 +60,7 @@ export function registeredEmail(r: Row, base: string) {
         ["Where", [r.venue, r.venue_address].filter(Boolean).join(", ") || "Venue to be announced"],
         ...(r.host ? ([["Host", r.host]] as [string, string][]) : []),
       ],
-      code: !waiting && !pending ? (r.pass_code ?? undefined) : undefined,
+      code: !waiting && !pending && r.pass_code ? passName(r.pass_code).label : undefined,
     }) +
     (r.confirm_message ? note(r.host ?? "the host", r.confirm_message) : "") +
     button(waiting || pending ? page : `${base}/passes`, waiting || pending ? "See the event" : "Open your pass") +
@@ -67,7 +68,7 @@ export function registeredEmail(r: Row, base: string) {
       { href: `${base}/api/events/${r.slug}/ics`, label: "Add to calendar" },
       { href: page, label: "Event page" },
     ]);
-  const text = `${heading}\n\n${r.title}\n${when(r.starts_at, r.ends_at)}\n${r.venue ?? "Venue to be announced"}\n${r.pass_code && !waiting && !pending ? `Pass: ${r.pass_code}\n` : ""}${r.confirm_message ? `\nA note from ${r.host ?? "the host"}:\n${r.confirm_message}\n` : ""}\nYour pass: ${base}/passes\nEvent page: ${page}`;
+  const text = `${heading}\n\n${r.title}\n${when(r.starts_at, r.ends_at)}\n${r.venue ?? "Venue to be announced"}\n${r.pass_code && !waiting && !pending ? `Pass: ${passName(r.pass_code).label}\n` : ""}${r.confirm_message ? `\nA note from ${r.host ?? "the host"}:\n${r.confirm_message}\n` : ""}\nYour pass: ${base}/passes\nEvent page: ${page}`;
   return {
     subject: waiting ? `Waitlist: ${r.title}` : pending ? `Request sent: ${r.title}` : `You're in: ${r.title}`,
     html: layout({

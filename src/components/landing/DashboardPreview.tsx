@@ -121,8 +121,8 @@ export function DashboardPreview() {
                       <span className="inline-flex h-9 items-center rounded-lg bg-ink px-3.5 text-[13px] font-semibold text-white">
                         Show pass
                       </span>
-                      <span className="font-mono text-[12px] tracking-[0.08em] text-ink-muted">
-                        EC-ROBO-0142
+                      <span className="font-display text-[16px] text-ink-muted">
+                        Lunar Zebra
                       </span>
                     </div>
                   </div>
