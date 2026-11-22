@@ -61,6 +61,18 @@ async function ensureSchema(db: D1Database): Promise<void> {
     ),
     db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS idx_teams_code ON teams(event_id, join_code)"),
     db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS idx_teams_name ON teams(event_id, lower(name))"),
+    // 0029: guest wall.
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS event_posts (
+         id TEXT PRIMARY KEY, event_id TEXT NOT NULL REFERENCES events(id), user_id TEXT NOT NULL REFERENCES users(id),
+         body TEXT NOT NULL, created_at TEXT NOT NULL)`,
+    ),
+    db.prepare("CREATE INDEX IF NOT EXISTS idx_event_posts_event ON event_posts(event_id, created_at)"),
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS event_post_reactions (
+         post_id TEXT NOT NULL REFERENCES event_posts(id), user_id TEXT NOT NULL REFERENCES users(id), emoji TEXT NOT NULL,
+         PRIMARY KEY (post_id, user_id, emoji))`,
+    ),
     // 0027: event posters.
     db.prepare(
       `CREATE TABLE IF NOT EXISTS event_posters (
@@ -70,6 +82,15 @@ async function ensureSchema(db: D1Database): Promise<void> {
 
   // 0024: category setup JSON on events.
   const evCols = await db.prepare("PRAGMA table_info(events)").all<{ name: string }>();
+  // 0029: page effect.
+  if (!(evCols.results ?? []).some((c) => c.name === "effect")) {
+    await db.prepare("ALTER TABLE events ADD COLUMN effect TEXT").run();
+    try {
+      await db.prepare("INSERT INTO d1_migrations (name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name = ?)").bind("0029_wall_effects.sql", "0029_wall_effects.sql").run();
+    } catch {
+      // no d1_migrations table locally
+    }
+  }
   if (!(evCols.results ?? []).some((c) => c.name === "category_config")) {
     await db.prepare("ALTER TABLE events ADD COLUMN category_config TEXT").run();
     try {

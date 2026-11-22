@@ -804,7 +804,8 @@ function GateView(p: HoloPassProps & { qrArt: string; onClose: () => void }) {
               className="block aspect-square w-[min(74vw,330px)]"
             />
           </div>
-          <p className="mt-6 text-[18px] font-semibold text-ink">{p.holder}</p>
+          <LiveProof accent={accentHex(p.accent)} />
+          <p className="mt-5 text-[18px] font-semibold text-ink">{p.holder}</p>
           <p className="mt-1 font-mono text-[15px] tracking-[0.16em] text-ink-2">
             {p.passCode}
           </p>
@@ -1120,4 +1121,34 @@ function wrap(
     out[maxLines - 1] = out[maxLines - 1].replace(/\s*\S+$/, "") + "…";
   const start = bottomUp ? y - (out.length - 1) * lh : y;
   out.forEach((l, i) => g.fillText(l, x, start + i * lh));
+}
+
+/**
+ * DICE-style proof the pass is live and not a screenshot: a band that keeps sweeping and a clock
+ * that ticks every second. Door staff learn to look for movement.
+ */
+function LiveProof({ accent }: { accent: string }) {
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <div className="mt-4 w-[min(74vw,330px)]" aria-label="Live pass">
+      <div className="relative h-2 overflow-hidden rounded-full" style={{ background: `${accent}26` }}>
+        <span className="live-sweep absolute inset-y-0 w-1/3 rounded-full" style={{ background: `linear-gradient(90deg, transparent, ${accent}, transparent)` }} />
+      </div>
+      <p className="mt-2 flex items-center justify-center gap-2 text-[12.5px] font-semibold text-ink-2">
+        <span className="relative flex size-2">
+          <span className="absolute inline-flex size-full animate-ping rounded-full opacity-60" style={{ background: accent }} />
+          <span className="relative inline-flex size-2 rounded-full" style={{ background: accent }} />
+        </span>
+        Live pass
+        <span className="font-mono tabular-nums text-ink-muted" suppressHydrationWarning>
+          {now ? now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }) : "--:--:--"}
+        </span>
+      </p>
+    </div>
+  );
 }

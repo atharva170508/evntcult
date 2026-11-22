@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button, Section, Segmented, apiJson } from "./primitives";
 import type { Question } from "@/lib/data/questions";
+import { CheckMark, SwitchMark } from "@/components/ui/Switch";
 
 /** One-click questions college fests and hackathons ask for, ready to count and export. */
 const PRESETS: { name: string; label: string; kind: "text" | "choice"; options?: string[]; required: boolean }[] = [
@@ -88,8 +89,9 @@ export function QuestionsSetup({ eventId }: { eventId: string }) {
               ]}
               onChange={setKind}
             />
-            <label className="o-inline" style={{ fontSize: 13 }}>
-              <input type="checkbox" checked={required} onChange={(e) => setRequired(e.target.checked)} /> Required
+            <label className="o-inline relative cursor-pointer" style={{ fontSize: 13 }}>
+              <input type="checkbox" className="peer sr-only" checked={required} onChange={(e) => setRequired(e.target.checked)} />
+              <CheckMark /> Required
             </label>
             <span className="o-spacer" />
             <Button disabled={busy} onClick={add}>Add</Button>

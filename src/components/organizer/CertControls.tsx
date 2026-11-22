@@ -4,6 +4,7 @@ import { Select } from "@/components/ui/Select";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { CheckMark, SwitchMark } from "@/components/ui/Switch";
 
 async function send(url: string, body: object = {}) {
   const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -32,7 +33,8 @@ export function CertPanel({ eventId, issued, checkedIn, enabled }: { eventId: st
         Issue certificates
       </button>
       <label className="flex items-center gap-2 text-[13px]">
-        <input type="checkbox" checked={enabled} disabled={busy} onChange={(e) => run(`/api/events/${eventId}/certificates`, { enabled: e.target.checked })} className="size-4 accent-ink" />
+        <input type="checkbox" checked={enabled} disabled={busy} onChange={(e) => run(`/api/events/${eventId}/certificates`, { enabled: e.target.checked })} role="switch" className="peer sr-only" />
+        <SwitchMark />
         Issue at check-in
       </label>
       {note && <span role="status" className="text-[13px] text-ink-muted">{note}</span>}

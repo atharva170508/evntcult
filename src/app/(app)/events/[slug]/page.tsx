@@ -46,6 +46,10 @@ import { myTeam } from "@/lib/data/teams";
 import { kindFor, parseConfig, teamMode } from "@/lib/categories";
 import { buttonClass } from "@/components/ui/Button";
 import { Odometer } from "@/components/ui/Odometer";
+import { GuestWall } from "@/components/events/GuestWall";
+import { EventEffect } from "@/components/events/EventEffect";
+import { EventCard } from "@/components/landing/EventCard";
+import { listEvents } from "@/lib/data/events";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Event" };
@@ -157,11 +161,19 @@ export default async function EventPage({
   const isPublic = e.status === "published" && e.access === "public";
   const teamRules = teamMode(kindFor(e.category), parseConfig(e.category_config));
   const viewerTeam = teamRules && reg && reg.status !== "cancelled" ? await myTeam(await getDB(), reg.id, viewer?.id ?? "") : null;
+  const related = ended
+    ? []
+    : await (async () => {
+        const same = (await listEvents({ type: e.category as never })).events.filter((x) => x.id !== e.id);
+        const rest = same.length >= 3 ? [] : (await listEvents({})).events.filter((x) => x.id !== e.id && !same.some((y) => y.id === x.id));
+        return [...same, ...rest].slice(0, 3);
+      })();
   const pageSections = [
     ...((updates.results ?? []).length ? [{ id: "updates", label: "Updates" }] : []),
     ...(e.description ? [{ id: "about", label: "About" }] : []),
     ...(e.agenda ? [{ id: "agenda", label: "Agenda" }] : []),
     ...categorySectionList(e.category, e.category_config),
+    ...(e.status !== "draft" ? [{ id: "wall", label: "Wall" }] : []),
   ];
   const regClosed = !!e.reg_closes_at && Date.parse(e.reg_closes_at) <= Date.now();
   const canSell = e.status === "published" && !ended && !regClosed;
@@ -302,6 +314,7 @@ export default async function EventPage({
     <div className="relative isolate pb-28 pt-6 md:pb-12 md:pt-10">
       {/* Luma-style: the page picks up the event's colour (from the flyer when there is one) and breathes slowly. */}
       <FlyerAura src={e.banner_url} fallback={accentHex(s.accent)} />
+      <EventEffect effect={e.effect ?? null} />
       <Link
         href="/events"
         className="inline-flex min-h-11 items-center gap-1.5 text-[14px] font-medium text-ink-muted transition-colors duration-fast hover:text-ink md:hidden"
@@ -750,6 +763,59 @@ export default async function EventPage({
           )}
 
           <CategorySections category={e.category} raw={e.category_config} />
+
+          {e.status !== "draft" && (
+            <section id="wall" aria-labelledby="wall-h" className="mt-10 scroll-mt-36 border-t border-line pt-8">
+              <h2 id="wall-h" className="mb-4 text-[20px] font-semibold text-ink">
+                Guest wall
+              </h2>
+              <GuestWall slug={e.slug} signedIn={!!viewer} registerHref={`/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`} />
+            </section>
+          )}
+
+          {confirmedVenue && e.venue_lat != null && e.venue_lng != null && (
+            <section aria-labelledby="loc-h" className="mt-10 border-t border-line pt-8">
+              <h2 id="loc-h" className="text-[20px] font-semibold text-ink">
+                Location
+              </h2>
+              <p className="mt-2 text-[15px] font-semibold text-ink">{e.venue}</p>
+              {e.venue_address && <p className="text-[14px] text-ink-muted">{e.venue_address}</p>}
+              <a
+                href={directionsUrl({ venue: e.venue!, venue_place_id: e.venue_place_id, venue_lat: e.venue_lat, venue_lng: e.venue_lng })}
+                target="_blank"
+                rel="noopener"
+                aria-label={`Open ${e.venue} in Maps`}
+                className="group relative mt-4 block overflow-hidden rounded-2xl border border-line bg-sunken shadow-[var(--lift-1)]"
+              >
+                <span aria-hidden className="absolute inset-0 grid place-items-center bg-[radial-gradient(rgb(var(--c-line-strong))_1px,transparent_1px)] [background-size:16px_16px]">
+                  <MapPin className="size-7 text-brand" />
+                </span>
+                <iframe
+                  title={`Map of ${e.venue}`}
+                  loading="lazy"
+                  tabIndex={-1}
+                  className="pointer-events-none relative h-56 w-full grayscale-[35%] transition-[filter] duration-300 group-hover:grayscale-0 dark:invert dark:hue-rotate-180"
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${e.venue_lng - 0.006}%2C${e.venue_lat - 0.0035}%2C${e.venue_lng + 0.006}%2C${e.venue_lat + 0.0035}&layer=mapnik&marker=${e.venue_lat}%2C${e.venue_lng}`}
+                />
+                <span className="absolute bottom-3 right-3 inline-flex h-9 items-center gap-1.5 rounded-xl bg-white px-3 text-[13px] font-semibold text-ink shadow-[var(--lift-2)]">
+                  <Navigation className="size-3.5" aria-hidden /> Directions
+                </span>
+              </a>
+            </section>
+          )}
+
+          {related.length > 0 && (
+            <section aria-labelledby="more-h" className="mt-12 border-t border-line pt-8">
+              <h2 id="more-h" className="text-[20px] font-semibold text-ink">
+                More like this
+              </h2>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {related.map((r) => (
+                  <EventCard key={r.id} e={r} />
+                ))}
+              </div>
+            </section>
+          )}
 
           {side("mt-10 border-t border-line pt-8 lg:hidden")}
         </div>

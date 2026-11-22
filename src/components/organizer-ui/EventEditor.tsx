@@ -14,6 +14,7 @@ import { TicketsSetup } from "./TicketsSetup";
 import { PosterSetup } from "./PosterSetup";
 import { SectionRail } from "./SectionRail";
 import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, isValidLink, LINK_ERROR, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
+import { DatePicker, TimePicker } from "@/components/ui/DatePicker";
 
 export interface EditorInitial {
   id: string;
@@ -448,10 +449,10 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
             <div id="sec-schedule">
             <Section n="02" label="Schedule">
               <Field label="Starts">
-                {(a) => (
+                {() => (
                   <div className="o-inline">
-                    <input {...a} aria-label="Start date" type="date" className="o-input o-mono" style={{ flex: 1.4 }} value={f.date} onChange={(e) => set("date", e.target.value)} />
-                    <input aria-label="Start time" type="time" className="o-input o-mono" style={{ flex: 1 }} value={f.time} onChange={(e) => set("time", e.target.value)} />
+                    <DatePicker label="Start date" className="flex-[1.4]" value={f.date} onChange={(v) => set("date", v)} />
+                    <TimePicker label="Start time" className="flex-1" value={f.time} onChange={(v) => set("time", v)} />
                     <span className="o-meta">IST</span>
                   </div>
                 )}

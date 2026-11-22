@@ -456,6 +456,54 @@
     stroke-dashoffset: 16;
     animation: ui-draw 260ms var(--ease-enter) 60ms forwards;
   }
+  /* Toggle switch and checkbox: the input is a visually hidden peer right before them. */
+  .ui-switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 22px;
+    border-radius: 999px;
+    background: rgb(var(--c-line-strong) / 1);
+    transition: background-color var(--dur-ui) var(--ease-enter);
+  }
+  .ui-switch-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(20, 14, 4, 0.25), 0 2px 6px rgba(20, 14, 4, 0.12);
+    transition: transform 260ms var(--ease-menu), width 160ms var(--ease-enter);
+  }
+  .peer:checked + .ui-switch { background: rgb(var(--c-ink) / 1); }
+  .peer:checked + .ui-switch .ui-switch-knob { transform: translateX(16px); }
+  label:active .ui-switch-knob { width: 22px; }
+  .peer:checked + .ui-switch:active .ui-switch-knob,
+  label:active .peer:checked + .ui-switch .ui-switch-knob { transform: translateX(12px); }
+  .peer:focus-visible + .ui-switch,
+  .peer:focus-visible + .ui-checkbox { box-shadow: var(--focus-field); }
+  .ui-checkbox {
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    background: #fff;
+    color: transparent;
+    box-shadow: inset 0 0 0 1.5px rgb(var(--c-line-strong) / 1);
+    transition: background-color 140ms var(--ease-enter), box-shadow 140ms var(--ease-enter), transform 120ms var(--ease-enter);
+  }
+  .ui-checkbox path { stroke-dasharray: 14; stroke-dashoffset: 14; transition: stroke-dashoffset 220ms var(--ease-enter) 40ms; }
+  label:active .ui-checkbox { transform: scale(0.9); }
+  .peer:checked + .ui-checkbox { background: rgb(var(--c-ink) / 1); color: #fff; box-shadow: none; }
+  .peer:checked + .ui-checkbox path { stroke-dashoffset: 0; }
+  .dark .ui-switch-knob { background: #fffef6; }
+  .dark .ui-checkbox { background: transparent; }
+  .dark .peer:checked + .ui-switch .ui-switch-knob { background: rgb(var(--c-canvas) / 1); }
+  .dark .peer:checked + .ui-checkbox { color: rgb(var(--c-canvas) / 1); }
+
   @keyframes ui-menu-in {
     from { opacity: 0; transform: scale(0.96) translateY(-4px); }
     to { opacity: 1; transform: none; }
@@ -733,3 +781,30 @@ body::after {
 .dark .ring-ink { --tw-ring-color: rgb(var(--c-ink) / 0.9); }
 .dark .bg-ink [class*="text-white/"] { color: rgb(20 19 17 / 0.7); }
 .dark .avstack > * { color: rgb(20 19 17); }
+
+/* Event page effect: emoji drifting down (EventEffect). */
+.fx-drop {
+  position: absolute;
+  top: -40px;
+  opacity: 0.55;
+  will-change: transform;
+  animation-name: fx-fall, fx-sway;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+  animation-direction: normal, alternate;
+}
+@keyframes fx-fall {
+  from { transform: translate3d(0, 0, 0) rotate(0deg); }
+  to { transform: translate3d(0, 110vh, 0) rotate(var(--spin)); }
+}
+@keyframes fx-sway {
+  from { margin-left: calc(var(--sway) * -1); }
+  to { margin-left: var(--sway); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fx-layer { display: none; }
+}
+
+/* Live pass band (HoloPass gate view). Keeps moving even with reduced motion: it is the proof. */
+.live-sweep { animation: live-sweep 1.8s linear infinite; }
+@keyframes live-sweep { from { left: -33%; } to { left: 100%; } }

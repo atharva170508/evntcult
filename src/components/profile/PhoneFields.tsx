@@ -1,6 +1,7 @@
 "use client";
 
 import { useId } from "react";
+import { CheckMark, SwitchMark } from "@/components/ui/Switch";
 
 /** Mobile number + WhatsApp consent, shared by sign-up, the dashboard card and /profile. */
 export function PhoneFields({
@@ -38,7 +39,8 @@ export function PhoneFields({
         </div>
       </div>
       <label className="flex cursor-pointer items-start gap-3 rounded-tile bg-sunken/70 p-3.5 text-[13.5px] text-ink-2">
-        <input type="checkbox" checked={optIn} onChange={(e) => setOptIn(e.target.checked)} className="mt-0.5 size-4 shrink-0 cursor-pointer accent-ink" />
+        <input type="checkbox" checked={optIn} onChange={(e) => setOptIn(e.target.checked)} className="peer sr-only" />
+        <CheckMark />
         <span>Send me event reminders and pass updates on WhatsApp.</span>
       </label>
     </>

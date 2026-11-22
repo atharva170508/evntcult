@@ -6,6 +6,7 @@ import { Megaphone } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Notice, Textarea } from "@/components/ui/Field";
 import { cn } from "@/lib/utils";
+import { CheckMark, SwitchMark } from "@/components/ui/Switch";
 
 const KINDS = [
   { value: "schedule", label: "Schedule", whatsapp: true },
@@ -81,7 +82,8 @@ export function UpdateComposer({ eventId, optedIn, connected }: { eventId: strin
         <p className="mt-1 text-right font-mono text-[11px] tabular-nums text-ink-subtle">{body.length}/500</p>
       </div>
       <label className="flex cursor-pointer items-start gap-2.5 text-[13.5px] text-ink-2">
-        <input type="checkbox" checked={whatsapp} onChange={(e) => setWhatsapp(e.target.checked)} className="mt-0.5 size-4 accent-ink" />
+        <input type="checkbox" checked={whatsapp} onChange={(e) => setWhatsapp(e.target.checked)} className="peer sr-only" />
+        <CheckMark />
         <span>
           Also send on WhatsApp to the <span className="font-mono font-medium tabular-nums text-ink">{optedIn}</span> registered {optedIn === 1 ? "person" : "people"} who opted in
           {!connected && <span className="text-ink-muted"> (queued until WhatsApp is connected)</span>}

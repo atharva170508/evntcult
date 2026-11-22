@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Camera, ImageUp, Loader2, RotateCcw, ScanFace, ShieldCheck } from "lucide-react";
 import type { PhotoMatch } from "@/lib/data/face-search";
 import { PhotoMatchCard } from "./PhotoMatchCard";
+import { CheckMark, SwitchMark } from "@/components/ui/Switch";
 
 type Phase =
   | { kind: "idle" }
@@ -91,7 +92,8 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
             </p>
 
             <label className="mt-5 flex max-w-xl cursor-pointer items-start gap-3 rounded-tile bg-sunken/70 p-3.5 text-[13.5px] text-ink-2">
-              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 size-4 shrink-0 accent-ink" />
+              <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="peer sr-only" />
+              <CheckMark />
               <span>
                 I agree to my selfie being turned into face numbers on this device to search this event&apos;s photos. The numbers are used once and not stored.
               </span>

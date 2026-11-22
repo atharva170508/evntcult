@@ -2,11 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Section, apiJson } from "./primitives";
+import { DatePicker, TimePicker } from "@/components/ui/DatePicker";
+import { Switch } from "@/components/ui/Switch";
+import { EFFECTS, EFFECT_KEYS } from "@/lib/effects";
 
 interface Rules {
   regClosesAt: string | null;
   requiresApproval: boolean;
   agenda: string | null;
+  effect?: string | null;
 }
 
 /** ISO -> "YYYY-MM-DDTHH:mm" in IST, for a datetime-local input. */
@@ -49,14 +53,21 @@ export function SignupRules({ eventId }: { eventId: string }) {
         <span className="o-label">Closes</span>
         <div>
           <div className="o-inline" style={{ gap: 8 }}>
-            <input
-              type="datetime-local"
-              aria-label="Registration closes at"
-              className="o-input o-mono"
-              style={{ maxWidth: 240 }}
-              value={toLocal(rules.regClosesAt)}
-              onChange={(e) => save({ ...rules, regClosesAt: fromLocal(e.target.value) })}
+            <DatePicker
+              label="Registration closes on"
+              className="w-[220px]"
+              placeholder="No cut-off"
+              value={toLocal(rules.regClosesAt).slice(0, 10)}
+              onChange={(d) => save({ ...rules, regClosesAt: fromLocal(`${d}T${toLocal(rules.regClosesAt).slice(11, 16) || "23:59"}`) }, 0)}
             />
+            {rules.regClosesAt && (
+              <TimePicker
+                label="Registration closes at"
+                className="w-[130px]"
+                value={toLocal(rules.regClosesAt).slice(11, 16)}
+                onChange={(t) => save({ ...rules, regClosesAt: fromLocal(`${toLocal(rules.regClosesAt).slice(0, 10)}T${t}`) }, 0)}
+              />
+            )}
             {rules.regClosesAt && (
               <button type="button" className="o-link" style={{ fontSize: 12.5 }} onClick={() => save({ ...rules, regClosesAt: null }, 0)}>
                 Clear
@@ -72,9 +83,7 @@ export function SignupRules({ eventId }: { eventId: string }) {
       <div className="o-row">
         <span className="o-label">Approval</span>
         <div>
-          <label className="o-inline" style={{ fontSize: 14 }}>
-            <input type="checkbox" checked={rules.requiresApproval} onChange={(e) => save({ ...rules, requiresApproval: e.target.checked }, 0)} /> I approve each sign-up
-          </label>
+          <Switch label="I approve each sign-up" checked={rules.requiresApproval} onChange={(v) => save({ ...rules, requiresApproval: v }, 0)} className="max-w-[420px]" />
           <p className="o-meta" style={{ marginTop: 6 }}>
             Guests send a request instead of getting a pass straight away. Approve or decline them from Manage; approved guests get their pass.
           </p>
@@ -94,6 +103,28 @@ export function SignupRules({ eventId }: { eventId: string }) {
           />
           <p className="o-meta" style={{ marginTop: 6 }}>
             One item per line: time, then what happens.
+          </p>
+        </div>
+      </div>
+      <div className="o-row">
+        <span className="o-label">Page effect</span>
+        <div>
+          <div className="o-chips" role="group" aria-label="Page effect">
+            {EFFECT_KEYS.map((k) => (
+              <button
+                key={k}
+                type="button"
+                className="o-chip"
+                aria-pressed={(rules.effect ?? "none") === k}
+                onClick={() => save({ ...rules, effect: k }, 0)}
+              >
+                {EFFECTS[k].glyphs[0] && <span aria-hidden style={{ marginRight: 4 }}>{EFFECTS[k].glyphs[0]}</span>}
+                {EFFECTS[k].label}
+              </button>
+            ))}
+          </div>
+          <p className="o-meta" style={{ marginTop: 6 }}>
+            A few emoji drift down your event page. Hidden for people who turn off animations.
           </p>
         </div>
       </div>

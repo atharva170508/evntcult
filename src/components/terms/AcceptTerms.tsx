@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Notice } from "@/components/ui/Field";
 import { TERMS_LABEL } from "@/lib/terms";
+import { CheckMark, SwitchMark } from "@/components/ui/Switch";
 
 /**
  * Shown at the top of the terms page to signed-in people who haven't accepted the current version
@@ -60,8 +61,9 @@ export function TermsCheckbox({ checked, onChange, newTab = false }: { checked: 
         required
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="mt-0.5 size-5 shrink-0 cursor-pointer rounded accent-ink"
+        className="peer sr-only"
       />
+      <CheckMark className="mt-0.5" />
       <span>
         {before}
         <Link

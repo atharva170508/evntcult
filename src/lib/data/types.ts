@@ -51,6 +51,8 @@ export interface EventRow {
   reg_closes_at?: string | null;
   requires_approval?: number | null;
   agenda?: string | null;
+  /** Page effect key (migration 0029). */
+  effect?: string | null;
   /** Ticket types and promo codes, JSON (migration 0026). */
   tiers?: string | null;
   promos?: string | null;

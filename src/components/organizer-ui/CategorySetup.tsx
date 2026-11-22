@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Section, apiJson } from "./primitives";
 import { kindFor, type CategoryConfig, type Field } from "@/lib/categories";
 import type { Question } from "@/lib/data/questions";
+import { CheckMark, SwitchMark } from "@/components/ui/Switch";
+import { Stepper } from "@/components/ui/Stepper";
 
 /**
  * The part of the editor that changes with the category: a hackathon asks for team size and
@@ -182,16 +184,7 @@ function FieldInput({
         ? (value as [number, number])
         : [f.min, f.min];
     const num = (v: number, set: (n: number) => void, label: string) => (
-      <input
-        aria-label={label}
-        type="number"
-        className="o-input o-mono"
-        style={{ width: 84 }}
-        min={f.min}
-        max={f.max}
-        value={v}
-        onChange={(e) => set(Number(e.target.value))}
-      />
+      <Stepper label={label} size="sm" className="w-[120px]" min={f.min} max={f.max} value={v} onChange={(n) => set(n ?? f.min)} />
     );
     return (
       <div className="o-inline" style={{ gap: 8 }}>
@@ -282,13 +275,16 @@ function FieldInput({
 
   if (f.type === "toggle") {
     return (
-      <label className="o-inline" style={{ fontSize: 14 }}>
+      <label className="o-inline relative cursor-pointer" style={{ fontSize: 14 }}>
         <input
           type="checkbox"
           checked={value === true}
           onChange={(e) => onChange(e.target.checked ? true : undefined)}
-        />{" "}
-        Yes
+          role="switch"
+          className="peer sr-only"
+        />
+        <SwitchMark />
+        {value === true ? "On" : "Off"}
       </label>
     );
   }

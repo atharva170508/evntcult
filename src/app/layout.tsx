@@ -4,6 +4,7 @@ import "./globals.css";
 import { SITE_URL } from "@/lib/site";
 import { THEME_SCRIPT } from "@/components/site/ThemeSwitch";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { Toaster } from "@/components/ui/Toaster";
 
 /* Figtree for the interface, EB Garamond for big headlines, JetBrains Mono for pass codes.
    Self-hosted (SIL OFL). */
@@ -63,7 +64,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <MotionProvider>{children}</MotionProvider>
+        <MotionProvider>
+          {children}
+          <Toaster />
+        </MotionProvider>
       </body>
     </html>
   );
