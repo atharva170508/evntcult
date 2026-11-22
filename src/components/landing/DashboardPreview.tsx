@@ -6,7 +6,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { BrandLogo } from "@/components/site/Brand";
 
 const cta =
-  "inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-lavender px-6 text-[16px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink transition-[background-color,transform] duration-fast hover:bg-lavender-hover active:scale-[0.97]";
+  "inline-flex h-12 items-center justify-center gap-2 rounded-xl whitespace-nowrap bg-lavender px-6 text-[16px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink transition-[background-color,transform] duration-fast hover:bg-lavender-hover active:scale-[0.97]";
 
 /* Made-up sample content. It is labelled "Example" on screen; none of it is a real event or person. */
 const WEEK = [
@@ -142,7 +142,7 @@ export function DashboardPreview() {
                     {WEEK.map((w) => (
                       <li
                         key={w.d}
-                        className={`flex flex-col items-center gap-1.5 rounded-xl py-2.5 ${w.picked ? "bg-lavender/60 ring-2 ring-inset ring-ink" : "bg-sunken"}`}
+                        className={`flex flex-col items-center gap-1.5 rounded-xl py-2.5 ${w.picked ? "whitespace-nowrap bg-lavender/60 ring-2 ring-inset ring-ink" : "bg-sunken"}`}
                       >
                         <span
                           className={`text-[11.5px] ${w.mine ? "font-semibold text-ink" : "text-ink-muted"}`}

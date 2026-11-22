@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 const variants = {
   primary: "bg-ink text-white hover:bg-black",
   accent:
-    "bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
+    "whitespace-nowrap bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
   secondary: "bg-surface text-ink ring-1 ring-inset ring-ink hover:bg-sunken",
   ghost: "text-ink-2 hover:bg-sunken hover:text-ink",
   soft: "bg-sunken text-ink hover:bg-mist",
@@ -21,9 +21,9 @@ const variants = {
   light: "bg-white text-ink hover:bg-white/90",
 
   /* legacy names → new anatomy */
-  volt: "bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
+  volt: "whitespace-nowrap bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
   brand:
-    "bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
+    "whitespace-nowrap bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
   glass:
     "bg-surface text-ink ring-1 ring-inset ring-line-strong hover:bg-sunken",
 } as const;

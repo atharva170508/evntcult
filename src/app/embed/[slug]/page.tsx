@@ -50,7 +50,7 @@ export default async function EmbedPage({ params, searchParams }: { params: Prom
           </span>
           <span className="mt-3 flex items-center justify-between gap-3">
             <span className="text-[14px] font-semibold tabular-nums text-ink">{e.price_paise > 0 ? `From ${formatINR(e.price_paise)}` : "Free"}</span>
-            <span className="inline-flex h-10 items-center rounded-xl bg-lavender px-4 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink">
+            <span className="inline-flex h-10 items-center rounded-xl whitespace-nowrap bg-lavender px-4 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink">
               {ended ? "See the event" : full ? "Join the waitlist" : "Register"}
             </span>
           </span>

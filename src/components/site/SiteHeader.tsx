@@ -212,13 +212,13 @@ export function SiteHeader({
                 <>
                   <Link
                     href="/dashboard"
-                    className="hidden h-10 items-center rounded-lg px-3.5 text-[14px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken lg:flex"
+                    className="hidden h-10 shrink-0 items-center whitespace-nowrap rounded-xl px-3.5 text-[14px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
                   >
                     Switch to attending
                   </Link>
                   <Link
                     href="/organizer/events/new"
-                    className="mr-1 hidden h-10 items-center gap-1.5 rounded-lg bg-lavender ring-2 ring-inset ring-ink px-4 text-[14px] font-semibold text-ink transition-colors hover:bg-lavender ring-2 ring-inset ring-ink-hover md:flex"
+                    className="mr-1 hidden h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-lavender px-4 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink transition-[background-color,transform] duration-fast hover:bg-lavender-hover active:scale-[0.97] md:flex"
                   >
                     <Plus className="size-4" strokeWidth={2.6} aria-hidden />{" "}
                     Create event
@@ -227,7 +227,7 @@ export function SiteHeader({
               ) : ws === "attend" && viewer?.isOrganizer ? (
                 <Link
                   href="/organizer"
-                  className="hidden h-10 items-center rounded-lg px-3.5 text-[14px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
+                  className="hidden h-10 shrink-0 items-center whitespace-nowrap rounded-xl px-3.5 text-[14px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
                 >
                   Switch to hosting
                 </Link>
@@ -241,7 +241,7 @@ export function SiteHeader({
                   </Link>
                   <Link
                     href="/signin?mode=signup"
-                    className="mr-1 hidden h-10 items-center whitespace-nowrap rounded-lg bg-lavender px-4 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover md:flex"
+                    className="mr-1 hidden h-10 items-center whitespace-nowrap rounded-xl bg-lavender px-4 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover md:flex"
                   >
                     Sign up
                   </Link>
@@ -581,7 +581,7 @@ function MenuSheet({
                   <>
                     <Link
                       href="/organizer/events/new"
-                      className="flex h-12 items-center justify-center gap-2 rounded-lg bg-lavender ring-2 ring-inset ring-ink text-[16px] font-semibold text-ink"
+                      className="flex h-12 items-center justify-center gap-2 rounded-xl whitespace-nowrap bg-lavender ring-2 ring-inset ring-ink text-[16px] font-semibold text-ink"
                     >
                       <Plus className="size-4" aria-hidden /> Create event
                     </Link>
@@ -636,7 +636,7 @@ function MenuSheet({
               <>
                 <Link
                   href="/signin?mode=signup"
-                  className="flex h-12 items-center justify-center rounded-lg bg-lavender ring-2 ring-inset ring-ink text-[16px] font-semibold text-ink"
+                  className="flex h-12 items-center justify-center rounded-xl whitespace-nowrap bg-lavender ring-2 ring-inset ring-ink text-[16px] font-semibold text-ink"
                 >
                   Sign up
                 </Link>

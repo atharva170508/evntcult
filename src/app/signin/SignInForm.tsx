@@ -274,7 +274,7 @@ export function SignInForm({
 
         <button
           disabled={busy || (step === "code" && code.length !== 6)}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-lavender text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-[background-color,transform] duration-fast hover:bg-lavender-hover active:scale-[0.98] disabled:opacity-50"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl whitespace-nowrap bg-lavender text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-[background-color,transform] duration-fast hover:bg-lavender-hover active:scale-[0.98] disabled:opacity-50"
         >
           {busy && <Loader2 className="size-4 animate-spin" aria-hidden />}
           {codeLogin && step === "email"

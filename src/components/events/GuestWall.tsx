@@ -78,7 +78,7 @@ export function GuestWall({ slug, signedIn, registerHref }: { slug: string; sign
             <p className="mt-1 text-[13.5px] text-ink-muted">
               {wall.count > 0 ? `${wall.count} ${wall.count === 1 ? "post" : "posts"} from people who are going.` : "Register to say hi to everyone who's going."}
             </p>
-            <a href={signedIn ? "#register" : registerHref} className="mt-4 inline-flex h-10 items-center rounded-xl bg-lavender px-5 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink">
+            <a href={signedIn ? "#register" : registerHref} className="mt-4 inline-flex h-10 items-center rounded-xl whitespace-nowrap bg-lavender px-5 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink">
               {signedIn ? "Register to join in" : "Log in to join in"}
             </a>
           </div>
@@ -167,7 +167,7 @@ export function GuestWall({ slug, signedIn, registerHref }: { slug: string; sign
                           onClick={() => void send("POST", { react: p.id, emoji: em })}
                           className={cn(
                             "inline-flex h-7 items-center gap-1 rounded-lg px-2 text-[13px] tabular-nums transition-all active:scale-90",
-                            r?.mine ? "bg-lavender font-semibold text-ink ring-1 ring-inset ring-ink/20" : r ? "bg-sunken text-ink-2" : "text-ink-subtle opacity-0 hover:bg-sunken focus-visible:opacity-100 group-hover:opacity-100 max-sm:opacity-60",
+                            r?.mine ? "whitespace-nowrap bg-lavender font-semibold text-ink ring-1 ring-inset ring-ink/20" : r ? "bg-sunken text-ink-2" : "text-ink-subtle opacity-0 hover:bg-sunken focus-visible:opacity-100 group-hover:opacity-100 max-sm:opacity-60",
                           )}
                         >
                           <span aria-hidden>{em}</span>

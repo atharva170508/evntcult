@@ -23,7 +23,7 @@ import { HeroShowcase } from "./HeroShowcase";
 import { qrArtSvg } from "@/lib/qr-art";
 
 const cta =
-  "ui-press ui-sheen relative inline-flex h-12 items-center justify-center gap-2 rounded-[14px] bg-lavender px-6 text-[16px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink hover:bg-lavender-hover";
+  "ui-press ui-sheen relative inline-flex h-12 items-center justify-center gap-2 rounded-[14px] whitespace-nowrap bg-lavender px-6 text-[16px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink hover:bg-lavender-hover";
 /* ── Hero: split, text left, the real "up next" list right (antislop layouts §17a) ── */
 
 /**

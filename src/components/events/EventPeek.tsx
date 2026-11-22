@@ -173,7 +173,7 @@ export function EventPeek({ events, children }: { events: EventSummary[]; childr
                       <p className="mt-0.5 text-[20px] font-semibold tabular-nums text-ink">{e.feePaise > 0 ? formatINR(e.feePaise) : "Free"}</p>
                     </>
                   )}
-                  <Link href={`/events/${e.slug}${d?.mine === "registered" ? "" : "#register"}`} className="mt-3 flex h-11 items-center justify-center rounded-xl bg-lavender text-[15px] font-semibold text-ink ring-2 ring-inset ring-ink">
+                  <Link href={`/events/${e.slug}${d?.mine === "registered" ? "" : "#register"}`} className="mt-3 flex h-11 items-center justify-center rounded-xl whitespace-nowrap bg-lavender text-[15px] font-semibold text-ink ring-2 ring-inset ring-ink">
                     {d?.mine === "registered" ? "Open event" : state === "full" ? "Join waitlist" : "Register"}
                   </Link>
                 </div>

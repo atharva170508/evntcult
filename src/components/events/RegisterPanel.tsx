@@ -271,7 +271,7 @@ export function RegisterPanel(props: {
                 aria-checked={on}
                 disabled={soldOut}
                 onClick={() => (setTier(t.id), setPromo(null))}
-                className={`ui-press flex min-h-12 items-center justify-between rounded-[14px] px-4 text-left ring-inset transition-shadow disabled:cursor-not-allowed disabled:opacity-50 ${on ? "bg-lavender/60 ring-2 ring-ink" : "bg-white ring-1 ring-line-strong hover:ring-ink/40"}`}
+                className={`ui-press flex min-h-12 items-center justify-between rounded-[14px] px-4 text-left ring-inset transition-shadow disabled:cursor-not-allowed disabled:opacity-50 ${on ? "whitespace-nowrap bg-lavender/60 ring-2 ring-ink" : "bg-white ring-1 ring-line-strong hover:ring-ink/40"}`}
               >
                 <span className="flex items-center gap-2.5 text-[15px] font-semibold text-ink">
                   <span className={`grid size-4 place-items-center rounded-full ring-2 ${on ? "ring-ink" : "ring-line-strong"}`} aria-hidden>

@@ -83,7 +83,7 @@ function EmptyCampus({ isOrganizer }: { isOrganizer: boolean }) {
           {isOrganizer ? (
             <Link
               href="/organizer/events/new"
-              className="inline-flex h-12 items-center gap-2 rounded-xl bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover"
+              className="inline-flex h-12 items-center gap-2 rounded-xl whitespace-nowrap bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover"
             >
               <Plus className="size-4" strokeWidth={2.6} aria-hidden /> Create
               an event
@@ -91,7 +91,7 @@ function EmptyCampus({ isOrganizer }: { isOrganizer: boolean }) {
           ) : (
             <Link
               href="/calendar"
-              className="inline-flex h-12 items-center rounded-xl bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover"
+              className="inline-flex h-12 items-center rounded-xl whitespace-nowrap bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover"
             >
               Open the calendar
             </Link>

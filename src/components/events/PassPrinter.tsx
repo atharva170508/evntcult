@@ -147,7 +147,7 @@ export function PassPrinter({ pass, onClose }: { pass: PrintedPass; onClose: () 
               >
                 <Link
                   href="/passes"
-                  className="inline-flex h-12 items-center justify-center rounded-xl bg-lavender text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover"
+                  className="inline-flex h-12 items-center justify-center rounded-xl whitespace-nowrap bg-lavender text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover"
                 >
                   Open my passes
                 </Link>

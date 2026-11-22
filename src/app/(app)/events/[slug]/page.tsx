@@ -907,7 +907,7 @@ export default async function EventPage({
                 ? "#register"
                 : `/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`
             }
-            className="inline-flex h-12 items-center rounded-xl bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink"
+            className="inline-flex h-12 items-center rounded-xl whitespace-nowrap bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink"
           >
             {viewer
               ? d.seatsLeft === 0
