@@ -1,0 +1,8 @@
+{
+ "name": "typing-animation-demo-5",
+ "type": "registry:example",
+ "description": "Example showing typing animation without cursor.",
+ "registryDependencies": [
+  "@magicui/typing-animation"
+ ]
+}

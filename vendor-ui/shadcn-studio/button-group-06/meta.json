@@ -1,0 +1,11 @@
+{
+ "name": "button-group-06",
+ "type": "registry:component",
+ "description": "Zoom control button group with increment/decrement and percentage display",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-animate-spring",
+ "type": "registry:ui",
+ "description": "Demo showing an animated spring.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-spring"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "primitives-buttons-button",
+ "type": "registry:ui",
+ "description": "A simple button that animates on hover and tap.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-slot"
+ ]
+}

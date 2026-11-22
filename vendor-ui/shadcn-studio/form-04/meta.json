@@ -1,0 +1,15 @@
+{
+ "name": "form-04",
+ "type": "registry:component",
+ "description": "Form with input fields and validation alerts for data entry",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "form",
+  "input"
+ ]
+}

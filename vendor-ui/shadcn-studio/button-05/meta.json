@@ -1,0 +1,11 @@
+{
+ "name": "button-05",
+ "type": "registry:component",
+ "description": "Outline buttons with icons positioned before and after text",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-community-share-button",
+ "type": "registry:ui",
+ "description": "Demo showing a share button.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-community-share-button"
+ ]
+}

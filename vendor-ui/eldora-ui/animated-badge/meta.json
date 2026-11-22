@@ -1,0 +1,9 @@
+{
+ "name": "animated-badge",
+ "type": "registry:ui",
+ "description": "An animated badge component.",
+ "dependencies": [
+  "motion",
+  "lucide-react"
+ ]
+}

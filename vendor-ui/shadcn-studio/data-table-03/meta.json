@@ -1,0 +1,16 @@
+{
+ "name": "data-table-03",
+ "type": "registry:component",
+ "description": "Payment records table with search filter, column visibility toggle, and refresh functionality",
+ "dependencies": [
+  "lucide-react",
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "button",
+  "checkbox",
+  "dropdown-menu",
+  "input",
+  "table"
+ ]
+}

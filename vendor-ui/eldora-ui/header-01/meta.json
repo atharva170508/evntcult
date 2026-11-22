@@ -1,0 +1,14 @@
+{
+ "name": "header-01",
+ "type": "registry:block",
+ "description": "A simple header.",
+ "dependencies": [
+  "motion/react",
+  "lucide-react",
+  "next-themes"
+ ],
+ "registryDependencies": [
+  "button",
+  "utils"
+ ]
+}

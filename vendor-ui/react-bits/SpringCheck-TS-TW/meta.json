@@ -1,0 +1,10 @@
+{
+ "name": "SpringCheck-TS-TW",
+ "type": "registry:component",
+ "description": "Checkbox row where one spring fills the box, draws the tick and strikes through the label.",
+ "dependencies": [
+  "motion@^12.23.12",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,12 @@
+{
+ "name": "button-group-04",
+ "type": "registry:component",
+ "description": "Rounded media control button group with play, pause, and skip functions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "tooltip"
+ ]
+}

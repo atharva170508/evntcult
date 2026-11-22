@@ -1,0 +1,9 @@
+{
+ "name": "card-06",
+ "type": "registry:component",
+ "description": "Horizontal layout card with side-by-side image and content",
+ "registryDependencies": [
+  "button",
+  "card"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "tabs-16",
+ "type": "registry:component",
+ "description": "Vertical tabs with underline styling in left-side layout",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

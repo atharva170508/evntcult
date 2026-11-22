@@ -1,0 +1,10 @@
+{
+ "name": "animated-grid-pattern",
+ "type": "registry:ui",
+ "description": "An animated grid pattern component.",
+ "dependencies": [
+  "react",
+  "three",
+  "react-three-fiber"
+ ]
+}

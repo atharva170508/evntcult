@@ -1,0 +1,8 @@
+{
+ "name": "comic-text",
+ "type": "registry:ui",
+ "description": "Comic text animation",
+ "dependencies": [
+  "motion"
+ ]
+}

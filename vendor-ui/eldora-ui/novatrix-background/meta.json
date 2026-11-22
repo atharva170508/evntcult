@@ -1,0 +1,9 @@
+{
+ "name": "novatrix-background",
+ "type": "registry:ui",
+ "description": "A novatrix background component.",
+ "dependencies": [
+  "react",
+  "ogl"
+ ]
+}

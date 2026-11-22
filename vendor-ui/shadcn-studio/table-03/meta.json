@@ -1,0 +1,8 @@
+{
+ "name": "table-03",
+ "type": "registry:component",
+ "description": "A table with rounded corners and shadow styling for enhanced visual appeal",
+ "registryDependencies": [
+  "table"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "pagination-14",
+ "type": "registry:component",
+ "description": "A pagination component with page size selector dropdown for customizable results per page",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "pagination",
+  "select"
+ ]
+}

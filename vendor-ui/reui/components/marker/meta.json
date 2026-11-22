@@ -1,0 +1,50 @@
+[
+  {
+    "name": "c-marker-1",
+    "title": "Default, separator, and border markers",
+    "label": "Basic Variants",
+    "description": "Default, separator, and border markers",
+    "order": 1,
+    "gridSize": 2
+  },
+  {
+    "name": "c-marker-2",
+    "title": "Tool call log with icon markers",
+    "label": "Tool Call Log",
+    "description": "Tool call log with icon markers",
+    "order": 2,
+    "gridSize": 2
+  },
+  {
+    "name": "c-marker-3",
+    "title": "Run status markers with a live step",
+    "label": "Run Status",
+    "description": "Run status markers with a live step",
+    "order": 3,
+    "gridSize": 2
+  },
+  {
+    "name": "c-marker-4",
+    "title": "Agent run log grouped by phase separators",
+    "label": "Phase Separators",
+    "description": "Agent run log grouped by phase separators",
+    "order": 4,
+    "gridSize": 2
+  },
+  {
+    "name": "c-marker-5",
+    "title": "Changed files summary with border markers",
+    "label": "Changed Files",
+    "description": "Changed files summary with border markers",
+    "order": 5,
+    "gridSize": 2
+  },
+  {
+    "name": "c-marker-6",
+    "title": "Markers as links and as an action button",
+    "label": "Links & Action",
+    "description": "Markers as links and as an action button",
+    "order": 6,
+    "gridSize": 2
+  }
+]

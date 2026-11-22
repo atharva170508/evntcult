@@ -1,0 +1,5 @@
+{
+ "name": "progressive-blur",
+ "type": "registry:ui",
+ "description": "The Progressive Blur component adds a smooth blur gradient effect to scrollable content, indicating more content below or above."
+}

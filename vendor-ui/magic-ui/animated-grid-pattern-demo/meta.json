@@ -1,0 +1,8 @@
+{
+ "name": "animated-grid-pattern-demo",
+ "type": "registry:example",
+ "description": "Example showing an animated grid pattern background.",
+ "registryDependencies": [
+  "@magicui/animated-grid-pattern"
+ ]
+}

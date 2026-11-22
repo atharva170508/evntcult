@@ -1,0 +1,8 @@
+{
+ "name": "image-comparison",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,11 @@
+{
+ "name": "comp-157",
+ "type": "registry:component",
+ "dependencies": [
+  "@remixicon/react"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/label.json",
+  "https://coss.com/origin/r/radio-group.json"
+ ]
+}

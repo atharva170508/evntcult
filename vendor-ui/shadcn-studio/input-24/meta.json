@@ -1,0 +1,8 @@
+{
+ "name": "input-24",
+ "type": "registry:component",
+ "description": "An email input field with an animated floating label that moves on focus",
+ "registryDependencies": [
+  "input"
+ ]
+}

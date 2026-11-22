@@ -1,0 +1,7 @@
+{
+ "name": "Scanner-TS-TW",
+ "type": "registry:component",
+ "description": "Glowing interference lines swept by a scan beam, with a CRT finish, cursor lensing and click pings.",
+ "dependencies": [],
+ "registryDependencies": []
+}

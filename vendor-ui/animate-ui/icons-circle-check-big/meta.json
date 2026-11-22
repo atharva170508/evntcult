@@ -1,0 +1,11 @@
+{
+ "name": "icons-circle-check-big",
+ "type": "registry:ui",
+ "description": "Circle check big icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

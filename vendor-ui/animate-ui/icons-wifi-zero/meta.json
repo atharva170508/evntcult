@@ -1,0 +1,11 @@
+{
+ "name": "icons-wifi-zero",
+ "type": "registry:ui",
+ "description": "Wifi zero icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

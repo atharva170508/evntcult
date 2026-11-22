@@ -1,0 +1,8 @@
+{
+ "name": "toolbar-dynamic",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,9 @@
+{
+ "name": "input-27",
+ "type": "registry:component",
+ "description": "A file input field with custom styling for the file picker button",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

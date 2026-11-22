@@ -1,0 +1,8 @@
+{
+ "name": "hexagon-pattern-dashed",
+ "type": "registry:example",
+ "description": "Example showing a dashed hexagon pattern.",
+ "registryDependencies": [
+  "@magicui/hexagon-pattern"
+ ]
+}

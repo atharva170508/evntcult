@@ -1,0 +1,7 @@
+{
+ "name": "Orb-TS-TW",
+ "type": "registry:component",
+ "description": "A glowing ring of swirling color that breathes, trails an orbiting light and reaches toward the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

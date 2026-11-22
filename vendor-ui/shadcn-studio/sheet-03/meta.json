@@ -1,0 +1,11 @@
+{
+ "name": "sheet-03",
+ "type": "registry:component",
+ "description": "A non-modal sheet component without overlay for profile editing",
+ "registryDependencies": [
+  "button",
+  "input",
+  "label",
+  "sheet"
+ ]
+}

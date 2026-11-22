@@ -1,0 +1,11 @@
+{
+ "name": "icons-axis-3d",
+ "type": "registry:ui",
+ "description": "Axis 3D icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

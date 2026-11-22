@@ -1,0 +1,7 @@
+{
+ "name": "CircularCarousel-TS-TW",
+ "type": "registry:component",
+ "description": "A 3D ring of images with bendable cards, momentum drag, snapping and click to focus.",
+ "dependencies": [],
+ "registryDependencies": []
+}

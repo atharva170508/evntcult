@@ -1,0 +1,11 @@
+{
+ "name": "demo-components-buttons-ripple",
+ "type": "registry:ui",
+ "description": "Demo showing a ripple button.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/components-buttons-ripple"
+ ]
+}

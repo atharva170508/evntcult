@@ -1,0 +1,8 @@
+{
+ "name": "logo-cloud-01",
+ "type": "registry:block",
+ "description": "Muted background logo cloud with centered card container, underlined text highlight, and flexbox logo grid arrangement with responsive gap spacing and centered alignment",
+ "registryDependencies": [
+  "card"
+ ]
+}

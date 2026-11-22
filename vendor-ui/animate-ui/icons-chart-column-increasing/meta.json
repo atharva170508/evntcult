@@ -1,0 +1,11 @@
+{
+ "name": "icons-chart-column-increasing",
+ "type": "registry:ui",
+ "description": "Chart column increasing icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "name": "Lightning-TS-TW",
+ "type": "registry:component",
+ "description": "Crackling, branching lightning that bends toward the cursor and strikes wherever you click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

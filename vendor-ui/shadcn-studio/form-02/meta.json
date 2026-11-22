@@ -1,0 +1,15 @@
+{
+ "name": "form-02",
+ "type": "registry:component",
+ "description": "Form with checkbox controls and alert integration for user selections",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "checkbox",
+  "form"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "gallery-component-01",
+ "type": "registry:block",
+ "description": "Gallery section with centered header featuring underlined text highlight, flexible grid layout supporting both single images and 2x2 grid sections for versatile image arrangement",
+ "registryDependencies": [
+  "utils"
+ ]
+}

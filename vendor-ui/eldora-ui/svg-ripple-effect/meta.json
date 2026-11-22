@@ -1,0 +1,11 @@
+{
+ "name": "svg-ripple-effect",
+ "type": "registry:ui",
+ "description": "An SVG ripple effect component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

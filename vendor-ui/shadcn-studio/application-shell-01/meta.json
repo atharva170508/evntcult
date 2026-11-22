@@ -1,0 +1,17 @@
+{
+ "name": "application-shell-01",
+ "type": "registry:block",
+ "description": "Classic sidebar application shell with navigation menu, user profile, and language selector for traditional dashboard layouts.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "breadcrumb",
+  "button",
+  "card",
+  "dropdown-menu",
+  "separator",
+  "sidebar"
+ ]
+}

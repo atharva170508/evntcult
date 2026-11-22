@@ -1,0 +1,8 @@
+{
+ "name": "comp-174",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/switch.json",
+  "https://coss.com/origin/r/label.json"
+ ]
+}

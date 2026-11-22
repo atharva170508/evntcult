@@ -1,0 +1,8 @@
+{
+ "name": "hacker-background-demo-2",
+ "type": "registry:example",
+ "description": "Example showing a hacker-background-demo-2 component.",
+ "registryDependencies": [
+  "@eldoraui/hacker-background"
+ ]
+}

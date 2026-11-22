@@ -1,0 +1,11 @@
+{
+ "name": "select-36",
+ "type": "registry:component",
+ "description": "A React Aria Components listbox with multiple selection and grouped language options",
+ "dependencies": [
+  "react-aria-components"
+ ],
+ "registryDependencies": [
+  "label"
+ ]
+}

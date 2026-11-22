@@ -1,0 +1,8 @@
+{
+ "name": "orbit-rotation-demo",
+ "type": "registry:example",
+ "description": "Example showing a orbit-rotation-demo component.",
+ "registryDependencies": [
+  "@eldoraui/orbit-rotation"
+ ]
+}

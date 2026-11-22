@@ -1,0 +1,8 @@
+{
+ "name": "tabs-08",
+ "type": "registry:component",
+ "description": "Simple justified tabs with equal width distribution across the container",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

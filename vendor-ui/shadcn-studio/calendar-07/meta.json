@@ -1,0 +1,11 @@
+{
+ "name": "calendar-07",
+ "type": "registry:component",
+ "description": "Range calendar with disabled weekends for business day selection only",
+ "dependencies": [
+  "react-day-picker"
+ ],
+ "registryDependencies": [
+  "calendar"
+ ]
+}

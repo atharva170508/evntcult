@@ -1,0 +1,13 @@
+{
+ "name": "alert-10",
+ "type": "registry:component",
+ "description": "Gradient background alert with email verification message and gradient styling.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "progress"
+ ]
+}

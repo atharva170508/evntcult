@@ -1,0 +1,11 @@
+{
+ "name": "icons-frame",
+ "type": "registry:ui",
+ "description": "Frame icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

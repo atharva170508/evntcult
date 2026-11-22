@@ -1,0 +1,9 @@
+{
+ "name": "input-17",
+ "type": "registry:component",
+ "description": "A domain input field with \".com\" text suffix positioned at the end",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

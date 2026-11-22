@@ -1,0 +1,7 @@
+{
+ "name": "GradualBlur-TS-TW",
+ "type": "registry:component",
+ "description": "Progressive edge blur for headers, footers, captions and carousels, with an optional fade to color that hides at the ends of a scroll.",
+ "dependencies": [],
+ "registryDependencies": []
+}

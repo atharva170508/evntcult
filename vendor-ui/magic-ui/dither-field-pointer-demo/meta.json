@@ -1,0 +1,8 @@
+{
+ "name": "dither-field-pointer-demo",
+ "type": "registry:example",
+ "description": "A quiet cloud field that brightens under the mouse, the pen or a held finger.",
+ "registryDependencies": [
+  "@magicui/dither-field"
+ ]
+}

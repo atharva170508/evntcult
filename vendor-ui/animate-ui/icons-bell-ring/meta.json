@@ -1,0 +1,11 @@
+{
+ "name": "icons-bell-ring",
+ "type": "registry:ui",
+ "description": "Bell ring icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

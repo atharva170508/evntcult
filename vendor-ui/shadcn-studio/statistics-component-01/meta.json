@@ -1,0 +1,12 @@
+{
+ "name": "statistics-component-01",
+ "type": "registry:block",
+ "description": "Logistics and shipping statistics cards displaying Shipped Orders, Damaged Returns, Missed Delivery Slots, and Late Deliveries with percentage change indicators and \"than last week\" comparison periods",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "card",
+  "utils"
+ ]
+}

@@ -1,0 +1,5 @@
+{
+ "name": "flickering-grid",
+ "type": "registry:ui",
+ "description": "A flickering grid background made with SVGs, fully customizable using Tailwind CSS."
+}

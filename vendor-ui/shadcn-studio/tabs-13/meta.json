@@ -1,0 +1,8 @@
+{
+ "name": "tabs-13",
+ "type": "registry:component",
+ "description": "Lifted tabs with shadow effects for elevated appearance",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

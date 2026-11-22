@@ -1,0 +1,42 @@
+{
+  "name": "@repo/animated-tags",
+  "description": "A AnimatedTags component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "lucide-react": "^0.545.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "patterns",
+    "tags": [
+      "tags",
+      "chips",
+      "filter",
+      "selection",
+      "animated",
+      "add-remove"
+    ],
+    "complexity": "simple",
+    "animationType": "spring",
+    "useCases": [
+      "Tag selection with add/remove animations",
+      "Animated filter chips for content categorization",
+      "Interactive tag picker for forms and filters"
+    ],
+    "compositionHints": [
+      "Use with Combobox primitive for tag suggestions",
+      "Pair with animated-input for tag creation"
+    ],
+    "hasReducedMotion": true
+  }
+}

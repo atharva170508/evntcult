@@ -1,0 +1,9 @@
+{
+ "name": "tabs-23",
+ "type": "registry:component",
+ "description": "Vertical tabs with badge indicators in left navigation layout",
+ "registryDependencies": [
+  "badge",
+  "tabs"
+ ]
+}

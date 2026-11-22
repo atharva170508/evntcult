@@ -1,0 +1,14 @@
+{
+ "name": "input-46",
+ "type": "registry:component",
+ "description": "Password input field with strength meter and requirements validation checker",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "input",
+  "label",
+  "utils"
+ ]
+}

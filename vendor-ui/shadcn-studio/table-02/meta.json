@@ -1,0 +1,8 @@
+{
+ "name": "table-02",
+ "type": "registry:component",
+ "description": "A bordered table with complete border styling around the table container",
+ "registryDependencies": [
+  "table"
+ ]
+}

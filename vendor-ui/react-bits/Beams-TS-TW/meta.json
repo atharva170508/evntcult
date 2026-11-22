@@ -1,0 +1,7 @@
+{
+ "name": "Beams-TS-TW",
+ "type": "registry:component",
+ "description": "Glossy ribbons that ripple in the dark and catch the light, which follows your cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

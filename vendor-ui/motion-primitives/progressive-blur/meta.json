@@ -1,0 +1,8 @@
+{
+ "name": "progressive-blur",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

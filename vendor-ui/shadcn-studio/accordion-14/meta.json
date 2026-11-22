@@ -1,0 +1,8 @@
+{
+ "name": "accordion-14",
+ "type": "registry:component",
+ "description": "Filled header accordion with accent background triggers and separated content sections.",
+ "registryDependencies": [
+  "accordion"
+ ]
+}

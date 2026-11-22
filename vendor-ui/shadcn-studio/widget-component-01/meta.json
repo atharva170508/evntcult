@@ -1,0 +1,15 @@
+{
+ "name": "widget-component-01",
+ "type": "registry:block",
+ "description": "Total earnings widget with progress tracking, interactive controls, and comprehensive financial overview",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "card",
+  "dropdown-menu",
+  "progress"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "name": "select-33",
+ "type": "registry:component",
+ "description": "A multi-select dropdown with placeholder, badge display and removal functionality",
+ "dependencies": [
+  "cmdk",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "command",
+  "label",
+  "utils"
+ ]
+}

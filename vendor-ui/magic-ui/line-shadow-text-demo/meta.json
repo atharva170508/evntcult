@@ -1,0 +1,8 @@
+{
+ "name": "line-shadow-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a text component with a moving line shadow.",
+ "registryDependencies": [
+  "@magicui/line-shadow-text"
+ ]
+}

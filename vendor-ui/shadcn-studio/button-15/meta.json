@@ -1,0 +1,11 @@
+{
+ "name": "button-15",
+ "type": "registry:component",
+ "description": "Destructive outline button for discard/delete actions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

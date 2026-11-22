@@ -1,0 +1,9 @@
+{
+ "name": "Hyperspeed-TS-TW",
+ "type": "registry:component",
+ "description": "Night highway of glowing light trails on a winding road that warps into hyperspace while you hold.",
+ "dependencies": [
+  "three@^0.180.0"
+ ],
+ "registryDependencies": []
+}

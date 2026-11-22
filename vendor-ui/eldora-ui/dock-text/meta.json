@@ -1,0 +1,9 @@
+{
+ "name": "dock-text",
+ "type": "registry:ui",
+ "description": "A dock text component with interactive hover effects.",
+ "dependencies": [
+  "react",
+  "motion"
+ ]
+}

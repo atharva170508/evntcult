@@ -1,0 +1,10 @@
+{
+ "name": "comp-45",
+ "type": "registry:component",
+ "dependencies": [
+  "input-otp"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/label.json"
+ ]
+}

@@ -1,0 +1,100 @@
+[
+  {
+    "name": "c-switch-1",
+    "title": "Basic switch.",
+    "label": "Basic",
+    "description": "Basic switch.",
+    "order": 1
+  },
+  {
+    "name": "c-switch-2",
+    "title": "Switch with description.",
+    "label": "With Description",
+    "description": "Switch with description.",
+    "order": 2
+  },
+  {
+    "name": "c-switch-3",
+    "title": "Disabled switch.",
+    "label": "Disabled",
+    "description": "Disabled switch.",
+    "order": 3
+  },
+  {
+    "name": "c-switch-4",
+    "title": "Switch in different sizes.",
+    "label": "Sizes",
+    "description": "Switch in different sizes.",
+    "order": 4
+  },
+  {
+    "name": "c-switch-5",
+    "title": "Switch group",
+    "label": "Switch Group",
+    "description": "Switch group",
+    "order": 5
+  },
+  {
+    "name": "c-switch-6",
+    "title": "Switch list in card with separators",
+    "label": "Card Separators",
+    "description": "Switch list in card with separators",
+    "order": 6
+  },
+  {
+    "name": "c-switch-7",
+    "title": "Switch list in card with icons",
+    "label": "Card With Icons",
+    "description": "Switch list in card with icons",
+    "order": 7
+  },
+  {
+    "name": "c-switch-8",
+    "title": "Switch in frame",
+    "label": "In Frame",
+    "description": "Switch in frame",
+    "order": 8
+  },
+  {
+    "name": "c-switch-9",
+    "title": "Switch with tooltip info",
+    "label": "Tooltip Info",
+    "description": "Switch with tooltip info",
+    "order": 9
+  },
+  {
+    "name": "c-switch-10",
+    "title": "Switch with badges",
+    "label": "With Badges",
+    "description": "Switch with badges",
+    "order": 10
+  },
+  {
+    "name": "c-switch-11",
+    "title": "Colored switches",
+    "label": "Colored",
+    "description": "Colored switches",
+    "order": 11
+  },
+  {
+    "name": "c-switch-12",
+    "title": "Destructive switch with confirmation text",
+    "label": "Destructive Confirm",
+    "description": "Destructive switch with confirmation text",
+    "order": 12
+  },
+  {
+    "name": "c-switch-13",
+    "title": "Compact settings table with switches",
+    "label": "Compact Table",
+    "description": "Compact settings table with switches",
+    "order": 13
+  },
+  {
+    "name": "c-switch-14",
+    "title": "Switch with descriptions in card grid",
+    "label": "Card Grid",
+    "description": "Switch with descriptions in card grid",
+    "order": 14
+  }
+]

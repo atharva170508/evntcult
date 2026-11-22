@@ -1,0 +1,11 @@
+{
+ "name": "icons-airplay",
+ "type": "registry:ui",
+ "description": "Airplay icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

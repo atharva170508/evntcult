@@ -1,0 +1,14 @@
+{
+ "name": "popover-02",
+ "type": "registry:component",
+ "description": "A dimensions popover with input fields for width, max width, height, and max height settings",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "input",
+  "label",
+  "popover"
+ ]
+}

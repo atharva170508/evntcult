@@ -1,0 +1,11 @@
+{
+ "name": "icons-gallery-horizontal",
+ "type": "registry:ui",
+ "description": "Gallery horizontal icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

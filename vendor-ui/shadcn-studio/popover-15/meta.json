@@ -1,0 +1,10 @@
+{
+ "name": "popover-15",
+ "type": "registry:component",
+ "description": "A user profile popover with avatar, bio, and social statistics display with zoom-in animation",
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "popover"
+ ]
+}

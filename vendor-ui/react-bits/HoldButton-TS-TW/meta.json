@@ -1,0 +1,7 @@
+{
+ "name": "HoldButton-TS-TW",
+ "type": "registry:component",
+ "description": "Hold-to-confirm button whose liquid fill rises while pressed and snaps back if you let go.",
+ "dependencies": [],
+ "registryDependencies": []
+}

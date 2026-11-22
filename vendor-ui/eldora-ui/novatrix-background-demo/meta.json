@@ -1,0 +1,8 @@
+{
+ "name": "novatrix-background-demo",
+ "type": "registry:example",
+ "description": "Example showing a novatrix-background-demo component.",
+ "registryDependencies": [
+  "@eldoraui/novatrix-background"
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "name": "dropdown-menu-07",
+ "type": "registry:component",
+ "description": "User account menu dropdown with avatar trigger and profile management options",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "dropdown-menu"
+ ]
+}

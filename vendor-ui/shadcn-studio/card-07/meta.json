@@ -1,0 +1,8 @@
+{
+ "name": "card-07",
+ "type": "registry:component",
+ "description": "Overlay card with image background and overlaid text content",
+ "registryDependencies": [
+  "card"
+ ]
+}

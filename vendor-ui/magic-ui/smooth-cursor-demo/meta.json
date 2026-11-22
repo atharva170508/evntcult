@@ -1,0 +1,8 @@
+{
+ "name": "smooth-cursor-demo",
+ "type": "registry:example",
+ "description": "Basic smooth cursor example",
+ "registryDependencies": [
+  "@magicui/smooth-cursor"
+ ]
+}

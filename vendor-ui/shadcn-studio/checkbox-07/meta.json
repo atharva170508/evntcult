@@ -1,0 +1,9 @@
+{
+ "name": "checkbox-07",
+ "type": "registry:component",
+ "description": "Checkbox with description text providing additional context and information",
+ "registryDependencies": [
+  "checkbox",
+  "label"
+ ]
+}

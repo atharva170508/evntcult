@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-community-user-presence-avatar",
+ "type": "registry:ui",
+ "description": "Demo showing a user presence avatar.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-community-user-presence-avatar"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "breadcrumb-04",
+ "type": "registry:component",
+ "description": "Breadcrumb with dot icon separators for minimal visual hierarchy",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "breadcrumb"
+ ]
+}

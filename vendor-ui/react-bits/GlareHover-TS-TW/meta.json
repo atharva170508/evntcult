@@ -1,0 +1,7 @@
+{
+ "name": "GlareHover-TS-TW",
+ "type": "registry:component",
+ "description": "A glossy light streak that sweeps across any element in the direction the cursor moves.",
+ "dependencies": [],
+ "registryDependencies": []
+}

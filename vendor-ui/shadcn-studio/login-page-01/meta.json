@@ -1,0 +1,17 @@
+{
+ "name": "login-page-01",
+ "type": "registry:block",
+ "description": "Centered card layout with logo header, quick login buttons, and full authentication form featuring email/password inputs, social login options, and remember me functionality",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "card",
+  "checkbox",
+  "input",
+  "label",
+  "separator",
+  "utils"
+ ]
+}

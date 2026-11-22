@@ -1,0 +1,8 @@
+{
+ "name": "light-rays",
+ "type": "registry:ui",
+ "description": "A component with animated light rays which shine down from above.",
+ "dependencies": [
+  "motion"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-message-square-heart",
+ "type": "registry:ui",
+ "description": "Message square heart icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

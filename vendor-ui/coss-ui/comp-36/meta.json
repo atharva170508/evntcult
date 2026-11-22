@@ -1,0 +1,10 @@
+{
+ "name": "comp-36",
+ "type": "registry:component",
+ "dependencies": [
+  "react-aria-components"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/datefield-rac.json"
+ ]
+}

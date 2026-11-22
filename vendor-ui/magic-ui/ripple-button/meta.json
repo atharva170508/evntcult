@@ -1,0 +1,5 @@
+{
+ "name": "ripple-button",
+ "type": "registry:ui",
+ "description": "An animated button with ripple useful for user engagement."
+}

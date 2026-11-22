@@ -1,0 +1,11 @@
+{
+ "name": "icons-gallery-vertical",
+ "type": "registry:ui",
+ "description": "Gallery vertical icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

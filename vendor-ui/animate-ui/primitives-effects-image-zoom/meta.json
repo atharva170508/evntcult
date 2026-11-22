@@ -1,0 +1,8 @@
+{
+ "name": "primitives-effects-image-zoom",
+ "type": "registry:ui",
+ "description": "An effect that allows you to zoom in on an image on hover.",
+ "dependencies": [
+  "motion"
+ ]
+}

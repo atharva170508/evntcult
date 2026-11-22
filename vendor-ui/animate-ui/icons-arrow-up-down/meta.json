@@ -1,0 +1,11 @@
+{
+ "name": "icons-arrow-up-down",
+ "type": "registry:ui",
+ "description": "Arrow up down icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

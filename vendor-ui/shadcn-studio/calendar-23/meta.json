@@ -1,0 +1,10 @@
+{
+ "name": "calendar-23",
+ "type": "registry:component",
+ "description": "Range calendar with preset date range shortcuts (Last week, month, year, etc.)",
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "card"
+ ]
+}

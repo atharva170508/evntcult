@@ -1,0 +1,9 @@
+{
+ "name": "select-23",
+ "type": "registry:component",
+ "description": "A custom select dropdown with separators and grouped countries by geographic regions",
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

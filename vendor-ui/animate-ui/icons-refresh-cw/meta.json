@@ -1,0 +1,11 @@
+{
+ "name": "icons-refresh-cw",
+ "type": "registry:ui",
+ "description": "Refresh cw icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

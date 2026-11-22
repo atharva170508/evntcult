@@ -1,0 +1,8 @@
+{
+ "name": "button-30",
+ "type": "registry:component",
+ "description": "Social authentication buttons with branded colors and \"Continue with\" text",
+ "registryDependencies": [
+  "button"
+ ]
+}

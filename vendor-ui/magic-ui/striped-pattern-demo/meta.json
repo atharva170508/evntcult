@@ -1,0 +1,8 @@
+{
+ "name": "striped-pattern-demo",
+ "type": "registry:example",
+ "description": "Example showing a background striped pattern made with SVGs.",
+ "registryDependencies": [
+  "@magicui/striped-pattern"
+ ]
+}

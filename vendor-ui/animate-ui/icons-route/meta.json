@@ -1,0 +1,11 @@
+{
+ "name": "icons-route",
+ "type": "registry:ui",
+ "description": "Route icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

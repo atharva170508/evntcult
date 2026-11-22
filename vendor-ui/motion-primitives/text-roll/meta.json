@@ -1,0 +1,8 @@
+{
+ "name": "text-roll",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

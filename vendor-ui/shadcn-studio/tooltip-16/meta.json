@@ -1,0 +1,12 @@
+{
+ "name": "tooltip-16",
+ "type": "registry:component",
+ "description": "An animated tooltip with stacked avatars and hover effects using motion-tooltip component",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "utils"
+ ]
+}

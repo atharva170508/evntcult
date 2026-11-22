@@ -1,0 +1,7 @@
+{
+ "name": "Noise-TS-TW",
+ "type": "registry:component",
+ "description": "Film grain overlay for photos and pages, from fine 35mm grain to dust, paper and TV static.",
+ "dependencies": [],
+ "registryDependencies": []
+}

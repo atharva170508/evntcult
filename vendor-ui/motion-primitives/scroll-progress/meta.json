@@ -1,0 +1,8 @@
+{
+ "name": "scroll-progress",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

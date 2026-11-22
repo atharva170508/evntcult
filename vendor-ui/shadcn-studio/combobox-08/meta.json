@@ -1,0 +1,15 @@
+{
+ "name": "combobox-08",
+ "type": "registry:component",
+ "description": "User selector combobox with avatars, name and email addresses",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "command",
+  "label",
+  "popover"
+ ]
+}

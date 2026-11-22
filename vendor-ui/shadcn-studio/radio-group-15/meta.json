@@ -1,0 +1,9 @@
+{
+ "name": "radio-group-15",
+ "type": "registry:component",
+ "description": "An animated inset radio group with smooth transitions for language selection",
+ "registryDependencies": [
+  "label",
+  "radio-group"
+ ]
+}

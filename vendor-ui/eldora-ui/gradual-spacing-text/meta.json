@@ -1,0 +1,10 @@
+{
+ "name": "gradual-spacing-text",
+ "type": "registry:ui",
+ "description": "A gradual spacing text component.",
+ "dependencies": [
+  "motion",
+  "react",
+  "clsx"
+ ]
+}

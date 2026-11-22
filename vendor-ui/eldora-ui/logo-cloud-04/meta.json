@@ -1,0 +1,8 @@
+{
+ "name": "logo-cloud-04",
+ "type": "registry:block",
+ "description": "A logo cloud with motion.",
+ "dependencies": [
+  "motion/react"
+ ]
+}

@@ -1,0 +1,20 @@
+{
+ "name": "data-table-12",
+ "type": "registry:component",
+ "description": "Data table with export functionality supporting CSV, Excel, and multiple formats",
+ "dependencies": [
+  "lucide-react",
+  "papaparse",
+  "@tanstack/react-table",
+  "xlsx"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button",
+  "checkbox",
+  "dropdown-menu",
+  "input",
+  "table",
+  "utils"
+ ]
+}

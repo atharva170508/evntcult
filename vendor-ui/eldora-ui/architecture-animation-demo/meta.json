@@ -1,0 +1,8 @@
+{
+ "name": "architecture-animation-demo",
+ "type": "registry:example",
+ "description": "Example showing a architecture-animation-demo component.",
+ "registryDependencies": [
+  "@eldoraui/architecture-animation"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "calendar-12",
+ "type": "registry:component",
+ "description": "Multi-select calendar allowing selection of multiple individual dates",
+ "registryDependencies": [
+  "calendar"
+ ]
+}

@@ -1,0 +1,6 @@
+{
+ "name": "kinetic-text",
+ "type": "registry:ui",
+ "description": "A text component that animates font weight of characters on hover.",
+ "dependencies": []
+}

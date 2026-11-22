@@ -1,0 +1,11 @@
+{
+ "name": "components-base-checkbox",
+ "type": "registry:ui",
+ "description": "An easily stylable checkbox component.",
+ "dependencies": [
+  "class-variance-authority"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-checkbox"
+ ]
+}

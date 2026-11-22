@@ -1,0 +1,11 @@
+{
+ "name": "icons-square-x",
+ "type": "registry:ui",
+ "description": "Square x icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

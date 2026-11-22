@@ -1,0 +1,9 @@
+{
+ "name": "Lanyard-TS-TW",
+ "type": "registry:component",
+ "description": "Swinging 3D badge on a stretchy woven band that you can drag, throw or click to flip.",
+ "dependencies": [
+  "three@^0.180.0"
+ ],
+ "registryDependencies": []
+}

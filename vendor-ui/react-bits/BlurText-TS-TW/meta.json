@@ -1,0 +1,9 @@
+{
+ "name": "BlurText-TS-TW",
+ "type": "registry:component",
+ "description": "Text starts blurred then crisply resolves for a soft-focus reveal effect.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

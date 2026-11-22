@@ -1,0 +1,11 @@
+{
+ "name": "primitives-texts-highlight",
+ "type": "registry:ui",
+ "description": "A highlight text animation.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/hooks-use-is-in-view"
+ ]
+}

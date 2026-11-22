@@ -1,0 +1,11 @@
+{
+ "name": "icons-sun-medium",
+ "type": "registry:ui",
+ "description": "Sun medium icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "select-03",
+ "type": "registry:component",
+ "description": "A native select dropdown with icon for movie selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

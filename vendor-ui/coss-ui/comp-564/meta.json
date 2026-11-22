@@ -1,0 +1,8 @@
+{
+ "name": "comp-564",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/button.json",
+  "https://coss.com/origin/r/cropper.json"
+ ]
+}

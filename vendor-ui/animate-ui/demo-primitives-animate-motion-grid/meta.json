@@ -1,0 +1,9 @@
+{
+ "name": "demo-primitives-animate-motion-grid",
+ "type": "registry:ui",
+ "description": "Demo showing an animated motion grid.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-motion-grid",
+  "@animate-ui/v1/primitives-texts-rotating"
+ ]
+}

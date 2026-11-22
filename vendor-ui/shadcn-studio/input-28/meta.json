@@ -1,0 +1,10 @@
+{
+ "name": "input-28",
+ "type": "registry:component",
+ "description": "A URL input field with a protocol selector dropdown at the start",
+ "registryDependencies": [
+  "input",
+  "label",
+  "select"
+ ]
+}

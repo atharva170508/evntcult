@@ -1,0 +1,15 @@
+{
+ "name": "hero-section-01",
+ "type": "registry:block",
+ "description": "Centered vertical layout hero with navigation header, AI-powered badge in muted container, decorative SVG underline animation on \"Effortless\" text, call-to-action button, and full-width bottom dish image showcase",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button",
+  "dropdown-menu",
+  "navigation-menu",
+  "utils"
+ ]
+}

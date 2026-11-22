@@ -1,0 +1,8 @@
+{
+ "name": "animated-theme-toggler-star-demo",
+ "type": "registry:example",
+ "description": "Theme transition with a star-shaped clip reveal.",
+ "registryDependencies": [
+  "@magicui/animated-theme-toggler"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "glare-hover-demo-alert",
+ "type": "registry:example",
+ "description": "Three alerts with custom glare colors and opacity.",
+ "registryDependencies": [
+  "@magicui/glare-hover"
+ ]
+}

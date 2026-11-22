@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-effects-image-zoom",
+ "type": "registry:ui",
+ "description": "Demo showing a image zoom effect.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-effects-image-zoom"
+ ]
+}

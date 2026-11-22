@@ -1,0 +1,8 @@
+{
+ "name": "comp-462",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/pagination.json",
+  "https://coss.com/origin/r/select.json"
+ ]
+}

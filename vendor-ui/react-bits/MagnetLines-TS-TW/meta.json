@@ -1,0 +1,7 @@
+{
+ "name": "MagnetLines-TS-TW",
+ "type": "registry:component",
+ "description": "A field of magnetic lines that swing toward the cursor, ripple outward and spin with every click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

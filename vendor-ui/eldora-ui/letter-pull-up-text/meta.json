@@ -1,0 +1,10 @@
+{
+ "name": "letter-pull-up-text",
+ "type": "registry:ui",
+ "description": "A letter pull up text component.",
+ "dependencies": [
+  "motion",
+  "react",
+  "clsx"
+ ]
+}

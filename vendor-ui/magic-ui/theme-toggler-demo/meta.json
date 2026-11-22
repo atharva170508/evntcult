@@ -1,0 +1,8 @@
+{
+ "name": "theme-toggler-demo",
+ "type": "registry:example",
+ "description": "Example showing animation in changing the theme.",
+ "registryDependencies": [
+  "animated-theme-toggler"
+ ]
+}

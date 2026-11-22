@@ -1,0 +1,11 @@
+{
+ "name": "icons-upload",
+ "type": "registry:ui",
+ "description": "Upload icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

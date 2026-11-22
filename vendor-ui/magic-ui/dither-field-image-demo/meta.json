@@ -1,0 +1,8 @@
+{
+ "name": "dither-field-image-demo",
+ "type": "registry:example",
+ "description": "A landscape photo dithered into 2px dots with a warm color ramp.",
+ "registryDependencies": [
+  "@magicui/dither-field"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-loader-circle",
+ "type": "registry:ui",
+ "description": "Loader circle icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

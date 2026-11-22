@@ -1,0 +1,12 @@
+{
+ "name": "popover-07",
+ "type": "registry:component",
+ "description": "A file deletion confirmation popover with warning icon and action buttons",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "popover"
+ ]
+}

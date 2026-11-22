@@ -1,0 +1,8 @@
+{
+ "name": "cobe-globe-demo-4",
+ "type": "registry:example",
+ "description": "Example showing a cobe-globe-demo-4 component.",
+ "registryDependencies": [
+  "@eldoraui/cobe-globe"
+ ]
+}

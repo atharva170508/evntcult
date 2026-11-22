@@ -1,0 +1,14 @@
+{
+ "name": "calendar-20",
+ "type": "registry:component",
+ "description": "Calendar with integrated time input for complete datetime selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "calendar",
+  "card",
+  "input",
+  "label"
+ ]
+}

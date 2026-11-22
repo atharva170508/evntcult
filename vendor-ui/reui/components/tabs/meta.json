@@ -1,0 +1,74 @@
+[
+  {
+    "name": "c-tabs-1",
+    "title": "Basic tabs.",
+    "label": "Basic",
+    "description": "Basic tabs.",
+    "order": 1,
+    "gridSize": 1
+  },
+  {
+    "name": "c-tabs-2",
+    "title": "Tabs with line variant.",
+    "label": "Line Variant",
+    "description": "Tabs with line variant.",
+    "order": 2,
+    "gridSize": 1
+  },
+  {
+    "name": "c-tabs-3",
+    "title": "Tabs with vertical orientation.",
+    "label": "Vertical",
+    "description": "Tabs with vertical orientation.",
+    "order": 3,
+    "gridSize": 1
+  },
+  {
+    "name": "c-tabs-4",
+    "title": "Tabs with vertical orientation and line variant.",
+    "label": "Vertical Line",
+    "description": "Tabs with vertical orientation and line variant.",
+    "order": 4,
+    "gridSize": 1
+  },
+  {
+    "name": "c-tabs-5",
+    "title": "Tabs with icons.",
+    "label": "Icons",
+    "description": "Tabs with icons.",
+    "order": 5,
+    "gridSize": 1
+  },
+  {
+    "name": "c-tabs-6",
+    "title": "Tabs with icons",
+    "label": "Full Width Icons",
+    "description": "Tabs with icons",
+    "order": 6,
+    "gridSize": 1
+  },
+  {
+    "name": "c-tabs-7",
+    "title": "Tabs with badge counts",
+    "label": "Badge Counts",
+    "description": "Tabs with badge counts",
+    "order": 7,
+    "gridSize": 1
+  },
+  {
+    "name": "c-tabs-8",
+    "title": "Tabs with icons and line variant",
+    "label": "Side List Icons",
+    "description": "Tabs with icons and line variant",
+    "order": 8,
+    "gridSize": 1
+  },
+  {
+    "name": "c-tabs-9",
+    "title": "Segmented control tabs",
+    "label": "Segmented Control",
+    "description": "Segmented control tabs",
+    "order": 9,
+    "gridSize": 1
+  }
+]

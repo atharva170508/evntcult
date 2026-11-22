@@ -1,0 +1,79 @@
+[
+  {
+    "name": "c-field-1",
+    "title": "Fields with input groups",
+    "label": "Input Groups",
+    "description": "Fields with input groups",
+    "order": 1
+  },
+  {
+    "name": "c-field-2",
+    "title": "Field with input and textarea",
+    "label": "Input & Textarea",
+    "description": "Field with input and textarea",
+    "order": 2
+  },
+  {
+    "name": "c-field-3",
+    "title": "Field with select control",
+    "label": "Select Controls",
+    "description": "Field with select control",
+    "order": 3
+  },
+  {
+    "name": "c-field-4",
+    "title": "Field with radio groups and checkboxes",
+    "label": "Radio & Checkboxes",
+    "description": "Field with radio groups and checkboxes",
+    "order": 4
+  },
+  {
+    "name": "c-field-5",
+    "title": "Filed with slider and switch",
+    "label": "Slider & Switch",
+    "description": "Filed with slider and switch",
+    "order": 5
+  },
+  {
+    "name": "c-field-6",
+    "title": "Field with OTP input",
+    "label": "OTP Input",
+    "description": "Field with OTP input",
+    "order": 6
+  },
+  {
+    "name": "c-field-7",
+    "title": "Settings form with validation",
+    "label": "Settings Form",
+    "description": "Settings form with validation",
+    "order": 7
+  },
+  {
+    "name": "c-field-8",
+    "title": "Permission settings with checkboxes",
+    "label": "Permissions",
+    "description": "Permission settings with checkboxes",
+    "order": 8
+  },
+  {
+    "name": "c-field-9",
+    "title": "Responsive field layout",
+    "label": "Responsive Layout",
+    "description": "Responsive field layout",
+    "order": 9
+  },
+  {
+    "name": "c-field-10",
+    "title": "Notification preferences form",
+    "label": "Notification Preferences",
+    "description": "Notification preferences form",
+    "order": 10
+  },
+  {
+    "name": "c-field-11",
+    "title": "Form with validation errors",
+    "label": "Validation Errors",
+    "description": "Form with validation errors",
+    "order": 11
+  }
+]

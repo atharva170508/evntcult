@@ -1,0 +1,7 @@
+{
+ "name": "GradientText-TS-TW",
+ "type": "registry:component",
+ "description": "Living gradients inside your text: a sliding sweep, a drifting mesh or a swinging conic fan.",
+ "dependencies": [],
+ "registryDependencies": []
+}

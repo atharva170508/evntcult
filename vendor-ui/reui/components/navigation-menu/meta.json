@@ -1,0 +1,30 @@
+[
+  {
+    "name": "c-navigation-menu-1",
+    "title": "Basic navigation menu.",
+    "label": "Basic",
+    "description": "Basic navigation menu.",
+    "order": 1
+  },
+  {
+    "name": "c-navigation-menu-2",
+    "title": "Navigation menu with grid layout.",
+    "label": "Grid Layout",
+    "description": "Navigation menu with grid layout.",
+    "order": 2
+  },
+  {
+    "name": "c-navigation-menu-3",
+    "title": "Navigation menu with icons.",
+    "label": "With Icons",
+    "description": "Navigation menu with icons.",
+    "order": 3
+  },
+  {
+    "name": "c-navigation-menu-4",
+    "title": "Navigation menu with grid layout and learn more button.",
+    "label": "Learn More Button",
+    "description": "Navigation menu with grid layout and learn more button.",
+    "order": 4
+  }
+]

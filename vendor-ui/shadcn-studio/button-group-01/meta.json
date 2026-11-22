@@ -1,0 +1,11 @@
+{
+ "name": "button-group-01",
+ "type": "registry:component",
+ "description": "Download button group with action button and download count display",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

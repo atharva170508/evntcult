@@ -1,0 +1,13 @@
+{
+ "name": "primitives-base-dialog",
+ "type": "registry:ui",
+ "description": "A popup that opens on top of the entire page.",
+ "dependencies": [
+  "motion",
+  "@base-ui-components/react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/hooks-use-controlled-state",
+  "@animate-ui/v1/lib-get-strict-context"
+ ]
+}

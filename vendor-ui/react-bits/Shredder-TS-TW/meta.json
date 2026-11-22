@@ -1,0 +1,9 @@
+{
+ "name": "Shredder-TS-TW",
+ "type": "registry:component",
+ "description": "A list with a paper shredder at the bottom that cuts dragged rows into curling strips.",
+ "dependencies": [
+  "react-dom@^19.0.0"
+ ],
+ "registryDependencies": []
+}

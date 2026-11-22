@@ -1,0 +1,9 @@
+{
+ "name": "input-37",
+ "type": "registry:component",
+ "description": "Search input field with keyboard shortcut indicator (\u2318K) for enhanced UX",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

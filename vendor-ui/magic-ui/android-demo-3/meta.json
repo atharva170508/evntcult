@@ -1,0 +1,8 @@
+{
+ "name": "android-demo-3",
+ "type": "registry:example",
+ "description": "Third example showing a mockup of an Android device.",
+ "registryDependencies": [
+  "@magicui/android"
+ ]
+}

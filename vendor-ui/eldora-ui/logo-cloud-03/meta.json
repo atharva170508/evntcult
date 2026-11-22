@@ -1,0 +1,9 @@
+{
+ "name": "logo-cloud-03",
+ "type": "registry:block",
+ "description": "A logo cloud with marquee effect.",
+ "dependencies": [],
+ "registryDependencies": [
+  "marquee"
+ ]
+}

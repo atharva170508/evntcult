@@ -1,0 +1,9 @@
+{
+ "name": "checkbox-11",
+ "type": "registry:component",
+ "description": "Custom icon checkboxes with heart, star, and circle icons for visual feedback",
+ "dependencies": [
+  "@radix-ui/react-checkbox",
+  "lucide-react"
+ ]
+}

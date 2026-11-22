@@ -1,0 +1,35 @@
+{
+  "name": "@repo/combobox",
+  "description": "An animated Combobox component for SmoothUI with text filtering, async search, and keyboard navigation.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/smooth-button": "workspace:*",
+    "cmdk": "1.1.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "lucide-react": "^0.469.0",
+    "radix-ui": "1.4.3",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "patterns",
+    "tags": [
+      "combobox",
+      "autocomplete",
+      "search",
+      "select",
+      "dropdown",
+      "form",
+      "animated"
+    ],
+    "hasReducedMotion": true
+  }
+}

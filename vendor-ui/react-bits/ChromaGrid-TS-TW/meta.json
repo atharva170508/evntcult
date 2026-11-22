@@ -1,0 +1,7 @@
+{
+ "name": "ChromaGrid-TS-TW",
+ "type": "registry:component",
+ "description": "A grid of grayscale photo cards where a spotlight follows the cursor and brings back color.",
+ "dependencies": [],
+ "registryDependencies": []
+}

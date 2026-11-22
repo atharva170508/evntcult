@@ -1,0 +1,9 @@
+{
+ "name": "SquishSwitch-TS-TW",
+ "type": "registry:component",
+ "description": "Switch whose thumb stretches with speed and squashes against the end when you flick it.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

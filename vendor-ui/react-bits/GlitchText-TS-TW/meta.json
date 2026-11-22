@@ -1,0 +1,7 @@
+{
+ "name": "GlitchText-TS-TW",
+ "type": "registry:component",
+ "description": "RGB split and distortion glitch effect with jitter effects.",
+ "dependencies": [],
+ "registryDependencies": []
+}

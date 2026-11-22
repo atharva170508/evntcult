@@ -1,0 +1,82 @@
+[
+  {
+    "name": "c-skeleton-1",
+    "title": "Skeleton loader for avatars and user info.",
+    "label": "Avatar Info",
+    "description": "Skeleton loader for avatars and user info.",
+    "order": 1,
+    "gridSize": 1
+  },
+  {
+    "name": "c-skeleton-2",
+    "title": "Skeleton loader for a card component.",
+    "label": "Card",
+    "description": "Skeleton loader for a card component.",
+    "order": 2,
+    "gridSize": 1
+  },
+  {
+    "name": "c-skeleton-3",
+    "title": "Skeleton loader for text and paragraphs.",
+    "label": "Text Paragraphs",
+    "description": "Skeleton loader for text and paragraphs.",
+    "order": 3,
+    "gridSize": 1
+  },
+  {
+    "name": "c-skeleton-4",
+    "title": "Skeleton loader for a form.",
+    "label": "Form",
+    "description": "Skeleton loader for a form.",
+    "order": 4,
+    "gridSize": 1
+  },
+  {
+    "name": "c-skeleton-5",
+    "title": "Skeleton loader for a data table.",
+    "label": "Data Table",
+    "description": "Skeleton loader for a data table.",
+    "order": 5,
+    "gridSize": 1
+  },
+  {
+    "name": "c-skeleton-6",
+    "title": "Skeleton loader for a dashboard stats row",
+    "label": "Stats Row",
+    "description": "Skeleton loader for a dashboard stats row",
+    "order": 6,
+    "gridSize": 1
+  },
+  {
+    "name": "c-skeleton-7",
+    "title": "Skeleton loader for a list with actions",
+    "label": "List With Actions",
+    "description": "Skeleton loader for a list with actions",
+    "order": 7,
+    "gridSize": 1
+  },
+  {
+    "name": "c-skeleton-8",
+    "title": "Skeleton loader for a card grid",
+    "label": "Card Grid",
+    "description": "Skeleton loader for a card grid",
+    "order": 8,
+    "gridSize": 1
+  },
+  {
+    "name": "c-skeleton-9",
+    "title": "Skeleton loader for a full profile page",
+    "label": "Profile Page",
+    "description": "Skeleton loader for a full profile page",
+    "order": 9,
+    "gridSize": 1
+  },
+  {
+    "name": "c-skeleton-10",
+    "title": "Skeleton loader for chat messages",
+    "label": "Chat Messages",
+    "description": "Skeleton loader for chat messages",
+    "order": 10,
+    "gridSize": 1
+  }
+]

@@ -1,0 +1,8 @@
+{
+ "name": "gradient-tracing-demo",
+ "type": "registry:example",
+ "description": "Example showing a gradient-tracing-demo component.",
+ "registryDependencies": [
+  "@eldoraui/gradient-tracing"
+ ]
+}

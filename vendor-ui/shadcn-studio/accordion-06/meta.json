@@ -1,0 +1,12 @@
+{
+ "name": "accordion-06",
+ "type": "registry:component",
+ "description": "Icon and expand indicator accordion with category icons and plus icon for expand/collapse.",
+ "dependencies": [
+  "@radix-ui/react-accordion",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "accordion"
+ ]
+}

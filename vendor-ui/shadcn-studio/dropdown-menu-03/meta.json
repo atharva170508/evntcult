@@ -1,0 +1,11 @@
+{
+ "name": "dropdown-menu-03",
+ "type": "registry:component",
+ "description": "Chat list dropdown with avatars, message previews, and notification badges",
+ "registryDependencies": [
+  "avatar",
+  "badge",
+  "button",
+  "dropdown-menu"
+ ]
+}

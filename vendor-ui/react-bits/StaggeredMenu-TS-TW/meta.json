@@ -1,0 +1,9 @@
+{
+ "name": "StaggeredMenu-TS-TW",
+ "type": "registry:component",
+ "description": "Menu with staggered item animations and smooth transitions on open/close.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

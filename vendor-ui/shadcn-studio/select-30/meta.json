@@ -1,0 +1,9 @@
+{
+ "name": "select-30",
+ "type": "registry:component",
+ "description": "A country select dropdown with flag images for each country option",
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

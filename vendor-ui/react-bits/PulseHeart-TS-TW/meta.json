@@ -1,0 +1,9 @@
+{
+ "name": "PulseHeart-TS-TW",
+ "type": "registry:component",
+ "description": "Like button that contracts to a dot, flips colour and pulses back as the count ticks over.",
+ "dependencies": [
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

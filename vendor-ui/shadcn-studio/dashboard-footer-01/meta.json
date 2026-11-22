@@ -1,0 +1,12 @@
+{
+ "name": "dashboard-footer-01",
+ "type": "registry:block",
+ "description": "A complete dashboard layout with sidebar, main content area, and footer featuring copyright text with social media icons (Facebook, Instagram, LinkedIn, Twitter) for application branding.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "card",
+  "sidebar"
+ ]
+}

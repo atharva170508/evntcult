@@ -1,0 +1,8 @@
+{
+ "name": "table-09",
+ "type": "registry:component",
+ "description": "A table with vertical scrolling functionality for displaying large datasets",
+ "registryDependencies": [
+  "table"
+ ]
+}

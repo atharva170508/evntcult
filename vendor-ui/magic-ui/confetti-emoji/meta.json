@@ -1,0 +1,8 @@
+{
+ "name": "confetti-emoji",
+ "type": "registry:example",
+ "description": "Example showing confetti with emoji particles.",
+ "registryDependencies": [
+  "@magicui/confetti"
+ ]
+}

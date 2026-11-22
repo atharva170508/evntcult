@@ -1,0 +1,8 @@
+{
+ "name": "tabs-27",
+ "type": "registry:component",
+ "description": "Animated tabs with motion highlight transitions using motion-tabs components",
+ "dependencies": [
+  "motion"
+ ]
+}

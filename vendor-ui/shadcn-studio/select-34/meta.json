@@ -1,0 +1,12 @@
+{
+ "name": "select-34",
+ "type": "registry:component",
+ "description": "A native multiple select dropdown for dietary preferences with bordered container",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

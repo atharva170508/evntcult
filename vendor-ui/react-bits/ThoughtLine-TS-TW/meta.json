@@ -1,0 +1,11 @@
+{
+ "name": "ThoughtLine-TS-TW",
+ "type": "registry:component",
+ "description": "Reasoning trace header with a live clock that folds its steps into one line when done.",
+ "dependencies": [
+  "motion@^12.23.12",
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

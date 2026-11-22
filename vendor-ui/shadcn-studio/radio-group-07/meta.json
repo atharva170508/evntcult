@@ -1,0 +1,9 @@
+{
+ "name": "radio-group-07",
+ "type": "registry:component",
+ "description": "A radio group with descriptions for detailed plan selection options",
+ "registryDependencies": [
+  "label",
+  "radio-group"
+ ]
+}

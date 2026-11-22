@@ -1,0 +1,39 @@
+{
+  "name": "@repo/footer-1",
+  "description": "Simple footer block with links and social icons",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^11.15.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "layout",
+    "tags": [
+      "footer",
+      "links",
+      "social",
+      "simple",
+      "animated"
+    ],
+    "complexity": "simple",
+    "animationType": "spring",
+    "useCases": [
+      "Simple footer with navigation links and social icons",
+      "Basic site footer for landing pages",
+      "Minimal footer with animated link groups"
+    ],
+    "compositionHints": [
+      "Use social-selector for social media icons"
+    ],
+    "hasReducedMotion": true
+  }
+}

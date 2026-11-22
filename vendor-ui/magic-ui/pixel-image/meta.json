@@ -1,0 +1,5 @@
+{
+ "name": "pixel-image",
+ "type": "registry:ui",
+ "description": "A component that displays an image with a pixelated effect, creating a retro aesthetic."
+}

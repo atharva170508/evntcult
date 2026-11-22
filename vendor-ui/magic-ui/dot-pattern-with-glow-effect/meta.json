@@ -1,0 +1,8 @@
+{
+ "name": "dot-pattern-with-glow-effect",
+ "type": "registry:example",
+ "description": "Example showing a dot pattern with glow effect",
+ "registryDependencies": [
+  "@magicui/dot-pattern"
+ ]
+}

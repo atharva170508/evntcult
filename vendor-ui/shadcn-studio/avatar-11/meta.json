@@ -1,0 +1,9 @@
+{
+ "name": "avatar-11",
+ "type": "registry:component",
+ "description": "Avatar with notification badge showing count number for alerts and messages.",
+ "registryDependencies": [
+  "avatar",
+  "badge"
+ ]
+}

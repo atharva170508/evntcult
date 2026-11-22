@@ -1,0 +1,8 @@
+{
+ "name": "backlight-image-demo",
+ "type": "registry:example",
+ "description": "An example of the backlight component with a image.",
+ "registryDependencies": [
+  "@magicui/backlight"
+ ]
+}

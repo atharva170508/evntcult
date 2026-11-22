@@ -1,0 +1,8 @@
+{
+ "name": "dot-pattern-linear-gradient",
+ "type": "registry:example",
+ "description": "Example showing a dot pattern with linear gradient effects.",
+ "registryDependencies": [
+  "@magicui/dot-pattern"
+ ]
+}

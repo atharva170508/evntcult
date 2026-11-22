@@ -1,0 +1,11 @@
+{
+ "name": "alert-25",
+ "type": "registry:component",
+ "description": "Soft destructive alert with red background and subtle styling for errors.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

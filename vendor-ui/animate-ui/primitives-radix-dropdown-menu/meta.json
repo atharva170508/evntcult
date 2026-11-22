@@ -1,0 +1,15 @@
+{
+ "name": "primitives-radix-dropdown-menu",
+ "type": "registry:ui",
+ "description": "Displays a menu to the user \u2014 such as a set of actions or functions \u2014 triggered by a button.",
+ "dependencies": [
+  "motion",
+  "radix-ui"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-effects-highlight",
+  "@animate-ui/v1/hooks-use-controlled-state",
+  "@animate-ui/v1/hooks-use-data-state",
+  "@animate-ui/v1/lib-get-strict-context"
+ ]
+}

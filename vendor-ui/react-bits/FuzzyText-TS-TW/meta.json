@@ -1,0 +1,7 @@
+{
+ "name": "FuzzyText-TS-TW",
+ "type": "registry:component",
+ "description": "Vibrating fuzzy text with controllable hover intensity.",
+ "dependencies": [],
+ "registryDependencies": []
+}

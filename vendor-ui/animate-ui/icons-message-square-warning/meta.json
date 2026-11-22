@@ -1,0 +1,11 @@
+{
+ "name": "icons-message-square-warning",
+ "type": "registry:ui",
+ "description": "Message square warning icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

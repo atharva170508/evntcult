@@ -1,0 +1,11 @@
+{
+ "name": "card-01",
+ "type": "registry:component",
+ "description": "Login form card with email and password inputs",
+ "registryDependencies": [
+  "button",
+  "card",
+  "input",
+  "label"
+ ]
+}

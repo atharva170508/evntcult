@@ -1,0 +1,10 @@
+{
+ "name": "wavy-text",
+ "type": "registry:ui",
+ "description": "A wavy text component.",
+ "dependencies": [
+  "motion",
+  "react",
+  "clsx"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-bot-message-square",
+ "type": "registry:ui",
+ "description": "Bot message square icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

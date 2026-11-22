@@ -1,0 +1,12 @@
+{
+ "name": "input-mask-05",
+ "type": "registry:component",
+ "description": "A credit card CVC input field with secure formatting and length validation",
+ "dependencies": [
+  "react-payment-inputs"
+ ],
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

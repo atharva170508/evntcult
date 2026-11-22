@@ -1,0 +1,9 @@
+{
+ "name": "AnimatedContent-TS-TW",
+ "type": "registry:component",
+ "description": "Wrapper that reveals its content on scroll with slides, blur, 3D tilts, soft wipes and staggered children.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

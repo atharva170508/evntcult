@@ -1,0 +1,8 @@
+{
+ "name": "shiny-button-demo",
+ "type": "registry:example",
+ "description": "Example showing a shiny button with dynamic styles.",
+ "registryDependencies": [
+  "@magicui/shiny-button"
+ ]
+}

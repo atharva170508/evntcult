@@ -1,0 +1,11 @@
+{
+ "name": "collapsible-02",
+ "type": "registry:component",
+ "description": "File tree explorer with nested folders and expandable directory structure",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "collapsible"
+ ]
+}

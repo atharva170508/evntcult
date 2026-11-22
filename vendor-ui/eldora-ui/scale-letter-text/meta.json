@@ -1,0 +1,8 @@
+{
+ "name": "scale-letter-text",
+ "type": "registry:ui",
+ "description": "A scale letter text component.",
+ "dependencies": [
+  "react"
+ ]
+}

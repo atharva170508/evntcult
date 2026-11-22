@@ -1,0 +1,5 @@
+{
+ "name": "ripple",
+ "type": "registry:ui",
+ "description": "An animated ripple effect typically used behind elements to emphasize them."
+}

@@ -1,0 +1,7 @@
+{
+ "name": "HoloMosaic-TS-TW",
+ "type": "registry:component",
+ "description": "Holographic tiles that split light into sweeping color as it moves, with glitter, a flip-in intro and click waves.",
+ "dependencies": [],
+ "registryDependencies": []
+}

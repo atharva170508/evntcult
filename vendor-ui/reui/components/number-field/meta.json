@@ -1,0 +1,44 @@
+[
+  {
+    "name": "c-number-field-1",
+    "title": "Basic number field",
+    "label": "Default Size",
+    "description": "Basic number field",
+    "order": 1
+  },
+  {
+    "name": "c-number-field-2",
+    "title": "Basic number field",
+    "label": "Small Size",
+    "description": "Basic number field",
+    "order": 2
+  },
+  {
+    "name": "c-number-field-3",
+    "title": "Basic number field",
+    "label": "Large Size",
+    "description": "Basic number field",
+    "order": 3
+  },
+  {
+    "name": "c-number-field-4",
+    "title": "Number field with buttons on right",
+    "label": "Buttons on Right",
+    "description": "Number field with buttons on right",
+    "order": 4
+  },
+  {
+    "name": "c-number-field-5",
+    "title": "Number field with spinner buttons",
+    "label": "Spinner Buttons",
+    "description": "Number field with spinner buttons",
+    "order": 5
+  },
+  {
+    "name": "c-number-field-6",
+    "title": "Number field in form",
+    "label": "Form Validation",
+    "description": "Number field in form",
+    "order": 6
+  }
+]

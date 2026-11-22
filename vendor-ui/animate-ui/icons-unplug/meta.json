@@ -1,0 +1,11 @@
+{
+ "name": "icons-unplug",
+ "type": "registry:ui",
+ "description": "Unplug icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

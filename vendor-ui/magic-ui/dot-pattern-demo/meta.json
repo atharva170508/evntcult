@@ -1,0 +1,8 @@
+{
+ "name": "dot-pattern-demo",
+ "type": "registry:example",
+ "description": "Example showing a background dot pattern made with SVGs.",
+ "registryDependencies": [
+  "@magicui/dot-pattern"
+ ]
+}

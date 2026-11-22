@@ -1,0 +1,11 @@
+{
+ "name": "accordion-03",
+ "type": "registry:component",
+ "description": "Icon-enhanced accordion with category icons displayed before each item title.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "accordion"
+ ]
+}

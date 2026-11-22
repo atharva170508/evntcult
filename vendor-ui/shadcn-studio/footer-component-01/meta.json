@@ -1,0 +1,12 @@
+{
+ "name": "footer-component-01",
+ "type": "registry:block",
+ "description": "Simple three-section footer with logo and brand name, centered navigation links, social media icons, separator line, and copyright text with heart emoji",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "separator",
+  "utils"
+ ]
+}

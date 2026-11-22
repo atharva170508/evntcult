@@ -1,0 +1,9 @@
+{
+ "name": "radio-group-06",
+ "type": "registry:component",
+ "description": "A radio group with solid filled styling for theme selection",
+ "registryDependencies": [
+  "label",
+  "radio-group"
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "name": "Lightfall-TS-TW",
+ "type": "registry:component",
+ "description": "Streaks of light falling down a curved tunnel, bending around the cursor and stretching into warp trails on hold.",
+ "dependencies": [],
+ "registryDependencies": []
+}

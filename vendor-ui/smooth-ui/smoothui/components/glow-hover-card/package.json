@@ -1,0 +1,42 @@
+{
+  "name": "@repo/glow-hover-card",
+  "description": "A GlowHoverCards component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "layout",
+    "tags": [
+      "card",
+      "glow",
+      "hover",
+      "gradient",
+      "mask",
+      "interactive",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "tween",
+    "useCases": [
+      "Card grid with cursor-tracking glow border effect",
+      "Feature showcase cards with dynamic hover glow",
+      "Interactive card group with shared glow mask"
+    ],
+    "compositionHints": [
+      "Wrap any content cards for the glow effect",
+      "Use with Tabs primitive for categorized card sections"
+    ],
+    "hasReducedMotion": true
+  }
+}

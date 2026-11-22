@@ -1,0 +1,9 @@
+{
+ "name": "DitherVeil-TS-TW",
+ "type": "registry:component",
+ "description": "A 1-bit dithered photo the cursor burns through to full colour, knitting back cell by cell.",
+ "dependencies": [
+  "ogl@^1.0.11"
+ ],
+ "registryDependencies": []
+}

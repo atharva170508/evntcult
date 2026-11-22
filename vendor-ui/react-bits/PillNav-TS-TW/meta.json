@@ -1,0 +1,7 @@
+{
+ "name": "PillNav-TS-TW",
+ "type": "registry:component",
+ "description": "A pill navigation bar where a fill rises through each link as its label rolls over, with a sliding active dot.",
+ "dependencies": [],
+ "registryDependencies": []
+}

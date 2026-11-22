@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-radix-progress",
+ "type": "registry:ui",
+ "description": "Demo showing a radix progress.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-radix-progress"
+ ]
+}

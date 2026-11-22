@@ -1,0 +1,11 @@
+{
+ "name": "icons-orbit",
+ "type": "registry:ui",
+ "description": "Orbit icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "name": "c-dialog-1",
+    "title": "Basic dialog",
+    "label": "Basic",
+    "description": "Basic dialog",
+    "order": 1
+  },
+  {
+    "name": "c-dialog-2",
+    "title": "Dialog with scrollable content",
+    "label": "Scrollable Content",
+    "description": "Dialog with scrollable content",
+    "order": 2
+  },
+  {
+    "name": "c-dialog-3",
+    "title": "Dialog with scrollable content and sticky footer",
+    "label": "Sticky Footer",
+    "description": "Dialog with scrollable content and sticky footer.",
+    "order": 3
+  },
+  {
+    "name": "c-dialog-4",
+    "title": "Dialog without a close button",
+    "label": "No Close Button",
+    "description": "Dialog without a close button.",
+    "order": 4
+  },
+  {
+    "name": "c-dialog-5",
+    "title": "Dialog with custom close button",
+    "label": "Custom Close Button",
+    "description": "Dialog with custom close button",
+    "order": 5
+  },
+  {
+    "name": "c-dialog-6",
+    "title": "Full-screen fluid dialog with sticky header and footer",
+    "label": "Full-Screen",
+    "description": "Full-screen fluid dialog with sticky header and footer",
+    "order": 6
+  },
+  {
+    "name": "c-dialog-7",
+    "title": "Confirmation dialog with destructive action",
+    "label": "Destructive Confirmation",
+    "description": "Confirmation dialog with destructive action",
+    "order": 7
+  },
+  {
+    "name": "c-dialog-8",
+    "title": "Cookie consent dialog",
+    "label": "Cookie Consent",
+    "description": "Cookie consent dialog",
+    "order": 8
+  },
+  {
+    "name": "c-dialog-9",
+    "title": "Dialog with keyboard shortcuts list",
+    "label": "Keyboard Shortcuts",
+    "description": "Dialog with keyboard shortcuts list",
+    "order": 9
+  },
+  {
+    "name": "c-dialog-10",
+    "title": "Dialog with full width button",
+    "label": "Full Width Button",
+    "description": "Dialog with full width button",
+    "order": 10
+  }
+]

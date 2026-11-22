@@ -1,0 +1,9 @@
+{
+ "name": "table-13",
+ "type": "registry:component",
+ "description": "A table with avatar components for displaying user information with profile pictures",
+ "registryDependencies": [
+  "avatar",
+  "table"
+ ]
+}

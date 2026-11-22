@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-buttons-liquid",
+ "type": "registry:ui",
+ "description": "Demo showing an animated liquid button.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-buttons-liquid"
+ ]
+}

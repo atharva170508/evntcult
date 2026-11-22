@@ -1,0 +1,12 @@
+{
+ "name": "select-07",
+ "type": "registry:component",
+ "description": "A native select dropdown with option groups for categorized choices",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "name": "c-sidebar-1",
+    "title": "Application shell with a workspace switcher",
+    "label": "Workspace Switcher",
+    "description": "Grouped navigation with count badges, row menus and a footer account menu.",
+    "order": 1,
+    "gridSize": 1,
+    "previewHeight": "560"
+  },
+  {
+    "name": "c-sidebar-2",
+    "title": "Icon rail that collapses",
+    "label": "Icon Rail",
+    "description": "Labels give way to tooltips at 3rem, with a rail and a trigger to drive it.",
+    "order": 2,
+    "gridSize": 1,
+    "previewHeight": "560"
+  },
+  {
+    "name": "c-sidebar-3",
+    "title": "Documentation nav with sub-menus",
+    "label": "Docs Navigation",
+    "description": "A search field, sections that collapse and a sub-tree under the current page.",
+    "order": 3,
+    "gridSize": 1,
+    "previewHeight": "560"
+  },
+  {
+    "name": "c-sidebar-4",
+    "title": "Right-hand inspector panel",
+    "label": "Inspector Panel",
+    "description": "A floating off-canvas panel with row actions, linked counts and a status badge.",
+    "order": 4,
+    "gridSize": 1,
+    "previewHeight": "560"
+  },
+  {
+    "name": "c-sidebar-5",
+    "title": "Filtering, loading and empty states",
+    "label": "Filter & Loading",
+    "description": "A filter field, skeleton rows while a refresh runs, and a real empty state.",
+    "order": 5,
+    "gridSize": 1,
+    "previewHeight": "560"
+  }
+]

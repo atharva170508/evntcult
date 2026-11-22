@@ -1,0 +1,15 @@
+{
+ "name": "primitives-base-menu",
+ "type": "registry:ui",
+ "description": "A list of actions in a dropdown, enhanced with keyboard navigation.",
+ "dependencies": [
+  "motion",
+  "@base-ui-components/react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-effects-highlight",
+  "@animate-ui/v1/lib-get-strict-context",
+  "@animate-ui/v1/hooks-use-controlled-state",
+  "@animate-ui/v1/hooks-use-data-state"
+ ]
+}

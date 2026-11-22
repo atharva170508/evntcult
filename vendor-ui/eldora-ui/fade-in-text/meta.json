@@ -1,0 +1,10 @@
+{
+ "name": "fade-in-text",
+ "type": "registry:ui",
+ "description": "A fade in text component.",
+ "dependencies": [
+  "motion",
+  "react",
+  "clsx"
+ ]
+}

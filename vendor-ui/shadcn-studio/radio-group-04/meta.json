@@ -1,0 +1,9 @@
+{
+ "name": "radio-group-04",
+ "type": "registry:component",
+ "description": "A radio group with different sizes for various display options",
+ "registryDependencies": [
+  "label",
+  "radio-group"
+ ]
+}

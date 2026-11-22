@@ -1,0 +1,8 @@
+{
+ "name": "glare-hover-demo",
+ "type": "registry:example",
+ "description": "Pricing card with diagonal hover glare (duration 600ms).",
+ "registryDependencies": [
+  "@magicui/glare-hover"
+ ]
+}

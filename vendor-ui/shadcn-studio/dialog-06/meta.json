@@ -1,0 +1,13 @@
+{
+ "name": "dialog-06",
+ "type": "registry:component",
+ "description": "Scrollable dialog with sticky footer for persistent action buttons",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "scroll-area"
+ ]
+}

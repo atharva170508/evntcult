@@ -1,0 +1,12 @@
+{
+ "name": "sonner-03",
+ "type": "registry:component",
+ "description": "A toast notification with custom icon for enhanced visual communication",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

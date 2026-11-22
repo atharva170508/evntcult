@@ -1,0 +1,1963 @@
+import { type Registry } from "shadcn/schema"
+
+export const reui: Registry["items"] = [
+  {
+    "name": "alert",
+    "type": "registry:ui",
+    "title": "Alert",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "class-variance-authority",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/alert.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/alert.tsx"
+      }
+    ],
+    "cssVars": {
+      "light": {
+        "destructive-foreground": "var(--color-red-800)",
+        "success": "var(--color-emerald-500)",
+        "success-foreground": "var(--color-emerald-900)",
+        "info": "var(--color-violet-500)",
+        "info-foreground": "var(--color-violet-900)",
+        "warning": "var(--color-yellow-500)",
+        "warning-foreground": "var(--color-yellow-900)",
+        "invert": "var(--color-zinc-900)",
+        "invert-foreground": "var(--color-zinc-50)"
+      },
+      "dark": {
+        "destructive-foreground": "var(--color-red-600)",
+        "success": "var(--color-emerald-500)",
+        "success-foreground": "var(--color-emerald-600)",
+        "info": "var(--color-violet-500)",
+        "info-foreground": "var(--color-violet-600)",
+        "warning": "var(--color-yellow-500)",
+        "warning-foreground": "var(--color-yellow-600)",
+        "invert": "var(--color-zinc-700)",
+        "invert-foreground": "var(--color-zinc-50)"
+      }
+    }
+  },
+  {
+    "name": "autocomplete",
+    "type": "registry:ui",
+    "title": "Autocomplete",
+    "description": "",
+    "registryDependencies": [
+      "scroll-area"
+    ],
+    "dependencies": [
+      "@base-ui/react",
+      "class-variance-authority",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/autocomplete.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/autocomplete.tsx"
+      }
+    ]
+  },
+  {
+    "name": "badge",
+    "type": "registry:ui",
+    "title": "Badge",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "class-variance-authority",
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/badge.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/badge.tsx"
+      }
+    ],
+    "cssVars": {
+      "light": {
+        "destructive-foreground": "var(--color-red-800)",
+        "success": "var(--color-emerald-500)",
+        "success-foreground": "var(--color-emerald-900)",
+        "info": "var(--color-violet-500)",
+        "info-foreground": "var(--color-violet-900)",
+        "warning": "var(--color-yellow-500)",
+        "warning-foreground": "var(--color-yellow-900)",
+        "invert": "var(--color-zinc-900)",
+        "invert-foreground": "var(--color-zinc-50)"
+      },
+      "dark": {
+        "destructive-foreground": "var(--color-red-600)",
+        "success": "var(--color-emerald-500)",
+        "success-foreground": "var(--color-emerald-600)",
+        "info": "var(--color-violet-500)",
+        "info-foreground": "var(--color-violet-600)",
+        "warning": "var(--color-yellow-500)",
+        "warning-foreground": "var(--color-yellow-600)",
+        "invert": "var(--color-zinc-700)",
+        "invert-foreground": "var(--color-zinc-50)"
+      }
+    }
+  },
+  {
+    "name": "cascader-async",
+    "type": "registry:ui",
+    "title": "Cascader Async",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-async.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-async.tsx"
+      }
+    ]
+  },
+  {
+    "name": "cascader-columns",
+    "type": "registry:ui",
+    "title": "Cascader Columns",
+    "description": "",
+    "registryDependencies": [
+      "scroll-area"
+    ],
+    "dependencies": [
+      "@base-ui/react",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-columns.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-columns.tsx"
+      }
+    ]
+  },
+  {
+    "name": "cascader-context",
+    "type": "registry:ui",
+    "title": "Cascader Context",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-context.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-context.tsx"
+      }
+    ]
+  },
+  {
+    "name": "cascader-footer",
+    "type": "registry:ui",
+    "title": "Cascader Footer",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "@base-ui/react",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-footer.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-footer.tsx"
+      }
+    ]
+  },
+  {
+    "name": "cascader-i18n",
+    "type": "registry:ui",
+    "title": "Cascader I18n",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-i18n.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-i18n.tsx"
+      }
+    ]
+  },
+  {
+    "name": "cascader-item",
+    "type": "registry:ui",
+    "title": "Cascader Item",
+    "description": "",
+    "registryDependencies": [
+      "spinner"
+    ],
+    "dependencies": [
+      "@base-ui/react",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-item.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-item.tsx"
+      }
+    ]
+  },
+  {
+    "name": "cascader-lib",
+    "type": "registry:ui",
+    "title": "Cascader Lib",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-lib.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-lib.tsx"
+      }
+    ]
+  },
+  {
+    "name": "cascader-nav",
+    "type": "registry:ui",
+    "title": "Cascader Nav",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "@base-ui/react",
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-nav.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-nav.tsx"
+      }
+    ]
+  },
+  {
+    "name": "cascader-types",
+    "type": "registry:ui",
+    "title": "Nested multi-level combobox with drill-down, columns and tree modes.",
+    "description": "Nested multi-level combobox with drill-down, columns and tree modes.",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-types.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-types.tsx"
+      }
+    ]
+  },
+  {
+    "name": "cascader-virtual",
+    "type": "registry:ui",
+    "title": "Cascader Virtual",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "@tanstack/react-virtual"
+    ],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-virtual.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-virtual.tsx"
+      }
+    ]
+  },
+  {
+    "name": "cascader",
+    "type": "registry:ui",
+    "title": "Cascader",
+    "description": "",
+    "registryDependencies": [
+      "scroll-area",
+      "spinner"
+    ],
+    "dependencies": [
+      "@base-ui/react",
+      "@tanstack/react-virtual",
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/cascader/cascader-async.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-async.tsx"
+      },
+      {
+        "path": "reui/cascader/cascader-columns.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-columns.tsx"
+      },
+      {
+        "path": "reui/cascader/cascader-context.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-context.tsx"
+      },
+      {
+        "path": "reui/cascader/cascader-footer.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-footer.tsx"
+      },
+      {
+        "path": "reui/cascader/cascader-i18n.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-i18n.tsx"
+      },
+      {
+        "path": "reui/cascader/cascader-item.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-item.tsx"
+      },
+      {
+        "path": "reui/cascader/cascader-lib.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-lib.tsx"
+      },
+      {
+        "path": "reui/cascader/cascader-nav.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-nav.tsx"
+      },
+      {
+        "path": "reui/cascader/cascader-types.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-types.tsx"
+      },
+      {
+        "path": "reui/cascader/cascader-virtual.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader-virtual.tsx"
+      },
+      {
+        "path": "reui/cascader/cascader.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/cascader/cascader.tsx"
+      }
+    ]
+  },
+  {
+    "name": "code-block-highlight",
+    "type": "registry:ui",
+    "title": "Isomorphic shiki engine and pure helpers for the code block.",
+    "description": "Isomorphic shiki engine and pure helpers for the code block.",
+    "registryDependencies": [],
+    "dependencies": [
+      "shiki"
+    ],
+    "files": [
+      {
+        "path": "reui/code-block/code-block-highlight.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/code-block/code-block-highlight.tsx"
+      }
+    ]
+  },
+  {
+    "name": "code-block",
+    "type": "registry:ui",
+    "title": "Shadcn code block with Shiki highlighting, streaming, diffs, folding and per-line interaction for AI chat UIs.",
+    "description": "Shadcn code block with Shiki highlighting, streaming, diffs, folding and per-line interaction for AI chat UIs.",
+    "registryDependencies": [
+      "button"
+    ],
+    "dependencies": [
+      "cn",
+      "shiki"
+    ],
+    "files": [
+      {
+        "path": "reui/code-block/code-block-highlight.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/code-block/code-block-highlight.tsx"
+      },
+      {
+        "path": "reui/code-block/code-block.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/code-block/code-block.tsx"
+      }
+    ],
+    "cssVars": {
+      "light": {
+        "destructive-foreground": "var(--color-red-800)",
+        "success": "var(--color-emerald-500)",
+        "success-foreground": "var(--color-emerald-900)",
+        "info": "var(--color-violet-500)",
+        "info-foreground": "var(--color-violet-900)",
+        "warning": "var(--color-yellow-500)",
+        "warning-foreground": "var(--color-yellow-900)",
+        "invert": "var(--color-zinc-900)",
+        "invert-foreground": "var(--color-zinc-50)"
+      },
+      "dark": {
+        "destructive-foreground": "var(--color-red-600)",
+        "success": "var(--color-emerald-500)",
+        "success-foreground": "var(--color-emerald-600)",
+        "info": "var(--color-violet-500)",
+        "info-foreground": "var(--color-violet-600)",
+        "warning": "var(--color-yellow-500)",
+        "warning-foreground": "var(--color-yellow-600)",
+        "invert": "var(--color-zinc-700)",
+        "invert-foreground": "var(--color-zinc-50)"
+      }
+    }
+  },
+  {
+    "name": "color-picker",
+    "type": "registry:ui",
+    "title": "Shadcn color picker with a saturation area, hue, alpha and channel sliders, a hue wheel, HEX, RGB, HSL, HSB and OKLCH fields, swatches and an eye dropper.",
+    "description": "Shadcn color picker with a saturation area, hue, alpha and channel sliders, a hue wheel, HEX, RGB, HSL, HSB and OKLCH fields, swatches and an eye dropper.",
+    "registryDependencies": [
+      "button",
+      "dropdown-menu",
+      "input-group",
+      "popover",
+      "separator"
+    ],
+    "dependencies": [
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/color-picker.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/color-picker.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-cell-selection",
+    "type": "registry:ui",
+    "title": "Data Grid Cell Selection",
+    "description": "",
+    "registryDependencies": [
+      "button"
+    ],
+    "dependencies": [
+      "@tanstack/react-table",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-cell-selection.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-cell-selection.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-column-filter",
+    "type": "registry:ui",
+    "title": "Data Grid Column Filter",
+    "description": "",
+    "registryDependencies": [
+      "badge",
+      "button",
+      "input",
+      "popover",
+      "separator"
+    ],
+    "dependencies": [
+      "@tanstack/react-table",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-column-filter.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-column-filter.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-column-header",
+    "type": "registry:ui",
+    "title": "Data Grid Column Header",
+    "description": "",
+    "registryDependencies": [
+      "button",
+      "dropdown-menu"
+    ],
+    "dependencies": [
+      "@tanstack/react-table",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-column-header.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-column-header.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-column-visibility",
+    "type": "registry:ui",
+    "title": "Data Grid Column Visibility",
+    "description": "",
+    "registryDependencies": [
+      "dropdown-menu"
+    ],
+    "dependencies": [
+      "@tanstack/react-table"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-column-visibility.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-column-visibility.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-i18n",
+    "type": "registry:ui",
+    "title": "Data Grid I18n",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-i18n.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-i18n.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-pagination",
+    "type": "registry:ui",
+    "title": "Data Grid Pagination",
+    "description": "",
+    "registryDependencies": [
+      "button",
+      "select",
+      "skeleton"
+    ],
+    "dependencies": [
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-pagination.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-pagination.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-scroll-area",
+    "type": "registry:ui",
+    "title": "Data Grid Scroll Area",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "@base-ui/react",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-scroll-area.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-scroll-area.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-table-dnd-rows",
+    "type": "registry:ui",
+    "title": "Data Grid Table Dnd Rows",
+    "description": "",
+    "registryDependencies": [
+      "button"
+    ],
+    "dependencies": [
+      "@dnd-kit/core",
+      "@dnd-kit/modifiers",
+      "@dnd-kit/sortable",
+      "@dnd-kit/utilities",
+      "@tanstack/react-table",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-table-dnd-rows.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-table-dnd-rows.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-table-dnd",
+    "type": "registry:ui",
+    "title": "Data Grid Table Dnd",
+    "description": "",
+    "registryDependencies": [
+      "button"
+    ],
+    "dependencies": [
+      "@dnd-kit/core",
+      "@dnd-kit/sortable",
+      "@dnd-kit/utilities",
+      "@tanstack/react-table"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-table-dnd.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-table-dnd.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-table-virtual",
+    "type": "registry:ui",
+    "title": "Data Grid Table Virtual",
+    "description": "",
+    "registryDependencies": [
+      "spinner"
+    ],
+    "dependencies": [
+      "@tanstack/react-table",
+      "@tanstack/react-virtual",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-table-virtual.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-table-virtual.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid-table",
+    "type": "registry:ui",
+    "title": "Data Grid Table",
+    "description": "",
+    "registryDependencies": [
+      "button",
+      "checkbox",
+      "spinner"
+    ],
+    "dependencies": [
+      "@tanstack/react-table",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-table.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-table.tsx"
+      }
+    ]
+  },
+  {
+    "name": "data-grid",
+    "type": "registry:ui",
+    "title": "Data Grid",
+    "description": "",
+    "registryDependencies": [
+      "badge",
+      "button",
+      "checkbox",
+      "dropdown-menu",
+      "input",
+      "popover",
+      "select",
+      "separator",
+      "skeleton",
+      "spinner"
+    ],
+    "dependencies": [
+      "@base-ui/react",
+      "@dnd-kit/core",
+      "@dnd-kit/modifiers",
+      "@dnd-kit/sortable",
+      "@dnd-kit/utilities",
+      "@tanstack/react-table",
+      "@tanstack/react-virtual",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/data-grid/data-grid-cell-selection.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-cell-selection.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid-column-filter.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-column-filter.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid-column-header.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-column-header.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid-column-visibility.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-column-visibility.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid-i18n.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-i18n.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid-pagination.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-pagination.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid-scroll-area.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-scroll-area.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid-table-dnd-rows.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-table-dnd-rows.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid-table-dnd.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-table-dnd.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid-table-virtual.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-table-virtual.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid-table.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid-table.tsx"
+      },
+      {
+        "path": "reui/data-grid/data-grid.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/data-grid/data-grid.tsx"
+      }
+    ]
+  },
+  {
+    "name": "date-selector",
+    "type": "registry:ui",
+    "title": "Date Selector",
+    "description": "",
+    "registryDependencies": [
+      "button",
+      "calendar",
+      "input",
+      "scroll-area",
+      "tabs",
+      "use-mobile"
+    ],
+    "dependencies": [
+      "cn",
+      "date-fns",
+      "react-day-picker"
+    ],
+    "files": [
+      {
+        "path": "reui/date-selector.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/date-selector.tsx"
+      }
+    ]
+  },
+  {
+    "name": "emoji-picker",
+    "type": "registry:ui",
+    "title": "Shadcn emoji picker with search, shortcodes, skin tones, frequently used and custom emoji, a category bar, a virtualized grid and 28 data languages.",
+    "description": "Shadcn emoji picker with search, shortcodes, skin tones, frequently used and custom emoji, a category bar, a virtualized grid and 28 data languages.",
+    "registryDependencies": [
+      "button",
+      "dropdown-menu",
+      "empty",
+      "input-group",
+      "popover",
+      "skeleton",
+      "tabs"
+    ],
+    "dependencies": [
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/emoji-picker.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/emoji-picker.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-agenda-view",
+    "type": "registry:ui",
+    "title": "Chronological agenda grouped by day - a day header row plus a clean time / dot / title table.",
+    "description": "Chronological agenda grouped by day - a day header row plus a clean time / dot / title table.",
+    "registryDependencies": [
+      "icon-stack",
+      "scroll-area"
+    ],
+    "dependencies": [
+      "cn",
+      "date-fns",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-agenda-view.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-agenda-view.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-content",
+    "type": "registry:ui",
+    "title": "Active-view switchboard rendering month, week, day, N-days, or agenda; swappable per view via the components prop.",
+    "description": "Active-view switchboard rendering month, week, day, N-days, or agenda; swappable per view via the components prop.",
+    "registryDependencies": [],
+    "dependencies": [
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-content.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-content.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-dnd",
+    "type": "registry:ui",
+    "title": "Custom pointer-event interaction engine - move, resize, and drag-create across month, week, day, and N-day views with live validation.",
+    "description": "Custom pointer-event interaction engine - move, resize, and drag-create across month, week, day, and N-day views with live validation.",
+    "registryDependencies": [],
+    "dependencies": [
+      "date-fns"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-dnd.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-dnd.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-event",
+    "type": "registry:ui",
+    "title": "The reusable event chip/bar/block - selection, clicks, drag + resize wiring, and the consumer render slot.",
+    "description": "The reusable event chip/bar/block - selection, clicks, drag + resize wiring, and the consumer render slot.",
+    "registryDependencies": [
+      "tooltip"
+    ],
+    "dependencies": [
+      "cn",
+      "date-fns",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-event.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-event.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-i18n",
+    "type": "registry:ui",
+    "title": "Default UI texts, date-format strings, and formatter functions for the event calendar, fully overridable per key.",
+    "description": "Default UI texts, date-format strings, and formatter functions for the event calendar, fully overridable per key.",
+    "registryDependencies": [],
+    "dependencies": [
+      "date-fns"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-i18n.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-i18n.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-lib",
+    "type": "registry:ui",
+    "title": "Pure, React-free calendar math: view ranges, zoned day keys, multi-day segmentation, overlap packing, lane packing, and the event index.",
+    "description": "Pure, React-free calendar math: view ranges, zoned day keys, multi-day segmentation, overlap packing, lane packing, and the event index.",
+    "registryDependencies": [],
+    "dependencies": [
+      "@date-fns/tz",
+      "date-fns"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-lib.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-lib.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-month-view",
+    "type": "registry:ui",
+    "title": "ARIA-grid month view with week rows, day cells, event chips, and overflow counts.",
+    "description": "ARIA-grid month view with week rows, day cells, event chips, and overflow counts.",
+    "registryDependencies": [
+      "popover",
+      "scroll-area"
+    ],
+    "dependencies": [
+      "cn",
+      "date-fns",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-month-view.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-month-view.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-nav",
+    "type": "registry:ui",
+    "title": "Composable navigation - Today, prev/next, period title, view switcher dropdown, and a free toolbar slot.",
+    "description": "Composable navigation - Today, prev/next, period title, view switcher dropdown, and a free toolbar slot.",
+    "registryDependencies": [
+      "button",
+      "calendar",
+      "dropdown-menu",
+      "popover",
+      "tooltip"
+    ],
+    "dependencies": [
+      "cn",
+      "date-fns",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-nav.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-nav.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-recurrence",
+    "type": "registry:ui",
+    "title": "RFC 5545 subset recurrence expansion for the event calendar - structured rules or raw RRULE strings, with a hard occurrence cap.",
+    "description": "RFC 5545 subset recurrence expansion for the event calendar - structured rules or raw RRULE strings, with a hard occurrence cap.",
+    "registryDependencies": [],
+    "dependencies": [
+      "@date-fns/tz",
+      "date-fns"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-recurrence.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-recurrence.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-resource-view",
+    "type": "registry:ui",
+    "title": "Resource-columns day grid for booking scenarios - one time axis, one column per resource, full drag, resize, and drag-create.",
+    "description": "Resource-columns day grid for booking scenarios - one time axis, one column per resource, full drag, resize, and drag-create.",
+    "registryDependencies": [
+      "scroll-area"
+    ],
+    "dependencies": [
+      "cn",
+      "date-fns",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-resource-view.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-resource-view.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-time-grid",
+    "type": "registry:ui",
+    "title": "Shared week/day/N-days engine - hour gutter, minute-positioned events, all-day row, drag ghosts, now indicator, and configurable scrolling.",
+    "description": "Shared week/day/N-days engine - hour gutter, minute-positioned events, all-day row, drag ghosts, now indicator, and configurable scrolling.",
+    "registryDependencies": [
+      "scroll-area"
+    ],
+    "dependencies": [
+      "cn",
+      "date-fns",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-time-grid.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-time-grid.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar-types",
+    "type": "registry:ui",
+    "title": "Public TypeScript contract for the headless event calendar: events, occurrences, segments, state, and callbacks.",
+    "description": "Public TypeScript contract for the headless event calendar: events, occurrences, segments, state, and callbacks.",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-types.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-types.tsx"
+      }
+    ]
+  },
+  {
+    "name": "event-calendar",
+    "type": "registry:ui",
+    "title": "Headless-first event calendar with month, week, day, N-day and agenda views, external CRUD contract, and a subscribable store.",
+    "description": "Headless-first event calendar with month, week, day, N-day and agenda views, external CRUD contract, and a subscribable store.",
+    "registryDependencies": [
+      "button",
+      "calendar",
+      "dropdown-menu",
+      "icon-stack",
+      "popover",
+      "scroll-area",
+      "tooltip"
+    ],
+    "dependencies": [
+      "@date-fns/tz",
+      "cn",
+      "date-fns",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/event-calendar/event-calendar-agenda-view.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-agenda-view.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-content.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-content.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-dnd.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-dnd.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-event.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-event.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-i18n.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-i18n.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-lib.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-lib.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-month-view.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-month-view.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-nav.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-nav.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-recurrence.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-recurrence.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-resource-view.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-resource-view.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-time-grid.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-time-grid.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar-types.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar-types.tsx"
+      },
+      {
+        "path": "reui/event-calendar/event-calendar.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/event-calendar/event-calendar.tsx"
+      }
+    ]
+  },
+  {
+    "name": "file-type",
+    "type": "registry:ui",
+    "title": "Shadcn file type icon in brand and family colors, outline, solid, light and mono variants, sizes down to 18px for data grid rows, and resolution from a file name or MIME type.",
+    "description": "Shadcn file type icon in brand and family colors, outline, solid, light and mono variants, sizes down to 18px for data grid rows, and resolution from a file name or MIME type.",
+    "registryDependencies": [],
+    "dependencies": [
+      "class-variance-authority",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/file-type.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/file-type.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-advanced",
+    "type": "registry:ui",
+    "title": "Filters Advanced",
+    "description": "",
+    "registryDependencies": [
+      "button",
+      "dropdown-menu",
+      "input",
+      "popover",
+      "tooltip"
+    ],
+    "dependencies": [
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/filters/filters-advanced.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-advanced.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-builder",
+    "type": "registry:ui",
+    "title": "Filters Builder",
+    "description": "",
+    "registryDependencies": [
+      "button",
+      "cascader",
+      "popover"
+    ],
+    "dependencies": [
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/filters/filters-builder.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-builder.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-chip",
+    "type": "registry:ui",
+    "title": "Filters Chip",
+    "description": "",
+    "registryDependencies": [
+      "button",
+      "button-group",
+      "dropdown-menu",
+      "popover",
+      "tooltip"
+    ],
+    "dependencies": [
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/filters/filters-chip.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-chip.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-context",
+    "type": "registry:ui",
+    "title": "Filters Context",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/filters/filters-context.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-context.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-date",
+    "type": "registry:ui",
+    "title": "Filters Date",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "date-fns"
+    ],
+    "files": [
+      {
+        "path": "reui/filters/filters-date.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-date.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-dnd",
+    "type": "registry:ui",
+    "title": "Pointer-based drag layer for the advanced condition builder - a carry clone that follows the pointer, drop indicators between rows and into groups, and Alt to copy.",
+    "description": "Pointer-based drag layer for the advanced condition builder - a carry clone that follows the pointer, drop indicators between rows and into groups, and Alt to copy.",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/filters/filters-dnd.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-dnd.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-draft",
+    "type": "registry:ui",
+    "title": "Filters Draft",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/filters/filters-draft.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-draft.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-editors",
+    "type": "registry:ui",
+    "title": "Filters Editors",
+    "description": "",
+    "registryDependencies": [
+      "button",
+      "button-group",
+      "cascader",
+      "input"
+    ],
+    "dependencies": [
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/filters/filters-editors.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-editors.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-i18n",
+    "type": "registry:ui",
+    "title": "Filters I18n",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/filters/filters-i18n.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-i18n.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-lib",
+    "type": "registry:ui",
+    "title": "Filters Lib",
+    "description": "",
+    "registryDependencies": [
+      "cascader"
+    ],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/filters/filters-lib.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-lib.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-operators",
+    "type": "registry:ui",
+    "title": "Filters Operators",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/filters/filters-operators.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-operators.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-query",
+    "type": "registry:ui",
+    "title": "Filters Query",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/filters/filters-query.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-query.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters-types",
+    "type": "registry:ui",
+    "title": "Stepped filter builder with nested fields, popover value editors and a boolean query tree.",
+    "description": "Stepped filter builder with nested fields, popover value editors and a boolean query tree.",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/filters/filters-types.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-types.tsx"
+      }
+    ]
+  },
+  {
+    "name": "filters",
+    "type": "registry:ui",
+    "title": "Filters",
+    "description": "",
+    "registryDependencies": [
+      "button",
+      "button-group",
+      "cascader",
+      "dropdown-menu",
+      "input",
+      "popover",
+      "tooltip"
+    ],
+    "dependencies": [
+      "class-variance-authority",
+      "cn",
+      "date-fns"
+    ],
+    "files": [
+      {
+        "path": "reui/filters/filters-advanced.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-advanced.tsx"
+      },
+      {
+        "path": "reui/filters/filters-builder.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-builder.tsx"
+      },
+      {
+        "path": "reui/filters/filters-chip.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-chip.tsx"
+      },
+      {
+        "path": "reui/filters/filters-context.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-context.tsx"
+      },
+      {
+        "path": "reui/filters/filters-date.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-date.tsx"
+      },
+      {
+        "path": "reui/filters/filters-dnd.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-dnd.tsx"
+      },
+      {
+        "path": "reui/filters/filters-draft.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-draft.tsx"
+      },
+      {
+        "path": "reui/filters/filters-editors.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-editors.tsx"
+      },
+      {
+        "path": "reui/filters/filters-i18n.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-i18n.tsx"
+      },
+      {
+        "path": "reui/filters/filters-lib.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-lib.tsx"
+      },
+      {
+        "path": "reui/filters/filters-operators.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-operators.tsx"
+      },
+      {
+        "path": "reui/filters/filters-query.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-query.tsx"
+      },
+      {
+        "path": "reui/filters/filters-types.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters-types.tsx"
+      },
+      {
+        "path": "reui/filters/filters.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/filters/filters.tsx"
+      }
+    ]
+  },
+  {
+    "name": "frame",
+    "type": "registry:ui",
+    "title": "Frame",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "class-variance-authority",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/frame.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/frame.tsx"
+      }
+    ]
+  },
+  {
+    "name": "gantt-bar",
+    "type": "registry:ui",
+    "title": "The interactive gantt bar - selection, clicks, drag + resize wiring, and the consumer render slot.",
+    "description": "The interactive gantt bar - selection, clicks, drag + resize wiring, and the consumer render slot.",
+    "registryDependencies": [
+      "context-menu",
+      "tooltip"
+    ],
+    "dependencies": [
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/gantt/gantt-bar.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-bar.tsx"
+      }
+    ]
+  },
+  {
+    "name": "gantt-dnd",
+    "type": "registry:ui",
+    "title": "Custom pointer-event interaction engine - edge resize and drag-create over the horizontal axis with live validation; bars are never dragged whole.",
+    "description": "Custom pointer-event interaction engine - edge resize and drag-create over the horizontal axis with live validation; bars are never dragged whole.",
+    "registryDependencies": [],
+    "dependencies": [
+      "date-fns"
+    ],
+    "files": [
+      {
+        "path": "reui/gantt/gantt-dnd.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-dnd.tsx"
+      }
+    ]
+  },
+  {
+    "name": "gantt-i18n",
+    "type": "registry:ui",
+    "title": "Default UI texts, date-format strings, and formatter functions for the gantt, fully overridable per key.",
+    "description": "Default UI texts, date-format strings, and formatter functions for the gantt, fully overridable per key.",
+    "registryDependencies": [],
+    "dependencies": [
+      "date-fns"
+    ],
+    "files": [
+      {
+        "path": "reui/gantt/gantt-i18n.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-i18n.tsx"
+      }
+    ]
+  },
+  {
+    "name": "gantt-lib",
+    "type": "registry:ui",
+    "title": "Pure, React-free calendar math: view ranges, zoned day keys, multi-day segmentation, overlap packing, lane packing, and the event index.",
+    "description": "Pure, React-free calendar math: view ranges, zoned day keys, multi-day segmentation, overlap packing, lane packing, and the event index.",
+    "registryDependencies": [],
+    "dependencies": [
+      "@date-fns/tz",
+      "date-fns"
+    ],
+    "files": [
+      {
+        "path": "reui/gantt/gantt-lib.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-lib.tsx"
+      }
+    ]
+  },
+  {
+    "name": "gantt-nav",
+    "type": "registry:ui",
+    "title": "Composable navigation - Today, view selector, prev/next, go-to-date, period title, and a free toolbar slot.",
+    "description": "Composable navigation - Today, view selector, prev/next, go-to-date, period title, and a free toolbar slot.",
+    "registryDependencies": [
+      "button",
+      "calendar",
+      "dropdown-menu",
+      "popover",
+      "tooltip"
+    ],
+    "dependencies": [
+      "cn",
+      "date-fns",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/gantt/gantt-nav.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-nav.tsx"
+      }
+    ]
+  },
+  {
+    "name": "gantt-recurrence",
+    "type": "registry:ui",
+    "title": "RFC 5545 subset recurrence expansion for the event calendar - structured rules or raw RRULE strings, with a hard occurrence cap.",
+    "description": "RFC 5545 subset recurrence expansion for the event calendar - structured rules or raw RRULE strings, with a hard occurrence cap.",
+    "registryDependencies": [],
+    "dependencies": [
+      "@date-fns/tz",
+      "date-fns"
+    ],
+    "files": [
+      {
+        "path": "reui/gantt/gantt-recurrence.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-recurrence.tsx"
+      }
+    ]
+  },
+  {
+    "name": "gantt-types",
+    "type": "registry:ui",
+    "title": "Public TypeScript contract for the headless gantt: events, occurrences, segments, state, and callbacks.",
+    "description": "Public TypeScript contract for the headless gantt: events, occurrences, segments, state, and callbacks.",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/gantt/gantt-types.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-types.tsx"
+      }
+    ]
+  },
+  {
+    "name": "gantt-view",
+    "type": "registry:ui",
+    "title": "The gantt body - split resizable tree/timeline panes with synced scrolling, multi-column tree, grouped two-row header, day through year scales, zoom, drag-to-pan, lanes, drag and resize.",
+    "description": "The gantt body - split resizable tree/timeline panes with synced scrolling, multi-column tree, grouped two-row header, day through year scales, zoom, drag-to-pan, lanes, drag and resize.",
+    "registryDependencies": [
+      "button",
+      "checkbox",
+      "context-menu",
+      "scroll-area",
+      "tooltip"
+    ],
+    "dependencies": [
+      "cn",
+      "date-fns",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/gantt/gantt-view.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-view.tsx"
+      }
+    ]
+  },
+  {
+    "name": "gantt",
+    "type": "registry:ui",
+    "title": "Headless-first gantt - horizontal resource timeline with day-to-year scales, external CRUD contract, and a subscribable store.",
+    "description": "Headless-first gantt - horizontal resource timeline with day-to-year scales, external CRUD contract, and a subscribable store.",
+    "registryDependencies": [
+      "button",
+      "calendar",
+      "checkbox",
+      "context-menu",
+      "dropdown-menu",
+      "popover",
+      "scroll-area",
+      "tooltip"
+    ],
+    "dependencies": [
+      "@date-fns/tz",
+      "cn",
+      "date-fns",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/gantt/gantt-bar.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-bar.tsx"
+      },
+      {
+        "path": "reui/gantt/gantt-dnd.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-dnd.tsx"
+      },
+      {
+        "path": "reui/gantt/gantt-i18n.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-i18n.tsx"
+      },
+      {
+        "path": "reui/gantt/gantt-lib.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-lib.tsx"
+      },
+      {
+        "path": "reui/gantt/gantt-nav.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-nav.tsx"
+      },
+      {
+        "path": "reui/gantt/gantt-recurrence.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-recurrence.tsx"
+      },
+      {
+        "path": "reui/gantt/gantt-types.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-types.tsx"
+      },
+      {
+        "path": "reui/gantt/gantt-view.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt-view.tsx"
+      },
+      {
+        "path": "reui/gantt/gantt.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/gantt/gantt.tsx"
+      }
+    ]
+  },
+  {
+    "name": "icon-stack",
+    "type": "registry:ui",
+    "title": "Layered icon illustration container",
+    "description": "Layered icon illustration container",
+    "registryDependencies": [],
+    "dependencies": [
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/icon-stack.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/icon-stack.tsx"
+      }
+    ]
+  },
+  {
+    "name": "icon-tile",
+    "type": "registry:ui",
+    "title": "Square container that gives icons a consistent surface",
+    "description": "Square container that gives icons a consistent surface",
+    "registryDependencies": [],
+    "dependencies": [
+      "class-variance-authority",
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/icon-tile.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/icon-tile.tsx"
+      }
+    ]
+  },
+  {
+    "name": "kanban",
+    "type": "registry:ui",
+    "title": "Kanban",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "@dnd-kit/core",
+      "@dnd-kit/sortable",
+      "@dnd-kit/utilities",
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/kanban.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/kanban.tsx"
+      }
+    ]
+  },
+  {
+    "name": "number-field",
+    "type": "registry:ui",
+    "title": "Number Field",
+    "description": "",
+    "registryDependencies": [
+      "label"
+    ],
+    "dependencies": [
+      "@base-ui/react",
+      "class-variance-authority",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/number-field.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/number-field.tsx"
+      }
+    ]
+  },
+  {
+    "name": "phone-input",
+    "type": "registry:ui",
+    "title": "Phone Input",
+    "description": "",
+    "registryDependencies": [
+      "button",
+      "combobox",
+      "input",
+      "scroll-area"
+    ],
+    "dependencies": [
+      "cn",
+      "react-phone-number-input"
+    ],
+    "files": [
+      {
+        "path": "reui/phone-input.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/phone-input.tsx"
+      }
+    ]
+  },
+  {
+    "name": "rating",
+    "type": "registry:ui",
+    "title": "Rating",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "class-variance-authority",
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/rating.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/rating.tsx"
+      }
+    ]
+  },
+  {
+    "name": "scrollspy",
+    "type": "registry:ui",
+    "title": "Scrollspy",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "reui/scrollspy.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/scrollspy.tsx"
+      }
+    ]
+  },
+  {
+    "name": "signature-pad",
+    "type": "registry:ui",
+    "title": "Shadcn signature pad with pressure and velocity ink, touch and stylus input, undo and redo, form fields and PNG, JPEG or SVG export.",
+    "description": "Shadcn signature pad with pressure and velocity ink, touch and stylus input, undo and redo, form fields and PNG, JPEG or SVG export.",
+    "registryDependencies": [
+      "button"
+    ],
+    "dependencies": [
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/signature-pad.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/signature-pad.tsx"
+      }
+    ]
+  },
+  {
+    "name": "sortable",
+    "type": "registry:ui",
+    "title": "Sortable",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "@dnd-kit/core",
+      "@dnd-kit/sortable",
+      "@dnd-kit/utilities",
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/sortable.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/sortable.tsx"
+      }
+    ]
+  },
+  {
+    "name": "stepper",
+    "type": "registry:ui",
+    "title": "Stepper",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/stepper.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/stepper.tsx"
+      }
+    ]
+  },
+  {
+    "name": "time-picker",
+    "type": "registry:ui",
+    "title": "Shadcn time picker with scrollable hour, minute, second and AM/PM columns, a typable input, steps, bounds and localized labels.",
+    "description": "Shadcn time picker with scrollable hour, minute, second and AM/PM columns, a typable input, steps, bounds and localized labels.",
+    "registryDependencies": [
+      "button",
+      "input-group",
+      "popover"
+    ],
+    "dependencies": [
+      "cn"
+    ],
+    "files": [
+      {
+        "path": "reui/time-picker.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/time-picker.tsx"
+      }
+    ]
+  },
+  {
+    "name": "timeline",
+    "type": "registry:ui",
+    "title": "Timeline",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/timeline.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/timeline.tsx"
+      }
+    ]
+  },
+  {
+    "name": "tree",
+    "type": "registry:ui",
+    "title": "Tree",
+    "description": "",
+    "registryDependencies": [],
+    "dependencies": [
+      "@headless-tree/core",
+      "cn",
+      "radix-ui"
+    ],
+    "files": [
+      {
+        "path": "reui/tree.tsx",
+        "type": "registry:ui",
+        "target": "components/reui/tree.tsx"
+      }
+    ]
+  }
+]

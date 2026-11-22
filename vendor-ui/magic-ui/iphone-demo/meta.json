@@ -1,0 +1,8 @@
+{
+ "name": "iphone-demo",
+ "type": "registry:example",
+ "description": "Example showing an iPhone mockup.",
+ "registryDependencies": [
+  "@magicui/iphone"
+ ]
+}

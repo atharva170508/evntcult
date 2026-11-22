@@ -1,0 +1,7 @@
+{
+ "name": "Dither-TS-TW",
+ "type": "registry:component",
+ "description": "Retro dithered waves with Bayer, halftone, line and noise patterns, palettes and cursor trails.",
+ "dependencies": [],
+ "registryDependencies": []
+}

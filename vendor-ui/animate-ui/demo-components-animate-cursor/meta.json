@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-animate-cursor",
+ "type": "registry:ui",
+ "description": "Demo showing a cursor.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-animate-cursor"
+ ]
+}

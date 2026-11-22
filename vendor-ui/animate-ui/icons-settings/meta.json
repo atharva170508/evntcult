@@ -1,0 +1,11 @@
+{
+ "name": "icons-settings",
+ "type": "registry:ui",
+ "description": "Settings icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

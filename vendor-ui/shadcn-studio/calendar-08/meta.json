@@ -1,0 +1,13 @@
+{
+ "name": "calendar-08",
+ "type": "registry:component",
+ "description": "Localized calendar with language switching between English and Hindi",
+ "dependencies": [
+  "react-day-picker"
+ ],
+ "registryDependencies": [
+  "calendar",
+  "card",
+  "select"
+ ]
+}

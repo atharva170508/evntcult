@@ -1,0 +1,11 @@
+{
+ "name": "bento-demo-vertical",
+ "type": "registry:example",
+ "description": "Example showing a vertical bento grid layout.",
+ "dependencies": [
+  "@radix-ui/react-icons"
+ ],
+ "registryDependencies": [
+  "@magicui/bento-grid"
+ ]
+}

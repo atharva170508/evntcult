@@ -1,0 +1,121 @@
+[
+  {
+    "name": "c-radio-group-1",
+    "title": "Basic radio group",
+    "label": "Basic",
+    "description": "Basic radio group",
+    "order": 1
+  },
+  {
+    "name": "c-radio-group-2",
+    "title": "Disabled radio group",
+    "label": "Disabled",
+    "description": "Disabled radio group",
+    "order": 2
+  },
+  {
+    "name": "c-radio-group-3",
+    "title": "Radio with description",
+    "label": "Descriptions",
+    "description": "Radio with description",
+    "order": 3
+  },
+  {
+    "name": "c-radio-group-4",
+    "title": "Invalid radio group",
+    "label": "Invalid",
+    "description": "Invalid radio group",
+    "order": 4
+  },
+  {
+    "name": "c-radio-group-5",
+    "title": "Colored radio group",
+    "label": "Colored",
+    "description": "Colored radio group",
+    "order": 5
+  },
+  {
+    "name": "c-radio-group-6",
+    "title": "Radio group with legend and description",
+    "label": "Legend & Description",
+    "description": "Radio group with legend and description",
+    "order": 6
+  },
+  {
+    "name": "c-radio-group-7",
+    "title": "Card radio group with descriptions",
+    "label": "Descriptive Cards",
+    "description": "Card radio group with descriptions",
+    "order": 7
+  },
+  {
+    "name": "c-radio-group-8",
+    "title": "Radio group in card with separators",
+    "label": "Card Separators",
+    "description": "Radio group in card with separators",
+    "order": 8
+  },
+  {
+    "name": "c-radio-group-9",
+    "title": "Radio group in card with icons",
+    "label": "Card Icons",
+    "description": "Radio group in card with icons",
+    "order": 9
+  },
+  {
+    "name": "c-radio-group-10",
+    "title": "Radio group in frame",
+    "label": "In Frame",
+    "description": "Radio group in frame",
+    "order": 10
+  },
+  {
+    "name": "c-radio-group-11",
+    "title": "Radio group with grid layout",
+    "label": "Grid Layout",
+    "description": "Radio group with grid layout",
+    "order": 11
+  },
+  {
+    "name": "c-radio-group-12",
+    "title": "Avatar based card radio group",
+    "label": "Avatar Cards",
+    "description": "Avatar based card radio group",
+    "order": 12
+  },
+  {
+    "name": "c-radio-group-13",
+    "title": "Payment method radio cards",
+    "label": "Payment Methods",
+    "description": "Payment method radio cards",
+    "order": 13
+  },
+  {
+    "name": "c-radio-group-14",
+    "title": "Radio group with tooltip info",
+    "label": "Tooltip Info",
+    "description": "Radio group with tooltip info",
+    "order": 14
+  },
+  {
+    "name": "c-radio-group-15",
+    "title": "Radio group with badges",
+    "label": "Badges",
+    "description": "Radio group with badges",
+    "order": 15
+  },
+  {
+    "name": "c-radio-group-16",
+    "title": "Inline horizontal radio group",
+    "label": "Inline Horizontal",
+    "description": "Inline horizontal radio group",
+    "order": 16
+  },
+  {
+    "name": "c-radio-group-17",
+    "title": "Pricing plan radio cards",
+    "label": "Pricing Tiers",
+    "description": "Pricing plan radio cards",
+    "order": 17
+  }
+]

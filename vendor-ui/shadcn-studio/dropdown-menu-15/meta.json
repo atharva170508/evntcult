@@ -1,0 +1,9 @@
+{
+ "name": "dropdown-menu-15",
+ "type": "registry:component",
+ "description": "Left side animation dropdown menu",
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

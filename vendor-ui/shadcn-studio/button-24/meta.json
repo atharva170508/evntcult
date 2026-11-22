@@ -1,0 +1,11 @@
+{
+ "name": "button-24",
+ "type": "registry:component",
+ "description": "Action buttons styled for \u201cReject\u201d and \u201cApprove\u201d with colored shield icons to indicate decision-based actions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

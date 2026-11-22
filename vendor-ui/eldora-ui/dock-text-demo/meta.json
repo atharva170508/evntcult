@@ -1,0 +1,8 @@
+{
+ "name": "dock-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a dock-text component.",
+ "registryDependencies": [
+  "@eldoraui/dock-text"
+ ]
+}

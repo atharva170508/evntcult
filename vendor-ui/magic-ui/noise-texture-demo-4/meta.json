@@ -1,0 +1,10 @@
+{
+ "name": "noise-texture-demo-4",
+ "type": "registry:example",
+ "description": "Example showing a labeled input field with NoiseTexture filling the input container.",
+ "registryDependencies": [
+  "@magicui/noise-texture",
+  "input",
+  "label"
+ ]
+}

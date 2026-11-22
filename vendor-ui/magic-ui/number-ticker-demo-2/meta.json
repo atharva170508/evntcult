@@ -1,0 +1,8 @@
+{
+ "name": "number-ticker-demo-2",
+ "type": "registry:example",
+ "description": "Example showing animated counting numbers.",
+ "registryDependencies": [
+  "@magicui/number-ticker"
+ ]
+}

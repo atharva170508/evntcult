@@ -1,0 +1,7 @@
+{
+ "name": "TextCursor-TS-TW",
+ "type": "registry:component",
+ "description": "Text or emoji that trails your cursor as stamped copies, a following chain or a ribbon of letters.",
+ "dependencies": [],
+ "registryDependencies": []
+}

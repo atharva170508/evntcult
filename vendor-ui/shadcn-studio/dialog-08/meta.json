@@ -1,0 +1,9 @@
+{
+ "name": "dialog-08",
+ "type": "registry:component",
+ "description": "Terms and conditions dialog with structured content and accept/decline actions",
+ "registryDependencies": [
+  "button",
+  "dialog"
+ ]
+}

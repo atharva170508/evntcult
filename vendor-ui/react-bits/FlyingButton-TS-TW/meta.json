@@ -1,0 +1,7 @@
+{
+ "name": "FlyingButton-TS-TW",
+ "type": "registry:component",
+ "description": "Button that fires its thrusters on hover, lifts off on a WebGL smoke plume and lands back in its own cloud.",
+ "dependencies": [],
+ "registryDependencies": []
+}

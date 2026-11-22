@@ -1,0 +1,10 @@
+{
+ "name": "PeekRating-TS-TW",
+ "type": "registry:component",
+ "description": "Star rating that lifts a wave of stars up to the pointer, then commits with a pop on click.",
+ "dependencies": [
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

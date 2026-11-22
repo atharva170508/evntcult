@@ -1,0 +1,9 @@
+{
+ "name": "ScrambledText-TS-TW",
+ "type": "registry:component",
+ "description": "Detects cursor position and applies a distortion effect to text.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

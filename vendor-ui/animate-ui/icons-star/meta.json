@@ -1,0 +1,11 @@
+{
+ "name": "icons-star",
+ "type": "registry:ui",
+ "description": "Star icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

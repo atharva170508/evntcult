@@ -1,0 +1,8 @@
+{
+ "name": "button-29",
+ "type": "registry:component",
+ "description": "Social media icon buttons for Google, X/Twitter, Facebook, and GitHub",
+ "registryDependencies": [
+  "button"
+ ]
+}

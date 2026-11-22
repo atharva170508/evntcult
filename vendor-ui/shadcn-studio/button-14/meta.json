@@ -1,0 +1,11 @@
+{
+ "name": "button-14",
+ "type": "registry:component",
+ "description": "Outline button with dashed border for download action",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

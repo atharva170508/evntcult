@@ -1,0 +1,7 @@
+{
+ "name": "LightPillar-TS-TW",
+ "type": "registry:component",
+ "description": "A swirling pillar of light that ignites on load, leans toward the cursor and surges on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

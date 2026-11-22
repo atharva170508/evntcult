@@ -1,0 +1,10 @@
+{
+ "name": "comp-300",
+ "type": "registry:component",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/button.json"
+ ]
+}

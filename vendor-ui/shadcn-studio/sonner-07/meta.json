@@ -1,0 +1,11 @@
+{
+ "name": "sonner-07",
+ "type": "registry:component",
+ "description": "A promise-based toast notification with loading, success, and error states",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "components-base-dialog",
+ "type": "registry:ui",
+ "description": "A popup that opens on top of the entire page.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-dialog"
+ ]
+}

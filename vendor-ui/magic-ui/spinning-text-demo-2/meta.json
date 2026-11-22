@@ -1,0 +1,8 @@
+{
+ "name": "spinning-text-demo-2",
+ "type": "registry:example",
+ "description": "Example showing spinning text animation.",
+ "registryDependencies": [
+  "@magicui/spinning-text"
+ ]
+}

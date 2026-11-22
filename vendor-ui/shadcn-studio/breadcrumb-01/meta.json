@@ -1,0 +1,8 @@
+{
+ "name": "breadcrumb-01",
+ "type": "registry:component",
+ "description": "Basic breadcrumb navigation with standard separators for page hierarchy",
+ "registryDependencies": [
+  "breadcrumb"
+ ]
+}

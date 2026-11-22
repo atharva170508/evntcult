@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-radix-hover-card",
+ "type": "registry:ui",
+ "description": "Demo showing an animated radix hover card.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-hover-card"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "striped-pattern-dashed",
+ "type": "registry:example",
+ "description": "Example showing a background striped pattern with a dashed stroke.",
+ "registryDependencies": [
+  "@magicui/striped-pattern"
+ ]
+}

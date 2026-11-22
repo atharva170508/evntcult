@@ -1,0 +1,11 @@
+{
+ "name": "sonner-12",
+ "type": "registry:component",
+ "description": "A soft-styled destructive error toast notification with subtle red theming for error messages",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "input-44",
+ "type": "registry:component",
+ "description": "Number field with rounded increment/decrement buttons positioned at the end using React Aria",
+ "dependencies": [
+  "lucide-react",
+  "react-aria-components"
+ ]
+}

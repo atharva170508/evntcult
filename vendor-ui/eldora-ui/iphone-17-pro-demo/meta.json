@@ -1,0 +1,8 @@
+{
+ "name": "iphone-17-pro-demo",
+ "type": "registry:example",
+ "description": "Example showing a iphone-17-pro-demo component.",
+ "registryDependencies": [
+  "@eldoraui/iphone-17-pro"
+ ]
+}

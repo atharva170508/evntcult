@@ -1,0 +1,12 @@
+{
+ "name": "accordion-04",
+ "type": "registry:component",
+ "description": "Plus/minus icon accordion with animated icon transitions for expand/collapse states.",
+ "dependencies": [
+  "@radix-ui/react-accordion",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "accordion"
+ ]
+}

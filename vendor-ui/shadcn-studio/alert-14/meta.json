@@ -1,0 +1,11 @@
+{
+ "name": "alert-14",
+ "type": "registry:component",
+ "description": "Error indicator alert with red styling and destructive error message.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

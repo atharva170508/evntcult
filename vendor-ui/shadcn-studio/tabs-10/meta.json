@@ -1,0 +1,8 @@
+{
+ "name": "tabs-10",
+ "type": "registry:component",
+ "description": "Outlined pill-style tabs with border styling and transparent background",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "dropdown-menu-13",
+ "type": "registry:component",
+ "description": "Dropdown with checkbox controls for UI elements",
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

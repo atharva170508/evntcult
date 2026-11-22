@@ -1,0 +1,8 @@
+{
+ "name": "badge-15",
+ "type": "registry:component",
+ "description": "Gradient outline badge with bordered gradient effect",
+ "registryDependencies": [
+  "badge"
+ ]
+}

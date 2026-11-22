@@ -1,0 +1,11 @@
+{
+ "name": "dialog-25",
+ "type": "registry:component",
+ "description": "Profile edit dialog with slide-right animation from left side of the screen",
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "input",
+  "label"
+ ]
+}

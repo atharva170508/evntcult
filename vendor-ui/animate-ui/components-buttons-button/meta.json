@@ -1,0 +1,11 @@
+{
+ "name": "components-buttons-button",
+ "type": "registry:ui",
+ "description": "A button component with a variety of styles and animations.",
+ "dependencies": [
+  "class-variance-authority"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-buttons-button"
+ ]
+}

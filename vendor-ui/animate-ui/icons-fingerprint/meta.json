@@ -1,0 +1,11 @@
+{
+ "name": "icons-fingerprint",
+ "type": "registry:ui",
+ "description": "Fingerprint icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

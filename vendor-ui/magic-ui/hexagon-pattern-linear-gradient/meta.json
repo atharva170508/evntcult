@@ -1,0 +1,8 @@
+{
+ "name": "hexagon-pattern-linear-gradient",
+ "type": "registry:example",
+ "description": "Example showing a hexagon pattern with linear gradient effects.",
+ "registryDependencies": [
+  "@magicui/hexagon-pattern"
+ ]
+}

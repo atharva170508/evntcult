@@ -1,0 +1,9 @@
+{
+ "name": "card-02",
+ "type": "registry:component",
+ "description": "Meeting notes card with team member avatars and attendee list",
+ "registryDependencies": [
+  "avatar",
+  "card"
+ ]
+}

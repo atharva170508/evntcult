@@ -1,0 +1,8 @@
+{
+ "name": "logo-cloud-01",
+ "type": "registry:block",
+ "description": "A simple logo cloud.",
+ "dependencies": [
+  "lucide-react"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "badge-01",
+ "type": "registry:component",
+ "description": "Default badge demonstrating basic styling with standard text display",
+ "registryDependencies": [
+  "badge"
+ ]
+}

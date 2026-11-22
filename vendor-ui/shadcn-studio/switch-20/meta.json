@@ -1,0 +1,13 @@
+{
+ "name": "switch-20",
+ "type": "registry:component",
+ "description": "Animated gradient motion switches with color transitions and multiple size variations",
+ "dependencies": [
+  "@radix-ui/react-switch",
+  "motion"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

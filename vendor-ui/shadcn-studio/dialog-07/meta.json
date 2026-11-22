@@ -1,0 +1,13 @@
+{
+ "name": "dialog-07",
+ "type": "registry:component",
+ "description": "Full-screen dialog taking up the entire viewport for immersive content",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "scroll-area"
+ ]
+}

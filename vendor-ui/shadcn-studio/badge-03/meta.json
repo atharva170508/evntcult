@@ -1,0 +1,8 @@
+{
+ "name": "badge-03",
+ "type": "registry:component",
+ "description": "Destructive variant badge with red styling for error or warning states",
+ "registryDependencies": [
+  "badge"
+ ]
+}

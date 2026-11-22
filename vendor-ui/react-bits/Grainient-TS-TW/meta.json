@@ -1,0 +1,7 @@
+{
+ "name": "Grainient-TS-TW",
+ "type": "registry:component",
+ "description": "Flowing grainy gradients you can stir with the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

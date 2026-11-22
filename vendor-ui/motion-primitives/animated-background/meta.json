@@ -1,0 +1,8 @@
+{
+ "name": "animated-background",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

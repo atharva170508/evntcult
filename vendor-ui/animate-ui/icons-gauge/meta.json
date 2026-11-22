@@ -1,0 +1,11 @@
+{
+ "name": "icons-gauge",
+ "type": "registry:ui",
+ "description": "Gauge icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

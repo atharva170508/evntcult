@@ -1,0 +1,8 @@
+{
+ "name": "wavy-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a wavy-text-demo component.",
+ "registryDependencies": [
+  "@eldoraui/wavy-text"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "table-14",
+ "type": "registry:component",
+ "description": "A table with integrated pagination controls for navigating through large datasets",
+ "registryDependencies": [
+  "pagination",
+  "table"
+ ]
+}

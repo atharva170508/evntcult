@@ -1,0 +1,9 @@
+{
+ "name": "AccordionGallery-TS-TW",
+ "type": "registry:component",
+ "description": "Panels expand on hover or focus, revealing parallax imagery and captions.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

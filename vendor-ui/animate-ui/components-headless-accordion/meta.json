@@ -1,0 +1,11 @@
+{
+ "name": "components-headless-accordion",
+ "type": "registry:ui",
+ "description": "A vertically stacked set of interactive headings that each reveal an associated section of content.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-headless-disclosure"
+ ]
+}

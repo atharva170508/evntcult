@@ -1,0 +1,8 @@
+{
+ "name": "animated-shiny-button-demo",
+ "type": "registry:example",
+ "description": "Example showing a animated-shiny-button-demo component.",
+ "registryDependencies": [
+  "@eldoraui/animated-shiny-button"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "button-17",
+ "type": "registry:component",
+ "description": "Loading button with spinning icon in disabled state",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

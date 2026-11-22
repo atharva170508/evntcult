@@ -1,0 +1,108 @@
+[
+  {
+    "name": "c-color-picker-1",
+    "title": "Inline color panel",
+    "label": "Inline Panel",
+    "description": "Saturation area, hue and opacity sliders, format fields and preset swatches rendered in place.",
+    "order": 1
+  },
+  {
+    "name": "c-color-picker-2",
+    "title": "Popover picker",
+    "label": "Popover",
+    "description": "Outline trigger in a labelled field that opens the full picker with an eye dropper and format fields.",
+    "order": 2
+  },
+  {
+    "name": "c-color-picker-3",
+    "title": "Color input",
+    "label": "Color Input",
+    "description": "Typable field that reads hex, rgb(), hsl(), oklch() or a CSS name, with a swatch that opens the picker.",
+    "order": 3
+  },
+  {
+    "name": "c-color-picker-4",
+    "title": "Opacity",
+    "label": "Opacity",
+    "description": "A banner overlay with an opacity slider and field, written as rgb() with alpha.",
+    "order": 4
+  },
+  {
+    "name": "c-color-picker-5",
+    "title": "Preset swatches",
+    "label": "Preset Swatches",
+    "description": "Round label colors to pick from, a plus that opens the full picker, and a live label preview.",
+    "order": 5
+  },
+  {
+    "name": "c-color-picker-6",
+    "title": "OKLCH theme token",
+    "label": "OKLCH Token",
+    "description": "Lightness, chroma and hue sliders for a --primary token, with a live Button and Badge preview.",
+    "order": 6
+  },
+  {
+    "name": "c-color-picker-7",
+    "title": "Format converter",
+    "label": "Format Converter",
+    "description": "One color as HEX, RGB, HSL, HSB and OKLCH, each with a copy button.",
+    "order": 7,
+    "gridSize": 1
+  },
+  {
+    "name": "c-color-picker-8",
+    "title": "Hue wheel",
+    "label": "Hue Wheel",
+    "description": "A hue ring around a saturation and brightness square, with HEX, RGB and HSL fields.",
+    "order": 8
+  },
+  {
+    "name": "c-color-picker-9",
+    "title": "Recent colors",
+    "label": "Recent Colors",
+    "description": "Each pick is saved to a Recent row once a drag is released, not on every move.",
+    "order": 9
+  },
+  {
+    "name": "c-color-picker-10",
+    "title": "Text and highlight colors",
+    "label": "Text & Highlight",
+    "description": "Editor toolbar buttons with preset palettes and a way back to the default color.",
+    "order": 10
+  },
+  {
+    "name": "c-color-picker-11",
+    "title": "Channel sliders",
+    "label": "Channel Sliders",
+    "description": "Red, green, blue and opacity sliders with numeric fields, each track redrawn from the others.",
+    "order": 11
+  },
+  {
+    "name": "c-color-picker-12",
+    "title": "Design inspector",
+    "label": "Design Inspector",
+    "description": "Fill, stroke and shadow rows that open a compact picker with vertical hue and opacity tracks.",
+    "order": 12
+  },
+  {
+    "name": "c-color-picker-13",
+    "title": "Contrast checker",
+    "label": "Contrast Checker",
+    "description": "Text and background pickers with a live preview, the WCAG ratio and AA and AAA results.",
+    "order": 13
+  },
+  {
+    "name": "c-color-picker-14",
+    "title": "Brand scale",
+    "label": "Brand Scale",
+    "description": "11 shades from 50 to 950 generated in OKLCH from one base color, copied as CSS variables.",
+    "order": 14
+  },
+  {
+    "name": "c-color-picker-15",
+    "title": "Form field with validation",
+    "label": "Form Validation",
+    "description": "Native form field with a required check, an error, reset and the submitted value.",
+    "order": 15
+  }
+]

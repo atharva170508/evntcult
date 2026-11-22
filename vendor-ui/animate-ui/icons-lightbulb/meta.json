@@ -1,0 +1,11 @@
+{
+ "name": "icons-lightbulb",
+ "type": "registry:ui",
+ "description": "Lightbulb icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

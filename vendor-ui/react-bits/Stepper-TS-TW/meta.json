@@ -1,0 +1,10 @@
+{
+ "name": "Stepper-TS-TW",
+ "type": "registry:component",
+ "description": "A multi-step flow with a gliding step indicator, spring transitions and horizontal or vertical layouts.",
+ "dependencies": [
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

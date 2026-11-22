@@ -1,0 +1,14 @@
+{
+ "name": "dialog-12",
+ "type": "registry:component",
+ "description": "OTP verification dialog with input-otp component and validation feedback",
+ "dependencies": [
+  "input-otp",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "utils"
+ ]
+}

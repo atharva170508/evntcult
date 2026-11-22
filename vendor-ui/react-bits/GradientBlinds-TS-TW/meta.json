@@ -1,0 +1,7 @@
+{
+ "name": "GradientBlinds-TS-TW",
+ "type": "registry:component",
+ "description": "Satin gradient blinds lit by a spotlight that follows the cursor, swaying and turning toward the light.",
+ "dependencies": [],
+ "registryDependencies": []
+}

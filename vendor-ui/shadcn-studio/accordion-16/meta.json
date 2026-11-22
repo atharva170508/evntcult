@@ -1,0 +1,12 @@
+{
+ "name": "accordion-16",
+ "type": "registry:component",
+ "description": "Simplified multi-level accordion with plus/minus icons for nested FAQ categories and questions.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "accordion",
+  "collapsible"
+ ]
+}

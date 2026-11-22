@@ -1,0 +1,8 @@
+{
+ "name": "primitives-texts-gradient",
+ "type": "registry:ui",
+ "description": "A gradient text animation.",
+ "dependencies": [
+  "motion"
+ ]
+}

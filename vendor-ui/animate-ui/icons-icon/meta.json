@@ -1,0 +1,12 @@
+{
+ "name": "icons-icon",
+ "type": "registry:ui",
+ "description": "Base component to use animated icons.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/hooks-use-is-in-view",
+  "@animate-ui/v1/primitives-animate-slot"
+ ]
+}

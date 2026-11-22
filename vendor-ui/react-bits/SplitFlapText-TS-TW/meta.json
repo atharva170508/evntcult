@@ -1,0 +1,7 @@
+{
+ "name": "SplitFlapText-TS-TW",
+ "type": "registry:component",
+ "description": "Mechanical split-flap departure board that clacks through to each new phrase.",
+ "dependencies": [],
+ "registryDependencies": []
+}

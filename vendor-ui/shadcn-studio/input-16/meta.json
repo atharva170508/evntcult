@@ -1,0 +1,9 @@
+{
+ "name": "input-16",
+ "type": "registry:component",
+ "description": "A URL input field with \"https://\" text prefix positioned at the start",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

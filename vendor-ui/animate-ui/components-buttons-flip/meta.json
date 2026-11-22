@@ -1,0 +1,12 @@
+{
+ "name": "components-buttons-flip",
+ "type": "registry:ui",
+ "description": "A button that flips between two states on hover.",
+ "dependencies": [
+  "class-variance-authority"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/components-buttons-button",
+  "@animate-ui/v1/primitives-buttons-flip"
+ ]
+}

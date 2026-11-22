@@ -1,0 +1,13 @@
+{
+ "name": "accordion-15",
+ "type": "registry:component",
+ "description": "Multi-level accordion with nested collapsible sections for hierarchical FAQ organization.",
+ "dependencies": [
+  "@radix-ui/react-accordion",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "accordion",
+  "collapsible"
+ ]
+}

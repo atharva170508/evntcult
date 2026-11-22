@@ -1,0 +1,8 @@
+{
+ "name": "dock",
+ "type": "registry:ui",
+ "description": "An implementation of the MacOS dock using react + tailwindcss + motion",
+ "dependencies": [
+  "motion"
+ ]
+}

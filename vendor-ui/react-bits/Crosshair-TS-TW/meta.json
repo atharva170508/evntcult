@@ -1,0 +1,7 @@
+{
+ "name": "Crosshair-TS-TW",
+ "type": "registry:component",
+ "description": "Crosshair cursor with live coordinates that locks onto links and buttons and measures them.",
+ "dependencies": [],
+ "registryDependencies": []
+}

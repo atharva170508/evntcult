@@ -1,0 +1,9 @@
+{
+ "name": "select-13",
+ "type": "registry:component",
+ "description": "A custom select dropdown with helper text for location selection",
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

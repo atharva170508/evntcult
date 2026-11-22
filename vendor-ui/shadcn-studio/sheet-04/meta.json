@@ -1,0 +1,10 @@
+{
+ "name": "sheet-04",
+ "type": "registry:component",
+ "description": "A sheet component with scrollable content for terms and conditions",
+ "registryDependencies": [
+  "button",
+  "scroll-area",
+  "sheet"
+ ]
+}

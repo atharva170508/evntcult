@@ -1,0 +1,100 @@
+[
+  {
+    "name": "c-alert-dialog-1",
+    "title": "Basic alert dialog with title, description, and action buttons",
+    "label": "Basic",
+    "description": "Basic alert dialog with title, description, and action buttons",
+    "order": 1
+  },
+  {
+    "name": "c-alert-dialog-2",
+    "title": "Small size alert dialog for quick confirmations",
+    "label": "Small Size",
+    "description": "Small size alert dialog for quick confirmations",
+    "order": 2
+  },
+  {
+    "name": "c-alert-dialog-3",
+    "title": "Alert dialog with icon",
+    "label": "With Icon",
+    "description": "Alert dialog with icon",
+    "order": 3
+  },
+  {
+    "name": "c-alert-dialog-4",
+    "title": "Small size alert dialog with media (icon)",
+    "label": "Small With Icon",
+    "description": "Small size alert dialog with media (icon)",
+    "order": 4
+  },
+  {
+    "name": "c-alert-dialog-5",
+    "title": "Destructive alert dialog for irreversible actions like deletion",
+    "label": "Destructive Delete",
+    "description": "Destructive alert dialog for irreversible actions like deletion",
+    "order": 5
+  },
+  {
+    "name": "c-alert-dialog-6",
+    "title": "Alert dialog nested within a standard Dialog component",
+    "label": "Nested In Dialog",
+    "description": "Alert dialog nested within a standard Dialog component",
+    "order": 6
+  },
+  {
+    "name": "c-alert-dialog-7",
+    "title": "Task success confirmation",
+    "label": "Success Notice",
+    "description": "Task success confirmation",
+    "order": 7
+  },
+  {
+    "name": "c-alert-dialog-8",
+    "title": "Account deactivation confirmation",
+    "label": "Account Deactivation",
+    "description": "Account deactivation confirmation",
+    "order": 8
+  },
+  {
+    "name": "c-alert-dialog-9",
+    "title": "Warning for unsaved changes when navigating away",
+    "label": "Unsaved Changes",
+    "description": "Warning for unsaved changes when navigating away",
+    "order": 9
+  },
+  {
+    "name": "c-alert-dialog-10",
+    "title": "Confirmation for successful e-ticket registration",
+    "label": "E-Ticket Receipt",
+    "description": "Confirmation for successful e-ticket registration",
+    "order": 10
+  },
+  {
+    "name": "c-alert-dialog-11",
+    "title": "System update notification requiring application restart",
+    "label": "System Update",
+    "description": "System update notification requiring application restart",
+    "order": 11
+  },
+  {
+    "name": "c-alert-dialog-12",
+    "title": "Billing warning for expired subscriptions or failed payments",
+    "label": "Billing Warning",
+    "description": "Billing warning for expired subscriptions or failed payments",
+    "order": 12
+  },
+  {
+    "name": "c-alert-dialog-13",
+    "title": "Logout confirmation dialog",
+    "label": "Logout Confirmation",
+    "description": "Logout confirmation dialog",
+    "order": 13
+  },
+  {
+    "name": "c-alert-dialog-14",
+    "title": "Advanced security audit confirmation",
+    "label": "Security Audit",
+    "description": "Advanced security audit confirmation",
+    "order": 14
+  }
+]

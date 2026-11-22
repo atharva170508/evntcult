@@ -1,0 +1,10 @@
+{
+ "name": "components-community-share-button",
+ "type": "registry:ui",
+ "description": "This is a button for sharing.",
+ "dependencies": [
+  "motion",
+  "lucide-react",
+  "class-variance-authority"
+ ]
+}

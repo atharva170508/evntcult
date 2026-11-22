@@ -1,0 +1,42 @@
+{
+  "name": "@repo/expandable-cards",
+  "description": "A ExpandableCards component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "lucide-react": "^0.545.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "layout",
+    "tags": [
+      "cards",
+      "expandable",
+      "modal",
+      "gallery",
+      "layout-animation",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "tween",
+    "useCases": [
+      "Card grid that expands to full detail view",
+      "Image gallery with animated card expansion",
+      "Content cards with smooth shared layout transitions"
+    ],
+    "compositionHints": [
+      "Combine with Tabs primitive for categorized card grids",
+      "Use animated-avatar-group for card author displays"
+    ],
+    "hasReducedMotion": true
+  }
+}

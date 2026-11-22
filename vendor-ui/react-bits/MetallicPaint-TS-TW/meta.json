@@ -1,0 +1,7 @@
+{
+ "name": "MetallicPaint-TS-TW",
+ "type": "registry:component",
+ "description": "Liquid chrome that flows over your logo or text, adapted from Paper's Liquid Metal shader.",
+ "dependencies": [],
+ "registryDependencies": []
+}

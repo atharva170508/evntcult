@@ -1,0 +1,8 @@
+{
+ "name": "components-base-switch",
+ "type": "registry:ui",
+ "description": "A control that indicates whether a setting is on or off.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-switch"
+ ]
+}

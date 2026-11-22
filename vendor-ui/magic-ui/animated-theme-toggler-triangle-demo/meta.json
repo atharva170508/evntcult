@@ -1,0 +1,8 @@
+{
+ "name": "animated-theme-toggler-triangle-demo",
+ "type": "registry:example",
+ "description": "Theme transition with a triangle clip reveal.",
+ "registryDependencies": [
+  "@magicui/animated-theme-toggler"
+ ]
+}

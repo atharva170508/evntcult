@@ -1,0 +1,8 @@
+{
+ "name": "scroll-progress-demo",
+ "type": "registry:example",
+ "description": "Example showing animated scroll progress for your pages.",
+ "registryDependencies": [
+  "@magicui/scroll-progress"
+ ]
+}

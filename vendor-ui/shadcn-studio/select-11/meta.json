@@ -1,0 +1,9 @@
+{
+ "name": "select-11",
+ "type": "registry:component",
+ "description": "A custom select dropdown with placeholder text",
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

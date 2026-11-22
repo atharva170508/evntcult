@@ -1,0 +1,8 @@
+{
+ "name": "pagination-09",
+ "type": "registry:component",
+ "description": "A pagination component with underline styling for the active page indicator",
+ "registryDependencies": [
+  "pagination"
+ ]
+}

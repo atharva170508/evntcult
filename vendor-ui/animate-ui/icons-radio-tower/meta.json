@@ -1,0 +1,11 @@
+{
+ "name": "icons-radio-tower",
+ "type": "registry:ui",
+ "description": "Radio tower icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

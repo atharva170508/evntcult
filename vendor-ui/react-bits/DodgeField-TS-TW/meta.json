@@ -1,0 +1,9 @@
+{
+ "name": "DodgeField-TS-TW",
+ "type": "registry:component",
+ "description": "Wrapper that makes any child dodge the pointer until it relents and glides home.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

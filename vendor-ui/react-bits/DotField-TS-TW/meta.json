@@ -1,0 +1,7 @@
+{
+ "name": "DotField-TS-TW",
+ "type": "registry:component",
+ "description": "A gradient dot field seen through a lens that follows the cursor, magnifying, pinching or swirling the dots.",
+ "dependencies": [],
+ "registryDependencies": []
+}

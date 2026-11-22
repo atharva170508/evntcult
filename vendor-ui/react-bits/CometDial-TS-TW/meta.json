@@ -1,0 +1,9 @@
+{
+ "name": "CometDial-TS-TW",
+ "type": "registry:component",
+ "description": "Tick-ring dial you flick by angle, with a comet that streaks behind the lit head.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

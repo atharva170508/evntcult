@@ -1,0 +1,11 @@
+{
+ "name": "icons-pause",
+ "type": "registry:ui",
+ "description": "Pause icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

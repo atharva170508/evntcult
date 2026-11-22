@@ -1,0 +1,11 @@
+{
+ "name": "dropdown-menu-05",
+ "type": "registry:component",
+ "description": "Meeting schedule dropdown with avatars, switch toggles for scheduling control",
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "dropdown-menu",
+  "switch"
+ ]
+}

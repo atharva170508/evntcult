@@ -1,0 +1,8 @@
+{
+ "name": "morphing-dialog",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

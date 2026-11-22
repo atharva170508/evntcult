@@ -1,0 +1,8 @@
+{
+ "name": "globe-demo",
+ "type": "registry:example",
+ "description": "Example showing an autorotating, interactive WebGL globe.",
+ "registryDependencies": [
+  "@magicui/globe"
+ ]
+}

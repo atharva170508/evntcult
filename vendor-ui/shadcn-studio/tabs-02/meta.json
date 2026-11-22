@@ -1,0 +1,8 @@
+{
+ "name": "tabs-02",
+ "type": "registry:component",
+ "description": "Outlined tabs with border styling and background transparency for modern interface design",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

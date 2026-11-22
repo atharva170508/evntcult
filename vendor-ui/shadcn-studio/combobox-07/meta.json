@@ -1,0 +1,15 @@
+{
+ "name": "combobox-07",
+ "type": "registry:component",
+ "description": "Timezone selector combobox with real timezone data from Intl API",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "command",
+  "label",
+  "popover",
+  "utils"
+ ]
+}

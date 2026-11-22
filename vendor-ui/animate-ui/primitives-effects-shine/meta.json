@@ -1,0 +1,8 @@
+{
+ "name": "primitives-effects-shine",
+ "type": "registry:ui",
+ "description": "An animated light sweep effect with configurable timing, colors, and triggers (hover, tap, or continuous).",
+ "dependencies": [
+  "motion"
+ ]
+}

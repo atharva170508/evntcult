@@ -1,0 +1,12 @@
+{
+ "name": "tooltip-05",
+ "type": "registry:component",
+ "description": "A tooltip with an icon and text content in a flexible layout",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "tooltip"
+ ]
+}

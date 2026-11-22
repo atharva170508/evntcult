@@ -1,0 +1,8 @@
+{
+ "name": "textarea-01",
+ "type": "registry:component",
+ "description": "A basic textarea input field with placeholder text",
+ "registryDependencies": [
+  "textarea"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-clapperboard",
+ "type": "registry:ui",
+ "description": "Clapperboard icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

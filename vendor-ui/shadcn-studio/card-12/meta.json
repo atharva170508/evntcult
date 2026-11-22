@@ -1,0 +1,14 @@
+{
+ "name": "card-12",
+ "type": "registry:component",
+ "description": "Product showcase card with gradient background, like button and pricing details",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button",
+  "card",
+  "utils"
+ ]
+}

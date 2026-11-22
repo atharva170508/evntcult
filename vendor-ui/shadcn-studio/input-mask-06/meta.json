@@ -1,0 +1,13 @@
+{
+ "name": "input-mask-06",
+ "type": "registry:component",
+ "description": "A comprehensive credit card details form with card number, expiry, and CVC inputs with automatic formatting",
+ "dependencies": [
+  "lucide-react",
+  "react-payment-inputs"
+ ],
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

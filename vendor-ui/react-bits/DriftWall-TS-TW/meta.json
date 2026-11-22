@@ -1,0 +1,7 @@
+{
+ "name": "DriftWall-TS-TW",
+ "type": "registry:component",
+ "description": "An endless perspective wall of tiles drifting past, lifting on hover.",
+ "dependencies": [],
+ "registryDependencies": []
+}

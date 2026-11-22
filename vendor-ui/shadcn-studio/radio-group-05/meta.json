@@ -1,0 +1,9 @@
+{
+ "name": "radio-group-05",
+ "type": "registry:component",
+ "description": "A radio group with dashed borders",
+ "registryDependencies": [
+  "label",
+  "radio-group"
+ ]
+}

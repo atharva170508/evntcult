@@ -1,0 +1,12 @@
+{
+ "name": "button-group-15",
+ "type": "registry:component",
+ "description": "Navigation button group with scale animation on press using Framer Motion",
+ "dependencies": [
+  "lucide-react",
+  "motion"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

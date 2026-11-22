@@ -1,0 +1,8 @@
+{
+ "name": "dotted-map-demo-2",
+ "type": "registry:example",
+ "description": "Example showing a dotted map.",
+ "registryDependencies": [
+  "@magicui/dotted-map"
+ ]
+}

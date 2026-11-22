@@ -1,0 +1,12 @@
+{
+ "name": "button-group-11",
+ "type": "registry:component",
+ "description": "Git merge button group with dropdown menu for merge strategy selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

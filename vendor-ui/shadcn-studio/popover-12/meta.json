@@ -1,0 +1,12 @@
+{
+ "name": "popover-12",
+ "type": "registry:component",
+ "description": "An informational popover with image and content layout for location details",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "popover"
+ ]
+}

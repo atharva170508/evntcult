@@ -1,0 +1,8 @@
+{
+ "name": "animated-list",
+ "type": "registry:ui",
+ "description": "An animated list component.",
+ "dependencies": [
+  "react"
+ ]
+}

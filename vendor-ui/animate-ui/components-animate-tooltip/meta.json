@@ -1,0 +1,11 @@
+{
+ "name": "components-animate-tooltip",
+ "type": "registry:ui",
+ "description": "A tooltip is a small box that appears when hovering over an element.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-tooltip"
+ ]
+}

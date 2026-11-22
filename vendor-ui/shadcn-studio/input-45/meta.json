@@ -1,0 +1,9 @@
+{
+ "name": "input-45",
+ "type": "registry:component",
+ "description": "Number field with vertically stacked chevron buttons for increment/decrement using React Aria",
+ "dependencies": [
+  "lucide-react",
+  "react-aria-components"
+ ]
+}

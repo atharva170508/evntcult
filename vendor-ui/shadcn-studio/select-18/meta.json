@@ -1,0 +1,9 @@
+{
+ "name": "select-18",
+ "type": "registry:component",
+ "description": "A ghost-style custom select dropdown with minimal styling and hover effects",
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "input-34",
+ "type": "registry:component",
+ "description": "Input field with character limit counter showing current count out of maximum allowed",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

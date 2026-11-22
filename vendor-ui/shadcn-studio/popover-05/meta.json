@@ -1,0 +1,12 @@
+{
+ "name": "popover-05",
+ "type": "registry:component",
+ "description": "An informational popover about Shadcn Studio with description and learn more link",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "popover"
+ ]
+}

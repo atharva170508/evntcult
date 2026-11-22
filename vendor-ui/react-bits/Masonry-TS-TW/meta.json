@@ -1,0 +1,11 @@
+{
+ "name": "Masonry-TS-TW",
+ "type": "registry:component",
+ "description": "A masonry gallery that springs into place, reflows as it resizes and opens images in a lightbox.",
+ "dependencies": [
+  "react-dom@^19.0.0",
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

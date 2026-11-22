@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-radix-alert-dialog",
+ "type": "registry:ui",
+ "description": "Demo showing an animated radix alert dialog.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-alert-dialog"
+ ]
+}

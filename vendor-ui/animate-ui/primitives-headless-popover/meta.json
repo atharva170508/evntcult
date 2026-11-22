@@ -1,0 +1,12 @@
+{
+ "name": "primitives-headless-popover",
+ "type": "registry:ui",
+ "description": "Popovers are perfect for floating panels with arbitrary content like navigation menus, mobile menus and flyout menus.",
+ "dependencies": [
+  "motion",
+  "@headlessui/react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/lib-get-strict-context"
+ ]
+}

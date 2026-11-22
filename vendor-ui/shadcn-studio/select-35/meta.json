@@ -1,0 +1,11 @@
+{
+ "name": "select-35",
+ "type": "registry:component",
+ "description": "A React Aria Components listbox with single selection for currency options",
+ "dependencies": [
+  "react-aria-components"
+ ],
+ "registryDependencies": [
+  "label"
+ ]
+}

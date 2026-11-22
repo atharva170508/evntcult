@@ -1,0 +1,8 @@
+{
+ "name": "text-reveal",
+ "type": "registry:ui",
+ "description": "Fade in text as you scroll down the page.",
+ "dependencies": [
+  "motion"
+ ]
+}

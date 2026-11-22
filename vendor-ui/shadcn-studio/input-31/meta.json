@@ -1,0 +1,13 @@
+{
+ "name": "input-31",
+ "type": "registry:component",
+ "description": "An email input field with an inline send button positioned at the end",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "input",
+  "label"
+ ]
+}

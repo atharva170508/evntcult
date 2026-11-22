@@ -1,0 +1,8 @@
+{
+ "name": "carousel",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

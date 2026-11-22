@@ -1,0 +1,9 @@
+{
+ "name": "RippleDistortion-TS-TW",
+ "type": "registry:component",
+ "description": "Pointer-driven water displacement that warps content and leaves a decaying wake.",
+ "dependencies": [
+  "ogl@^1.0.11"
+ ],
+ "registryDependencies": []
+}

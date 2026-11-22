@@ -1,0 +1,8 @@
+{
+ "name": "button-09",
+ "type": "registry:component",
+ "description": "A button component with custom extra small sizing",
+ "registryDependencies": [
+  "button"
+ ]
+}

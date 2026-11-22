@@ -1,0 +1,12 @@
+{
+ "name": "dropdown-menu-06",
+ "type": "registry:component",
+ "description": "Text editing dropdown menu with formatting options and descriptions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

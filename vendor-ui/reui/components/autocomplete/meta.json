@@ -1,0 +1,86 @@
+[
+  {
+    "name": "c-autocomplete-1",
+    "title": "Basic autocomplete control",
+    "label": "Basic",
+    "description": "Basic autocomplete control",
+    "order": 1
+  },
+  {
+    "name": "c-autocomplete-2",
+    "title": "Disabled state",
+    "label": "Disabled",
+    "description": "Disabled state",
+    "order": 2
+  },
+  {
+    "name": "c-autocomplete-3",
+    "title": "Auto highlight option as you type",
+    "label": "Auto Highlight",
+    "description": "Auto highlight option as you type",
+    "order": 3
+  },
+  {
+    "name": "c-autocomplete-4",
+    "title": "Control with label",
+    "label": "Labeled",
+    "description": "Control with label",
+    "order": 4
+  },
+  {
+    "name": "c-autocomplete-5",
+    "title": "With clear button",
+    "label": "Clear Button",
+    "description": "With clear button",
+    "order": 5
+  },
+  {
+    "name": "c-autocomplete-6",
+    "title": "With trigger button",
+    "label": "Trigger Button",
+    "description": "With trigger button",
+    "order": 6
+  },
+  {
+    "name": "c-autocomplete-7",
+    "title": "With clear and trigger buttons",
+    "label": "Clear & Trigger",
+    "description": "With clear and trigger buttons",
+    "order": 7
+  },
+  {
+    "name": "c-autocomplete-8",
+    "title": "With groups and labels",
+    "label": "Groups & Labels",
+    "description": "With groups and labels",
+    "order": 8
+  },
+  {
+    "name": "c-autocomplete-9",
+    "title": "With search results",
+    "label": "Search Results",
+    "description": "With search results",
+    "order": 9
+  },
+  {
+    "name": "c-autocomplete-10",
+    "title": "Small autocomplete",
+    "label": "Small",
+    "description": "Small autocomplete",
+    "order": 10
+  },
+  {
+    "name": "c-autocomplete-11",
+    "title": "Large autocomplete",
+    "label": "Large",
+    "description": "Large autocomplete",
+    "order": 11
+  },
+  {
+    "name": "c-autocomplete-12",
+    "title": "Form integration",
+    "label": "Form Integration",
+    "description": "Form integration",
+    "order": 12
+  }
+]

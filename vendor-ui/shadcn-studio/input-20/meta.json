@@ -1,0 +1,9 @@
+{
+ "name": "input-20",
+ "type": "registry:component",
+ "description": "A domain input field with an external \".com\" add-on box at the end",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

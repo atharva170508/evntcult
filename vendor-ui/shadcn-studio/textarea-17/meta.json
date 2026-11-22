@@ -1,0 +1,9 @@
+{
+ "name": "textarea-17",
+ "type": "registry:component",
+ "description": "An auto-growing textarea with field-sizing-content that expands with text content",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

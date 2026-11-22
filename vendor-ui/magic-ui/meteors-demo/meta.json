@@ -1,0 +1,8 @@
+{
+ "name": "meteors-demo",
+ "type": "registry:example",
+ "description": "Example showing a meteor shower effect.",
+ "registryDependencies": [
+  "@magicui/meteors"
+ ]
+}

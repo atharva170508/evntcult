@@ -1,0 +1,11 @@
+{
+ "name": "alert-20",
+ "type": "registry:component",
+ "description": "Outline warning alert with amber border and text for warning messages.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "smooth-cursor",
+ "type": "registry:ui",
+ "description": "A customizable, physics-based smooth cursor animation component with spring animations and rotation effects",
+ "dependencies": [
+  "motion"
+ ]
+}

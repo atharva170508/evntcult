@@ -1,0 +1,9 @@
+{
+ "name": "testimonal-slider",
+ "type": "registry:ui",
+ "description": "A testimonial slider component.",
+ "dependencies": [
+  "react",
+  "@headlessui/react"
+ ]
+}

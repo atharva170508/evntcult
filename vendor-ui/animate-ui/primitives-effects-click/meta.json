@@ -1,0 +1,8 @@
+{
+ "name": "primitives-effects-click",
+ "type": "registry:ui",
+ "description": "An effect that creates animated effects at the click position, adding interactive feedback to user actions.",
+ "dependencies": [
+  "motion"
+ ]
+}

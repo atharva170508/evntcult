@@ -1,0 +1,8 @@
+{
+ "name": "accordion",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

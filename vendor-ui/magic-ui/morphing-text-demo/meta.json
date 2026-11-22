@@ -1,0 +1,8 @@
+{
+ "name": "morphing-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a dynamic text morphing component.",
+ "registryDependencies": [
+  "@magicui/morphing-text"
+ ]
+}

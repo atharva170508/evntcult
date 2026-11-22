@@ -1,0 +1,8 @@
+{
+ "name": "calendar-01",
+ "type": "registry:component",
+ "description": "Basic single date selection calendar with default month display",
+ "registryDependencies": [
+  "calendar"
+ ]
+}

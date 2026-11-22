@@ -1,0 +1,10 @@
+{
+ "name": "border-beam-demo-2",
+ "type": "registry:example",
+ "description": "Example showing an animated border beam effect.",
+ "registryDependencies": [
+  "button",
+  "card",
+  "@magicui/border-beam"
+ ]
+}

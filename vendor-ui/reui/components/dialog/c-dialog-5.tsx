@@ -1,0 +1,88 @@
+"use client"
+
+import { useId, useState, type FormEvent } from "react"
+import { cn } from "cn"
+
+import { Button } from "@/registry/bases/radix/ui/button"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/registry/bases/radix/ui/dialog"
+import { Field, FieldGroup, FieldLabel } from "@/registry/bases/radix/ui/field"
+import { Input } from "@/registry/bases/radix/ui/input"
+
+export default function Pattern() {
+  const id = useId()
+  const [open, setOpen] = useState(false)
+  const [profile, setProfile] = useState({
+    name: "Albert Einstein",
+    username: "@albert",
+  })
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    setProfile({
+      name: String(formData.get("name")),
+      username: String(formData.get("username")),
+    })
+    setOpen(false)
+  }
+
+  return (
+    <div className="flex items-center justify-center">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline">Custom Close Button</Button>
+        </DialogTrigger>
+        <DialogContent
+          className={cn(
+            "[&>[data-slot=dialog-close]]:bg-background [&>[data-slot=dialog-close]]:-end-6 [&>[data-slot=dialog-close]]:-top-6",
+            "[&>[data-slot=dialog-close]]:size-7 [&>[data-slot=dialog-close]]:rounded-full [&>[data-slot=dialog-close]]:border [&>[data-slot=dialog-close]]:shadow-sm"
+          )}
+        >
+          <DialogHeader>
+            <DialogTitle>Edit profile</DialogTitle>
+            <DialogDescription>
+              Make changes to your profile here. Click save when you&apos;re
+              done. Your profile will be updated immediately.
+            </DialogDescription>
+          </DialogHeader>
+          {/* The form sits inside the portaled content so Save can submit it. */}
+          <form onSubmit={handleSubmit} className="contents">
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor={`${id}-name`}>Name</FieldLabel>
+                <Input
+                  id={`${id}-name`}
+                  name="name"
+                  defaultValue={profile.name}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor={`${id}-username`}>Username</FieldLabel>
+                <Input
+                  id={`${id}-username`}
+                  name="username"
+                  defaultValue={profile.username}
+                />
+              </Field>
+            </FieldGroup>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button type="submit">Save changes</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
+}

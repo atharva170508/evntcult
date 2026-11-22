@@ -1,0 +1,11 @@
+{
+ "name": "sheet-02",
+ "type": "registry:component",
+ "description": "A sheet component demonstrating different slide directions (top, right, bottom, left)",
+ "registryDependencies": [
+  "button",
+  "input",
+  "label",
+  "sheet"
+ ]
+}

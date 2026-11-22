@@ -1,0 +1,8 @@
+{
+ "name": "avatar-15",
+ "type": "registry:component",
+ "description": "Large-sized avatar group with bigger dimensions for prominent display.",
+ "registryDependencies": [
+  "avatar"
+ ]
+}

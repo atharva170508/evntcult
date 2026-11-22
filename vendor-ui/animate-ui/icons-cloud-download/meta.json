@@ -1,0 +1,11 @@
+{
+ "name": "icons-cloud-download",
+ "type": "registry:ui",
+ "description": "Cloud download icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

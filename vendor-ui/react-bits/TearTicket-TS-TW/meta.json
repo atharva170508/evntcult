@@ -1,0 +1,9 @@
+{
+ "name": "TearTicket-TS-TW",
+ "type": "registry:component",
+ "description": "Ticket whose perforated stub tears off by hand, fibre by fibre, and drops away.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

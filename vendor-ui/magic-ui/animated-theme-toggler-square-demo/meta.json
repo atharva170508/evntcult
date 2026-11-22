@@ -1,0 +1,8 @@
+{
+ "name": "animated-theme-toggler-square-demo",
+ "type": "registry:example",
+ "description": "Theme transition with a square clip reveal.",
+ "registryDependencies": [
+  "@magicui/animated-theme-toggler"
+ ]
+}

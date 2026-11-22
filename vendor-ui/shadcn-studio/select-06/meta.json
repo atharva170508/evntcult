@@ -1,0 +1,12 @@
+{
+ "name": "select-06",
+ "type": "registry:component",
+ "description": "A required native select dropdown with asterisk indicator",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-radix-toggle-group",
+ "type": "registry:ui",
+ "description": "Demo showing an animated radix toggle group.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-toggle-group"
+ ]
+}

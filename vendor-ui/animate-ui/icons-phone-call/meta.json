@@ -1,0 +1,11 @@
+{
+ "name": "icons-phone-call",
+ "type": "registry:ui",
+ "description": "Phone call icon with animated waves.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

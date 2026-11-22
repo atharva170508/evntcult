@@ -1,0 +1,8 @@
+{
+ "name": "border-beam",
+ "type": "registry:ui",
+ "description": "An animated beam of light which travels along the border of its container.",
+ "dependencies": [
+  "motion"
+ ]
+}

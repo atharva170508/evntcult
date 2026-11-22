@@ -1,0 +1,11 @@
+{
+ "name": "components-community-playful-todolist",
+ "type": "registry:ui",
+ "description": "A playful todolist component with animated wavy strikethroughs for each completed task.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-checkbox"
+ ]
+}

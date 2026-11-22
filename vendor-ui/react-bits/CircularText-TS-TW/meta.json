@@ -1,0 +1,9 @@
+{
+ "name": "CircularText-TS-TW",
+ "type": "registry:component",
+ "description": "Layouts characters around a circle with optional rotation animation.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

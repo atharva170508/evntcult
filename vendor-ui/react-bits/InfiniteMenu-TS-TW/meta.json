@@ -1,0 +1,7 @@
+{
+ "name": "InfiniteMenu-TS-TW",
+ "type": "registry:component",
+ "description": "A draggable sphere of image tiles that snaps the nearest one forward and shows its title.",
+ "dependencies": [],
+ "registryDependencies": []
+}

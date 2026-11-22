@@ -1,0 +1,7 @@
+{
+ "name": "GradientWaves-TS-TW",
+ "type": "registry:component",
+ "description": "Lit satin waves rolling in from a hazy horizon, with a light that follows the cursor and swells on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

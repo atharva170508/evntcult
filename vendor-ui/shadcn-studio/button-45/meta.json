@@ -1,0 +1,13 @@
+{
+ "name": "button-45",
+ "type": "registry:component",
+ "description": "Button with magnetic effect that follows mouse movement",
+ "dependencies": [
+  "class-variance-authority",
+  "motion"
+ ],
+ "registryDependencies": [
+  "button",
+  "utils"
+ ]
+}

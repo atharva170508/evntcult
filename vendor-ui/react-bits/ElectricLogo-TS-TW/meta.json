@@ -1,0 +1,9 @@
+{
+ "name": "ElectricLogo-TS-TW",
+ "type": "registry:component",
+ "description": "Turns any logo into a living lightning outline, with arcs that leap off its edges.",
+ "dependencies": [
+  "ogl@^1.0.11"
+ ],
+ "registryDependencies": []
+}

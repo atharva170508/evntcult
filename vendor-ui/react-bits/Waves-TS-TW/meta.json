@@ -1,0 +1,7 @@
+{
+ "name": "Waves-TS-TW",
+ "type": "registry:component",
+ "description": "Dense flowing lines that sway like silk, bend around the cursor and spring back into place.",
+ "dependencies": [],
+ "registryDependencies": []
+}

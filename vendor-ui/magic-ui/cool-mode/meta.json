@@ -1,0 +1,5 @@
+{
+ "name": "cool-mode",
+ "type": "registry:ui",
+ "description": "Cool mode effect for buttons, links, and other DOMs"
+}

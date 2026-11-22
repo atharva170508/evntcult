@@ -1,0 +1,12 @@
+{
+ "name": "input-otp-01",
+ "type": "registry:component",
+ "description": "A 4-digit numeric OTP input field with individual slots for each digit",
+ "dependencies": [
+  "input-otp"
+ ],
+ "registryDependencies": [
+  "input-otp",
+  "label"
+ ]
+}

@@ -1,0 +1,10 @@
+{
+ "name": "tooltip-09",
+ "type": "registry:component",
+ "description": "A tooltip with badge indicator for pricing and status information",
+ "registryDependencies": [
+  "badge",
+  "button",
+  "tooltip"
+ ]
+}

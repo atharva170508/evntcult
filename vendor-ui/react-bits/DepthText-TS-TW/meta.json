@@ -1,0 +1,7 @@
+{
+ "name": "DepthText-TS-TW",
+ "type": "registry:component",
+ "description": "Layered extruded type with parallax that shifts against the pointer.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "c-progress-1",
+    "title": "Basic progress.",
+    "label": "Basic",
+    "description": "Basic progress.",
+    "order": 1
+  },
+  {
+    "name": "c-progress-2",
+    "title": "Small progress.",
+    "label": "Small",
+    "description": "Small progress.",
+    "order": 2
+  },
+  {
+    "name": "c-progress-3",
+    "title": "Large progress.",
+    "label": "Large",
+    "description": "Large progress.",
+    "order": 3
+  },
+  {
+    "name": "c-progress-4",
+    "title": "Progress bar with status messages.",
+    "label": "Status Messages",
+    "description": "Progress bar with status messages.",
+    "order": 4
+  },
+  {
+    "name": "c-progress-5",
+    "title": "File upload list with progress & status.",
+    "label": "File Uploads",
+    "description": "File upload list with progress & status.",
+    "order": 5
+  },
+  {
+    "name": "c-progress-6",
+    "title": "Progress bar with slider.",
+    "label": "With Slider",
+    "description": "Progress bar with slider.",
+    "order": 6
+  },
+  {
+    "name": "c-progress-7",
+    "title": "Multi-step progress indicator",
+    "label": "Multi-Step",
+    "description": "Multi-step progress indicator",
+    "order": 7
+  },
+  {
+    "name": "c-progress-8",
+    "title": "Progress bar with custom colors.",
+    "label": "Custom Colors",
+    "description": "Progress bar with custom colors.",
+    "order": 8
+  }
+]

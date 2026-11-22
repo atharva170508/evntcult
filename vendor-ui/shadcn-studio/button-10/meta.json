@@ -1,0 +1,11 @@
+{
+ "name": "button-10",
+ "type": "registry:component",
+ "description": "A destructive button with gradient background for delete actions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

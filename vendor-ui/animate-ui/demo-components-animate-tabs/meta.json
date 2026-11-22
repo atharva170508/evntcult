@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-animate-tabs",
+ "type": "registry:ui",
+ "description": "Demo showing an animated tabs.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-animate-tabs"
+ ]
+}

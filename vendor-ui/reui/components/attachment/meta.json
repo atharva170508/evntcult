@@ -1,0 +1,50 @@
+[
+  {
+    "name": "c-attachment-1",
+    "title": "Single file attachment in an assistant reply",
+    "label": "Assistant Reply",
+    "description": "Single file attachment in an assistant reply",
+    "order": 1,
+    "gridSize": 2
+  },
+  {
+    "name": "c-attachment-2",
+    "title": "Composer tray with removable attachments",
+    "label": "Composer Tray",
+    "description": "Composer tray with removable attachments",
+    "order": 2,
+    "gridSize": 2
+  },
+  {
+    "name": "c-attachment-3",
+    "title": "Image thumbnails in a snapping strip",
+    "label": "Image Strip",
+    "description": "Image thumbnails in a snapping strip",
+    "order": 3,
+    "gridSize": 2
+  },
+  {
+    "name": "c-attachment-4",
+    "title": "Three sizes carrying three levels of an answer",
+    "label": "Three Sizes",
+    "description": "Three sizes carrying three levels of an answer",
+    "order": 4,
+    "gridSize": 2
+  },
+  {
+    "name": "c-attachment-5",
+    "title": "Upload queue across all five states",
+    "label": "Upload Queue",
+    "description": "Upload queue across all five states",
+    "order": 5,
+    "gridSize": 2
+  },
+  {
+    "name": "c-attachment-6",
+    "title": "File picker that fills an attachment tray",
+    "label": "File Picker",
+    "description": "File picker that fills an attachment tray",
+    "order": 6,
+    "gridSize": 2
+  }
+]

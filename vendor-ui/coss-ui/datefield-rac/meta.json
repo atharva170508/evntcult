@@ -1,0 +1,7 @@
+{
+ "name": "datefield-rac",
+ "type": "registry:ui",
+ "dependencies": [
+  "react-aria-components"
+ ]
+}

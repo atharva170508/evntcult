@@ -1,0 +1,11 @@
+{
+ "name": "testimonal-02",
+ "type": "registry:block",
+ "description": "A testimonial marquee.",
+ "dependencies": [
+  "motion/react"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

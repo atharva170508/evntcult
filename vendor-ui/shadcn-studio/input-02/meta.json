@@ -1,0 +1,9 @@
+{
+ "name": "input-02",
+ "type": "registry:component",
+ "description": "An email input field with a descriptive label for improved accessibility",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

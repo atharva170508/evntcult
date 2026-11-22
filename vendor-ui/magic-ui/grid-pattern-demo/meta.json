@@ -1,0 +1,8 @@
+{
+ "name": "grid-pattern-demo",
+ "type": "registry:example",
+ "description": "Example showing a background grid pattern made with SVGs.",
+ "registryDependencies": [
+  "@magicui/grid-pattern"
+ ]
+}

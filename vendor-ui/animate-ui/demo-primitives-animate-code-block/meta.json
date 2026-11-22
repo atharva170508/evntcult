@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-animate-code-block",
+ "type": "registry:ui",
+ "description": "Demo showing an animated code block.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-code-block"
+ ]
+}

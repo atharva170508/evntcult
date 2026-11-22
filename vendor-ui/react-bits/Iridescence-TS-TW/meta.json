@@ -1,0 +1,7 @@
+{
+ "name": "Iridescence-TS-TW",
+ "type": "registry:component",
+ "description": "Liquid iridescent surface with shifting folds that you can stir with the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,8 @@
+{
+ "name": "confetti-stars",
+ "type": "registry:example",
+ "description": "Example showing star-shaped confetti animation.",
+ "registryDependencies": [
+  "@magicui/confetti"
+ ]
+}

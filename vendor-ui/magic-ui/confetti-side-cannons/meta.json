@@ -1,0 +1,8 @@
+{
+ "name": "confetti-side-cannons",
+ "type": "registry:example",
+ "description": "Example showing side-mounted confetti cannons.",
+ "registryDependencies": [
+  "@magicui/confetti"
+ ]
+}

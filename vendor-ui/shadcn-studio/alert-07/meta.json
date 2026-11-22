@@ -1,0 +1,12 @@
+{
+ "name": "alert-07",
+ "type": "registry:component",
+ "description": "File upload progress alert with animated progress bar, action buttons, and close functionality.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button"
+ ]
+}

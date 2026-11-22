@@ -1,0 +1,8 @@
+{
+ "name": "backlight-video-demo",
+ "type": "registry:example",
+ "description": "An example of the backlight component with a video.",
+ "registryDependencies": [
+  "@magicui/backlight"
+ ]
+}

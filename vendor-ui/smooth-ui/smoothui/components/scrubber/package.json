@@ -1,0 +1,42 @@
+{
+  "name": "@repo/scrubber",
+  "description": "Design-tool style scrubber slider with animated thumb and built-in label",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "patterns",
+    "tags": [
+      "slider",
+      "scrubber",
+      "range",
+      "input",
+      "drag",
+      "design-tool",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "spring",
+    "useCases": [
+      "Design tool-style scrubber slider with animated thumb",
+      "Precise numeric value control with drag interaction",
+      "Parameter adjustment slider with built-in label and ticks"
+    ],
+    "compositionHints": [
+      "Pair with exposure-slider for different slider aesthetics",
+      "Use in settings panels with morph-toggle"
+    ],
+    "hasReducedMotion": true
+  }
+}

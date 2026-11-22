@@ -1,0 +1,8 @@
+{
+ "name": "hooks-use-is-in-view",
+ "type": "registry:hook",
+ "description": "A hook that allows you to check if an element is in view.",
+ "dependencies": [
+  "motion"
+ ]
+}

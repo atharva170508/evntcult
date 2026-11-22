@@ -1,0 +1,8 @@
+{
+ "name": "grid-demo",
+ "type": "registry:example",
+ "description": "Example showing a grid-demo component.",
+ "registryDependencies": [
+  "@eldoraui/grid"
+ ]
+}

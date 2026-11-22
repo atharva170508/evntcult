@@ -1,0 +1,8 @@
+{
+ "name": "dither-field-card-demo",
+ "type": "registry:example",
+ "description": "Bento grid of feature cards, each on a quiet dither pattern in the muted foreground color.",
+ "registryDependencies": [
+  "@magicui/dither-field"
+ ]
+}

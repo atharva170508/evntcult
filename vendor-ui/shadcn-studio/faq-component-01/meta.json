@@ -1,0 +1,8 @@
+{
+ "name": "faq-component-01",
+ "type": "registry:block",
+ "description": "Simple accordion-style FAQ section with collapsible questions and answers using shadcn/ui accordion component, featuring a clean header and single-column layout for basic Q&A display",
+ "registryDependencies": [
+  "accordion"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "neon-gradient-card-demo",
+ "type": "registry:example",
+ "description": "Example showing a beautiful neon card effect.",
+ "registryDependencies": [
+  "@magicui/neon-gradient-card"
+ ]
+}

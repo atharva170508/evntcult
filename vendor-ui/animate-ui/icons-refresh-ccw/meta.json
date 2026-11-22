@@ -1,0 +1,11 @@
+{
+ "name": "icons-refresh-ccw",
+ "type": "registry:ui",
+ "description": "Refresh ccw icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

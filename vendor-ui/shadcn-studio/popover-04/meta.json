@@ -1,0 +1,14 @@
+{
+ "name": "popover-04",
+ "type": "registry:component",
+ "description": "A volume control popover with a slider for adjusting audio levels",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "label",
+  "popover",
+  "slider"
+ ]
+}

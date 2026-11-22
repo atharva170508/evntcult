@@ -1,0 +1,8 @@
+{
+ "name": "shiny-button",
+ "type": "registry:ui",
+ "description": "A shiny button component with dynamic styles in the dark mode or light mode.",
+ "dependencies": [
+  "motion"
+ ]
+}

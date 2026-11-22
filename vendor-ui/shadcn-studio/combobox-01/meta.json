@@ -1,0 +1,14 @@
+{
+ "name": "combobox-01",
+ "type": "registry:component",
+ "description": "Basic combobox with framework selection and searchable dropdown",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "command",
+  "popover",
+  "utils"
+ ]
+}

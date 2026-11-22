@@ -1,0 +1,11 @@
+{
+ "name": "alert-27",
+ "type": "registry:component",
+ "description": "Solid success alert with full green background for prominent success messages.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

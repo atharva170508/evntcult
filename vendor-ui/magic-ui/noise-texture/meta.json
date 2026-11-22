@@ -1,0 +1,5 @@
+{
+ "name": "noise-texture",
+ "type": "registry:ui",
+ "description": "An SVG fractal noise layer using feTurbulence, desaturation, and contrast controls for subtle texture overlays."
+}

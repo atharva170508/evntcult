@@ -1,0 +1,8 @@
+{
+ "name": "ipad-demo",
+ "type": "registry:example",
+ "description": "Example showing a ipad-demo component.",
+ "registryDependencies": [
+  "@eldoraui/ipad"
+ ]
+}

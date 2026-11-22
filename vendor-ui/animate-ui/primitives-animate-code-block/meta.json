@@ -1,0 +1,11 @@
+{
+ "name": "primitives-animate-code-block",
+ "type": "registry:ui",
+ "description": "A code block component that animates the code as it is written.",
+ "dependencies": [
+  "shiki"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/hooks-use-is-in-view"
+ ]
+}

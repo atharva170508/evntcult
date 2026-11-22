@@ -1,0 +1,8 @@
+{
+ "name": "sparkles-text-demo",
+ "type": "registry:example",
+ "description": "Example showing text with animated sparkle effects.",
+ "registryDependencies": [
+  "@magicui/sparkles-text"
+ ]
+}

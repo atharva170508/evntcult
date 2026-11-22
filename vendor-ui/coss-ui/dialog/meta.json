@@ -1,0 +1,7 @@
+{
+ "name": "dialog",
+ "type": "registry:ui",
+ "dependencies": [
+  "radix-ui"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "dither-field-monochrome-demo",
+ "type": "registry:example",
+ "description": "A monochrome pair: black dots on white and white dots on black.",
+ "registryDependencies": [
+  "@magicui/dither-field"
+ ]
+}

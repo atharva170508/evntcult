@@ -1,0 +1,8 @@
+{
+ "name": "morphing-popover",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,8 @@
+{
+ "name": "tilt",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

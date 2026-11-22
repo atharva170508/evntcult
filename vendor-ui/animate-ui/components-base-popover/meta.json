@@ -1,0 +1,8 @@
+{
+ "name": "components-base-popover",
+ "type": "registry:ui",
+ "description": "An accessible popup anchored to a button.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-popover"
+ ]
+}

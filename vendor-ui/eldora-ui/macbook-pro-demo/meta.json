@@ -1,0 +1,8 @@
+{
+ "name": "macbook-pro-demo",
+ "type": "registry:example",
+ "description": "Example showing a macbook-pro-demo component.",
+ "registryDependencies": [
+  "@eldoraui/macbook-pro"
+ ]
+}

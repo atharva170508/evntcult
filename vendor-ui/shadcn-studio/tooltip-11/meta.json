@@ -1,0 +1,12 @@
+{
+ "name": "tooltip-11",
+ "type": "registry:component",
+ "description": "A hover card with media content including image and description links",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "hover-card"
+ ]
+}

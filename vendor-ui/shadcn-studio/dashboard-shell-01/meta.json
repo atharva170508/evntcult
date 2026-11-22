@@ -1,0 +1,24 @@
+{
+ "name": "dashboard-shell-01",
+ "type": "registry:block",
+ "description": "Comprehensive dashboard layout with sidebar navigation, breadcrumb header, sales metrics charts, statistics cards, transaction tables, and widget components for business analytics and reporting",
+ "dependencies": [
+  "@tanstack/react-table",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "badge",
+  "breadcrumb",
+  "button",
+  "card",
+  "chart",
+  "dropdown-menu",
+  "pagination",
+  "progress",
+  "separator",
+  "sidebar",
+  "table",
+  "utils"
+ ]
+}

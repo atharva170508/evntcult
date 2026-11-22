@@ -1,0 +1,7 @@
+{
+ "name": "Counter-TS-TW",
+ "type": "registry:component",
+ "description": "An odometer-style number whose digits roll to every new value, with currency, separators and locales.",
+ "dependencies": [],
+ "registryDependencies": []
+}

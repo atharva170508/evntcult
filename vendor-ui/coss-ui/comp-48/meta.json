@@ -1,0 +1,11 @@
+{
+ "name": "comp-48",
+ "type": "registry:component",
+ "dependencies": [
+  "react-payment-inputs"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/input.json",
+  "https://coss.com/origin/r/label.json"
+ ]
+}

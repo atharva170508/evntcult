@@ -1,0 +1,5 @@
+{
+ "name": "hexagon-pattern",
+ "type": "registry:ui",
+ "description": "A background hexagon pattern made with SVGs, fully customizable using Tailwind CSS."
+}

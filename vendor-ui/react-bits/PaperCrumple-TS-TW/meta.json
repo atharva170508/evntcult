@@ -1,0 +1,9 @@
+{
+ "name": "PaperCrumple-TS-TW",
+ "type": "registry:component",
+ "description": "An image that crumples into a textured 3D sheet while you hold and drag it.",
+ "dependencies": [
+  "three@^0.180.0"
+ ],
+ "registryDependencies": []
+}

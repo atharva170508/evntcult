@@ -1,0 +1,7 @@
+{
+ "name": "GridScan-TS-TW",
+ "type": "registry:component",
+ "description": "A 3D grid room swept by a scanning light that follows your view.",
+ "dependencies": [],
+ "registryDependencies": []
+}

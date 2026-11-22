@@ -1,0 +1,8 @@
+{
+ "name": "button-01",
+ "type": "registry:component",
+ "description": "A basic button component with default styling",
+ "registryDependencies": [
+  "button"
+ ]
+}

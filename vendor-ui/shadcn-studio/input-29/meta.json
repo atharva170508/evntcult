@@ -1,0 +1,10 @@
+{
+ "name": "input-29",
+ "type": "registry:component",
+ "description": "A domain input field with a TLD selector dropdown at the end",
+ "registryDependencies": [
+  "input",
+  "label",
+  "select"
+ ]
+}

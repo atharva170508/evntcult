@@ -1,0 +1,19 @@
+{
+ "name": "data-table-04",
+ "type": "registry:component",
+ "description": "Product inventory table with images, badges, and advanced filtering by multiple attributes",
+ "dependencies": [
+  "lucide-react",
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "badge",
+  "checkbox",
+  "input",
+  "label",
+  "select",
+  "table",
+  "utils"
+ ]
+}

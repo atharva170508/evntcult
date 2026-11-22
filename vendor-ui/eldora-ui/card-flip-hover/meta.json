@@ -1,0 +1,8 @@
+{
+ "name": "card-flip-hover",
+ "type": "registry:ui",
+ "description": "A card flip hover component.",
+ "dependencies": [
+  "react"
+ ]
+}

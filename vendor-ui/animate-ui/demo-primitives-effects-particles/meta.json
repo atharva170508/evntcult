@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-effects-particles",
+ "type": "registry:ui",
+ "description": "Demo showing an animated particles.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-effects-particles"
+ ]
+}

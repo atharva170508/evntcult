@@ -1,0 +1,10 @@
+{
+ "name": "tooltip-12",
+ "type": "registry:component",
+ "description": "A hover card displaying statistics with avatar and growth metrics",
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "hover-card"
+ ]
+}

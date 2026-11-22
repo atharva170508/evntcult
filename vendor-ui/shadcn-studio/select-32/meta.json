@@ -1,0 +1,14 @@
+{
+ "name": "select-32",
+ "type": "registry:component",
+ "description": "A multi-select dropdown with search functionality for product categories",
+ "dependencies": [
+  "cmdk",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "command",
+  "label",
+  "utils"
+ ]
+}

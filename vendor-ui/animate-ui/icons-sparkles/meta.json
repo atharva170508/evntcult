@@ -1,0 +1,11 @@
+{
+ "name": "icons-sparkles",
+ "type": "registry:ui",
+ "description": "Sparkles icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

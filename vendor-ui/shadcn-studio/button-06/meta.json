@@ -1,0 +1,8 @@
+{
+ "name": "button-06",
+ "type": "registry:component",
+ "description": "Grouped action buttons for Cancel and Save operations",
+ "registryDependencies": [
+  "button"
+ ]
+}

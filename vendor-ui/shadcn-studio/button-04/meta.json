@@ -1,0 +1,11 @@
+{
+ "name": "button-04",
+ "type": "registry:component",
+ "description": "A button with animated icon that moves on hover",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

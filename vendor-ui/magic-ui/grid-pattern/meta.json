@@ -1,0 +1,5 @@
+{
+ "name": "grid-pattern",
+ "type": "registry:ui",
+ "description": "A background grid pattern made with SVGs, fully customizable using Tailwind CSS."
+}

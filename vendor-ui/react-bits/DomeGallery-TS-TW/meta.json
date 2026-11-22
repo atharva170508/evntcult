@@ -1,0 +1,9 @@
+{
+ "name": "DomeGallery-TS-TW",
+ "type": "registry:component",
+ "description": "Immersive 3D dome gallery projecting images on a hemispheric surface.",
+ "dependencies": [
+  "@use-gesture/react@^10.2.27"
+ ],
+ "registryDependencies": []
+}

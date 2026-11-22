@@ -1,0 +1,8 @@
+{
+ "name": "lens",
+ "type": "registry:ui",
+ "description": "A interactive component that enables zooming into images, videos and other elements.",
+ "dependencies": [
+  "motion"
+ ]
+}

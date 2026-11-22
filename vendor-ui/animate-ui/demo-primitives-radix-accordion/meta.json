@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-radix-accordion",
+ "type": "registry:ui",
+ "description": "Demo showing an animated radix accordion.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-accordion"
+ ]
+}

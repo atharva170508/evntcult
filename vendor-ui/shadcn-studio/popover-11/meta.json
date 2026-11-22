@@ -1,0 +1,14 @@
+{
+ "name": "popover-11",
+ "type": "registry:component",
+ "description": "A notifications popover with unread indicators and mark-as-read functionality",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "popover",
+  "separator"
+ ]
+}

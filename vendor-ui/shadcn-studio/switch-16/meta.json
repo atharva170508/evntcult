@@ -1,0 +1,9 @@
+{
+ "name": "switch-16",
+ "type": "registry:component",
+ "description": "A switch card with Google Cloud icon for backup service toggle functionality",
+ "registryDependencies": [
+  "label",
+  "switch"
+ ]
+}

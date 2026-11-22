@@ -1,0 +1,8 @@
+{
+ "name": "comp-446",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/breadcrumb.json",
+  "https://coss.com/origin/r/dropdown-menu.json"
+ ]
+}

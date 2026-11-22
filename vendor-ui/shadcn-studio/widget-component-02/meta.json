@@ -1,0 +1,15 @@
+{
+ "name": "widget-component-02",
+ "type": "registry:block",
+ "description": "Product insights widget with advanced analytics, chart visualization, and comprehensive product data overview",
+ "dependencies": [
+  "lucide-react",
+  "recharts"
+ ],
+ "registryDependencies": [
+  "card",
+  "chart",
+  "separator",
+  "utils"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "testimonal-slider-demo",
+ "type": "registry:example",
+ "description": "Example showing a testimonal-slider-demo component.",
+ "registryDependencies": [
+  "@eldoraui/testimonal-slider"
+ ]
+}

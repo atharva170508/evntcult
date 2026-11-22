@@ -1,0 +1,16 @@
+{
+ "name": "date-picker-13",
+ "type": "registry:component",
+ "description": "Analytics chart with date range filter showing visitor data and interactive filtering",
+ "dependencies": [
+  "lucide-react",
+  "recharts"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "card",
+  "chart",
+  "popover"
+ ]
+}

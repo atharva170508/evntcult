@@ -1,0 +1,8 @@
+{
+ "name": "multi-direction-slide-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a multi-direction-slide-text-demo component.",
+ "registryDependencies": [
+  "@eldoraui/multi-direction-slide-text"
+ ]
+}

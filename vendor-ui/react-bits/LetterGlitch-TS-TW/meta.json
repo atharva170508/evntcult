@@ -1,0 +1,7 @@
+{
+ "name": "LetterGlitch-TS-TW",
+ "type": "registry:component",
+ "description": "A calm field of letters that flicker, scramble and glitch in color, stirred by the cursor and torn by clicks.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,13 @@
+{
+ "name": "comp-43",
+ "type": "registry:component",
+ "dependencies": [
+  "react-aria-components",
+  "react-aria",
+  "@internationalized/date"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/calendar-rac.json",
+  "https://coss.com/origin/r/datefield-rac.json"
+ ]
+}

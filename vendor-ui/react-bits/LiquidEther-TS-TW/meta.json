@@ -1,0 +1,7 @@
+{
+ "name": "LiquidEther-TS-TW",
+ "type": "registry:component",
+ "description": "A glowing liquid that swirls under the cursor, colored by how fast it flows.",
+ "dependencies": [],
+ "registryDependencies": []
+}

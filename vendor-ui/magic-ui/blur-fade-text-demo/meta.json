@@ -1,0 +1,8 @@
+{
+ "name": "blur-fade-text-demo",
+ "type": "registry:example",
+ "description": "Example showing blur fade animations with text.",
+ "registryDependencies": [
+  "@magicui/blur-fade"
+ ]
+}

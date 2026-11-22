@@ -1,0 +1,8 @@
+{
+ "name": "comic-text-demo",
+ "type": "registry:example",
+ "description": "Example showing comic text animation.",
+ "registryDependencies": [
+  "@magicui/comic-text"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "tabs-20",
+ "type": "registry:component",
+ "description": "Vertical tabs with lined separator styling for organized layout",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-disc-3",
+ "type": "registry:ui",
+ "description": "Disc 3 icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

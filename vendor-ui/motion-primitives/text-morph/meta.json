@@ -1,0 +1,8 @@
+{
+ "name": "text-morph",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,15 @@
+{
+ "name": "form-06",
+ "type": "registry:component",
+ "description": "Form with textarea component for multi-line text input",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "form",
+  "textarea"
+ ]
+}

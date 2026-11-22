@@ -1,0 +1,12 @@
+{
+ "name": "dashboard-sidebar-01",
+ "type": "registry:block",
+ "description": "Social media analytics dashboard sidebar featuring Content Performance, Audience Insights, Hashtag Performance, Competitor Analysis, Influencer tracking, Campaign Tracking, Sentiment Tracking, Real Time Monitoring, and Schedule Post & Calendar navigation",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "card",
+  "sidebar"
+ ]
+}

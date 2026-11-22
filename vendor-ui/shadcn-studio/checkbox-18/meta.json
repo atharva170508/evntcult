@@ -1,0 +1,13 @@
+{
+ "name": "checkbox-18",
+ "type": "registry:component",
+ "description": "Animated todo checkbox with strikethrough effect and smooth transitions",
+ "dependencies": [
+  "@radix-ui/react-checkbox",
+  "motion"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

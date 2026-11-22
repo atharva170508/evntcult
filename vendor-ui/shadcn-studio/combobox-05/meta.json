@@ -1,0 +1,14 @@
+{
+ "name": "combobox-05",
+ "type": "registry:component",
+ "description": "Framework selector combobox with custom check icon styling",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "command",
+  "label",
+  "popover"
+ ]
+}

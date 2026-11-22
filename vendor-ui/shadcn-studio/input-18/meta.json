@@ -1,0 +1,9 @@
+{
+ "name": "input-18",
+ "type": "registry:component",
+ "description": "A URL input field with both \"https://\" prefix and \".com\" suffix text add-ons",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

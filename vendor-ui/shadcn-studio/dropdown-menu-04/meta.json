@@ -1,0 +1,10 @@
+{
+ "name": "dropdown-menu-04",
+ "type": "registry:component",
+ "description": "Contact list dropdown with avatars, email display, and send action buttons",
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "dropdown-menu"
+ ]
+}

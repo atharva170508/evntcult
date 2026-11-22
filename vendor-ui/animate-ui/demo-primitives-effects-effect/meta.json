@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-effects-effect",
+ "type": "registry:ui",
+ "description": "Demo showing an animated effect.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-effects-effect"
+ ]
+}

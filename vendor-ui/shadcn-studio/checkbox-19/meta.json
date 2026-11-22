@@ -1,0 +1,12 @@
+{
+ "name": "checkbox-19",
+ "type": "registry:component",
+ "description": "Checkbox with confetti animation effect when checked",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "checkbox",
+  "label"
+ ]
+}

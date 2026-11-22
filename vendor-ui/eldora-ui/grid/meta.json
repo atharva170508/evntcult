@@ -1,0 +1,11 @@
+{
+ "name": "grid",
+ "type": "registry:ui",
+ "description": "A grid component.",
+ "dependencies": [
+  "react"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "dotted-map",
+ "type": "registry:ui",
+ "description": "A component with a dotted map.",
+ "dependencies": [
+  "svg-dotted-map"
+ ]
+}

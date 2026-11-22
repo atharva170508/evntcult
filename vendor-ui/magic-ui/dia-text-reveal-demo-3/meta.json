@@ -1,0 +1,8 @@
+{
+ "name": "dia-text-reveal-demo-3",
+ "type": "registry:example",
+ "description": "Rotating phrases with repeat and repeat delay.",
+ "registryDependencies": [
+  "@magicui/dia-text-reveal"
+ ]
+}

@@ -1,0 +1,5 @@
+{
+ "name": "morphing-text",
+ "type": "registry:ui",
+ "description": "A dynamic text morphing component for Magic UI."
+}

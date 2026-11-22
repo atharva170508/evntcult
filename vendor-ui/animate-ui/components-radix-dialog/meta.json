@@ -1,0 +1,11 @@
+{
+ "name": "components-radix-dialog",
+ "type": "registry:ui",
+ "description": "A window overlaid on either the primary window or another dialog window, rendering the content underneath inert.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-dialog"
+ ]
+}

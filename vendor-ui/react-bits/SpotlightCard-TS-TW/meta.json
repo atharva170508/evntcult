@@ -1,0 +1,7 @@
+{
+ "name": "SpotlightCard-TS-TW",
+ "type": "registry:component",
+ "description": "Card lit by a soft spotlight that follows the pointer, catches its edge and reaches nearby cards.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,14 @@
+{
+ "name": "features-section-01",
+ "type": "registry:block",
+ "description": "Three-column grid features section with header, description, \"See all features\" button, and feature cards containing avatar icons, titles, and descriptions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "card",
+  "button",
+  "utils"
+ ]
+}

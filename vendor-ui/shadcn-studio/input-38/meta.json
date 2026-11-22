@@ -1,0 +1,13 @@
+{
+ "name": "input-38",
+ "type": "registry:component",
+ "description": "Search input field with search icon and microphone button for voice input",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "input",
+  "label"
+ ]
+}

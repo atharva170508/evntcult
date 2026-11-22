@@ -1,0 +1,8 @@
+{
+ "name": "logo-timeline-demo-2",
+ "type": "registry:example",
+ "description": "Example showing a logo-timeline-demo-2 component with hover animation.",
+ "registryDependencies": [
+  "@eldoraui/logo-timeline"
+ ]
+}

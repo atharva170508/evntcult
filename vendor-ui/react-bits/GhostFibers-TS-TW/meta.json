@@ -1,0 +1,7 @@
+{
+ "name": "GhostFibers-TS-TW",
+ "type": "registry:component",
+ "description": "Layered ribbons of fine glowing fibers that twist, fold and drift through soft depth of field.",
+ "dependencies": [],
+ "registryDependencies": []
+}

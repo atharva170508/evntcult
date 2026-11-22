@@ -1,0 +1,11 @@
+{
+ "name": "button-group-14",
+ "type": "registry:component",
+ "description": "Like/dislike button group with expandable hover reveal animation",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

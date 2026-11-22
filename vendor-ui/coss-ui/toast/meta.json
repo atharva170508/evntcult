@@ -1,0 +1,7 @@
+{
+ "name": "toast",
+ "type": "registry:ui",
+ "dependencies": [
+  "radix-ui"
+ ]
+}

@@ -1,0 +1,135 @@
+[
+  {
+    "name": "c-frame-1",
+    "title": "Basic frame",
+    "label": "Basic",
+    "description": "Basic frame",
+    "order": 1
+  },
+  {
+    "name": "c-frame-2",
+    "title": "Frame with separated panels",
+    "label": "Separated Panels",
+    "description": "Frame with separated panels",
+    "order": 2
+  },
+  {
+    "name": "c-frame-3",
+    "title": "Frame with stacked panels",
+    "label": "Stacked Panels",
+    "description": "Frame with stacked panels",
+    "order": 3
+  },
+  {
+    "name": "c-frame-4",
+    "title": "Frame with stacked panels and dense style",
+    "label": "Stacked Dense",
+    "description": "Frame with stacked panels and dense style",
+    "order": 4
+  },
+  {
+    "name": "c-frame-5",
+    "title": "Frame with collapsible panels",
+    "label": "Collapsible Panels",
+    "description": "Frame with collapsible panels",
+    "order": 5
+  },
+  {
+    "name": "c-frame-6",
+    "title": "Frame with ghost(no outer border) variant",
+    "label": "Ghost Variant",
+    "description": "Frame with ghost(no outer border) variant",
+    "order": 6
+  },
+  {
+    "name": "c-frame-7",
+    "title": "Frame with dense layout",
+    "label": "Dense Layout",
+    "description": "Frame with dense layout",
+    "order": 7
+  },
+  {
+    "name": "c-frame-8",
+    "title": "Frame with stacked panels",
+    "label": "Stacked Rows",
+    "description": "Frame with stacked panels",
+    "order": 8
+  },
+  {
+    "name": "c-frame-9",
+    "title": "Frame with extra small spacing",
+    "label": "Extra Small Spacing",
+    "description": "Frame with extra small spacing",
+    "order": 9
+  },
+  {
+    "name": "c-frame-10",
+    "title": "Frame with small spacing",
+    "label": "Small Spacing",
+    "description": "Frame with small spacing",
+    "order": 10
+  },
+  {
+    "name": "c-frame-11",
+    "title": "Frame with default spacing",
+    "label": "Default Spacing",
+    "description": "Frame with default spacing",
+    "order": 11
+  },
+  {
+    "name": "c-frame-12",
+    "title": "Frame with large spacing",
+    "label": "Large Spacing",
+    "description": "Frame with large spacing",
+    "order": 12
+  },
+  {
+    "name": "c-frame-13",
+    "title": "Frame with small border radius",
+    "label": "Small Radius",
+    "description": "Frame with small border radius",
+    "order": 13
+  },
+  {
+    "name": "c-frame-14",
+    "title": "Frame with medium border radius",
+    "label": "Medium Radius",
+    "description": "Frame with medium border radius",
+    "order": 14
+  },
+  {
+    "name": "c-frame-15",
+    "title": "Frame with large border radius",
+    "label": "Large Radius",
+    "description": "Frame with large border radius",
+    "order": 15
+  },
+  {
+    "name": "c-frame-16",
+    "title": "Frame with default border radius",
+    "label": "Default Radius",
+    "description": "Frame with default border radius",
+    "order": 16
+  },
+  {
+    "name": "c-frame-17",
+    "title": "Frame with extra large border radius",
+    "label": "Extra Large Radius",
+    "description": "Frame with extra large border radius",
+    "order": 17
+  },
+  {
+    "name": "c-frame-18",
+    "title": "Frame with content-only panels",
+    "label": "Content-Only Panels",
+    "description": "Frame with content-only panels",
+    "order": 18
+  },
+  {
+    "name": "c-frame-19",
+    "title": "Frame with stacked content-only panels",
+    "label": "Stacked Content-Only",
+    "description": "Frame with stacked content-only panels",
+    "order": 19
+  }
+]

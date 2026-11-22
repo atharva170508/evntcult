@@ -1,0 +1,43 @@
+{
+  "name": "@repo/ai-branch",
+  "description": "An interactive AI branch component for displaying conversation flows.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "lucide-react": "^0.545.0",
+    "motion": "^12.23.25",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "ai",
+    "tags": [
+      "ai",
+      "chat",
+      "branching",
+      "conversation",
+      "message",
+      "navigation",
+      "animated"
+    ],
+    "complexity": "complex",
+    "animationType": "spring",
+    "useCases": [
+      "Navigate between AI conversation branches",
+      "Show alternative AI responses in chat interfaces",
+      "Build multi-turn conversation UIs with edit/regenerate support"
+    ],
+    "compositionHints": [
+      "Combine with ai-prompt-input for a full chat experience",
+      "Use agent-avatar for AI message avatars"
+    ],
+    "hasReducedMotion": true
+  }
+}

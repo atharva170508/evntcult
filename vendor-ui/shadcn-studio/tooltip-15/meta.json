@@ -1,0 +1,10 @@
+{
+ "name": "tooltip-15",
+ "type": "registry:component",
+ "description": "A hover card showing today's task completion with team member avatars and percentage progress",
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "hover-card"
+ ]
+}

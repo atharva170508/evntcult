@@ -1,0 +1,11 @@
+{
+ "name": "breadcrumb-08",
+ "type": "registry:component",
+ "description": "Outlined breadcrumb with bordered container styling for defined boundaries",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "breadcrumb"
+ ]
+}

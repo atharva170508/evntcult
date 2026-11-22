@@ -1,0 +1,8 @@
+{
+ "name": "font-weight-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a font-weight-text-demo component.",
+ "registryDependencies": [
+  "@eldoraui/font-weight-text"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "pointer",
+ "type": "registry:ui",
+ "description": "A component that displays a pointer when hovering over an element",
+ "dependencies": [
+  "motion"
+ ]
+}

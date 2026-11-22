@@ -1,0 +1,11 @@
+{
+ "name": "icons-cloud-moon-rain",
+ "type": "registry:ui",
+ "description": "Cloud moon rain icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

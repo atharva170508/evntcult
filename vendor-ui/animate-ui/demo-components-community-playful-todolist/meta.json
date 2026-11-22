@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-community-playful-todolist",
+ "type": "registry:ui",
+ "description": "Demo showing a playful todolist.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-community-playful-todolist"
+ ]
+}

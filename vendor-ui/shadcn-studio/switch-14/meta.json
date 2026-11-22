@@ -1,0 +1,8 @@
+{
+ "name": "switch-14",
+ "type": "registry:component",
+ "description": "A square-styled switch with sliding Yes/No text indicators in the background",
+ "registryDependencies": [
+  "switch"
+ ]
+}

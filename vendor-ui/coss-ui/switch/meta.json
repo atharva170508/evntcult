@@ -1,0 +1,7 @@
+{
+ "name": "switch",
+ "type": "registry:ui",
+ "dependencies": [
+  "radix-ui"
+ ]
+}

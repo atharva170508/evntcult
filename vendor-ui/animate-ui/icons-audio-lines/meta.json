@@ -1,0 +1,11 @@
+{
+ "name": "icons-audio-lines",
+ "type": "registry:ui",
+ "description": "Audio Lines icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

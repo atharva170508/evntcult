@@ -1,0 +1,9 @@
+{
+ "name": "textarea-04",
+ "type": "registry:component",
+ "description": "A textarea with right-aligned helper text for guidance",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

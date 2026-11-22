@@ -1,0 +1,7 @@
+{
+ "name": "FloatingLines-TS-TW",
+ "type": "registry:component",
+ "description": "Ribbons of fine glowing lines that drift in waves, part around the cursor and curl when clicked.",
+ "dependencies": [],
+ "registryDependencies": []
+}

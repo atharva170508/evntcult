@@ -1,0 +1,8 @@
+{
+ "name": "tabs-09",
+ "type": "registry:component",
+ "description": "Solid pill-style tabs with rounded corners and filled background",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

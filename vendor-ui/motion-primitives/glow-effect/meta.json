@@ -1,0 +1,8 @@
+{
+ "name": "glow-effect",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

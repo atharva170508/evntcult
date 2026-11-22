@@ -1,0 +1,9 @@
+{
+ "name": "input-03",
+ "type": "registry:component",
+ "description": "A required email input field with a red asterisk indicator and validation",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "name": "SwarmCursor-TS-TW",
+ "type": "registry:component",
+ "description": "A liquid swarm of particles that flows after the cursor, curls into eddies and pours around hovered buttons.",
+ "dependencies": [],
+ "registryDependencies": []
+}

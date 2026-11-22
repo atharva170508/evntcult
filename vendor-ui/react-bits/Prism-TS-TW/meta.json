@@ -1,0 +1,7 @@
+{
+ "name": "Prism-TS-TW",
+ "type": "registry:component",
+ "description": "Rotating prism of glowing spectral light with configurable shape, colors and motion.",
+ "dependencies": [],
+ "registryDependencies": []
+}

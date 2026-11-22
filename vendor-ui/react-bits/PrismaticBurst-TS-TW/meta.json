@@ -1,0 +1,7 @@
+{
+ "name": "PrismaticBurst-TS-TW",
+ "type": "registry:component",
+ "description": "A burst of prismatic light rays that leans toward the cursor and sends a wave of light outward on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

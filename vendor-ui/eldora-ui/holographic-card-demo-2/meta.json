@@ -1,0 +1,8 @@
+{
+ "name": "holographic-card-demo-2",
+ "type": "registry:example",
+ "description": "Example showing a holographic-card component.",
+ "registryDependencies": [
+  "@eldoraui/holographic-card"
+ ]
+}

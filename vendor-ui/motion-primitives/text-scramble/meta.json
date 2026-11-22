@@ -1,0 +1,8 @@
+{
+ "name": "text-scramble",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

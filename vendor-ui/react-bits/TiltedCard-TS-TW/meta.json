@@ -1,0 +1,7 @@
+{
+ "name": "TiltedCard-TS-TW",
+ "type": "registry:component",
+ "description": "A 3D card that tilts toward the cursor, with glare, a soft shadow, floating layers and a flip side.",
+ "dependencies": [],
+ "registryDependencies": []
+}

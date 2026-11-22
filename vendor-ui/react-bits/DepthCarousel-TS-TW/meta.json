@@ -1,0 +1,9 @@
+{
+ "name": "DepthCarousel-TS-TW",
+ "type": "registry:component",
+ "description": "Cards recede into depth on a 3D rail, with drag, keyboard and auto-advance.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

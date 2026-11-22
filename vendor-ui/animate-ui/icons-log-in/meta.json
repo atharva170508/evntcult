@@ -1,0 +1,11 @@
+{
+ "name": "icons-log-in",
+ "type": "registry:ui",
+ "description": "Log in icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

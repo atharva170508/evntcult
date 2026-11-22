@@ -1,0 +1,66 @@
+[
+  {
+    "name": "c-sortable-1",
+    "title": "Sortable list of items with drag-and-drop",
+    "label": "File List",
+    "description": "Sortable list of items with drag-and-drop",
+    "order": 1,
+    "gridSize": 1
+  },
+  {
+    "name": "c-sortable-2",
+    "title": "Sortable list of items with grid layout",
+    "label": "Grid Layout",
+    "description": "Sortable list of items with grid layout",
+    "order": 2,
+    "gridSize": 1
+  },
+  {
+    "name": "c-sortable-3",
+    "title": "Sortable list of items with nested layout",
+    "label": "Nested Layout",
+    "description": "Sortable list of items with nested layout",
+    "order": 3,
+    "gridSize": 1
+  },
+  {
+    "name": "c-sortable-4",
+    "title": "Sortable playlist with frame",
+    "label": "Playlist",
+    "description": "Sortable playlist with frame",
+    "order": 4,
+    "gridSize": 1
+  },
+  {
+    "name": "c-sortable-5",
+    "title": "Sortable settings priority with frame",
+    "label": "Settings Priority",
+    "description": "Sortable settings priority with frame",
+    "order": 5,
+    "gridSize": 1
+  },
+  {
+    "name": "c-sortable-6",
+    "title": "Sortable sidebar navigation with frame",
+    "label": "Sidebar Navigation",
+    "description": "Sortable sidebar navigation with frame",
+    "order": 6,
+    "gridSize": 1
+  },
+  {
+    "name": "c-sortable-7",
+    "title": "Sortable image gallery grid with frame",
+    "label": "Image Gallery",
+    "description": "Sortable image gallery grid with frame",
+    "order": 7,
+    "gridSize": 1
+  },
+  {
+    "name": "c-sortable-8",
+    "title": "Sortable list persisted to a backend",
+    "label": "Persisted Order",
+    "description": "Persist the new order with onValueCommit, optimistic updates, and Sonner rollback",
+    "order": 8,
+    "gridSize": 1
+  }
+]

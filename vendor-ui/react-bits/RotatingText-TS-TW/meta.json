@@ -1,0 +1,9 @@
+{
+ "name": "RotatingText-TS-TW",
+ "type": "registry:component",
+ "description": "Cycles through multiple phrases with 3D rotate / flip transitions.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

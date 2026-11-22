@@ -1,0 +1,11 @@
+{
+ "name": "button-31",
+ "type": "registry:component",
+ "description": "Icon-only button with bookmark icon and screen reader accessibility",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

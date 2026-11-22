@@ -1,0 +1,11 @@
+{
+ "name": "alert-29",
+ "type": "registry:component",
+ "description": "Solid info alert with full blue background for prominent informational messages.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

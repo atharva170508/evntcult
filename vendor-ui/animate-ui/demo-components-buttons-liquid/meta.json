@@ -1,0 +1,11 @@
+{
+ "name": "demo-components-buttons-liquid",
+ "type": "registry:ui",
+ "description": "Demo showing a liquid button.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/components-buttons-liquid"
+ ]
+}

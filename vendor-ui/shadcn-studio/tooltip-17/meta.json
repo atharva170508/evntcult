@@ -1,0 +1,12 @@
+{
+ "name": "tooltip-17",
+ "type": "registry:component",
+ "description": "A global tooltip system with overlapping avatars and hover scaling effects using global-tooltip component",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "utils"
+ ]
+}

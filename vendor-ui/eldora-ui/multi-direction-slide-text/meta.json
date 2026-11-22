@@ -1,0 +1,10 @@
+{
+ "name": "multi-direction-slide-text",
+ "type": "registry:ui",
+ "description": "A multi direction slide text component.",
+ "dependencies": [
+  "motion",
+  "react",
+  "clsx"
+ ]
+}

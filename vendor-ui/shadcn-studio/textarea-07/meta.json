@@ -1,0 +1,9 @@
+{
+ "name": "textarea-07",
+ "type": "registry:component",
+ "description": "A required textarea with asterisk indicator for mandatory fields",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-cloud-upload",
+ "type": "registry:ui",
+ "description": "Cloud upload icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

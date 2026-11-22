@@ -1,0 +1,11 @@
+{
+ "name": "dialog-26",
+ "type": "registry:component",
+ "description": "Profile edit dialog with zoom in animation from center of the screen",
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "input",
+  "label"
+ ]
+}

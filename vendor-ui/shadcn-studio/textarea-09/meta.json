@@ -1,0 +1,9 @@
+{
+ "name": "textarea-09",
+ "type": "registry:component",
+ "description": "A filled textarea with muted background and transparent border styling",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

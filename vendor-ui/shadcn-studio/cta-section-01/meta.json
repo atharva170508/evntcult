@@ -1,0 +1,8 @@
+{
+ "name": "cta-section-01",
+ "type": "registry:block",
+ "description": "Rounded card layout with app download content featuring heading, description, and App Store/Google Play download buttons",
+ "registryDependencies": [
+  "card"
+ ]
+}

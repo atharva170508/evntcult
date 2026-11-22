@@ -1,0 +1,13 @@
+{
+ "name": "button-44",
+ "type": "registry:component",
+ "description": "Button with bounce hover effect on mouse interaction",
+ "dependencies": [
+  "class-variance-authority",
+  "motion"
+ ],
+ "registryDependencies": [
+  "button",
+  "utils"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "textarea-12",
+ "type": "registry:component",
+ "description": "A textarea with end icon positioned on the right side",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

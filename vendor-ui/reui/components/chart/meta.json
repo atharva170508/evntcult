@@ -1,0 +1,177 @@
+[
+  {
+    "name": "c-chart-1",
+    "title": "Basic bar chart",
+    "label": "Basic Bars",
+    "description": "Basic bar chart",
+    "order": 1
+  },
+  {
+    "name": "c-chart-2",
+    "title": "Multi-dataset bar chart",
+    "label": "Multi-Dataset Bars",
+    "description": "Multi-dataset bar chart",
+    "order": 2
+  },
+  {
+    "name": "c-chart-3",
+    "title": "Diagonal stripe bar chart",
+    "label": "Diagonal Stripe Bars",
+    "description": "Diagonal stripe bar chart",
+    "order": 3
+  },
+  {
+    "name": "c-chart-4",
+    "title": "Dotted pattern bar chart",
+    "label": "Dotted Bars",
+    "description": "Dotted pattern bar chart",
+    "order": 4
+  },
+  {
+    "name": "c-chart-5",
+    "title": "Striped and solid bar chart",
+    "label": "Striped Solid Bars",
+    "description": "Striped and solid bar chart",
+    "order": 5
+  },
+  {
+    "name": "c-chart-6",
+    "title": "3D gradient bar chart",
+    "label": "3D Gradient Bars",
+    "description": "3D gradient bar chart",
+    "order": 6
+  },
+  {
+    "name": "c-chart-7",
+    "title": "Gradient bar chart",
+    "label": "Gradient Bars",
+    "description": "Gradient bar chart",
+    "order": 7
+  },
+  {
+    "name": "c-chart-8",
+    "title": "3D isometric bar chart",
+    "label": "Isometric Bars",
+    "description": "3D isometric bar chart",
+    "order": 8
+  },
+  {
+    "name": "c-chart-9",
+    "title": "Dotted and solid bar chart",
+    "label": "Dotted Solid Bars",
+    "description": "Dotted and solid bar chart",
+    "order": 9
+  },
+  {
+    "name": "c-chart-10",
+    "title": "Duotone gradient bar chart",
+    "label": "Duotone Bars",
+    "description": "Duotone gradient bar chart",
+    "order": 10
+  },
+  {
+    "name": "c-chart-11",
+    "title": "Animated monochrome bar chart",
+    "label": "Animated Monochrome Bars",
+    "description": "Animated monochrome bar chart",
+    "order": 11
+  },
+  {
+    "name": "c-chart-12",
+    "title": "Vertical bar chart",
+    "label": "Horizontal Bars",
+    "description": "Vertical bar chart",
+    "order": 12
+  },
+  {
+    "name": "c-chart-13",
+    "title": "Gradient area chart with stripe overlay",
+    "label": "Gradient Area",
+    "description": "Gradient area chart with stripe overlay",
+    "order": 13
+  },
+  {
+    "name": "c-chart-14",
+    "title": "Stacked area chart with dashed strokes",
+    "label": "Stacked Dashed Area",
+    "description": "Stacked area chart with dashed strokes",
+    "order": 14
+  },
+  {
+    "name": "c-chart-15",
+    "title": "Step area chart with dotted pattern fill",
+    "label": "Dotted Step Area",
+    "description": "Step area chart with dotted pattern fill",
+    "order": 15
+  },
+  {
+    "name": "c-chart-16",
+    "title": "Area chart with glowing dot markers",
+    "label": "Glowing Dot Area",
+    "description": "Area chart with glowing dot markers",
+    "order": 16
+  },
+  {
+    "name": "c-chart-17",
+    "title": "Forecast line chart with stripe pattern zone",
+    "label": "Forecast Line",
+    "description": "Forecast line chart with stripe pattern zone",
+    "order": 17
+  },
+  {
+    "name": "c-chart-18",
+    "title": "Stacked area chart with crosshatch pattern fill",
+    "label": "Crosshatch Area",
+    "description": "Stacked area chart with crosshatch pattern fill",
+    "order": 18
+  },
+  {
+    "name": "c-chart-19",
+    "title": "Donut chart with center total",
+    "label": "Donut Center Total",
+    "description": "Donut chart with center total",
+    "order": 19
+  },
+  {
+    "name": "c-chart-20",
+    "title": "Donut chart with center stats",
+    "label": "Donut Center Stats",
+    "description": "Donut chart with center stats",
+    "order": 20
+  },
+  {
+    "name": "c-chart-21",
+    "title": "Bug priority pie with stripe patterns",
+    "label": "Striped Pie",
+    "description": "Bug priority pie with stripe patterns",
+    "order": 21
+  },
+  {
+    "name": "c-chart-22",
+    "title": "Active segment donut with center label",
+    "label": "Active Segment Donut",
+    "description": "Active segment donut with center label",
+    "order": 22
+  },
+  {
+    "name": "c-chart-23",
+    "title": "Radar chart with gradient fill",
+    "label": "Gradient Radar",
+    "description": "Radar chart with gradient fill",
+    "order": 23
+  },
+  {
+    "name": "c-chart-24",
+    "title": "Filled radar with glowing stroke",
+    "label": "Glowing Stroke Radar",
+    "description": "Filled radar with glowing stroke",
+    "order": 24
+  },
+  {
+    "name": "c-chart-25",
+    "title": "Lighthouse scores radial with labels",
+    "label": "Radial Scores",
+    "description": "Lighthouse scores radial with labels",
+    "order": 25
+  }
+]

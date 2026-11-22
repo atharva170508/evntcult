@@ -1,0 +1,7 @@
+{
+ "name": "GlassIcons-TS-TW",
+ "type": "registry:component",
+ "description": "Liquid glass icons that bend the color behind them, for app grids, docks and social links.",
+ "dependencies": [],
+ "registryDependencies": []
+}

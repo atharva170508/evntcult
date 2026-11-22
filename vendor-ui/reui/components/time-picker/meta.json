@@ -1,0 +1,94 @@
+[
+  {
+    "name": "c-time-picker-1",
+    "title": "Inline time panel",
+    "label": "Inline Panel",
+    "description": "Hour and minute columns rendered in place, with Now, Clear and a live readout.",
+    "order": 1
+  },
+  {
+    "name": "c-time-picker-2",
+    "title": "Popover picker",
+    "label": "Popover",
+    "description": "Outline trigger in a labelled field that opens hour and minute columns with Now, Clear and OK.",
+    "order": 2
+  },
+  {
+    "name": "c-time-picker-3",
+    "title": "Typable time input",
+    "label": "Typable Input",
+    "description": "Type 930, 14:30 or 2:30 pm, or step through free times with the arrow keys.",
+    "order": 3
+  },
+  {
+    "name": "c-time-picker-4",
+    "title": "12-hour clock with seconds",
+    "label": "12-Hour Seconds",
+    "description": "Hour, minute, second and AM/PM columns for a stream go-live time.",
+    "order": 4
+  },
+  {
+    "name": "c-time-picker-5",
+    "title": "Hour only",
+    "label": "Hour Only",
+    "description": "A daily digest send time picked by the hour in a settings row.",
+    "order": 5
+  },
+  {
+    "name": "c-time-picker-6",
+    "title": "Steps and opening hours",
+    "label": "Opening Hours",
+    "description": "15-minute steps limited to 08:30 to 17:30, with out-of-range hours disabled.",
+    "order": 6
+  },
+  {
+    "name": "c-time-picker-7",
+    "title": "Unavailable slots",
+    "label": "Unavailable Slots",
+    "description": "30-minute appointment slots with the lunch hour and booked times disabled.",
+    "order": 7
+  },
+  {
+    "name": "c-time-picker-8",
+    "title": "Start and end time",
+    "label": "Start & End",
+    "description": "A meeting range where the end stays after the start and the duration updates.",
+    "order": 8
+  },
+  {
+    "name": "c-time-picker-9",
+    "title": "Time zone label",
+    "label": "Time Zone",
+    "description": "Event time in the venue's time zone, shown in the trigger, with a footer that leaves out Now.",
+    "order": 9
+  },
+  {
+    "name": "c-time-picker-10",
+    "title": "Confirm before applying",
+    "label": "Confirm Before Apply",
+    "description": "Column picks stay a draft until OK, so a shift change applies once.",
+    "order": 10
+  },
+  {
+    "name": "c-time-picker-11",
+    "title": "Localized labels",
+    "label": "Localized",
+    "description": "English, German, Chinese and Arabic labels, clocks and digits, with Arabic right to left.",
+    "order": 11
+  },
+  {
+    "name": "c-time-picker-12",
+    "title": "Form field with validation",
+    "label": "Form Validation",
+    "description": "Native form field with a required check, an error, reset and the submitted value.",
+    "order": 12
+  },
+  {
+    "name": "c-time-picker-13",
+    "title": "Date and time",
+    "label": "Date & Time",
+    "description": "Schedule a post with a calendar and time columns side by side in one card.",
+    "order": 13,
+    "gridSize": 1
+  }
+]

@@ -1,0 +1,11 @@
+{
+ "name": "animated-shiny-text-demo",
+ "type": "registry:example",
+ "description": "Example showing text with a shimmering light effect.",
+ "dependencies": [
+  "@radix-ui/react-icons"
+ ],
+ "registryDependencies": [
+  "@magicui/animated-shiny-text"
+ ]
+}

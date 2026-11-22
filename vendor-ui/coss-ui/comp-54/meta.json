@@ -1,0 +1,11 @@
+{
+ "name": "comp-54",
+ "type": "registry:component",
+ "dependencies": [
+  "use-mask-input"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/input.json",
+  "https://coss.com/origin/r/label.json"
+ ]
+}

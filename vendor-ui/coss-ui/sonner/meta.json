@@ -1,0 +1,8 @@
+{
+ "name": "sonner",
+ "type": "registry:ui",
+ "dependencies": [
+  "sonner",
+  "next-themes"
+ ]
+}

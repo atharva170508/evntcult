@@ -1,0 +1,14 @@
+{
+ "name": "data-table-05",
+ "type": "registry:component",
+ "description": "table with sortable columns and up/down arrow sort indicators",
+ "dependencies": [
+  "lucide-react",
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "checkbox",
+  "table",
+  "utils"
+ ]
+}

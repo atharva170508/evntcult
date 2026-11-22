@@ -1,0 +1,7 @@
+{
+ "name": "SlicedWaves-TS-TW",
+ "type": "registry:component",
+ "description": "Waves of colored light sliced into glowing bars, seen in depth with a focus that follows the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

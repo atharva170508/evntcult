@@ -1,0 +1,8 @@
+{
+ "name": "blur-in-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a blur-in-text-demo component.",
+ "registryDependencies": [
+  "@eldoraui/blur-in-text"
+ ]
+}

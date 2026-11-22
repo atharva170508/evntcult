@@ -1,0 +1,8 @@
+{
+ "name": "table-01",
+ "type": "registry:component",
+ "description": "A basic table with caption, header, body, and footer displaying invoice data",
+ "registryDependencies": [
+  "table"
+ ]
+}

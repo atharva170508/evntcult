@@ -1,0 +1,11 @@
+{
+ "name": "button-23",
+ "type": "registry:component",
+ "description": "Save button with a floppy disk icon and soft blue background for non-intrusive actions.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

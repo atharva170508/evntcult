@@ -1,0 +1,11 @@
+{
+ "name": "badge-19",
+ "type": "registry:component",
+ "description": "Pending status badge with amber outline and alert icon",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge"
+ ]
+}

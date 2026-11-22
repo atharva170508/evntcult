@@ -1,0 +1,11 @@
+{
+ "name": "primitives-texts-morphing",
+ "type": "registry:ui",
+ "description": "A text component that smoothly morphs characters to transition between strings.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/hooks-use-is-in-view"
+ ]
+}

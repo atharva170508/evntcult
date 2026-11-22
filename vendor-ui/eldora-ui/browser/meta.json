@@ -1,0 +1,17 @@
+{
+ "name": "browser",
+ "type": "registry:ui",
+ "description": "A browser SVG component.",
+ "dependencies": [
+  "react",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "utils",
+  "button",
+  "badge",
+  "card",
+  "separator",
+  "input"
+ ]
+}

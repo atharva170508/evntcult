@@ -1,0 +1,7 @@
+{
+ "name": "ShapeBlur-TS-TW",
+ "type": "registry:component",
+ "description": "A crisp logo or shape that drifts out of focus under the pointer like a camera lens.",
+ "dependencies": [],
+ "registryDependencies": []
+}

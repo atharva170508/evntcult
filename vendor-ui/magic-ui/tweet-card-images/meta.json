@@ -1,0 +1,9 @@
+{
+ "name": "tweet-card-images",
+ "type": "registry:example",
+ "description": "Example showing a tweet card with images.",
+ "registryDependencies": [
+  "@magicui/client-tweet-card",
+  "@magicui/tweet-card"
+ ]
+}

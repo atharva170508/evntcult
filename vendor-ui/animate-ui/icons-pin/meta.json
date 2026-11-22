@@ -1,0 +1,11 @@
+{
+ "name": "icons-pin",
+ "type": "registry:ui",
+ "description": "Pin icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

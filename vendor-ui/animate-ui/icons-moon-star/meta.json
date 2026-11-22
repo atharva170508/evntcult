@@ -1,0 +1,11 @@
+{
+ "name": "icons-moon-star",
+ "type": "registry:ui",
+ "description": "Moon star icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

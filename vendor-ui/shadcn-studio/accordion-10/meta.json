@@ -1,0 +1,8 @@
+{
+ "name": "accordion-10",
+ "type": "registry:component",
+ "description": "Box-style accordion with unified border container around all accordion items.",
+ "registryDependencies": [
+  "accordion"
+ ]
+}

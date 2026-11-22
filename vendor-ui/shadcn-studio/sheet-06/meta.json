@@ -1,0 +1,13 @@
+{
+ "name": "sheet-06",
+ "type": "registry:component",
+ "description": "A navigation sheet component with collapsible menu structure",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "collapsible",
+  "sheet"
+ ]
+}

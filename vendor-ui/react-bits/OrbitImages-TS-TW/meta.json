@@ -1,0 +1,7 @@
+{
+ "name": "OrbitImages-TS-TW",
+ "type": "registry:component",
+ "description": "SVG Path customizable orbiting images effect",
+ "dependencies": [],
+ "registryDependencies": []
+}

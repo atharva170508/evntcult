@@ -1,0 +1,12 @@
+{
+ "name": "input-14",
+ "type": "registry:component",
+ "description": "A username input field with a user icon positioned at the start",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

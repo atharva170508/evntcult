@@ -1,0 +1,8 @@
+{
+ "name": "pagination-10",
+ "type": "registry:component",
+ "description": "A card-style pagination component with border, shadow, and contained layout",
+ "registryDependencies": [
+  "pagination"
+ ]
+}

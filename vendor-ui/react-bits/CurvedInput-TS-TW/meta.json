@@ -1,0 +1,7 @@
+{
+ "name": "CurvedInput-TS-TW",
+ "type": "registry:component",
+ "description": "Arc-bent input bar with text, caret and submit button all following the curve.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,9 @@
+{
+ "name": "select-17",
+ "type": "registry:component",
+ "description": "A custom select dropdown with colored background and themed styling",
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

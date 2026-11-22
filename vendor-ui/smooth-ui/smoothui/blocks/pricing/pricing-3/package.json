@@ -1,0 +1,40 @@
+{
+  "name": "@repo/pricing-3",
+  "description": "Creative pricing block with two plans",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/smooth-button": "workspace:*",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^11.15.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "layout",
+    "tags": [
+      "pricing",
+      "plans",
+      "creative",
+      "two-plans",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "spring",
+    "useCases": [
+      "Creative two-plan pricing layout",
+      "Side-by-side pricing comparison with animated entrance",
+      "Product pricing with highlighted recommended plan"
+    ],
+    "compositionHints": [
+      "Use morph-toggle for billing period switcher"
+    ],
+    "hasReducedMotion": true
+  }
+}

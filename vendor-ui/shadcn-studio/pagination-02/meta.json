@@ -1,0 +1,11 @@
+{
+ "name": "pagination-02",
+ "type": "registry:component",
+ "description": "A pagination component with chevron icons for previous and next navigation",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "pagination"
+ ]
+}

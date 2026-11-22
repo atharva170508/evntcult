@@ -1,0 +1,8 @@
+{
+ "name": "tabs-25",
+ "type": "registry:component",
+ "description": "Custom styled tabs with primary background active state and enhanced hover effects",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

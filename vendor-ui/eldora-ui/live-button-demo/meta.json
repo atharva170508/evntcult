@@ -1,0 +1,8 @@
+{
+ "name": "live-button-demo",
+ "type": "registry:example",
+ "description": "Example showing a live-button-demo component.",
+ "registryDependencies": [
+  "@eldoraui/live-button"
+ ]
+}

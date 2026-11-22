@@ -1,0 +1,11 @@
+{
+ "name": "button-36",
+ "type": "registry:component",
+ "description": "Security icon button with destructive gradient background effect",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

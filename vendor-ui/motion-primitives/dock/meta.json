@@ -1,0 +1,8 @@
+{
+ "name": "dock",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

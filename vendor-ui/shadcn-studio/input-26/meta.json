@@ -1,0 +1,13 @@
+{
+ "name": "input-26",
+ "type": "registry:component",
+ "description": "A password input field with a toggle button to show/hide password visibility",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "input",
+  "label"
+ ]
+}

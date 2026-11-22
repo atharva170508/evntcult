@@ -1,0 +1,9 @@
+{
+ "name": "primitives-headless-checkbox",
+ "type": "registry:ui",
+ "description": "Checkboxes provide the same functionality as native HTML checkboxes, without any of the styling, giving you a clean slate to design them however you'd like.",
+ "dependencies": [
+  "motion",
+  "@headlessui/react"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "components-radix-alert-dialog",
+ "type": "registry:ui",
+ "description": "A modal dialog that interrupts the user with important content and expects a response.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-alert-dialog",
+  "@animate-ui/v1/components-buttons-button"
+ ]
+}

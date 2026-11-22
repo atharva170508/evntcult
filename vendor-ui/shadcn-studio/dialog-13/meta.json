@@ -1,0 +1,12 @@
+{
+ "name": "dialog-13",
+ "type": "registry:component",
+ "description": "Sign up dialog with gradient background and terms acceptance checkbox",
+ "registryDependencies": [
+  "button",
+  "checkbox",
+  "dialog",
+  "input",
+  "label"
+ ]
+}

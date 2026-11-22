@@ -1,0 +1,8 @@
+{
+ "name": "social-proof-01",
+ "type": "registry:block",
+ "description": "Feature checklist layout with split design showcasing product benefits alongside a complementary image. Perfect for highlighting key features with checkmark icons and descriptive content.",
+ "dependencies": [
+  "lucide-react"
+ ]
+}

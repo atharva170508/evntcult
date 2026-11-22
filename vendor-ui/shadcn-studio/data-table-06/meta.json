@@ -1,0 +1,11 @@
+{
+ "name": "data-table-06",
+ "type": "registry:component",
+ "description": "Data table with row expansion functionality for detailed content display",
+ "dependencies": [
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "table"
+ ]
+}

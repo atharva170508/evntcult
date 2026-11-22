@@ -1,0 +1,8 @@
+{
+ "name": "magnetic",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

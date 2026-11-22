@@ -1,0 +1,11 @@
+{
+ "name": "icons-move-left",
+ "type": "registry:ui",
+ "description": "Move left icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

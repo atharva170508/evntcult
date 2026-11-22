@@ -1,0 +1,14 @@
+{
+ "name": "calendar-24",
+ "type": "registry:component",
+ "description": "Appointment booking calendar with time slot selection and availability indicators",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "card",
+  "scroll-area"
+ ]
+}

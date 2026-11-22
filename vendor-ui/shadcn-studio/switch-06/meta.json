@@ -1,0 +1,8 @@
+{
+ "name": "switch-06",
+ "type": "registry:component",
+ "description": "Outline-styled switches with transparent backgrounds and colored borders for different themes",
+ "registryDependencies": [
+  "switch"
+ ]
+}

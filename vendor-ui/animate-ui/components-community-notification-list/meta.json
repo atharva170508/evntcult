@@ -1,0 +1,9 @@
+{
+ "name": "components-community-notification-list",
+ "type": "registry:ui",
+ "description": "A fun notification list with animated stacking and cards that expand as you interact.",
+ "dependencies": [
+  "motion",
+  "lucide-react"
+ ]
+}

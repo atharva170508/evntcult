@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-base-dialog",
+ "type": "registry:ui",
+ "description": "Demo showing a dialog.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-base-dialog"
+ ]
+}

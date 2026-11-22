@@ -1,0 +1,9 @@
+{
+ "name": "RubberSegment-TS-TW",
+ "type": "registry:component",
+ "description": "Segmented control whose rubber thumb stretches across the gap and squashes into place.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

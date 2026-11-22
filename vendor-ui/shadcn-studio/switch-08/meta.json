@@ -1,0 +1,9 @@
+{
+ "name": "switch-08",
+ "type": "registry:component",
+ "description": "A switch with dynamic label that changes text based on toggle state (Yes/No)",
+ "registryDependencies": [
+  "label",
+  "switch"
+ ]
+}

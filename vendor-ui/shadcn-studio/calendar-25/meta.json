@@ -1,0 +1,8 @@
+{
+ "name": "calendar-25",
+ "type": "registry:component",
+ "description": "Pricing calendar with dynamic price display for each date based on availability",
+ "registryDependencies": [
+  "calendar"
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "name": "form-03",
+ "type": "registry:component",
+ "description": "Form with switch toggle controls for settings and preferences",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "form",
+  "switch"
+ ]
+}

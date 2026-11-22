@@ -1,0 +1,7 @@
+{
+ "name": "CircularGallery-TS-TW",
+ "type": "registry:component",
+ "description": "A curved image gallery you can drag, scroll or tab through, with cards that open to the full image.",
+ "dependencies": [],
+ "registryDependencies": []
+}

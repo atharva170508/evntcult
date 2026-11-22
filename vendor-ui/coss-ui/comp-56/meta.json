@@ -1,0 +1,10 @@
+{
+ "name": "comp-56",
+ "type": "registry:component",
+ "dependencies": [
+  "emblor"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/label.json"
+ ]
+}

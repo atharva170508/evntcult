@@ -1,0 +1,10 @@
+{
+ "name": "comp-488",
+ "type": "registry:component",
+ "dependencies": [
+  "react-aria-components"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/calendar-rac.json"
+ ]
+}

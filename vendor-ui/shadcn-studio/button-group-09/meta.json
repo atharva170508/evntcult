@@ -1,0 +1,11 @@
+{
+ "name": "button-group-09",
+ "type": "registry:component",
+ "description": "Action button group with edit, duplicate, and delete functions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

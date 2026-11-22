@@ -1,0 +1,8 @@
+{
+ "name": "transition-panel",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

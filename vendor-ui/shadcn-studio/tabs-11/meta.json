@@ -1,0 +1,8 @@
+{
+ "name": "tabs-11",
+ "type": "registry:component",
+ "description": "Underline tabs with border bottom styling for minimal navigation",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

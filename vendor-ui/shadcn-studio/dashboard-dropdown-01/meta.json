@@ -1,0 +1,12 @@
+{
+ "name": "dashboard-dropdown-01",
+ "type": "registry:block",
+ "description": "A language selection dropdown with flag icons and language options for internationalization and localization features.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

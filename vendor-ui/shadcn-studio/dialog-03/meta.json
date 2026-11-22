@@ -1,0 +1,14 @@
+{
+ "name": "dialog-03",
+ "type": "registry:component",
+ "description": "Destructive alert dialog with warning icon and checkbox for permanent deletion",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert-dialog",
+  "button",
+  "checkbox",
+  "label"
+ ]
+}

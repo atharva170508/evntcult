@@ -1,0 +1,8 @@
+{
+ "name": "avatar-04",
+ "type": "registry:component",
+ "description": "Large sized avatar variant with expanded dimensions.",
+ "registryDependencies": [
+  "avatar"
+ ]
+}

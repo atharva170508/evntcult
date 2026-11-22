@@ -1,0 +1,11 @@
+{
+ "name": "alert-24",
+ "type": "registry:component",
+ "description": "Soft warning alert with amber background and subtle styling for warnings.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

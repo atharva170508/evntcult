@@ -1,0 +1,12 @@
+{
+ "name": "checkbox-14",
+ "type": "registry:component",
+ "description": "List group checkboxes with icons and skills selection in bordered layout",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "checkbox",
+  "label"
+ ]
+}

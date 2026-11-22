@@ -1,0 +1,8 @@
+{
+ "name": "input-06",
+ "type": "registry:component",
+ "description": "Text input fields showcasing different size variants (small, medium, large)",
+ "registryDependencies": [
+  "input"
+ ]
+}

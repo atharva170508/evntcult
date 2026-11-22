@@ -1,0 +1,8 @@
+{
+ "name": "gradient-tracing",
+ "type": "registry:ui",
+ "description": "A gradient tracing component.",
+ "dependencies": [
+  "react"
+ ]
+}

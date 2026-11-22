@@ -1,0 +1,11 @@
+{
+ "name": "avatar-12",
+ "type": "registry:component",
+ "description": "Avatar with verified badge showing check mark icon for verified accounts.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar"
+ ]
+}

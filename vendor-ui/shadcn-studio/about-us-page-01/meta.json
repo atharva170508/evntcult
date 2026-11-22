@@ -1,0 +1,13 @@
+{
+ "name": "about-us-page-01",
+ "type": "registry:block",
+ "description": "Centered header with video/image section and overlapping stats grid card displaying icons, values, and descriptions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button",
+  "card"
+ ]
+}

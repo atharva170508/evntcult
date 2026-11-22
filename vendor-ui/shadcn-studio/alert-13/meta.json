@@ -1,0 +1,12 @@
+{
+ "name": "alert-13",
+ "type": "registry:component",
+ "description": "displaying a minimal \"New message!\" notification with an attention icon and an actionable \"Open\" button",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button"
+ ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@repo/header-3",
+  "description": "Header block with gradient logo and smooth animations",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/avatar": "workspace:*",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "lucide-react": "^0.548.0",
+    "motion": "^11.15.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "layout",
+    "tags": [
+      "header",
+      "hero",
+      "navigation",
+      "gradient",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "spring",
+    "useCases": [
+      "Hero header variant with gradient logo and animations",
+      "Alternative landing page header",
+      "Content-focused hero section with animated entrance"
+    ],
+    "compositionHints": [
+      "Uses SmoothButton primitive and shared block components"
+    ],
+    "hasReducedMotion": true
+  }
+}

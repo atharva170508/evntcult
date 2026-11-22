@@ -1,0 +1,11 @@
+{
+ "name": "button-37",
+ "type": "registry:component",
+ "description": "Success icon button with soft green background and check icon",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

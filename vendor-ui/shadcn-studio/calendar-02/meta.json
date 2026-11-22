@@ -1,0 +1,8 @@
+{
+ "name": "calendar-02",
+ "type": "registry:component",
+ "description": "Multi-month calendar displaying two months side by side for single date selection",
+ "registryDependencies": [
+  "calendar"
+ ]
+}

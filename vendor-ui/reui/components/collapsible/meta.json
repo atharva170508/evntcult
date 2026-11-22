@@ -1,0 +1,72 @@
+[
+  {
+    "name": "c-collapsible-1",
+    "title": "Basic collapsible",
+    "label": "Basic",
+    "description": "Basic collapsible",
+    "order": 1
+  },
+  {
+    "name": "c-collapsible-2",
+    "title": "Collapsible with checkbox settings",
+    "label": "Checkbox Settings",
+    "description": "Collapsible with checkbox settings",
+    "order": 2
+  },
+  {
+    "name": "c-collapsible-3",
+    "title": "Collapsible animated card",
+    "label": "Animated Card",
+    "description": "Collapsible animated card",
+    "order": 3
+  },
+  {
+    "name": "c-collapsible-4",
+    "title": "Collapsible card with bottom trigger",
+    "label": "Bottom Trigger",
+    "description": "Collapsible card with bottom trigger",
+    "order": 4
+  },
+  {
+    "name": "c-collapsible-5",
+    "title": "Collapsible form fields",
+    "label": "Form Fields",
+    "description": "Collapsible form fields",
+    "order": 5
+  },
+  {
+    "name": "c-collapsible-6",
+    "title": "Collapsible frame",
+    "label": "In Frame",
+    "description": "Collapsible frame",
+    "order": 6
+  },
+  {
+    "name": "c-collapsible-7",
+    "title": "Nested collapsible list with actions",
+    "label": "Nested List",
+    "description": "Nested collapsible list with actions",
+    "order": 7
+  },
+  {
+    "name": "c-collapsible-8",
+    "title": "Collapsible User profile",
+    "label": "User Profile",
+    "description": "Collapsible User profile",
+    "order": 8
+  },
+  {
+    "name": "c-collapsible-9",
+    "title": "Multi-level collapsible menu",
+    "label": "Multi-Level Menu",
+    "description": "Multi-level collapsible menu",
+    "order": 9
+  },
+  {
+    "name": "c-collapsible-10",
+    "title": "Tree view with file actions",
+    "label": "File Tree",
+    "description": "Tree view with file actions",
+    "order": 10
+  }
+]

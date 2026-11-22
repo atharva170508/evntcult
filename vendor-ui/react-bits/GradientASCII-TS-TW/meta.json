@@ -1,0 +1,7 @@
+{
+ "name": "GradientASCII-TS-TW",
+ "type": "registry:component",
+ "description": "Soft gradient glows drawn in ASCII characters that scramble under the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,114 @@
+[
+  {
+    "name": "c-toggle-group-1",
+    "title": "Basic toggle group.",
+    "label": "Basic",
+    "description": "Basic toggle group.",
+    "order": 1
+  },
+  {
+    "name": "c-toggle-group-2",
+    "title": "Toggle group with outline variant.",
+    "label": "Outline",
+    "description": "Toggle group with outline variant.",
+    "order": 2
+  },
+  {
+    "name": "c-toggle-group-3",
+    "title": "Toggle groups in different sizes.",
+    "label": "Sizes",
+    "description": "Toggle groups in different sizes.",
+    "order": 3
+  },
+  {
+    "name": "c-toggle-group-4",
+    "title": "Toggle group with custom spacing.",
+    "label": "Custom Spacing",
+    "description": "Toggle group with custom spacing.",
+    "order": 4
+  },
+  {
+    "name": "c-toggle-group-5",
+    "title": "Toggle group with filter control.",
+    "label": "Filter Control",
+    "description": "Toggle group with filter control.",
+    "order": 5
+  },
+  {
+    "name": "c-toggle-group-6",
+    "title": "Toggle group with vertical orientation.",
+    "label": "Vertical",
+    "description": "Toggle group with vertical orientation.",
+    "order": 6
+  },
+  {
+    "name": "c-toggle-group-7",
+    "title": "Toggle group for text alignment",
+    "label": "Text Alignment",
+    "description": "Toggle group for text alignment",
+    "order": 7
+  },
+  {
+    "name": "c-toggle-group-8",
+    "title": "Toggle group for view mode switching",
+    "label": "View Mode",
+    "description": "Toggle group for view mode switching",
+    "order": 8
+  },
+  {
+    "name": "c-toggle-group-9",
+    "title": "Vertical toggle group for settings",
+    "label": "Vertical Settings",
+    "description": "Vertical toggle group for settings",
+    "order": 9
+  },
+  {
+    "name": "c-toggle-group-10",
+    "title": "Toggle group for color theme",
+    "label": "Color Theme",
+    "description": "Toggle group for color theme",
+    "order": 10
+  },
+  {
+    "name": "c-toggle-group-11",
+    "title": "Toggle group for font size",
+    "label": "Font Size",
+    "description": "Toggle group for font size",
+    "order": 11
+  },
+  {
+    "name": "c-toggle-group-12",
+    "title": "Toggle group for time range filter",
+    "label": "Time Range",
+    "description": "Toggle group for time range filter",
+    "order": 12
+  },
+  {
+    "name": "c-toggle-group-13",
+    "title": "Toggle group for notification channels",
+    "label": "Notification Channels",
+    "description": "Toggle group for notification channels",
+    "order": 13
+  },
+  {
+    "name": "c-toggle-group-14",
+    "title": "Toggle group for layout columns",
+    "label": "Layout Columns",
+    "description": "Toggle group for layout columns",
+    "order": 14
+  },
+  {
+    "name": "c-toggle-group-15",
+    "title": "Toggle group for sort direction",
+    "label": "Sort Direction",
+    "description": "Toggle group for sort direction",
+    "order": 15
+  },
+  {
+    "name": "c-toggle-group-16",
+    "title": "Toggle group for pricing tier",
+    "label": "Pricing Tier",
+    "description": "Toggle group for pricing tier",
+    "order": 16
+  }
+]

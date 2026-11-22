@@ -1,0 +1,5 @@
+{
+ "name": "hooks-use-controlled-state",
+ "type": "registry:hook",
+ "description": "A hook that allows you to control a state."
+}

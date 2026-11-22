@@ -1,0 +1,11 @@
+{
+ "name": "icons-external-link",
+ "type": "registry:ui",
+ "description": "External link icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "tooltip-03",
+ "type": "registry:component",
+ "description": "A tooltip without the arrow indicator for clean minimal appearance",
+ "registryDependencies": [
+  "button",
+  "tooltip"
+ ]
+}

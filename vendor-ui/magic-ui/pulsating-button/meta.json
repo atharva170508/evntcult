@@ -1,0 +1,5 @@
+{
+ "name": "pulsating-button",
+ "type": "registry:ui",
+ "description": "An animated pulsating button useful for capturing attention of users."
+}

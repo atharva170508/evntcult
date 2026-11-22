@@ -1,0 +1,8 @@
+{
+ "name": "badge-02",
+ "type": "registry:component",
+ "description": "Secondary variant badge with muted styling for less prominent labels",
+ "registryDependencies": [
+  "badge"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "FadeContent-TS-TW",
+ "type": "registry:component",
+ "description": "Wrapper that fades content in on scroll, plain or out of focus, from washed-out gray, or through grain, mist and pixel blocks.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

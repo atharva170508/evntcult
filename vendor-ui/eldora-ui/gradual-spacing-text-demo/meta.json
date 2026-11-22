@@ -1,0 +1,8 @@
+{
+ "name": "gradual-spacing-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a gradual-spacing-text-demo component.",
+ "registryDependencies": [
+  "@eldoraui/gradual-spacing-text"
+ ]
+}

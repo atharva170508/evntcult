@@ -1,0 +1,9 @@
+{
+ "name": "date-picker-08",
+ "type": "registry:component",
+ "description": "Simple time input field with step control for precise time selection",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

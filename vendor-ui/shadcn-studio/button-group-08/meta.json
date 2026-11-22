@@ -1,0 +1,11 @@
+{
+ "name": "button-group-08",
+ "type": "registry:component",
+ "description": "Preview link button group with primary action and external link icon",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

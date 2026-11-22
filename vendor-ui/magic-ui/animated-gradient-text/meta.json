@@ -1,0 +1,5 @@
+{
+ "name": "animated-gradient-text",
+ "type": "registry:ui",
+ "description": "An animated gradient background which transitions between colors for text."
+}

@@ -1,0 +1,7 @@
+{
+ "name": "Particles-TS-TW",
+ "type": "registry:component",
+ "description": "A drifting 3D field of particles with glow, twinkle, constellation lines and cursor interaction.",
+ "dependencies": [],
+ "registryDependencies": []
+}

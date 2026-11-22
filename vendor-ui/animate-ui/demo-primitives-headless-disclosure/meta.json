@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-headless-disclosure",
+ "type": "registry:ui",
+ "description": "Demo showing an animated headless disclosure.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-headless-disclosure"
+ ]
+}

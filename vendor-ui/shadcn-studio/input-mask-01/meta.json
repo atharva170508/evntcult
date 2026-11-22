@@ -1,0 +1,12 @@
+{
+ "name": "input-mask-01",
+ "type": "registry:component",
+ "description": "An input field with custom alphanumeric mask pattern for structured data entry",
+ "dependencies": [
+  "use-mask-input"
+ ],
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

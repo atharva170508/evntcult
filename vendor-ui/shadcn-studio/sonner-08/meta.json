@@ -1,0 +1,11 @@
+{
+ "name": "sonner-08",
+ "type": "registry:component",
+ "description": "A toast notification with configurable positioning options for all screen corners and centers for e.g. (top-left, top-right, bottom-left, bottom-right, center)",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

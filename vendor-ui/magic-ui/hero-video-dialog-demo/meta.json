@@ -1,0 +1,8 @@
+{
+ "name": "hero-video-dialog-demo",
+ "type": "registry:example",
+ "description": "Example showing a hero video dialog component.",
+ "registryDependencies": [
+  "@magicui/hero-video-dialog"
+ ]
+}

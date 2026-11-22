@@ -1,0 +1,7 @@
+{
+ "name": "HoloCard-TS-TW",
+ "type": "registry:component",
+ "description": "Collectible trading card with a real holographic foil and glitter that sparkles as it tilts.",
+ "dependencies": [],
+ "registryDependencies": []
+}

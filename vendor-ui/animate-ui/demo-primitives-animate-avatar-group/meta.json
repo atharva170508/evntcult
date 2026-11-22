@@ -1,0 +1,11 @@
+{
+ "name": "demo-primitives-animate-avatar-group",
+ "type": "registry:ui",
+ "description": "Demo showing an animated avatar group.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-avatar-group"
+ ]
+}

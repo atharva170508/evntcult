@@ -1,0 +1,8 @@
+{
+ "name": "svg-ripple-effect-demo-2",
+ "type": "registry:example",
+ "description": "Example showing a svg-ripple-effect-demo-2 component.",
+ "registryDependencies": [
+  "@eldoraui/svg-ripple-effect"
+ ]
+}

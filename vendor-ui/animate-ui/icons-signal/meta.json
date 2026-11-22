@@ -1,0 +1,11 @@
+{
+ "name": "icons-signal",
+ "type": "registry:ui",
+ "description": "Signal icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

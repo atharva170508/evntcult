@@ -1,0 +1,8 @@
+{
+ "name": "dock-text-demo-2",
+ "type": "registry:example",
+ "description": "Example showing a dock-text component with down prop.",
+ "registryDependencies": [
+  "@eldoraui/dock-text"
+ ]
+}

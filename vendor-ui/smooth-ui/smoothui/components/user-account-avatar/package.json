@@ -1,0 +1,44 @@
+{
+  "name": "@repo/user-account-avatar",
+  "description": "A UserAccountAvatar component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "lucide-react": "^0.545.0",
+    "@radix-ui/react-popover": "1.1.15",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "other",
+    "tags": [
+      "avatar",
+      "account",
+      "popover",
+      "profile",
+      "orders",
+      "radix",
+      "animated"
+    ],
+    "complexity": "complex",
+    "animationType": "spring",
+    "useCases": [
+      "User account avatar with popover profile panel",
+      "Account menu with profile editing and order tracking",
+      "Interactive user avatar with animated tab navigation"
+    ],
+    "compositionHints": [
+      "Use with count-badge for unread indicators",
+      "Pair with animated-avatar-group in team settings"
+    ],
+    "hasReducedMotion": true
+  }
+}

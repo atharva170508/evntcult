@@ -1,0 +1,8 @@
+{
+ "name": "text-3d-flip",
+ "type": "registry:ui",
+ "description": "A text effect that flips each letter in 3D with a staggered animation on hover.",
+ "dependencies": [
+  "motion"
+ ]
+}

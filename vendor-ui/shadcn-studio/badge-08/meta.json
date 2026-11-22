@@ -1,0 +1,8 @@
+{
+ "name": "badge-08",
+ "type": "registry:component",
+ "description": "Large size badge with increased padding for prominence",
+ "registryDependencies": [
+  "badge"
+ ]
+}

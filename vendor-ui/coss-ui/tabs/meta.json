@@ -1,0 +1,7 @@
+{
+ "name": "tabs",
+ "type": "registry:ui",
+ "dependencies": [
+  "radix-ui"
+ ]
+}

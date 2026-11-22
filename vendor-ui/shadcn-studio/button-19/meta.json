@@ -1,0 +1,11 @@
+{
+ "name": "button-19",
+ "type": "registry:component",
+ "description": "Publish button with circular icon badge and rounded outline styling",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

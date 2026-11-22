@@ -1,0 +1,7 @@
+{
+ "name": "SoftAurora-TS-TW",
+ "type": "registry:component",
+ "description": "Soft aurora borealis shader with 3D Perlin noise and cosine gradient palettes.",
+ "dependencies": [],
+ "registryDependencies": []
+}

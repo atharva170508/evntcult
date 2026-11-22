@@ -1,0 +1,9 @@
+{
+ "name": "tabs-04",
+ "type": "registry:component",
+ "description": "Tabs with badge components for displaying notifications, counters, or status indicators",
+ "registryDependencies": [
+  "badge",
+  "tabs"
+ ]
+}

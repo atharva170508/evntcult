@@ -1,0 +1,14 @@
+{
+ "name": "date-picker-02",
+ "type": "registry:component",
+ "description": "Date range picker with popover calendar for selecting start and end dates",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "label",
+  "popover"
+ ]
+}

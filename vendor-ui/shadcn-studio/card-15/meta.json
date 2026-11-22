@@ -1,0 +1,9 @@
+{
+ "name": "card-15",
+ "type": "registry:component",
+ "description": "Connected card group with three image showcase cards arranged side by side",
+ "registryDependencies": [
+  "card",
+  "tabs"
+ ]
+}

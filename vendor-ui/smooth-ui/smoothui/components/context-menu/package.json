@@ -1,0 +1,42 @@
+{
+  "name": "@repo/context-menu",
+  "description": "An animated Context Menu component for SmoothUI with spring animations, nested submenus, and keyboard navigation.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "radix-ui": "1.4.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "patterns",
+    "tags": [
+      "context-menu",
+      "menu",
+      "right-click",
+      "submenu",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "spring",
+    "useCases": [
+      "Right-click context menus with nested submenus",
+      "File browser context actions",
+      "Canvas or workspace right-click actions"
+    ],
+    "compositionHints": [
+      "Wrap any element to add right-click menu",
+      "Shares animation pattern with dropdown-menu"
+    ],
+    "hasReducedMotion": true
+  }
+}

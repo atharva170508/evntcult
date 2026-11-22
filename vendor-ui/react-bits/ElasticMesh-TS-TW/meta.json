@@ -1,0 +1,7 @@
+{
+ "name": "ElasticMesh-TS-TW",
+ "type": "registry:component",
+ "description": "Turns text or any logo into a puffy inflated shape you can press, poke and stretch like jelly.",
+ "dependencies": [],
+ "registryDependencies": []
+}

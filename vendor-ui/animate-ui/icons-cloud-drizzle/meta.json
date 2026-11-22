@@ -1,0 +1,11 @@
+{
+ "name": "icons-cloud-drizzle",
+ "type": "registry:ui",
+ "description": "Cloud drizzle icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "tabs-22",
+ "type": "registry:component",
+ "description": "Vertical tabs with icons for enhanced visual navigation",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "tabs"
+ ]
+}

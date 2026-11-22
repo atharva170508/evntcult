@@ -1,0 +1,12 @@
+{
+ "name": "card-13",
+ "type": "registry:component",
+ "description": "Testimonial card with user profile, star rating and highlighted text review",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "card"
+ ]
+}

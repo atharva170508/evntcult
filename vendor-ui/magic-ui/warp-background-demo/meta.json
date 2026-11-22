@@ -1,0 +1,8 @@
+{
+ "name": "warp-background-demo",
+ "type": "registry:example",
+ "description": "Example showing a card with a time warping background effect.",
+ "registryDependencies": [
+  "@magicui/warp-background"
+ ]
+}

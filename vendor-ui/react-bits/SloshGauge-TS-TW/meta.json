@@ -1,0 +1,7 @@
+{
+ "name": "SloshGauge-TS-TW",
+ "type": "registry:component",
+ "description": "Tank gauge whose liquid chases the value, tilts as it moves and splashes when it fills.",
+ "dependencies": [],
+ "registryDependencies": []
+}

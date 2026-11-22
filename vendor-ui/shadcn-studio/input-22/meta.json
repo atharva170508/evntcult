@@ -1,0 +1,9 @@
+{
+ "name": "input-22",
+ "type": "registry:component",
+ "description": "An email input field with a filled muted background style and no border",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

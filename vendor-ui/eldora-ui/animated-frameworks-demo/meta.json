@@ -1,0 +1,8 @@
+{
+ "name": "animated-frameworks-demo",
+ "type": "registry:example",
+ "description": "Example showing a animated-frameworks-demo component.",
+ "registryDependencies": [
+  "@eldoraui/animated-frameworks"
+ ]
+}

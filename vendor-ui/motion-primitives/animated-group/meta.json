@@ -1,0 +1,8 @@
+{
+ "name": "animated-group",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

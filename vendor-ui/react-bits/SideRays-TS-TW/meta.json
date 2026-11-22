@@ -1,0 +1,7 @@
+{
+ "name": "SideRays-TS-TW",
+ "type": "registry:component",
+ "description": "Shafts of light that fan in from a corner or side, shimmer slowly and lean toward the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

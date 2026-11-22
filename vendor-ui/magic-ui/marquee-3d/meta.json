@@ -1,0 +1,8 @@
+{
+ "name": "marquee-3d",
+ "type": "registry:example",
+ "description": "Example showing a 3D infinite scrolling component.",
+ "registryDependencies": [
+  "@magicui/marquee"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "switch-13",
+ "type": "registry:component",
+ "description": "A switch with sliding check and X icon indicators that move with the toggle handle",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "switch"
+ ]
+}

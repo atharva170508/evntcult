@@ -1,0 +1,8 @@
+{
+ "name": "tabs-17",
+ "type": "registry:component",
+ "description": "Soft vertical tabs with gentle styling and left navigation",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

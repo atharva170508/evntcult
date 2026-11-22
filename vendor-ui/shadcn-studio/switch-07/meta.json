@@ -1,0 +1,8 @@
+{
+ "name": "switch-07",
+ "type": "registry:component",
+ "description": "A gradient-styled switch with amber to sky/indigo color transitions based on state",
+ "registryDependencies": [
+  "switch"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "badge-24",
+ "type": "registry:component",
+ "description": "Online status indicator badge with green dot over avatar",
+ "registryDependencies": [
+  "avatar"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-community-radial-intro",
+ "type": "registry:ui",
+ "description": "Demo showing radial intro.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-community-radial-intro"
+ ]
+}

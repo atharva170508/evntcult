@@ -1,0 +1,41 @@
+{
+  "name": "@repo/scroll-reveal-paragraph",
+  "description": "A ScrollRevealParagraph component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "text",
+    "tags": [
+      "text",
+      "scroll",
+      "reveal",
+      "paragraph",
+      "word-by-word",
+      "animated"
+    ],
+    "complexity": "simple",
+    "animationType": "scroll",
+    "useCases": [
+      "Paragraph text that reveals word by word on scroll",
+      "Scroll-driven text opacity animation for storytelling",
+      "Reading progress indicator through text highlighting"
+    ],
+    "compositionHints": [
+      "Use for about sections and storytelling pages",
+      "Combine with reveal-text for heading + paragraph combos"
+    ],
+    "hasReducedMotion": true
+  }
+}

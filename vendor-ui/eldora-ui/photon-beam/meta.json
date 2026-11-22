@@ -1,0 +1,9 @@
+{
+ "name": "photon-beam",
+ "type": "registry:ui",
+ "description": "A photon beam background component with animated light trails.",
+ "dependencies": [
+  "react",
+  "three"
+ ]
+}

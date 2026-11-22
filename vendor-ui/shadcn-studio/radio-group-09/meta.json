@@ -1,0 +1,10 @@
+{
+ "name": "radio-group-09",
+ "type": "registry:component",
+ "description": "A list-style radio group with pricing and badges for plan selection",
+ "registryDependencies": [
+  "badge",
+  "label",
+  "radio-group"
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "name": "testimonal-03",
+ "type": "registry:block",
+ "description": "A testimonial card grid.",
+ "dependencies": [],
+ "registryDependencies": []
+}

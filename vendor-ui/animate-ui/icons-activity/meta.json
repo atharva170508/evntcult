@@ -1,0 +1,11 @@
+{
+ "name": "icons-activity",
+ "type": "registry:ui",
+ "description": "Activity icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

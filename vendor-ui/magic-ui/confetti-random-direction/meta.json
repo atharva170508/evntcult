@@ -1,0 +1,8 @@
+{
+ "name": "confetti-random-direction",
+ "type": "registry:example",
+ "description": "Example showing confetti with random directions.",
+ "registryDependencies": [
+  "@magicui/confetti"
+ ]
+}

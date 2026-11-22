@@ -1,0 +1,8 @@
+{
+ "name": "live-button",
+ "type": "registry:ui",
+ "description": "A live button component.",
+ "dependencies": [
+  "react"
+ ]
+}

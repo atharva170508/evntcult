@@ -1,0 +1,8 @@
+{
+ "name": "animated-shiny-button",
+ "type": "registry:ui",
+ "description": "An animated shiny button component.",
+ "dependencies": [
+  "react"
+ ]
+}

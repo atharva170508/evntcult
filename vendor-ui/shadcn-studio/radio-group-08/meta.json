@@ -1,0 +1,8 @@
+{
+ "name": "radio-group-08",
+ "type": "registry:component",
+ "description": "A chip-style radio group with grid layout for size selection",
+ "registryDependencies": [
+  "radio-group"
+ ]
+}

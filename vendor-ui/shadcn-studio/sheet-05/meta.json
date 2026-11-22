@@ -1,0 +1,16 @@
+{
+ "name": "sheet-05",
+ "type": "registry:component",
+ "description": "A sheet component with form validation and structured user registration",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "form",
+  "input",
+  "sheet"
+ ]
+}

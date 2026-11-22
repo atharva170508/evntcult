@@ -1,0 +1,11 @@
+{
+ "name": "button-group-07",
+ "type": "registry:component",
+ "description": "Number input button group with plus/minus controls and value display",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

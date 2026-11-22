@@ -1,0 +1,14 @@
+{
+ "name": "combobox-14",
+ "type": "registry:component",
+ "description": "Framework selector combobox with floating label animation and enhanced styling",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "command",
+  "popover",
+  "utils"
+ ]
+}

@@ -1,0 +1,16 @@
+{
+ "name": "product-list-01",
+ "type": "registry:block",
+ "description": "Three-column grid layout with product cards featuring centered images, product names with badges, separator lines, pricing with sale discounts, wishlist checkboxes and shopping cart icons",
+ "dependencies": [
+  "@radix-ui/react-checkbox",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button",
+  "card",
+  "separator",
+  "utils"
+ ]
+}

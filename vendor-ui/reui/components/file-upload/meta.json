@@ -1,0 +1,80 @@
+[
+  {
+    "name": "c-file-upload-1",
+    "title": "Basic file upload",
+    "label": "Basic",
+    "description": "Basic file upload",
+    "order": 1
+  },
+  {
+    "name": "c-file-upload-2",
+    "title": "Avatar upload",
+    "label": "Avatar",
+    "description": "Avatar upload",
+    "order": 2
+  },
+  {
+    "name": "c-file-upload-3",
+    "title": "Basic drag and drop file upload",
+    "label": "Drag & Drop",
+    "description": "Basic drag and drop file upload",
+    "order": 3,
+    "gridSize": 1
+  },
+  {
+    "name": "c-file-upload-4",
+    "title": "Gallery file upload",
+    "label": "Gallery",
+    "description": "Gallery file upload",
+    "order": 4,
+    "gridSize": 1
+  },
+  {
+    "name": "c-file-upload-5",
+    "title": "Progress file upload",
+    "label": "Progress List",
+    "description": "Progress file upload",
+    "order": 5,
+    "gridSize": 1
+  },
+  {
+    "name": "c-file-upload-6",
+    "title": "Table file upload",
+    "label": "Table",
+    "description": "Table file upload",
+    "order": 6,
+    "gridSize": 1
+  },
+  {
+    "name": "c-file-upload-7",
+    "title": "Image upload",
+    "label": "Product Images",
+    "description": "Image upload",
+    "order": 7,
+    "gridSize": 1
+  },
+  {
+    "name": "c-file-upload-8",
+    "title": "Image upload with sorting.",
+    "label": "Sortable Images",
+    "description": "Image upload with sorting.",
+    "order": 8,
+    "gridSize": 1
+  },
+  {
+    "name": "c-file-upload-9",
+    "title": "Card file upload.",
+    "label": "Preview Cards",
+    "description": "Card file upload.",
+    "order": 9,
+    "gridSize": 1
+  },
+  {
+    "name": "c-file-upload-10",
+    "title": "Cover image upload.",
+    "label": "Cover Image",
+    "description": "Cover image upload.",
+    "order": 10,
+    "gridSize": 1
+  }
+]

@@ -1,0 +1,8 @@
+{
+ "name": "textarea-10",
+ "type": "registry:component",
+ "description": "Textarea size variations with small, default, and large height options",
+ "registryDependencies": [
+  "textarea"
+ ]
+}

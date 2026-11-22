@@ -1,0 +1,8 @@
+{
+ "name": "striped-pattern-right",
+ "type": "registry:example",
+ "description": "Example showing a background striped pattern slanting to the right using SVG.",
+ "registryDependencies": [
+  "@magicui/striped-pattern"
+ ]
+}

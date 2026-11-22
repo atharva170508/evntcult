@@ -1,0 +1,14 @@
+{
+ "name": "calendar-21",
+ "type": "registry:component",
+ "description": "Advanced calendar with collapsible year/month selection and custom navigation",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "collapsible",
+  "scroll-area"
+ ]
+}

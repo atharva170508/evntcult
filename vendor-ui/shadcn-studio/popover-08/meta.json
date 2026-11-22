@@ -1,0 +1,13 @@
+{
+ "name": "popover-08",
+ "type": "registry:component",
+ "description": "A feedback popover with textarea for user comments and send/cancel actions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "popover",
+  "textarea"
+ ]
+}

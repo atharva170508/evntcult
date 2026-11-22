@@ -1,0 +1,13 @@
+{
+ "name": "navbar-component-01",
+ "type": "registry:block",
+ "description": "A sticky navigation header with centered logo and brand name flanked symmetrically by navigation links on both sides. Features a search icon button and responsive mobile dropdown menu, perfect for balanced logo-centric layouts.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dropdown-menu",
+  "utils"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-animate-github-stars",
+ "type": "registry:ui",
+ "description": "Demo showing an animated github stars counter.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-github-stars"
+ ]
+}

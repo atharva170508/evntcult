@@ -1,0 +1,9 @@
+{
+ "name": "input-otp-03",
+ "type": "registry:component",
+ "description": "A 4-digit OTP input field with resend functionality and helper text",
+ "registryDependencies": [
+  "input-otp",
+  "label"
+ ]
+}

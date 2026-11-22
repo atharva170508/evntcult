@@ -1,0 +1,8 @@
+{
+ "name": "animated-list",
+ "type": "registry:ui",
+ "description": "A list that animates each item in sequence with a delay. Used to showcase notifications or events on your landing page.",
+ "dependencies": [
+  "motion"
+ ]
+}

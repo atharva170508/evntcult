@@ -1,0 +1,8 @@
+{
+ "name": "badge-17",
+ "type": "registry:component",
+ "description": "Blocked status badge with destructive color and dot indicator",
+ "registryDependencies": [
+  "badge"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "name": "data-table-07",
+ "type": "registry:component",
+ "description": "Data table with pinnable columns sticking to the left side or right side for easy access",
+ "dependencies": [
+  "lucide-react",
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "button",
+  "dropdown-menu",
+  "table"
+ ]
+}

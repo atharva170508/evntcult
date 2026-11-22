@@ -1,0 +1,11 @@
+{
+ "name": "icons-rotate-ccw",
+ "type": "registry:ui",
+ "description": "Rotate ccw icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

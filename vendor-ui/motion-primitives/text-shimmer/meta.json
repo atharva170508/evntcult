@@ -1,0 +1,8 @@
+{
+ "name": "text-shimmer",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

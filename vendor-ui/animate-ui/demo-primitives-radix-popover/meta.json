@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-radix-popover",
+ "type": "registry:ui",
+ "description": "Demo showing an animated radix popover.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-popover"
+ ]
+}

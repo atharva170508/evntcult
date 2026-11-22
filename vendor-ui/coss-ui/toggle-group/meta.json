@@ -1,0 +1,10 @@
+{
+ "name": "toggle-group",
+ "type": "registry:ui",
+ "dependencies": [
+  "radix-ui"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/toggle.json"
+ ]
+}

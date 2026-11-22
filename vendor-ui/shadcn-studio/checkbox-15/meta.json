@@ -1,0 +1,12 @@
+{
+ "name": "checkbox-15",
+ "type": "registry:component",
+ "description": "Tree checkbox with parent-child relationship and indeterminate state",
+ "dependencies": [
+  "@radix-ui/react-checkbox",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label"
+ ]
+}

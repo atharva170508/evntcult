@@ -1,0 +1,11 @@
+{
+ "name": "demo-primitives-base-files",
+ "type": "registry:ui",
+ "description": "Demo showing an animated base files.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-files"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "button-35",
+ "type": "registry:component",
+ "description": "Mail icon button with notification badge counter for unread messages",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button"
+ ]
+}

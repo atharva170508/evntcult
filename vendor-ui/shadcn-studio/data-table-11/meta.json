@@ -1,0 +1,17 @@
+{
+ "name": "data-table-11",
+ "type": "registry:component",
+ "description": "data table with sorting, row selection, and pagination\u2014styled with Origin UI and powered by @tanstack/react-table",
+ "dependencies": [
+  "lucide-react",
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button",
+  "checkbox",
+  "pagination",
+  "select",
+  "table"
+ ]
+}

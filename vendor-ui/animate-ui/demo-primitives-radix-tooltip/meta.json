@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-radix-tooltip",
+ "type": "registry:ui",
+ "description": "Demo showing an animated radix tooltip.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-tooltip"
+ ]
+}

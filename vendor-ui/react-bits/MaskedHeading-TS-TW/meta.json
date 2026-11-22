@@ -1,0 +1,9 @@
+{
+ "name": "MaskedHeading-TS-TW",
+ "type": "registry:component",
+ "description": "A headline with a drifting colour mesh or image showing through, revealed word by word.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

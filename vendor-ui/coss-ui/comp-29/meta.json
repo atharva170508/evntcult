@@ -1,0 +1,7 @@
+{
+ "name": "comp-29",
+ "type": "registry:component",
+ "dependencies": [
+  "react-aria-components"
+ ]
+}

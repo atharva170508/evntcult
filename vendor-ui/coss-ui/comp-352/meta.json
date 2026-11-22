@@ -1,0 +1,8 @@
+{
+ "name": "comp-352",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/accordion.json",
+  "https://coss.com/origin/r/collapsible.json"
+ ]
+}

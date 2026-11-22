@@ -1,0 +1,8 @@
+{
+ "name": "tabs-15",
+ "type": "registry:component",
+ "description": "Vertical tabs layout with left-side navigation structure",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "components-base-tabs",
+ "type": "registry:ui",
+ "description": "A component for toggling between related panels on the same page.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-tabs"
+ ]
+}

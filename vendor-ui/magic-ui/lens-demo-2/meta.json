@@ -1,0 +1,10 @@
+{
+ "name": "lens-demo-2",
+ "type": "registry:example",
+ "description": "Second example showing a lens effect component",
+ "registryDependencies": [
+  "button",
+  "card",
+  "@magicui/lens"
+ ]
+}

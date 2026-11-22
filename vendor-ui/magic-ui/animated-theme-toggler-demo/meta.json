@@ -1,0 +1,8 @@
+{
+ "name": "animated-theme-toggler-demo",
+ "type": "registry:example",
+ "description": "Example showing animation while changing the theme.",
+ "registryDependencies": [
+  "@magicui/animated-theme-toggler"
+ ]
+}

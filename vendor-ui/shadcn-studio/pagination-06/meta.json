@@ -1,0 +1,8 @@
+{
+ "name": "pagination-06",
+ "type": "registry:component",
+ "description": "A pagination component with fully rounded button styling for modern appearance",
+ "registryDependencies": [
+  "pagination"
+ ]
+}

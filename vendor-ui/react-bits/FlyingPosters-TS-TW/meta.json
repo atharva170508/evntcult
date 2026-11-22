@@ -1,0 +1,7 @@
+{
+ "name": "FlyingPosters-TS-TW",
+ "type": "registry:component",
+ "description": "3D posters that twist and flip as you scroll or drag through an endless column.",
+ "dependencies": [],
+ "registryDependencies": []
+}

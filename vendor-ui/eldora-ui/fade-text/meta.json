@@ -1,0 +1,10 @@
+{
+ "name": "fade-text",
+ "type": "registry:ui",
+ "description": "A combined fade text component with support for in, up, and down directions.",
+ "dependencies": [
+  "motion",
+  "react",
+  "clsx"
+ ]
+}

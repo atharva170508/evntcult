@@ -1,0 +1,8 @@
+{
+ "name": "word-rotate",
+ "type": "registry:ui",
+ "description": "A vertical rotation of words",
+ "dependencies": [
+  "motion"
+ ]
+}

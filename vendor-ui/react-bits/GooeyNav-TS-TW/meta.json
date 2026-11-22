@@ -1,0 +1,7 @@
+{
+ "name": "GooeyNav-TS-TW",
+ "type": "registry:component",
+ "description": "A navigation bar whose active pill breaks into goo that flows over to the item you pick.",
+ "dependencies": [],
+ "registryDependencies": []
+}

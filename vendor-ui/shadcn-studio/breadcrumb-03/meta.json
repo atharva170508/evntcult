@@ -1,0 +1,11 @@
+{
+ "name": "breadcrumb-03",
+ "type": "registry:component",
+ "description": "Breadcrumb with folder icons and chevron separators for file system navigation",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "breadcrumb"
+ ]
+}

@@ -1,0 +1,401 @@
+[
+  {
+    "name": "c-button-group-1",
+    "title": "Basic button group with two buttons",
+    "label": "Two Buttons",
+    "description": "Basic button group with two buttons",
+    "order": 1
+  },
+  {
+    "name": "c-button-group-2",
+    "title": "Button group with button followed by input",
+    "label": "Button & Input",
+    "description": "Button group with button followed by input",
+    "order": 2
+  },
+  {
+    "name": "c-button-group-3",
+    "title": "Button group with buttons and badge",
+    "label": "Buttons & Badge",
+    "description": "Button group with buttons and badge",
+    "order": 3
+  },
+  {
+    "name": "c-button-group-4",
+    "title": "Button group with dropdown menu",
+    "label": "Dropdown Menu",
+    "description": "Button group with dropdown menu",
+    "order": 4
+  },
+  {
+    "name": "c-button-group-5",
+    "title": "Team activity and collaboration group",
+    "label": "Team Activity",
+    "description": "Team activity and collaboration group",
+    "order": 5
+  },
+  {
+    "name": "c-button-group-6",
+    "title": "Button group using icons for visual actions",
+    "label": "Icon Actions",
+    "description": "Button group using icons for visual actions",
+    "order": 6
+  },
+  {
+    "name": "c-button-group-7",
+    "title": "Dropdown menu with status indicator",
+    "label": "Status Indicator",
+    "description": "Dropdown menu with status indicator",
+    "order": 7
+  },
+  {
+    "name": "c-button-group-8",
+    "title": "Button group styled as a like button with a counter",
+    "label": "Like Counter",
+    "description": "Button group styled as a like button with a counter",
+    "order": 8
+  },
+  {
+    "name": "c-button-group-9",
+    "title": "Nested button groups for complex action sets",
+    "label": "Nested Groups",
+    "description": "Nested button groups for complex action sets",
+    "order": 9
+  },
+  {
+    "name": "c-button-group-10",
+    "title": "Button group used for standard pagination",
+    "label": "Basic Pagination",
+    "description": "Button group used for standard pagination",
+    "order": 10
+  },
+  {
+    "name": "c-button-group-11",
+    "title": "Pagination split into page numbers and navigation arrows",
+    "label": "Split Pagination",
+    "description": "Pagination split into page numbers and navigation arrows",
+    "order": 11
+  },
+  {
+    "name": "c-button-group-12",
+    "title": "Button group for editor text alignment controls",
+    "label": "Text Alignment",
+    "description": "Button group for editor text alignment controls",
+    "order": 12
+  },
+  {
+    "name": "c-button-group-13",
+    "title": "Vertical button group orientation",
+    "label": "Vertical Orientation",
+    "description": "Vertical button group orientation",
+    "order": 13
+  },
+  {
+    "name": "c-button-group-14",
+    "title": "Nested vertical button group for complex tool palettes",
+    "label": "Vertical Tool Palette",
+    "description": "Nested vertical button group for complex tool palettes",
+    "order": 14
+  },
+  {
+    "name": "c-button-group-15",
+    "title": "Star button group with count and dropdown",
+    "label": "Star With Dropdown",
+    "description": "Star button group with count and dropdown",
+    "order": 15
+  },
+  {
+    "name": "c-button-group-16",
+    "title": "Search input with filter menu and clear button",
+    "label": "Search Filter Clear",
+    "description": "Search input with filter menu and clear button",
+    "order": 16
+  },
+  {
+    "name": "c-button-group-17",
+    "title": "Button group with comprehensive action menu",
+    "label": "Conversation Menu",
+    "description": "Button group with comprehensive action menu",
+    "order": 17
+  },
+  {
+    "name": "c-button-group-18",
+    "title": "Advanced git toolbar with branch selection and split commit button",
+    "label": "Git Split Button",
+    "description": "Advanced git toolbar with branch selection and split commit button",
+    "order": 18
+  },
+  {
+    "name": "c-button-group-19",
+    "title": "Button group with dropdown menu and input group",
+    "label": "Search With Menu",
+    "description": "Button group with dropdown menu and input group",
+    "order": 19
+  },
+  {
+    "name": "c-button-group-20",
+    "title": "Button group with input group and button",
+    "label": "Search With Button",
+    "description": "Button group with input group and button",
+    "order": 20
+  },
+  {
+    "name": "c-button-group-21",
+    "title": "Button group with dropdown menu and input group",
+    "label": "File Name Menu",
+    "description": "Button group with dropdown menu and input group",
+    "order": 21
+  },
+  {
+    "name": "c-button-group-22",
+    "title": "Basic button group with disabled button",
+    "label": "Disabled Button",
+    "description": "Basic button group with disabled button",
+    "order": 22
+  },
+  {
+    "name": "c-button-group-23",
+    "title": "Button group buttons with separators",
+    "label": "Separated Buttons",
+    "description": "Button group buttons with separators",
+    "order": 23
+  },
+  {
+    "name": "c-button-group-24",
+    "title": "View switcher for dashboard layouts",
+    "label": "Dashboard Views",
+    "description": "View switcher for dashboard layouts",
+    "order": 24
+  },
+  {
+    "name": "c-button-group-25",
+    "title": "Rating scale using numerical buttons",
+    "label": "Rating Scale",
+    "description": "Rating scale using numerical buttons",
+    "order": 25
+  },
+  {
+    "name": "c-button-group-26",
+    "title": "Button group with user selection select",
+    "label": "User Selection",
+    "description": "Button group with user selection select",
+    "order": 26
+  },
+  {
+    "name": "c-button-group-27",
+    "title": "Button group with select status addon",
+    "label": "Status Select",
+    "description": "Button group with select status addon",
+    "order": 27
+  },
+  {
+    "name": "c-button-group-28",
+    "title": "Volume controller with plus/minus actions",
+    "label": "Volume Control",
+    "description": "Volume controller with plus/minus actions",
+    "order": 28
+  },
+  {
+    "name": "c-button-group-29",
+    "title": "Button group with follower count",
+    "label": "Follower Count",
+    "description": "Button group with follower count",
+    "order": 29
+  },
+  {
+    "name": "c-button-group-30",
+    "title": "Active state button group with count",
+    "label": "Active Count",
+    "description": "Active state button group with count",
+    "order": 30
+  },
+  {
+    "name": "c-button-group-31",
+    "title": "Horizontal button group with primary and secondary labels",
+    "label": "Share Caption",
+    "description": "Horizontal button group with primary and secondary labels",
+    "order": 31
+  },
+  {
+    "name": "c-button-group-32",
+    "title": "Button group with dropdown menu and view toggle",
+    "label": "Sort & View",
+    "description": "Button group with dropdown menu and view toggle",
+    "order": 32
+  },
+  {
+    "name": "c-button-group-33",
+    "title": "Button group with select controls",
+    "label": "Select Controls",
+    "description": "Button group with select controls",
+    "order": 33
+  },
+  {
+    "name": "c-button-group-34",
+    "title": "Segmented control with dropdown inside button group",
+    "label": "Segmented Control",
+    "description": "Segmented control with dropdown inside button group",
+    "order": 34
+  },
+  {
+    "name": "c-button-group-35",
+    "title": "Pagination button group",
+    "label": "Numbered Pagination",
+    "description": "Pagination button group",
+    "order": 35
+  },
+  {
+    "name": "c-button-group-36",
+    "title": "View switcher button group",
+    "label": "View Switcher",
+    "description": "View switcher button group",
+    "order": 36
+  },
+  {
+    "name": "c-button-group-37",
+    "title": "Zoom controls button group",
+    "label": "Zoom Controls",
+    "description": "Zoom controls button group",
+    "order": 37
+  },
+  {
+    "name": "c-button-group-38",
+    "title": "Media player controls button group",
+    "label": "Media Controls",
+    "description": "Media player controls button group",
+    "order": 38
+  },
+  {
+    "name": "c-button-group-39",
+    "title": "Split button with dropdown trigger",
+    "label": "Split Button",
+    "description": "Split button with dropdown trigger",
+    "order": 39
+  },
+  {
+    "name": "c-button-group-40",
+    "title": "Vertical button group",
+    "label": "Vertical List",
+    "description": "Vertical button group",
+    "order": 40
+  },
+  {
+    "name": "c-button-group-41",
+    "title": "Model selector with tier badges",
+    "label": "Model Selector",
+    "description": "Model selector with tier badges",
+    "order": 41
+  },
+  {
+    "name": "c-button-group-42",
+    "title": "Segmented order type selector",
+    "label": "Order Type",
+    "description": "Segmented order type selector",
+    "order": 42
+  },
+  {
+    "name": "c-button-group-43",
+    "title": "Buy sell hold toggle group",
+    "label": "Buy Sell Hold",
+    "description": "Buy sell hold toggle group",
+    "order": 43
+  },
+  {
+    "name": "c-button-group-44",
+    "title": "Pipeline stage mover with dropdown",
+    "label": "Pipeline Stage",
+    "description": "Pipeline stage mover with dropdown",
+    "order": 44
+  },
+  {
+    "name": "c-button-group-45",
+    "title": "Environment switcher with indicator",
+    "label": "Environment Switcher",
+    "description": "Environment switcher with indicator",
+    "order": 45
+  },
+  {
+    "name": "c-button-group-46",
+    "title": "Compact time interval selector",
+    "label": "Time Interval",
+    "description": "Compact time interval selector",
+    "order": 46
+  },
+  {
+    "name": "c-button-group-47",
+    "title": "Review actions split button",
+    "label": "Review Actions",
+    "description": "Review actions split button",
+    "order": 47
+  },
+  {
+    "name": "c-button-group-48",
+    "title": "Toolbar filter with export and view toggle",
+    "label": "Export Toolbar",
+    "description": "Toolbar filter with export and view toggle",
+    "order": 48
+  },
+  {
+    "name": "c-button-group-49",
+    "title": "Vertical nav links with icons",
+    "label": "Vertical Nav",
+    "description": "Vertical nav links with icons",
+    "order": 49
+  },
+  {
+    "name": "c-button-group-50",
+    "title": "Toolbar filter sort and more",
+    "label": "Filter Sort More",
+    "description": "Toolbar filter sort and more",
+    "order": 50
+  },
+  {
+    "name": "c-button-group-51",
+    "title": "New button with create dropdown",
+    "label": "Create Menu",
+    "description": "New button with create dropdown",
+    "order": 51
+  },
+  {
+    "name": "c-button-group-52",
+    "title": "Refresh share and export dropdown",
+    "label": "Dashboard Actions",
+    "description": "Refresh share and export dropdown",
+    "order": 52
+  },
+  {
+    "name": "c-button-group-53",
+    "title": "Publish controls with split button and overflow",
+    "label": "Publish Controls",
+    "description": "Publish controls with split button and overflow",
+    "order": 53
+  },
+  {
+    "name": "c-button-group-54",
+    "title": "API service environment and version selectors",
+    "label": "Service Selectors",
+    "description": "API service environment and version selectors",
+    "order": 54
+  },
+  {
+    "name": "c-button-group-55",
+    "title": "Payout release controls with amount context",
+    "label": "Payout Release",
+    "description": "Payout release controls with amount context",
+    "order": 55
+  },
+  {
+    "name": "c-button-group-56",
+    "title": "Attachment button group with download action",
+    "label": "File Attachment",
+    "description": "Attachment button group with download action",
+    "order": 56
+  },
+  {
+    "name": "c-button-group-57",
+    "title": "Agent mode selector with credit cap dropdown",
+    "label": "Agent Mode",
+    "description": "Agent mode selector with credit cap dropdown",
+    "order": 57
+  }
+]

@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-community-notification-list",
+ "type": "registry:ui",
+ "description": "Demo showing a notification list.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-community-notification-list"
+ ]
+}

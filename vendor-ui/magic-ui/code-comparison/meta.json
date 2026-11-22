@@ -1,0 +1,9 @@
+{
+ "name": "code-comparison",
+ "type": "registry:ui",
+ "description": "A component which compares two code snippets.",
+ "dependencies": [
+  "shiki",
+  "@shikijs/transformers"
+ ]
+}

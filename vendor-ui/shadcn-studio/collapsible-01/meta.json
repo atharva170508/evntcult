@@ -1,0 +1,12 @@
+{
+ "name": "collapsible-01",
+ "type": "registry:component",
+ "description": "Basic collapsible with repository list and toggle button functionality",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "collapsible"
+ ]
+}

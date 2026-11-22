@@ -1,0 +1,8 @@
+{
+ "name": "tweet-card",
+ "type": "registry:ui",
+ "description": "A card that displays a tweet with the author's name, handle, and profile picture.",
+ "dependencies": [
+  "react-tweet"
+ ]
+}

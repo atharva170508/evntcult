@@ -1,0 +1,11 @@
+{
+ "name": "calendar",
+ "type": "registry:ui",
+ "dependencies": [
+  "react-day-picker",
+  "date-fns"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/button.json"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "badge-21",
+ "type": "registry:component",
+ "description": "Successful status badge with green outline and check icon",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge"
+ ]
+}

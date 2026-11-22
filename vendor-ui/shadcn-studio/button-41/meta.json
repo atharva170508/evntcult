@@ -1,0 +1,8 @@
+{
+ "name": "button-41",
+ "type": "registry:component",
+ "description": "Button with shine hover effect using gradient animation",
+ "registryDependencies": [
+  "button"
+ ]
+}

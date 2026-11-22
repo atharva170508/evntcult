@@ -1,0 +1,9 @@
+{
+ "name": "BubbleMenu-TS-TW",
+ "type": "registry:component",
+ "description": "Floating circular expanding menu with staggered item reveal.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

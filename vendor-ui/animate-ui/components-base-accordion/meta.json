@@ -1,0 +1,11 @@
+{
+ "name": "components-base-accordion",
+ "type": "registry:ui",
+ "description": "A set of collapsible panels with headings.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-accordion"
+ ]
+}

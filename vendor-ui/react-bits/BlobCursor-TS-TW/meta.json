@@ -1,0 +1,9 @@
+{
+ "name": "BlobCursor-TS-TW",
+ "type": "registry:component",
+ "description": "Liquid metal blob cursor that stretches, sloshes and bursts into droplets, in chrome, jelly, pearl or ink.",
+ "dependencies": [
+  "three@^0.180.0"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,8 @@
+{
+ "name": "button-40",
+ "type": "registry:component",
+ "description": "Button with ring hover effect that shows animated border on hover",
+ "registryDependencies": [
+  "button"
+ ]
+}

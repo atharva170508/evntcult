@@ -1,0 +1,11 @@
+{
+ "name": "icons-chart-spline",
+ "type": "registry:ui",
+ "description": "Chart spline icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

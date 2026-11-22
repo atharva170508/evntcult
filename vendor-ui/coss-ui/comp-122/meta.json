@@ -1,0 +1,10 @@
+{
+ "name": "comp-122",
+ "type": "registry:component",
+ "dependencies": [
+  "@remixicon/react"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/button.json"
+ ]
+}

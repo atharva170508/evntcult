@@ -1,0 +1,8 @@
+{
+ "name": "avatar-07",
+ "type": "registry:component",
+ "description": "Status avatar with busy indicator showing red status dot.",
+ "registryDependencies": [
+  "avatar"
+ ]
+}

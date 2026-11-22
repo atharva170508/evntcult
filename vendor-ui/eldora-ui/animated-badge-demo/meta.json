@@ -1,0 +1,8 @@
+{
+ "name": "animated-badge-demo",
+ "type": "registry:example",
+ "description": "Example showing a animated-badge-demo component.",
+ "registryDependencies": [
+  "@eldoraui/animated-badge"
+ ]
+}

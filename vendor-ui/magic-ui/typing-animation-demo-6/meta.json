@@ -1,0 +1,8 @@
+{
+ "name": "typing-animation-demo-6",
+ "type": "registry:example",
+ "description": "Example showing single play without looping.",
+ "registryDependencies": [
+  "@magicui/typing-animation"
+ ]
+}

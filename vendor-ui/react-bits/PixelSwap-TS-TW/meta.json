@@ -1,0 +1,7 @@
+{
+ "name": "PixelSwap-TS-TW",
+ "type": "registry:component",
+ "description": "New content builds in pixel by pixel in a springy wave that starts wherever the cursor enters.",
+ "dependencies": [],
+ "registryDependencies": []
+}

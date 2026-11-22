@@ -1,0 +1,86 @@
+[
+  {
+    "name": "c-signature-pad-1",
+    "title": "Pinned clear and save",
+    "label": "Pinned Actions",
+    "description": "Muted signing surface with clear and save controls pinned inside the pad.",
+    "order": 1
+  },
+  {
+    "name": "c-signature-pad-2",
+    "title": "Undo and redo toolbar",
+    "label": "Undo & Redo",
+    "description": "Toolbar with undo, redo and clear, plus Ctrl+Z and Ctrl+Shift+Z shortcuts.",
+    "order": 2
+  },
+  {
+    "name": "c-signature-pad-3",
+    "title": "Form field with validation",
+    "label": "Form Validation",
+    "description": "Native form field that submits an SVG signature, with a required check and reset.",
+    "order": 3
+  },
+  {
+    "name": "c-signature-pad-4",
+    "title": "Signing workspace",
+    "label": "Signing Workspace",
+    "description": "Ink colors, line weights, undo, redo, replay and PNG or SVG download in one signing card.",
+    "order": 4
+  },
+  {
+    "name": "c-signature-pad-5",
+    "title": "Export PNG, JPEG, SVG or JSON",
+    "label": "Export Formats",
+    "description": "Export the signature in 4 formats with a preview, payload size and download link.",
+    "order": 5
+  },
+  {
+    "name": "c-signature-pad-6",
+    "title": "Draw or type",
+    "label": "Draw or Type",
+    "description": "Tabs to draw a signature or type it, the keyboard route to the same outcome.",
+    "order": 6
+  },
+  {
+    "name": "c-signature-pad-7",
+    "title": "Agreement signing card",
+    "label": "Agreement Card",
+    "description": "Agreement card that locks the signature read-only once it is signed and dated.",
+    "order": 7
+  },
+  {
+    "name": "c-signature-pad-8",
+    "title": "Signature in a dialog",
+    "label": "In Dialog",
+    "description": "Saved profile signature with a dialog to draw, edit or remove it.",
+    "order": 8
+  },
+  {
+    "name": "c-signature-pad-9",
+    "title": "Stylus mode with palm rejection",
+    "label": "Stylus Mode",
+    "description": "Pen-only input that ignores a resting palm, with pressure-sensitive ink.",
+    "order": 9
+  },
+  {
+    "name": "c-signature-pad-10",
+    "title": "Initials per clause",
+    "label": "Clause Initials",
+    "description": "Compact initial pads for each contract clause with a completion count.",
+    "order": 10
+  },
+  {
+    "name": "c-signature-pad-11",
+    "title": "Proof of delivery",
+    "label": "Proof of Delivery",
+    "description": "Mobile delivery card with recipient name, a touch signature and confirmation.",
+    "order": 11
+  },
+  {
+    "name": "c-signature-pad-12",
+    "title": "Upload with apiRef",
+    "label": "File Upload",
+    "description": "Read the pad from outside its tree and attach the signature as a PNG file.",
+    "order": 12
+  }
+]

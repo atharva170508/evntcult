@@ -1,0 +1,5 @@
+{
+ "name": "components-backgrounds-hexagon",
+ "type": "registry:ui",
+ "description": "A background component featuring an interactive hexagon grid."
+}

@@ -1,0 +1,9 @@
+{
+ "name": "accordion-07",
+ "type": "registry:component",
+ "description": "Avatar-based accordion displaying user profiles with avatar images, names, and email addresses.",
+ "registryDependencies": [
+  "accordion",
+  "avatar"
+ ]
+}

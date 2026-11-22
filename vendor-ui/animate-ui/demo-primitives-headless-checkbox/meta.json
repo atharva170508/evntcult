@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-headless-checkbox",
+ "type": "registry:ui",
+ "description": "Demo showing an animated headless checkbox.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-headless-checkbox"
+ ]
+}

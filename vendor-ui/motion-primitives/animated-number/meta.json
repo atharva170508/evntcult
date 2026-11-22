@@ -1,0 +1,8 @@
+{
+ "name": "animated-number",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

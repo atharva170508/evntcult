@@ -1,0 +1,8 @@
+{
+ "name": "badge-14",
+ "type": "registry:component",
+ "description": "Gradient styled badge with vibrant indigo-to-pink color transition",
+ "registryDependencies": [
+  "badge"
+ ]
+}

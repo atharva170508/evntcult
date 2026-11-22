@@ -1,0 +1,8 @@
+{
+ "name": "primitives-effects-highlight",
+ "type": "registry:ui",
+ "description": "A highlight effect that allows you to highlight elements on hover, click or with a controlled value.",
+ "dependencies": [
+  "motion"
+ ]
+}

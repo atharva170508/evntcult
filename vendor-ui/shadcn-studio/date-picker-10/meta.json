@@ -1,0 +1,15 @@
+{
+ "name": "date-picker-10",
+ "type": "registry:component",
+ "description": "Combined date picker and time input displayed side by side for datetime selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "input",
+  "label",
+  "popover"
+ ]
+}

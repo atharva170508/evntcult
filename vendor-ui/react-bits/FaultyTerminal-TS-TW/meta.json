@@ -1,0 +1,7 @@
+{
+ "name": "FaultyTerminal-TS-TW",
+ "type": "registry:component",
+ "description": "A flickering CRT terminal of glowing glyphs, with phosphor trails under the cursor and glitches on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

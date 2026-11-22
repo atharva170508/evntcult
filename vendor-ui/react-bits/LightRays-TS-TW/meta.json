@@ -1,0 +1,7 @@
+{
+ "name": "LightRays-TS-TW",
+ "type": "registry:component",
+ "description": "Volumetric light rays from any edge, with source glow and haze. The cursor steers the beam and casts a shadow.",
+ "dependencies": [],
+ "registryDependencies": []
+}

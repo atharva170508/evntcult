@@ -1,0 +1,11 @@
+{
+ "name": "sonner-05",
+ "type": "registry:component",
+ "description": "A closable toast notification with user-controlled dismiss functionality",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-buttons-ripple",
+ "type": "registry:ui",
+ "description": "Demo showing a ripple button.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-buttons-ripple"
+ ]
+}

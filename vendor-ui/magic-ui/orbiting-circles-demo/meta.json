@@ -1,0 +1,11 @@
+{
+ "name": "orbiting-circles-demo",
+ "type": "registry:example",
+ "description": "Example showing circles moving in orbital paths.",
+ "dependencies": [
+  "@radix-ui/react-icons"
+ ],
+ "registryDependencies": [
+  "@magicui/orbiting-circles"
+ ]
+}

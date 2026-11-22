@@ -1,0 +1,8 @@
+{
+ "name": "text-reveal-demo",
+ "type": "registry:example",
+ "description": "Example showing text that fades in on scroll.",
+ "registryDependencies": [
+  "@magicui/text-reveal"
+ ]
+}

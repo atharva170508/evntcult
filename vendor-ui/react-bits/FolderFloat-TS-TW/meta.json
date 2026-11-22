@@ -1,0 +1,9 @@
+{
+ "name": "FolderFloat-TS-TW",
+ "type": "registry:component",
+ "description": "Folder whose notes spring out into a floating cloud when it opens on hover or press.",
+ "dependencies": [
+  "matter-js@^0.20.0"
+ ],
+ "registryDependencies": []
+}

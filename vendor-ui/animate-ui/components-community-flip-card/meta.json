@@ -1,0 +1,10 @@
+{
+ "name": "components-community-flip-card",
+ "type": "registry:ui",
+ "description": "A 3D animated card component that flips to reveal content on the back.",
+ "dependencies": [
+  "motion",
+  "class-variance-authority",
+  "lucide-react"
+ ]
+}

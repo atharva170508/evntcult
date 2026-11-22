@@ -1,0 +1,14 @@
+{
+ "name": "date-picker-07",
+ "type": "registry:component",
+ "description": "Single date picker with disabled outside days for cleaner calendar view",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "label",
+  "popover"
+ ]
+}

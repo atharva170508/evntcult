@@ -1,0 +1,9 @@
+{
+ "name": "ShapeWaves-TS-TW",
+ "type": "registry:component",
+ "description": "A field of triangles, circles and squares that brighten and grow along rolling waves.",
+ "dependencies": [
+  "vgpu@^0.3.1"
+ ],
+ "registryDependencies": []
+}

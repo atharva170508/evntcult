@@ -1,0 +1,13 @@
+{
+ "name": "chart-component-01",
+ "type": "registry:block",
+ "description": "Comprehensive sales metrics dashboard featuring company profile, key performance indicators (sales trend, discounts, profit, orders), pie chart for revenue goals, and bar chart for sales plan completion with cohort analysis tools.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "card",
+  "chart"
+ ]
+}

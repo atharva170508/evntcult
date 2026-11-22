@@ -1,0 +1,11 @@
+{
+ "name": "comp-46",
+ "type": "registry:component",
+ "dependencies": [
+  "react-phone-number-input"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/input.json",
+  "https://coss.com/origin/r/label.json"
+ ]
+}

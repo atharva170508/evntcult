@@ -1,0 +1,13 @@
+{
+ "name": "components-animate-code",
+ "type": "registry:ui",
+ "description": "A code component that animates the code as it is written.",
+ "dependencies": [
+  "next-themes"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-code-block",
+  "@animate-ui/v1/components-buttons-copy",
+  "@animate-ui/v1/lib-get-strict-context"
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "name": "PixelSnow-TS-TW",
+ "type": "registry:component",
+ "description": "Pixel-art snowflakes drifting down in layers of depth, brushed aside by the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

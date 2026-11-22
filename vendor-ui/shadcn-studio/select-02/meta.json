@@ -1,0 +1,12 @@
+{
+ "name": "select-02",
+ "type": "registry:component",
+ "description": "A native select dropdown with placeholder text for user guidance",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

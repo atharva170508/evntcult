@@ -1,0 +1,9 @@
+{
+ "name": "input-01",
+ "type": "registry:component",
+ "description": "A basic email input field with placeholder text",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

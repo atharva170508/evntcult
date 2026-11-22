@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-base-menu",
+ "type": "registry:ui",
+ "description": "Demo showing an animated base menu.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-menu"
+ ]
+}

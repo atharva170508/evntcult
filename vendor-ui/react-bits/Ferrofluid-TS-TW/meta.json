@@ -1,0 +1,7 @@
+{
+ "name": "Ferrofluid-TS-TW",
+ "type": "registry:component",
+ "description": "A glossy sea of magnetic fluid where swells of spikes roll in and the cursor raises a crown.",
+ "dependencies": [],
+ "registryDependencies": []
+}

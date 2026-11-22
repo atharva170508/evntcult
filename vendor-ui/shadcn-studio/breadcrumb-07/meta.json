@@ -1,0 +1,12 @@
+{
+ "name": "breadcrumb-07",
+ "type": "registry:component",
+ "description": "Interactive breadcrumb with folder state icons and dropdown functionality",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "breadcrumb",
+  "dropdown-menu"
+ ]
+}

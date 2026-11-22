@@ -1,0 +1,11 @@
+{
+ "name": "icons-panel-left",
+ "type": "registry:ui",
+ "description": "Panel left icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

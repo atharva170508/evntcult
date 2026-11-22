@@ -1,0 +1,10 @@
+{
+ "name": "pagination-03",
+ "type": "registry:component",
+ "description": "A pagination component with primary button styling for the active page",
+ "registryDependencies": [
+  "button",
+  "pagination",
+  "utils"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-chart-line",
+ "type": "registry:ui",
+ "description": "Chart line icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "accordion-12",
+ "type": "registry:component",
+ "description": "Tab with outline accordion featuring bordered highlighting and shadow effects for expanded items.",
+ "dependencies": [
+  "@radix-ui/react-accordion",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "accordion"
+ ]
+}

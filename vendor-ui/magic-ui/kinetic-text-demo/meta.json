@@ -1,0 +1,8 @@
+{
+ "name": "kinetic-text-demo",
+ "type": "registry:example",
+ "description": "An example of the kinetic text component.",
+ "registryDependencies": [
+  "@magicui/kinetic-text"
+ ]
+}

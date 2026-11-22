@@ -1,0 +1,8 @@
+{
+ "name": "marquee",
+ "type": "registry:ui",
+ "description": "A performant, customizable marquee (scrolling text/content) component.",
+ "registryDependencies": [
+  "utils"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "sonner-18",
+ "type": "registry:component",
+ "description": "A solid-styled success toast notification with green background and white text for prominent positive feedback",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

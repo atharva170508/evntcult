@@ -1,0 +1,12 @@
+{
+ "name": "select-29",
+ "type": "registry:component",
+ "description": "A status select dropdown with colored circle indicators for each status",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "name": "c-sheet-1",
+    "title": "Sheet containing a form for editing profile information",
+    "label": "Profile Editor",
+    "description": "Sheet containing a form for editing profile information.",
+    "order": 1
+  },
+  {
+    "name": "c-sheet-2",
+    "title": "Sheet without a corner close button",
+    "label": "No Close Button",
+    "description": "Sheet containing a profile form with the corner close button hidden, so the footer Cancel button closes it.",
+    "order": 2
+  },
+  {
+    "name": "c-sheet-3",
+    "title": "Sheets that open from any side",
+    "label": "Any Side",
+    "description": "Sheets that open from any side.",
+    "order": 3
+  },
+  {
+    "name": "c-sheet-4",
+    "title": "Sheet with scrollable content",
+    "label": "Scrollable Content",
+    "description": "Sheet with scrollable content",
+    "order": 4
+  }
+]

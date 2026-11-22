@@ -1,0 +1,8 @@
+{
+ "name": "alert-16",
+ "type": "registry:component",
+ "description": "Minimal alert without icon displaying simple message text only.",
+ "registryDependencies": [
+  "alert"
+ ]
+}

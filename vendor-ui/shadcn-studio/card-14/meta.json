@@ -1,0 +1,12 @@
+{
+ "name": "card-14",
+ "type": "registry:component",
+ "description": "Dismissible action card with close button and call-to-action content",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "card"
+ ]
+}

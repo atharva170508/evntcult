@@ -1,0 +1,11 @@
+{
+ "name": "switch-12",
+ "type": "registry:component",
+ "description": "A switch with check and X icon indicators that change visibility based on toggle state",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "switch"
+ ]
+}

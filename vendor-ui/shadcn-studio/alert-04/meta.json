@@ -1,0 +1,12 @@
+{
+ "name": "alert-04",
+ "type": "registry:component",
+ "description": "Interactive alert with link button featuring arrow icon and styled border/text colors.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button"
+ ]
+}

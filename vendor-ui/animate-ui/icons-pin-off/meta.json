@@ -1,0 +1,11 @@
+{
+ "name": "icons-pin-off",
+ "type": "registry:ui",
+ "description": "Pin off icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

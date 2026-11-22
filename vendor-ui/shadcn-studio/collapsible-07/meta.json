@@ -1,0 +1,13 @@
+{
+ "name": "collapsible-07",
+ "type": "registry:component",
+ "description": "FAQ card with collapsible answer section and expandable image content",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "card",
+  "collapsible"
+ ]
+}

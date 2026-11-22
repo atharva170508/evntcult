@@ -1,0 +1,7 @@
+{
+ "name": "LineWaves-TS-TW",
+ "type": "registry:component",
+ "description": "Fine lines that flow in silky waves while a band of light drifts through them.",
+ "dependencies": [],
+ "registryDependencies": []
+}

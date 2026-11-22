@@ -1,0 +1,8 @@
+{
+ "name": "animated-grid-pattern",
+ "type": "registry:ui",
+ "description": "A animated background grid pattern made with SVGs, fully customizable using Tailwind CSS.",
+ "dependencies": [
+  "motion"
+ ]
+}

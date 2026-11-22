@@ -1,0 +1,9 @@
+{
+ "name": "input-10",
+ "type": "registry:component",
+ "description": "An email input field with right-aligned helper text for privacy assurance",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

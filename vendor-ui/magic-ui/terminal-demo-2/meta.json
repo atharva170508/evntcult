@@ -1,0 +1,8 @@
+{
+ "name": "terminal-demo-2",
+ "type": "registry:example",
+ "description": "Example showing a terminal with animated text and custom delays",
+ "registryDependencies": [
+  "@magicui/terminal"
+ ]
+}

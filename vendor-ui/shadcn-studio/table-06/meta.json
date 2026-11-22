@@ -1,0 +1,8 @@
+{
+ "name": "table-06",
+ "type": "registry:component",
+ "description": "A striped rows table with alternating row background colors for improved readability",
+ "registryDependencies": [
+  "table"
+ ]
+}

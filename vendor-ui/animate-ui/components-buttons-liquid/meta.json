@@ -1,0 +1,11 @@
+{
+ "name": "components-buttons-liquid",
+ "type": "registry:ui",
+ "description": "A button that fills on hover.",
+ "dependencies": [
+  "class-variance-authority"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-buttons-liquid"
+ ]
+}

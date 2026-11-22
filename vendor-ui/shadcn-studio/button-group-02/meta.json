@@ -1,0 +1,12 @@
+{
+ "name": "button-group-02",
+ "type": "registry:component",
+ "description": "Interactive like button group with toggle state and dynamic count",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "utils"
+ ]
+}

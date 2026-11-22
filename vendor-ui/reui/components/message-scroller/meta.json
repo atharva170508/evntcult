@@ -1,0 +1,56 @@
+[
+  {
+    "name": "c-message-scroller-1",
+    "title": "Chat transcript with jump to latest",
+    "label": "Jump to Latest",
+    "description": "A scroll region that opens at the live edge with a jump to latest control.",
+    "order": 1,
+    "gridSize": 1,
+    "previewHeight": "420"
+  },
+  {
+    "name": "c-message-scroller-2",
+    "title": "Streaming reply that follows the edge",
+    "label": "Streaming Reply",
+    "description": "autoScroll pins the viewport while tokens arrive, and releases the moment the reader scrolls up.",
+    "order": 2,
+    "gridSize": 1,
+    "previewHeight": "480"
+  },
+  {
+    "name": "c-message-scroller-3",
+    "title": "Anchored turn with a previous peek",
+    "label": "Anchored Turn",
+    "description": "scrollAnchor lifts a sent message near the top while a slice of the previous turn stays visible.",
+    "order": 3,
+    "gridSize": 1,
+    "previewHeight": "500"
+  },
+  {
+    "name": "c-message-scroller-4",
+    "title": "Opening position for a saved thread",
+    "label": "Opening Position",
+    "description": "Compare start, end and last-anchor as the place a reopened thread opens at.",
+    "order": 4,
+    "gridSize": 1,
+    "previewHeight": "500"
+  },
+  {
+    "name": "c-message-scroller-5",
+    "title": "Load earlier without losing your place",
+    "label": "Load Earlier",
+    "description": "Older turns prepend above the reader while the row they were reading stays put.",
+    "order": 5,
+    "gridSize": 1,
+    "previewHeight": "460"
+  },
+  {
+    "name": "c-message-scroller-6",
+    "title": "Thread navigator for stepping turns",
+    "label": "Thread Navigator",
+    "description": "A footer navigator that reports the turn you are reading and jumps between turns.",
+    "order": 6,
+    "gridSize": 1,
+    "previewHeight": "480"
+  }
+]

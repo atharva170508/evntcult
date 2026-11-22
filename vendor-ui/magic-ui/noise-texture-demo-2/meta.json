@@ -1,0 +1,12 @@
+{
+ "name": "noise-texture-demo-2",
+ "type": "registry:example",
+ "description": "Example showing a newsletter signup card with email input over a noise texture.",
+ "registryDependencies": [
+  "@magicui/noise-texture",
+  "button",
+  "card",
+  "input",
+  "label"
+ ]
+}

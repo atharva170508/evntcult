@@ -1,0 +1,10 @@
+{
+ "name": "seperate-away-text",
+ "type": "registry:ui",
+ "description": "A seperate away text component.",
+ "dependencies": [
+  "motion",
+  "react",
+  "clsx"
+ ]
+}

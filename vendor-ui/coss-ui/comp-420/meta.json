@@ -1,0 +1,7 @@
+{
+ "name": "comp-420",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/badge.json"
+ ]
+}

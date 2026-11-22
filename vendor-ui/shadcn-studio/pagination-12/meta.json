@@ -1,0 +1,8 @@
+{
+ "name": "pagination-12",
+ "type": "registry:component",
+ "description": "A numberless pagination component with current page indicator text display",
+ "registryDependencies": [
+  "pagination"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "tweet-card-meta-preview",
+ "type": "registry:example",
+ "description": "Example showing a tweet card with meta preview.",
+ "registryDependencies": [
+  "@magicui/client-tweet-card",
+  "@magicui/tweet-card"
+ ]
+}

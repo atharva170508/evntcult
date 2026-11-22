@@ -1,0 +1,5 @@
+{
+ "name": "hooks-use-data-state",
+ "type": "registry:hook",
+ "description": "A hook that allows you to get the data-state of an element."
+}

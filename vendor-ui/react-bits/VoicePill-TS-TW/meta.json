@@ -1,0 +1,10 @@
+{
+ "name": "VoicePill-TS-TW",
+ "type": "registry:component",
+ "description": "Mic button that swells into a capsule of live equalizer bars and a timer while recording.",
+ "dependencies": [
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

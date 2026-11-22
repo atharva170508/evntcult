@@ -1,0 +1,9 @@
+{
+ "name": "checkbox-01",
+ "type": "registry:component",
+ "description": "Basic checkbox with label for simple true/false selection",
+ "registryDependencies": [
+  "checkbox",
+  "label"
+ ]
+}

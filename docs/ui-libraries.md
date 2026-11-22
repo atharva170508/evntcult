@@ -24,6 +24,54 @@ never overwrite our `Switch.tsx` on Windows). Their colour classes (`bg-backgrou
 4. Fonts: Figtree for UI, EB Garamond for headlines. Remove any Inter or Geist imports.
 5. Respect reduced motion (`useReducedMotion` from `motion/react`).
 
+## What's installed (branch `ui-libraries`)
+
+**Component sources** are in `vendor-ui/<library>/`, one folder per library, with each library's
+licence. About 10,000 files, taken from the libraries' public GitHub repos. Each component folder from
+a built registry has a `meta.json` listing its npm dependencies.
+
+`vendor-ui/` is left out of the type-check, the linter and Tailwind's class scan, so nothing there
+reaches the site until it's used. To use a component: copy it into `src/components/shadcn/`, fix its
+imports, install the packages in its `meta.json`, and restyle it (checklist above).
+
+**npm packages** in `package.json`: `@heroui/react` 2.7 and `framer-motion`, `lightswind`,
+`daisyui` 4, `flowbite` 2, `preline` 2, `flyonui` 1. These are the newest versions that work with
+Tailwind 3.4. `.npmrc` sets `legacy-peer-deps` because Lightswind asks for an older tailwind-merge.
+
+The four Tailwind theme kits are installed but **not switched on** in `tailwind.config.ts`.
+Switching one on restyles existing pages: Flowbite and Preline restyle every form field, FlyonUI and
+DaisyUI add their own `.card` and `.btn` classes (we already have a `.card`), and HeroUI's plugin
+replaces the `primary` and `background` colours. When a screen needs one, enable it with a prefix
+(e.g. DaisyUI: `daisyui: { prefix: "dy-", base: false }`).
+
+| Library | Installed as | Count |
+|---|---|---|
+| Magic UI | `vendor-ui/magic-ui` | 262 components |
+| React Bits | `vendor-ui/react-bits` | 219 components |
+| Kibo UI | `vendor-ui/kibo-ui` | 1,234 files |
+| Animate UI | `vendor-ui/animate-ui` | 579 components |
+| Motion Primitives | `vendor-ui/motion-primitives` | 33 components |
+| ReUI | `vendor-ui/reui` | 1,439 files |
+| Coss UI | `vendor-ui/coss-ui` | 646 components |
+| Smooth UI | `vendor-ui/smooth-ui` | 919 files |
+| Eldora UI | `vendor-ui/eldora-ui` | 125 components |
+| shadcn Studio | `vendor-ui/shadcn-studio` | 637 components |
+| 8bitcn | `vendor-ui/8bitcn` | 118 files |
+| Fancy Components | `vendor-ui/fancy-components` | 49 files |
+| Jolly UI | `vendor-ui/jolly-ui` | 34 components |
+| shadcn/ui | `vendor-ui/shadcn-ui` | 62 components |
+| TailGrids | `vendor-ui/tailgrids` | 144 files |
+| Float UI | `vendor-ui/float-ui` | 198 files |
+| HyperUI | `vendor-ui/hyperui` | 658 HTML files |
+| Meraki UI | `vendor-ui/meraki-ui` | 228 HTML files |
+| HeroUI | npm `@heroui/react` | needs `HeroUIProvider` and its plugin |
+| Lightswind | npm `lightswind` | import from `lightswind` |
+| DaisyUI, Flowbite, Preline, FlyonUI | npm, plugin off | see above |
+| Aceternity UI, Skiper UI | registry only | no public source; add per component with the shadcn CLI |
+| Glassy UI, Watermelon UI | registry only | no public repo found; add per component with the shadcn CLI |
+| 21st.dev | per-component URL | a marketplace, no single library |
+| Beautiful UI | not found | no package, registry or repo |
+
 ## The 30 libraries
 
 | Library | How to add | Notes |

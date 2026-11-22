@@ -1,0 +1,8 @@
+{
+ "name": "dither-field-demo",
+ "type": "registry:example",
+ "description": "A hero section on a violet dither horizon. CSS variables switch its colors between the light and dark themes.",
+ "registryDependencies": [
+  "@magicui/dither-field"
+ ]
+}

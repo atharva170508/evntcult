@@ -1,0 +1,8 @@
+{
+ "name": "flickering-grid-rounded-demo",
+ "type": "registry:example",
+ "description": "Example showing a flickering grid background with rounded corners.",
+ "registryDependencies": [
+  "@magicui/flickering-grid"
+ ]
+}

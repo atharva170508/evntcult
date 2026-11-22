@@ -1,0 +1,11 @@
+{
+ "name": "icons-sliders-vertical",
+ "type": "registry:ui",
+ "description": "Sliders vertical icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

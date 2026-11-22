@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-base-menu-radio",
+ "type": "registry:ui",
+ "description": "Demo showing a menu radio.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-base-menu"
+ ]
+}

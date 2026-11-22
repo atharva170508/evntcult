@@ -1,0 +1,11 @@
+{
+ "name": "icons-lock-keyhole",
+ "type": "registry:ui",
+ "description": "Lock keyhole icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

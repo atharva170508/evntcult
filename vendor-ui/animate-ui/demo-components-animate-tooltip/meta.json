@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-animate-tooltip",
+ "type": "registry:ui",
+ "description": "Demo showing an animated tooltip.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-animate-tooltip"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "calendar-05",
+ "type": "registry:component",
+ "description": "Range selection calendar with minimum days constraint (5 days minimum)",
+ "dependencies": [
+  "react-day-picker"
+ ],
+ "registryDependencies": [
+  "calendar"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "button-21",
+ "type": "registry:component",
+ "description": "Button with badge indicator showing unread message count",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button"
+ ]
+}

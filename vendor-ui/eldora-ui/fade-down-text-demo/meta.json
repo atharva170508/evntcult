@@ -1,0 +1,8 @@
+{
+ "name": "fade-down-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a fade-down-text-demo component.",
+ "registryDependencies": [
+  "@eldoraui/fade-down-text"
+ ]
+}

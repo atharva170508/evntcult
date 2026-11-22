@@ -1,0 +1,156 @@
+[
+  {
+    "name": "c-checkbox-1",
+    "title": "Basic checkbox with label",
+    "label": "Basic",
+    "description": "Basic checkbox with label",
+    "order": 1
+  },
+  {
+    "name": "c-checkbox-2",
+    "title": "Disabled checkbox",
+    "label": "Disabled",
+    "description": "Disabled checkbox",
+    "order": 2
+  },
+  {
+    "name": "c-checkbox-3",
+    "title": "Invalid checkbox",
+    "label": "Invalid",
+    "description": "Invalid checkbox",
+    "order": 3
+  },
+  {
+    "name": "c-checkbox-4",
+    "title": "Indeterminate checkbox",
+    "label": "Indeterminate",
+    "description": "Indeterminate checkbox",
+    "order": 4
+  },
+  {
+    "name": "c-checkbox-5",
+    "title": "Checkbox with label and description",
+    "label": "Label & Description",
+    "description": "Checkbox with label and description",
+    "order": 5
+  },
+  {
+    "name": "c-checkbox-6",
+    "title": "Colored checkbox",
+    "label": "Colored",
+    "description": "Colored checkbox",
+    "order": 6
+  },
+  {
+    "name": "c-checkbox-7",
+    "title": "Circle checkbox",
+    "label": "Circle To-Do",
+    "description": "Circle checkbox",
+    "order": 7
+  },
+  {
+    "name": "c-checkbox-8",
+    "title": "Checkbox group",
+    "label": "Basic Group",
+    "description": "Checkbox group",
+    "order": 8
+  },
+  {
+    "name": "c-checkbox-9",
+    "title": "Card checkbox with group",
+    "label": "Setting Card",
+    "description": "Card checkbox with group",
+    "order": 9
+  },
+  {
+    "name": "c-checkbox-10",
+    "title": "Checkbox group in a frame",
+    "label": "Frame Group",
+    "description": "Checkbox group in a frame",
+    "order": 10
+  },
+  {
+    "name": "c-checkbox-11",
+    "title": "Card checkbox group with icons",
+    "label": "Card Rows",
+    "description": "Card checkbox group with icons",
+    "order": 11
+  },
+  {
+    "name": "c-checkbox-12",
+    "title": "Card checkbox group with icons",
+    "label": "Icon Card Rows",
+    "description": "Card checkbox group with icons",
+    "order": 12
+  },
+  {
+    "name": "c-checkbox-13",
+    "title": "Custom positioned checkbox",
+    "label": "Corner Check Tiles",
+    "description": "Custom positioned checkbox",
+    "order": 13
+  },
+  {
+    "name": "c-checkbox-14",
+    "title": "Custom positioned checkbox",
+    "label": "Module Tiles",
+    "description": "Custom positioned checkbox",
+    "order": 14
+  },
+  {
+    "name": "c-checkbox-15",
+    "title": "Avatar based card checkbox",
+    "label": "Avatar Card",
+    "description": "Avatar based card checkbox",
+    "order": 15
+  },
+  {
+    "name": "c-checkbox-16",
+    "title": "Nested checkbox group",
+    "label": "Nested Permissions",
+    "description": "Nested checkbox group",
+    "order": 16
+  },
+  {
+    "name": "c-checkbox-17",
+    "title": "Payment method card checkbox",
+    "label": "Payment Method",
+    "description": "Payment method card checkbox",
+    "order": 17
+  },
+  {
+    "name": "c-checkbox-18",
+    "title": "Checkbox with label and tooltip info",
+    "label": "Help Icon Tooltip",
+    "description": "Checkbox with label and tooltip info",
+    "order": 18
+  },
+  {
+    "name": "c-checkbox-19",
+    "title": "Checkbox group with badge",
+    "label": "Badge Group",
+    "description": "Checkbox group with badge",
+    "order": 19
+  },
+  {
+    "name": "c-checkbox-20",
+    "title": "Checkbox with label and tooltip info",
+    "label": "Right Side Tooltip",
+    "description": "Checkbox with label and tooltip info",
+    "order": 20
+  },
+  {
+    "name": "c-checkbox-21",
+    "title": "Inline horizontal checkbox group",
+    "label": "Inline Group",
+    "description": "Inline horizontal checkbox group",
+    "order": 21
+  },
+  {
+    "name": "c-checkbox-22",
+    "title": "Checkbox with feature badge",
+    "label": "Uppercase Badges",
+    "description": "Checkbox with feature badge",
+    "order": 22
+  }
+]

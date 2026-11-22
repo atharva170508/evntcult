@@ -1,0 +1,12 @@
+{
+ "name": "primitives-headless-disclosure",
+ "type": "registry:ui",
+ "description": "A simple, accessible foundation for building custom UIs that show and hide content, like togglable accordion panels.",
+ "dependencies": [
+  "motion",
+  "@headlessui/react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/lib-get-strict-context"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "WakeSlider-TS-TW",
+ "type": "registry:component",
+ "description": "Thumbless range slider of thin bars where drag speed raises a wake behind the handle.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

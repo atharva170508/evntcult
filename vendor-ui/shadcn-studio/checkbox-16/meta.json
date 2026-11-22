@@ -1,0 +1,10 @@
+{
+ "name": "checkbox-16",
+ "type": "registry:component",
+ "description": "Form checkbox with terms acceptance, description text, and action buttons",
+ "registryDependencies": [
+  "button",
+  "checkbox",
+  "label"
+ ]
+}

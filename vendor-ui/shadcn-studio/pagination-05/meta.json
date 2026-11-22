@@ -1,0 +1,10 @@
+{
+ "name": "pagination-05",
+ "type": "registry:component",
+ "description": "A bordered pagination component with dividers and connected button styling",
+ "registryDependencies": [
+  "button",
+  "pagination",
+  "utils"
+ ]
+}

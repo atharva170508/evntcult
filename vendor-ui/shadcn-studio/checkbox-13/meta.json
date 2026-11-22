@@ -1,0 +1,9 @@
+{
+ "name": "checkbox-13",
+ "type": "registry:component",
+ "description": "Card-style checkboxes with border highlighting and description text",
+ "registryDependencies": [
+  "checkbox",
+  "label"
+ ]
+}

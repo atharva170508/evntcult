@@ -1,0 +1,13 @@
+{
+ "name": "architecture-animation",
+ "type": "registry:ui",
+ "description": "An architecture animation component.",
+ "dependencies": [
+  "motion",
+  "react"
+ ],
+ "registryDependencies": [
+  "utils",
+  "text-shimmer"
+ ]
+}

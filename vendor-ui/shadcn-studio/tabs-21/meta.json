@@ -1,0 +1,12 @@
+{
+ "name": "tabs-21",
+ "type": "registry:component",
+ "description": "Vertical tabs with tooltip functionality for additional information",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "tabs",
+  "tooltip"
+ ]
+}

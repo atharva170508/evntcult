@@ -1,0 +1,8 @@
+{
+ "name": "pointer-demo-1",
+ "type": "registry:example",
+ "description": "Example showing a pointer effect component",
+ "registryDependencies": [
+  "@magicui/pointer"
+ ]
+}

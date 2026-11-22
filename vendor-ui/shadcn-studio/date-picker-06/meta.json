@@ -1,0 +1,15 @@
+{
+ "name": "date-picker-06",
+ "type": "registry:component",
+ "description": "Date range picker with compact date formatting using little-date library",
+ "dependencies": [
+  "little-date",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "label",
+  "popover"
+ ]
+}

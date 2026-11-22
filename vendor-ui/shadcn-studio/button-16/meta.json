@@ -1,0 +1,11 @@
+{
+ "name": "button-16",
+ "type": "registry:component",
+ "description": "Ghost button with animated arrow on hover",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

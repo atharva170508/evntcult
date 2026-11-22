@@ -1,0 +1,7 @@
+{
+ "name": "Balatro-TS-TW",
+ "type": "registry:component",
+ "description": "The swirling Balatro paint shader, with crisp pixels, a cursor that stirs the paint and click whirlpools.",
+ "dependencies": [],
+ "registryDependencies": []
+}

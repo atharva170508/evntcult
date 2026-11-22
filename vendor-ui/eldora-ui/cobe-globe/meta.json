@@ -1,0 +1,14 @@
+{
+ "name": "cobe-globe",
+ "type": "registry:ui",
+ "description": "A cobe globe component.",
+ "dependencies": [
+  "react-spring",
+  "cobe",
+  "react"
+ ],
+ "registryDependencies": [
+  "button",
+  "utils"
+ ]
+}

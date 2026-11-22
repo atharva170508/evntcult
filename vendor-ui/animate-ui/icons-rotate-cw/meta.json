@@ -1,0 +1,11 @@
+{
+ "name": "icons-rotate-cw",
+ "type": "registry:ui",
+ "description": "Rotate cw icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

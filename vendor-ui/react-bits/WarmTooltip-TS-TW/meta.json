@@ -1,0 +1,10 @@
+{
+ "name": "WarmTooltip-TS-TW",
+ "type": "registry:component",
+ "description": "Tooltip group where the first label waits, then its siblings open instantly while warm.",
+ "dependencies": [
+  "react-dom@^19.0.0",
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,8 @@
+{
+ "name": "tabs-01",
+ "type": "registry:component",
+ "description": "Basic tabs component with default styling for content organization and navigation",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

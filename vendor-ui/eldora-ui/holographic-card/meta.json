@@ -1,0 +1,9 @@
+{
+ "name": "holographic-card",
+ "type": "registry:ui",
+ "description": "An interactive card with a holographic gradient and mouse\u2011reactive tilt effect.",
+ "dependencies": [
+  "react",
+  "motion"
+ ]
+}

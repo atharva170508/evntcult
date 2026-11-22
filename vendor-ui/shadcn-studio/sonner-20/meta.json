@@ -1,0 +1,11 @@
+{
+ "name": "sonner-20",
+ "type": "registry:component",
+ "description": "A solid-styled destructive error toast notification with red background and white text for prominent error messages",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

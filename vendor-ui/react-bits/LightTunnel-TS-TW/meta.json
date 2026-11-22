@@ -1,0 +1,7 @@
+{
+ "name": "LightTunnel-TS-TW",
+ "type": "registry:component",
+ "description": "A swirling fibre-optic tunnel where comets of light race into depth, steered by the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

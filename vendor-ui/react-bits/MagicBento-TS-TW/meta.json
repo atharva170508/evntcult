@@ -1,0 +1,10 @@
+{
+ "name": "MagicBento-TS-TW",
+ "type": "registry:component",
+ "description": "A bento grid of feature cards with live artwork, edge light that follows the cursor and a click wave.",
+ "dependencies": [
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

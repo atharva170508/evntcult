@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-base-dialog",
+ "type": "registry:ui",
+ "description": "Demo showing an animated base dialog.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-dialog"
+ ]
+}

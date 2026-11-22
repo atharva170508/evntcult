@@ -1,0 +1,12 @@
+{
+ "name": "primitives-texts-sliding-number",
+ "type": "registry:ui",
+ "description": "A sliding number animation.",
+ "dependencies": [
+  "motion",
+  "react-use-measure"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/hooks-use-is-in-view"
+ ]
+}

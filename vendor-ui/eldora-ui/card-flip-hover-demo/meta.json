@@ -1,0 +1,8 @@
+{
+ "name": "card-flip-hover-demo",
+ "type": "registry:example",
+ "description": "Example showing a card-flip-hover-demo component.",
+ "registryDependencies": [
+  "@eldoraui/card-flip-hover"
+ ]
+}

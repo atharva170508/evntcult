@@ -1,0 +1,11 @@
+{
+ "name": "icons-users",
+ "type": "registry:ui",
+ "description": "Users icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

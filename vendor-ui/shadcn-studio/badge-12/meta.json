@@ -1,0 +1,11 @@
+{
+ "name": "badge-12",
+ "type": "registry:component",
+ "description": "Closable badge with X button for dismissible notifications",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge"
+ ]
+}

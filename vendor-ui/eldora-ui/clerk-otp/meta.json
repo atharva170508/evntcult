@@ -1,0 +1,12 @@
+{
+ "name": "clerk-otp",
+ "type": "registry:ui",
+ "description": "A clerk OTP component.",
+ "dependencies": [
+  "react",
+  "motion"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

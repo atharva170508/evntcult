@@ -1,0 +1,8 @@
+{
+ "name": "macbook-pro",
+ "type": "registry:ui",
+ "description": "A MacBook Pro SVG component.",
+ "dependencies": [
+  "react"
+ ]
+}

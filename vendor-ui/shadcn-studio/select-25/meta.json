@@ -1,0 +1,9 @@
+{
+ "name": "select-25",
+ "type": "registry:component",
+ "description": "A custom select dropdown with inset label design inside bordered container",
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

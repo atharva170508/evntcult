@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-backgrounds-fireworks",
+ "type": "registry:ui",
+ "description": "Demo showing a fireworks background.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-backgrounds-fireworks"
+ ]
+}

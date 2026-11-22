@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-community-radial-nav",
+ "type": "registry:ui",
+ "description": "Demo Radial Nav.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-community-radial-nav"
+ ]
+}

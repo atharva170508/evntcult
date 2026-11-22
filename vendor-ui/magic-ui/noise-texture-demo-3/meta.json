@@ -1,0 +1,9 @@
+{
+ "name": "noise-texture-demo-3",
+ "type": "registry:example",
+ "description": "Example showing NoiseTexture behind a button label inside a relative button.",
+ "registryDependencies": [
+  "@magicui/noise-texture",
+  "button"
+ ]
+}

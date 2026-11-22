@@ -1,0 +1,9 @@
+{
+ "name": "FallingText-TS-TW",
+ "type": "registry:component",
+ "description": "Text that breaks apart and tumbles into a pile you can drag, throw and swipe, then flies back into place.",
+ "dependencies": [
+  "matter-js@^0.20.0"
+ ],
+ "registryDependencies": []
+}

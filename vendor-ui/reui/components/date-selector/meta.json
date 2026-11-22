@@ -1,0 +1,31 @@
+[
+  {
+    "name": "c-date-selector-1",
+    "title": "Basic date selector",
+    "label": "Basic Inline",
+    "description": "Basic date selector",
+    "order": 1,
+    "gridSize": 1
+  },
+  {
+    "name": "c-date-selector-2",
+    "title": "Date selector with popover",
+    "label": "Popover",
+    "description": "Date selector with popover",
+    "order": 2
+  },
+  {
+    "name": "c-date-selector-3",
+    "title": "Date selector with dialog",
+    "label": "Dialog",
+    "description": "Date selector with dialog",
+    "order": 3
+  },
+  {
+    "name": "c-date-selector-4",
+    "title": "Date selector with dropdown menu",
+    "label": "Language Menu",
+    "description": "Date selector with dropdown menu",
+    "order": 4
+  }
+]

@@ -1,0 +1,12 @@
+{
+ "name": "select-01",
+ "type": "registry:component",
+ "description": "A basic native select dropdown for gender selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

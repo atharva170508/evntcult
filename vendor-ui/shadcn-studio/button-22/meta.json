@@ -1,0 +1,11 @@
+{
+ "name": "button-22",
+ "type": "registry:component",
+ "description": "caution button with a warning icon and soft amber styling to indicate alerts or risks.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

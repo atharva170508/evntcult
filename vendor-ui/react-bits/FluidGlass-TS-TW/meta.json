@@ -1,0 +1,7 @@
+{
+ "name": "FluidGlass-TS-TW",
+ "type": "registry:component",
+ "description": "A 3D glass object that refracts your headline, image or video, follows the cursor and melts between shapes.",
+ "dependencies": [],
+ "registryDependencies": []
+}

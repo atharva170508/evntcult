@@ -1,0 +1,11 @@
+{
+ "name": "button-33",
+ "type": "registry:component",
+ "description": "Toggle icon button that switches between menu and close icons",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

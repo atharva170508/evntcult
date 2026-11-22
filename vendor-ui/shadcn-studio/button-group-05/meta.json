@@ -1,0 +1,11 @@
+{
+ "name": "button-group-05",
+ "type": "registry:component",
+ "description": "Social media links button group with branded colors and hover effects",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

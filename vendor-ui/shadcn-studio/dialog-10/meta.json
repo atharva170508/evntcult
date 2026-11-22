@@ -1,0 +1,12 @@
+{
+ "name": "dialog-10",
+ "type": "registry:component",
+ "description": "Referral program dialog with avatar display and email sharing functionality",
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "dialog",
+  "input",
+  "label"
+ ]
+}

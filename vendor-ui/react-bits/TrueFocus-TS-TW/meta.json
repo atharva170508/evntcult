@@ -1,0 +1,9 @@
+{
+ "name": "TrueFocus-TS-TW",
+ "type": "registry:component",
+ "description": "Applies dynamic blur / clarity based over a series of words in order.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

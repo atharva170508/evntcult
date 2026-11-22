@@ -1,0 +1,12 @@
+{
+ "name": "card-03",
+ "type": "registry:component",
+ "description": "Team invitation card with member list and invite functionality",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "card"
+ ]
+}

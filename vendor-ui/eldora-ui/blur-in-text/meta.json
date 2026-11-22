@@ -1,0 +1,10 @@
+{
+ "name": "blur-in-text",
+ "type": "registry:ui",
+ "description": "A blur in text component.",
+ "dependencies": [
+  "motion",
+  "react",
+  "clsx"
+ ]
+}

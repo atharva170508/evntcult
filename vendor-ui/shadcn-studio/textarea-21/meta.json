@@ -1,0 +1,9 @@
+{
+ "name": "textarea-21",
+ "type": "registry:component",
+ "description": "A disabled textarea in non-interactive state for form display",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

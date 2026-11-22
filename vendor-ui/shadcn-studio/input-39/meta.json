@@ -1,0 +1,12 @@
+{
+ "name": "input-39",
+ "type": "registry:component",
+ "description": "Search input field with loading indicator that shows during search operations",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "alert-08",
+ "type": "registry:component",
+ "description": "Multi-action alert with primary background, multiple buttons, and dismissible interface.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "dia-text-reveal",
+ "type": "registry:ui",
+ "description": "A horizontal color band sweeps across text, revealing a gradient shine before settling on the base color.",
+ "dependencies": [
+  "motion"
+ ]
+}

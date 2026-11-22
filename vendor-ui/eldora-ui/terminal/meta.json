@@ -1,0 +1,10 @@
+{
+ "name": "terminal",
+ "type": "registry:ui",
+ "description": "A terminal component.",
+ "dependencies": [
+  "react",
+  "lucide-react",
+  "react-icons/go"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "avatar-06",
+ "type": "registry:component",
+ "description": "Icon avatar using Lucide icon with colored background.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar"
+ ]
+}

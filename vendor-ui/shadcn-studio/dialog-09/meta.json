@@ -1,0 +1,11 @@
+{
+ "name": "dialog-09",
+ "type": "registry:component",
+ "description": "Subscription dialog with input field and subscribe button",
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "input",
+  "label"
+ ]
+}

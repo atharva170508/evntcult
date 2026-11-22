@@ -1,0 +1,8 @@
+{
+ "name": "tabs-26",
+ "type": "registry:component",
+ "description": "Custom tabs with underline styling using bottom border and no background",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

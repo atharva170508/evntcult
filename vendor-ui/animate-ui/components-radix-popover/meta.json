@@ -1,0 +1,8 @@
+{
+ "name": "components-radix-popover",
+ "type": "registry:ui",
+ "description": "Displays rich content in a portal, triggered by a button.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-popover"
+ ]
+}

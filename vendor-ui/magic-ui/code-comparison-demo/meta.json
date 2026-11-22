@@ -1,0 +1,8 @@
+{
+ "name": "code-comparison-demo",
+ "type": "registry:example",
+ "description": "Example showing a component which compares two code snippets.",
+ "registryDependencies": [
+  "@magicui/code-comparison"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "name": "combobox-09",
+ "type": "registry:component",
+ "description": "Country selector combobox with flag icons and country selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "command",
+  "popover",
+  "utils"
+ ]
+}

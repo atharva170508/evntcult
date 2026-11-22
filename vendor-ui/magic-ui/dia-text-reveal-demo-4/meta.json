@@ -1,0 +1,8 @@
+{
+ "name": "dia-text-reveal-demo-4",
+ "type": "registry:example",
+ "description": "Slower sweep with delay \u2014 custom duration and timing.",
+ "registryDependencies": [
+  "@magicui/dia-text-reveal"
+ ]
+}

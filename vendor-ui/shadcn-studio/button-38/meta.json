@@ -1,0 +1,11 @@
+{
+ "name": "button-38",
+ "type": "registry:component",
+ "description": "Notification icon button with animated blue dot indicator",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

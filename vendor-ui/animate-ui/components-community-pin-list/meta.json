@@ -1,0 +1,9 @@
+{
+ "name": "components-community-pin-list",
+ "type": "registry:ui",
+ "description": "A playful list for pinning and unpinning items, with smooth animated transitions as items move between groups.",
+ "dependencies": [
+  "motion",
+  "lucide-react"
+ ]
+}

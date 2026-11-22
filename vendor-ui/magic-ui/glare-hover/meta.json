@@ -1,0 +1,5 @@
+{
+ "name": "glare-hover",
+ "type": "registry:ui",
+ "description": "A diagonal glare on hover using a ::before gradient and CSS variables (angle, size, duration, color)."
+}

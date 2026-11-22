@@ -1,0 +1,8 @@
+{
+ "name": "table-10",
+ "type": "registry:component",
+ "description": "A table with sticky header that remains visible during vertical scrolling",
+ "registryDependencies": [
+  "table"
+ ]
+}

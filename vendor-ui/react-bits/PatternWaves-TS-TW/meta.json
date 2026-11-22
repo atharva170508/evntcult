@@ -1,0 +1,9 @@
+{
+ "name": "PatternWaves-TS-TW",
+ "type": "registry:component",
+ "description": "A lit halftone surface of dots, lines or glyphs that moves like draped silk.",
+ "dependencies": [
+  "ogl@^1.0.11"
+ ],
+ "registryDependencies": []
+}

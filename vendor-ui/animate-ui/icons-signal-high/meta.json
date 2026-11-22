@@ -1,0 +1,11 @@
+{
+ "name": "icons-signal-high",
+ "type": "registry:ui",
+ "description": "Signal high icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

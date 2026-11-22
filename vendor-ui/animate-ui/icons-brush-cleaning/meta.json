@@ -1,0 +1,11 @@
+{
+ "name": "icons-brush-cleaning",
+ "type": "registry:ui",
+ "description": "Brush cleaning icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

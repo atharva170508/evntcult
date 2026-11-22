@@ -1,0 +1,12 @@
+{
+ "name": "highlighter-demo",
+ "type": "registry:example",
+ "description": "Example showing the demo of a Highlighter",
+ "dependencies": [
+  "motion",
+  "rough-notation"
+ ],
+ "registryDependencies": [
+  "@magicui/highlighter"
+ ]
+}

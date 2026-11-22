@@ -1,0 +1,8 @@
+{
+ "name": "animated-gradient-text-demo-2",
+ "type": "registry:example",
+ "description": "Second example showing text with animated gradient backgrounds.",
+ "registryDependencies": [
+  "@magicui/animated-gradient-text"
+ ]
+}

@@ -1,0 +1,10 @@
+{
+ "name": "FlowingMenu-TS-TW",
+ "type": "registry:component",
+ "description": "A full-height menu with a liquid band that glides between rows and reveals a scrolling marquee of each item.",
+ "dependencies": [
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

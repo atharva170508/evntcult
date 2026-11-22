@@ -1,0 +1,11 @@
+{
+ "name": "glyph-matrix-demo",
+ "type": "registry:example",
+ "description": "Example showing an animated grid of subtly shifting glyphs.",
+ "dependencies": [
+  "next-themes"
+ ],
+ "registryDependencies": [
+  "@magicui/glyph-matrix"
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "name": "alert-09",
+ "type": "registry:component",
+ "description": "Task progress alert with user avatar, progress indicator, and task completion tracking.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert",
+  "avatar",
+  "progress"
+ ]
+}

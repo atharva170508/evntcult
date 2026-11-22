@@ -1,0 +1,11 @@
+{
+ "name": "icons-house-wifi",
+ "type": "registry:ui",
+ "description": "House wifi icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

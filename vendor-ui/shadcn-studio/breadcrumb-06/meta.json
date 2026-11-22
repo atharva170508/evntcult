@@ -1,0 +1,13 @@
+{
+ "name": "breadcrumb-06",
+ "type": "registry:component",
+ "description": "Breadcrumb with dropdown menu integration for compact nested navigation and outlined badge components for modern tab-like appearance",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "breadcrumb",
+  "dropdown-menu"
+ ]
+}

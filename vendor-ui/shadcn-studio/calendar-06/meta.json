@@ -1,0 +1,8 @@
+{
+ "name": "calendar-06",
+ "type": "registry:component",
+ "description": "Calendar with disabled dates before a specific date for restricted selection",
+ "registryDependencies": [
+  "calendar"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "switch-10",
+ "type": "registry:component",
+ "description": "A switch with icon label that toggles between sun and moon icons for theme switching",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "switch"
+ ]
+}

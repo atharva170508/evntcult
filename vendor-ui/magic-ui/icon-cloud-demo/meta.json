@@ -1,0 +1,8 @@
+{
+ "name": "icon-cloud-demo",
+ "type": "registry:example",
+ "description": "Example showing an interactive 3D icon cloud.",
+ "registryDependencies": [
+  "@magicui/icon-cloud"
+ ]
+}

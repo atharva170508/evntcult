@@ -1,0 +1,8 @@
+{
+ "name": "clerk-otp-demo",
+ "type": "registry:example",
+ "description": "Example showing a clerk-otp-demo component.",
+ "registryDependencies": [
+  "@eldoraui/clerk-otp"
+ ]
+}

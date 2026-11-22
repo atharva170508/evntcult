@@ -1,0 +1,7 @@
+{
+ "name": "DarkVeil-TS-TW",
+ "type": "registry:component",
+ "description": "A silky veil of light that drifts in the dark and bends around the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

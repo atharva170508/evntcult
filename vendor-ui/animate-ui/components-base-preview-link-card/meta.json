@@ -1,0 +1,8 @@
+{
+ "name": "components-base-preview-link-card",
+ "type": "registry:ui",
+ "description": "Displays a preview image of a link when hovered.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-preview-card"
+ ]
+}

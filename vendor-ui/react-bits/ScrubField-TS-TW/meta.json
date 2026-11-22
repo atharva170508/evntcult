@@ -1,0 +1,9 @@
+{
+ "name": "ScrubField-TS-TW",
+ "type": "registry:component",
+ "description": "Number chip you drag to scrub, with rubber-band limits and click to type.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

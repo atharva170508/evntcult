@@ -1,0 +1,8 @@
+{
+ "name": "testimonal-01",
+ "type": "registry:block",
+ "description": "A testimonial slider.",
+ "dependencies": [
+  "react-icons/md"
+ ]
+}

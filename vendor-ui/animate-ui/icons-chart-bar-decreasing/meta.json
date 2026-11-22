@@ -1,0 +1,11 @@
+{
+ "name": "icons-chart-bar-decreasing",
+ "type": "registry:ui",
+ "description": "Chart bar decreasing icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

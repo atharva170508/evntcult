@@ -1,0 +1,19 @@
+{
+ "name": "form-10",
+ "type": "registry:component",
+ "description": "Comprehensive form with multiple input types in card layout for complex data entry",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "card",
+  "form",
+  "input",
+  "radio-group",
+  "select",
+  "textarea"
+ ]
+}

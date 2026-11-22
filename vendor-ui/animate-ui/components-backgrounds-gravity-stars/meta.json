@@ -1,0 +1,8 @@
+{
+ "name": "components-backgrounds-gravity-stars",
+ "type": "registry:ui",
+ "description": "A background component featuring a subtle yet engaging animated gravity stars effect.",
+ "dependencies": [
+  "motion"
+ ]
+}

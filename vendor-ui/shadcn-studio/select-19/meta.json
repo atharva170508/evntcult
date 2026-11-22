@@ -1,0 +1,9 @@
+{
+ "name": "select-19",
+ "type": "registry:component",
+ "description": "A disabled custom select dropdown with reduced opacity and interaction",
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

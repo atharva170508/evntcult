@@ -1,0 +1,11 @@
+{
+ "name": "ModelViewer-TS-TW",
+ "type": "registry:component",
+ "description": "A product-style 3D model viewer that frames itself and floats over a soft shadow.",
+ "dependencies": [
+  "@react-three/fiber@^9.3.0",
+  "@react-three/drei@^10.7.4",
+  "three@^0.180.0"
+ ],
+ "registryDependencies": []
+}

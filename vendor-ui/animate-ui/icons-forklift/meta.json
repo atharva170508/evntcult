@@ -1,0 +1,11 @@
+{
+ "name": "icons-forklift",
+ "type": "registry:ui",
+ "description": "Forklift icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

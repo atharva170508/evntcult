@@ -1,0 +1,11 @@
+{
+ "name": "icons-cloud-sun",
+ "type": "registry:ui",
+ "description": "Cloud sun icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

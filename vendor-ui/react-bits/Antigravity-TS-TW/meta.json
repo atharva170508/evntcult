@@ -1,0 +1,7 @@
+{
+ "name": "Antigravity-TS-TW",
+ "type": "registry:component",
+ "description": "A field of particles that lifts into a glowing ring around the cursor and bursts outward on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

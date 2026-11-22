@@ -1,0 +1,58 @@
+[
+  {
+    "name": "c-phone-input-1",
+    "title": "Basic phone input",
+    "label": "Basic",
+    "description": "Basic phone input",
+    "order": 1
+  },
+  {
+    "name": "c-phone-input-2",
+    "title": "Small phone input",
+    "label": "Small",
+    "description": "Small phone input",
+    "order": 2
+  },
+  {
+    "name": "c-phone-input-3",
+    "title": "Large phone input",
+    "label": "Large",
+    "description": "Large phone input",
+    "order": 3
+  },
+  {
+    "name": "c-phone-input-4",
+    "title": "Disabled phone input",
+    "label": "Disabled",
+    "description": "Disabled phone input",
+    "order": 4
+  },
+  {
+    "name": "c-phone-input-5",
+    "title": "Phone input with preset value",
+    "label": "Preset Value",
+    "description": "Phone input with preset value",
+    "order": 5
+  },
+  {
+    "name": "c-phone-input-6",
+    "title": "Phone input with error state",
+    "label": "Error State",
+    "description": "Phone input with error state",
+    "order": 6
+  },
+  {
+    "name": "c-phone-input-7",
+    "title": "Phone input with specific default country",
+    "label": "Default Country",
+    "description": "Phone input with specific default country",
+    "order": 7
+  },
+  {
+    "name": "c-phone-input-8",
+    "title": "Read-only phone input",
+    "label": "Read-Only",
+    "description": "Read-only phone input",
+    "order": 8
+  }
+]

@@ -1,0 +1,14 @@
+{
+ "name": "pagination-15",
+ "type": "registry:component",
+ "description": "A comprehensive pagination component with page size selector, tooltips, and detailed navigation controls",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "pagination",
+  "select",
+  "tooltip"
+ ]
+}

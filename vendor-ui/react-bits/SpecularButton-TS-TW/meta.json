@@ -1,0 +1,7 @@
+{
+ "name": "SpecularButton-TS-TW",
+ "type": "registry:component",
+ "description": "Glass button whose edge catches the light, with a highlight that glides toward the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,8 @@
+{
+ "name": "aurora-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a beautiful aurora text effect.",
+ "registryDependencies": [
+  "@magicui/aurora-text"
+ ]
+}

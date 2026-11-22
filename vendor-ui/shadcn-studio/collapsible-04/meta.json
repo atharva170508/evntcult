@@ -1,0 +1,13 @@
+{
+ "name": "collapsible-04",
+ "type": "registry:component",
+ "description": "User list with avatars, status indicators and expandable team member details",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "collapsible"
+ ]
+}

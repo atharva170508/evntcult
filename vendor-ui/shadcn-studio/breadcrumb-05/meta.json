@@ -1,0 +1,9 @@
+{
+ "name": "breadcrumb-05",
+ "type": "registry:component",
+ "description": "Breadcrumb styled with outlined badge components for modern tab-like appearance",
+ "registryDependencies": [
+  "badge",
+  "breadcrumb"
+ ]
+}

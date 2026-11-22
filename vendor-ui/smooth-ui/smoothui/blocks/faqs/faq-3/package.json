@@ -1,0 +1,39 @@
+{
+  "name": "@repo/faq-3",
+  "description": "Searchable FAQ section with filter animations",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "lucide-react": "^0.548.0",
+    "motion": "^11.15.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "layout",
+    "tags": [
+      "faq",
+      "search",
+      "filter",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "spring",
+    "useCases": [
+      "Searchable FAQ section with filter animations",
+      "Help center with instant search filtering",
+      "Documentation FAQ with real-time search"
+    ],
+    "compositionHints": [
+      "Uses Accordion for answers and Input plus Field for search"
+    ],
+    "hasReducedMotion": true
+  }
+}

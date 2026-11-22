@@ -1,0 +1,7 @@
+{
+ "name": "GlowCursor-TS-TW",
+ "type": "registry:component",
+ "description": "Light that pours from the cursor, drifts softly through the air and cools as it fades.",
+ "dependencies": [],
+ "registryDependencies": []
+}

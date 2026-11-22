@@ -1,0 +1,8 @@
+{
+ "name": "comp-456",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/button.json",
+  "https://coss.com/origin/r/pagination.json"
+ ]
+}

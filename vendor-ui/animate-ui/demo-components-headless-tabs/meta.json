@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-headless-tabs",
+ "type": "registry:ui",
+ "description": "Demo showing a headless tabs.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-headless-tabs"
+ ]
+}

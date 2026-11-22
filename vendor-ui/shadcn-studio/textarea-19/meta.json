@@ -1,0 +1,9 @@
+{
+ "name": "textarea-19",
+ "type": "registry:component",
+ "description": "A textarea with character count display and remaining characters indicator",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

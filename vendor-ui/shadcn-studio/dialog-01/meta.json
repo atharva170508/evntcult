@@ -1,0 +1,9 @@
+{
+ "name": "dialog-01",
+ "type": "registry:component",
+ "description": "Basic alert dialog with confirmation for destructive actions",
+ "registryDependencies": [
+  "alert-dialog",
+  "button"
+ ]
+}

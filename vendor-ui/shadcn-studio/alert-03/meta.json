@@ -1,0 +1,11 @@
+{
+ "name": "alert-03",
+ "type": "registry:component",
+ "description": "Closable alert with dismiss functionality using X icon and state management.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

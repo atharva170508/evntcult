@@ -1,0 +1,12 @@
+{
+ "name": "primitives-buttons-ripple",
+ "type": "registry:ui",
+ "description": "A button that animates on tap with a ripple effect.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/lib-get-strict-context",
+  "@animate-ui/v1/primitives-animate-slot"
+ ]
+}

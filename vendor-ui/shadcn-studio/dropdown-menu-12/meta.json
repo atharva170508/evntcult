@@ -1,0 +1,12 @@
+{
+ "name": "dropdown-menu-12",
+ "type": "registry:component",
+ "description": "User profile menu dropdown with icons for profile, settings, billing, and FAQ",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

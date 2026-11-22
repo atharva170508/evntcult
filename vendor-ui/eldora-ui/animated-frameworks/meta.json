@@ -1,0 +1,12 @@
+{
+ "name": "animated-frameworks",
+ "type": "registry:ui",
+ "description": "An animated frameworks component.",
+ "dependencies": [
+  "motion",
+  "react"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

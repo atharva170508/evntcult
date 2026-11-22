@@ -1,0 +1,8 @@
+{
+ "name": "pulsating-button-demo-2",
+ "type": "registry:example",
+ "description": "Example showing an animated pulsating button with a ripple varaint.",
+ "registryDependencies": [
+  "@magicui/pulsating-button"
+ ]
+}

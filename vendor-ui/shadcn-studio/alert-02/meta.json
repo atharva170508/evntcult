@@ -1,0 +1,12 @@
+{
+ "name": "alert-02",
+ "type": "registry:component",
+ "description": "Avatar-enhanced alert with user profile image, and alert icon.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert",
+  "avatar"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "dropdown-menu-11",
+ "type": "registry:component",
+ "description": "Task priority selector dropdown with icons and priority levels",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

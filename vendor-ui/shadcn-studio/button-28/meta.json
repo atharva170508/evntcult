@@ -1,0 +1,12 @@
+{
+ "name": "button-28",
+ "type": "registry:component",
+ "description": "Copy button with state transition animation between copy and check icons",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "utils"
+ ]
+}

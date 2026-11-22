@@ -1,0 +1,10 @@
+{
+ "name": "select-31",
+ "type": "registry:component",
+ "description": "A user select dropdown with avatar images for each user option",
+ "registryDependencies": [
+  "avatar",
+  "label",
+  "select"
+ ]
+}

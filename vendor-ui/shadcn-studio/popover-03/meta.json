@@ -1,0 +1,13 @@
+{
+ "name": "popover-03",
+ "type": "registry:component",
+ "description": "A pricing popover displaying plan details with features and pricing information",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button",
+  "popover"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "TargetCursor-TS-TW",
+ "type": "registry:component",
+ "description": "A reticle cursor whose corner brackets snap around targets, matching their shape.",
+ "dependencies": [
+  "react-dom@^19.0.0"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-square-kanban",
+ "type": "registry:ui",
+ "description": "Square Kanban icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

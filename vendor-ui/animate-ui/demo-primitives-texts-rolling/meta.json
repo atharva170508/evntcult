@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-texts-rolling",
+ "type": "registry:ui",
+ "description": "Demo showing an animated rolling text.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-texts-rolling"
+ ]
+}

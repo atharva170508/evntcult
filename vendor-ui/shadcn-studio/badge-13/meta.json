@@ -1,0 +1,12 @@
+{
+ "name": "badge-13",
+ "type": "registry:component",
+ "description": "Selectable badge with checkbox functionality for interactive selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "checkbox"
+ ]
+}

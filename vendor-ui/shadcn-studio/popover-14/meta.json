@@ -1,0 +1,13 @@
+{
+ "name": "popover-14",
+ "type": "registry:component",
+ "description": "A team sharing popover with email input and member selection checkboxes with slide in from bottom animation",
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "checkbox",
+  "input",
+  "label",
+  "popover"
+ ]
+}

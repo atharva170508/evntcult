@@ -1,0 +1,5 @@
+{
+ "name": "components-backgrounds-fireworks",
+ "type": "registry:ui",
+ "description": "A background component that displays a fireworks animation."
+}

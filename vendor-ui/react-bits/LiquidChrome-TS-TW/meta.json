@@ -1,0 +1,7 @@
+{
+ "name": "LiquidChrome-TS-TW",
+ "type": "registry:component",
+ "description": "Soft ribbons of liquid chrome that swirl through a dark pool, ripple under the cursor and catch the light as it moves.",
+ "dependencies": [],
+ "registryDependencies": []
+}

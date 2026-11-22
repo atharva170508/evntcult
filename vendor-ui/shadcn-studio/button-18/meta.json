@@ -1,0 +1,8 @@
+{
+ "name": "button-18",
+ "type": "registry:component",
+ "description": "Link button with animated underline effect on hover",
+ "registryDependencies": [
+  "button"
+ ]
+}

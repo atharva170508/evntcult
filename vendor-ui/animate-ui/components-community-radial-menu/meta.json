@@ -1,0 +1,11 @@
+{
+ "name": "components-community-radial-menu",
+ "type": "registry:ui",
+ "description": "A circular context menu built with Base UI, displaying actions in a clean radial layout with full keyboard support and smooth interaction.",
+ "dependencies": [
+  "motion",
+  "lucide-react",
+  "@base-ui-components/react"
+ ],
+ "registryDependencies": []
+}

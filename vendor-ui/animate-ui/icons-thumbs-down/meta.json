@@ -1,0 +1,11 @@
+{
+ "name": "icons-thumbs-down",
+ "type": "registry:ui",
+ "description": "Thumbs down icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

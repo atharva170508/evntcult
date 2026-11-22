@@ -1,0 +1,9 @@
+{
+ "name": "checkbox-08",
+ "type": "registry:component",
+ "description": "Horizontal group of checkboxes for technology selection with organized layout",
+ "registryDependencies": [
+  "checkbox",
+  "label"
+ ]
+}

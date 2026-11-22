@@ -1,0 +1,9 @@
+{
+ "name": "tooltip-04",
+ "type": "registry:component",
+ "description": "An error-styled tooltip with destructive color scheme for warnings",
+ "registryDependencies": [
+  "button",
+  "tooltip"
+ ]
+}

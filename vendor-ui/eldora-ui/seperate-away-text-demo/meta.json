@@ -1,0 +1,8 @@
+{
+ "name": "seperate-away-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a seperate-away-text-demo component.",
+ "registryDependencies": [
+  "@eldoraui/seperate-away-text"
+ ]
+}

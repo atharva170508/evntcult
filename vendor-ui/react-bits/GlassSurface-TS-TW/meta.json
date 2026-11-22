@@ -1,0 +1,7 @@
+{
+ "name": "GlassSurface-TS-TW",
+ "type": "registry:component",
+ "description": "Apple-style liquid glass that bends what is behind it, in a rounded panel or any logo shape.",
+ "dependencies": [],
+ "registryDependencies": []
+}

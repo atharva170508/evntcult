@@ -1,0 +1,12 @@
+{
+ "name": "alert-06",
+ "type": "registry:component",
+ "description": "Focused icon alert with avatar-wrapped warning icon and destructive background styling.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert",
+  "avatar"
+ ]
+}

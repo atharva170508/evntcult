@@ -1,0 +1,7 @@
+{
+ "name": "PixelTrail-TS-TW",
+ "type": "registry:component",
+ "description": "Glossy pixels melt into a fluid goo trail behind the cursor, with color shifts and drips.",
+ "dependencies": [],
+ "registryDependencies": []
+}

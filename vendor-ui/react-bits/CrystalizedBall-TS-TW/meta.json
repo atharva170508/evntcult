@@ -1,0 +1,9 @@
+{
+ "name": "CrystalizedBall-TS-TW",
+ "type": "registry:component",
+ "description": "A glass ball with a crackling electric rim and glowing dust that swirls with the cursor.",
+ "dependencies": [
+  "ogl@^1.0.11"
+ ],
+ "registryDependencies": []
+}

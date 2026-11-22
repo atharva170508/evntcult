@@ -1,0 +1,8 @@
+{
+ "name": "card-04",
+ "type": "registry:component",
+ "description": "Image showcase card with gradient background and bottom-aligned image",
+ "registryDependencies": [
+  "card"
+ ]
+}

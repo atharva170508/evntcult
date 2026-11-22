@@ -1,0 +1,8 @@
+{
+ "name": "glare-hover-demo-cta",
+ "type": "registry:example",
+ "description": "CTA card with hover glare (700ms).",
+ "registryDependencies": [
+  "@magicui/glare-hover"
+ ]
+}

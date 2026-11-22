@@ -1,0 +1,8 @@
+{
+ "name": "accordion-09",
+ "type": "registry:component",
+ "description": "Outline-style accordion with bordered items and spacing between each accordion item.",
+ "registryDependencies": [
+  "accordion"
+ ]
+}

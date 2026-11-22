@@ -1,0 +1,9 @@
+{
+ "name": "dropdown-menu-10",
+ "type": "registry:component",
+ "description": "End-aligned dropdown menu with browser actions and keyboard shortcuts",
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

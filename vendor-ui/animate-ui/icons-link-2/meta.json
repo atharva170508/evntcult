@@ -1,0 +1,11 @@
+{
+ "name": "icons-link-2",
+ "type": "registry:ui",
+ "description": "Link 2 icon with connect/unlink animations.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

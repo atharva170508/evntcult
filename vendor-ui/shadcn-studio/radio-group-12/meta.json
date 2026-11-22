@@ -1,0 +1,9 @@
+{
+ "name": "radio-group-12",
+ "type": "registry:component",
+ "description": "A border less card radio group with hidden radio buttons and label-based selection",
+ "registryDependencies": [
+  "label",
+  "radio-group"
+ ]
+}

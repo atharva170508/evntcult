@@ -1,0 +1,12 @@
+{
+ "name": "portfolio-01",
+ "type": "registry:block",
+ "description": "Portfolio showcase with masonry grid layout featuring project details, client information, and social media links",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "separator"
+ ]
+}

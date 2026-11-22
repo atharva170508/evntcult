@@ -1,0 +1,12 @@
+{
+ "name": "avatar-19",
+ "type": "registry:component",
+ "description": "Avatar group with dropdown menu showing additional users and actions.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "dropdown-menu"
+ ]
+}

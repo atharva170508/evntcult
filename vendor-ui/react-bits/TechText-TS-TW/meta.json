@@ -1,0 +1,7 @@
+{
+ "name": "TechText-TS-TW",
+ "type": "registry:component",
+ "description": "A wordmark whose letters turn into dashed vector paths under the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

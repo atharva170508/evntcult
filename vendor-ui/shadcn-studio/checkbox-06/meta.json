@@ -1,0 +1,9 @@
+{
+ "name": "checkbox-06",
+ "type": "registry:component",
+ "description": "Badge-style checkboxes with hidden unchecked state for compact selection",
+ "registryDependencies": [
+  "badge",
+  "checkbox"
+ ]
+}

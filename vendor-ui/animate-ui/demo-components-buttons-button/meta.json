@@ -1,0 +1,11 @@
+{
+ "name": "demo-components-buttons-button",
+ "type": "registry:ui",
+ "description": "Demo showing a button.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/components-buttons-button"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "FoldText-TS-TW",
+ "type": "registry:component",
+ "description": "Lines unfold into place like creased paper opening flat.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

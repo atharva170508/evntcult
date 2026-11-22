@@ -1,0 +1,8 @@
+{
+ "name": "collapsible-06",
+ "type": "registry:component",
+ "description": "Simple text content collapsible with expandable paragraph sections",
+ "registryDependencies": [
+  "collapsible"
+ ]
+}

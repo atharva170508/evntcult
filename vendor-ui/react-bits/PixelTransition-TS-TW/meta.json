@@ -1,0 +1,7 @@
+{
+ "name": "PixelTransition-TS-TW",
+ "type": "registry:component",
+ "description": "Retro pixel dissolve that covers a card in solid pixels, swaps the content underneath and clears again.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,9 @@
+{
+ "name": "input-05",
+ "type": "registry:component",
+ "description": "A read-only email input field with default value and muted styling",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

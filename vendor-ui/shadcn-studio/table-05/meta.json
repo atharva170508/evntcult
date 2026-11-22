@@ -1,0 +1,8 @@
+{
+ "name": "table-05",
+ "type": "registry:component",
+ "description": "A table without borders for a clean, minimal appearance",
+ "registryDependencies": [
+  "table"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-radix-files",
+ "type": "registry:ui",
+ "description": "Demo showing a files.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-radix-files"
+ ]
+}

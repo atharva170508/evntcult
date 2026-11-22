@@ -1,0 +1,58 @@
+[
+  {
+    "name": "c-gantt-1",
+    "title": "Gantt chart with settings menu and schedulable rows",
+    "label": "Settings Menu",
+    "description": "Gantt chart with settings menu and schedulable rows",
+    "order": 1,
+    "gridSize": 1
+  },
+  {
+    "name": "c-gantt-2",
+    "title": "Gantt chart with drag-to-reorder tree rows",
+    "label": "Drag Reorder",
+    "description": "Gantt chart with drag-to-reorder tree rows",
+    "order": 2,
+    "gridSize": 1
+  },
+  {
+    "name": "c-gantt-3",
+    "title": "Gantt chart with quarter roadmap and rollups",
+    "label": "Quarter Roadmap",
+    "description": "Gantt chart with quarter roadmap and rollups",
+    "order": 3,
+    "gridSize": 1
+  },
+  {
+    "name": "c-gantt-4",
+    "title": "Gantt chart with weekly capacity board",
+    "label": "Capacity Board",
+    "description": "Gantt chart with weekly capacity board",
+    "order": 4,
+    "gridSize": 1
+  },
+  {
+    "name": "c-gantt-5",
+    "title": "Gantt chart with task table and progress",
+    "label": "Task Table",
+    "description": "Gantt chart with task table and progress",
+    "order": 5,
+    "gridSize": 1
+  },
+  {
+    "name": "c-gantt-6",
+    "title": "Gantt chart with as-built baseline tracking",
+    "label": "Baseline Tracking",
+    "description": "Gantt chart with as-built baseline tracking",
+    "order": 6,
+    "gridSize": 1
+  },
+  {
+    "name": "c-gantt-7",
+    "title": "Gantt chart with dependency arrows and milestones",
+    "label": "Dependencies & Milestones",
+    "description": "Gantt chart with dependency arrows and milestones",
+    "order": 7,
+    "gridSize": 1
+  }
+]

@@ -1,0 +1,12 @@
+{
+ "name": "forgot-password-01",
+ "type": "registry:block",
+ "description": "Centered card layout with logo header, title, description, and form input for password reset functionality with decorative background shape",
+ "registryDependencies": [
+  "button",
+  "card",
+  "input",
+  "label",
+  "utils"
+ ]
+}

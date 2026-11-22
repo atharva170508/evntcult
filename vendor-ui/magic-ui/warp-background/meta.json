@@ -1,0 +1,8 @@
+{
+ "name": "warp-background",
+ "type": "registry:ui",
+ "description": "A card with a time warping background effect.",
+ "dependencies": [
+  "motion"
+ ]
+}

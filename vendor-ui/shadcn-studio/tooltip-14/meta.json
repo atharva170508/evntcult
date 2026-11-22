@@ -1,0 +1,12 @@
+{
+ "name": "tooltip-14",
+ "type": "registry:component",
+ "description": "An alert hover card with warning icon for error notifications",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "hover-card"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "tooltip-01",
+ "type": "registry:component",
+ "description": "A basic tooltip with simple text content displayed on hover",
+ "registryDependencies": [
+  "button",
+  "tooltip"
+ ]
+}

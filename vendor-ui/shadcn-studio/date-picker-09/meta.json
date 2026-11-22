@@ -1,0 +1,12 @@
+{
+ "name": "date-picker-09",
+ "type": "registry:component",
+ "description": "Time input field with clock icon for enhanced visual identification",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

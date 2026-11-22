@@ -1,0 +1,8 @@
+{
+ "name": "noise-texture-demo",
+ "type": "registry:example",
+ "description": "Example showing the SVG noise texture in a framed panel with a radial mask.",
+ "registryDependencies": [
+  "@magicui/noise-texture"
+ ]
+}

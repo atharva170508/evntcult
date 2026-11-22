@@ -1,0 +1,12 @@
+{
+ "name": "button-group-03",
+ "type": "registry:component",
+ "description": "Toolbar button group with tooltips for design tools and actions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "tooltip"
+ ]
+}

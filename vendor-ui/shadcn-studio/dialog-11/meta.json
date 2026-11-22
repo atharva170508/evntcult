@@ -1,0 +1,13 @@
+{
+ "name": "dialog-11",
+ "type": "registry:component",
+ "description": "Rating feedback dialog with emoji radio buttons and text area for comments",
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "checkbox",
+  "label",
+  "radio-group",
+  "textarea"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "hyper-text",
+ "type": "registry:ui",
+ "description": "A text animation that scrambles letters before revealing the final text.",
+ "dependencies": [
+  "motion"
+ ]
+}

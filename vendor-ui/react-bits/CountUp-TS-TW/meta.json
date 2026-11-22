@@ -1,0 +1,9 @@
+{
+ "name": "CountUp-TS-TW",
+ "type": "registry:component",
+ "description": "Animated number counter supporting formatting and decimals.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

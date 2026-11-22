@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-buttons-flip",
+ "type": "registry:ui",
+ "description": "Demo showing an animated flip button.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-buttons-flip"
+ ]
+}

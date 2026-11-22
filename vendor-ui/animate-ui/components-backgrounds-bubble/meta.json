@@ -1,0 +1,8 @@
+{
+ "name": "components-backgrounds-bubble",
+ "type": "registry:ui",
+ "description": "An interactive background featuring smoothly animated gradient bubbles, creating a playful, dynamic, and visually engaging backdrop.",
+ "dependencies": [
+  "motion"
+ ]
+}

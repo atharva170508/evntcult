@@ -1,0 +1,5 @@
+{
+ "name": "lib-get-strict-context",
+ "type": "registry:lib",
+ "description": "A hook that allows you to create a strict context."
+}

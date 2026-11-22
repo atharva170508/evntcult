@@ -1,0 +1,8 @@
+{
+ "name": "word-rotate-demo",
+ "type": "registry:example",
+ "description": "Example showing vertical word rotation animation.",
+ "registryDependencies": [
+  "@magicui/word-rotate"
+ ]
+}

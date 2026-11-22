@@ -1,0 +1,8 @@
+{
+ "name": "calendar-09",
+ "type": "registry:component",
+ "description": "Calendar with month and year dropdown selectors for easy navigation",
+ "registryDependencies": [
+  "calendar"
+ ]
+}

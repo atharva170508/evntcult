@@ -1,0 +1,13 @@
+{
+ "name": "collapsible-08",
+ "type": "registry:component",
+ "description": "Menu items with dropdown actions and nested navigation structure",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "collapsible",
+  "dropdown-menu"
+ ]
+}

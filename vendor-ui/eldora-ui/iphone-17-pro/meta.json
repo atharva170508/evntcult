@@ -1,0 +1,8 @@
+{
+ "name": "iphone-17-pro",
+ "type": "registry:ui",
+ "description": "An iPhone 17 Pro SVG component.",
+ "dependencies": [
+  "react"
+ ]
+}

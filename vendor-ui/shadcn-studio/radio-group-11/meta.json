@@ -1,0 +1,9 @@
+{
+ "name": "radio-group-11",
+ "type": "registry:component",
+ "description": "A card-style radio group with detailed descriptions and pricing",
+ "registryDependencies": [
+  "label",
+  "radio-group"
+ ]
+}

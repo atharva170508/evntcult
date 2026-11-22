@@ -1,0 +1,22 @@
+// Export all UI blocks from their category packages
+export { default as Faq1 } from "./faqs/faq-1";
+export { default as Faq2 } from "./faqs/faq-2";
+export { default as Footer1 } from "./footers/footer-1";
+export { default as Footer2 } from "./footers/footer-2";
+export { default as Header1 } from "./headers/header-1";
+export { default as Header2 } from "./headers/header-2";
+export { default as Header3 } from "./headers/header-3";
+export { default as Header4 } from "./headers/header-4";
+export { default as LogoCloud1 } from "./logos/logo-cloud-1";
+export { default as LogoCloud2 } from "./logos/logo-cloud-2";
+export { default as LogoCloud3 } from "./logos/logo-cloud-3";
+export { default as Pricing1 } from "./pricing/pricing-1";
+export { default as Pricing2 } from "./pricing/pricing-2";
+export { default as Pricing3 } from "./pricing/pricing-3";
+export { default as Stats1 } from "./stats/stats-1";
+export { default as Stats2 } from "./stats/stats-2";
+export { default as Team1 } from "./team/team-1";
+export { default as Team2 } from "./team/team-2";
+export { default as Testimonials1 } from "./testimonials/testimonials-1";
+export { default as Testimonials2 } from "./testimonials/testimonials-2";
+export { default as Testimonials3 } from "./testimonials/testimonials-3";

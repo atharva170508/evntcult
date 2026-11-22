@@ -1,0 +1,16 @@
+{
+ "name": "date-picker-05",
+ "type": "registry:component",
+ "description": "Natural language date picker supporting phrases like \"tomorrow\" or \"next week\"",
+ "dependencies": [
+  "chrono-node",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "input",
+  "label",
+  "popover"
+ ]
+}

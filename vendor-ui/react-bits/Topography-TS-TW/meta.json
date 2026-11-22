@@ -1,0 +1,7 @@
+{
+ "name": "Topography-TS-TW",
+ "type": "registry:component",
+ "description": "A 3D landscape drawn in glowing contour lines that rises under the cursor, with light pulses on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

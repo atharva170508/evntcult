@@ -1,0 +1,7 @@
+{
+ "name": "Aurora-TS-TW",
+ "type": "registry:component",
+ "description": "A soft, calm aurora that flows across the top of the page and drifts toward the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

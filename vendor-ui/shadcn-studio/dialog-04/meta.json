@@ -1,0 +1,13 @@
+{
+ "name": "dialog-04",
+ "type": "registry:component",
+ "description": "Scrollable dialog with long content and scroll area for product information",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "scroll-area"
+ ]
+}

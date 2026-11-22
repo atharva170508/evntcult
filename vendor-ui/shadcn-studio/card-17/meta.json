@@ -1,0 +1,8 @@
+{
+ "name": "card-17",
+ "type": "registry:component",
+ "description": "Dynamic 3D hover card with perspective transforms and smooth depth animations",
+ "registryDependencies": [
+  "card"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-buttons-icon",
+ "type": "registry:ui",
+ "description": "Demo showing an icon button.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-buttons-icon"
+ ]
+}

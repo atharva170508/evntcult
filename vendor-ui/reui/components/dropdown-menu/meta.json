@@ -1,0 +1,128 @@
+[
+  {
+    "name": "c-dropdown-menu-1",
+    "title": "Basic dropdown menu",
+    "label": "Basic",
+    "description": "Basic dropdown menu",
+    "order": 1
+  },
+  {
+    "name": "c-dropdown-menu-2",
+    "title": "Dropdown menus opening positions",
+    "label": "Opening Positions",
+    "description": "Dropdown menus opening positions",
+    "order": 2
+  },
+  {
+    "name": "c-dropdown-menu-3",
+    "title": "Dropdown menu with icons",
+    "label": "Icons",
+    "description": "Dropdown menu with icons",
+    "order": 3
+  },
+  {
+    "name": "c-dropdown-menu-4",
+    "title": "Dropdown menu with keyboard shortcuts",
+    "label": "Keyboard Shortcuts",
+    "description": "Dropdown menu with keyboard shortcuts",
+    "order": 4
+  },
+  {
+    "name": "c-dropdown-menu-5",
+    "title": "Dropdown menu with nested submenus",
+    "label": "Nested Submenus",
+    "description": "Dropdown menu with nested submenus",
+    "order": 5
+  },
+  {
+    "name": "c-dropdown-menu-6",
+    "title": "Dropdown menu with checkboxes",
+    "label": "Checkboxes",
+    "description": "Dropdown menu with checkboxes",
+    "order": 6
+  },
+  {
+    "name": "c-dropdown-menu-7",
+    "title": "Dropdown menu with radio groups",
+    "label": "Radio Groups",
+    "description": "Dropdown menu with radio groups",
+    "order": 7
+  },
+  {
+    "name": "c-dropdown-menu-8",
+    "title": "Advance dropdown menu",
+    "label": "All Item Types",
+    "description": "Advance dropdown menu",
+    "order": 8
+  },
+  {
+    "name": "c-dropdown-menu-9",
+    "title": "User profile dropdown menu",
+    "label": "User Profile",
+    "description": "User profile dropdown menu",
+    "order": 9
+  },
+  {
+    "name": "c-dropdown-menu-10",
+    "title": "Workspace switcher dropdown menu",
+    "label": "Workspace Switcher",
+    "description": "Workspace switcher dropdown menu",
+    "order": 10
+  },
+  {
+    "name": "c-dropdown-menu-11",
+    "title": "Notifications dropdown menu",
+    "label": "Notification Feed",
+    "description": "Notifications dropdown menu",
+    "order": 11
+  },
+  {
+    "name": "c-dropdown-menu-12",
+    "title": "Actions dropdown menu",
+    "label": "Record Actions",
+    "description": "Actions dropdown menu",
+    "order": 12
+  },
+  {
+    "name": "c-dropdown-menu-13",
+    "title": "Share and export dropdown menu",
+    "label": "Share & Export",
+    "description": "Share and export dropdown menu",
+    "order": 13
+  },
+  {
+    "name": "c-dropdown-menu-14",
+    "title": "User profile dropdown menu with theme toggle and status selector",
+    "label": "Theme & Status",
+    "description": "User profile dropdown menu with theme toggle and status selector",
+    "order": 14
+  },
+  {
+    "name": "c-dropdown-menu-15",
+    "title": "User and create menu",
+    "label": "User & Create",
+    "description": "User and create menu",
+    "order": 15
+  },
+  {
+    "name": "c-dropdown-menu-16",
+    "title": "Quick action menu",
+    "label": "Quick Actions",
+    "description": "Quick action menu",
+    "order": 16
+  },
+  {
+    "name": "c-dropdown-menu-17",
+    "title": "Notifications dropdown with items",
+    "label": "Notification Items",
+    "description": "Notifications dropdown with items",
+    "order": 17
+  },
+  {
+    "name": "c-dropdown-menu-18",
+    "title": "AI model selector with provider icons",
+    "label": "AI Model Selector",
+    "description": "AI model selector with provider icons",
+    "order": 18
+  }
+]

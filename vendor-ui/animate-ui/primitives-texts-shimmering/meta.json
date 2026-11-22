@@ -1,0 +1,11 @@
+{
+ "name": "primitives-texts-shimmering",
+ "type": "registry:ui",
+ "description": "A shimmering text animation.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/hooks-use-is-in-view"
+ ]
+}

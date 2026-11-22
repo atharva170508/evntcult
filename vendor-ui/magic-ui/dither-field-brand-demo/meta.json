@@ -1,0 +1,8 @@
+{
+ "name": "dither-field-brand-demo",
+ "type": "registry:example",
+ "description": "A brand-color pair: an amber glow and a cyan aurora with three-stop color ramps.",
+ "registryDependencies": [
+  "@magicui/dither-field"
+ ]
+}

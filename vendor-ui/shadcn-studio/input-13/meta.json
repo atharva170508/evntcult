@@ -1,0 +1,9 @@
+{
+ "name": "input-13",
+ "type": "registry:component",
+ "description": "An email input field with custom indigo focus ring styling",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

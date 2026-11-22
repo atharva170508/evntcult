@@ -1,0 +1,13 @@
+{
+ "name": "checkbox-17",
+ "type": "registry:component",
+ "description": "Smooth animated checkbox with motion transitions and visual feedback",
+ "dependencies": [
+  "@radix-ui/react-checkbox",
+  "motion"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "app-integration-01",
+ "type": "registry:block",
+ "description": "Two-column layout with integration cards featuring tool logos, names, descriptions, and call-to-action for conversion-focused app showcases",
+ "registryDependencies": [
+  "button",
+  "card"
+ ]
+}

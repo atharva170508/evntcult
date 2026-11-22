@@ -1,0 +1,8 @@
+{
+ "name": "card-09",
+ "type": "registry:component",
+ "description": "Outline card with primary border and transparent background",
+ "registryDependencies": [
+  "card"
+ ]
+}

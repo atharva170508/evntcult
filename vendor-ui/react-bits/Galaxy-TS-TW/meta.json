@@ -1,0 +1,7 @@
+{
+ "name": "Galaxy-TS-TW",
+ "type": "registry:component",
+ "description": "Endless flight through a twinkling starfield with warp jumps, cursor repulsion and star palettes.",
+ "dependencies": [],
+ "registryDependencies": []
+}

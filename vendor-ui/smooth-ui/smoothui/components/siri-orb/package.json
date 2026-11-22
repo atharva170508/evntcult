@@ -1,0 +1,46 @@
+{
+  "name": "@repo/siri-orb",
+  "description": "A beautiful animated orb component inspired by Siri's visual design.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/ai-core": "workspace:*",
+    "motion": "^12.23.25",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "ai",
+    "tags": [
+      "siri",
+      "orb",
+      "ai",
+      "animated",
+      "glow",
+      "css",
+      "audio",
+      "reactive",
+      "voice"
+    ],
+    "complexity": "moderate",
+    "animationType": "tween",
+    "useCases": [
+      "Animated Siri-inspired orb for AI interfaces",
+      "Visual AI status indicator with pulsing glow",
+      "Decorative animated orb for loading or presence states"
+    ],
+    "compositionHints": [
+      "Drive the state prop from the same AIState as the rest of the screen",
+      "Feed amplitude from useAudioAmplitude for real voice reactivity",
+      "Pair with agent-avatar for AI presence displays"
+    ],
+    "hasReducedMotion": true
+  }
+}

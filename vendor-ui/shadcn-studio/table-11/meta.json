@@ -1,0 +1,8 @@
+{
+ "name": "table-11",
+ "type": "registry:component",
+ "description": "A table with sticky first column that remains fixed during horizontal scrolling",
+ "registryDependencies": [
+  "table"
+ ]
+}

@@ -1,0 +1,18 @@
+{
+ "name": "bento-demo",
+ "type": "registry:example",
+ "description": "Example showing a bento grid layout for showcasing features.",
+ "dependencies": [
+  "@radix-ui/react-icons"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "@magicui/marquee",
+  "@magicui/bento-grid",
+  "@magicui/animated-beam",
+  "@magicui/animated-list",
+  "@magicui/animated-beam-multiple-outputs",
+  "@magicui/animated-list-demo"
+ ]
+}

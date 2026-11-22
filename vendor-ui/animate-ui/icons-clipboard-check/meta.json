@@ -1,0 +1,11 @@
+{
+ "name": "icons-clipboard-check",
+ "type": "registry:ui",
+ "description": "Clipboard Check icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

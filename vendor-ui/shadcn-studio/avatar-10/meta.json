@@ -1,0 +1,11 @@
+{
+ "name": "avatar-10",
+ "type": "registry:component",
+ "description": "Avatar with plus icon overlay for adding or editing profile functionality.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar"
+ ]
+}

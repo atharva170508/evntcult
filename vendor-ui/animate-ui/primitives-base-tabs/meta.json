@@ -1,0 +1,15 @@
+{
+ "name": "primitives-base-tabs",
+ "type": "registry:ui",
+ "description": "A component for toggling between related panels on the same page.",
+ "dependencies": [
+  "motion",
+  "@base-ui-components/react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-effects-auto-height",
+  "@animate-ui/v1/primitives-effects-highlight",
+  "@animate-ui/v1/lib-get-strict-context",
+  "@animate-ui/v1/hooks-use-controlled-state"
+ ]
+}

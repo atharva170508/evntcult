@@ -1,0 +1,11 @@
+{
+ "name": "icons-loader-pinwheel",
+ "type": "registry:ui",
+ "description": "Loader pinwheel icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

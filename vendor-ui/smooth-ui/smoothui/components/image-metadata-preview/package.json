@@ -1,0 +1,42 @@
+{
+  "name": "@repo/image-metadata-preview",
+  "description": "A ImageMetadataPreview component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "lucide-react": "^0.545.0",
+    "react-use-measure": "^2.1.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "data-display",
+    "tags": [
+      "image",
+      "metadata",
+      "preview",
+      "expandable",
+      "file-info",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "spring",
+    "useCases": [
+      "Image preview card with expandable metadata panel",
+      "File information display with share and close actions",
+      "Media asset preview with creation date and source info"
+    ],
+    "compositionHints": [
+      "Use inside Dialog primitive for full image preview dialogs"
+    ],
+    "hasReducedMotion": true
+  }
+}

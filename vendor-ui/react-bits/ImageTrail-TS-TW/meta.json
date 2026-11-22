@@ -1,0 +1,9 @@
+{
+ "name": "ImageTrail-TS-TW",
+ "type": "registry:component",
+ "description": "Cursor-based image trail with several built-in variants.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

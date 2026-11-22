@@ -1,0 +1,8 @@
+{
+ "name": "switch-05",
+ "type": "registry:component",
+ "description": "Multiple size variations of switches with small, medium, and large options",
+ "registryDependencies": [
+  "switch"
+ ]
+}

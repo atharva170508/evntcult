@@ -1,0 +1,11 @@
+{
+ "name": "icons-play",
+ "type": "registry:ui",
+ "description": "Play icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-terminal",
+ "type": "registry:ui",
+ "description": "Terminal icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

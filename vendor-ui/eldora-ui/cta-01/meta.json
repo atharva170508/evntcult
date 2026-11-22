@@ -1,0 +1,12 @@
+{
+ "name": "cta-01",
+ "type": "registry:block",
+ "description": "CTA with heading, grid background, and animated side lines.",
+ "dependencies": [
+  "motion/react",
+  "next-themes"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

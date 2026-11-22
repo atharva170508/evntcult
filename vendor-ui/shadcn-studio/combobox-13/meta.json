@@ -1,0 +1,14 @@
+{
+ "name": "combobox-13",
+ "type": "registry:component",
+ "description": "Framework selector combobox with smooth animations and motion effects",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "command",
+  "popover",
+  "utils"
+ ]
+}

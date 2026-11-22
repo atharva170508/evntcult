@@ -1,0 +1,12 @@
+{
+ "name": "blog-component-01",
+ "type": "registry:block",
+ "description": "Three-column blog grid with featured images, titles, descriptions, and read more buttons for journey and destination content",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "card"
+ ]
+}

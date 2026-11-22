@@ -1,0 +1,7 @@
+{
+ "name": "Radar-TS-TW",
+ "type": "registry:component",
+ "description": "A radar scope whose sweep leaves a phosphor afterglow and picks up moving contacts.",
+ "dependencies": [],
+ "registryDependencies": []
+}

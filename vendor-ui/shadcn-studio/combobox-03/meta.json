@@ -1,0 +1,14 @@
+{
+ "name": "combobox-03",
+ "type": "registry:component",
+ "description": "Grouped combobox with disabled options and category-based selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "command",
+  "label",
+  "popover"
+ ]
+}

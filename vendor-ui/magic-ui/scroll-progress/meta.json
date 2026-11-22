@@ -1,0 +1,8 @@
+{
+ "name": "scroll-progress",
+ "type": "registry:ui",
+ "description": "Animated Scroll Progress for your pages",
+ "dependencies": [
+  "motion"
+ ]
+}

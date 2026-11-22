@@ -1,0 +1,9 @@
+{
+ "name": "tweet-card-demo",
+ "type": "registry:example",
+ "description": "Example showing a tweet card with author info.",
+ "registryDependencies": [
+  "@magicui/client-tweet-card",
+  "@magicui/tweet-card"
+ ]
+}

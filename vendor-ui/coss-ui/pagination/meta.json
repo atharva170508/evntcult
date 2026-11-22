@@ -1,0 +1,7 @@
+{
+ "name": "pagination",
+ "type": "registry:ui",
+ "registryDependencies": [
+  "https://coss.com/origin/r/button.json"
+ ]
+}

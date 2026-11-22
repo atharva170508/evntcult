@@ -1,0 +1,13 @@
+{
+ "name": "dropdown-menu-02",
+ "type": "registry:component",
+ "description": "User switcher dropdown with avatar display and task assignment selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "dropdown-menu"
+ ]
+}

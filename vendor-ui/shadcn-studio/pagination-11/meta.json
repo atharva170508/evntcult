@@ -1,0 +1,8 @@
+{
+ "name": "pagination-11",
+ "type": "registry:component",
+ "description": "A minimal numberless pagination component with only previous and next controls",
+ "registryDependencies": [
+  "pagination"
+ ]
+}

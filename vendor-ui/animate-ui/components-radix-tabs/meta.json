@@ -1,0 +1,8 @@
+{
+ "name": "components-radix-tabs",
+ "type": "registry:ui",
+ "description": "A set of layered sections of content\u2014known as tab panels\u2014that are displayed one at a time.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-tabs"
+ ]
+}

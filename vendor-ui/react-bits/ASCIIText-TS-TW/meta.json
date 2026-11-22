@@ -1,0 +1,7 @@
+{
+ "name": "ASCIIText-TS-TW",
+ "type": "registry:component",
+ "description": "Waving ASCII text that tilts toward the pointer, scrambles on hover and ripples on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

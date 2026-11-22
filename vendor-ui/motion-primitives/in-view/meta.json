@@ -1,0 +1,8 @@
+{
+ "name": "in-view",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

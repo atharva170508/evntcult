@@ -1,0 +1,8 @@
+{
+ "name": "shimmer-button-demo",
+ "type": "registry:example",
+ "description": "Example showing a button with a shimmering light effect.",
+ "registryDependencies": [
+  "@magicui/shimmer-button"
+ ]
+}

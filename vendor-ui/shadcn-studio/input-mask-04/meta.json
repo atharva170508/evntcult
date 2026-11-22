@@ -1,0 +1,12 @@
+{
+ "name": "input-mask-04",
+ "type": "registry:component",
+ "description": "A credit card expiry date input with MM/YY formatting and validation",
+ "dependencies": [
+  "react-payment-inputs"
+ ],
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

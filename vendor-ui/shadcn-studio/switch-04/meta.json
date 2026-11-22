@@ -1,0 +1,8 @@
+{
+ "name": "switch-04",
+ "type": "registry:component",
+ "description": "Color-themed switches with destructive, success, info, and warning variants",
+ "registryDependencies": [
+  "switch"
+ ]
+}

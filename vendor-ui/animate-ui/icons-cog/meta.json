@@ -1,0 +1,11 @@
+{
+ "name": "icons-cog",
+ "type": "registry:ui",
+ "description": "Cog icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

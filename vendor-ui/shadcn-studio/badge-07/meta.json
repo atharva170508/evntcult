@@ -1,0 +1,8 @@
+{
+ "name": "badge-07",
+ "type": "registry:component",
+ "description": "Number badge with circular design for count and notification displays",
+ "registryDependencies": [
+  "badge"
+ ]
+}

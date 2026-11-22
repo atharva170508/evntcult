@@ -1,0 +1,8 @@
+{
+ "name": "animated-beam-multiple-inputs",
+ "type": "registry:example",
+ "description": "Example showing animated beams with multiple input points.",
+ "registryDependencies": [
+  "@magicui/animated-beam"
+ ]
+}

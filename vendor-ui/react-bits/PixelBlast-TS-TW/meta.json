@@ -1,0 +1,7 @@
+{
+ "name": "PixelBlast-TS-TW",
+ "type": "registry:component",
+ "description": "Dithered pixel clouds that drift, shimmer and light up under the cursor, with ripples, shapes and a perspective floor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

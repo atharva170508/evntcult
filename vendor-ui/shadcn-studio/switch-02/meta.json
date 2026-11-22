@@ -1,0 +1,8 @@
+{
+ "name": "switch-02",
+ "type": "registry:component",
+ "description": "A square-styled switch with rounded corners for alternative visual design",
+ "registryDependencies": [
+  "switch"
+ ]
+}

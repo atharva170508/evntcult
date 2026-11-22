@@ -1,0 +1,8 @@
+{
+ "name": "button-11",
+ "type": "registry:component",
+ "description": "A Primary Button with gradient background effect for primary action",
+ "registryDependencies": [
+  "button"
+ ]
+}

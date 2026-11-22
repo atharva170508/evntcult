@@ -1,0 +1,7 @@
+{
+ "name": "breadcrumb",
+ "type": "registry:ui",
+ "dependencies": [
+  "radix-ui"
+ ]
+}

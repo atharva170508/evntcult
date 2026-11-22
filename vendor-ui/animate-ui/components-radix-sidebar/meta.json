@@ -1,0 +1,20 @@
+{
+ "name": "components-radix-sidebar",
+ "type": "registry:ui",
+ "description": "A composable, themeable and customizable sidebar component. Created by Shadcn and animated by Animate UI.",
+ "dependencies": [
+  "radix-ui",
+  "class-variance-authority",
+  "motion",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-checkbox",
+  "@animate-ui/v1/lib-get-strict-context",
+  "button",
+  "input",
+  "separator",
+  "skeleton",
+  "use-mobile"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-radio",
+ "type": "registry:ui",
+ "description": "Radio icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

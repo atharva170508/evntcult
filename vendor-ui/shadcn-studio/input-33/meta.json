@@ -1,0 +1,10 @@
+{
+ "name": "input-33",
+ "type": "registry:component",
+ "description": "An email input field with an external subscribe button connected via styling",
+ "registryDependencies": [
+  "button",
+  "input",
+  "label"
+ ]
+}

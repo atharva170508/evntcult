@@ -1,0 +1,8 @@
+{
+ "name": "sparkles-text",
+ "type": "registry:ui",
+ "description": "A dynamic text that generates continuous sparkles with smooth transitions, perfect for highlighting text with animated stars.",
+ "dependencies": [
+  "motion"
+ ]
+}

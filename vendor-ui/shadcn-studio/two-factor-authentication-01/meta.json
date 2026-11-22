@@ -1,0 +1,12 @@
+{
+ "name": "two-factor-authentication-01",
+ "type": "registry:block",
+ "description": "Centered card layout with logo header, clear two-factor authentication messaging, OTP input field, and authenticator app instructions for secure account verification",
+ "registryDependencies": [
+  "button",
+  "card",
+  "input-otp",
+  "label",
+  "utils"
+ ]
+}

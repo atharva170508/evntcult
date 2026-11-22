@@ -1,0 +1,8 @@
+{
+ "name": "components-base-progress",
+ "type": "registry:ui",
+ "description": "Displays the status of a task that takes a long time.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-progress"
+ ]
+}

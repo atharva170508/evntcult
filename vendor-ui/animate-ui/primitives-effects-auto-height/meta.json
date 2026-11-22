@@ -1,0 +1,12 @@
+{
+ "name": "primitives-effects-auto-height",
+ "type": "registry:ui",
+ "description": "An effect that automatically adjusts the height of an element based on its content.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-slot",
+  "@animate-ui/v1/hooks-use-auto-height"
+ ]
+}

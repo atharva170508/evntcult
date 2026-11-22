@@ -1,0 +1,98 @@
+[
+  {
+    "name": "c-timeline-1",
+    "title": "Basic timeline.",
+    "label": "Basic",
+    "description": "Basic timeline.",
+    "order": 1,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-2",
+    "title": "Timeline with roadmap.",
+    "label": "Roadmap",
+    "description": "Timeline with roadmap.",
+    "order": 2,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-3",
+    "title": "Timeline with order status.",
+    "label": "Order Status",
+    "description": "Timeline with order status.",
+    "order": 3,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-4",
+    "title": "Timeline with git activity.",
+    "label": "Git Activity",
+    "description": "Timeline with git activity.",
+    "order": 4,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-5",
+    "title": "Timeline with milestones.",
+    "label": "Milestones",
+    "description": "Timeline with milestones.",
+    "order": 5,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-6",
+    "title": "Timeline with pipeline steps.",
+    "label": "Pipeline Steps",
+    "description": "Timeline with pipeline steps.",
+    "order": 6,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-7",
+    "title": "Timeline with roadmap items.",
+    "label": "Roadmap Items",
+    "description": "Timeline with roadmap items.",
+    "order": 7,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-8",
+    "title": "Vertical timeline",
+    "label": "Horizontal",
+    "description": "Vertical timeline",
+    "order": 8,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-9",
+    "title": "Horizontal timeline with leading labels",
+    "label": "Leading Labels",
+    "description": "Horizontal timeline with leading labels",
+    "order": 9,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-10",
+    "title": "Deployment log timeline",
+    "label": "Deployment Log",
+    "description": "Deployment log timeline",
+    "order": 10,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-11",
+    "title": "Activity feed timeline with user avatars",
+    "label": "Avatar Activity",
+    "description": "Activity feed timeline with user avatars",
+    "order": 11,
+    "gridSize": 1
+  },
+  {
+    "name": "c-timeline-12",
+    "title": "Compact horizontal milestone timeline",
+    "label": "Compact Milestones",
+    "description": "Compact horizontal milestone timeline",
+    "order": 12,
+    "gridSize": 1
+  }
+]

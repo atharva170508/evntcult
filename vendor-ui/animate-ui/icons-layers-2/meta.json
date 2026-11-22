@@ -1,0 +1,11 @@
+{
+ "name": "icons-layers-2",
+ "type": "registry:ui",
+ "description": "Layers 2 icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

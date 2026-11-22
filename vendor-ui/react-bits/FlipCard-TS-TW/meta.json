@@ -1,0 +1,9 @@
+{
+ "name": "FlipCard-TS-TW",
+ "type": "registry:component",
+ "description": "Two-faced card that flips in 3D on a click, drag or flick and settles on a spring.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

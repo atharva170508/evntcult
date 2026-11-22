@@ -1,0 +1,10 @@
+{
+ "name": "CardSwap-TS-TW",
+ "type": "registry:component",
+ "description": "A 3D stack of cards that sends the front card to the back on a timer, or when you fling it.",
+ "dependencies": [
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

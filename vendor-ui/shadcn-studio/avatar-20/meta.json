@@ -1,0 +1,8 @@
+{
+ "name": "avatar-20",
+ "type": "registry:component",
+ "description": "Avatar group with outlined container and background styling.",
+ "registryDependencies": [
+  "avatar"
+ ]
+}

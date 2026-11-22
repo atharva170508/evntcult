@@ -1,0 +1,10 @@
+{
+ "name": "SplitText-TS-TW",
+ "type": "registry:component",
+ "description": "Splits text into characters / words for staggered entrance animation.",
+ "dependencies": [
+  "gsap@^3.13.0",
+  "@gsap/react@^2.1.2"
+ ],
+ "registryDependencies": []
+}

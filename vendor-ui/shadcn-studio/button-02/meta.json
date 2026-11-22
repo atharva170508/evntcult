@@ -1,0 +1,8 @@
+{
+ "name": "button-02",
+ "type": "registry:component",
+ "description": "A button component in disabled state",
+ "registryDependencies": [
+  "button"
+ ]
+}

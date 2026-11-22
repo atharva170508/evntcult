@@ -1,0 +1,7 @@
+{
+ "name": "GridDistortion-TS-TW",
+ "type": "registry:component",
+ "description": "Image background that breaks into a grid of blocks under the cursor and settles back into place.",
+ "dependencies": [],
+ "registryDependencies": []
+}

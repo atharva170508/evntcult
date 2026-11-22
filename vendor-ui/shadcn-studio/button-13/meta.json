@@ -1,0 +1,11 @@
+{
+ "name": "button-13",
+ "type": "registry:component",
+ "description": "Outline button with sky blue theme for duplicate action",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

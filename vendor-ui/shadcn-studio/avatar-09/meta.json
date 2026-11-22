@@ -1,0 +1,8 @@
+{
+ "name": "avatar-09",
+ "type": "registry:component",
+ "description": "Status avatar with away indicator showing amber status dot for absent/away state.",
+ "registryDependencies": [
+  "avatar"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "border-trail",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,8 @@
+{
+ "name": "line-shadow-text",
+ "type": "registry:ui",
+ "description": "A text component with a moving line shadow.",
+ "dependencies": [
+  "motion"
+ ]
+}

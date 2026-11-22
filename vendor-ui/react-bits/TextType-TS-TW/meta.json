@@ -1,0 +1,9 @@
+{
+ "name": "TextType-TS-TW",
+ "type": "registry:component",
+ "description": "Typewriter effect with blinking cursor and adjustable typing cadence.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

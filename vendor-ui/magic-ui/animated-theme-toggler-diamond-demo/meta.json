@@ -1,0 +1,8 @@
+{
+ "name": "animated-theme-toggler-diamond-demo",
+ "type": "registry:example",
+ "description": "Theme transition with a diamond-shaped clip reveal.",
+ "registryDependencies": [
+  "@magicui/animated-theme-toggler"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "input-otp-04",
+ "type": "registry:component",
+ "description": "A 4-digit OTP input field with countdown timer and automatic resend functionality",
+ "registryDependencies": [
+  "input-otp",
+  "label"
+ ]
+}

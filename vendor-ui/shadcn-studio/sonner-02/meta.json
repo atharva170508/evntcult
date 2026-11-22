@@ -1,0 +1,11 @@
+{
+ "name": "sonner-02",
+ "type": "registry:component",
+ "description": "A toast notification with title and description for detailed information",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

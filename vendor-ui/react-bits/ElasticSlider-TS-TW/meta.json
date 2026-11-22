@@ -1,0 +1,10 @@
+{
+ "name": "ElasticSlider-TS-TW",
+ "type": "registry:component",
+ "description": "A slider that grows under your cursor and stretches like rubber when pulled past either end, then springs back.",
+ "dependencies": [
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

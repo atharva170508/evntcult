@@ -1,0 +1,11 @@
+{
+ "name": "icon-cloud",
+ "type": "registry:ui",
+ "description": "An interactive 3D tag cloud component",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

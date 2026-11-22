@@ -1,0 +1,15 @@
+{
+ "name": "popover-09",
+ "type": "registry:component",
+ "description": "A filter popover with checkbox options and price range slider controls",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "checkbox",
+  "label",
+  "popover",
+  "slider"
+ ]
+}

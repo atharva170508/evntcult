@@ -1,0 +1,12 @@
+{
+ "name": "components-animate-github-stars-wheel",
+ "type": "registry:ui",
+ "description": "A scrolling wheel that displays GitHub stars count.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-effects-particles",
+  "@animate-ui/v1/primitives-texts-scrolling-number"
+ ]
+}

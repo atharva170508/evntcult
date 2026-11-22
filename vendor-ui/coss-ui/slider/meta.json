@@ -1,0 +1,10 @@
+{
+ "name": "slider",
+ "type": "registry:ui",
+ "dependencies": [
+  "radix-ui"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/tooltip.json"
+ ]
+}

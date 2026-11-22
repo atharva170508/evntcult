@@ -1,0 +1,9 @@
+{
+ "name": "AeroShards-TS-TW",
+ "type": "registry:component",
+ "description": "Silk ribbons of thick glass shards streaming on layered depths among survey markers, catching light along their edges.",
+ "dependencies": [
+  "vgpu@^0.3.1"
+ ],
+ "registryDependencies": []
+}

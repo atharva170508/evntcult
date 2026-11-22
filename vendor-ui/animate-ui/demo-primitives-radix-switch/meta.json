@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-radix-switch",
+ "type": "registry:ui",
+ "description": "Demo showing an animated radix switch.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-switch"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "avatar-01",
+ "type": "registry:component",
+ "description": "Basic avatar with profile image and fallback initials.",
+ "registryDependencies": [
+  "avatar"
+ ]
+}

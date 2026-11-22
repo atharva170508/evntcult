@@ -1,0 +1,41 @@
+{
+  "name": "@repo/app-download-stack",
+  "description": "A AppDownloadStack component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "lucide-react": "^0.545.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "other",
+    "tags": [
+      "download",
+      "stack",
+      "cards",
+      "app-store",
+      "selection",
+      "animated"
+    ],
+    "complexity": "complex",
+    "animationType": "spring",
+    "useCases": [
+      "App download selection with stacked card animation",
+      "Batch app installer with animated progress",
+      "Multi-select download manager with expand/collapse"
+    ],
+    "compositionHints": [
+      "Use Progress primitive for download progress visualization"
+    ],
+    "hasReducedMotion": true
+  }
+}

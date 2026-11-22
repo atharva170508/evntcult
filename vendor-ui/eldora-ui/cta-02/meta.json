@@ -1,0 +1,14 @@
+{
+ "name": "cta-02",
+ "type": "registry:block",
+ "description": "CTA with heading, button, and orbiting app icons.",
+ "dependencies": [
+  "motion/react",
+  "next-themes"
+ ],
+ "registryDependencies": [
+  "button",
+  "grid",
+  "utils"
+ ]
+}

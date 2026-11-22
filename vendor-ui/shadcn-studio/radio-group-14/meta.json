@@ -1,0 +1,14 @@
+{
+ "name": "radio-group-14",
+ "type": "registry:component",
+ "description": "An animated radio group with motion effects for notification preferences",
+ "dependencies": [
+  "@radix-ui/react-radio-group",
+  "lucide-react",
+  "motion"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

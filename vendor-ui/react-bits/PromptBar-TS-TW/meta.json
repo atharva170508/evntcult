@@ -1,0 +1,11 @@
+{
+ "name": "PromptBar-TS-TW",
+ "type": "registry:component",
+ "description": "Chat composer with @ sources, / commands, a model picker, dictation and attachments.",
+ "dependencies": [
+  "motion@^12.23.12",
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

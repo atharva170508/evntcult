@@ -1,0 +1,8 @@
+{
+ "name": "calendar-17",
+ "type": "registry:component",
+ "description": "Calendar with week numbers displayed for week-based scheduling",
+ "registryDependencies": [
+  "calendar"
+ ]
+}

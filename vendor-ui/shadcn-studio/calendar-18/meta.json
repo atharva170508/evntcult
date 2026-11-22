@@ -1,0 +1,10 @@
+{
+ "name": "calendar-18",
+ "type": "registry:component",
+ "description": "Calendar with \"Today\" quick action button for fast current date selection",
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "card"
+ ]
+}

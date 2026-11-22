@@ -1,0 +1,12 @@
+{
+ "name": "primitives-texts-scrolling-number",
+ "type": "registry:ui",
+ "description": "A scrolling number animation.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/hooks-use-is-in-view",
+  "@animate-ui/v1/lib-get-strict-context"
+ ]
+}

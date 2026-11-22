@@ -1,0 +1,8 @@
+{
+ "name": "dither-field-colors-demo",
+ "type": "registry:example",
+ "description": "Four color treatments in one grid: black on white, white on black, an amber glow and a cyan aurora.",
+ "registryDependencies": [
+  "@magicui/dither-field"
+ ]
+}

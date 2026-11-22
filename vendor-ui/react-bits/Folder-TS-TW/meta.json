@@ -1,0 +1,7 @@
+{
+ "name": "Folder-TS-TW",
+ "type": "registry:component",
+ "description": "Folder that drops its flap open or swings open like a book, with pages you can pick.",
+ "dependencies": [],
+ "registryDependencies": []
+}

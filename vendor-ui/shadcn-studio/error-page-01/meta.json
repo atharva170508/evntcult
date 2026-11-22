@@ -1,0 +1,8 @@
+{
+ "name": "error-page-01",
+ "type": "registry:block",
+ "description": "Two-column error page layout with left-side text content (Whoops heading, error message, description) and right-side black background featuring centered astronaut illustration",
+ "registryDependencies": [
+  "button"
+ ]
+}

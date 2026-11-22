@@ -1,0 +1,9 @@
+{
+ "name": "comp-463",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/label.json",
+  "https://coss.com/origin/r/pagination.json",
+  "https://coss.com/origin/r/select.json"
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "name": "Ballpit-TS-TW",
+ "type": "registry:component",
+ "description": "A soft-lit pit of physics balls you can shove with the cursor, grab, throw and blast apart.",
+ "dependencies": [],
+ "registryDependencies": []
+}

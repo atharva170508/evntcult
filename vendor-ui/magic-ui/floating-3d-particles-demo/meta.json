@@ -1,0 +1,12 @@
+{
+ "name": "floating-3d-particles-demo",
+ "type": "registry:example",
+ "description": "Example showing a floating 3D particle field behind hero content.",
+ "dependencies": [
+  "lucide-react",
+  "next-themes"
+ ],
+ "registryDependencies": [
+  "@magicui/floating-3d-particles"
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "name": "comp-40",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/datefield-rac.json"
+ ]
+}

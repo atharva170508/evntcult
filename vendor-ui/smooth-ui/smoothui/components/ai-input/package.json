@@ -1,0 +1,37 @@
+{
+  "name": "@repo/ai-input",
+  "description": "Deprecated alias for morph-surface. Kept for one release so existing installs keep resolving.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/morph-surface": "workspace:*",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "others",
+    "tags": [
+      "deprecated",
+      "alias",
+      "morph",
+      "dock"
+    ],
+    "complexity": "simple",
+    "animationType": "spring",
+    "useCases": [
+      "Kept only so existing ai-input installs keep resolving",
+      "Use morph-surface for the dock, ai-prompt-input for a chat composer"
+    ],
+    "compositionHints": [
+      "Deprecated — import morph-surface instead",
+      "Scheduled for removal one release after the rename"
+    ],
+    "hasReducedMotion": true
+  }
+}

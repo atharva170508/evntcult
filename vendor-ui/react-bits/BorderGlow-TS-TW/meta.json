@@ -1,0 +1,7 @@
+{
+ "name": "BorderGlow-TS-TW",
+ "type": "registry:component",
+ "description": "Glowing mesh-gradient border that follows cursor direction and intensifies near edges.",
+ "dependencies": [],
+ "registryDependencies": []
+}

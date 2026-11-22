@@ -1,0 +1,5 @@
+{
+ "name": "textarea-15",
+ "type": "registry:component",
+ "description": "A textarea with inset label for compact form layouts"
+}

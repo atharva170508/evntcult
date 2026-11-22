@@ -1,0 +1,12 @@
+{
+ "name": "tabs-07",
+ "type": "registry:component",
+ "description": "Icon-only tabs with tooltip labels for compact navigation",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "tabs",
+  "tooltip"
+ ]
+}

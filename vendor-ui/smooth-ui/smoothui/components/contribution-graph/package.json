@@ -1,0 +1,41 @@
+{
+  "name": "@repo/contribution-graph",
+  "description": "A ContributionGraph component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "data-display",
+    "tags": [
+      "graph",
+      "heatmap",
+      "calendar",
+      "github",
+      "activity",
+      "data-visualization"
+    ],
+    "complexity": "complex",
+    "animationType": "spring",
+    "useCases": [
+      "GitHub-style contribution heatmap",
+      "Activity tracking calendar visualization",
+      "Yearly data density chart with tooltip details"
+    ],
+    "compositionHints": [
+      "Pair with Tooltip primitive for cell details",
+      "Use number-flow for animated stat counters alongside"
+    ],
+    "hasReducedMotion": true
+  }
+}

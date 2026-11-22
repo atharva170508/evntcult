@@ -1,0 +1,12 @@
+{
+ "name": "input-mask-02",
+ "type": "registry:component",
+ "description": "A time input field with HH:MM:SS mask formatting for precise time entry",
+ "dependencies": [
+  "use-mask-input"
+ ],
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

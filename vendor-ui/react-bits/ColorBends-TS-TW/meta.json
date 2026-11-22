@@ -1,0 +1,9 @@
+{
+ "name": "ColorBends-TS-TW",
+ "type": "registry:component",
+ "description": "Vibrant color bends with smooth flowing animation.",
+ "dependencies": [
+  "three@^0.180.0"
+ ],
+ "registryDependencies": []
+}

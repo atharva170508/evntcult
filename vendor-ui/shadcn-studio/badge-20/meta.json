@@ -1,0 +1,11 @@
+{
+ "name": "badge-20",
+ "type": "registry:component",
+ "description": "Failed status badge with destructive outline and ban icon",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge"
+ ]
+}

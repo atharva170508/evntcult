@@ -1,0 +1,12 @@
+{
+ "name": "select-27",
+ "type": "registry:component",
+ "description": "A music genre select dropdown with icons for each option",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

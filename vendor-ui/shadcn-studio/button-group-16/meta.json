@@ -1,0 +1,8 @@
+{
+ "name": "button-group-16",
+ "type": "registry:component",
+ "description": "File action button group with animated shine/shimmer hover effect",
+ "registryDependencies": [
+  "button"
+ ]
+}

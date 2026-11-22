@@ -1,0 +1,12 @@
+{
+ "name": "collapsible-10",
+ "type": "registry:component",
+ "description": "Animated collapsible with smooth transitions and motion effects",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "collapsible"
+ ]
+}

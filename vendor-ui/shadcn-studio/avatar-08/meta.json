@@ -1,0 +1,11 @@
+{
+ "name": "avatar-08",
+ "type": "registry:component",
+ "description": "Status avatar with online indicator showing green status dot.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "avatar-circles-demo",
+ "type": "registry:example",
+ "description": "Example showing overlapping avatar circles.",
+ "registryDependencies": [
+  "@magicui/avatar-circles"
+ ]
+}

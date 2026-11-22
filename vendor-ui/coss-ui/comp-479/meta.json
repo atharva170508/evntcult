@@ -1,0 +1,10 @@
+{
+ "name": "comp-479",
+ "type": "registry:component",
+ "dependencies": [
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/table.json"
+ ]
+}

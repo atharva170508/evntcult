@@ -1,0 +1,7 @@
+{
+ "name": "DecayCard-TS-TW",
+ "type": "registry:component",
+ "description": "An image card that tears and melts as the pointer moves, then pulls itself back together.",
+ "dependencies": [],
+ "registryDependencies": []
+}

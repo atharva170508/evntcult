@@ -1,0 +1,8 @@
+{
+ "name": "dia-text-reveal-demo",
+ "type": "registry:example",
+ "description": "Example showing a sweeping color band reveal on headline text.",
+ "registryDependencies": [
+  "@magicui/dia-text-reveal"
+ ]
+}

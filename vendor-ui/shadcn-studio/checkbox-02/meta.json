@@ -1,0 +1,12 @@
+{
+ "name": "checkbox-02",
+ "type": "registry:component",
+ "description": "Indeterminate checkbox with custom styling and three-state functionality",
+ "dependencies": [
+  "@radix-ui/react-checkbox",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-base-progress",
+ "type": "registry:ui",
+ "description": "Demo showing a progress bar.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-base-progress"
+ ]
+}

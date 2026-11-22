@@ -1,0 +1,9 @@
+{
+ "name": "dropdown-menu-01",
+ "type": "registry:component",
+ "description": "Basic dropdown menu with groups, separators, and submenu for account actions",
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

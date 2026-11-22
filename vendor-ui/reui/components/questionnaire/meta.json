@@ -1,0 +1,58 @@
+[
+  {
+    "name": "c-questionnaire-1",
+    "title": "Guided workspace setup",
+    "label": "Guided Setup",
+    "description": "Three required questions in a card, with progress, navigation and a summary on submit.",
+    "order": 1,
+    "gridSize": 2
+  },
+  {
+    "name": "c-questionnaire-2",
+    "title": "Multi-select answers",
+    "label": "Multi-Select",
+    "description": "A checkbox question that accepts several answers, with a live count and a chip summary.",
+    "order": 2,
+    "gridSize": 2
+  },
+  {
+    "name": "c-questionnaire-3",
+    "title": "A written answer beside the choices",
+    "label": "Write-In Answer",
+    "description": "A text input sitting with the fixed choices, so an answer can be typed instead of picked.",
+    "order": 3,
+    "gridSize": 2
+  },
+  {
+    "name": "c-questionnaire-4",
+    "title": "Segmented progress with step labels",
+    "label": "Segmented Progress",
+    "description": "A custom progress bar built from the progress render state, over a four question flow.",
+    "order": 4,
+    "gridSize": 2
+  },
+  {
+    "name": "c-questionnaire-5",
+    "title": "An optional question with skip",
+    "label": "Optional Skip",
+    "description": "A question the visitor may skip on purpose, with the skipped state carried into the summary.",
+    "order": 5,
+    "gridSize": 2
+  },
+  {
+    "name": "c-questionnaire-6",
+    "title": "A rule that sends you back",
+    "label": "Cross-Question Rule",
+    "description": "A cross-question rule checked on submit, returning the flow to the question that broke it.",
+    "order": 6,
+    "gridSize": 2
+  },
+  {
+    "name": "c-questionnaire-7",
+    "title": "A branch that appears when it applies",
+    "label": "Conditional Branch",
+    "description": "A question that only joins the flow after an earlier answer, with avatars, reset and a summary.",
+    "order": 7,
+    "gridSize": 2
+  }
+]

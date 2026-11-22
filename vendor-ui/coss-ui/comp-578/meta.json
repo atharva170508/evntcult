@@ -1,0 +1,9 @@
+{
+ "name": "comp-578",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/button.json",
+  "https://coss.com/origin/r/navigation-menu.json",
+  "https://coss.com/origin/r/popover.json"
+ ]
+}

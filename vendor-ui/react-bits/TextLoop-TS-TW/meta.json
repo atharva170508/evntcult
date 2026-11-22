@@ -1,0 +1,9 @@
+{
+ "name": "TextLoop-TS-TW",
+ "type": "registry:component",
+ "description": "A seamless text marquee that flows along curved SVG paths.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

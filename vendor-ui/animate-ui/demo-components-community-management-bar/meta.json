@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-community-management-bar",
+ "type": "registry:ui",
+ "description": "Demo showing a management bar.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-community-management-bar"
+ ]
+}

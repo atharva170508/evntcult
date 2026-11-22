@@ -1,0 +1,7 @@
+{
+ "name": "OptionWheel-TS-TW",
+ "type": "registry:component",
+ "description": "Curved option picker that spins with scroll, drag or arrow keys, tilting items away.",
+ "dependencies": [],
+ "registryDependencies": []
+}

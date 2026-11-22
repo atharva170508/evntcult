@@ -1,0 +1,7 @@
+{
+ "name": "CursorGrid-TS-TW",
+ "type": "registry:component",
+ "description": "A crisp grid whose cells light up and fade behind the cursor, with grid styles, tiles and click pulses.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,11 @@
+{
+ "name": "alert-19",
+ "type": "registry:component",
+ "description": "Outline success alert with green border and text for success messages.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "name": "comp-478",
+ "type": "registry:component",
+ "dependencies": [
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/checkbox.json",
+  "https://coss.com/origin/r/input.json",
+  "https://coss.com/origin/r/label.json",
+  "https://coss.com/origin/r/select.json",
+  "https://coss.com/origin/r/table.json"
+ ]
+}

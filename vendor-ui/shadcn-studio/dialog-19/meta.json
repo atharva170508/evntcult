@@ -1,0 +1,11 @@
+{
+ "name": "dialog-19",
+ "type": "registry:component",
+ "description": "Profile edit dialog positioned at middle-left-aligned of screen",
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "input",
+  "label"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-texts-scrolling-number",
+ "type": "registry:ui",
+ "description": "Demo showing an animated scrolling number.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-texts-scrolling-number"
+ ]
+}

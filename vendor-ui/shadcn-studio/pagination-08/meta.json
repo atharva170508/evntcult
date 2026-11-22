@@ -1,0 +1,9 @@
+{
+ "name": "pagination-08",
+ "type": "registry:component",
+ "description": "A pagination component with ellipsis and tooltip showing hidden page count",
+ "registryDependencies": [
+  "pagination",
+  "tooltip"
+ ]
+}

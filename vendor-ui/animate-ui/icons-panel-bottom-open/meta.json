@@ -1,0 +1,11 @@
+{
+ "name": "icons-panel-bottom-open",
+ "type": "registry:ui",
+ "description": "Panel bottom open icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

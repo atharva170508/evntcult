@@ -1,0 +1,11 @@
+{
+ "name": "alert-05",
+ "type": "registry:component",
+ "description": "Attached icon alert with separated icon section and destructive warning styling.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-paperclip",
+ "type": "registry:ui",
+ "description": "Paperclip icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

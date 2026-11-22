@@ -1,0 +1,10 @@
+{
+ "name": "MorphSlider-TS-TW",
+ "type": "registry:component",
+ "description": "WebGL slider that melts between images with a displacement transition.",
+ "dependencies": [
+  "ogl@^1.0.11",
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

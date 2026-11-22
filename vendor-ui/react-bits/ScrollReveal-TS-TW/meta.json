@@ -1,0 +1,9 @@
+{
+ "name": "ScrollReveal-TS-TW",
+ "type": "registry:component",
+ "description": "Text gently unblurs and reveals on scroll.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

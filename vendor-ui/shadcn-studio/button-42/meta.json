@@ -1,0 +1,11 @@
+{
+ "name": "button-42",
+ "type": "registry:component",
+ "description": "Button with tap scale animation using Framer Motion",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

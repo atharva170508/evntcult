@@ -1,0 +1,12 @@
+{
+ "name": "dialog-02",
+ "type": "registry:component",
+ "description": "Alert dialog with icon and detailed feature list for update notifications",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert-dialog",
+  "button"
+ ]
+}

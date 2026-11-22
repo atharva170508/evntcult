@@ -1,0 +1,8 @@
+{
+ "name": "accordion-01",
+ "type": "registry:component",
+ "description": "Basic accordion with default styling and collapsible FAQ items.",
+ "registryDependencies": [
+  "accordion"
+ ]
+}

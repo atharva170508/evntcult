@@ -1,0 +1,9 @@
+{
+ "name": "input-19",
+ "type": "registry:component",
+ "description": "A URL input field with an external \"https://\" add-on box at the start",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

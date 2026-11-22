@@ -1,0 +1,9 @@
+{
+ "name": "ScrollFloat-TS-TW",
+ "type": "registry:component",
+ "description": "Text gently floats / parallax shifts on scroll.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

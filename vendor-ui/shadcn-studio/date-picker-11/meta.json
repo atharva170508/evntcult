@@ -1,0 +1,15 @@
+{
+ "name": "date-picker-11",
+ "type": "registry:component",
+ "description": "Date picker with time range selection (from/to times) for event scheduling",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "input",
+  "label",
+  "popover"
+ ]
+}

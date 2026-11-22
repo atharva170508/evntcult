@@ -1,0 +1,5 @@
+{
+ "name": "glyph-matrix",
+ "type": "registry:ui",
+ "description": "An animated grid of subtly shifting glyphs with fade effect and theme support."
+}

@@ -1,0 +1,15 @@
+{
+ "name": "date-picker-04",
+ "type": "registry:component",
+ "description": "Date picker with integrated input field for manual date entry and calendar popup",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "input",
+  "label",
+  "popover"
+ ]
+}

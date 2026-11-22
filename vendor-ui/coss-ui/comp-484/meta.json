@@ -1,0 +1,15 @@
+{
+ "name": "comp-484",
+ "type": "registry:component",
+ "dependencies": [
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "https://coss.com/origin/r/badge.json",
+  "https://coss.com/origin/r/button.json",
+  "https://coss.com/origin/r/checkbox.json",
+  "https://coss.com/origin/r/pagination.json",
+  "https://coss.com/origin/r/select.json",
+  "https://coss.com/origin/r/table.json"
+ ]
+}

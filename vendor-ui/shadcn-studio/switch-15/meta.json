@@ -1,0 +1,12 @@
+{
+ "name": "switch-15",
+ "type": "registry:component",
+ "description": "A switch integrated within a card layout with database icon for backup settings",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "switch"
+ ]
+}

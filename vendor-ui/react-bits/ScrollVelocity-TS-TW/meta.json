@@ -1,0 +1,9 @@
+{
+ "name": "ScrollVelocity-TS-TW",
+ "type": "registry:component",
+ "description": "Text marquee animatio - speed and distortion scale with user's scroll velocity.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,16 @@
+{
+ "name": "collapsible-05",
+ "type": "registry:component",
+ "description": "Filter panel with price range inputs, rating checkboxes and brand selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "checkbox",
+  "collapsible",
+  "label",
+  "input",
+  "separator"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "word-pull-up-text-demo",
+ "type": "registry:example",
+ "description": "Example showing a word-pull-up-text-demo component.",
+ "registryDependencies": [
+  "@eldoraui/word-pull-up-text"
+ ]
+}

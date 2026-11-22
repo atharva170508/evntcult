@@ -1,0 +1,9 @@
+{
+ "name": "button-27",
+ "type": "registry:component",
+ "description": "User profile button with avatar image and username display",
+ "registryDependencies": [
+  "avatar",
+  "button"
+ ]
+}

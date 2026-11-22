@@ -1,0 +1,11 @@
+{
+ "name": "alert-11",
+ "type": "registry:component",
+ "description": "Success indicator alert with left border highlight and green success styling.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

@@ -1,0 +1,17 @@
+{
+ "name": "form-08",
+ "type": "registry:component",
+ "description": "Form with command popover for searchable command selection",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "command",
+  "form",
+  "popover",
+  "utils"
+ ]
+}

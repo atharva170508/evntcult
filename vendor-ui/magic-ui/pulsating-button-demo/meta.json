@@ -1,0 +1,8 @@
+{
+ "name": "pulsating-button-demo",
+ "type": "registry:example",
+ "description": "Example showing an animated pulsating button.",
+ "registryDependencies": [
+  "@magicui/pulsating-button"
+ ]
+}

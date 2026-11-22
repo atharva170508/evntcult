@@ -1,0 +1,13 @@
+{
+ "name": "primitives-animate-tooltip",
+ "type": "registry:ui",
+ "description": "An animated tooltip that shows contextual info on hover or focus and smoothly glides to the next element without disappearing between transitions.",
+ "dependencies": [
+  "motion",
+  "@floating-ui/react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-slot",
+  "@animate-ui/v1/lib-get-strict-context"
+ ]
+}

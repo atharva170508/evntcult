@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-headless-popover",
+ "type": "registry:ui",
+ "description": "Demo showing a popover.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-headless-popover"
+ ]
+}

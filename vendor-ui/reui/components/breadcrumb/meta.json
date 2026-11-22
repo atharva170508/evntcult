@@ -1,0 +1,107 @@
+[
+  {
+    "name": "c-breadcrumb-1",
+    "title": "Basic breadcrumb",
+    "label": "Basic",
+    "description": "Basic breadcrumb",
+    "order": 1
+  },
+  {
+    "name": "c-breadcrumb-2",
+    "title": "Breadcrumb with dropdown menu",
+    "label": "Dropdown Menu",
+    "description": "Breadcrumb with dropdown menu",
+    "order": 2
+  },
+  {
+    "name": "c-breadcrumb-3",
+    "title": "Breadcrumb with Next.js link",
+    "label": "Router Link",
+    "description": "Breadcrumb with Next.js link",
+    "order": 3
+  },
+  {
+    "name": "c-breadcrumb-4",
+    "title": "Breadcrumb with a custom slash separator",
+    "label": "Slash Separator",
+    "description": "Breadcrumb with a custom slash separator",
+    "order": 4
+  },
+  {
+    "name": "c-breadcrumb-5",
+    "title": "Breadcrumb with icons for each item",
+    "label": "Item Icons",
+    "description": "Breadcrumb with icons for each item",
+    "order": 5
+  },
+  {
+    "name": "c-breadcrumb-6",
+    "title": "Breadcrumb with ellipsis for long paths",
+    "label": "Static Ellipsis",
+    "description": "Breadcrumb with ellipsis for long paths",
+    "order": 6
+  },
+  {
+    "name": "c-breadcrumb-7",
+    "title": "Breadcrumb items with avatars",
+    "label": "Avatars",
+    "description": "Breadcrumb items with avatars",
+    "order": 7
+  },
+  {
+    "name": "c-breadcrumb-8",
+    "title": "Breadcrumb with double chevron separators",
+    "label": "Double Chevron",
+    "description": "Breadcrumb with double chevron separators",
+    "order": 8
+  },
+  {
+    "name": "c-breadcrumb-9",
+    "title": "Breadcrumb inside card",
+    "label": "In Card",
+    "description": "Breadcrumb inside card",
+    "order": 9
+  },
+  {
+    "name": "c-breadcrumb-10",
+    "title": "Pill-style breadcrumb inside frame",
+    "label": "Pill In Frame",
+    "description": "Pill-style breadcrumb inside frame",
+    "order": 10
+  },
+  {
+    "name": "c-breadcrumb-11",
+    "title": "Breadcrumb items containing badge with count",
+    "label": "Count Badge",
+    "description": "Breadcrumb items containing badge with count",
+    "order": 11
+  },
+  {
+    "name": "c-breadcrumb-12",
+    "title": "Breadcrumb starting with home icon item",
+    "label": "Home Icon Button",
+    "description": "Breadcrumb starting with home icon item",
+    "order": 12
+  },
+  {
+    "name": "c-breadcrumb-13",
+    "title": "Breadcrumb with a custom separator",
+    "label": "Bar Separator",
+    "description": "Breadcrumb with a custom separator",
+    "order": 13
+  },
+  {
+    "name": "c-breadcrumb-14",
+    "title": "Button-style breadcrumb",
+    "label": "Button Style",
+    "description": "Button-style breadcrumb",
+    "order": 14
+  },
+  {
+    "name": "c-breadcrumb-15",
+    "title": "Breadcrumb with project, user and document info",
+    "label": "Project & Document",
+    "description": "Breadcrumb with project, user and document info",
+    "order": 15
+  }
+]

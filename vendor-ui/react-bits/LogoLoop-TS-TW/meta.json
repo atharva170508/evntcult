@@ -1,0 +1,7 @@
+{
+ "name": "LogoLoop-TS-TW",
+ "type": "registry:component",
+ "description": "Continuously looping marquee of brand or tech logos with seamless repeat and hover pause.",
+ "dependencies": [],
+ "registryDependencies": []
+}

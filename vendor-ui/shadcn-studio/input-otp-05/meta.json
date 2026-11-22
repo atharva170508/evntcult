@@ -1,0 +1,9 @@
+{
+ "name": "input-otp-05",
+ "type": "registry:component",
+ "description": "A 4-digit OTP input field with outlined styling and rounded borders",
+ "registryDependencies": [
+  "input-otp",
+  "label"
+ ]
+}

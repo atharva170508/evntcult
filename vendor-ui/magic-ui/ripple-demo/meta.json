@@ -1,0 +1,8 @@
+{
+ "name": "ripple-demo",
+ "type": "registry:example",
+ "description": "Example showing an animated ripple effect.",
+ "registryDependencies": [
+  "@magicui/ripple"
+ ]
+}

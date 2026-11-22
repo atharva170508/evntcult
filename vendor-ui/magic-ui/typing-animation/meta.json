@@ -1,0 +1,8 @@
+{
+ "name": "typing-animation",
+ "type": "registry:ui",
+ "description": "Characters appearing in typed animation",
+ "dependencies": [
+  "motion"
+ ]
+}

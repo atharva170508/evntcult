@@ -1,0 +1,7 @@
+{
+ "name": "GridMotion-TS-TW",
+ "type": "registry:component",
+ "description": "A tilted wall of drifting tiles that slides with the pointer and lights up where it rests.",
+ "dependencies": [],
+ "registryDependencies": []
+}

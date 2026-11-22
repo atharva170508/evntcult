@@ -1,0 +1,11 @@
+{
+ "name": "icons-message-circle-x",
+ "type": "registry:ui",
+ "description": "Message circle x icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "animated-list-demo",
+ "type": "registry:example",
+ "description": "Example showing a animated-list-demo component.",
+ "registryDependencies": [
+  "@eldoraui/animated-list"
+ ]
+}

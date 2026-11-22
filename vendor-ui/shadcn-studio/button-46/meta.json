@@ -1,0 +1,8 @@
+{
+ "name": "button-46",
+ "type": "registry:component",
+ "description": "Destructive button with heartbeat pulse animation effect",
+ "registryDependencies": [
+  "button"
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "name": "combobox-06",
+ "type": "registry:component",
+ "description": "combobox with add new option functionality",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "command",
+  "label",
+  "popover",
+  "utils"
+ ]
+}

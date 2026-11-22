@@ -1,0 +1,13 @@
+{
+ "name": "input-32",
+ "type": "registry:component",
+ "description": "Input field with a right-aligned icon button, ideal for actions like downloading or submitting email addresses",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "input",
+  "label"
+ ]
+}

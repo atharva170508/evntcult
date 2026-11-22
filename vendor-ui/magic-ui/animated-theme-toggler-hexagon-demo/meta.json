@@ -1,0 +1,8 @@
+{
+ "name": "animated-theme-toggler-hexagon-demo",
+ "type": "registry:example",
+ "description": "Theme transition with a hexagon clip reveal.",
+ "registryDependencies": [
+  "@magicui/animated-theme-toggler"
+ ]
+}

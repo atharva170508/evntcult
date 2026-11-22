@@ -1,0 +1,5 @@
+{
+ "name": "shimmer-button",
+ "type": "registry:ui",
+ "description": "A button with a shimmering light which travels around the perimeter."
+}

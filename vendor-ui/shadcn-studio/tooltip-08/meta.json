@@ -1,0 +1,10 @@
+{
+ "name": "tooltip-08",
+ "type": "registry:component",
+ "description": "A tooltip displaying user information with avatar and name",
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "tooltip"
+ ]
+}

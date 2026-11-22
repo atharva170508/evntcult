@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-radix-dropdown-menu-radio",
+ "type": "registry:ui",
+ "description": "Demo showing a dropdown menu with a radio.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-radix-dropdown-menu"
+ ]
+}

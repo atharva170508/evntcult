@@ -1,0 +1,8 @@
+{
+ "name": "shine-border-demo",
+ "type": "registry:example",
+ "description": "Example showing an animated shining border effect.",
+ "registryDependencies": [
+  "@magicui/shine-border"
+ ]
+}

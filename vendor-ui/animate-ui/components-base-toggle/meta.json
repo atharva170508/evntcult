@@ -1,0 +1,8 @@
+{
+ "name": "components-base-toggle",
+ "type": "registry:ui",
+ "description": "A two-state button that can be on or off.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-toggle"
+ ]
+}

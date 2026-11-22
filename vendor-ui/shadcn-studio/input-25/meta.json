@@ -1,0 +1,5 @@
+{
+ "name": "input-25",
+ "type": "registry:component",
+ "description": "An email input field with an inset label positioned above the input area"
+}

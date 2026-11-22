@@ -1,0 +1,81 @@
+[
+  {
+    "name": "c-carousel-1",
+    "title": "Basic carousel with single item",
+    "label": "Basic",
+    "description": "Basic carousel with single item",
+    "order": 1
+  },
+  {
+    "name": "c-carousel-2",
+    "title": "Vertical carousel orientation",
+    "label": "Vertical",
+    "description": "Vertical carousel orientation",
+    "order": 2
+  },
+  {
+    "name": "c-carousel-3",
+    "title": "Carousel with multiple items visible",
+    "label": "Multiple Items",
+    "description": "Carousel with multiple items visible",
+    "order": 3,
+    "gridSize": 1
+  },
+  {
+    "name": "c-carousel-4",
+    "title": "Carousel with responsive basis",
+    "label": "Responsive Basis",
+    "description": "Carousel with responsive basis",
+    "order": 4,
+    "gridSize": 1
+  },
+  {
+    "name": "c-carousel-5",
+    "title": "Carousel with autoplay plugin",
+    "label": "Autoplay",
+    "description": "Carousel with autoplay plugin",
+    "order": 5
+  },
+  {
+    "name": "c-carousel-6",
+    "title": "Carousel with centered slide alignment",
+    "label": "Centered Alignment",
+    "description": "Carousel with centered slide alignment",
+    "order": 6
+  },
+  {
+    "name": "c-carousel-7",
+    "title": "Carousel with custom spacing",
+    "label": "Custom Spacing",
+    "description": "Carousel with custom spacing",
+    "order": 7
+  },
+  {
+    "name": "c-carousel-8",
+    "title": "Carousel with images and overlays",
+    "label": "Image Overlays",
+    "description": "Carousel with images and overlays",
+    "order": 8
+  },
+  {
+    "name": "c-carousel-9",
+    "title": "Carousel with thumbnail navigation",
+    "label": "Thumbnail Strip",
+    "description": "Carousel with thumbnail navigation",
+    "order": 9
+  },
+  {
+    "name": "c-carousel-10",
+    "title": "Carousel with overlay thumbnail navigation",
+    "label": "Overlay Thumbnails",
+    "description": "Carousel with overlay thumbnail navigation",
+    "order": 10
+  },
+  {
+    "name": "c-carousel-11",
+    "title": "Carousel with dots navigation and content overlays",
+    "label": "Dots Navigation",
+    "description": "Carousel with dots navigation and content overlays",
+    "order": 11
+  }
+]

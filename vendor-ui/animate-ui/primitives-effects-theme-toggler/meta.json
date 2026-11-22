@@ -1,0 +1,5 @@
+{
+ "name": "primitives-effects-theme-toggler",
+ "type": "registry:ui",
+ "description": "An effect that allows you to toggle the theme gradually."
+}

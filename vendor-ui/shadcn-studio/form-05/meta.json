@@ -1,0 +1,15 @@
+{
+ "name": "form-05",
+ "type": "registry:component",
+ "description": "Form with OTP input component for secure verification codes",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "form",
+  "input-otp"
+ ]
+}

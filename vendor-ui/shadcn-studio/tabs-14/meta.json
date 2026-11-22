@@ -1,0 +1,9 @@
+{
+ "name": "tabs-14",
+ "type": "registry:component",
+ "description": "Overflow tabs with scrollable area for handling many tab items",
+ "registryDependencies": [
+  "scroll-area",
+  "tabs"
+ ]
+}

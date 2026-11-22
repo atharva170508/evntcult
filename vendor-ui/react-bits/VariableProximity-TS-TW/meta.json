@@ -1,0 +1,7 @@
+{
+ "name": "VariableProximity-TS-TW",
+ "type": "registry:component",
+ "description": "Letter styling changes continuously with pointer distance mapping.",
+ "dependencies": [],
+ "registryDependencies": []
+}

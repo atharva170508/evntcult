@@ -1,0 +1,9 @@
+{
+ "name": "input-12",
+ "type": "registry:component",
+ "description": "An email input field with error validation and dynamic error message display",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

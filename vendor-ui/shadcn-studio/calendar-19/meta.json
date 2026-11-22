@@ -1,0 +1,14 @@
+{
+ "name": "calendar-19",
+ "type": "registry:component",
+ "description": "Calendar with synchronized date input field for manual date entry",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "calendar",
+  "card",
+  "input",
+  "label"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "toolbar-expandable",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion",
+  "react-use-measure"
+ ],
+ "registryDependencies": []
+}

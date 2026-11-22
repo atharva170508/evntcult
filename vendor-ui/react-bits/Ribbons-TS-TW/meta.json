@@ -1,0 +1,7 @@
+{
+ "name": "Ribbons-TS-TW",
+ "type": "registry:component",
+ "description": "Springy ribbons that trail the cursor, in lens, comet or even shapes with an optional wave.",
+ "dependencies": [],
+ "registryDependencies": []
+}

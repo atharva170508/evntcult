@@ -1,0 +1,13 @@
+{
+ "name": "tabs-28",
+ "type": "registry:component",
+ "description": "Expandable tabs with icons and collapsible content using framer motion animations",
+ "dependencies": [
+  "lucide-react",
+  "motion"
+ ],
+ "registryDependencies": [
+  "tabs",
+  "utils"
+ ]
+}

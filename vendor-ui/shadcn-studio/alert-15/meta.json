@@ -1,0 +1,11 @@
+{
+ "name": "alert-15",
+ "type": "registry:component",
+ "description": "Pure destructive alert using built-in destructive variant with error styling.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

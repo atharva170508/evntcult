@@ -1,0 +1,8 @@
+{
+ "name": "safari-browser-demo",
+ "type": "registry:example",
+ "description": "Example showing a safari-browser-demo component.",
+ "registryDependencies": [
+  "@eldoraui/safari-browser"
+ ]
+}

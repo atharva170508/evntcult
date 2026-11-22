@@ -1,0 +1,8 @@
+{
+ "name": "components-headless-switch",
+ "type": "registry:ui",
+ "description": "Switches are a pleasant interface for toggling a value between two states, and offer the same semantics and keyboard navigation as native checkbox elements.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-headless-switch"
+ ]
+}

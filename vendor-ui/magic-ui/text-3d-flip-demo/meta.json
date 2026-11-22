@@ -1,0 +1,8 @@
+{
+ "name": "text-3d-flip-demo",
+ "type": "registry:example",
+ "description": "Example showing a 3D text animation that rotates each letter on hover.",
+ "registryDependencies": [
+  "@magicui/text-3d-flip"
+ ]
+}

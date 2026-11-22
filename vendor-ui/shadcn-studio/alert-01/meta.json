@@ -1,0 +1,11 @@
+{
+ "name": "alert-01",
+ "type": "registry:component",
+ "description": "Basic alert with circle alert icon and simple title message.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

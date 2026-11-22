@@ -1,0 +1,8 @@
+{
+ "name": "badge-06",
+ "type": "registry:component",
+ "description": "Rounded badge with full border radius for pill-shaped appearance",
+ "registryDependencies": [
+  "badge"
+ ]
+}

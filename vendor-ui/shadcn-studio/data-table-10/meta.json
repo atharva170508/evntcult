@@ -1,0 +1,19 @@
+{
+ "name": "data-table-10",
+ "type": "registry:component",
+ "description": "Data table with pagination, rows selection, and sorting system",
+ "dependencies": [
+  "lucide-react",
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button",
+  "checkbox",
+  "label",
+  "pagination",
+  "select",
+  "table",
+  "utils"
+ ]
+}

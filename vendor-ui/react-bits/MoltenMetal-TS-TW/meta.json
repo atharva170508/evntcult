@@ -1,0 +1,7 @@
+{
+ "name": "MoltenMetal-TS-TW",
+ "type": "registry:component",
+ "description": "Swirling caustic filaments with white-hot cores that heat up under the cursor and flare on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

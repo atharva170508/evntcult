@@ -1,0 +1,13 @@
+{
+ "name": "primitives-base-checkbox",
+ "type": "registry:ui",
+ "description": "An easily stylable checkbox component.",
+ "dependencies": [
+  "motion",
+  "@base-ui-components/react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/lib-get-strict-context",
+  "@animate-ui/v1/hooks-use-controlled-state"
+ ]
+}

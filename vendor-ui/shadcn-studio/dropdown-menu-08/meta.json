@@ -1,0 +1,10 @@
+{
+ "name": "dropdown-menu-08",
+ "type": "registry:component",
+ "description": "User profile dropdown with avatar header, user info, and submenu for invitations",
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "dropdown-menu"
+ ]
+}

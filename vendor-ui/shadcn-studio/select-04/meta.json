@@ -1,0 +1,12 @@
+{
+ "name": "select-04",
+ "type": "registry:component",
+ "description": "A native select dropdown with helper text",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

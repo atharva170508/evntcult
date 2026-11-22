@@ -1,0 +1,13 @@
+{
+ "name": "collapsible-03",
+ "type": "registry:component",
+ "description": "Task completion list with user avatars and progress percentages",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "collapsible"
+ ]
+}

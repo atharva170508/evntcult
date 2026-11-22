@@ -1,0 +1,10 @@
+{
+ "name": "GlideSelect-TS-TW",
+ "type": "registry:component",
+ "description": "Select chip whose menu pops from its corner and whose highlight glides between rows.",
+ "dependencies": [
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

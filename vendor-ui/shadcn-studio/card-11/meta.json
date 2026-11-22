@@ -1,0 +1,14 @@
+{
+ "name": "card-11",
+ "type": "registry:component",
+ "description": "Social media post card with user profile, image, hashtags and interaction buttons",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "card",
+  "utils"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "badge-11",
+ "type": "registry:component",
+ "description": "Link badge that can be used as clickable navigation element",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge"
+ ]
+}

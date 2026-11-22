@@ -1,0 +1,41 @@
+{
+  "name": "@repo/tweet-card",
+  "description": "A beautiful tweet card component for displaying Twitter/X posts.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-tweet": "^3.3.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "data-display",
+    "tags": [
+      "tweet",
+      "twitter",
+      "x",
+      "embed",
+      "social",
+      "card"
+    ],
+    "complexity": "moderate",
+    "animationType": "none",
+    "useCases": [
+      "Embed Twitter/X posts with styled card component",
+      "Social proof section with real tweet displays",
+      "Testimonial display using actual tweets"
+    ],
+    "compositionHints": [
+      "Use with infinite-slider for scrolling tweet walls",
+      "Pair with content-skeleton via TweetSkeleton for loading"
+    ],
+    "hasReducedMotion": false
+  }
+}

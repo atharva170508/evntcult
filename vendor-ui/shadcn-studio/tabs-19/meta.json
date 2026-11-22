@@ -1,0 +1,8 @@
+{
+ "name": "tabs-19",
+ "type": "registry:component",
+ "description": "Vertical tabs with sharp corners and rectangular styling",
+ "registryDependencies": [
+  "tabs"
+ ]
+}

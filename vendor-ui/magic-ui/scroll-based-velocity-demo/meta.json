@@ -1,0 +1,8 @@
+{
+ "name": "scroll-based-velocity-demo",
+ "type": "registry:example",
+ "description": "Example showing text speed changes based on scroll velocity.",
+ "registryDependencies": [
+  "@magicui/scroll-based-velocity"
+ ]
+}

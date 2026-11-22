@@ -1,0 +1,7 @@
+{
+ "name": "BounceCards-TS-TW",
+ "type": "registry:component",
+ "description": "A fan of photo cards that bounce in, then spread apart and straighten the one you hover.",
+ "dependencies": [],
+ "registryDependencies": []
+}

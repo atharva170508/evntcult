@@ -1,0 +1,14 @@
+{
+ "name": "date-picker-03",
+ "type": "registry:component",
+ "description": "Single date picker with calendar icon and enhanced visual styling",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "label",
+  "popover"
+ ]
+}

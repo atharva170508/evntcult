@@ -1,0 +1,9 @@
+{
+ "name": "radio-group-02",
+ "type": "registry:component",
+ "description": "A horizontal radio group layout",
+ "registryDependencies": [
+  "label",
+  "radio-group"
+ ]
+}

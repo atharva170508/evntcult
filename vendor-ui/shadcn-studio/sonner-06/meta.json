@@ -1,0 +1,11 @@
+{
+ "name": "sonner-06",
+ "type": "registry:component",
+ "description": "A toast notification with action button for interactive user responses",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

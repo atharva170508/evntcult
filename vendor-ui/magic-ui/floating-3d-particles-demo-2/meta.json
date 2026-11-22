@@ -1,0 +1,11 @@
+{
+ "name": "floating-3d-particles-demo-2",
+ "type": "registry:example",
+ "description": "Example showing the particle field as a standalone background.",
+ "dependencies": [
+  "next-themes"
+ ],
+ "registryDependencies": [
+  "@magicui/floating-3d-particles"
+ ]
+}

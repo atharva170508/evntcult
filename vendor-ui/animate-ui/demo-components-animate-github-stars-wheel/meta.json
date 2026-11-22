@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-animate-github-stars-wheel",
+ "type": "registry:ui",
+ "description": "Demo showing an animated github stars wheel.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-animate-github-stars-wheel"
+ ]
+}

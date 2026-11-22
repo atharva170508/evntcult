@@ -1,0 +1,8 @@
+{
+ "name": "hyper-text-demo",
+ "type": "registry:example",
+ "description": "Example showing text with scrambling letter animations.",
+ "registryDependencies": [
+  "@magicui/hyper-text"
+ ]
+}

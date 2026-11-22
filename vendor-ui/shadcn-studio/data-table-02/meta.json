@@ -1,0 +1,15 @@
+{
+ "name": "data-table-02",
+ "type": "registry:component",
+ "description": "Density data table with density selection",
+ "dependencies": [
+  "lucide-react",
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "checkbox",
+  "select",
+  "table",
+  "utils"
+ ]
+}

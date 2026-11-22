@@ -1,0 +1,8 @@
+{
+ "name": "cool-mode-custom",
+ "type": "registry:example",
+ "description": "Example showing customized cool mode effects.",
+ "registryDependencies": [
+  "@magicui/cool-mode"
+ ]
+}

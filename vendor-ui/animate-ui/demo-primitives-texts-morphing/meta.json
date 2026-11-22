@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-texts-morphing",
+ "type": "registry:ui",
+ "description": "Demo showing an animated morphing text.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-texts-morphing"
+ ]
+}

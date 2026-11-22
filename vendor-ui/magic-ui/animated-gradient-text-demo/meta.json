@@ -1,0 +1,11 @@
+{
+ "name": "animated-gradient-text-demo",
+ "type": "registry:example",
+ "description": "Example showing text with animated gradient backgrounds.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@magicui/animated-gradient-text"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "input-23",
+ "type": "registry:component",
+ "description": "An email input field with an overlapping label positioned over the border",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

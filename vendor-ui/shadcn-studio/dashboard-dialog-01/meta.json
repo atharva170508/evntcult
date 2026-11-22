@@ -1,0 +1,16 @@
+{
+ "name": "dashboard-dialog-01",
+ "type": "registry:block",
+ "description": "A subscription plan selection dialog with pricing options, features comparison, and radio button selection for choosing between different tiers.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "dialog",
+  "label",
+  "radio-group",
+  "utils"
+ ]
+}

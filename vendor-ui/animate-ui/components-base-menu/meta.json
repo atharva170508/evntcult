@@ -1,0 +1,8 @@
+{
+ "name": "components-base-menu",
+ "type": "registry:ui",
+ "description": "A list of actions in a dropdown, enhanced with keyboard navigation.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-menu"
+ ]
+}

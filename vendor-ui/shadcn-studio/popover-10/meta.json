@@ -1,0 +1,14 @@
+{
+ "name": "popover-10",
+ "type": "registry:component",
+ "description": "A user search popover with debounced input, loading states, and avatar display",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "input",
+  "popover"
+ ]
+}

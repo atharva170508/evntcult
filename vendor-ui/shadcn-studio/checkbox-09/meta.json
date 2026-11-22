@@ -1,0 +1,12 @@
+{
+ "name": "checkbox-09",
+ "type": "registry:component",
+ "description": "Vertical group of checkboxes with icons for fruits selection",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "checkbox",
+  "label"
+ ]
+}

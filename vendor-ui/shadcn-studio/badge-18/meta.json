@@ -1,0 +1,8 @@
+{
+ "name": "badge-18",
+ "type": "registry:component",
+ "description": "Completed status badge with green color and dot indicator",
+ "registryDependencies": [
+  "badge"
+ ]
+}

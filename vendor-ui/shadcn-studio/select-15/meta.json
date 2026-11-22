@@ -1,0 +1,9 @@
+{
+ "name": "select-15",
+ "type": "registry:component",
+ "description": "A custom select dropdown with different size variants (small, default, large)",
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "input-04",
+ "type": "registry:component",
+ "description": "A disabled email input field that prevents user interaction",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

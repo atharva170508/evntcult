@@ -1,0 +1,13 @@
+{
+ "name": "switch-19",
+ "type": "registry:component",
+ "description": "Animated motion switches in multiple sizes with smooth transition effects",
+ "dependencies": [
+  "@radix-ui/react-switch",
+  "motion"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

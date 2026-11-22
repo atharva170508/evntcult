@@ -1,0 +1,13 @@
+{
+ "name": "dialog-05",
+ "type": "registry:component",
+ "description": "Scrollable dialog with sticky header for fixed navigation while scrolling content",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "scroll-area"
+ ]
+}

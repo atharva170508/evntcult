@@ -1,0 +1,12 @@
+{
+ "name": "team-section-01",
+ "type": "registry:block",
+ "description": "A clean team showcase featuring a responsive 4-column grid layout with member cards, social media links, and hover effects. Perfect for displaying team members with their photos, names, roles, and social connections.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "card",
+  "separator"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "map",
+ "type": "registry:ui",
+ "description": "An animated map component with location markers.",
+ "dependencies": [
+  "motion"
+ ]
+}

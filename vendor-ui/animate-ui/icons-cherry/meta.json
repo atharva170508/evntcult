@@ -1,0 +1,11 @@
+{
+ "name": "icons-cherry",
+ "type": "registry:ui",
+ "description": "Cherry icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

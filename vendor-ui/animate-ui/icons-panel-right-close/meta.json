@@ -1,0 +1,11 @@
+{
+ "name": "icons-panel-right-close",
+ "type": "registry:ui",
+ "description": "Panel right close icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

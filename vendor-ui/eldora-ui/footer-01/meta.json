@@ -1,0 +1,8 @@
+{
+ "name": "footer-01",
+ "type": "registry:block",
+ "description": "A footer.",
+ "dependencies": [
+  "lucide-react"
+ ]
+}

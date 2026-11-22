@@ -1,0 +1,11 @@
+{
+ "name": "icons-square-arrow-out-up-left",
+ "type": "registry:ui",
+ "description": "Square arrow out up left icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

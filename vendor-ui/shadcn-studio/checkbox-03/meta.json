@@ -1,0 +1,9 @@
+{
+ "name": "checkbox-03",
+ "type": "registry:component",
+ "description": "Checkbox with dashed border styling for visual distinction",
+ "registryDependencies": [
+  "checkbox",
+  "label"
+ ]
+}

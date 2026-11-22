@@ -1,0 +1,8 @@
+{
+ "name": "rainbow-button-demo-2",
+ "type": "registry:example",
+ "description": "Example showing an animated button with rainbow effect.",
+ "registryDependencies": [
+  "@magicui/rainbow-button"
+ ]
+}

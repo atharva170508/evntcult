@@ -1,0 +1,13 @@
+{
+ "name": "input-mask-03",
+ "type": "registry:component",
+ "description": "A credit card number input with automatic formatting and card type detection",
+ "dependencies": [
+  "lucide-react",
+  "react-payment-inputs"
+ ],
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

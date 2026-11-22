@@ -1,0 +1,15 @@
+{
+ "name": "reset-password-01",
+ "type": "registry:block",
+ "description": "Centered card layout with logo header, clear reset password messaging, form inputs for current and new passwords, and back to login navigation for secure password recovery",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "card",
+  "input",
+  "label",
+  "utils"
+ ]
+}

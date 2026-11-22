@@ -1,0 +1,9 @@
+{
+ "name": "StrokeText-TS-TW",
+ "type": "registry:component",
+ "description": "Outlined letterforms draw themselves on, then flood with fill.",
+ "dependencies": [
+  "gsap@^3.13.0"
+ ],
+ "registryDependencies": []
+}

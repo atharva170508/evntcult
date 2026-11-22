@@ -1,0 +1,11 @@
+{
+ "name": "button-group-12",
+ "type": "registry:component",
+ "description": "Ghost variant button group for navigation between settings, dashboard, and analytics",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

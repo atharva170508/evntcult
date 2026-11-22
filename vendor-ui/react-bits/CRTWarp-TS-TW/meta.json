@@ -1,0 +1,7 @@
+{
+ "name": "CRTWarp-TS-TW",
+ "type": "registry:component",
+ "description": "A blocky plasma glowing on a curved CRT, with real scanlines, a phosphor mask, afterglow and a power-on intro.",
+ "dependencies": [],
+ "registryDependencies": []
+}

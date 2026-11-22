@@ -1,0 +1,5 @@
+{
+ "name": "dot-pattern",
+ "type": "registry:ui",
+ "description": "A background dot pattern made with SVGs, fully customizable using Tailwind CSS."
+}

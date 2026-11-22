@@ -1,0 +1,41 @@
+{
+  "name": "@repo/interactive-image-selector",
+  "description": "A InteractiveImageSelector component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "lucide-react": "^0.545.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "other",
+    "tags": [
+      "image",
+      "selector",
+      "gallery",
+      "selection",
+      "gesture",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "spring",
+    "useCases": [
+      "Image gallery with animated selection and deselection",
+      "Multi-image picker with gesture-driven animations",
+      "Photo selection interface with share and delete actions"
+    ],
+    "compositionHints": [
+      "Combine with Dialog primitive for image detail views"
+    ],
+    "hasReducedMotion": true
+  }
+}

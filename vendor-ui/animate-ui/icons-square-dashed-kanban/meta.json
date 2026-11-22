@@ -1,0 +1,11 @@
+{
+ "name": "icons-square-dashed-kanban",
+ "type": "registry:ui",
+ "description": "Square Dashed Kanban icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

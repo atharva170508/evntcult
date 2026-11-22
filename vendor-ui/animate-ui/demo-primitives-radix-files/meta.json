@@ -1,0 +1,11 @@
+{
+ "name": "demo-primitives-radix-files",
+ "type": "registry:ui",
+ "description": "Demo showing an animated radix files.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-files"
+ ]
+}

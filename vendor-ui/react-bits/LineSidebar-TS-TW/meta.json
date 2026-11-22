@@ -1,0 +1,7 @@
+{
+ "name": "LineSidebar-TS-TW",
+ "type": "registry:component",
+ "description": "Static list navigation with a cursor-proximity effect that shifts and highlights nearby items.",
+ "dependencies": [],
+ "registryDependencies": []
+}

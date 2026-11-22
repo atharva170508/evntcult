@@ -1,0 +1,7 @@
+{
+ "name": "PixelCard-TS-TW",
+ "type": "registry:component",
+ "description": "A card that fills with twinkling pixels on hover, rippling out from the center or the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

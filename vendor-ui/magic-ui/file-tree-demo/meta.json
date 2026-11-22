@@ -1,0 +1,8 @@
+{
+ "name": "file-tree-demo",
+ "type": "registry:example",
+ "description": "Example showing a component that displays folder and file structure.",
+ "registryDependencies": [
+  "@magicui/file-tree"
+ ]
+}

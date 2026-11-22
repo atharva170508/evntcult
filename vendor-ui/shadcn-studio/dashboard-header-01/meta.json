@@ -1,0 +1,17 @@
+{
+ "name": "dashboard-header-01",
+ "type": "registry:block",
+ "description": "Comprehensive dashboard header with navigation, breadcrumbs, user profile, and language dropdown",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "breadcrumb",
+  "button",
+  "card",
+  "dropdown-menu",
+  "separator",
+  "sidebar"
+ ]
+}

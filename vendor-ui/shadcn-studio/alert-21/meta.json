@@ -1,0 +1,11 @@
+{
+ "name": "alert-21",
+ "type": "registry:component",
+ "description": "Soft primary alert with subtle background and text styling for secondary messages.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

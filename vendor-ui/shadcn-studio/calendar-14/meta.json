@@ -1,0 +1,11 @@
+{
+ "name": "calendar-14",
+ "type": "registry:component",
+ "description": "Custom styled range calendar with sky blue theme for date range selection",
+ "dependencies": [
+  "react-day-picker"
+ ],
+ "registryDependencies": [
+  "calendar"
+ ]
+}

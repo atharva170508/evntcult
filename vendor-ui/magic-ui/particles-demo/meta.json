@@ -1,0 +1,11 @@
+{
+ "name": "particles-demo",
+ "type": "registry:example",
+ "description": "Example showing interactive particle effects.",
+ "dependencies": [
+  "next-themes"
+ ],
+ "registryDependencies": [
+  "@magicui/particles"
+ ]
+}

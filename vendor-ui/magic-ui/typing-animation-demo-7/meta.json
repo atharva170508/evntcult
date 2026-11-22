@@ -1,0 +1,8 @@
+{
+ "name": "typing-animation-demo-7",
+ "type": "registry:example",
+ "description": "Example showing cursor blinking control.",
+ "registryDependencies": [
+  "@magicui/typing-animation"
+ ]
+}

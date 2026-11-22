@@ -1,0 +1,11 @@
+{
+ "name": "icons-search",
+ "type": "registry:ui",
+ "description": "Search icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

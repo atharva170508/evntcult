@@ -1,0 +1,8 @@
+{
+ "name": "map-demo",
+ "type": "registry:example",
+ "description": "Example showing a map component.",
+ "registryDependencies": [
+  "@eldoraui/map"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-toggle-right",
+ "type": "registry:ui",
+ "description": "Toggle right icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

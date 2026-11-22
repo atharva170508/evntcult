@@ -1,0 +1,40 @@
+{
+  "name": "@repo/faq-4",
+  "description": "Categorized FAQ section with tab navigation",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "lucide-react": "^0.548.0",
+    "motion": "^11.15.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "layout",
+    "tags": [
+      "faq",
+      "tabs",
+      "categories",
+      "navigation",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "spring",
+    "useCases": [
+      "FAQ section with tab-based category navigation",
+      "Multi-category help center layout",
+      "Organized FAQ with tabbed topic groups"
+    ],
+    "compositionHints": [
+      "Uses Accordion for answers and Tabs for category tabs"
+    ],
+    "hasReducedMotion": true
+  }
+}

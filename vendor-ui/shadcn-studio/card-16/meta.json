@@ -1,0 +1,8 @@
+{
+ "name": "card-16",
+ "type": "registry:component",
+ "description": "Interactive spotlight card with animated glow effect that follows mouse movement",
+ "registryDependencies": [
+  "card"
+ ]
+}

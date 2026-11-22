@@ -1,0 +1,12 @@
+{
+ "name": "button-32",
+ "type": "registry:component",
+ "description": "Circular icon button with plus icon and tooltip for enhanced UX",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "tooltip"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "table-12",
+ "type": "registry:component",
+ "description": "A vertical table layout for displaying data in a column-oriented format with key-value pairs",
+ "registryDependencies": [
+  "table"
+ ]
+}

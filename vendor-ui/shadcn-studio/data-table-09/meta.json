@@ -1,0 +1,14 @@
+{
+ "name": "data-table-09",
+ "type": "registry:component",
+ "description": "Data table with expanding sub rows for detailed content display",
+ "dependencies": [
+  "lucide-react",
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "button",
+  "checkbox",
+  "table"
+ ]
+}

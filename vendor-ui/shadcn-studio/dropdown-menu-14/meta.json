@@ -1,0 +1,9 @@
+{
+ "name": "dropdown-menu-14",
+ "type": "registry:component",
+ "description": "Radio group selection dropdown for panel position with single choice selection",
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

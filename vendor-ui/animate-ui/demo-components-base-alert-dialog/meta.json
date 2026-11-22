@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-base-alert-dialog",
+ "type": "registry:ui",
+ "description": "Demo showing a alert dialog.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-base-alert-dialog"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-clipboard-list",
+ "type": "registry:ui",
+ "description": "Clipboard List icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

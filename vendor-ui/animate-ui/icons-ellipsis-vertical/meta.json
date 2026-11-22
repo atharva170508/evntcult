@@ -1,0 +1,11 @@
+{
+ "name": "icons-ellipsis-vertical",
+ "type": "registry:ui",
+ "description": "Ellipsis vertical icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

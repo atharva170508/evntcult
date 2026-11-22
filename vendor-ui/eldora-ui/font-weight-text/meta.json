@@ -1,0 +1,11 @@
+{
+ "name": "font-weight-text",
+ "type": "registry:ui",
+ "description": "A font weight text component.",
+ "dependencies": [
+  "react"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

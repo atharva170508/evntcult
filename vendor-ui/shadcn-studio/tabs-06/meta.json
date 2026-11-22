@@ -1,0 +1,9 @@
+{
+ "name": "tabs-06",
+ "type": "registry:component",
+ "description": "Tabs with badge count indicators showing numerical values for each tab",
+ "registryDependencies": [
+  "badge",
+  "tabs"
+ ]
+}

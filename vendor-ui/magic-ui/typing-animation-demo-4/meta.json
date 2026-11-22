@@ -1,0 +1,8 @@
+{
+ "name": "typing-animation-demo-4",
+ "type": "registry:example",
+ "description": "Example showing animation that starts when in viewport.",
+ "registryDependencies": [
+  "@magicui/typing-animation"
+ ]
+}

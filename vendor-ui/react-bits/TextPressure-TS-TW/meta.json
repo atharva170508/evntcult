@@ -1,0 +1,7 @@
+{
+ "name": "TextPressure-TS-TW",
+ "type": "registry:component",
+ "description": "Characters scale / warp interactively based on pointer pressure zone.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,5 @@
+{
+ "name": "hooks-use-auto-height",
+ "type": "registry:hook",
+ "description": "A hook that allows you to automatically adjust the height of an element based on its content."
+}

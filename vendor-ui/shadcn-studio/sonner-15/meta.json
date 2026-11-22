@@ -1,0 +1,11 @@
+{
+ "name": "sonner-15",
+ "type": "registry:component",
+ "description": "An outline-styled warning toast notification with amber border theming for caution messages",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

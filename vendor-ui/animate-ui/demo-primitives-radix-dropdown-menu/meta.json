@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-radix-dropdown-menu",
+ "type": "registry:ui",
+ "description": "Demo showing an animated radix dropdown menu.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-dropdown-menu"
+ ]
+}

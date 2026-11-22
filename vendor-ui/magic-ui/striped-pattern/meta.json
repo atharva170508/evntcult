@@ -1,0 +1,5 @@
+{
+ "name": "striped-pattern",
+ "type": "registry:ui",
+ "description": "A background striped pattern made with SVGs, fully customizable using Tailwind CSS."
+}

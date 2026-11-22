@@ -1,0 +1,8 @@
+{
+ "name": "switch-09",
+ "type": "registry:component",
+ "description": "A dual-label switch with clickable Yes/No labels that toggle the switch state",
+ "registryDependencies": [
+  "switch"
+ ]
+}

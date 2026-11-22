@@ -1,0 +1,7 @@
+{
+ "name": "RippleGrid-TS-TW",
+ "type": "registry:component",
+ "description": "A crisp grid that ripples like water, bending and lighting up as waves pass through it.",
+ "dependencies": [],
+ "registryDependencies": []
+}

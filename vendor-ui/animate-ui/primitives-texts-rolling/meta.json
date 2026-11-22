@@ -1,0 +1,11 @@
+{
+ "name": "primitives-texts-rolling",
+ "type": "registry:ui",
+ "description": "A rolling text animation.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/hooks-use-is-in-view"
+ ]
+}

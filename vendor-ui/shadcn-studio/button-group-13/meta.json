@@ -1,0 +1,14 @@
+{
+ "name": "button-group-13",
+ "type": "registry:component",
+ "description": "Email action button group with ripple animation effects",
+ "dependencies": [
+  "class-variance-authority",
+  "lucide-react",
+  "motion"
+ ],
+ "registryDependencies": [
+  "button",
+  "utils"
+ ]
+}

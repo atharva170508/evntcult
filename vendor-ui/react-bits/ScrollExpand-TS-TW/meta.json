@@ -1,0 +1,7 @@
+{
+ "name": "ScrollExpand-TS-TW",
+ "type": "registry:component",
+ "description": "A rounded media frame that grows to full bleed as it scrolls through the viewport.",
+ "dependencies": [],
+ "registryDependencies": []
+}

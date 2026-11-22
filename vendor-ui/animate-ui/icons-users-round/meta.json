@@ -1,0 +1,11 @@
+{
+ "name": "icons-users-round",
+ "type": "registry:ui",
+ "description": "Users round icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

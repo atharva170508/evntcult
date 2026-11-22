@@ -1,0 +1,11 @@
+{
+ "name": "breadcrumb-02",
+ "type": "registry:component",
+ "description": "Breadcrumb with home icon and slash separators for enhanced navigation",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "breadcrumb"
+ ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@repo/grid-loader",
+  "description": "3x3 grid-based loading animation with preset patterns",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "feedback",
+    "tags": [
+      "loader",
+      "grid",
+      "loading",
+      "spinner",
+      "pattern",
+      "animated"
+    ],
+    "complexity": "simple",
+    "animationType": "spring",
+    "useCases": [
+      "3x3 grid loading animation with customizable patterns",
+      "Creative loading indicator with preset shape sequences",
+      "Decorative loader with configurable cell patterns"
+    ],
+    "compositionHints": [
+      "Use alongside content-skeleton for different loading states",
+      "Pair with Progress primitive for determinate loading"
+    ],
+    "hasReducedMotion": true
+  }
+}

@@ -1,0 +1,12 @@
+{
+ "name": "switch-18",
+ "type": "registry:component",
+ "description": "A list group of switches with icons for skill preference selection across multiple categories",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "switch"
+ ]
+}

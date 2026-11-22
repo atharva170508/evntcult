@@ -1,0 +1,10 @@
+{
+ "name": "textarea-16",
+ "type": "registry:component",
+ "description": "A textarea with separate submit button below for form submission",
+ "registryDependencies": [
+  "button",
+  "label",
+  "textarea"
+ ]
+}

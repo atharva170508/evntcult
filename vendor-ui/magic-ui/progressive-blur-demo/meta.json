@@ -1,0 +1,8 @@
+{
+ "name": "progressive-blur-demo",
+ "type": "registry:example",
+ "description": "Example showing progressive blur effect for scrollable content.",
+ "registryDependencies": [
+  "@magicui/progressive-blur"
+ ]
+}

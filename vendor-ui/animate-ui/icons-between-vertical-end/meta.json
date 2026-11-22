@@ -1,0 +1,11 @@
+{
+ "name": "icons-between-vertical-end",
+ "type": "registry:ui",
+ "description": "Between vertical end icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

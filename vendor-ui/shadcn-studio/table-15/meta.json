@@ -1,0 +1,9 @@
+{
+ "name": "table-15",
+ "type": "registry:component",
+ "description": "A table with selectable rows using checkboxes for bulk actions and data manipulation",
+ "registryDependencies": [
+  "checkbox",
+  "table"
+ ]
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "c-message-1",
+    "title": "Two-sided conversation",
+    "label": "Two-Sided Chat",
+    "description": "Incoming and outgoing rows separated by nothing but the align prop.",
+    "order": 1,
+    "gridSize": 2
+  },
+  {
+    "name": "c-message-2",
+    "title": "Avatars on both sides",
+    "label": "Avatars",
+    "description": "Bottom-anchored avatars that flip with the row, plus a presence dot.",
+    "order": 2,
+    "gridSize": 2
+  },
+  {
+    "name": "c-message-3",
+    "title": "Sender name and delivery status",
+    "label": "Sender & Status",
+    "description": "Header for identity, footer for status, and how each one picks its side.",
+    "order": 3,
+    "gridSize": 2
+  },
+  {
+    "name": "c-message-4",
+    "title": "Reply actions in the footer",
+    "label": "Reply Actions",
+    "description": "Copy, regenerate and rating controls under an unframed assistant reply.",
+    "order": 4,
+    "gridSize": 2
+  },
+  {
+    "name": "c-message-5",
+    "title": "Files shared in a thread",
+    "label": "Shared Files",
+    "description": "Image and document attachments stacked with the bubble in one message.",
+    "order": 5,
+    "gridSize": 2
+  },
+  {
+    "name": "c-message-6",
+    "title": "Consecutive messages from one sender",
+    "label": "Consecutive Messages",
+    "description": "A run of three messages under a single avatar, using MessageGroup.",
+    "order": 6,
+    "gridSize": 2
+  },
+  {
+    "name": "c-message-7",
+    "title": "Streaming reply with a pending state",
+    "label": "Streaming Reply",
+    "description": "One assistant row moving from thinking, to typing, to settled.",
+    "order": 7,
+    "gridSize": 1
+  }
+]

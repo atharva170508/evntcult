@@ -1,0 +1,8 @@
+{
+ "name": "components-base-preview-card",
+ "type": "registry:ui",
+ "description": "A popup that appears when a link is hovered, showing a preview for sighted users.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-preview-card"
+ ]
+}

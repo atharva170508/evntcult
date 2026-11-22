@@ -1,0 +1,8 @@
+{
+ "name": "hero-video-dialog",
+ "type": "registry:ui",
+ "description": "A hero video dialog component.",
+ "dependencies": [
+  "motion"
+ ]
+}

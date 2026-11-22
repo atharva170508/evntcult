@@ -1,0 +1,8 @@
+{
+ "name": "typing-animation-demo-8",
+ "type": "registry:example",
+ "description": "Example showing different cursor styles (line, block, underscore).",
+ "registryDependencies": [
+  "@magicui/typing-animation"
+ ]
+}

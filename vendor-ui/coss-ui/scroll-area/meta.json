@@ -1,0 +1,7 @@
+{
+ "name": "scroll-area",
+ "type": "registry:ui",
+ "dependencies": [
+  "radix-ui"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "input-otp-09",
+ "type": "registry:component",
+ "description": "A 6-digit OTP input field with outlined grouped layout and visual separator",
+ "registryDependencies": [
+  "input-otp",
+  "label"
+ ]
+}

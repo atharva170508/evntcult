@@ -1,0 +1,12 @@
+{
+ "name": "select-05",
+ "type": "registry:component",
+ "description": "A native select dropdown with error state and validation message",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

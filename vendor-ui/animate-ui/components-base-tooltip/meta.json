@@ -1,0 +1,8 @@
+{
+ "name": "components-base-tooltip",
+ "type": "registry:ui",
+ "description": "A popup that appears when an element is hovered or focused, showing a hint for sighted users.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-tooltip"
+ ]
+}

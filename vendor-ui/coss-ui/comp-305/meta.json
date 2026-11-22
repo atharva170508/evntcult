@@ -1,0 +1,7 @@
+{
+ "name": "comp-305",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/button.json"
+ ]
+}

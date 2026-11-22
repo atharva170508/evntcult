@@ -1,0 +1,8 @@
+{
+ "name": "table-08",
+ "type": "registry:component",
+ "description": "A table with highlighted row functionality for emphasis and user interaction",
+ "registryDependencies": [
+  "table"
+ ]
+}

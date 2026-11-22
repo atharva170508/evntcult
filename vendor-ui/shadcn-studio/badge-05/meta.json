@@ -1,0 +1,5 @@
+{
+ "name": "badge-05",
+ "type": "registry:component",
+ "description": "Dot indicator badge with colored circle for compact status representation"
+}

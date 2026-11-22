@@ -1,0 +1,13 @@
+{
+ "name": "integrations",
+ "type": "registry:ui",
+ "description": "An integrations component.",
+ "dependencies": [
+  "react",
+  "motion",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "interactive-hover-button-demo",
+ "type": "registry:example",
+ "description": "Example showing an interactive button with hover effects.",
+ "registryDependencies": [
+  "@magicui/interactive-hover-button"
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "name": "popover-01",
+ "type": "registry:component",
+ "description": "A ratings popover displaying star ratings with progress bars and review statistics",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button",
+  "popover",
+  "progress",
+  "separator"
+ ]
+}

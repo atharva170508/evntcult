@@ -1,0 +1,11 @@
+{
+ "name": "primitives-effects-magnetic",
+ "type": "registry:ui",
+ "description": "A magnetic effect that clings to the cursor, creating a magnetic attraction effect.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-animate-slot"
+ ]
+}

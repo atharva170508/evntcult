@@ -1,0 +1,5 @@
+{
+ "name": "file-tree",
+ "type": "registry:ui",
+ "description": "A component used to showcase the folder and file structure of a directory."
+}

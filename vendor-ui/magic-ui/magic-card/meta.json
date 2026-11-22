@@ -1,0 +1,8 @@
+{
+ "name": "magic-card",
+ "type": "registry:ui",
+ "description": "A spotlight effect that follows your mouse cursor and highlights borders on hover.",
+ "dependencies": [
+  "motion"
+ ]
+}

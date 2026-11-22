@@ -1,0 +1,15 @@
+{
+ "name": "combobox-12",
+ "type": "registry:component",
+ "description": "Multi-select combobox with a count badge showing the number of selected frameworks.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button",
+  "command",
+  "label",
+  "popover"
+ ]
+}

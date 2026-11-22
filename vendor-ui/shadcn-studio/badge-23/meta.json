@@ -1,0 +1,12 @@
+{
+ "name": "badge-23",
+ "type": "registry:component",
+ "description": "Cart notification badge with count display over shopping icon",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "badge"
+ ]
+}

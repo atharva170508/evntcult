@@ -1,0 +1,7 @@
+{
+ "name": "ParticleText-TS-TW",
+ "type": "registry:component",
+ "description": "Text assembles from drifting particles that scatter and reform on demand.",
+ "dependencies": [],
+ "registryDependencies": []
+}

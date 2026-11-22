@@ -1,0 +1,11 @@
+{
+ "name": "calendar-03",
+ "type": "registry:component",
+ "description": "Single month calendar with date range selection capability",
+ "dependencies": [
+  "react-day-picker"
+ ],
+ "registryDependencies": [
+  "calendar"
+ ]
+}

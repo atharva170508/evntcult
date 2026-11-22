@@ -1,0 +1,9 @@
+{
+ "name": "Stack-TS-TW",
+ "type": "registry:component",
+ "description": "Pile of cards you can drag, flick or click through, with thrown cards tucking underneath.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,7 @@
+{
+ "name": "StarBorder-TS-TW",
+ "type": "registry:component",
+ "description": "A twinkling star that travels the exact outline of any button, pill or card, trailing light and stardust.",
+ "dependencies": [],
+ "registryDependencies": []
+}

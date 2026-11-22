@@ -1,0 +1,12 @@
+{
+ "name": "accordion-08",
+ "type": "registry:component",
+ "description": "Enhanced icon accordion with circular icon containers and subtitle descriptions for each item.",
+ "dependencies": [
+  "@radix-ui/react-accordion",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "accordion"
+ ]
+}

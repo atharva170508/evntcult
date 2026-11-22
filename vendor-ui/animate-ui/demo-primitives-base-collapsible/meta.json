@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-base-collapsible",
+ "type": "registry:ui",
+ "description": "Demo showing an animated base collapsible.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-base-collapsible"
+ ]
+}

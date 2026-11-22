@@ -1,0 +1,11 @@
+{
+ "name": "icons-panel-bottom",
+ "type": "registry:ui",
+ "description": "Panel bottom icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "@repo/job-listing-component",
+  "description": "A JobListingComponent component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "usehooks-ts": "^3.1.1",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "layout",
+    "tags": [
+      "job",
+      "listing",
+      "card",
+      "expandable",
+      "careers",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "spring",
+    "useCases": [
+      "Job listing cards with expandable details",
+      "Careers page component with company logos",
+      "Animated job board with salary and location info"
+    ],
+    "compositionHints": [
+      "Use with Combobox primitive for job filtering",
+      "Pair with animated-tags for skill tag display"
+    ],
+    "hasReducedMotion": true
+  }
+}

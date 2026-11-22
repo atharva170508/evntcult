@@ -1,0 +1,13 @@
+{
+ "name": "input-36",
+ "type": "registry:component",
+ "description": "Input field with clear button to instantly reset the field value",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "input",
+  "label"
+ ]
+}

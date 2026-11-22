@@ -1,0 +1,9 @@
+{
+ "name": "tooltip-06",
+ "type": "registry:component",
+ "description": "A tooltip with rounded corners for a modern soft appearance",
+ "registryDependencies": [
+  "button",
+  "tooltip"
+ ]
+}

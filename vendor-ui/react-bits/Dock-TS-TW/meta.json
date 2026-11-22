@@ -1,0 +1,9 @@
+{
+ "name": "Dock-TS-TW",
+ "type": "registry:component",
+ "description": "macOS style dock with smooth magnification, launch bounce, badges and context menus.",
+ "dependencies": [
+  "react-dom@^19.0.0"
+ ],
+ "registryDependencies": []
+}

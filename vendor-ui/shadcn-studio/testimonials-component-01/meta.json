@@ -1,0 +1,14 @@
+{
+ "name": "testimonials-component-01",
+ "type": "registry:block",
+ "description": "Testimonials section with side content and carousel featuring customer feedback with star ratings and avatars",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "card",
+  "carousel",
+  "utils"
+ ]
+}

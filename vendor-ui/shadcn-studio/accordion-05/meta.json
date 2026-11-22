@@ -1,0 +1,8 @@
+{
+ "name": "accordion-05",
+ "type": "registry:component",
+ "description": "Active state accordion with amber highlighting for expanded items and borders.",
+ "registryDependencies": [
+  "accordion"
+ ]
+}

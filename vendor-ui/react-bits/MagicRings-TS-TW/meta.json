@@ -1,0 +1,7 @@
+{
+ "name": "MagicRings-TS-TW",
+ "type": "registry:component",
+ "description": "Glowing rings that pulse outward in a wave, swell toward the cursor and flare on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

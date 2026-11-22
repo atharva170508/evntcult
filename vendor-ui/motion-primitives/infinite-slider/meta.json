@@ -1,0 +1,9 @@
+{
+ "name": "infinite-slider",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion",
+  "react-use-measure"
+ ],
+ "registryDependencies": []
+}

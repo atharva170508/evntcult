@@ -1,0 +1,17 @@
+{
+ "name": "register-01",
+ "type": "registry:block",
+ "description": "Centered card layout with logo header, registration form featuring full name, email, password inputs, social signup options, and account linking for comprehensive user onboarding",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "card",
+  "checkbox",
+  "input",
+  "label",
+  "separator",
+  "utils"
+ ]
+}

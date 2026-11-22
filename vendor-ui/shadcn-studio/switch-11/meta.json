@@ -1,0 +1,11 @@
+{
+ "name": "switch-11",
+ "type": "registry:component",
+ "description": "A dual-icon switch with clickable sun and moon icons for theme mode switching",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "switch"
+ ]
+}

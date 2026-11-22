@@ -1,0 +1,13 @@
+{
+ "name": "button-39",
+ "type": "registry:component",
+ "description": "Animated button with ripple effect on click",
+ "dependencies": [
+  "class-variance-authority",
+  "motion"
+ ],
+ "registryDependencies": [
+  "button",
+  "utils"
+ ]
+}

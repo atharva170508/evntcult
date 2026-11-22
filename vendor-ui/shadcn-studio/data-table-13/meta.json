@@ -1,0 +1,15 @@
+{
+ "name": "data-table-13",
+ "type": "registry:component",
+ "description": "editable data table with inline cell editing for text, status, and progress\u2014supports row selection and live updates.",
+ "dependencies": [
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "button",
+  "checkbox",
+  "input",
+  "select",
+  "table"
+ ]
+}

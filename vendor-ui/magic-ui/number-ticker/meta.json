@@ -1,0 +1,8 @@
+{
+ "name": "number-ticker",
+ "type": "registry:ui",
+ "description": "Animate numbers to count up or down to a target number",
+ "dependencies": [
+  "motion"
+ ]
+}

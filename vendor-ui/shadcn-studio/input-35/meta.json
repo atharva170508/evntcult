@@ -1,0 +1,9 @@
+{
+ "name": "input-35",
+ "type": "registry:component",
+ "description": "Input field with real-time character counter, guiding users on remaining character allowance.",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

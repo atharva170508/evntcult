@@ -1,0 +1,6 @@
+{
+ "name": "backlight",
+ "type": "registry:ui",
+ "description": "A backlight glow effect for videos, images, and SVGs.",
+ "dependencies": []
+}

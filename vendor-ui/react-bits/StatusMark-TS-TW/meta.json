@@ -1,0 +1,9 @@
+{
+ "name": "StatusMark-TS-TW",
+ "type": "registry:component",
+ "description": "Agent task status glyph that morphs from an idle ring to a progress arc, then a check.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

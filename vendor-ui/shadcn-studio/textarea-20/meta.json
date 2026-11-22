@@ -1,0 +1,9 @@
+{
+ "name": "textarea-20",
+ "type": "registry:component",
+ "description": "A read-only textarea with muted background styling for displaying non-editable content",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

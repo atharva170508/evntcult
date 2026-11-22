@@ -1,0 +1,11 @@
+{
+ "name": "icons-kanban",
+ "type": "registry:ui",
+ "description": "Kanban icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

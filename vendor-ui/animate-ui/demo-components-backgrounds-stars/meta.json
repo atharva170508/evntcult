@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-backgrounds-stars",
+ "type": "registry:ui",
+ "description": "Demo showing a stars background.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-backgrounds-stars"
+ ]
+}

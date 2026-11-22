@@ -1,0 +1,8 @@
+{
+ "name": "animated-beam-bidirectional",
+ "type": "registry:example",
+ "description": "Example showing a bidirectional animated beam effect.",
+ "registryDependencies": [
+  "@magicui/animated-beam"
+ ]
+}

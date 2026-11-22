@@ -1,0 +1,10 @@
+{
+ "name": "input-30",
+ "type": "registry:component",
+ "description": "An email input field paired with a subscribe button for newsletter signups",
+ "registryDependencies": [
+  "button",
+  "input",
+  "label"
+ ]
+}

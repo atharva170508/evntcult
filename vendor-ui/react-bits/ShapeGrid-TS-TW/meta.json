@@ -1,0 +1,7 @@
+{
+ "name": "ShapeGrid-TS-TW",
+ "type": "registry:component",
+ "description": "A drifting grid of shapes that lights up under the cursor, with perspective tilt and rainbow trails.",
+ "dependencies": [],
+ "registryDependencies": []
+}

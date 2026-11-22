@@ -1,0 +1,18 @@
+[
+  {
+    "name": "c-scrollspy-1",
+    "title": "Basic scrollspy",
+    "label": "Vertical Nav",
+    "description": "Basic scrollspy",
+    "order": 1,
+    "gridSize": 1
+  },
+  {
+    "name": "c-scrollspy-2",
+    "title": "Basic scroll area",
+    "label": "Horizontal Nav",
+    "description": "Basic scroll area",
+    "order": 2,
+    "gridSize": 1
+  }
+]

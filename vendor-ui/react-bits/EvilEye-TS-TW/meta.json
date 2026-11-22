@@ -1,0 +1,9 @@
+{
+ "name": "EvilEye-TS-TW",
+ "type": "registry:component",
+ "description": "Procedural evil eye shader with animated iris, slit pupil, and fiery outer glow.",
+ "dependencies": [
+  "ogl@^1.0.11"
+ ],
+ "registryDependencies": []
+}

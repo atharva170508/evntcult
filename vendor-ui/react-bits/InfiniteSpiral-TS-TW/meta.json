@@ -1,0 +1,7 @@
+{
+ "name": "InfiniteSpiral-TS-TW",
+ "type": "registry:component",
+ "description": "An endlessly looping 3D helix of images with adjustable motion, depth and spacing.",
+ "dependencies": [],
+ "registryDependencies": []
+}

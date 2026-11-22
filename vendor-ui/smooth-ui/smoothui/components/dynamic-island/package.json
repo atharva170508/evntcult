@@ -1,0 +1,42 @@
+{
+  "name": "@repo/dynamic-island",
+  "description": "A DynamicIsland component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "lucide-react": "^0.545.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "other",
+    "tags": [
+      "dynamic-island",
+      "apple",
+      "notification",
+      "music",
+      "timer",
+      "morph",
+      "animated"
+    ],
+    "complexity": "complex",
+    "animationType": "spring",
+    "useCases": [
+      "Apple Dynamic Island-inspired notification area",
+      "Morphing status bar for music player, timer, and calls",
+      "Context-aware notification component with layout animations"
+    ],
+    "compositionHints": [
+      "Use with count-badge for alert indicators"
+    ],
+    "hasReducedMotion": true
+  }
+}

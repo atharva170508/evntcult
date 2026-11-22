@@ -1,0 +1,7 @@
+{
+ "name": "ElectricBorder-TS-TW",
+ "type": "registry:component",
+ "description": "Wraps any element in crackling strands of current that surge near the cursor and leap off in sparks.",
+ "dependencies": [],
+ "registryDependencies": []
+}

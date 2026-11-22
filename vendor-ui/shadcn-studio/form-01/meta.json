@@ -1,0 +1,15 @@
+{
+ "name": "form-01",
+ "type": "registry:component",
+ "description": "Form with radio group selection and alert notifications for user feedback",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "form",
+  "radio-group"
+ ]
+}

@@ -1,0 +1,9 @@
+{
+ "name": "input-09",
+ "type": "registry:component",
+ "description": "An input field with helper text below for additional guidance",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

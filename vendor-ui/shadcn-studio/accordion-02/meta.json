@@ -1,0 +1,8 @@
+{
+ "name": "accordion-02",
+ "type": "registry:component",
+ "description": "Card-style accordion with separated items, shadow effects, and rotated chevron icons.",
+ "registryDependencies": [
+  "accordion"
+ ]
+}

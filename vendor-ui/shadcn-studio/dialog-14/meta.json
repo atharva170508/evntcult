@@ -1,0 +1,14 @@
+{
+ "name": "dialog-14",
+ "type": "registry:component",
+ "description": "Sign in dialog with gradient background and social login options",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dialog",
+  "input",
+  "label"
+ ]
+}

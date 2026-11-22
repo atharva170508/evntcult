@@ -1,0 +1,7 @@
+{
+ "name": "SplashCursor-TS-TW",
+ "type": "registry:component",
+ "description": "A fluid simulation that trails the cursor in swirling ink and bursts into a splash on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,12 @@
+{
+ "name": "confetti",
+ "type": "registry:ui",
+ "description": "Confetti animations are best used to delight your users when something special happens",
+ "dependencies": [
+  "canvas-confetti",
+  "@types/canvas-confetti"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

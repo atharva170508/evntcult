@@ -1,0 +1,8 @@
+{
+ "name": "photon-beam-demo",
+ "type": "registry:example",
+ "description": "Example showing a photon-beam-demo component.",
+ "registryDependencies": [
+  "@eldoraui/photon-beam"
+ ]
+}

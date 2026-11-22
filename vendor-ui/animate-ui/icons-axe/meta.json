@@ -1,0 +1,11 @@
+{
+ "name": "icons-axe",
+ "type": "registry:ui",
+ "description": "Axe icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

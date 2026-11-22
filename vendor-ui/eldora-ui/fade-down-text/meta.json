@@ -1,0 +1,10 @@
+{
+ "name": "fade-down-text",
+ "type": "registry:ui",
+ "description": "A fade down text component.",
+ "dependencies": [
+  "motion",
+  "react",
+  "clsx"
+ ]
+}

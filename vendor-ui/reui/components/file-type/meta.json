@@ -1,0 +1,109 @@
+[
+  {
+    "name": "c-file-type-1",
+    "title": "Common formats",
+    "label": "Common Formats",
+    "description": "The formats people share most, in their brand colors.",
+    "order": 1
+  },
+  {
+    "name": "c-file-type-2",
+    "title": "Outline, solid, light and mono",
+    "label": "Variants",
+    "description": "The 4 variants side by side: outlined, filled, soft grey and one gray for every type.",
+    "order": 2
+  },
+  {
+    "name": "c-file-type-3",
+    "title": "Sizes",
+    "label": "Sizes",
+    "description": "6 sizes from 18px to 56px drawing the same icon, tuned to stay legible at 18px.",
+    "order": 3
+  },
+  {
+    "name": "c-file-type-4",
+    "title": "Family glyphs",
+    "label": "Family Glyphs",
+    "description": "One glyph per family, drawn on one grid, for family types and the glyph option.",
+    "order": 4
+  },
+  {
+    "name": "c-file-type-5",
+    "title": "All formats",
+    "label": "All Formats",
+    "description": "Every built-in format grouped by family, with a variant switch.",
+    "order": 5,
+    "gridSize": 1
+  },
+  {
+    "name": "c-file-type-6",
+    "title": "Data grid file browser",
+    "label": "File Browser",
+    "description": "Mini icons resolved from each file name in the rows of a sortable data grid.",
+    "order": 6,
+    "gridSize": 1
+  },
+  {
+    "name": "c-file-type-7",
+    "title": "Attachment list",
+    "label": "Attachment List",
+    "description": "Attachments with their type, size and a download action.",
+    "order": 7
+  },
+  {
+    "name": "c-file-type-8",
+    "title": "Upload queue",
+    "label": "Upload Queue",
+    "description": "Files uploading with progress, each icon resolved from its MIME type.",
+    "order": 8
+  },
+  {
+    "name": "c-file-type-9",
+    "title": "Resolve from a file name",
+    "label": "Resolve From Name",
+    "description": "Type a file name, path, URL or MIME type and see the icon it resolves to.",
+    "order": 9
+  },
+  {
+    "name": "c-file-type-10",
+    "title": "Custom labels",
+    "label": "Custom Labels",
+    "description": "Version tags and document codes in place of the extension.",
+    "order": 10
+  },
+  {
+    "name": "c-file-type-11",
+    "title": "Custom colors and unknown types",
+    "label": "Custom Colors",
+    "description": "Unknown extensions fall back to a neutral icon, and one class recolors any type.",
+    "order": 11
+  },
+  {
+    "name": "c-file-type-12",
+    "title": "Export format picker",
+    "label": "Format Picker",
+    "description": "Radio cards for choosing an export format, each with its file type icon.",
+    "order": 12
+  },
+  {
+    "name": "c-file-type-13",
+    "title": "Locked, linked and starred",
+    "label": "Locked & Starred",
+    "description": "A lock, link or star drawn on the icon in place of the extension label.",
+    "order": 13
+  },
+  {
+    "name": "c-file-type-14",
+    "title": "Restyled labels",
+    "label": "Restyled Labels",
+    "description": "File type extension labels restyled through labelClassName: rounded, outlined, inverted, recolored.",
+    "order": 14
+  },
+  {
+    "name": "c-file-type-15",
+    "title": "Dotfiles and build names",
+    "label": "Dotfiles & Build Names",
+    "description": "Icons read from names such as .env.local, Dockerfile and Makefile, which carry no usual extension.",
+    "order": 15
+  }
+]

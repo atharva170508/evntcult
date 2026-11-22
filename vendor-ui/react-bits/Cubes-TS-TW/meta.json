@@ -1,0 +1,7 @@
+{
+ "name": "Cubes-TS-TW",
+ "type": "registry:component",
+ "description": "A grid of outlined 3D cubes that turn to face the cursor, spin when swept and ripple on click.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,8 @@
+{
+ "name": "ipad",
+ "type": "registry:ui",
+ "description": "An iPad SVG component.",
+ "dependencies": [
+  "react"
+ ]
+}

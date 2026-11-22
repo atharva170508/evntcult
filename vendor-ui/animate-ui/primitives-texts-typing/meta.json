@@ -1,0 +1,12 @@
+{
+ "name": "primitives-texts-typing",
+ "type": "registry:ui",
+ "description": "A typing text animation.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/hooks-use-is-in-view",
+  "@animate-ui/v1/lib-get-strict-context"
+ ]
+}

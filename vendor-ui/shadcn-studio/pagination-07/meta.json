@@ -1,0 +1,11 @@
+{
+ "name": "pagination-07",
+ "type": "registry:component",
+ "description": "A pagination component with first and last page navigation buttons",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "pagination"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-battery-charging",
+ "type": "registry:ui",
+ "description": "Battery Charging icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

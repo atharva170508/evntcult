@@ -1,0 +1,11 @@
+{
+ "name": "components-radix-radio-group",
+ "type": "registry:ui",
+ "description": "A set of checkable buttons\u2014known as radio buttons\u2014where no more than one of the buttons can be checked at a time.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-radio-group"
+ ]
+}

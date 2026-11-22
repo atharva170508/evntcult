@@ -1,0 +1,40 @@
+{
+  "name": "@repo/pricing-1",
+  "description": "Simple pricing block with single plan",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/smooth-button": "workspace:*",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^11.15.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "layout",
+    "tags": [
+      "pricing",
+      "plan",
+      "single",
+      "cta",
+      "animated"
+    ],
+    "complexity": "simple",
+    "animationType": "spring",
+    "useCases": [
+      "Simple single-plan pricing card",
+      "SaaS pricing section with feature list",
+      "Minimalist pricing display with CTA"
+    ],
+    "compositionHints": [
+      "Use price-flow or number-flow for animated price display"
+    ],
+    "hasReducedMotion": true
+  }
+}

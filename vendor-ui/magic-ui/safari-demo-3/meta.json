@@ -1,0 +1,8 @@
+{
+ "name": "safari-demo-3",
+ "type": "registry:example",
+ "description": "Third example showing a Safari browser mockup.",
+ "registryDependencies": [
+  "@magicui/safari"
+ ]
+}

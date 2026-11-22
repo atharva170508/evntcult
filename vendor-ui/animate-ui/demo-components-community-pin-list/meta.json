@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-community-pin-list",
+ "type": "registry:ui",
+ "description": "Demo showing a pin list.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-community-pin-list"
+ ]
+}

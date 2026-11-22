@@ -1,0 +1,12 @@
+{
+ "name": "components-buttons-icon",
+ "type": "registry:ui",
+ "description": "An icon button component with a variety of styles and animations.",
+ "dependencies": [
+  "class-variance-authority"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-buttons-button",
+  "@animate-ui/v1/primitives-effects-particles"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "animated-beam",
+ "type": "registry:ui",
+ "description": "An animated beam of light which travels along a path. Useful for showcasing the integration features of a website.",
+ "dependencies": [
+  "motion"
+ ]
+}

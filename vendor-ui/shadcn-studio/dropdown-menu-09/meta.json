@@ -1,0 +1,12 @@
+{
+ "name": "dropdown-menu-09",
+ "type": "registry:component",
+ "description": "Start-aligned dropdown menu with edit, share, and delete actions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "dropdown-menu"
+ ]
+}

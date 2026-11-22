@@ -1,0 +1,12 @@
+{
+ "name": "dashboard-dropdown-02",
+ "type": "registry:block",
+ "description": "A user profile dropdown with avatar display, user information, profile settings, and account actions for user management.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "dropdown-menu"
+ ]
+}

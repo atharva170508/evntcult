@@ -1,0 +1,9 @@
+{
+ "name": "input-11",
+ "type": "registry:component",
+ "description": "An email input field with hint text indicating the field is optional",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

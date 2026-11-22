@@ -1,0 +1,11 @@
+{
+ "name": "icons-cast",
+ "type": "registry:ui",
+ "description": "Cast icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

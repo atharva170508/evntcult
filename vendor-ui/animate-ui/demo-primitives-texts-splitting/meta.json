@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-texts-splitting",
+ "type": "registry:ui",
+ "description": "Demo showing an animated splitting text.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-texts-splitting"
+ ]
+}

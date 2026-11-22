@@ -1,0 +1,9 @@
+{
+ "name": "JellyRadio-TS-TW",
+ "type": "registry:component",
+ "description": "Radio group of chips where the chosen one swells and barges its neighbours outward.",
+ "dependencies": [
+  "motion@^12.23.12"
+ ],
+ "registryDependencies": []
+}

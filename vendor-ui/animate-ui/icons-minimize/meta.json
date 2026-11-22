@@ -1,0 +1,11 @@
+{
+ "name": "icons-minimize",
+ "type": "registry:ui",
+ "description": "Minimize icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

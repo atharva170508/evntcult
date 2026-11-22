@@ -1,0 +1,7 @@
+{
+ "name": "LatticeLoader-TS-TW",
+ "type": "registry:component",
+ "description": "Agent status row with a lattice of cells that brighten in a wave beside a live stopwatch.",
+ "dependencies": [],
+ "registryDependencies": []
+}

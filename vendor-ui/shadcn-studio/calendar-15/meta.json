@@ -1,0 +1,8 @@
+{
+ "name": "calendar-15",
+ "type": "registry:component",
+ "description": "Calendar with right-aligned navigation controls for alternative layout",
+ "registryDependencies": [
+  "calendar"
+ ]
+}

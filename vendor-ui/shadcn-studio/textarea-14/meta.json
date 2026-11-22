@@ -1,0 +1,8 @@
+{
+ "name": "textarea-14",
+ "type": "registry:component",
+ "description": "A textarea with floating label that animates on focus",
+ "registryDependencies": [
+  "textarea"
+ ]
+}

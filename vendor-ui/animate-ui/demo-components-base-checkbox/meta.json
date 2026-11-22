@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-base-checkbox",
+ "type": "registry:ui",
+ "description": "Demo showing a checkbox.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-base-checkbox"
+ ]
+}

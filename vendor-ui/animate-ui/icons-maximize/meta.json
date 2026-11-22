@@ -1,0 +1,11 @@
+{
+ "name": "icons-maximize",
+ "type": "registry:ui",
+ "description": "Maximize icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

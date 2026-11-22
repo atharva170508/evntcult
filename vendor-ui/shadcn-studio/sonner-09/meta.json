@@ -1,0 +1,11 @@
+{
+ "name": "sonner-09",
+ "type": "registry:component",
+ "description": "A soft-styled info toast notification with color-mixed background for subtle messaging",
+ "dependencies": [
+  "sonner"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

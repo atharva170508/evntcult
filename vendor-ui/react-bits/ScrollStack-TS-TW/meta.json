@@ -1,0 +1,7 @@
+{
+ "name": "ScrollStack-TS-TW",
+ "type": "registry:component",
+ "description": "Cards pin and stack as you scroll, settling back into a dimmed deck with smooth, jitter-free motion.",
+ "dependencies": [],
+ "registryDependencies": []
+}

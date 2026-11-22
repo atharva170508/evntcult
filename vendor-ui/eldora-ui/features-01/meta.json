@@ -1,0 +1,10 @@
+{
+ "name": "features-01",
+ "type": "registry:block",
+ "description": "Features section with accordion and image carousel.",
+ "dependencies": [
+  "motion/react",
+  "@radix-ui/react-accordion",
+  "lucide-react"
+ ]
+}

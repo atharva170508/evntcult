@@ -1,0 +1,12 @@
+{
+ "name": "data-table-01",
+ "type": "registry:component",
+ "description": "Basic data table with records and row selection functionality",
+ "dependencies": [
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "checkbox",
+  "table"
+ ]
+}

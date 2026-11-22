@@ -1,0 +1,42 @@
+{
+  "name": "@repo/testimonials-2",
+  "description": "Grid testimonials block with navigation arrows",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/avatar": "workspace:*",
+    "@smoothui/data": "workspace:*",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "lucide-react": "^0.548.0",
+    "motion": "^11.15.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "layout",
+    "tags": [
+      "testimonials",
+      "grid",
+      "navigation",
+      "arrows",
+      "animated"
+    ],
+    "complexity": "moderate",
+    "animationType": "spring",
+    "useCases": [
+      "Grid testimonials with navigation arrows",
+      "Customer reviews grid with paginated navigation",
+      "Testimonial section with manual browse controls"
+    ],
+    "compositionHints": [
+      "Use animated-avatar-group for reviewer photos"
+    ],
+    "hasReducedMotion": true
+  }
+}

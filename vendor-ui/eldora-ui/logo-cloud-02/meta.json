@@ -1,0 +1,6 @@
+{
+ "name": "logo-cloud-02",
+ "type": "registry:block",
+ "description": "A logo cloud with flex wrap layout.",
+ "dependencies": []
+}

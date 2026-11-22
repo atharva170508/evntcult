@@ -1,0 +1,8 @@
+{
+ "name": "scroll-based-velocity",
+ "type": "registry:ui",
+ "description": "Scrolling text whose speed changes based on scroll speed",
+ "dependencies": [
+  "motion"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "accordion-11",
+ "type": "registry:component",
+ "description": "Tab-style accordion with accent background highlighting for expanded items.",
+ "registryDependencies": [
+  "accordion"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "hero-video-dialog-demo-top-in-bottom-out",
+ "type": "registry:example",
+ "description": "Example showing a hero video dialog with top-in bottom-out animation.",
+ "registryDependencies": [
+  "@magicui/hero-video-dialog"
+ ]
+}

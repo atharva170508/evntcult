@@ -1,0 +1,8 @@
+{
+ "name": "comp-151",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/checkbox.json",
+  "https://coss.com/origin/r/label.json"
+ ]
+}

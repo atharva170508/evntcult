@@ -1,0 +1,9 @@
+{
+ "name": "comp-440",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/badge.json",
+  "https://coss.com/origin/r/tabs.json",
+  "https://coss.com/origin/r/tooltip.json"
+ ]
+}

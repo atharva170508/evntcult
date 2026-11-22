@@ -1,0 +1,11 @@
+{
+ "name": "button-43",
+ "type": "registry:component",
+ "description": "Button with shimmer effect animation across the surface",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

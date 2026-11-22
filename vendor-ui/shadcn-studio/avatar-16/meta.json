@@ -1,0 +1,9 @@
+{
+ "name": "avatar-16",
+ "type": "registry:component",
+ "description": "Avatar group with tooltip hover effects and elevation animation.",
+ "registryDependencies": [
+  "avatar",
+  "tooltip"
+ ]
+}

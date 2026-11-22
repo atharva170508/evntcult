@@ -1,0 +1,9 @@
+{
+ "name": "checkbox-04",
+ "type": "registry:component",
+ "description": "Todo list checkbox with strikethrough text when checked",
+ "registryDependencies": [
+  "checkbox",
+  "label"
+ ]
+}

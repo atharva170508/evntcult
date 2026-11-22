@@ -1,0 +1,12 @@
+{
+ "name": "dock-demo",
+ "type": "registry:example",
+ "description": "Example showing a MacOS-style dock implementation.",
+ "dependencies": [
+  "next-themes"
+ ],
+ "registryDependencies": [
+  "button",
+  "@magicui/dock"
+ ]
+}

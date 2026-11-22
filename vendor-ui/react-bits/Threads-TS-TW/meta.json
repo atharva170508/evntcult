@@ -1,0 +1,7 @@
+{
+ "name": "Threads-TS-TW",
+ "type": "registry:component",
+ "description": "Flowing threads that fray apart and part around the cursor, from fine silk to contour lines.",
+ "dependencies": [],
+ "registryDependencies": []
+}

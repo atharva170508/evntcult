@@ -1,0 +1,14 @@
+{
+ "name": "components-buttons-theme-toggler",
+ "type": "registry:ui",
+ "description": "A button that toggles the theme gradually.",
+ "dependencies": [
+  "next-themes",
+  "class-variance-authority",
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-effects-theme-toggler",
+  "@animate-ui/v1/components-buttons-icon"
+ ]
+}

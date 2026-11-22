@@ -1,0 +1,8 @@
+{
+ "name": "calendar-10",
+ "type": "registry:component",
+ "description": "Variable size calendar with responsive cell sizing for different screen sizes",
+ "registryDependencies": [
+  "calendar"
+ ]
+}

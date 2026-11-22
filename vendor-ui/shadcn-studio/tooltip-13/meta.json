@@ -1,0 +1,14 @@
+{
+ "name": "tooltip-13",
+ "type": "registry:component",
+ "description": "A project hover card with progress bar, timeline, and team avatars",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "hover-card",
+  "progress"
+ ]
+}

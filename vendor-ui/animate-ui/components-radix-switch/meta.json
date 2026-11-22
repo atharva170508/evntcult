@@ -1,0 +1,8 @@
+{
+ "name": "components-radix-switch",
+ "type": "registry:ui",
+ "description": "A control that allows the user to toggle between checked and not checked.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-switch"
+ ]
+}

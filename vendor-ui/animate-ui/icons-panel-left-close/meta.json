@@ -1,0 +1,11 @@
+{
+ "name": "icons-panel-left-close",
+ "type": "registry:ui",
+ "description": "Panel left close icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

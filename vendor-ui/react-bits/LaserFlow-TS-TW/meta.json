@@ -1,0 +1,7 @@
+{
+ "name": "LaserFlow-TS-TW",
+ "type": "registry:component",
+ "description": "A beam of light that splashes onto your content and pours over its corners.",
+ "dependencies": [],
+ "registryDependencies": []
+}

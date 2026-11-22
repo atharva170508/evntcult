@@ -1,0 +1,8 @@
+{
+ "name": "dia-text-reveal-demo-2",
+ "type": "registry:example",
+ "description": "Custom gradient colors and settled text color on a light background.",
+ "registryDependencies": [
+  "@magicui/dia-text-reveal"
+ ]
+}

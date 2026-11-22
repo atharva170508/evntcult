@@ -1,0 +1,7 @@
+{
+ "name": "GhostCursor-TS-TW",
+ "type": "registry:component",
+ "description": "A ghost of glowing smoke that floats after the cursor and curls away as it rises.",
+ "dependencies": [],
+ "registryDependencies": []
+}

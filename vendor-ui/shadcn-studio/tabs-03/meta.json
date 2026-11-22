@@ -1,0 +1,11 @@
+{
+ "name": "tabs-03",
+ "type": "registry:component",
+ "description": "Tabs with icons for enhanced visual navigation and improved user experience",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "tabs"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "select-08",
+ "type": "registry:component",
+ "description": "A native select dropdown with overlapping label design",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

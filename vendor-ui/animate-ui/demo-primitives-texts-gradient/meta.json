@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-texts-gradient",
+ "type": "registry:ui",
+ "description": "Demo showing an animated gradient text.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-texts-gradient"
+ ]
+}

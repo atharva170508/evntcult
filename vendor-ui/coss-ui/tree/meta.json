@@ -1,0 +1,9 @@
+{
+ "name": "tree",
+ "type": "registry:component",
+ "dependencies": [
+  "@headless-tree/core",
+  "@headless-tree/react",
+  "radix-ui"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "text-loop",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

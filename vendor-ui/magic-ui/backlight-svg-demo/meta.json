@@ -1,0 +1,8 @@
+{
+ "name": "backlight-svg-demo",
+ "type": "registry:example",
+ "description": "An example of the backlight component with SVGs.",
+ "registryDependencies": [
+  "@magicui/backlight"
+ ]
+}

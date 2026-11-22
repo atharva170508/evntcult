@@ -1,0 +1,8 @@
+{
+ "name": "retro-grid-demo",
+ "type": "registry:example",
+ "description": "Example showing an animated scrolling retro grid effect.",
+ "registryDependencies": [
+  "@magicui/retro-grid"
+ ]
+}

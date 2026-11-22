@@ -1,0 +1,9 @@
+{
+ "name": "radio-group-03",
+ "type": "registry:component",
+ "description": "A colored radio group with custom styling for different states",
+ "registryDependencies": [
+  "label",
+  "radio-group"
+ ]
+}

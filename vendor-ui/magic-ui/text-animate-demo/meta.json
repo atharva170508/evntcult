@@ -1,0 +1,8 @@
+{
+ "name": "text-animate-demo",
+ "type": "registry:example",
+ "description": "Example showing various text animations.",
+ "registryDependencies": [
+  "@magicui/text-animate"
+ ]
+}

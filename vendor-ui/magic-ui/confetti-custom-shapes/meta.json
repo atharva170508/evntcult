@@ -1,0 +1,8 @@
+{
+ "name": "confetti-custom-shapes",
+ "type": "registry:example",
+ "description": "Example showing confetti with custom shape particles.",
+ "registryDependencies": [
+  "@magicui/confetti"
+ ]
+}

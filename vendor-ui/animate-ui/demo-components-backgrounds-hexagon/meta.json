@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-backgrounds-hexagon",
+ "type": "registry:ui",
+ "description": "Demo showing a hexagon background.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-backgrounds-hexagon"
+ ]
+}

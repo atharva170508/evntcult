@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-texts-shimmering",
+ "type": "registry:ui",
+ "description": "Demo showing an animated shimmering text.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-texts-shimmering"
+ ]
+}

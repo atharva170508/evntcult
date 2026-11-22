@@ -1,0 +1,8 @@
+{
+ "name": "text-shimmer-wave",
+ "type": "registry:ui",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": []
+}

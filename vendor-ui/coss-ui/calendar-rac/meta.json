@@ -1,0 +1,8 @@
+{
+ "name": "calendar-rac",
+ "type": "registry:ui",
+ "dependencies": [
+  "react-aria-components",
+  "@internationalized/date"
+ ]
+}

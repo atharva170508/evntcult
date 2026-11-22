@@ -1,0 +1,7 @@
+{
+ "name": "ShinyText-TS-TW",
+ "type": "registry:component",
+ "description": "A sheen of light that sweeps across text, from soft bands to chrome-like reflections.",
+ "dependencies": [],
+ "registryDependencies": []
+}

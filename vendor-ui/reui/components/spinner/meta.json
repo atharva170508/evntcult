@@ -1,0 +1,86 @@
+[
+  {
+    "name": "c-spinner-1",
+    "title": "Basic spinner.",
+    "label": "Basic",
+    "description": "Basic spinner.",
+    "order": 1
+  },
+  {
+    "name": "c-spinner-2",
+    "title": "Spinners in buttons.",
+    "label": "In Buttons",
+    "description": "Spinners in buttons.",
+    "order": 2
+  },
+  {
+    "name": "c-spinner-3",
+    "title": "Spinners in badges.",
+    "label": "In Badges",
+    "description": "Spinners in badges.",
+    "order": 3
+  },
+  {
+    "name": "c-spinner-4",
+    "title": "Spinner in input group.",
+    "label": "In Input Group",
+    "description": "Spinner in input group.",
+    "order": 4
+  },
+  {
+    "name": "c-spinner-5",
+    "title": "Spinner in empty state.",
+    "label": "In Empty State",
+    "description": "Spinner in empty state.",
+    "order": 5
+  },
+  {
+    "name": "c-spinner-6",
+    "title": "Button loading states",
+    "label": "Pending Buttons",
+    "description": "Button loading states",
+    "order": 6
+  },
+  {
+    "name": "c-spinner-7",
+    "title": "Overlay loading spinner",
+    "label": "Overlay With Caption",
+    "description": "Overlay loading spinner",
+    "order": 7
+  },
+  {
+    "name": "c-spinner-8",
+    "title": "Full page loading state",
+    "label": "Full Page",
+    "description": "Full page loading state",
+    "order": 8
+  },
+  {
+    "name": "c-spinner-9",
+    "title": "Inline loading text with spinner",
+    "label": "Inline Text",
+    "description": "Inline loading text with spinner",
+    "order": 9
+  },
+  {
+    "name": "c-spinner-10",
+    "title": "Animated loading dots",
+    "label": "Loading Dots",
+    "description": "Animated loading dots",
+    "order": 10
+  },
+  {
+    "name": "c-spinner-11",
+    "title": "Spinner overlay on card",
+    "label": "Card Overlay",
+    "description": "Spinner overlay on card",
+    "order": 11
+  },
+  {
+    "name": "c-spinner-12",
+    "title": "Spinner color variants",
+    "label": "Color Variants",
+    "description": "Spinner color variants",
+    "order": 12
+  }
+]

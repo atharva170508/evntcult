@@ -1,0 +1,11 @@
+{
+ "name": "accordion-13",
+ "type": "registry:component",
+ "description": "Media content accordion with category icons and embedded images in accordion content.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "accordion"
+ ]
+}

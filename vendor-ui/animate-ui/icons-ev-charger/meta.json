@@ -1,0 +1,11 @@
+{
+ "name": "icons-ev-charger",
+ "type": "registry:ui",
+ "description": "EV Charger icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

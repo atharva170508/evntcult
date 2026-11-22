@@ -1,0 +1,14 @@
+{
+ "name": "table-16",
+ "type": "registry:component",
+ "description": "A comprehensive product table with avatars, checkboxes, buttons, and action controls",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "checkbox",
+  "table"
+ ]
+}

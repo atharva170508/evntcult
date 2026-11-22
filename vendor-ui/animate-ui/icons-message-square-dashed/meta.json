@@ -1,0 +1,11 @@
+{
+ "name": "icons-message-square-dashed",
+ "type": "registry:ui",
+ "description": "Message square dashed icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

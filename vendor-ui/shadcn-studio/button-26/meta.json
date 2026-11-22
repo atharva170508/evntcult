@@ -1,0 +1,12 @@
+{
+ "name": "button-26",
+ "type": "registry:component",
+ "description": "Promise-based button with loading spinner and success/error state transitions",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "utils"
+ ]
+}

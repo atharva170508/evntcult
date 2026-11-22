@@ -1,0 +1,17 @@
+{
+ "name": "form-09",
+ "type": "registry:component",
+ "description": "Form with date picker in popover for date selection",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "calendar",
+  "form",
+  "popover",
+  "utils"
+ ]
+}

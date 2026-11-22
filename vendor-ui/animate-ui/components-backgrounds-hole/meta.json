@@ -1,0 +1,8 @@
+{
+ "name": "components-backgrounds-hole",
+ "type": "registry:ui",
+ "description": "A background component featuring an animated hole grid.",
+ "dependencies": [
+  "motion"
+ ]
+}

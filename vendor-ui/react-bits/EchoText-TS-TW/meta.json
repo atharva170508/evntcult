@@ -1,0 +1,7 @@
+{
+ "name": "EchoText-TS-TW",
+ "type": "registry:component",
+ "description": "Ghosted copies trail behind the text and settle into a single word.",
+ "dependencies": [],
+ "registryDependencies": []
+}

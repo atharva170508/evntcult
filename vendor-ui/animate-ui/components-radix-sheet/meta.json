@@ -1,0 +1,11 @@
+{
+ "name": "components-radix-sheet",
+ "type": "registry:ui",
+ "description": "Extends the Dialog component to display content that complements the main content of the screen.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-radix-sheet"
+ ]
+}

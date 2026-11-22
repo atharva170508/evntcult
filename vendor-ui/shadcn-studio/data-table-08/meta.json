@@ -1,0 +1,17 @@
+{
+ "name": "data-table-08",
+ "type": "registry:component",
+ "description": "Drag-and-drop data table with sortable rows and reordering functionality",
+ "dependencies": [
+  "@dnd-kit/core",
+  "@dnd-kit/modifiers",
+  "@dnd-kit/sortable",
+  "@dnd-kit/utilities",
+  "lucide-react",
+  "@tanstack/react-table"
+ ],
+ "registryDependencies": [
+  "button",
+  "table"
+ ]
+}

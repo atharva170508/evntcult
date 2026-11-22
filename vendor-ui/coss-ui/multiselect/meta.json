@@ -1,0 +1,7 @@
+{
+ "name": "multiselect",
+ "type": "registry:ui",
+ "registryDependencies": [
+  "https://coss.com/origin/r/command.json"
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "name": "ClickSpark-TS-TW",
+ "type": "registry:component",
+ "description": "Bursts of sparks at every click, as dashes, comets, dots or stars, that can spill around buttons.",
+ "dependencies": [],
+ "registryDependencies": []
+}

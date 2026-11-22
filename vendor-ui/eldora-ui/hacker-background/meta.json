@@ -1,0 +1,8 @@
+{
+ "name": "hacker-background",
+ "type": "registry:ui",
+ "description": "A hacker background component.",
+ "dependencies": [
+  "react"
+ ]
+}

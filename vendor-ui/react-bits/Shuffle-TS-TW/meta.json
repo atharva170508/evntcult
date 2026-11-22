@@ -1,0 +1,10 @@
+{
+ "name": "Shuffle-TS-TW",
+ "type": "registry:component",
+ "description": "Animated text reveal where characters shuffle before settling.",
+ "dependencies": [
+  "gsap@^3.13.0",
+  "@gsap/react@^2.1.2"
+ ],
+ "registryDependencies": []
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "c-emoji-picker-1",
+    "title": "Inline emoji picker",
+    "label": "Inline",
+    "description": "The full picker inline on a card: search, category tabs, the grid and a footer with the preview and skin tone.",
+    "order": 1
+  },
+  {
+    "name": "c-emoji-picker-2",
+    "title": "Chat composer",
+    "label": "Chat Composer",
+    "description": "A chat composer that inserts emoji at the caret and keeps the draft in view.",
+    "order": 2
+  },
+  {
+    "name": "c-emoji-picker-3",
+    "title": "Message reactions",
+    "label": "Message Reactions",
+    "description": "A product update with reactions you can toggle, a tooltip naming who reacted and a picker that opens on quick reactions.",
+    "order": 3
+  },
+  {
+    "name": "c-emoji-picker-4",
+    "title": "Page icon",
+    "label": "Page Icon",
+    "description": "A page header with an emoji icon above the title, plus Random and Remove in the picker.",
+    "order": 4
+  },
+  {
+    "name": "c-emoji-picker-5",
+    "title": "Custom team emoji",
+    "label": "Custom Team Emoji",
+    "description": "A release thread whose reply field inserts the workspace's own emoji as shortcodes from their own tab.",
+    "order": 5
+  },
+  {
+    "name": "c-emoji-picker-6",
+    "title": "Shortcode suggestions",
+    "label": "Shortcode Suggestions",
+    "description": "A design review reply where typing a colon shortcode shows emoji suggestions under the field.",
+    "order": 6
+  },
+  {
+    "name": "c-emoji-picker-7",
+    "title": "Workplace-safe set",
+    "label": "Workplace-Safe Set",
+    "description": "A kudos card whose picker hides a blocklist and newer emoji, then posts the note to #platform.",
+    "order": 7
+  },
+  {
+    "name": "c-emoji-picker-8",
+    "title": "Localized data and labels",
+    "label": "Localized Labels",
+    "description": "A status emoji card in German, French or Japanese, with localized emoji names, keywords and labels.",
+    "order": 8
+  }
+]

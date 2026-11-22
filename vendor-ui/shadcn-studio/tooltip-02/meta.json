@@ -1,0 +1,9 @@
+{
+ "name": "tooltip-02",
+ "type": "registry:component",
+ "description": "A light-themed tooltip with custom background and text colors",
+ "registryDependencies": [
+  "button",
+  "tooltip"
+ ]
+}

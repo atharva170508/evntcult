@@ -1,0 +1,8 @@
+{
+ "name": "typing-animation-demo",
+ "type": "registry:example",
+ "description": "Example showing typed character animations.",
+ "registryDependencies": [
+  "@magicui/typing-animation"
+ ]
+}

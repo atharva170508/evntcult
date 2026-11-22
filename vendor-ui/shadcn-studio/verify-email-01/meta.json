@@ -1,0 +1,10 @@
+{
+ "name": "verify-email-01",
+ "type": "registry:block",
+ "description": "Centered card layout with logo header, email verification messaging, activation link instructions, skip option, and resend link for streamlined email confirmation",
+ "registryDependencies": [
+  "button",
+  "card",
+  "utils"
+ ]
+}

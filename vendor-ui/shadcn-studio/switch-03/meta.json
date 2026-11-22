@@ -1,0 +1,8 @@
+{
+ "name": "switch-03",
+ "type": "registry:component",
+ "description": "A mini-sized switch with border styling for compact interface layouts",
+ "registryDependencies": [
+  "switch"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "badge-10",
+ "type": "registry:component",
+ "description": "Badge with icon integration for enhanced visual context",
+ "registryDependencies": [
+  "badge"
+ ]
+}

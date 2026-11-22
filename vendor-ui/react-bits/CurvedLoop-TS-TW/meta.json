@@ -1,0 +1,7 @@
+{
+ "name": "CurvedLoop-TS-TW",
+ "type": "registry:component",
+ "description": "Flowing looping text path along a customizable curve with drag interaction.",
+ "dependencies": [],
+ "registryDependencies": []
+}

@@ -1,0 +1,9 @@
+{
+ "name": "textarea-02",
+ "type": "registry:component",
+ "description": "A textarea with associated label for improved accessibility",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

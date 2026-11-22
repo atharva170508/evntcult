@@ -1,0 +1,11 @@
+{
+ "name": "icons-list",
+ "type": "registry:ui",
+ "description": "List icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "github-inline-comments-demo",
+ "type": "registry:example",
+ "description": "Example showing a github-inline-comments-demo component.",
+ "registryDependencies": [
+  "@eldoraui/github-inline-comments"
+ ]
+}

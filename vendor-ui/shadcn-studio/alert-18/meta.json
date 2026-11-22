@@ -1,0 +1,11 @@
+{
+ "name": "alert-18",
+ "type": "registry:component",
+ "description": "Outline info alert with blue border and text styling for informational messages.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

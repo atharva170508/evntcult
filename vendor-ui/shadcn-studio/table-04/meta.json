@@ -1,0 +1,8 @@
+{
+ "name": "table-04",
+ "type": "registry:component",
+ "description": "A table with vertical lines between columns for clear data separation",
+ "registryDependencies": [
+  "table"
+ ]
+}

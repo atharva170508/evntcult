@@ -1,0 +1,11 @@
+{
+ "name": "pricing-02",
+ "type": "registry:block",
+ "description": "A pricing table with a dropdown menu.",
+ "dependencies": [
+  "motion/react"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

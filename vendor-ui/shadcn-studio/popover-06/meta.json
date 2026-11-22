@@ -1,0 +1,14 @@
+{
+ "name": "popover-06",
+ "type": "registry:component",
+ "description": "A download progress popover with progress bar and pause/cancel/retry controls",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "popover",
+  "progress",
+  "utils"
+ ]
+}

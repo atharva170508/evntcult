@@ -1,0 +1,11 @@
+{
+ "name": "button-12",
+ "type": "registry:component",
+ "description": "Upgrade button with amber gradient and icon",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "name": "comp-109",
+ "type": "registry:component",
+ "registryDependencies": [
+  "https://coss.com/origin/r/toggle-group.json"
+ ]
+}

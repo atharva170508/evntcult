@@ -1,0 +1,8 @@
+{
+ "name": "integrations-demo",
+ "type": "registry:example",
+ "description": "Example showing a integrations-demo component.",
+ "registryDependencies": [
+  "@eldoraui/integrations"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "pixel-image-demo",
+ "type": "registry:example",
+ "description": "Example showing a pixelated image effect.",
+ "registryDependencies": [
+  "@magicui/pixel-image"
+ ]
+}

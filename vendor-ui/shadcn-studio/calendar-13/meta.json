@@ -1,0 +1,8 @@
+{
+ "name": "calendar-13",
+ "type": "registry:component",
+ "description": "Custom styled calendar with sky blue theme for selected dates",
+ "registryDependencies": [
+  "calendar"
+ ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "@repo/button-copy",
+  "description": "A ButtonCopy component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "lucide-react": "^0.545.0",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "button",
+    "tags": [
+      "button",
+      "copy",
+      "clipboard",
+      "feedback",
+      "icon-swap",
+      "animated"
+    ],
+    "complexity": "simple",
+    "animationType": "spring",
+    "useCases": [
+      "Copy to clipboard button with loading/success animation",
+      "Code snippet copy button with icon transition",
+      "Share button with animated state feedback"
+    ],
+    "compositionHints": [
+      "Enhance with Tooltip primitive to show copy hint",
+      "Use Toast primitive for additional copy confirmation"
+    ],
+    "hasReducedMotion": true
+  }
+}

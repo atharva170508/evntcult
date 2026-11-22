@@ -1,0 +1,11 @@
+{
+ "name": "icons-plug-zap",
+ "type": "registry:ui",
+ "description": "Plug Zap icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

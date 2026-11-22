@@ -1,0 +1,11 @@
+{
+ "name": "icons-message-square-text",
+ "type": "registry:ui",
+ "description": "Message square text icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

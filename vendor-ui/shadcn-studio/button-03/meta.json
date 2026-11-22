@@ -1,0 +1,11 @@
+{
+ "name": "button-03",
+ "type": "registry:component",
+ "description": "A rounded button with icon and text content",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

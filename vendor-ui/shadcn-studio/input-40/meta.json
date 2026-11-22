@@ -1,0 +1,9 @@
+{
+ "name": "input-40",
+ "type": "registry:component",
+ "description": "Number input field with increment/decrement buttons using React Aria Components",
+ "dependencies": [
+  "lucide-react",
+  "react-aria-components"
+ ]
+}

@@ -1,0 +1,12 @@
+{
+ "name": "button-34",
+ "type": "registry:component",
+ "description": "Theme toggle button switching between sun and moon icons with colored styling",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "utils"
+ ]
+}

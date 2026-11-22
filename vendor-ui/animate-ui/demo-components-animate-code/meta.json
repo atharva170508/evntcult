@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-animate-code",
+ "type": "registry:ui",
+ "description": "Demo showing a code.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-animate-code"
+ ]
+}

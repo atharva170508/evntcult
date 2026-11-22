@@ -1,0 +1,11 @@
+{
+ "name": "icons-hammer",
+ "type": "registry:ui",
+ "description": "Hammer icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

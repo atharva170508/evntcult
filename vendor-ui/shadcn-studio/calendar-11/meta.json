@@ -1,0 +1,13 @@
+{
+ "name": "calendar-11",
+ "type": "registry:component",
+ "description": "Event calendar with integrated event list display and add event functionality",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "card"
+ ]
+}

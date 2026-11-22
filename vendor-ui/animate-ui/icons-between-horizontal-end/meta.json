@@ -1,0 +1,11 @@
+{
+ "name": "icons-between-horizontal-end",
+ "type": "registry:ui",
+ "description": "Between horizontal end icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

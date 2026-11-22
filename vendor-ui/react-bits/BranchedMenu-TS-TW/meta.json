@@ -1,0 +1,10 @@
+{
+ "name": "BranchedMenu-TS-TW",
+ "type": "registry:component",
+ "description": "Collapsible menu that branches each section from a trunk and traces a line to your pick.",
+ "dependencies": [
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

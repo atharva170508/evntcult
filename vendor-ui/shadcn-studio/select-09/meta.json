@@ -1,0 +1,12 @@
+{
+ "name": "select-09",
+ "type": "registry:component",
+ "description": "A native select dropdown with inset label design and custom styling",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "label",
+  "utils"
+ ]
+}

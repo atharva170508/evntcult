@@ -1,0 +1,9 @@
+{
+ "name": "checkbox-12",
+ "type": "registry:component",
+ "description": "Filled circular checkboxes with color themes and circle check icons",
+ "dependencies": [
+  "@radix-ui/react-checkbox",
+  "lucide-react"
+ ]
+}

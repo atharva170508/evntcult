@@ -1,0 +1,9 @@
+{
+ "name": "select-37",
+ "type": "registry:component",
+ "description": "An animated select dropdown with slide-in from bottom transition effect",
+ "registryDependencies": [
+  "label",
+  "select"
+ ]
+}

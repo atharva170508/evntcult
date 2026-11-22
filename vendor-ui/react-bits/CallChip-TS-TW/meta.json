@@ -1,0 +1,10 @@
+{
+ "name": "CallChip-TS-TW",
+ "type": "registry:component",
+ "description": "Tool-call chip whose fill wipes across as a live timer ticks, ending green or shaking red.",
+ "dependencies": [
+  "@hugeicons/react@^1.1.10",
+  "@hugeicons/core-free-icons@^4.3.3"
+ ],
+ "registryDependencies": []
+}

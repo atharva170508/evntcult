@@ -1,0 +1,12 @@
+{
+ "name": "text-shimmer",
+ "type": "registry:ui",
+ "description": "A text shimmer component.",
+ "dependencies": [
+  "motion",
+  "react"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "name": "icons-layout-dashboard",
+ "type": "registry:ui",
+ "description": "Layout dashboard icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

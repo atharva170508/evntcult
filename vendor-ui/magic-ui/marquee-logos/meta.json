@@ -1,0 +1,8 @@
+{
+ "name": "marquee-logos",
+ "type": "registry:example",
+ "description": "Example showing an infinite scrolling logo carousel.",
+ "registryDependencies": [
+  "@magicui/marquee"
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "name": "dither-field-text-demo",
+ "type": "registry:example",
+ "description": "A large heading filled with a cloud dither field through a mix-blend-mode overlay.",
+ "registryDependencies": [
+  "@magicui/dither-field"
+ ]
+}

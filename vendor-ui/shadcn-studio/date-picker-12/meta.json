@@ -1,0 +1,15 @@
+{
+ "name": "date-picker-12",
+ "type": "registry:component",
+ "description": "Travel date picker with departure/return dates and time selection for bookings",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button",
+  "calendar",
+  "input",
+  "label",
+  "popover"
+ ]
+}

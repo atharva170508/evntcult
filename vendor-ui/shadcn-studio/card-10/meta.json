@@ -1,0 +1,9 @@
+{
+ "name": "card-10",
+ "type": "registry:component",
+ "description": "Tabbed card with integrated tabs component for organized content sections",
+ "registryDependencies": [
+  "card",
+  "tabs"
+ ]
+}

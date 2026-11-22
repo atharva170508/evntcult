@@ -1,0 +1,11 @@
+{
+ "name": "icons-chevron-right",
+ "type": "registry:ui",
+ "description": "Chevron right icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

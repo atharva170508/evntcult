@@ -1,0 +1,9 @@
+{
+ "name": "card-05",
+ "type": "registry:component",
+ "description": "Image showcase card with top-aligned image and action buttons",
+ "registryDependencies": [
+  "button",
+  "card"
+ ]
+}

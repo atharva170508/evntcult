@@ -1,0 +1,8 @@
+{
+ "name": "safari-browser",
+ "type": "registry:ui",
+ "description": "A safari browser component.",
+ "dependencies": [
+  "react"
+ ]
+}

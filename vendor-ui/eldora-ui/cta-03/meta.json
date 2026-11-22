@@ -1,0 +1,11 @@
+{
+ "name": "cta-03",
+ "type": "registry:block",
+ "description": "CTA with heading, button, and ripple background.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "utils"
+ ]
+}

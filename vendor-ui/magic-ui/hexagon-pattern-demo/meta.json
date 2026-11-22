@@ -1,0 +1,8 @@
+{
+ "name": "hexagon-pattern-demo",
+ "type": "registry:example",
+ "description": "Example showing a background hexagon pattern made with SVGs.",
+ "registryDependencies": [
+  "@magicui/hexagon-pattern"
+ ]
+}

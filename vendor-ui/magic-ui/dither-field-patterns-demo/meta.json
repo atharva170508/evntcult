@@ -1,0 +1,8 @@
+{
+ "name": "dither-field-patterns-demo",
+ "type": "registry:example",
+ "description": "Every built-in pattern side by side in the current theme color.",
+ "registryDependencies": [
+  "@magicui/dither-field"
+ ]
+}

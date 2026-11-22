@@ -1,0 +1,12 @@
+{
+ "name": "input-otp-10",
+ "type": "registry:component",
+ "description": "A 6-digit OTP input field with custom dot separator and grouped layout",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "input-otp",
+  "label"
+ ]
+}

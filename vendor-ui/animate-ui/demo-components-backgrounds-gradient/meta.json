@@ -1,0 +1,8 @@
+{
+ "name": "demo-components-backgrounds-gradient",
+ "type": "registry:ui",
+ "description": "Demo showing a gradient background.",
+ "registryDependencies": [
+  "@animate-ui/v1/components-backgrounds-gradient"
+ ]
+}

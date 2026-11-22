@@ -1,0 +1,7 @@
+{
+ "name": "MetaBalls-TS-TW",
+ "type": "registry:component",
+ "description": "Liquid metaballs that merge, stretch and pinch apart, with a cursor blob that pushes through them.",
+ "dependencies": [],
+ "registryDependencies": []
+}

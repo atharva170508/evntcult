@@ -1,0 +1,41 @@
+{
+  "name": "@repo/clip-corners-button",
+  "description": "A ClipCornersButton component for SmoothUI.",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@repo/smooth-button": "workspace:*",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "motion": "^12.23.25",
+    "@repo/smoothui-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "typescript": "^5.9.3"
+  },
+  "smoothui": {
+    "category": "button",
+    "tags": [
+      "button",
+      "clip-path",
+      "corners",
+      "geometric",
+      "hover",
+      "animated"
+    ],
+    "complexity": "simple",
+    "animationType": "spring",
+    "useCases": [
+      "Stylized CTA button with clipped corner hover effect",
+      "Geometric button for gaming or tech-themed UIs",
+      "Creative hover button with corner triangle animations"
+    ],
+    "compositionHints": [
+      "Use with Tooltip primitive for button descriptions"
+    ],
+    "hasReducedMotion": true
+  }
+}

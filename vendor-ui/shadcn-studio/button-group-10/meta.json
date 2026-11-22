@@ -1,0 +1,11 @@
+{
+ "name": "button-group-10",
+ "type": "registry:component",
+ "description": "Flip transformation button group with horizontal and vertical controls",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "button"
+ ]
+}

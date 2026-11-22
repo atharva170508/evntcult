@@ -1,0 +1,8 @@
+{
+ "name": "card-08",
+ "type": "registry:component",
+ "description": "Soft background card with subtle primary color theme",
+ "registryDependencies": [
+  "card"
+ ]
+}

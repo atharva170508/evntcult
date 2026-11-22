@@ -1,0 +1,9 @@
+{
+ "name": "textarea-13",
+ "type": "registry:component",
+ "description": "A textarea with overlapping label for modern form design",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

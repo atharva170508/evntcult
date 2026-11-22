@@ -1,0 +1,7 @@
+{
+ "name": "FluxLines-TS-TW",
+ "type": "registry:component",
+ "description": "Glowing flux lines tracing a churning magnetic fluid. The cursor magnet reveals and curls them.",
+ "dependencies": [],
+ "registryDependencies": []
+}

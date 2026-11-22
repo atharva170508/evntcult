@@ -1,0 +1,12 @@
+{
+ "name": "button-25",
+ "type": "registry:component",
+ "description": "Notifications button with bell icon and red notification badge counter",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "badge",
+  "button"
+ ]
+}

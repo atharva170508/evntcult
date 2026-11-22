@@ -1,0 +1,8 @@
+{
+ "name": "typing-animation-demo-2",
+ "type": "registry:example",
+ "description": "Example showing multiple words with looping.",
+ "registryDependencies": [
+  "@magicui/typing-animation"
+ ]
+}

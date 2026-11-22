@@ -1,0 +1,8 @@
+{
+ "name": "select-14",
+ "type": "registry:component",
+ "description": "A custom select dropdown with error state and validation message",
+ "registryDependencies": [
+  "select"
+ ]
+}

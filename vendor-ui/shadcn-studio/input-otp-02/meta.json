@@ -1,0 +1,12 @@
+{
+ "name": "input-otp-02",
+ "type": "registry:component",
+ "description": "A 4-character alphanumeric OTP input field supporting both letters and numbers",
+ "dependencies": [
+  "input-otp"
+ ],
+ "registryDependencies": [
+  "input-otp",
+  "label"
+ ]
+}

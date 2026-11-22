@@ -1,0 +1,7 @@
+{
+ "name": "HalftoneReveal-TS-TW",
+ "type": "registry:component",
+ "description": "A halftone print of an image whose dots swell into the real photo under the cursor.",
+ "dependencies": [],
+ "registryDependencies": []
+}

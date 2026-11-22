@@ -1,0 +1,7 @@
+{
+ "name": "DotGrid-TS-TW",
+ "type": "registry:component",
+ "description": "A springy dot grid that the cursor flicks and drags through like jelly, with click shockwaves.",
+ "dependencies": [],
+ "registryDependencies": []
+}

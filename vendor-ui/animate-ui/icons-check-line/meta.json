@@ -1,0 +1,11 @@
+{
+ "name": "icons-check-line",
+ "type": "registry:ui",
+ "description": "Check line icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

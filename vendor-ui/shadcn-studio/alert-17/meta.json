@@ -1,0 +1,11 @@
+{
+ "name": "alert-17",
+ "type": "registry:component",
+ "description": "Standard alert with both title and description text providing detailed information.",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "alert"
+ ]
+}

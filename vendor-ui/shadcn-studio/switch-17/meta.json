@@ -1,0 +1,9 @@
+{
+ "name": "switch-17",
+ "type": "registry:component",
+ "description": "A switch card with GitHub icon for repository connection toggle functionality",
+ "registryDependencies": [
+  "label",
+  "switch"
+ ]
+}

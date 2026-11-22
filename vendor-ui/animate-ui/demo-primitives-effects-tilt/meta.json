@@ -1,0 +1,8 @@
+{
+ "name": "demo-primitives-effects-tilt",
+ "type": "registry:ui",
+ "description": "Demo showing an animated tilt.",
+ "registryDependencies": [
+  "@animate-ui/v1/primitives-effects-tilt"
+ ]
+}

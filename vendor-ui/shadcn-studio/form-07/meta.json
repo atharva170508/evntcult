@@ -1,0 +1,15 @@
+{
+ "name": "form-07",
+ "type": "registry:component",
+ "description": "Form with select dropdown components for option selection",
+ "dependencies": [
+  "lucide-react",
+  "sonner"
+ ],
+ "registryDependencies": [
+  "alert",
+  "button",
+  "form",
+  "select"
+ ]
+}

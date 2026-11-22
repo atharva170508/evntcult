@@ -1,0 +1,8 @@
+{
+ "name": "blur-fade",
+ "type": "registry:ui",
+ "description": "Blur fade in and out animation. Used to smoothly fade in and out content.",
+ "dependencies": [
+  "motion"
+ ]
+}

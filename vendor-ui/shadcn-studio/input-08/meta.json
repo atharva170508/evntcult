@@ -1,0 +1,9 @@
+{
+ "name": "input-08",
+ "type": "registry:component",
+ "description": "An input field with fully rounded borders for a modern appearance",
+ "registryDependencies": [
+  "input",
+  "label"
+ ]
+}

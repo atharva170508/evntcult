@@ -1,0 +1,8 @@
+{
+ "name": "checkbox-10",
+ "type": "registry:component",
+ "description": "Color-themed checkboxes with destructive, info, and success color variants",
+ "registryDependencies": [
+  "checkbox"
+ ]
+}

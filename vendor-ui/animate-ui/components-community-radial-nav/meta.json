@@ -1,0 +1,10 @@
+{
+ "name": "components-community-radial-nav",
+ "type": "registry:ui",
+ "description": "A circular navigation menu with animated pointer and expanding buttons for smooth interactive transitions.",
+ "dependencies": [
+  "motion",
+  "lucide-react"
+ ],
+ "registryDependencies": []
+}

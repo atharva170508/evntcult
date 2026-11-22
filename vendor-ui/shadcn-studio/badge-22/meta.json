@@ -1,0 +1,8 @@
+{
+ "name": "badge-22",
+ "type": "registry:component",
+ "description": "Avatar badge combining user profile image with label text",
+ "registryDependencies": [
+  "badge"
+ ]
+}

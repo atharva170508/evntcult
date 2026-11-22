@@ -1,0 +1,11 @@
+{
+ "name": "pagination-13",
+ "type": "registry:component",
+ "description": "A compact mini pagination component with page count display and icon navigation",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "pagination"
+ ]
+}

@@ -1,0 +1,5 @@
+{
+ "name": "animated-circular-progress-bar",
+ "type": "registry:ui",
+ "description": "Animated Circular Progress Bar is a component that displays a circular gauge with a percentage value."
+}

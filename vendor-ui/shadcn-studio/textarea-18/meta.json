@@ -1,0 +1,9 @@
+{
+ "name": "textarea-18",
+ "type": "registry:component",
+ "description": "A textarea with disabled resize functionality for fixed dimensions",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

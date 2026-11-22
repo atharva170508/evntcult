@@ -1,0 +1,11 @@
+{
+ "name": "icons-binary",
+ "type": "registry:ui",
+ "description": "Binary icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

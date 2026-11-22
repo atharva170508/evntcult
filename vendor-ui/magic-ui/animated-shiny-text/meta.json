@@ -1,0 +1,5 @@
+{
+ "name": "animated-shiny-text",
+ "type": "registry:ui",
+ "description": "A light glare effect which pans across text making it appear as if it is shimmering."
+}

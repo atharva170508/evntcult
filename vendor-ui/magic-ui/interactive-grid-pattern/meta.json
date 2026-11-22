@@ -1,0 +1,5 @@
+{
+ "name": "interactive-grid-pattern",
+ "type": "registry:ui",
+ "description": "A interactive background grid pattern made with SVGs, fully customizable using Tailwind CSS."
+}

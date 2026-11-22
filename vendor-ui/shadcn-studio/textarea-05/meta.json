@@ -1,0 +1,9 @@
+{
+ "name": "textarea-05",
+ "type": "registry:component",
+ "description": "An invalid textarea with error styling and validation message",
+ "registryDependencies": [
+  "label",
+  "textarea"
+ ]
+}

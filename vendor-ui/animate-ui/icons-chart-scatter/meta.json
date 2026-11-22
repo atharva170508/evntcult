@@ -1,0 +1,11 @@
+{
+ "name": "icons-chart-scatter",
+ "type": "registry:ui",
+ "description": "Chart scatter icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}

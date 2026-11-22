@@ -1,0 +1,15 @@
+{
+ "name": "dialog-15",
+ "type": "registry:component",
+ "description": "Invite friends dialog with avatar list and email invitation functionality",
+ "dependencies": [
+  "lucide-react"
+ ],
+ "registryDependencies": [
+  "avatar",
+  "button",
+  "dialog",
+  "input",
+  "label"
+ ]
+}

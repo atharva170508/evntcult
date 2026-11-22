@@ -1,0 +1,11 @@
+{
+ "name": "icons-clock-3",
+ "type": "registry:ui",
+ "description": "Clock 3 icon component.",
+ "dependencies": [
+  "motion"
+ ],
+ "registryDependencies": [
+  "@animate-ui/v1/icons-icon"
+ ]
+}
