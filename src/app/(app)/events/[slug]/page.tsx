@@ -195,9 +195,9 @@ export default async function EventPage({
   const confirmedVenue =
     e.event_type !== "virtual" && e.venue && e.venue_status === "confirmed";
 
-  const cover = (cls: string) => (
+  const cover = (cls: string, aspect = "aspect-square") => (
     <div
-      className={`relative aspect-square overflow-hidden rounded-[20px] bg-sunken ${cls}`}
+      className={`relative ${aspect} overflow-hidden rounded-[20px] bg-sunken ${cls}`}
     >
       <EventArt accent={s.accent} seed={s.id} scrim={false} />
       {e.banner_url && (
@@ -373,7 +373,7 @@ export default async function EventPage({
         {/* Right: what, when, where, register, about */}
         <div className="min-w-0">
           <Entrance delay={0.02} className="mt-2 lg:hidden">
-            {cover("aspect-[4/3] sm:aspect-[2/1]")}
+            {cover("rounded-[18px]", "aspect-[2/1]")}
           </Entrance>
 
           <Entrance delay={0.06} className="mt-6 lg:mt-0">

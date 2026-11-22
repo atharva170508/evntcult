@@ -182,21 +182,27 @@ export function Landing({
   data,
   month,
   isOrganizer = false,
+  app = false,
 }: {
   data: LandingData;
   month: MonthPayload;
   isOrganizer?: boolean;
+  /** Signed-in home: on phones, skip what the tabs and header already give (calendar, search, venues, the pitch). */
+  app?: boolean;
 }) {
+  const offPhone = app ? "max-md:hidden" : undefined;
   return (
     <div className="pb-6">
-      <CampusCalendar month={month} />
+      <div className={offPhone}>
+        <CampusCalendar month={month} />
+      </div>
 
       {/* Phones: the header has no room for the big bar, so search lives here. */}
       <form
         action="/events"
         method="get"
         role="search"
-        className="pt-5 md:hidden"
+        className={app ? "hidden" : "pt-5 md:hidden"}
       >
         <label className="flex h-14 items-center gap-3 rounded-lg border border-line-strong bg-white px-5 shadow-search">
           <Search
@@ -213,7 +219,11 @@ export function Landing({
         </label>
       </form>
 
-      {data.featured && <Featured e={data.featured} />}
+      {data.featured && (
+        <div className={offPhone}>
+          <Featured e={data.featured} />
+        </div>
+      )}
 
       {data.discover.length === 0 ? (
         <div className="pt-6">
@@ -227,13 +237,12 @@ export function Landing({
         {data.rows.filter((r) => r.key === "recent").map(shelf)}
       </div>
 
-      <Venues venues={data.venues} />
-
-      <HostsBand isOrganizer={isOrganizer} />
-
-      <AppBand />
-
-      <Questions />
+      <div className={offPhone}>
+        <Venues venues={data.venues} />
+        <HostsBand isOrganizer={isOrganizer} />
+        <AppBand />
+        <Questions />
+      </div>
     </div>
   );
 }

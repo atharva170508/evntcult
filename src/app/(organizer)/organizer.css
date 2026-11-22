@@ -473,3 +473,15 @@
   .o-crumb { font-size: 15px; flex: 1 1 auto; }
   .o-top .o-reason { display: none; }
 }
+
+/* Phones: editor sections fold to their heading; one open at a time (PhoneAccordion). */
+@media (max-width: 767px) {
+  .o-acc .o-section { margin-top: 10px; padding-top: 14px; padding-bottom: 14px; scroll-margin-top: calc(var(--header-h) + 64px); }
+  .o-acc .o-section.is-open { padding-bottom: 20px; }
+  .o-acc .o-section:not(.is-open) > :not(.o-section-head) { display: none !important; }
+  .o-acc .o-section-head { cursor: pointer; margin-bottom: 0; min-height: 32px; -webkit-tap-highlight-color: transparent; }
+  .o-acc .o-section.is-open > .o-section-head { margin-bottom: 18px; }
+  .o-acc .o-section-head::after { content: ""; margin-left: auto; width: 9px; height: 9px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: translateY(-3px) rotate(45deg); transition: transform 200ms var(--ease); }
+  .o-acc .o-section.is-open > .o-section-head::after { transform: translateY(2px) rotate(-135deg); }
+  .o-sticky .o-ticket, .o-sticky .o-rail { display: none; }
+}

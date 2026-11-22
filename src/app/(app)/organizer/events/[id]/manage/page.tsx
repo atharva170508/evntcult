@@ -16,6 +16,7 @@ import { formatINR } from "@/lib/money";
 import { fmtDate, fmtRange, fmtTime, relative } from "@/lib/utils";
 import { Chip } from "@/components/ui/Chip";
 import { MoreSheet } from "@/components/organizer-ui/MoreSheet";
+import { MoreRows } from "@/components/organizer/MoreRows";
 import { UpdateComposer } from "@/components/organizer/UpdateComposer";
 import { PaymentCell } from "@/components/organizer/PaymentCell";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
@@ -47,8 +48,11 @@ const WA_LABEL: Record<string, string> = { event_reminder: "reminder", event_soo
 const UPDATE_LABEL: Record<string, string> = { schedule: "Schedule change", venue: "Venue change", update: "Update" };
 const PAGE = 100;
 
-export default async function ManageEventPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ q?: string; all?: string; f?: string }> }) {
-  const [{ id }, { q, all: showAll, f: filterParam }] = await Promise.all([params, searchParams]);
+export default async function ManageEventPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ q?: string; all?: string; f?: string; tab?: string }> }) {
+  const [{ id }, { q, all: showAll, f: filterParam, tab: tabParam }] = await Promise.all([params, searchParams]);
+  // Phones show one pane at a time; laptops show everything.
+  const tab = tabParam === "stats" || tabParam === "tools" ? tabParam : "guests";
+  const pane = (t: string) => (tab === t ? "" : "max-md:hidden");
   const viewer = await getViewer();
   if (!viewer) redirect(`/signin?next=/organizer/events/${encodeURIComponent(id)}/manage`);
   if (!viewer.verifiedOrganizer) redirect("/dashboard");
@@ -205,6 +209,26 @@ export default async function ManageEventPage({ params, searchParams }: { params
         </p>
       </header>
 
+      <nav aria-label="Sections" className="ui-seg mt-5 grid w-full grid-cols-3 md:hidden">
+        {(
+          [
+            ["guests", "Guests"],
+            ["stats", "Stats"],
+            ["tools", "Tools"],
+          ] as const
+        ).map(([k, label]) => (
+          <Link
+            key={k}
+            href={`?${new URLSearchParams({ ...(k === "guests" ? {} : { tab: k }), ...(k === "guests" && q ? { q } : {}), ...(k === "guests" && filter.key !== "all" ? { f: filter.key } : {}) })}`}
+            aria-current={tab === k ? "page" : undefined}
+            className={`flex h-9 items-center justify-center rounded-[10px] text-[14px] font-semibold transition-colors ${tab === k ? "bg-surface text-ink shadow-card" : "text-ink-muted"}`}
+          >
+            {label}
+          </Link>
+        ))}
+      </nav>
+
+      <div className={pane("stats")}>
       {/* KPIs */}
       <dl className="mt-6 grid grid-cols-2 overflow-hidden rounded-2xl border border-line-strong bg-white sm:flex sm:divide-x sm:divide-line">
         {kpis.map((k, i) => (
@@ -227,10 +251,11 @@ export default async function ManageEventPage({ params, searchParams }: { params
       </dl>
 
       <EventAnalyticsCard data={analytics} />
+      </div>
 
       <div className="mt-6 grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
         {/* Attendees — the main job */}
-        <section aria-labelledby="att-h" className="card min-w-0 overflow-hidden">
+        <section aria-labelledby="att-h" className={`card min-w-0 overflow-hidden ${pane("guests")}`}>
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3.5 md:px-5">
             <h2 id="att-h" className="text-h4 font-semibold">
               Attendees{" "}
@@ -295,8 +320,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
             <div className="overflow-x-auto">
               {paidEvent && <TriageKeys tableId="att-table" />}
               <AttendeeTools eventId={e.id} tableId="att-table" slug={e.slug} />
-              <table id="att-table" className="w-full min-w-[760px] text-left text-[13.5px]">
-                <thead className="border-b border-line bg-sunken/60 text-ink-subtle">
+              <table id="att-table" className="w-full text-left text-[13.5px] max-md:block md:min-w-[760px]">
+                <thead className="border-b border-line bg-sunken/60 text-ink-subtle max-md:hidden">
                   <tr>
                     <th scope="col" className="w-10 py-2.5 pl-4">
                       <label className="relative inline-flex cursor-pointer">
@@ -312,7 +337,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
                     {paidEvent && <th scope="col" className={th}>Payment</th>}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-line/70">
+                <tbody className="divide-y divide-line/70 max-md:block">
                   {shown.map((a) => (
                     <tr
                       key={a.id}
@@ -322,7 +347,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
                       data-email={a.email}
                       data-pass={a.pass_code}
                       data-utr={a.status === "registered" && a.payment_status === "unpaid" && a.upi_utr ? a.upi_utr : undefined}
-                      className="scroll-mt-24 align-top transition-colors hover:bg-sunken/60 data-[selected=true]:bg-lavender/30 data-[selected=true]:shadow-[inset_3px_0_0_#1A1A1A]"
+                      className="scroll-mt-24 align-top transition-colors max-md:grid max-md:grid-cols-[40px_minmax(0,1fr)_auto] max-md:items-center max-md:pr-4 hover:bg-sunken/60 data-[selected=true]:bg-lavender/30 data-[selected=true]:shadow-[inset_3px_0_0_#1A1A1A]"
                     >
                       <td className="py-3 pl-4">
                         <label className="relative inline-flex cursor-pointer pt-0.5">
@@ -330,25 +355,25 @@ export default async function ManageEventPage({ params, searchParams }: { params
                           <CheckMark />
                         </label>
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-3 max-md:min-w-0 max-md:px-1">
                         <button type="button" data-guest={a.id} className="text-left font-medium underline-offset-4 hover:underline">
                           {a.name}
                         </button>
-                        <p className="text-[12px] text-ink-muted">{a.email.endsWith("@walkin.invalid") ? "Walk-in" : a.email}</p>
+                        <p className="truncate text-[12px] text-ink-muted">{a.email.endsWith("@walkin.invalid") ? "Walk-in" : a.email}</p>
                         {questions
                           .filter((qq) => answers.get(a.id)?.[qq.id])
                           .map((qq) => (
-                            <p key={qq.id} className="mt-0.5 text-[12px] text-ink-2">
+                            <p key={qq.id} className="mt-0.5 text-[12px] text-ink-2 max-md:hidden">
                               <span className="text-ink-subtle">{qq.label}:</span> {answers.get(a.id)?.[qq.id]}
                             </p>
                           ))}
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3"><span className="block text-[14px] font-medium">{passName(a.pass_code).name}</span><span className="block text-[12px] tabular-nums text-ink-muted">No. {passName(a.pass_code).no}</span></td>
-                      <td className="px-4 py-3">{a.status === "registered" ? <Chip tone="outline">Registered</Chip> : a.hold_expires_at ? <Chip tone="warn">Seat held</Chip> : <Chip>Waitlist</Chip>}</td>
-                      <td className="px-4 py-3">{a.checked_in_at ? <span className="font-mono font-medium text-live">{fmtTime(new Date(a.checked_in_at))}</span> : <span className="text-ink-subtle">—</span>}</td>
-                      <td className="px-4 py-3">{a.checked_in_at ? <AttendeeCert regId={a.id} certs={certs.filter((c) => c.registrationId === a.id)} /> : <span className="text-ink-subtle">—</span>}</td>
+                      <td className="whitespace-nowrap px-4 py-3 max-md:px-0 max-md:text-right"><span className="block text-[14px] font-medium">{passName(a.pass_code).name}</span><span className="block text-[12px] tabular-nums text-ink-muted">No. {passName(a.pass_code).no}</span></td>
+                      <td className="px-4 py-3 max-md:hidden">{a.status === "registered" ? <Chip tone="outline">Registered</Chip> : a.hold_expires_at ? <Chip tone="warn">Seat held</Chip> : <Chip>Waitlist</Chip>}</td>
+                      <td className="px-4 py-3 max-md:hidden">{a.checked_in_at ? <span className="font-mono font-medium text-live">{fmtTime(new Date(a.checked_in_at))}</span> : <span className="text-ink-subtle">—</span>}</td>
+                      <td className="px-4 py-3 max-md:hidden">{a.checked_in_at ? <AttendeeCert regId={a.id} certs={certs.filter((c) => c.registrationId === a.id)} /> : <span className="text-ink-subtle">—</span>}</td>
                       {paidEvent && (
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-3 max-md:hidden">
                           {a.status === "registered" ? <PaymentCell regId={a.id} paid={a.payment_status === "paid"} method={a.payment_method} refCode={a.payment_ref} utr={a.upi_utr} /> : <span className="text-ink-subtle">—</span>}
                         </td>
                       )}
@@ -358,8 +383,9 @@ export default async function ManageEventPage({ params, searchParams }: { params
               </table>
             </div>
           )}
+          {filtered.length > 0 && <MoreRows tableId="att-table" total={shown.length} />}
           {filtered.length > shown.length && (
-            <p className="border-t border-line px-5 py-4 text-[13px] text-ink-muted">
+            <p className="border-t border-line px-5 py-4 text-[13px] text-ink-muted max-md:hidden">
               Showing <span className="font-mono">{shown.length}</span> of <span className="font-mono">{filtered.length}</span>.{" "}
               <Link href={`?${new URLSearchParams({ ...(q ? { q } : {}), ...(filter.key !== "all" ? { f: filter.key } : {}), all: "1" })}`} className="link">
                 Show all
@@ -370,7 +396,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
         </section>
 
         {/* Side panels */}
-        <div className="space-y-5">
+        <div className={`space-y-5 ${pane("tools")}`}>
           {requests && <RequestsCard eventId={e.id} initial={requests} />}
           {e.status === "published" && <WalkInCard eventId={e.id} count={walkIns} />}
           {e.status === "published" && e.access === "public" && <EmbedCode slug={e.slug} origin={SITE_URL} />}

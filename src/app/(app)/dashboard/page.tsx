@@ -102,7 +102,7 @@ export default async function DashboardPage({
         </aside>
       </div>
 
-      <Landing data={landing} month={month} isOrganizer={viewer.verifiedOrganizer} />
+      <Landing data={landing} month={month} isOrganizer={viewer.verifiedOrganizer} app />
 
       {!viewer.phone && (
         <div className="pt-6">

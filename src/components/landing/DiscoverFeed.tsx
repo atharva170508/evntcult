@@ -6,7 +6,7 @@ import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { Segmented } from "@/components/ui/Segmented";
 import { Select } from "@/components/ui/Select";
 import { formatINR } from "@/lib/money";
-import { fmtDate, fmtTime } from "@/lib/utils";
+import { cn, fmtDate, fmtTime } from "@/lib/utils";
 import type { EventSummary } from "@/lib/data/types";
 
 type Kind = "all" | "tech" | "sports" | "party" | "learn";
@@ -188,16 +188,21 @@ export function DiscoverFeed({ events }: { events: Ev[] }) {
           </button>
         </div>
       ) : (
-        <ul key={`${kind}-${sort}-${when}-${price}`} className="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 xl:grid-cols-4">
+        <ul key={`${kind}-${sort}-${when}-${price}`} className="no-scrollbar mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-gutter px-gutter -mx-gutter md:mx-0 md:mt-6 md:grid md:snap-none md:grid-cols-3 md:gap-x-4 md:gap-y-8 md:overflow-visible md:px-0 xl:grid-cols-4">
           {shown.slice(0, limit).map((e, i) => (
-            <li key={e.id} className={changed ? "feed-in" : undefined} style={changed ? { animationDelay: `${Math.min(i, 8) * 35}ms` } : undefined}>
+            <li key={e.id} className={cn("w-[44%] shrink-0 snap-start md:w-auto", changed && "feed-in")} style={changed ? { animationDelay: `${Math.min(i, 8) * 35}ms` } : undefined}>
               <FeedCard e={e} />
             </li>
           ))}
+          <li className="w-[44%] shrink-0 snap-start md:hidden">
+            <Link href="/events" className="grid aspect-[4/5] place-items-center rounded-[20px] bg-sunken text-[15px] font-semibold text-ink active:bg-mist">
+              See all
+            </Link>
+          </li>
         </ul>
       )}
       {shown.length > limit && (
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 hidden justify-center md:flex">
           <button
             type="button"
             onClick={() => setLimit((l) => l + 8)}

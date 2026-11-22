@@ -128,7 +128,8 @@ export function OrganizerBento() {
         </div>
       </div>
 
-      <div>
+      {/* Phones: the steps swipe sideways, one card per step, instead of five screens of scroll. */}
+      <div className="no-scrollbar max-md:-mx-gutter max-md:flex max-md:snap-x max-md:snap-mandatory max-md:gap-4 max-md:overflow-x-auto max-md:scroll-px-gutter max-md:px-gutter max-md:pb-2">
         {STEPS.map((st, i) => (
           <section
             key={st.short}
@@ -137,14 +138,14 @@ export function OrganizerBento() {
             }}
             data-step={i}
             aria-labelledby={`ros-${i}`}
-            className="flex flex-col justify-center border-t border-cream/10 py-12 first:border-t-0 first:pt-0 lg:min-h-[62vh] lg:py-14"
+            className="flex flex-col justify-center border-t border-cream/10 py-12 first:border-t-0 first:pt-0 max-md:w-[86%] max-md:shrink-0 max-md:snap-start max-md:justify-start max-md:border-t-0 max-md:py-0 lg:min-h-[62vh] lg:py-14"
           >
             <p className="font-display text-[40px] leading-none tracking-[-0.02em] text-cream lg:hidden">{st.when}</p>
             <h3 id={`ros-${i}`} className="mt-3 text-[24px] font-semibold leading-snug tracking-[-0.01em] text-cream lg:mt-0 lg:text-[28px]">
               {st.title}
             </h3>
             <p className="mt-2 max-w-[48ch] text-[16px] leading-relaxed text-cream/65">{st.body}</p>
-            <div className="relative mt-8 md:mb-10">
+            <div className="relative mt-6 md:mb-10 md:mt-8">
               <Window title={st.win}>{st.demo}</Window>
               {st.float && <div className="absolute -bottom-14 -right-3 hidden md:block">{st.float}</div>}
             </div>

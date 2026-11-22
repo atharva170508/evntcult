@@ -13,6 +13,7 @@ import { SignupRules } from "./SignupRules";
 import { TicketsSetup } from "./TicketsSetup";
 import { PosterSetup } from "./PosterSetup";
 import { MoreSheet } from "./MoreSheet";
+import { PhoneAccordion } from "./PhoneAccordion";
 import { ChevronLeft } from "lucide-react";
 import { SectionRail } from "./SectionRail";
 import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, isValidLink, LINK_ERROR, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
@@ -315,9 +316,12 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
 
   const pill = status === "published" ? "Published" : status === "closed" || status === "cancelled" ? "Closed" : "Draft";
   const goTo = (section: string) => {
-    const el = document.getElementById(section);
-    el?.scrollIntoView({ block: "start" });
-    el?.querySelector<HTMLElement>("input:not(:disabled), textarea, button")?.focus({ preventScroll: true });
+    window.dispatchEvent(new CustomEvent("o-open", { detail: section }));
+    requestAnimationFrame(() => {
+      const el = document.getElementById(section);
+      el?.scrollIntoView({ block: "start" });
+      el?.querySelector<HTMLElement>("input:not(:disabled), textarea, button:not(.o-section-head)")?.focus({ preventScroll: true });
+    });
   };
   const checklist: [string, boolean, string][] = [
     ["Name", !!f.title.trim(), "sec-event"],
@@ -419,6 +423,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
         </div>
         <div className="o-form-grid">
           <div className="o-form-col">
+            <PhoneAccordion />
             <div id="sec-event">
             <Section n="01" label="Event">
               <Field
