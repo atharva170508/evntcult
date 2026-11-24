@@ -1,77 +1,164 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, ArrowUpRight, Images } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CheckCircle2, Download, Images, ScanFace, Sparkles } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDB } from "@/lib/db";
 import { myGalleries, myTaggedPhotos } from "@/lib/data/photos";
+import { myAutoMatchedPhotos, syncUserAutoVault, type AutoVaultPhoto } from "@/lib/data/auto-vault";
 import { fmtDate } from "@/lib/utils";
 import { PageHero } from "@/components/brand/PageHero";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LinkButton } from "@/components/ui/Button";
+import { FaceIdEnrollCard } from "@/components/photos/FaceIdEnrollCard";
 
 export const metadata: Metadata = { title: "Photo Vault" };
 export const dynamic = "force-dynamic";
+
+interface EventGroup {
+  slug: string;
+  title: string;
+  startsAt: string;
+  manualIds: string[];
+  autoPhotos: AutoVaultPhoto[];
+}
 
 export default async function VaultPage() {
   const viewer = await getViewer();
   if (!viewer) redirect("/signin?next=/vault");
   const db = await getDB();
-  const [tagged, galleries] = await Promise.all([myTaggedPhotos(db, viewer.id), myGalleries(db, viewer.id)]);
 
-  // Group my photos by event, keeping the newest event first.
-  const byEvent = new Map<string, { slug: string; title: string; startsAt: string; ids: string[] }>();
+  // If user has Face ID active, auto-sync any new event photos before rendering
+  if (viewer.hasFaceId) {
+    await syncUserAutoVault(db, viewer.id).catch(() => ({ syncedEvents: 0, matchedPhotos: 0 }));
+  }
+
+  const [tagged, galleries, autoPhotos] = await Promise.all([
+    myTaggedPhotos(db, viewer.id),
+    myGalleries(db, viewer.id),
+    myAutoMatchedPhotos(db, viewer.id).catch(() => [] as AutoVaultPhoto[]),
+  ]);
+
+  // Group photos by event
+  const byEvent = new Map<string, EventGroup>();
+
   for (const p of tagged) {
-    const g = byEvent.get(p.event_id) ?? { slug: p.event_slug, title: p.event_title, startsAt: p.starts_at, ids: [] };
-    g.ids.push(p.id);
+    const g = byEvent.get(p.event_id) ?? {
+      slug: p.event_slug,
+      title: p.event_title,
+      startsAt: p.starts_at,
+      manualIds: [],
+      autoPhotos: [],
+    };
+    g.manualIds.push(p.id);
     byEvent.set(p.event_id, g);
   }
 
+  for (const a of autoPhotos) {
+    const g = byEvent.get(a.eventId) ?? {
+      slug: a.eventSlug,
+      title: a.eventTitle,
+      startsAt: a.startsAt,
+      manualIds: [],
+      autoPhotos: [],
+    };
+    // Avoid duplicate if already in manualIds
+    if (!g.manualIds.includes(a.photoId)) {
+      g.autoPhotos.push(a);
+    }
+    byEvent.set(a.eventId, g);
+  }
+
+  const totalPhotos = tagged.length + autoPhotos.length;
+
   return (
-    <div className="space-y-14 pb-8">
+    <div className="space-y-12 pb-8">
       <PageHero
-        title="Photos"
+        title="Photo Vault"
         sub={
-          <>
-            {tagged.length} photo{tagged.length === 1 ? "" : "s"}
-          </>
+          <div className="flex flex-wrap items-center gap-3">
+            <span>
+              {totalPhotos} photo{totalPhotos === 1 ? "" : "s"} of you
+            </span>
+            {viewer.hasFaceId && (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-volt/40 bg-volt/10 px-3 py-0.5 text-[12px] font-bold text-ink">
+                <CheckCircle2 className="size-3 text-volt" aria-hidden /> Auto-Vault Active
+              </span>
+            )}
+          </div>
         }
       />
+
+      {/* Auto-Vault Activation Callout if not enrolled */}
+      {!viewer.hasFaceId && (
+        <div className="rounded-2xl border border-volt/40 bg-volt/[0.04] p-1">
+          <FaceIdEnrollCard
+            title="Activate Automatic Photo Vault"
+            subtitle="Take a 1-time selfie so photos from every event you attend automatically land in your Vault without searching!"
+          />
+        </div>
+      )}
 
       {byEvent.size === 0 ? (
         <EmptyState
           art="photos"
           icon={Images}
           title="No photos of you yet."
-          body="When an event you went to uploads its photos, take one selfie and we'll find the ones you're in."
-          action={galleries.length ? { label: "Browse your galleries", href: `/events/${galleries[0].slug}/photos` } : { label: "Find an event", href: "/events" }}
+          body={
+            viewer.hasFaceId
+              ? "Your Face ID is active! As soon as organizers upload photos from your registered events, they will automatically appear here."
+              : "Enable Auto-Vault above with a 1-time selfie, or browse your event galleries below."
+          }
+          action={
+            galleries.length
+              ? { label: "Browse your galleries", href: `/events/${galleries[0].slug}/photos` }
+              : { label: "Find an event", href: "/events" }
+          }
         />
       ) : (
-        [...byEvent.entries()].map(([eventId, g]) => (
-          <section key={eventId} aria-label={g.title} className="space-y-5">
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <p className="eyebrow">
-                  {fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })}, {g.ids.length} of you
-                </p>
-                <h2 className="mt-2 text-display-md font-semibold">{g.title}</h2>
+        [...byEvent.entries()].map(([eventId, g]) => {
+          const count = g.manualIds.length + g.autoPhotos.length;
+          return (
+            <section key={eventId} aria-label={g.title} className="space-y-5">
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="eyebrow">
+                    {fmtDate(new Date(g.startsAt), { day: "numeric", month: "short", year: "numeric" })}, {count} of you
+                  </p>
+                  <h2 className="mt-2 text-display-md font-semibold">{g.title}</h2>
+                </div>
+                <LinkButton href={`/events/${g.slug}/photos`} variant="secondary" size="sm">
+                  All photos <ArrowRight className="size-3.5" aria-hidden />
+                </LinkButton>
               </div>
-              <LinkButton href={`/events/${g.slug}/photos`} variant="secondary" size="sm">
-                All photos <ArrowRight className="size-3.5" aria-hidden />
-              </LinkButton>
-            </div>
-            <ul className="grid grid-cols-3 gap-1.5 sm:grid-cols-4 lg:grid-cols-6">
-              {g.ids.map((id, i) => (
-                <li key={id} className={i === 0 ? "col-span-2 row-span-2 overflow-hidden rounded-card bg-sunken" : "aspect-square overflow-hidden rounded-tile bg-sunken"}>
-                  <a href={`/api/photos/${id}`} target="_blank" rel="noopener" aria-label="Open full size" className="group block size-full">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/api/photos/${id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-slow ease-out" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
+
+              <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+                {/* R2 manual tagged photos */}
+                {g.manualIds.map((id) => (
+                  <li key={id} className="group relative aspect-square overflow-hidden rounded-tile bg-sunken">
+                    <a href={`/api/photos/${id}`} target="_blank" rel="noopener" aria-label="Open full size" className="block size-full">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`/api/photos/${id}?size=thumb`} alt="" loading="lazy" className="size-full object-cover transition-transform duration-slow ease-out group-hover:scale-105" />
+                    </a>
+                  </li>
+                ))}
+
+                {/* AI Auto-matched photos */}
+                {g.autoPhotos.map((m) => (
+                  <li key={m.photoId} className="group relative aspect-square overflow-hidden rounded-tile bg-sunken">
+                    <a href={m.downloadUrl} target="_blank" rel="noopener noreferrer" aria-label="Download Full HD" className="block size-full">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={m.thumbnailUrl} alt="" loading="lazy" className="size-full object-cover transition-transform duration-slow ease-out group-hover:scale-105" />
+                      <span className="absolute bottom-1.5 right-1.5 flex size-7 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-opacity group-hover:bg-volt group-hover:text-ink">
+                        <Download className="size-3.5" aria-hidden />
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          );
+        })
       )}
 
       <section aria-labelledby="galleries-heading" className="space-y-5">

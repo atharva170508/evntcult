@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { BadgeCheck, Mail } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { ProfileForm } from "@/components/profile/ProfileForm";
+import { ProfileFaceId } from "@/components/profile/ProfileFaceId";
 import { PageHero } from "@/components/brand/PageHero";
 import { initials } from "@/lib/utils";
 
@@ -41,7 +42,10 @@ export default async function ProfilePage() {
           </dl>
         </aside>
 
-        <ProfileForm name={viewer.name} phone={viewer.phone} whatsappOptIn={viewer.whatsappOptIn} />
+        <div className="space-y-8">
+          <ProfileForm name={viewer.name} phone={viewer.phone} whatsappOptIn={viewer.whatsappOptIn} />
+          <ProfileFaceId initialHasFaceId={viewer.hasFaceId} initialUpdatedAt={viewer.faceUpdatedAt} />
+        </div>
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import { Loader2, MailCheck } from "lucide-react";
 import { PhoneFields } from "@/components/profile/PhoneFields";
 import { ModalDialog } from "@/components/ui/ModalDialog";
 import { TermsCheckbox } from "@/components/terms/AcceptTerms";
+import { FaceIdEnrollCard } from "@/components/photos/FaceIdEnrollCard";
 
 type ApiErr = { error?: { code: string; message: string } };
 
@@ -34,7 +35,7 @@ export function SignInForm({
   const [optIn, setOptIn] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [needName, setNeedName] = useState(signup);
-  const [step, setStep] = useState<"email" | "code">("email");
+  const [step, setStep] = useState<"email" | "code" | "face-id">("email");
   const [code, setCode] = useState("");
   const [resendIn, setResendIn] = useState(0);
   const [busy, setBusy] = useState(false);
@@ -121,7 +122,12 @@ export function SignInForm({
         email,
         ...details(),
       });
-      if (res.ok) return void (window.location.href = next);
+      if (res.ok) {
+        if ((data as { hasFaceId?: boolean })?.hasFaceId) {
+          return void (window.location.href = next);
+        }
+        return setStep("face-id");
+      }
       return handleError(data, "Sign-in failed. Try again.");
     }
     if (step === "email") return sendCode();
@@ -130,8 +136,32 @@ export function SignInForm({
       code,
       ...details(),
     });
-    if (res.ok) return void (window.location.href = next);
+    if (res.ok) {
+      if ((data as { hasFaceId?: boolean })?.hasFaceId) {
+        return void (window.location.href = next);
+      }
+      return setStep("face-id");
+    }
     handleError(data, "That didn't work. Try again.");
+  }
+
+  if (step === "face-id") {
+    return (
+      <div className="mt-6">
+        <FaceIdEnrollCard
+          title="Activate your Photo Vault"
+          subtitle="Take a 1-time selfie so photos from every event you attend automatically arrive in your Photo Vault!"
+          onSuccess={() => {
+            setTimeout(() => {
+              window.location.href = next;
+            }, 1200);
+          }}
+          onSkip={() => {
+            window.location.href = next;
+          }}
+        />
+      </div>
+    );
   }
 
   return (

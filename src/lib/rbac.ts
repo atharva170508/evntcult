@@ -20,14 +20,27 @@ export interface Viewer {
   verifiedOrganizer: boolean;
   /** Has accepted the current Terms & Conditions and User Rules (TERMS_VERSION). */
   termsAccepted: boolean;
+  /** Whether the user has enrolled their 1-time Face ID for automatic Photo Vault tagging. */
+  hasFaceId: boolean;
+  faceUpdatedAt: string | null;
 }
 
 /** The signed-in viewer, or null. The role always comes from the database, never the cookie. */
 export async function getViewer(): Promise<Viewer | null> {
   const uid = await readSessionValue((await cookies()).get(SESSION_COOKIE)?.value);
   if (!uid) return null;
-  const u = await first<{ id: string; name: string; email: string; role: Role; phone: string | null; whatsapp_opt_in: number; terms_version: string | null }>(
-    "SELECT id, name, email, role, phone, whatsapp_opt_in, terms_version FROM users WHERE id = ? AND blocked_at IS NULL",
+  const u = await first<{
+    id: string;
+    name: string;
+    email: string;
+    role: Role;
+    phone: string | null;
+    whatsapp_opt_in: number;
+    terms_version: string | null;
+    face_embedding: string | null;
+    face_updated_at: string | null;
+  }>(
+    "SELECT id, name, email, role, phone, whatsapp_opt_in, terms_version, face_embedding, face_updated_at FROM users WHERE id = ? AND blocked_at IS NULL",
     uid,
   );
   if (!u) return null;
@@ -41,6 +54,8 @@ export async function getViewer(): Promise<Viewer | null> {
     image: null,
     verifiedOrganizer: u.role === "organizer" || u.role === "admin",
     termsAccepted: u.terms_version === TERMS_VERSION,
+    hasFaceId: Boolean(u.face_embedding),
+    faceUpdatedAt: u.face_updated_at ?? null,
   };
 }
 
