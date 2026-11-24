@@ -3,9 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
-import { ArrowRight, RefreshCw, RotateCw, ShieldCheck, Images, QrCode, CalendarDays } from "lucide-react";
+import { ArrowRight, RefreshCw, RotateCw, QrCode, Images, ShieldCheck } from "lucide-react";
 import { BrandMark } from "@/components/site/Brand";
-import { Tilt } from "@/components/motion/Tilt";
 import { EASE } from "@/components/motion/MotionProvider";
 import { cn } from "@/lib/utils";
 
@@ -13,67 +12,73 @@ const VIBES = [
   {
     key: "PARTY",
     label: "Nights out",
-    hint: "Rooftops & DJs",
+    blurb: "Rooftop DJ sets, acoustic nights, and afterhours campus socials.",
     swatch: "#6D3DF5",
-    bg: "linear-gradient(135deg, #25134D 0%, #5228B8 55%, #190D36 100%)",
-    glow: "rgba(155, 110, 255, 0.32)",
+    tint: "rgba(109, 61, 245, 0.08)",
+    cardBg: "linear-gradient(145deg, #211047 0%, #4E26B3 58%, #160A30 100%)",
     names: ["Sunset Sessions", "Rooftop Social", "Afterhours Vinyl"],
     venues: ["Riverside Lawn", "Terrace Deck", "Amphitheatre"],
+    slot: "Sat · 8:00 pm",
     tag: "Entry + QR",
   },
   {
     key: "TECH",
     label: "Tech",
-    hint: "Hackathons & AI",
+    blurb: "24-hour hackathons, AI build nights, founder talks, and live demos.",
     swatch: "#2346A8",
-    bg: "linear-gradient(135deg, #0D1B45 0%, #1F42A3 55%, #0A1433 100%)",
-    glow: "rgba(92, 146, 255, 0.30)",
+    tint: "rgba(35, 70, 168, 0.08)",
+    cardBg: "linear-gradient(145deg, #0B1940 0%, #1F44A8 58%, #091330 100%)",
     names: ["Hack Night", "Build with AI", "Campus Demo Day"],
     venues: ["Main Auditorium", "Innovation Lab", "Seminar Hall B"],
+    slot: "Fri · 6:30 pm",
     tag: "Team pass",
   },
   {
     key: "SPORTS",
     label: "Sports",
-    hint: "Turf & runs",
+    blurb: "Floodlit box cricket, midnight 5Ks, 5-a-side turf leagues, and badminton.",
     swatch: "#D6652A",
-    bg: "linear-gradient(135deg, #3D1808 0%, #B84D18 55%, #260E04 100%)",
-    glow: "rgba(255, 148, 84, 0.30)",
+    tint: "rgba(214, 101, 42, 0.09)",
+    cardBg: "linear-gradient(145deg, #3B1707 0%, #BD4E19 58%, #240D04 100%)",
     names: ["Box Cricket League", "Midnight 5K Run", "5-a-side Friday"],
     venues: ["North Turf", "Main Track", "East Court"],
+    slot: "Sun · 6:00 am",
     tag: "Player pass",
   },
   {
     key: "CULTURAL",
     label: "Culture",
-    hint: "Fests & open mics",
+    blurb: "Garba nights, open mic poetry, theatre showcases, and annual fests.",
     swatch: "#C7457A",
-    bg: "linear-gradient(135deg, #421026 0%, #B02E63 55%, #2B0918 100%)",
-    glow: "rgba(240, 110, 165, 0.30)",
+    tint: "rgba(199, 69, 122, 0.08)",
+    cardBg: "linear-gradient(145deg, #3E0F24 0%, #B32E65 58%, #260816 100%)",
     names: ["Garba Night", "Open Mic Poetry", "Acoustic Courtyard"],
     venues: ["Central Quad", "OAT Steps", "Heritage Hall"],
+    slot: "Sat · 7:00 pm",
     tag: "General entry",
   },
   {
     key: "WORKSHOP",
     label: "Workshops",
-    hint: "Hands-on labs",
+    blurb: "Hands-on design sprints, film photo walks, pottery, and maker labs.",
     swatch: "#11796D",
-    bg: "linear-gradient(135deg, #082E29 0%, #146E63 55%, #051F1C 100%)",
-    glow: "rgba(74, 212, 190, 0.28)",
+    tint: "rgba(17, 121, 109, 0.08)",
+    cardBg: "linear-gradient(145deg, #072B27 0%, #147065 58%, #041C19 100%)",
     names: ["Film Photo Walk", "Figma in 90 Mins", "Pottery Sunday"],
     venues: ["Design Studio", "Botanical Gate", "Craft Room 4"],
+    slot: "Sun · 11:00 am",
     tag: "Seat + cert",
   },
   {
     key: "GAMING",
     label: "Gaming",
-    hint: "LAN & chess",
+    blurb: "LAN Valorant cups, retro arcade nights, FIFA brackets, and blitz chess.",
     swatch: "#E3264F",
-    bg: "linear-gradient(135deg, #3D0A16 0%, #B81B3E 55%, #24050C 100%)",
-    glow: "rgba(255, 86, 120, 0.30)",
+    tint: "rgba(227, 38, 79, 0.08)",
+    cardBg: "linear-gradient(145deg, #3A0A15 0%, #BA1B3E 58%, #21050B 100%)",
     names: ["Valorant Cup", "Retro Arcade Night", "Blitz Chess Open"],
     venues: ["Esports Arena", "Student Lounge", "Library Lawn"],
+    slot: "Fri · 9:00 pm",
     tag: "Bracket slot",
   },
 ] as const;
@@ -87,10 +92,33 @@ function greetingForNow(): string {
   return "Good evening";
 }
 
+/** Deterministic crisp 9x9 QR matrix for the back of the pass. */
+function QrMatrix({ seed }: { seed: number }) {
+  const cells: boolean[] = [];
+  for (let y = 0; y < 9; y++) {
+    for (let x = 0; x < 9; x++) {
+      const finder = (x < 3 && y < 3) || (x > 5 && y < 3) || (x < 3 && y > 5);
+      const ring = finder && !((x % 6 === 1 || x === 7) && (y % 6 === 1 || y === 7));
+      cells.push(
+        finder
+          ? ring || (x % 6 === 1 && y % 6 === 1) || (x === 7 && y === 1) || (x === 1 && y === 7)
+          : ((x * 7 + y * 13 + seed * 5) % 5) < 2,
+      );
+    }
+  }
+  return (
+    <div aria-hidden className="grid size-[62px] shrink-0 grid-cols-9 gap-[1.5px] rounded-lg bg-[#FFFEF6] p-1.5 ring-1 ring-ink/10">
+      {cells.map((on, k) => (
+        <span key={k} className={on ? "rounded-[0.5px] bg-[#1A1A1A]" : ""} />
+      ))}
+    </div>
+  );
+}
+
 function MiniBarcode() {
   const bars = [2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 2, 3, 1, 1, 2, 1, 3, 1, 2];
   return (
-    <div aria-hidden className="flex h-7 items-stretch gap-[2px] opacity-80">
+    <div aria-hidden className="flex h-6 items-stretch gap-[2px] opacity-80">
       {bars.map((w, idx) => (
         <span key={idx} className="rounded-[0.5px] bg-[#FFFEF6]" style={{ width: `${w}px` }} />
       ))}
@@ -100,16 +128,19 @@ function MiniBarcode() {
 
 /**
  * Signed-in Home hero when the user doesn't have an upcoming pass yet.
- * Replaces the old dead 00:00:00 countdown with a tactile 3D interactive preview pass
- * paired with a clean 2x3 campus vibe console.
+ * Full-width warm editorial canvas (zero nested boxes) with a tactile fanned 3-pass Apple Wallet
+ * stack on the right, live cursor-tracking foil sheen, 3D flip, and instant vibe switching.
  */
 export function EmptyTicket({ name, dateLine }: { name: string; dateLine: string }) {
   const reduce = !!useReducedMotion();
-  const [vibeIdx, setVibeIdx] = useState(1); // Default to Tech or Nights out
+  const [vibeIdx, setVibeIdx] = useState(1);
   const [titleIdx, setTitleIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [glare, setGlare] = useState({ x: 50, y: 30, on: false, rx: 0, ry: 0 });
 
   const vibe = VIBES[vibeIdx];
+  const nextVibe = VIBES[(vibeIdx + 1) % VIBES.length];
+  const prevVibe = VIBES[(vibeIdx + VIBES.length - 1) % VIBES.length];
   const eventTitle = vibe.names[titleIdx % vibe.names.length];
   const venue = vibe.venues[titleIdx % vibe.venues.length];
   const firstName = name.trim().split(/\s+/)[0] || name;
@@ -120,225 +151,50 @@ export function EmptyTicket({ name, dateLine }: { name: string; dateLine: string
     setFlipped(false);
   };
 
+  const onCardMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (reduce) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = ((e.clientX - rect.left) / rect.width) * 100;
+    const py = ((e.clientY - rect.top) / rect.height) * 100;
+    const ry = ((px - 50) / 50) * 7;
+    const rx = ((50 - py) / 50) * 6;
+    setGlare({ x: px, y: py, on: true, rx, ry });
+  };
+
+  const onCardLeave = () => setGlare((g) => ({ ...g, on: false, rx: 0, ry: 0 }));
+
   return (
     <section aria-labelledby="home-greeting" className="pt-6 md:pt-10">
-      {/* Top editorial greeting bar */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-[13.5px] font-medium text-ink-muted">{dateLine}</p>
-          <h1
-            id="home-greeting"
-            className="mt-1 font-display text-[clamp(34px,4.2vw,52px)] leading-[0.98] tracking-[-0.03em] text-ink"
-          >
-            {greetingForNow()}, {firstName}.
-          </h1>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href="/vault"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
-          >
-            <Images className="size-3.5 text-ink-muted" aria-hidden />
-            Photo Vault
-          </Link>
-          <Link
-            href="/calendar"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
-          >
-            <CalendarDays className="size-3.5 text-ink-muted" aria-hidden />
-            Calendar
-          </Link>
-        </div>
+      {/* Clean editorial header — no floating pill clutter */}
+      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+        <h1
+          id="home-greeting"
+          className="font-display text-[clamp(36px,4.4vw,56px)] leading-[0.96] tracking-[-0.03em] text-ink"
+        >
+          {greetingForNow()}, {firstName}.
+        </h1>
+        <p className="text-[14px] font-medium text-ink-muted">{dateLine}</p>
       </div>
 
-      {/* Main asymmetric two-column pass studio */}
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.85fr)] lg:items-stretch">
-        {/* Left: Tactile 3D preview pass stage */}
-        <div className="relative flex flex-col justify-between overflow-hidden rounded-[28px] border border-line-strong bg-[#151413] p-6 text-[#FFFEF6] shadow-[0_36px_72px_-44px_rgba(20,16,10,0.65)] md:p-8">
-          {/* Ambient radial glow tuned to selected vibe */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-24 -top-24 size-[340px] rounded-full blur-[90px] transition-colors duration-500"
-            style={{ background: vibe.glow }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 opacity-[0.07]"
-            style={{
-              backgroundImage: "radial-gradient(#FFFEF6 1px, transparent 1px)",
-              backgroundSize: "20px 20px",
-            }}
-          />
-
-          {/* Stage top controls */}
-          <div className="relative z-10 flex items-center justify-between gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[12px] font-semibold text-[#FFFEF6]/90 backdrop-blur-sm">
-              <span className="size-2 rounded-full" style={{ backgroundColor: vibe.swatch }} aria-hidden />
-              Your first pass preview
-            </span>
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => {
-                  setFlipped(false);
-                  setTitleIdx((n) => n + 1);
-                }}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-white/10 px-3 text-[12px] font-semibold text-[#FFFEF6]/90 transition-colors hover:bg-white/20"
-                title="Show another example event"
-              >
-                <RefreshCw className="size-3" aria-hidden />
-                Shuffle
-              </button>
-              <button
-                type="button"
-                onClick={() => setFlipped((f) => !f)}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-white/10 px-3 text-[12px] font-semibold text-[#FFFEF6]/90 transition-colors hover:bg-white/20"
-              >
-                <RotateCw className="size-3" aria-hidden />
-                {flipped ? "Front" : "Flip"}
-              </button>
-            </div>
-          </div>
-
-          {/* 3D Interactive Pass Card */}
-          <div className="relative z-10 my-6" style={{ perspective: 1100 }}>
-            <Tilt max={6}>
-              <m.div
-                animate={{ rotateY: flipped ? 180 : 0 }}
-                transition={reduce ? { duration: 0.01 } : { type: "spring", stiffness: 220, damping: 24 }}
-                style={{ transformStyle: "preserve-3d" }}
-                className="relative min-h-[248px] w-full"
-              >
-                {/* FRONT FACE */}
-                <div
-                  style={{ backfaceVisibility: "hidden", background: vibe.bg }}
-                  className="relative flex min-h-[248px] flex-col justify-between overflow-hidden rounded-[22px] p-6 text-[#FFFEF6] shadow-[0_24px_48px_-24px_rgba(0,0,0,0.85),inset_0_1px_0_rgba(255,255,255,0.22)] ring-1 ring-white/15"
-                >
-                  {/* Subtle diagonal sheen */}
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-[linear-gradient(125deg,rgba(255,255,255,0.12)_0%,transparent_42%,rgba(0,0,0,0.25)_100%)]"
-                  />
-
-                  <div className="relative flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <BrandMark className="size-4" />
-                      <span className="font-mono text-[11px] font-medium tracking-[0.06em] text-[#FFFEF6]/80">
-                        EVNTCULT PASS
-                      </span>
-                    </div>
-                    <span className="rounded-md bg-black/25 px-2.5 py-0.5 font-mono text-[11px] font-medium text-[#FFFEF6]/90 backdrop-blur-sm">
-                      {vibe.tag}
-                    </span>
-                  </div>
-
-                  <div className="relative my-5">
-                    <AnimatePresence mode="wait" initial={false}>
-                      <m.div
-                        key={`${vibe.key}-${titleIdx}`}
-                        initial={reduce ? false : { opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={reduce ? undefined : { opacity: 0, y: -8 }}
-                        transition={{ duration: 0.24, ease: EASE }}
-                      >
-                        <h2 className="font-display text-[clamp(32px,4vw,46px)] leading-[0.98] tracking-[-0.025em] text-[#FFFEF6]">
-                          {eventTitle}
-                        </h2>
-                        <p className="mt-1.5 text-[14px] text-[#FFFEF6]/80">
-                          {venue} · {vibe.label}
-                        </p>
-                      </m.div>
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Perforated tear divider */}
-                  <div className="relative -mx-6 my-1 flex items-center">
-                    <span className="size-3.5 -translate-x-1/2 rounded-full bg-[#151413]" aria-hidden />
-                    <div className="flex-1 border-t border-dashed border-white/25" />
-                    <span className="size-3.5 translate-x-1/2 rounded-full bg-[#151413]" aria-hidden />
-                  </div>
-
-                  <div className="relative mt-2 flex items-end justify-between gap-4">
-                    <dl className="flex flex-wrap gap-x-6 gap-y-1 text-[12px]">
-                      <div>
-                        <dt className="text-[#FFFEF6]/60">Admit one</dt>
-                        <dd className="mt-0.5 max-w-[140px] truncate text-[14px] font-semibold text-[#FFFEF6]">
-                          {name}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt className="text-[#FFFEF6]/60">Gate</dt>
-                        <dd className="mt-0.5 text-[14px] font-semibold text-[#FFFEF6]">Instant QR</dd>
-                      </div>
-                    </dl>
-                    <MiniBarcode />
-                  </div>
-                </div>
-
-                {/* BACK FACE */}
-                <div
-                  style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
-                  className="paper-keep absolute inset-0 flex flex-col justify-between rounded-[22px] bg-[#FFFEF6] p-6 text-[#1A1A1A] shadow-[0_24px_48px_-24px_rgba(0,0,0,0.75)] ring-1 ring-black/10"
-                >
-                  <div className="flex items-center justify-between border-b border-dashed border-[#D8D1BE] pb-3">
-                    <span className="font-mono text-[11px] font-semibold tracking-[0.05em] text-[#6A6A6A]">
-                      WHAT COMES WITH EVERY PASS
-                    </span>
-                    <BrandMark className="size-4" />
-                  </div>
-
-                  <ul className="my-3 space-y-2.5 text-[13.5px]">
-                    <li className="flex items-center gap-2.5">
-                      <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-[#F0D7FF] text-[#1A1A1A]">
-                        <QrCode className="size-4" aria-hidden />
-                      </span>
-                      <span>
-                        <strong className="font-semibold">Offline QR entry</strong> at the gate in 1 second
-                      </span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-[#F5F2E8] text-[#1A1A1A]">
-                        <Images className="size-4" aria-hidden />
-                      </span>
-                      <span>
-                        <strong className="font-semibold">Auto Photo Vault</strong> finds your photos automatically
-                      </span>
-                    </li>
-                    <li className="flex items-center gap-2.5">
-                      <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-[#F5F2E8] text-[#1A1A1A]">
-                        <ShieldCheck className="size-4" aria-hidden />
-                      </span>
-                      <span>
-                        <strong className="font-semibold">Verified certificate</strong> saved straight to your profile
-                      </span>
-                    </li>
-                  </ul>
-
-                  <p className="font-mono text-[11px] text-[#6A6A6A]">
-                    HOLDER: {name.toUpperCase()} · READY TO CLAIM
-                  </p>
-                </div>
-              </m.div>
-            </Tilt>
-          </div>
-
-          <p className="relative z-10 text-[13px] text-[#FFFEF6]/60">
-            Claim any campus event and your real scannable pass appears right here.
-          </p>
-        </div>
-
-        {/* Right: Personal Vibe Console */}
-        <div className="flex flex-col justify-between rounded-[28px] border border-line-strong bg-surface p-6 shadow-card md:p-7">
-          <div>
-            <h2 className="font-display text-[28px] leading-[1.05] tracking-[-0.02em] text-ink">
-              What are you into?
+      {/* Single unified warm editorial stage — no nested cards */}
+      <div
+        className="relative overflow-hidden rounded-[28px] border border-line-strong bg-sunken/75 transition-colors duration-500"
+        style={{
+          backgroundImage: `radial-gradient(620px circle at 82% 28%, ${vibe.tint}, transparent 68%)`,
+        }}
+      >
+        <div className="grid items-center gap-10 p-6 sm:p-9 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 lg:p-11">
+          {/* LEFT: Editorial copy, spring vibe selector, direct actions */}
+          <div className="relative z-10 flex flex-col">
+            <h2 className="max-w-[16ch] font-display text-[clamp(32px,3.6vw,48px)] leading-[1.02] tracking-[-0.025em] text-ink">
+              Your first pass is waiting for a plan.
             </h2>
-            <p className="mt-1.5 text-[14px] leading-relaxed text-ink-muted">
-              Pick a category to preview your pass and jump straight to upcoming events.
+            <p className="mt-3 max-w-[44ch] text-[15.5px] leading-relaxed text-ink-2">
+              {vibe.blurb}
             </p>
 
-            {/* 2x3 Tactile Vibe Grid */}
-            <div className="mt-5 grid grid-cols-2 gap-2.5">
+            {/* Spring-animated tactile vibe pill bar */}
+            <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Pick a campus vibe">
               {VIBES.map((v, idx) => {
                 const active = idx === vibeIdx;
                 return (
@@ -348,58 +204,241 @@ export function EmptyTicket({ name, dateLine }: { name: string; dateLine: string
                     aria-pressed={active}
                     onClick={() => selectVibe(idx)}
                     className={cn(
-                      "ui-press group flex flex-col items-start rounded-2xl border px-3.5 py-3 text-left transition-all duration-150",
-                      active
-                        ? "border-ink bg-ink text-[#FFFEF6] shadow-sm"
-                        : "border-line bg-sunken/70 text-ink hover:border-line-strong hover:bg-sunken",
+                      "relative inline-flex h-10 items-center gap-2 rounded-full px-4 text-[14px] font-semibold transition-colors",
+                      active ? "text-[#FFFEF6]" : "bg-surface/90 text-ink-2 ring-1 ring-line hover:text-ink",
                     )}
                   >
-                    <span className="flex w-full items-center justify-between gap-2">
-                      <span className="text-[14px] font-semibold">{v.label}</span>
-                      <span
-                        className={cn(
-                          "size-2.5 rounded-full transition-transform group-hover:scale-110",
-                          active && "ring-2 ring-white/40",
-                        )}
-                        style={{ backgroundColor: v.swatch }}
-                        aria-hidden
+                    {active && (
+                      <m.span
+                        layoutId="dashboard-vibe-pill"
+                        transition={reduce ? { duration: 0.01 } : { type: "spring", stiffness: 420, damping: 32 }}
+                        className="absolute inset-0 rounded-full bg-ink"
                       />
-                    </span>
+                    )}
                     <span
-                      className={cn(
-                        "mt-0.5 text-[12px]",
-                        active ? "text-[#FFFEF6]/70" : "text-ink-muted",
-                      )}
-                    >
-                      {v.hint}
-                    </span>
+                      className="relative z-10 size-2 rounded-full"
+                      style={{ backgroundColor: v.swatch }}
+                      aria-hidden
+                    />
+                    <span className="relative z-10">{v.label}</span>
                   </button>
                 );
               })}
             </div>
-          </div>
 
-          <div className="mt-6 border-t border-line pt-5">
-            <Link
-              href={`/events?type=${vibe.key}`}
-              className="ui-press ui-sheen flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-lavender px-5 text-[15.5px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink transition-colors hover:bg-lavender-hover"
-            >
-              Explore {vibe.label.toLowerCase()}
-              <ArrowRight className="size-4" strokeWidth={2.2} aria-hidden />
-            </Link>
-            <div className="mt-3.5 flex items-center justify-between text-[13.5px]">
+            {/* Primary + secondary actions */}
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <Link
+                href={`/events?type=${vibe.key}`}
+                className="ui-press ui-sheen inline-flex h-12 items-center gap-2 rounded-xl bg-lavender px-6 text-[15.5px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink transition-colors hover:bg-lavender-hover"
+              >
+                Explore {vibe.label.toLowerCase()}
+                <ArrowRight className="size-4" strokeWidth={2.3} aria-hidden />
+              </Link>
               <Link
                 href="/events"
-                className="font-semibold text-ink-2 underline decoration-line-strong underline-offset-4 hover:text-ink"
+                className="text-[14.5px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors hover:decoration-ink"
               >
-                See all events
+                Browse all events
               </Link>
               <Link
                 href="/host"
-                className="font-semibold text-ink-2 underline decoration-line-strong underline-offset-4 hover:text-ink"
+                className="text-[14.5px] font-semibold text-ink-2 underline decoration-line-strong underline-offset-[6px] transition-colors hover:text-ink hover:decoration-ink"
               >
                 Host your own
               </Link>
+            </div>
+          </div>
+
+          {/* RIGHT: Tactile Fanned 3-Pass Stack floating freely on the stage */}
+          <div className="relative flex flex-col items-center">
+            <div className="relative mx-auto w-full max-w-[400px] pt-5" style={{ perspective: 1200 }}>
+              {/* Back-left peeking pass (click to switch to previous vibe) */}
+              <button
+                type="button"
+                aria-label={`Preview ${prevVibe.label} pass`}
+                onClick={() => selectVibe((vibeIdx + VIBES.length - 1) % VIBES.length)}
+                style={{ background: prevVibe.cardBg }}
+                className="pointer-events-auto absolute inset-x-4 top-0 h-[120px] -rotate-[4.5deg] cursor-pointer rounded-[22px] p-4 text-left text-[#FFFEF6]/80 opacity-85 shadow-lg ring-1 ring-white/15 transition-transform duration-300 hover:-translate-y-2 hover:-rotate-[6deg] hover:opacity-100"
+              >
+                <span className="font-mono text-[10px] tracking-[0.06em] opacity-80">{prevVibe.label}</span>
+              </button>
+
+              {/* Back-right peeking pass (click to switch to next vibe) */}
+              <button
+                type="button"
+                aria-label={`Preview ${nextVibe.label} pass`}
+                onClick={() => selectVibe((vibeIdx + 1) % VIBES.length)}
+                style={{ background: nextVibe.cardBg }}
+                className="pointer-events-auto absolute inset-x-4 top-2 h-[120px] rotate-[4deg] cursor-pointer rounded-[22px] p-4 text-right text-[#FFFEF6]/85 opacity-90 shadow-lg ring-1 ring-white/15 transition-transform duration-300 hover:-translate-y-2 hover:rotate-[5.5deg] hover:opacity-100"
+              >
+                <span className="font-mono text-[10px] tracking-[0.06em] opacity-85">{nextVibe.label}</span>
+              </button>
+
+              {/* Front active 3D Pass with cursor-tracking foil glare */}
+              <div
+                onPointerMove={onCardMove}
+                onPointerLeave={onCardLeave}
+                className="relative z-10 mt-6"
+                style={{ perspective: 1200 }}
+              >
+                <m.div
+                  animate={{
+                    rotateY: flipped ? 180 : glare.ry,
+                    rotateX: flipped ? 0 : glare.rx,
+                  }}
+                  transition={
+                    reduce
+                      ? { duration: 0.01 }
+                      : { type: "spring", stiffness: 210, damping: 22 }
+                  }
+                  style={{ transformStyle: "preserve-3d" }}
+                  className="relative min-h-[262px] w-full"
+                >
+                  {/* FRONT FACE */}
+                  <div
+                    style={{ backfaceVisibility: "hidden", background: vibe.cardBg }}
+                    className="relative flex min-h-[262px] flex-col justify-between overflow-hidden rounded-[24px] p-6 text-[#FFFEF6] shadow-[0_32px_60px_-24px_rgba(20,14,6,0.58),inset_0_1px_0_rgba(255,255,255,0.24)] ring-1 ring-black/15"
+                  >
+                    {/* Cursor-tracking holographic foil sheen */}
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 transition-opacity duration-300"
+                      style={{
+                        opacity: glare.on ? 1 : 0,
+                        background: `radial-gradient(280px circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.24), transparent 65%)`,
+                      }}
+                    />
+
+                    {/* Subtle dot matrix texture */}
+                    <div
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 opacity-[0.07]"
+                      style={{
+                        backgroundImage: "radial-gradient(#FFFEF6 1px, transparent 1px)",
+                        backgroundSize: "16px 16px",
+                      }}
+                    />
+
+                    <div className="relative flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <BrandMark className="size-4" />
+                        <span className="font-mono text-[11px] font-medium tracking-[0.06em] text-[#FFFEF6]/80">
+                          EVNTCULT
+                        </span>
+                      </div>
+                      <span className="rounded-md bg-black/25 px-2.5 py-0.5 font-mono text-[11px] font-medium text-[#FFFEF6]/95 backdrop-blur-sm">
+                        {vibe.tag}
+                      </span>
+                    </div>
+
+                    <div className="relative my-5">
+                      <AnimatePresence mode="wait" initial={false}>
+                        <m.div
+                          key={`${vibe.key}-${titleIdx}`}
+                          initial={reduce ? false : { opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={reduce ? undefined : { opacity: 0, y: -8 }}
+                          transition={{ duration: 0.22, ease: EASE }}
+                        >
+                          <p className="font-display text-[clamp(30px,3.6vw,40px)] leading-[0.98] tracking-[-0.025em] text-[#FFFEF6]">
+                            {eventTitle}
+                          </p>
+                          <p className="mt-1.5 text-[13.5px] font-medium text-[#FFFEF6]/80">
+                            {venue} · {vibe.slot}
+                          </p>
+                        </m.div>
+                      </AnimatePresence>
+                    </div>
+
+                    {/* Perforated tear divider with side notches */}
+                    <div className="relative -mx-6 my-1 flex items-center">
+                      <span className="size-3.5 -translate-x-1/2 rounded-full bg-sunken" aria-hidden />
+                      <div className="flex-1 border-t border-dashed border-white/25" />
+                      <span className="size-3.5 translate-x-1/2 rounded-full bg-sunken" aria-hidden />
+                    </div>
+
+                    <div className="relative mt-2 flex items-end justify-between gap-3">
+                      <dl className="flex gap-5 text-[11.5px]">
+                        <div>
+                          <dt className="text-[#FFFEF6]/60">Admit one</dt>
+                          <dd className="mt-0.5 max-w-[125px] truncate text-[14px] font-semibold text-[#FFFEF6]">
+                            {name}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-[#FFFEF6]/60">Pass</dt>
+                          <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#FFFEF6]">
+                            EC-001
+                          </dd>
+                        </div>
+                      </dl>
+                      <MiniBarcode />
+                    </div>
+                  </div>
+
+                  {/* BACK FACE — Warm cream paper back with real geometric QR */}
+                  <div
+                    style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                    className="paper-keep absolute inset-0 flex flex-col justify-between rounded-[24px] bg-[#FFFEF6] p-6 text-[#1A1A1A] shadow-[0_32px_60px_-24px_rgba(20,14,6,0.45)] ring-1 ring-black/15"
+                  >
+                    <div className="flex items-start justify-between gap-4 border-b border-dashed border-[#D8D1BE] pb-3.5">
+                      <div>
+                        <p className="font-display text-[22px] leading-tight text-[#1A1A1A]">
+                          One pass, zero hassle.
+                        </p>
+                        <p className="mt-0.5 text-[12.5px] text-[#6A6A6A]">
+                          Issued to {firstName} on claim
+                        </p>
+                      </div>
+                      <QrMatrix seed={vibeIdx * 7 + titleIdx + 1} />
+                    </div>
+
+                    <ul className="my-3 space-y-2 text-[13px] text-[#2A2A2A]">
+                      <li className="flex items-center gap-2.5">
+                        <QrCode className="size-4 shrink-0 text-[#1A1A1A]" aria-hidden />
+                        <span>Offline QR scans at the gate in under a second</span>
+                      </li>
+                      <li className="flex items-center gap-2.5">
+                        <Images className="size-4 shrink-0 text-[#1A1A1A]" aria-hidden />
+                        <span>Auto Photo Vault finds your event photos via Face ID</span>
+                      </li>
+                      <li className="flex items-center gap-2.5">
+                        <ShieldCheck className="size-4 shrink-0 text-[#1A1A1A]" aria-hidden />
+                        <span>Verified certificate lands straight in your profile</span>
+                      </li>
+                    </ul>
+
+                    <div className="flex items-center justify-between font-mono text-[10.5px] text-[#6A6A6A]">
+                      <span>EVNTCULT · CAMPUS PASS</span>
+                      <span>READY</span>
+                    </div>
+                  </div>
+                </m.div>
+              </div>
+            </div>
+
+            {/* Quiet tactile controls right under the pass */}
+            <div className="mt-4 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setFlipped(false);
+                  setTitleIdx((n) => n + 1);
+                }}
+                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface px-3.5 text-[12.5px] font-semibold text-ink ring-1 ring-line transition-colors hover:bg-canvas"
+              >
+                <RefreshCw className="size-3 text-ink-muted" aria-hidden />
+                Shuffle idea
+              </button>
+              <button
+                type="button"
+                onClick={() => setFlipped((f) => !f)}
+                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface px-3.5 text-[12.5px] font-semibold text-ink ring-1 ring-line transition-colors hover:bg-canvas"
+              >
+                <RotateCw className="size-3 text-ink-muted" aria-hidden />
+                {flipped ? "Show front" : "Flip pass"}
+              </button>
             </div>
           </div>
         </div>

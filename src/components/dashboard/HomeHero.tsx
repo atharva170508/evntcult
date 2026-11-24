@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { m, useReducedMotion } from "motion/react";
-import { ArrowUpRight, CalendarDays, Images } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { EASE } from "@/components/motion/MotionProvider";
 import { EmptyTicket } from "./EmptyTicket";
@@ -69,29 +69,11 @@ export function HomeHero({ e, mine, dateLine, name }: { e: HeroEvent | null; min
 
   return (
     <section aria-labelledby="hero-title" className="pt-6 md:pt-10">
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-[13.5px] font-medium text-ink-muted">{dateLine}</p>
-          <p className="mt-1 font-display text-[clamp(32px,3.8vw,48px)] leading-[0.98] tracking-[-0.03em] text-ink">
-            {greetingForNow()}, {firstName}.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href="/vault"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
-          >
-            <Images className="size-3.5 text-ink-muted" aria-hidden />
-            Photo Vault
-          </Link>
-          <Link
-            href="/calendar"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
-          >
-            <CalendarDays className="size-3.5 text-ink-muted" aria-hidden />
-            Calendar
-          </Link>
-        </div>
+      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+        <p className="font-display text-[clamp(36px,4.4vw,56px)] leading-[0.96] tracking-[-0.03em] text-ink">
+          {greetingForNow()}, {firstName}.
+        </p>
+        <p className="text-[14px] font-medium text-ink-muted">{dateLine}</p>
       </div>
 
       <m.div

@@ -123,11 +123,11 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
       </div>
 
       {items.length === 0 ? (
-        <div className="mt-4 rounded-2xl border border-line bg-surface p-5 sm:p-6">
-          <p className="font-display text-[24px] leading-tight tracking-[-0.02em] text-ink">
+        <div className="mt-5 border-b border-line pb-6 pt-1">
+          <p className="font-display text-[26px] leading-tight tracking-[-0.02em] text-ink">
             Your week is wide open.
           </p>
-          <p className="mt-1 text-[14px] text-ink-muted">
+          <p className="mt-1 text-[14.5px] text-ink-muted">
             No passes booked for the next 7 days. Jump into a filter to fill your calendar.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -140,7 +140,7 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
               <Link
                 key={chip.href}
                 href={chip.href}
-                className="inline-flex h-9 items-center rounded-full border border-line-strong bg-sunken/80 px-3.5 text-[13.5px] font-semibold text-ink transition-colors hover:bg-ink hover:text-[#FFFEF6]"
+                className="inline-flex h-9 items-center rounded-full border border-line-strong bg-surface px-3.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink hover:bg-ink hover:text-[#FFFEF6]"
               >
                 {chip.label}
               </Link>
@@ -288,15 +288,15 @@ export function UpdatesFeed({ items }: { items: AnnouncementItem[] }) {
         )}
       </div>
       {items.length === 0 ? (
-        <div className="mt-4 rounded-2xl border border-line bg-surface p-4 text-[13.5px] leading-relaxed text-ink-muted">
+        <p className="py-4 text-[14px] leading-relaxed text-ink-muted">
           All quiet on your events. Time or venue changes from organizers show up here automatically.
-        </div>
+        </p>
       ) : (
-        <ul className="mt-3 space-y-2.5">
+        <ul className="divide-y divide-line">
           {items.slice(0, 4).map((a) => (
-            <li key={a.id} className="rounded-2xl border border-line bg-surface p-4">
+            <li key={a.id} className="py-4">
               <p className="flex items-baseline justify-between gap-3">
-                <span className="truncate text-[14px] font-semibold text-ink">{a.eventTitle}</span>
+                <span className="truncate text-[14.5px] font-semibold text-ink">{a.eventTitle}</span>
                 <time dateTime={a.createdAt.toISOString()} className="shrink-0 text-[12px] tabular-nums text-ink-subtle">
                   {relative(a.createdAt)}
                 </time>
