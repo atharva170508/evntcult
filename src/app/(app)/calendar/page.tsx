@@ -99,24 +99,27 @@ export default async function CalendarPage({
         actions={
           <div className="flex flex-wrap items-center gap-2">
             {feedUrl && <SubscribeCalendar feedUrl={feedUrl} />}
-            <div className="flex items-center gap-1 rounded-full border border-line-strong bg-white p-1">
+            <div className="flex items-center gap-0.5 rounded-full border border-line-strong bg-sunken/70 p-0.5">
               <Link
                 href={href(range.prev)}
-                className={buttonClass("ghost", "sm", "w-8 px-0")}
+                className="grid size-8 place-items-center rounded-full text-ink-2 transition-colors hover:bg-surface hover:text-ink"
                 aria-label="Previous month"
               >
                 <ChevronLeft className="size-4" aria-hidden />
               </Link>
               <Link
                 href={href(thisMonth)}
-                className={buttonClass("ghost", "sm")}
+                className={cn(
+                  "inline-flex h-8 items-center rounded-full px-3 text-[13px] font-semibold text-ink transition-colors hover:bg-surface",
+                  range.key === thisMonth && "pointer-events-none opacity-45",
+                )}
                 aria-disabled={range.key === thisMonth || undefined}
               >
                 Today
               </Link>
               <Link
                 href={href(range.next)}
-                className={buttonClass("ghost", "sm", "w-8 px-0")}
+                className="grid size-8 place-items-center rounded-full text-ink-2 transition-colors hover:bg-surface hover:text-ink"
                 aria-label="Next month"
               >
                 <ChevronRight className="size-4" aria-hidden />
@@ -142,9 +145,9 @@ export default async function CalendarPage({
                 href={href(range.key, t.view)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "rounded-xl px-4 py-1.5 text-[13.5px] font-medium transition-[background-color,color,box-shadow] duration-fast",
+                  "rounded-full px-4 py-1.5 text-[13.5px] font-semibold transition-[background-color,color,box-shadow] duration-fast",
                   active
-                    ? "bg-surface text-ink shadow-card"
+                    ? "bg-surface text-ink shadow-sm"
                     : "text-ink-muted hover:text-ink",
                 )}
               >
@@ -157,37 +160,45 @@ export default async function CalendarPage({
 
       {/* Month grid */}
       <section
-        className="card overflow-hidden"
+        className="overflow-hidden rounded-[24px] border border-line-strong bg-surface p-3 shadow-card sm:p-5"
         aria-label={`${monthName} month view`}
       >
-        <div className="grid grid-cols-7 border-b border-line">
-          {WEEKDAYS.map((d) => (
+        <div className="grid grid-cols-7 pb-2">
+          {WEEKDAYS.map((d, idx) => (
             <div
               key={d}
-              className="py-3 text-center text-[12.5px] text-ink-subtle"
+              className={cn(
+                "py-1.5 text-center text-[12px] font-semibold",
+                idx >= 5 ? "text-ink-subtle" : "text-ink-muted",
+              )}
             >
               {d}
             </div>
           ))}
         </div>
         <MonthSlide month={`${range.year}-${String(range.month + 1).padStart(2, "0")}`}>
-        <div className="grid grid-cols-7 gap-px bg-line">
+        <div className="grid grid-cols-7 gap-1">
           {cells.map((day, i) => {
             if (!day)
               return (
                 <div
                   key={`b${i}`}
-                  className="min-h-[50px] bg-canvas/60 md:min-h-[124px]"
+                  className="min-h-[54px] rounded-xl md:min-h-[104px]"
                 />
               );
             const list = byDay.get(day) ?? [];
             const isToday = day === today;
+            const isWeekend = i % 7 >= 5;
             return (
               <div
                 key={day}
                 className={cn(
-                  "relative min-h-[50px] bg-surface py-1.5 md:min-h-[124px] md:p-2",
-                  isToday && "bg-accent-soft/40",
+                  "relative min-h-[54px] rounded-xl py-1.5 transition-colors md:min-h-[104px] md:p-2",
+                  isToday
+                    ? "bg-[#E3264F]/[0.06] ring-1 ring-inset ring-[#E3264F]/25"
+                    : isWeekend
+                      ? "bg-canvas/60 hover:bg-sunken/70"
+                      : "hover:bg-sunken/70",
                 )}
               >
                 {list.length > 0 && (
@@ -195,12 +206,12 @@ export default async function CalendarPage({
                 )}
                 <p
                   className={cn(
-                    "mx-auto grid size-7 place-items-center rounded-full text-[13px] tabular-nums md:mx-0 md:size-6 md:font-mono md:text-[12px]",
+                    "mx-auto grid size-7 place-items-center rounded-full text-[13px] tabular-nums md:mx-0 md:size-7",
                     isToday
-                      ? "bg-night font-medium text-white"
+                      ? "bg-[#E3264F] font-semibold text-white"
                       : list.length
-                        ? "font-medium text-ink"
-                        : "text-ink-subtle",
+                        ? "font-semibold text-ink"
+                        : "font-medium text-ink-2",
                   )}
                 >
                   {Number(day.slice(8))}
