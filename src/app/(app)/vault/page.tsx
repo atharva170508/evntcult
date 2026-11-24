@@ -81,8 +81,8 @@ export default async function VaultPage() {
               {totalPhotos} photo{totalPhotos === 1 ? "" : "s"} of you
             </span>
             {viewer.hasFaceId && (
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-volt/40 bg-volt/10 px-3 py-0.5 text-[12px] font-bold text-ink">
-                <CheckCircle2 className="size-3 text-volt" aria-hidden /> Auto-Vault Active
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-live-soft px-3 py-0.5 text-[12px] font-semibold text-live">
+                <CheckCircle2 className="size-3" aria-hidden /> Auto-Vault Active
               </span>
             )}
           </div>
@@ -91,12 +91,10 @@ export default async function VaultPage() {
 
       {/* Auto-Vault Activation Callout if not enrolled */}
       {!viewer.hasFaceId && (
-        <div className="rounded-2xl border border-volt/40 bg-volt/[0.04] p-1">
-          <FaceIdEnrollCard
-            title="Activate Automatic Photo Vault"
-            subtitle="Take a 1-time selfie so photos from every event you attend automatically land in your Vault without searching!"
-          />
-        </div>
+        <FaceIdEnrollCard
+          title="Activate Automatic Photo Vault"
+          subtitle="Take a 1-time selfie so photos from every event you attend automatically land in your Vault without searching."
+        />
       )}
 
       {byEvent.size === 0 ? (

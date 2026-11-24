@@ -102,10 +102,37 @@ async function ensureSchema(db: D1Database): Promise<void> {
       `CREATE TABLE IF NOT EXISTS event_posters (
          event_id TEXT PRIMARY KEY REFERENCES events(id), mime TEXT NOT NULL, data BLOB NOT NULL, updated_at TEXT NOT NULL)`,
     ),
+    // 0035: discovery page subscriptions & city submissions.
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS topic_subscriptions (
+         user_id TEXT NOT NULL REFERENCES users(id), topic_kind TEXT NOT NULL, topic_slug TEXT NOT NULL, created_at TEXT NOT NULL,
+         PRIMARY KEY (user_id, topic_kind, topic_slug))`,
+    ),
+    db.prepare("CREATE INDEX IF NOT EXISTS idx_topic_subs_lookup ON topic_subscriptions(topic_kind, topic_slug)"),
+    db.prepare(
+      `CREATE TABLE IF NOT EXISTS city_submissions (
+         id TEXT PRIMARY KEY, city_slug TEXT NOT NULL, user_id TEXT REFERENCES users(id),
+         title TEXT NOT NULL, event_url TEXT, note TEXT, status TEXT NOT NULL DEFAULT 'pending', created_at TEXT NOT NULL)`,
+    ),
   ]);
 
   // 0024: category setup JSON on events.
   const evCols = await db.prepare("PRAGMA table_info(events)").all<{ name: string }>();
+  // 0036: Google Drive album folder linked for Photo Vault scanning.
+  if (!(evCols.results ?? []).some((c) => c.name === "drive_folder_id")) {
+    await db.batch([
+      db.prepare("ALTER TABLE events ADD COLUMN drive_folder_id TEXT"),
+      db.prepare("ALTER TABLE events ADD COLUMN drive_linked_at TEXT"),
+    ]);
+    try {
+      await db
+        .prepare("INSERT INTO d1_migrations (name) SELECT ? WHERE NOT EXISTS (SELECT 1 FROM d1_migrations WHERE name = ?)")
+        .bind("0036_event_drive_folder.sql", "0036_event_drive_folder.sql")
+        .run();
+    } catch {
+      // no d1_migrations table locally
+    }
+  }
   // 0033: confirmation message.
   if (!(evCols.results ?? []).some((c) => c.name === "confirm_message")) {
     await db.prepare("ALTER TABLE events ADD COLUMN confirm_message TEXT").run();

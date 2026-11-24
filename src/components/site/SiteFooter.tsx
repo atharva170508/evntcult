@@ -1,87 +1,103 @@
 import Link from "next/link";
 import { ThemeSwitch } from "./ThemeSwitch";
+import { FooterFootnote, FooterWordmark } from "./FooterWordmark";
 import type { NavViewer } from "./SiteHeader";
+import { CATEGORY_HUBS, CITIES } from "@/lib/discovery";
 
-/** Light grey footer: three columns of destinations and a quiet bottom line. */
+/** Monumental editorial footer: crisp directory columns, theme switcher, and full-bleed wordmark. */
 export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
-  const all: { title: string; links: { href: string; label: string }[] }[] = [
+  const columns: { title: string; links: { href: string; label: string }[] }[] = [
     {
       title: "Explore",
       links: [
         { href: "/events", label: "All events" },
         { href: "/events?when=today", label: "Happening today" },
         { href: "/events?when=weekend", label: "This weekend" },
-        { href: "/events?price=free", label: "Free events" },
         { href: "/calendar", label: "Events calendar" },
-        { href: "/venues", label: "Venues and directions" },
+        { href: "/venues", label: "Venues & directions" },
       ],
     },
     {
-      title: "Hosting",
-      links: viewer?.isOrganizer
-        ? [
-            { href: "/organizer", label: "Your events" },
-            { href: "/organizer/events/new", label: "Create an event" },
-            { href: "/organizer/calendar", label: "Host calendar" },
-          ]
-        : viewer
-          ? [
-              { href: "/host", label: "Apply to host events" },
-              { href: "/dashboard#hosts", label: "How hosting works" },
-            ]
-          : [],
+      title: "Hubs",
+      links: CITIES.map((c) => ({ href: `/city/${c.slug}`, label: c.name })),
+    },
+    {
+      title: "Categories",
+      links: CATEGORY_HUBS.slice(0, 5).map((c) => ({ href: `/category/${c.slug}`, label: c.name })),
     },
     {
       title: "EvntCult",
       links: [
-        { href: "/passes", label: "Your passes" },
-        { href: "/vault", label: "Photos" },
+        { href: "/passes", label: "My passes" },
+        { href: "/vault", label: "Photo Vault" },
         { href: "/certificates", label: "Certificates" },
-        { href: "/get-app", label: "Get the app" },
-        { href: "/terms", label: "Terms & Conditions" },
-        ...(viewer ? [{ href: "/profile", label: "Account" }] : [{ href: "/signin?mode=signup", label: "Create an account" }]),
+        { href: "/get-app", label: "Install app" },
+        ...(viewer?.isOrganizer
+          ? [{ href: "/organizer", label: "Organizer studio" }]
+          : [{ href: "/host", label: "Host an event" }]),
+        ...(viewer
+          ? [{ href: "/profile", label: "Account" }]
+          : [{ href: "/signin?mode=signup", label: "Sign up free" }]),
       ],
     },
   ];
 
-  // Hosting is for approved organizers, so visitors don't get a Hosting column at all.
-  const columns = all.filter((c) => c.links.length > 0);
-
   return (
-    <footer className="border-t border-line bg-sunken print:hidden">
-      <div className="mx-auto max-w-[1360px] px-gutter pb-28 pt-6 md:pb-8 md:pt-12">
-        <nav aria-label="Footer" className="hidden gap-y-8 md:grid md:grid-cols-3 md:gap-x-12">
-          {columns.map((c, i) => (
-            <div key={c.title} className={i > 0 ? "border-t border-line-strong pt-8 md:border-0 md:pt-0" : undefined}>
-              <h2 className="text-[14px] font-semibold text-ink">{c.title}</h2>
-              <ul className="mt-2">
-                {c.links.map((l) => (
-                  <li key={l.href}>
-                    <Link href={l.href} className="inline-flex min-h-11 items-center text-[14px] text-ink-2 hover:underline hover:underline-offset-2">
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+    <footer className="overflow-hidden border-t border-line-strong bg-sunken print:hidden">
+      <div className="mx-auto max-w-[1360px] px-gutter pb-28 pt-12 md:pb-10 md:pt-16">
+        <div className="grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
+          {/* Left editorial statement + theme switch */}
+          <div className="flex flex-col justify-between gap-6">
+            <div>
+              <p className="font-display text-[32px] leading-[1.02] tracking-[-0.025em] text-ink">
+                Every event on campus, <em>one pass.</em>
+              </p>
+              <p className="mt-3 max-w-[34ch] text-[14.5px] leading-relaxed text-ink-muted">
+                Built by Synchronous Labs for college clubs, fests, hackathons, and student communities.
+              </p>
             </div>
-          ))}
-        </nav>
-        <div className="flex flex-col gap-4 text-[14px] text-ink-2 sm:flex-row sm:items-start sm:justify-between md:mt-12 md:border-t md:border-line-strong md:pt-6">
+            <ThemeSwitch className="w-full max-w-[270px]" />
+          </div>
+
+          {/* Right directory columns */}
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4">
+            {columns.map((c) => (
+              <div key={c.title}>
+                <h2 className="text-[13px] font-semibold text-ink">{c.title}</h2>
+                <ul className="mt-3 space-y-1">
+                  {c.links.map((l) => (
+                    <li key={l.href}>
+                      <Link
+                        href={l.href}
+                        className="inline-flex min-h-9 items-center text-[14px] text-ink-2 transition-colors hover:text-ink hover:underline hover:underline-offset-4"
+                      >
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
+        </div>
+
+        {/* Bottom legal & contact bar */}
+        <div className="mt-12 flex flex-col gap-3 border-t border-line-strong pt-6 text-[13.5px] text-ink-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} EvntCult.{" "}
-            <a href="mailto:evntcult@gmail.com" className="hover:underline hover:underline-offset-2">
+            © {new Date().getFullYear()} EvntCult ·{" "}
+            <a href="mailto:evntcult@gmail.com" className="text-ink-2 hover:text-ink hover:underline">
               evntcult@gmail.com
             </a>
-            <Link href="/terms" className="ml-3 underline-offset-2 hover:underline md:hidden">
+            {" · "}
+            <Link href="/terms" className="text-ink-2 hover:text-ink hover:underline">
               Terms
             </Link>
           </p>
-          <ThemeSwitch className="w-full max-w-[280px] sm:w-[280px]" />
-          <p className="sm:text-right">
-            <span className="block font-semibold text-ink">Made by Synchronous Labs</span>
-            <span className="block text-ink-muted">Many minds. One momentum.</span>
-          </p>
+          <FooterFootnote />
         </div>
+
+        {/* Monumental architectural wordmark (click letters to play a pentatonic note) */}
+        <FooterWordmark />
       </div>
     </footer>
   );

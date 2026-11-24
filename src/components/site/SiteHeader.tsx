@@ -25,6 +25,7 @@ import { NotificationBell } from "@/components/shell/NotificationBell";
 import { ATTEND_NAV, VISITOR_HREF, isActive, isMainActive, workspaceFor, type Workspace } from "@/components/shell/nav";
 import { BrandLogo } from "./Brand";
 import { BottomSheet } from "@/components/ui/BottomSheet";
+import { toast } from "@/components/ui/Toaster";
 import { CompactSearch, HeaderSearch } from "./HeaderSearch";
 import {
   CalendarIcon,
@@ -94,7 +95,27 @@ export function SiteHeader({
   const [scrolled, setScrolled] = useState(false);
   const [hoverTab, setHoverTab] = useState<string | null>(null);
   const [sheet, setSheet] = useState(false);
+  const [logoWobble, setLogoWobble] = useState(0);
+  const logoTaps = useRef<number[]>([]);
+  const logoUnlockCount = useRef(0);
   const ref = useRef<HTMLElement>(null);
+
+  const onLogoClick = () => {
+    const now = Date.now();
+    logoTaps.current = [...logoTaps.current.filter((t) => now - t < 2200), now];
+    if (logoTaps.current.length >= 5) {
+      logoTaps.current = [];
+      const quips = [
+        "Secret backstage door found. Act casual.",
+        "Still no free merch, sorry.",
+        "Okay fine, you're officially on the guest list.",
+      ];
+      const msg = quips[logoUnlockCount.current % quips.length];
+      logoUnlockCount.current += 1;
+      setLogoWobble((w) => w + 1);
+      toast(msg, { tone: "info" });
+    }
+  };
 
   useEffect(() => {
     const el = ref.current;
@@ -120,18 +141,14 @@ export function SiteHeader({
   useEffect(() => setSheet(false), [pathname]);
 
   const tabs = ws === "host" ? HOST_TABS : ws === "admin" ? [] : ATTEND_TABS;
-  const compact = hasSearch && scrolled;
 
   return (
     <>
       <header
         ref={ref}
         className={cn(
-          // Search pages: fixed over a spacer of the expanded height, so folding the search on
-          // scroll never moves the page (CLS 0). Elsewhere: sticky in the flow.
-          hasSearch ? "fixed inset-x-0 top-0" : "sticky top-0",
-          "z-40 border-b border-line/80 bg-canvas/80 backdrop-blur-xl backdrop-saturate-150 transition-shadow duration-base ease-out supports-[not(backdrop-filter:blur(1px))]:bg-canvas print:hidden",
-          scrolled && "shadow-[0_8px_24px_-12px_rgba(60,40,10,0.18)]",
+          "sticky top-0 z-40 border-b border-line/70 bg-canvas/80 backdrop-blur-xl backdrop-saturate-150 transition-[box-shadow,background-color] duration-base ease-out supports-[not(backdrop-filter:blur(1px))]:bg-canvas print:hidden",
+          scrolled && "bg-canvas/90 shadow-[0_12px_32px_-16px_rgba(10,10,20,0.45)]",
         )}
       >
         <div
@@ -140,7 +157,7 @@ export function SiteHeader({
             wide ? "max-w-[1440px]" : "max-w-[1360px]",
           )}
         >
-          <div className="grid h-14 grid-cols-[auto_1fr_auto] items-center gap-4 md:h-20 md:grid-cols-[1fr_auto_1fr]">
+          <div className="grid h-16 grid-cols-[auto_1fr_auto] items-center gap-4 md:h-[72px] md:grid-cols-[1fr_auto_1fr]">
             <div className="flex items-center gap-3">
               <Link
                 href={
@@ -150,25 +167,33 @@ export function SiteHeader({
                       ? "/admin"
                       : "/dashboard"
                 }
+                onClick={onLogoClick}
                 aria-label="EvntCult home"
                 className="rounded-lg py-1"
               >
-                <BrandLogo className="text-[20px] md:text-[24px]" />
+                <m.span
+                  key={logoWobble}
+                  animate={logoWobble > 0 ? { rotate: [0, -10, 10, -6, 4, 0] } : undefined}
+                  transition={{ duration: 0.45 }}
+                  className="inline-flex"
+                >
+                  <BrandLogo className="text-[20px] md:text-[22px]" />
+                </m.span>
               </Link>
               {ws !== "attend" && (
-                <span className="hidden rounded-lg bg-sunken px-2.5 py-1 text-[12px] font-semibold text-ink-2 sm:inline">
+                <span className="hidden rounded-md border border-line-strong bg-sunken px-2 py-0.5 text-[11.5px] font-semibold text-ink-2 sm:inline">
                   {ws === "host" ? "Hosting" : "Admin"}
                 </span>
               )}
             </div>
 
             <div className="hidden justify-center md:flex">
-              {compact ? (
-                <div className="motion-safe:animate-scale-in">
-                  <CompactSearch onOpen={onSearch} />
-                </div>
-              ) : (
-                <nav aria-label="Main" className="flex items-center gap-2" onPointerLeave={() => setHoverTab(null)}>
+              {tabs.length > 0 && (
+                <nav
+                  aria-label="Main"
+                  className="flex items-center gap-0.5 rounded-full border border-line-strong/80 bg-sunken/80 p-1 shadow-[inset_0_1px_2px_rgba(60,40,10,0.05)]"
+                  onPointerLeave={() => setHoverTab(null)}
+                >
                   {tabs.map((t) => {
                     const active = ws === "attend" ? isMainActive(pathname, t.href) : isActive(pathname, t);
                     return (
@@ -178,29 +203,29 @@ export function SiteHeader({
                         aria-current={active ? "page" : undefined}
                         onPointerEnter={() => setHoverTab(t.href)}
                         className={cn(
-                          "group relative flex h-14 items-center gap-2 whitespace-nowrap px-3 text-[15px] transition-colors duration-fast xl:px-3",
+                          "relative flex h-9 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-[14px] transition-colors duration-fast",
                           active
                             ? "font-semibold text-ink"
                             : "font-medium text-ink-muted hover:text-ink",
                         )}
                       >
-                        {hoverTab === t.href && (
+                        {active && (
+                          <m.span
+                            layoutId="nav-active-pill"
+                            aria-hidden
+                            className="absolute inset-0 -z-10 rounded-full bg-surface shadow-[0_1px_3px_rgba(60,40,10,0.12),0_0_0_1px_rgba(26,26,26,0.06)]"
+                            transition={{ type: "spring", stiffness: 460, damping: 36 }}
+                          />
+                        )}
+                        {!active && hoverTab === t.href && (
                           <m.span
                             layoutId="nav-hover"
                             aria-hidden
-                            className="absolute inset-x-0 inset-y-2 -z-10 rounded-xl bg-sunken"
+                            className="absolute inset-0 -z-20 rounded-full bg-surface/50"
                             transition={{ type: "spring", stiffness: 520, damping: 40 }}
                           />
                         )}
                         {t.label}
-                        {active ? (
-                          <m.span
-                            layoutId="tab-underline"
-                            aria-hidden
-                            className="absolute inset-x-3 bottom-0 h-[2px] rounded-full bg-ink"
-                            transition={{ duration: 0.25, ease: EASE }}
-                          />
-                        ) : null}
                       </Link>
                     );
                   })}
@@ -208,18 +233,30 @@ export function SiteHeader({
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-1">
+            <div className="flex items-center justify-end gap-1.5">
+              {ws === "attend" && (
+                <button
+                  type="button"
+                  onClick={onSearch}
+                  aria-label="Search events"
+                  className="hidden h-9 items-center gap-2 rounded-full border border-line-strong/80 bg-surface/75 px-3 text-[13px] font-medium text-ink-muted transition-colors duration-fast hover:border-ink-subtle hover:text-ink xl:flex"
+                >
+                  <Search className="size-3.5 text-ink-muted" strokeWidth={2.2} aria-hidden />
+                  <span>Search</span>
+                  <kbd className="kbd ml-1 text-[10px]">/</kbd>
+                </button>
+              )}
               {ws === "host" ? (
                 <>
                   <Link
                     href="/dashboard"
-                    className="hidden h-10 shrink-0 items-center whitespace-nowrap rounded-xl px-3.5 text-[14px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
+                    className="hidden h-9 shrink-0 items-center whitespace-nowrap rounded-full px-3 text-[13.5px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
                   >
-                    Switch to attending
+                    Attending
                   </Link>
                   <Link
                     href="/organizer/events/new"
-                    className="mr-1 hidden h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-lavender px-4 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink transition-[background-color,transform] duration-fast hover:bg-lavender-hover active:scale-[0.97] md:flex"
+                    className="ui-press mr-0.5 hidden h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-lavender px-3.5 text-[13.5px] font-semibold text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover md:flex"
                   >
                     <Plus className="size-4" strokeWidth={2.6} aria-hidden />{" "}
                     Create event
@@ -228,21 +265,21 @@ export function SiteHeader({
               ) : ws === "attend" && viewer?.isOrganizer ? (
                 <Link
                   href="/organizer"
-                  className="hidden h-10 shrink-0 items-center whitespace-nowrap rounded-xl px-3.5 text-[14px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
+                  className="hidden h-9 shrink-0 items-center whitespace-nowrap rounded-full px-3 text-[13.5px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
                 >
-                  Switch to hosting
+                  Hosting
                 </Link>
               ) : !viewer ? (
                 <>
                   <Link
                     href="/signin"
-                    className="hidden h-10 items-center whitespace-nowrap rounded-lg px-3 text-[14px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
+                    className="hidden h-9 items-center whitespace-nowrap rounded-full px-3 text-[13.5px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
                   >
                     Log in
                   </Link>
                   <Link
                     href="/signin?mode=signup"
-                    className="mr-1 hidden h-10 items-center whitespace-nowrap rounded-xl bg-lavender px-4 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors duration-fast hover:bg-lavender-hover md:flex"
+                    className="ui-press mr-0.5 hidden h-9 items-center whitespace-nowrap rounded-xl bg-lavender px-4 text-[13.5px] font-semibold text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover md:flex"
                   >
                     Sign up
                   </Link>
@@ -252,9 +289,9 @@ export function SiteHeader({
               <button
                 onClick={onSearch}
                 aria-label="Search events"
-                className="grid size-10 place-items-center rounded-full text-ink transition-colors duration-fast active:bg-sunken md:hidden"
+                className="grid size-10 place-items-center rounded-full text-ink transition-colors duration-fast active:bg-sunken xl:hidden"
               >
-                <Search className="size-[20px]" strokeWidth={2.1} aria-hidden />
+                <Search className="size-[19px]" strokeWidth={2.1} aria-hidden />
               </button>
               {viewer && (
                 <span className="hidden md:block">
@@ -273,28 +310,15 @@ export function SiteHeader({
               ) : (
                 <Link
                   href="/signin"
-                  className="ml-1 flex h-9 items-center whitespace-nowrap rounded-xl bg-lavender px-3.5 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink md:hidden"
+                  className="ml-1 flex h-9 items-center whitespace-nowrap rounded-[10px] bg-lavender px-3.5 text-[13.5px] font-bold text-ink ring-2 ring-inset ring-ink md:hidden"
                 >
                   Log in
                 </Link>
               )}
             </div>
           </div>
-
-          {hasSearch && !compact && (
-            <div className="hidden justify-center pb-6 pt-1 md:flex">
-              <Suspense
-                fallback={
-                  <div className="h-[66px] w-full max-w-[850px] rounded-full border border-line-strong shadow-search" />
-                }
-              >
-                <HeaderSearch className="max-w-[850px]" />
-              </Suspense>
-            </div>
-          )}
         </div>
       </header>
-      {hasSearch && <div aria-hidden className="h-[57px] md:h-[175px] print:hidden" />}
       {sheet && viewer && (
         <MenuSheet
           viewer={viewer}
@@ -365,22 +389,14 @@ function AccountMenu({
         aria-haspopup="menu"
         aria-label="Account menu"
         className={cn(
-          "flex h-[42px] cursor-pointer items-center gap-3 rounded-xl border border-line-strong bg-white pl-3.5 pr-1.5 transition-shadow duration-fast hover:shadow-raised",
-          open && "shadow-raised",
+          "grid size-9 cursor-pointer place-items-center rounded-full border border-line-strong/80 bg-surface text-ink transition-[border-color,box-shadow,transform] duration-fast hover:border-ink-subtle hover:shadow-raised active:scale-95",
+          open && "border-ink shadow-raised",
         )}
       >
-        <Menu className="size-4 text-ink" strokeWidth={2.4} aria-hidden />
         {viewer ? (
-          <Avatar name={viewer.name} className="size-[30px] text-[11.5px]" />
+          <Avatar name={viewer.name} className="size-7 text-[11px]" />
         ) : (
-          <span className="grid size-[30px] place-items-center rounded-full bg-[#717171] text-white">
-            <UserRound
-              className="size-[18px]"
-              fill="currentColor"
-              strokeWidth={0}
-              aria-hidden
-            />
-          </span>
+          <Menu className="size-4 text-ink" strokeWidth={2.2} aria-hidden />
         )}
       </button>
       {open && (

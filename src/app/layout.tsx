@@ -5,6 +5,7 @@ import { SITE_URL } from "@/lib/site";
 import { THEME_SCRIPT } from "@/components/site/ThemeSwitch";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { Toaster } from "@/components/ui/Toaster";
+import { PlayfulExtras } from "@/components/site/PlayfulExtras";
 
 /* Figtree for the interface, EB Garamond for big headlines, JetBrains Mono for pass codes.
    Self-hosted (SIL OFL). */
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MotionProvider>
           {children}
           <Toaster />
+          <PlayfulExtras />
         </MotionProvider>
       </body>
     </html>

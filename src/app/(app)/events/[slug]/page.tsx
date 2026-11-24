@@ -342,12 +342,32 @@ export default async function EventPage({
 
   return (
     <div className="relative isolate pb-28 pt-6 md:pb-12 md:pt-10">
-      {/* Luma-style: the page picks up the event's colour (from the flyer when there is one) and breathes slowly. */}
+      {/* Cover-tinted ambient wash (Luma teardown #5): picks up the event's accent color gently at the top. */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[440px] opacity-[0.14] dark:opacity-[0.2]"
+        style={{
+          background: `radial-gradient(820px 380px at 30% 0%, ${accentHex(s.accent)}, transparent 75%)`,
+        }}
+      />
       {look.style === "ruled" && (
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(rgb(var(--c-line))_1px,transparent_1px)] [background-size:100%_32px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
       )}
       {look.style === "dots" && (
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(rgb(var(--c-line-strong))_1px,transparent_1.2px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
+      )}
+      {look.style === "grid" && (
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-[linear-gradient(to_right,rgb(var(--c-line))_1px,transparent_1px),linear-gradient(to_bottom,rgb(var(--c-line))_1px,transparent_1px)] [background-size:28px_28px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
+      )}
+      {look.style === "diagonal" && (
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 opacity-50 bg-[repeating-linear-gradient(-45deg,transparent,transparent_14px,rgb(var(--c-line))_14px,rgb(var(--c-line))_15px)] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
+      )}
+      {look.style === "spotlight" && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[560px] opacity-[0.22] dark:opacity-[0.28]"
+          style={{ background: `radial-gradient(640px 420px at 50% 0%, ${accentHex(s.accent)}, transparent 72%)` }}
+        />
       )}
       <EventEffect effect={e.effect ?? null} />
       {e.status !== "draft" && <ViewBeacon slug={e.slug} />}
@@ -366,6 +386,17 @@ export default async function EventPage({
         >
           <Entrance delay={0.04}>
             {cover("shadow-[0_24px_48px_-28px_rgba(60,40,10,0.45)]")}
+            {e.category && (
+              <Link
+                href={`/category/${e.category.toLowerCase()}`}
+                className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-line-strong bg-surface px-4 py-2.5 text-[13px] transition-colors duration-fast hover:bg-sunken"
+              >
+                <span className="text-ink-muted">
+                  Featured in <strong className="font-semibold text-ink">{kind}</strong>
+                </span>
+                <ChevronRight className="size-4 text-ink-subtle" aria-hidden />
+              </Link>
+            )}
           </Entrance>
           {side("mt-6")}
         </aside>

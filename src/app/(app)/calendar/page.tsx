@@ -17,6 +17,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Chip } from "@/components/ui/Chip";
 import { buttonClass } from "@/components/ui/Button";
 import { SubscribeCalendar } from "@/components/calendar/SubscribeCalendar";
+import { FirstVisitCard } from "@/components/ui/FirstVisitCard";
 import { calendarFeedToken } from "@/lib/session";
 import { siteHost } from "@/lib/organizer/page-data";
 
@@ -77,6 +78,16 @@ export default async function CalendarPage({
 
   return (
     <div className="space-y-10 pb-8">
+      <FirstVisitCard
+        storageKey="ec_welcome_calendar_v1"
+        eyebrow="Welcome to your calendar"
+        title="Every campus event, synced in one place."
+        steps={[
+          { num: "01", label: "See what's on", detail: "Browse every upcoming event across campus, colour-coded by your status." },
+          { num: "02", label: "Filter to yours", detail: "Toggle My events to focus only on passes you hold and events you host." },
+          { num: "03", label: "Subscribe via iCal", detail: "Connect Apple or Google Calendar once and new registrations appear automatically." },
+        ]}
+      />
       <PageHero
         title={monthName}
         sub={

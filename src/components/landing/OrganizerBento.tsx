@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { Check, RotateCcw, WifiOff, Wifi, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { TransitionPanel } from "@/components/motion/TransitionPanel";
 
 /**
  * How an event runs on EvntCult, as a run of show: four moments in time order, each a small
@@ -522,6 +523,8 @@ const TILES = [
 ];
 const MINE = new Set([1, 4, 7, 10]);
 
+const MINE_SCORE: Record<number, string> = { 1: "99%", 4: "98%", 7: "97%", 10: "99%" };
+
 function VaultDemo() {
   const [state, setState] = useState<"idle" | "scan" | "done">("idle");
   const go = () => {
@@ -550,6 +553,11 @@ function VaultDemo() {
           >
             <span className="absolute left-1/2 top-[30%] size-[34%] -translate-x-1/2 rounded-full bg-white/30" />
             <span className="absolute bottom-0 left-1/2 h-[28%] w-[62%] -translate-x-1/2 rounded-t-full bg-white/25" />
+            {state === "done" && MINE_SCORE[i] && (
+              <span className="absolute right-1 top-1 rounded bg-night/85 px-1 py-0.5 font-mono text-[9px] font-semibold text-cream">
+                {MINE_SCORE[i]}
+              </span>
+            )}
           </span>
         ))}
         {state === "scan" && (
@@ -626,59 +634,67 @@ const KINDS = [
 
 function KindsDemo() {
   const [i, setI] = useState(0);
-  const k = KINDS[i];
   return (
-    <div className="grid items-center gap-5 md:grid-cols-[auto_1fr_auto]">
-      <div
-        className="flex flex-wrap gap-1.5"
-        role="radiogroup"
-        aria-label="Kind of event"
-      >
-        {KINDS.map((x, j) => (
-          <button
-            key={x.k}
-            type="button"
-            role="radio"
-            aria-checked={i === j}
-            onClick={() => setI(j)}
-            className={cn(
-              "rounded-lg px-4 py-2 text-[13.5px] font-semibold ring-1 ring-inset transition-colors duration-200",
-              i === j
-                ? "bg-cream text-[#1a1a1a] ring-cream"
-                : "text-cream/70 ring-white/15 hover:text-cream",
-            )}
-          >
-            {x.k}
-          </button>
-        ))}
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div
+          className="inline-flex flex-wrap gap-1 rounded-xl bg-black/30 p-1 ring-1 ring-inset ring-white/10"
+          role="radiogroup"
+          aria-label="Kind of event"
+        >
+          {KINDS.map((x, j) => (
+            <button
+              key={x.k}
+              type="button"
+              role="radio"
+              aria-checked={i === j}
+              onClick={() => setI(j)}
+              className={cn(
+                "relative rounded-lg px-3.5 py-1.5 text-[13.5px] font-semibold transition-colors duration-200",
+                i === j ? "text-[#0E0E12]" : "text-cream/70 hover:text-cream",
+              )}
+            >
+              {i === j && (
+                <m.span
+                  layoutId="kind-demo-pill"
+                  aria-hidden
+                  className="absolute inset-0 rounded-lg bg-cream"
+                  transition={{ type: "spring", stiffness: 460, damping: 34 }}
+                />
+              )}
+              <span className="relative z-10">{x.k}</span>
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-1.5" aria-label="On the pass">
+          {KINDS[i].pass.map((p) => (
+            <span
+              key={p}
+              className="rounded-lg bg-lavender px-2.5 py-1 text-[12px] font-bold text-[#0E0E12]"
+            >
+              {p}
+            </span>
+          ))}
+        </div>
       </div>
-      <dl
-        key={k.k}
-        className="grid grid-cols-3 gap-px overflow-hidden rounded-[14px] bg-white/10 motion-safe:animate-[ui-menu-in_220ms_var(--ease-enter)]"
-      >
-        {k.fields.map(([l, v]) => (
-          <div key={l} className="bg-night px-4 py-3">
-            <dt className="text-[11.5px] text-cream/65">{l}</dt>
-            <dd className="mt-0.5 truncate text-[14px] font-semibold text-cream">
-              {v}
-            </dd>
-          </div>
-        ))}
-      </dl>
-      <div
-        key={`p${k.k}`}
-        className="flex gap-1.5 motion-safe:animate-[ui-menu-in_220ms_var(--ease-enter)]"
-        aria-label="On the pass"
-      >
-        {k.pass.map((p) => (
-          <span
-            key={p}
-            className="rounded-lg bg-lavender px-2.5 py-1 text-[12.5px] font-semibold text-ink"
+
+      <TransitionPanel activeIndex={i}>
+        {KINDS.map((item) => (
+          <dl
+            key={item.k}
+            className="grid grid-cols-1 gap-px overflow-hidden rounded-[14px] bg-white/10 ring-1 ring-inset ring-white/10 sm:grid-cols-3"
           >
-            {p}
-          </span>
+            {item.fields.map(([l, v]) => (
+              <div key={l} className="bg-night px-4 py-3.5">
+                <dt className="text-[11.5px] font-medium text-cream/55">{l}</dt>
+                <dd className="mt-1 truncate text-[14.5px] font-semibold text-cream">
+                  {v}
+                </dd>
+              </div>
+            ))}
+          </dl>
         ))}
-      </div>
+      </TransitionPanel>
     </div>
   );
 }

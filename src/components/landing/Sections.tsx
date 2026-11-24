@@ -14,6 +14,8 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import { Reveal } from "@/components/motion/Reveal";
 import { Entrance, MaskedLines } from "@/components/motion/MaskedLines";
 import { Spotlight } from "@/components/motion/Spotlight";
+import { Focus } from "@/components/motion/Focus";
+import { Tilt } from "@/components/motion/Tilt";
 import { formatINR } from "@/lib/money";
 import { fmtDate, fmtTime } from "@/lib/utils";
 import { CountUp, Countdown } from "./Live";
@@ -39,45 +41,64 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-h"
-      className="grid grid-cols-1 items-center gap-14 pb-16 pt-12 md:pt-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-10 lg:pb-24"
+      className="pb-14 pt-8 md:pt-14 lg:pb-20"
     >
-      <div>
-        <h1
-          id="hero-h"
-          className="font-display text-[clamp(52px,7.4vw,104px)] leading-[0.9] tracking-[-0.04em] text-ink"
-        >
-          <MaskedLines
-            lines={["Every event,", "one pass."]}
-          />
-        </h1>
-        <Entrance delay={0.3}>
-          <p className="mt-7 max-w-[38ch] text-[18px] leading-snug text-ink-2 md:text-[20px]">
-            Concerts, meetups, workshops, parties and hackathons, all on one
-            calendar. Register in a tap and walk in with your phone.
-          </p>
-        </Entrance>
-        <Entrance delay={0.36} className="relative z-10">
-          <HeroSearch />
-        </Entrance>
-        <Entrance
-          delay={0.42}
-          className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3"
-        >
-          <Magnetic>
-            <Link href="/signin?mode=signup" className={cta}>
-              Sign up free
-            </Link>
-          </Magnetic>
-          <Link
-            href="/host"
-            className="text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors duration-fast hover:decoration-ink"
+      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-12">
+        <div>
+          <h1
+            id="hero-h"
+            className="font-display text-[clamp(58px,8.4vw,122px)] leading-[0.88] tracking-[-0.04em] text-ink"
           >
-            Host an event
-          </Link>
+            <MaskedLines
+              lines={["Every event,", <em key="em">one pass.</em>]}
+            />
+          </h1>
+          <Entrance delay={0.3}>
+            <p className="mt-7 max-w-[38ch] text-[18px] leading-snug text-ink-2 md:text-[20px]">
+              Concerts, meetups, workshops, parties and hackathons, all on one
+              calendar. Register in a tap and walk in with your phone.
+            </p>
+          </Entrance>
+          <Entrance delay={0.36} className="relative z-10">
+            <HeroSearch />
+          </Entrance>
+          <Entrance
+            delay={0.42}
+            className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3"
+          >
+            <Magnetic>
+              <Link href="/signin?mode=signup" className={cta}>
+                Sign up free
+              </Link>
+            </Magnetic>
+            <Link
+              href="/host"
+              className="text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors duration-fast hover:decoration-ink"
+            >
+              Host an event
+            </Link>
+          </Entrance>
+        </div>
+        <Entrance delay={0.2}>
+          <HeroShowcase qr={qr} />
         </Entrance>
       </div>
-      <Entrance delay={0.2}>
-        <HeroShowcase qr={qr} />
+
+      {/* Editorial architectural truth strip — real product mechanics, zero invented stats */}
+      <Entrance delay={0.5}>
+        <dl className="mt-14 grid grid-cols-2 divide-y divide-line border-t border-line pt-6 sm:grid-cols-4 sm:divide-x sm:divide-y-0">
+          {[
+            ["0% platform fee", "Direct UPI straight to clubs"],
+            ["Offline QR gates", "Scans in under a second without Wi-Fi"],
+            ["On-device Face ID", "Event photos land in your Vault"],
+            ["Verified certificates", "Tamper-proof codes on every issue"],
+          ].map(([head, sub]) => (
+            <div key={head} className="py-3 sm:px-5 sm:py-0 sm:first:pl-0 sm:last:pr-0">
+              <dt className="text-[14px] font-semibold text-ink">{head}</dt>
+              <dd className="mt-0.5 text-[13px] text-ink-muted">{sub}</dd>
+            </div>
+          ))}
+        </dl>
       </Entrance>
     </section>
   );
@@ -254,21 +275,20 @@ export function HowItWorks() {
       <figure>
         <ol className="divide-y divide-line-strong border-y border-line-strong">
           {steps.map((s, i) => (
-            <li
-              key={s.t}
-              className="grid gap-5 py-7 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-8"
-            >
-              <span
-                className="font-display text-[44px] leading-none text-ink-subtle"
-                aria-hidden
-              >
-                {i + 1}
-              </span>
-              <div>
-                <h3 className="text-[20px] font-semibold text-ink">{s.t}</h3>
-                {s.b && <p className="mt-1 max-w-[36ch] text-[15.5px] text-ink-2">{s.b}</p>}
-              </div>
-              <div data-sample="true">{s.art}</div>
+            <li key={s.t}>
+              <Focus className="grid gap-5 py-7 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-8">
+                <span
+                  className="font-display text-[44px] leading-none text-ink-subtle"
+                  aria-hidden
+                >
+                  {i + 1}
+                </span>
+                <div>
+                  <h3 className="text-[20px] font-semibold text-ink">{s.t}</h3>
+                  {s.b && <p className="mt-1 max-w-[36ch] text-[15.5px] text-ink-2">{s.b}</p>}
+                </div>
+                <div data-sample="true">{s.art}</div>
+              </Focus>
             </li>
           ))}
         </ol>
@@ -406,16 +426,20 @@ export function AppBand() {
             <li>Opens straight to your passes</li>
             <li>Works without internet at the gate</li>
           </ul>
-          <Link href="/get-app" className={`${cta} mt-8`}>
+          <Link
+            href="/get-app"
+            className="ui-press ui-sheen mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-[14px] bg-[#1A1A1A] px-6 text-[16px] font-semibold !text-[#FFFEF6] shadow-button hover:bg-black [&_svg]:!text-[#FFFEF6]"
+          >
             <Smartphone className="size-4" aria-hidden /> Install the app
           </Link>
         </div>
         <div className="flex justify-center self-end">
-          <div
-            data-sample="true"
-            aria-label="Example of the app showing a pass"
-            className="w-[250px] translate-y-6 rounded-t-[24px] border-[10px] border-b-0 border-ink bg-white px-4 pb-10 pt-6 shadow-[0_30px_60px_-20px_rgba(60,20,90,0.45)]"
-          >
+          <Tilt max={5}>
+            <div
+              data-sample="true"
+              aria-label="Example of the app showing a pass"
+              className="paper-keep w-[250px] translate-y-6 rounded-t-[24px] border-[10px] border-b-0 border-[#1A1A1A] bg-white px-4 pb-10 pt-6 shadow-[0_30px_60px_-20px_rgba(60,20,90,0.45)]"
+            >
             <div className="mx-auto h-1.5 w-16 rounded-full bg-ink/15" />
             <p className="mt-5 text-[12px] font-semibold text-ink-muted">
               Example
@@ -448,6 +472,7 @@ export function AppBand() {
               </div>
             </div>
           </div>
+          </Tilt>
         </div>
       </div>
     </Reveal>
@@ -460,11 +485,11 @@ export function Closing() {
   return (
     <Reveal
       as="section"
-      className="mb-4 mt-6 border-t border-line-strong pt-16 md:pt-20"
+      className="mb-4 mt-6 rounded-[24px] bg-surface p-8 shadow-card md:p-14"
     >
       <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
         <h2 className="max-w-[14ch] font-display text-[clamp(44px,6vw,84px)] leading-[0.95] tracking-[-0.03em] text-ink">
-          See you at the gate.
+          See you at <em>the gate.</em>
         </h2>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
           <Magnetic>

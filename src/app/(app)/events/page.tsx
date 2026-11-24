@@ -10,6 +10,8 @@ import { CATEGORY_NAMES } from "@/components/site/categories";
 import { cn } from "@/lib/utils";
 import { EventTimeline } from "@/components/events/EventTimeline";
 import { EventPeek } from "@/components/events/EventPeek";
+import { getDB } from "@/lib/db";
+import { CATEGORY_HUBS, CITIES, getCategoryEventCounts } from "@/lib/discovery";
 
 export const metadata: Metadata = { title: "Events" };
 export const dynamic = "force-dynamic";
@@ -21,7 +23,10 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
   // Blank fields from the search bar mean "any", not "invalid".
   const parsed = listQuerySchema.safeParse(Object.fromEntries(Object.entries(raw).filter(([, v]) => v)));
   const q = parsed.success ? parsed.data : {};
-  const { events, nextCursor } = await listEvents(q);
+  const [{ events, nextCursor }, catCounts] = await Promise.all([
+    listEvents(q),
+    getCategoryEventCounts(await getDB()),
+  ]);
   const view = raw.view === "list" ? "list" : "grid";
 
   /** URL that keeps the other filters and drops the cursor. */
@@ -134,6 +139,52 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
           </Link>
         </div>
       )}
+
+      {/* Luma-style Discovery Directory: Categories with live counts + City Hubs */}
+      <section aria-labelledby="discover-hubs-h" className="mt-16 grid gap-10 border-t border-line pt-12 lg:grid-cols-2">
+        <div>
+          <h2 id="discover-hubs-h" className="font-display text-[32px] leading-none text-ink">
+            Browse by category
+          </h2>
+          <ul className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+            {CATEGORY_HUBS.map((c) => {
+              const n = catCounts[c.code] ?? 0;
+              return (
+                <li key={c.slug}>
+                  <Link
+                    href={`/category/${c.slug}`}
+                    className="flex flex-col justify-between rounded-2xl border border-line-strong bg-surface p-4 shadow-card transition-[transform,box-shadow] duration-fast hover:-translate-y-0.5 hover:shadow-raised"
+                  >
+                    <span className="text-[14.5px] font-semibold text-ink">{c.name}</span>
+                    <span className="mt-1.5 font-mono text-[12px] tabular-nums text-ink-muted">
+                      {n} upcoming
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        <div>
+          <h2 className="font-display text-[32px] leading-none text-ink">
+            Explore hubs &amp; cities
+          </h2>
+          <ul className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+            {CITIES.map((city) => (
+              <li key={city.slug}>
+                <Link
+                  href={`/city/${city.slug}`}
+                  className="flex flex-col justify-between rounded-2xl border border-line-strong bg-surface p-4 shadow-card transition-[transform,box-shadow] duration-fast hover:-translate-y-0.5 hover:shadow-raised"
+                >
+                  <span className="text-[14.5px] font-semibold text-ink">{city.name}</span>
+                  <span className="mt-1.5 text-[12px] text-ink-muted">{city.region}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
     </div>
   );
 }

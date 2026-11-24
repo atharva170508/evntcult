@@ -68,5 +68,48 @@ export function ThemeSwitch({ className }: { className?: string }) {
   );
 }
 
+/** Compact 1-click Light <-> Dark toggle for the top header bar. */
+export function ThemeToggle({ className }: { className?: string }) {
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    const sync = () => setDark(document.documentElement.classList.contains("dark"));
+    sync();
+    const obs = new MutationObserver(sync);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => obs.disconnect();
+  }, []);
+
+  const flip = () => {
+    const next: Theme = dark ? "light" : "dark";
+    try {
+      localStorage.setItem(KEY, next);
+    } catch {
+      // private mode
+    }
+    applyTheme(next);
+    setDark(next === "dark");
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={flip}
+      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+      title={dark ? "Light mode" : "Dark mode"}
+      className={cn(
+        "ui-press grid size-9 shrink-0 place-items-center rounded-full border border-line-strong/80 bg-surface text-ink transition-[border-color,background-color,transform] duration-fast hover:border-ink-subtle hover:bg-sunken",
+        className,
+      )}
+    >
+      {dark ? (
+        <Sun className="size-4" strokeWidth={2} aria-hidden />
+      ) : (
+        <Moon className="size-4" strokeWidth={2} aria-hidden />
+      )}
+    </button>
+  );
+}
+
 /** Inline, before first paint: sets .dark so the page never flashes the wrong theme. */
 export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('${KEY}')||'light';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}})()`;

@@ -4,7 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import { Section, apiJson } from "./primitives";
 import { DatePicker, TimePicker } from "@/components/ui/DatePicker";
 import { Switch } from "@/components/ui/Switch";
-import { EFFECTS, EFFECT_KEYS, PAGE_STYLES, PAGE_STYLE_KEYS, TITLE_FONTS, TITLE_FONT_KEYS, parseLook } from "@/lib/effects";
+import {
+  EFFECTS,
+  EFFECT_KEYS,
+  EVENT_THEME_PRESETS,
+  PAGE_STYLES,
+  PAGE_STYLE_KEYS,
+  THEME_CATEGORIES,
+  TITLE_FONTS,
+  TITLE_FONT_KEYS,
+  parseLook,
+  type ThemeCategoryCode,
+} from "@/lib/effects";
 
 interface Rules {
   regClosesAt: string | null;
@@ -29,9 +40,16 @@ const fromLocal = (v: string) => (v ? new Date(`${v}:00+05:30`).toISOString() : 
  * Sign-up rules, saved on their own: when registration closes, whether each sign-up waits for
  * your approval, and the agenda shown on the event page.
  */
-export function SignupRules({ eventId }: { eventId: string }) {
+export function SignupRules({ eventId, category }: { eventId: string; category?: string | null }) {
   const [rules, setRules] = useState<Rules | null>(null);
   const [saved, setSaved] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const initialCat = (THEME_CATEGORIES.find((c) => c.code === (category ?? "").toUpperCase())?.code ?? "SPORTS") as ThemeCategoryCode;
+  const [themeCat, setThemeCat] = useState<ThemeCategoryCode>(initialCat);
+
+  useEffect(() => {
+    const matched = THEME_CATEGORIES.find((c) => c.code === (category ?? "").toUpperCase())?.code;
+    if (matched) setThemeCat(matched);
+  }, [category]);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -133,7 +151,58 @@ export function SignupRules({ eventId }: { eventId: string }) {
         </div>
       </div>
       <div className="o-row">
-        <span className="o-label">Page look</span>
+        <span className="o-label">Event themes</span>
+        <div>
+          <div className="o-chips" role="tablist" aria-label="Theme category" style={{ marginBottom: 10 }}>
+            {THEME_CATEGORIES.map((c) => (
+              <button
+                key={c.code}
+                type="button"
+                role="tab"
+                aria-selected={themeCat === c.code}
+                aria-pressed={themeCat === c.code}
+                className="o-chip"
+                onClick={() => setThemeCat(c.code)}
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 8 }}>
+            {EVENT_THEME_PRESETS.filter((p) => p.category === themeCat).map((p) => {
+              const cur = parseLook(rules.look);
+              const active = cur.style === p.style && cur.font === p.font && (rules.effect ?? "none") === p.effect;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => save({ ...rules, look: `${p.style}:${p.font}`, effect: p.effect }, 0)}
+                  style={{
+                    textAlign: "left",
+                    padding: "12px 13px",
+                    borderRadius: 12,
+                    border: active ? "2px solid var(--ink)" : "1px solid var(--hair-strong)",
+                    background: active ? "var(--sunken)" : "var(--panel)",
+                    cursor: "pointer",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6 }}>
+                    <span style={{ width: 10, height: 10, borderRadius: 999, background: p.swatch, display: "inline-block" }} />
+                    <span style={{ fontSize: 11, opacity: 0.7 }}>{EFFECTS[p.effect].glyphs[0] ?? PAGE_STYLES[p.style].label}</span>
+                  </div>
+                  <div className={TITLE_FONTS[p.font].cls} style={{ fontSize: 15, marginTop: 7, lineHeight: 1.1 }}>
+                    {p.name}
+                  </div>
+                  <div style={{ fontSize: 11.5, opacity: 0.65, marginTop: 3 }}>{p.vibe}</div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      <div className="o-row">
+        <span className="o-label">Fine-tune look</span>
         <div>
           <div className="o-chips" role="group" aria-label="Background">
             {PAGE_STYLE_KEYS.map((k) => (
@@ -141,6 +210,20 @@ export function SignupRules({ eventId }: { eventId: string }) {
                 {PAGE_STYLES[k].label}
               </button>
             ))}
+            <button
+              type="button"
+              className="o-chip"
+              title="Pick a random page style, title font, and effect"
+              onClick={() => {
+                const pick = <T,>(arr: readonly T[]) => arr[Math.floor(Math.random() * arr.length)];
+                const nextStyle = pick(PAGE_STYLE_KEYS);
+                const nextFont = pick(TITLE_FONT_KEYS);
+                const nextEffect = pick(EFFECT_KEYS);
+                save({ ...rules, look: `${nextStyle}:${nextFont}`, effect: nextEffect }, 0);
+              }}
+            >
+              Shuffle look
+            </button>
           </div>
           <div className="o-chips" role="group" aria-label="Title font" style={{ marginTop: 8 }}>
             {TITLE_FONT_KEYS.map((k) => (

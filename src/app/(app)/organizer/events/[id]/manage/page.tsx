@@ -38,6 +38,7 @@ import { kindFor, parseConfig, teamMode, teamRule } from "@/lib/categories";
 import { AttendeeTools } from "@/components/organizer/AttendeeTools";
 import { CheckMark } from "@/components/ui/Switch";
 import { EmbedCode } from "@/components/organizer/EmbedCode";
+import { DriveVaultCard } from "@/components/organizer/DriveVaultCard";
 import { SITE_URL } from "@/lib/site";
 import { passName } from "@/lib/pass-name";
 
@@ -58,8 +59,8 @@ export default async function ManageEventPage({ params, searchParams }: { params
   if (!viewer.verifiedOrganizer) redirect("/dashboard");
   if (!(await canManageEvent(viewer, id))) notFound();
 
-  const e = await first<{ id: string; slug: string; title: string; status: string; venue: string; starts_at: string; ends_at: string; capacity: number; price_paise: number; access: string; access_code: string | null; certificates_enabled: number; category: string | null; category_config: string | null; requires_approval: number | null }>(
-    "SELECT id, slug, title, status, COALESCE(venue, 'Venue TBA') AS venue, starts_at, ends_at, capacity, price_paise, access, access_code, certificates_enabled, category, category_config, requires_approval FROM events WHERE id = ?",
+  const e = await first<{ id: string; slug: string; title: string; status: string; venue: string; starts_at: string; ends_at: string; capacity: number; price_paise: number; access: string; access_code: string | null; certificates_enabled: number; category: string | null; category_config: string | null; requires_approval: number | null; drive_folder_id: string | null; drive_folder_url: string | null; drive_linked_at: string | null }>(
+    "SELECT id, slug, title, status, COALESCE(venue, 'Venue TBA') AS venue, starts_at, ends_at, capacity, price_paise, access, access_code, certificates_enabled, category, category_config, requires_approval, drive_folder_id, drive_folder_url, drive_linked_at FROM events WHERE id = ?",
     id,
   );
   if (!e) notFound();
@@ -509,6 +510,13 @@ export default async function ManageEventPage({ params, searchParams }: { params
               <WaTestButton eventId={e.id} />
             </div>
           </section>
+
+          <DriveVaultCard
+            eventId={e.id}
+            initialFolderId={e.drive_folder_id}
+            initialFolderUrl={e.drive_folder_url}
+            initialLinkedAt={e.drive_linked_at}
+          />
 
           <section aria-labelledby="cert-h" className="card p-5">
             <h2 id="cert-h" className="mb-4 flex items-center gap-2 text-h4 font-semibold">

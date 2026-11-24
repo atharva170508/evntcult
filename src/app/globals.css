@@ -112,12 +112,36 @@
 
   html {
     scroll-behavior: smooth;
+    overflow-x: clip;
     @apply bg-canvas text-ink antialiased;
     text-rendering: optimizeLegibility;
     -webkit-tap-highlight-color: transparent;
     scroll-padding-top: calc(var(--header-h) + 16px);
+    scrollbar-color: rgb(var(--c-line-strong)) transparent;
+    scrollbar-width: thin;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--c-line-strong));
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--c-ink-subtle));
+  }
+  input,
+  textarea {
+    caret-color: #E3264F;
   }
   body {
+    overflow-x: clip;
     @apply min-h-dvh bg-canvas font-sans text-body;
     font-feature-settings: "ss01";
   }
@@ -831,3 +855,30 @@ tr[data-picked] { background: rgb(240 215 255 / 0.35); }
 /* Empty home ticket: the typing caret and the chip that shows when the next kind comes up. */
 @keyframes caret { 50% { opacity: 0; } }
 @keyframes chip-timer { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Page entrance: calm 6px rise on navigation. */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.page-in { animation: page-in 260ms var(--ease-enter) both; }
+
+/* Ticket card: a dashed tear line with a notch bitten out of each side. */
+.stub-tear { position: relative; height: 0; border-top: 1.5px dashed rgb(var(--c-line-strong)); margin: 0 14px; }
+.stub-tear::before,
+.stub-tear::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgb(var(--c-canvas));
+  box-shadow: inset 0 0 0 1px rgb(var(--c-line-strong));
+}
+.stub-tear::before { left: -23px; clip-path: inset(0 0 0 50%); }
+.stub-tear::after { right: -23px; clip-path: inset(0 50% 0 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .page-in { animation: none; }
+}

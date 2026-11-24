@@ -11,6 +11,7 @@ import { EventArt } from "@/components/ui/EventArt";
 import { Chip } from "@/components/ui/Chip";
 import { Meter } from "@/components/ui/Meter";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
+import { FirstVisitCard } from "@/components/ui/FirstVisitCard";
 
 export const metadata: Metadata = { title: "Your events" };
 export const dynamic = "force-dynamic";
@@ -116,6 +117,19 @@ export default async function OrganizerHome() {
           Welcome back, {firstName}
         </h1>
       </header>
+
+      <div className="mt-6">
+        <FirstVisitCard
+          storageKey="ec_welcome_organizer_v1"
+          eyebrow="Hosting on EvntCult"
+          title="Launch an event in two minutes."
+          steps={[
+            { num: "01", label: "Create the essentials", detail: "Name, date, venue, and ticket type. Publish as soon as it's ready." },
+            { num: "02", label: "Style & customize", detail: "Shuffle page looks, upload a poster, and add custom signup questions or merch." },
+            { num: "03", label: "Scan at the gate", detail: "Verify UPI payments in one tap and scan QR passes offline on event day." },
+          ]}
+        />
+      </div>
 
       <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-card bg-line shadow-card lg:grid-cols-4">
         {[

@@ -6,6 +6,7 @@ import { PhoneFields } from "@/components/profile/PhoneFields";
 import { ModalDialog } from "@/components/ui/ModalDialog";
 import { TermsCheckbox } from "@/components/terms/AcceptTerms";
 import { FaceIdEnrollCard } from "@/components/photos/FaceIdEnrollCard";
+import { OtpInput } from "@/components/ui/OtpInput";
 
 type ApiErr = { error?: { code: string; message: string } };
 
@@ -245,25 +246,21 @@ export function SignInForm({
                 . It works for 10 minutes. Check spam if you don&apos;t see it.
               </span>
             </p>
-            <label className="block">
-              <span className="text-[13px] font-medium text-ink-2">
-                6-digit code
+            <div className="block">
+              <span className="mb-2 block text-[13px] font-medium text-ink-2">
+                Enter 6-digit code
               </span>
-              <input
-                required
-                autoFocus
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                pattern="\d{6}"
-                maxLength={6}
+              <OtpInput
                 value={code}
-                onChange={(e) =>
-                  setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
-                }
-                placeholder="000000"
-                className={`${inputCls} text-center h-16 font-mono text-[26px] font-medium tracking-[0.5em]`}
+                onChange={(next) => {
+                  setCode(next);
+                  if (error) setError(null);
+                }}
+                disabled={busy}
+                hasError={Boolean(error)}
+                autoFocus
               />
-            </label>
+            </div>
           </div>
         )}
 

@@ -13,9 +13,15 @@ import {
   Closing,
   Featured,
   Hero,
-  HowItWorks,
   Venues,
 } from "./Sections";
+import { OnePassInteractive } from "./OnePassInteractive";
+import { VaultSpotlight } from "./VaultSpotlight";
+import { ThemeStudioDemo } from "./ThemeStudioDemo";
+import { SocialPulseDemo } from "./SocialPulseDemo";
+import { SavingsCalculator } from "./SavingsCalculator";
+import { ExploreHubsBand } from "./ExploreHubsBand";
+import { ChapterNav } from "./ChapterNav";
 import { DiscoverFeed } from "./DiscoverFeed";
 import { OrganizerBento } from "./OrganizerBento";
 import { EventArt } from "@/components/ui/EventArt";
@@ -144,11 +150,17 @@ export function PublicHome() {
   return (
     <div className="pb-6">
       <Hero />
-      <HowItWorks />
+      <OnePassInteractive />
+      <VaultSpotlight />
+      <ThemeStudioDemo />
+      <SocialPulseDemo />
+      <ExploreHubsBand />
       <HostsBand />
+      <SavingsCalculator />
       <AppBand />
       <Questions />
       <Closing />
+      <ChapterNav />
     </div>
   );
 }

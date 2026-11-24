@@ -669,10 +669,19 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
               )}
             </Section>
 
-            {id && <SignupRules eventId={id} />}
-            {id && <CategorySetup eventId={id} category={f.category} />}
-            {id && <QuestionsSetup eventId={id} />}
-            {id && <MerchSetup eventId={id} />}
+            {id ? (
+              <>
+                <SignupRules eventId={id} category={f.category} />
+                <CategorySetup eventId={id} category={f.category} />
+                <QuestionsSetup eventId={id} />
+                <MerchSetup eventId={id} />
+              </>
+            ) : (
+              <div className="rounded-2xl border border-line-strong bg-sunken/70 px-5 py-4 text-[13.5px] text-ink-2">
+                <strong className="font-semibold text-ink">Quick create:</strong>{" "}
+                Custom poster, page look &amp; shuffle, signup questions, merch, and ticket tiers unlock right after you save this event.
+              </div>
+            )}
           </div>
 
           <div className="o-sticky">

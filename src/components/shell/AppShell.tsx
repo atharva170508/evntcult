@@ -9,6 +9,7 @@ import { SearchDialog } from "@/components/site/SearchDialog";
 import { TabBar } from "@/components/site/TabBar";
 import { EnterCodeDialog } from "./EnterCodeDialog";
 import { SheenTracker } from "@/components/ui/SheenTracker";
+import { BackToTop } from "@/components/ui/BackToTop";
 import { workspaceFor } from "./nav";
 
 export type { NavViewer };
@@ -62,6 +63,7 @@ export function AppShell({
       </main>
       {ws === "attend" && <SiteFooter viewer={viewer} />}
       <TabBar signedIn={!!viewer} />
+      <BackToTop />
       <SearchDialog open={searchOpen} onClose={closeSearch} isOrganizer={!!viewer?.isOrganizer} />
       <EnterCodeDialog open={codeOpen} onClose={() => setCodeOpen(false)} />
     </div>
