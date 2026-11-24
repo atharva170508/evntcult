@@ -3,11 +3,20 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { m, useReducedMotion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Images } from "lucide-react";
 import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { EASE } from "@/components/motion/MotionProvider";
 import { EmptyTicket } from "./EmptyTicket";
 import { passName } from "@/lib/pass-name";
+
+function greetingForNow(): string {
+  const hour = Number(
+    new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", hour12: false }).format(new Date()),
+  );
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+}
 
 export type HeroEvent = {
   id: string;
@@ -56,10 +65,34 @@ export function HomeHero({ e, mine, dateLine, name }: { e: HeroEvent | null; min
   const tone = accentHex(e.accent);
   const when = `${new Date(e.startsAt).toLocaleDateString("en-IN", { ...IST, weekday: "short", day: "numeric", month: "short" })}, ${new Date(e.startsAt).toLocaleTimeString("en-IN", { ...IST, hour: "numeric", minute: "2-digit" }).toLowerCase()}`;
   const href = mine ? "/passes" : `/events/${e.slug}#register`;
+  const firstName = name.trim().split(/\s+/)[0] || name;
 
   return (
     <section aria-labelledby="hero-title" className="pt-6 md:pt-10">
-      <p className="mb-4 text-[15px] font-medium text-ink-muted">{dateLine}</p>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-[13.5px] font-medium text-ink-muted">{dateLine}</p>
+          <p className="mt-1 font-display text-[clamp(32px,3.8vw,48px)] leading-[0.98] tracking-[-0.03em] text-ink">
+            {greetingForNow()}, {firstName}.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/vault"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+          >
+            <Images className="size-3.5 text-ink-muted" aria-hidden />
+            Photo Vault
+          </Link>
+          <Link
+            href="/calendar"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+          >
+            <CalendarDays className="size-3.5 text-ink-muted" aria-hidden />
+            Calendar
+          </Link>
+        </div>
+      </div>
 
       <m.div
         initial={reduce ? false : { opacity: 0, y: 18 }}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { Award, ChevronRight, Images, Plus, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDashboardData } from "@/lib/data/dashboard";
 import { getLandingData } from "@/lib/data/landing";
@@ -93,12 +93,84 @@ export default async function DashboardPage({
             </Link>
           )}
           <UpdatesFeed items={data.announcements} />
-          {data.stats.registered > 0 && (
-            <Link href="/passes" className="group -mt-4 flex min-h-11 items-center justify-between border-b border-line pb-3 text-[15px] font-semibold text-ink">
-              {data.stats.registered === 1 ? "Your pass" : `All ${data.stats.registered} passes`}
-              <ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
-            </Link>
-          )}
+
+          {/* Quick personal desk */}
+          <section aria-labelledby="desk-h">
+            <h2 id="desk-h" className="border-b border-ink pb-3 text-[18px] font-semibold text-ink">
+              Your desk
+            </h2>
+            <div className="mt-3 divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
+              <Link
+                href="/passes"
+                className="group flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-sunken/70"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="grid size-8 place-items-center rounded-xl bg-sunken text-ink">
+                    <Ticket className="size-4" aria-hidden />
+                  </span>
+                  <span>
+                    <span className="block text-[14px] font-semibold text-ink">My passes</span>
+                    <span className="block text-[12.5px] text-ink-muted">
+                      {data.stats.registered > 0 ? `${data.stats.registered} active` : "Gate QR codes & history"}
+                    </span>
+                  </span>
+                </span>
+                <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+              </Link>
+
+              <Link
+                href="/vault"
+                className="group flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-sunken/70"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="grid size-8 place-items-center rounded-xl bg-sunken text-ink">
+                    <Images className="size-4" aria-hidden />
+                  </span>
+                  <span>
+                    <span className="block text-[14px] font-semibold text-ink">Photo Vault</span>
+                    <span className="block text-[12.5px] text-ink-muted">Auto-matched event photos</span>
+                  </span>
+                </span>
+                <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+              </Link>
+
+              <Link
+                href="/certificates"
+                className="group flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-sunken/70"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="grid size-8 place-items-center rounded-xl bg-sunken text-ink">
+                    <Award className="size-4" aria-hidden />
+                  </span>
+                  <span>
+                    <span className="block text-[14px] font-semibold text-ink">Certificates</span>
+                    <span className="block text-[12.5px] text-ink-muted">Verified participation records</span>
+                  </span>
+                </span>
+                <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+              </Link>
+
+              <Link
+                href={viewer.verifiedOrganizer ? "/organizer" : "/host"}
+                className="group flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-sunken/70"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="grid size-8 place-items-center rounded-xl bg-lavender text-ink ring-1 ring-inset ring-ink/15">
+                    <Plus className="size-4" aria-hidden />
+                  </span>
+                  <span>
+                    <span className="block text-[14px] font-semibold text-ink">
+                      {viewer.verifiedOrganizer ? "Organizer studio" : "Host an event"}
+                    </span>
+                    <span className="block text-[12.5px] text-ink-muted">
+                      {viewer.verifiedOrganizer ? "Manage tickets & Drive vault" : "0% UPI fee for campus clubs"}
+                    </span>
+                  </span>
+                </span>
+                <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+              </Link>
+            </div>
+          </section>
         </aside>
       </div>
 

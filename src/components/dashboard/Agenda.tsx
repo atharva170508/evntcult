@@ -87,36 +87,98 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
         </Link>
       </div>
 
-      <ol>
-        {rows.map((r, i) =>
-          r.kind === "empty" ? (
-            <li key={i} className="grid gap-x-6 border-b border-line py-3.5 text-[14px] text-ink-subtle sm:grid-cols-[120px_minmax(0,1fr)]">
-              <span className="font-medium">{istYmd(r.from) === istYmd(r.to) ? label(r.from) : `${short(r.from)} to ${short(r.to)}`}</span>
-              <span>Nothing yet</span>
-            </li>
-          ) : (
-            <li key={i} className="grid gap-x-6 border-b border-line py-5 sm:grid-cols-[120px_minmax(0,1fr)]">
-              <p className="pb-2 sm:pb-0 sm:pt-1">
-                <span className="block text-[14px] font-semibold text-ink">{label(r.d)}</span>
-                {label(r.d) === "Today" || label(r.d) === "Tomorrow" ? <span className="text-[13px] text-ink-muted">{fmtDate(r.d, { weekday: "short", day: "numeric" })}</span> : null}
-              </p>
-              <ul className="space-y-4">
-                {r.list.map((e) =>
-                  e.mine ? (
-                    <li key={e.id}>
-                      <PassRow e={e} serial={next?.id === e.id ? next.passSerial : null} pending={next?.id === e.id && next.paymentStatus === "PENDING"} />
-                    </li>
-                  ) : (
-                    <li key={e.id}>
-                      <OtherRow e={e} now={now} />
-                    </li>
-                  ),
+      {/* 7-day visual strip (Cron / Things 3 style) */}
+      <div className="mt-4 grid grid-cols-7 gap-1.5" aria-label="Next 7 days">
+        {days.map((d, idx) => {
+          const ymd = istYmd(d);
+          const list = byDay.get(ymd) ?? [];
+          const hasMine = list.some((e) => e.mine);
+          const hasOther = list.some((e) => !e.mine);
+          const isToday = idx === 0;
+          return (
+            <Link
+              key={ymd}
+              href="/calendar"
+              className={
+                isToday
+                  ? "flex flex-col items-center rounded-2xl bg-ink py-2.5 text-[#FFFEF6] shadow-sm transition-transform hover:-translate-y-0.5"
+                  : "flex flex-col items-center rounded-2xl border border-line bg-surface py-2.5 text-ink transition-colors hover:border-line-strong hover:bg-sunken"
+              }
+            >
+              <span className={isToday ? "text-[11px] font-medium text-[#FFFEF6]/70" : "text-[11px] font-medium text-ink-muted"}>
+                {fmtDate(d, { weekday: "short" })}
+              </span>
+              <span className="mt-0.5 font-display text-[22px] leading-none tracking-[-0.02em] tabular-nums">
+                {fmtDate(d, { day: "numeric" })}
+              </span>
+              <span className="mt-1.5 flex h-1.5 items-center gap-1" aria-hidden>
+                {hasMine && <span className="size-1.5 rounded-full bg-[#E3264F]" />}
+                {hasOther && (
+                  <span className={isToday ? "size-1.5 rounded-full bg-[#FFFEF6]/70" : "size-1.5 rounded-full bg-ink/40"} />
                 )}
-              </ul>
-            </li>
-          ),
-        )}
-      </ol>
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {items.length === 0 ? (
+        <div className="mt-4 rounded-2xl border border-line bg-surface p-5 sm:p-6">
+          <p className="font-display text-[24px] leading-tight tracking-[-0.02em] text-ink">
+            Your week is wide open.
+          </p>
+          <p className="mt-1 text-[14px] text-ink-muted">
+            No passes booked for the next 7 days. Jump into a filter to fill your calendar.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {[
+              { href: "/events?when=weekend", label: "This weekend" },
+              { href: "/events?when=today", label: "Happening today" },
+              { href: "/events?price=free", label: "Free events" },
+              { href: "/events", label: "Browse all" },
+            ].map((chip) => (
+              <Link
+                key={chip.href}
+                href={chip.href}
+                className="inline-flex h-9 items-center rounded-full border border-line-strong bg-sunken/80 px-3.5 text-[13.5px] font-semibold text-ink transition-colors hover:bg-ink hover:text-[#FFFEF6]"
+              >
+                {chip.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <ol className="mt-2">
+          {rows.map((r, i) =>
+            r.kind === "empty" ? (
+              <li key={i} className="grid gap-x-6 border-b border-line py-3.5 text-[14px] text-ink-subtle sm:grid-cols-[120px_minmax(0,1fr)]">
+                <span className="font-medium">{istYmd(r.from) === istYmd(r.to) ? label(r.from) : `${short(r.from)} to ${short(r.to)}`}</span>
+                <span>Nothing yet</span>
+              </li>
+            ) : (
+              <li key={i} className="grid gap-x-6 border-b border-line py-5 sm:grid-cols-[120px_minmax(0,1fr)]">
+                <p className="pb-2 sm:pb-0 sm:pt-1">
+                  <span className="block text-[14px] font-semibold text-ink">{label(r.d)}</span>
+                  {label(r.d) === "Today" || label(r.d) === "Tomorrow" ? <span className="text-[13px] text-ink-muted">{fmtDate(r.d, { weekday: "short", day: "numeric" })}</span> : null}
+                </p>
+                <ul className="space-y-4">
+                  {r.list.map((e) =>
+                    e.mine ? (
+                      <li key={e.id}>
+                        <PassRow e={e} serial={next?.id === e.id ? next.passSerial : null} pending={next?.id === e.id && next.paymentStatus === "PENDING"} />
+                      </li>
+                    ) : (
+                      <li key={e.id}>
+                        <OtherRow e={e} now={now} />
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </li>
+            ),
+          )}
+        </ol>
+      )}
 
       {nextOutside && (
         <div className="grid gap-x-6 border-b border-line py-5 sm:grid-cols-[120px_minmax(0,1fr)]">
@@ -141,11 +203,13 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
           </ul>
         </div>
       )}
-      <div className="pt-6">
-        <Link href="/events" className="inline-flex h-11 items-center rounded-xl bg-ink px-5 text-[15px] font-semibold text-white transition-colors hover:bg-black">
-          Find something to do
-        </Link>
-      </div>
+      {items.length > 0 && (
+        <div className="pt-6">
+          <Link href="/events" className="inline-flex h-11 items-center rounded-xl bg-ink px-5 text-[15px] font-semibold text-white transition-colors hover:bg-black">
+            Find something to do
+          </Link>
+        </div>
+      )}
     </section>
   );
 }
@@ -215,23 +279,30 @@ function OtherRow({ e, now }: { e: EventSummary; now: Date }) {
 export function UpdatesFeed({ items }: { items: AnnouncementItem[] }) {
   return (
     <section aria-labelledby="upd-feed-h">
-      <h2 id="upd-feed-h" className="border-b border-ink pb-3 text-[18px] font-semibold text-ink">
-        Updates
-      </h2>
+      <div className="flex items-baseline justify-between border-b border-ink pb-3">
+        <h2 id="upd-feed-h" className="text-[18px] font-semibold text-ink">
+          Updates
+        </h2>
+        {items.length > 0 && (
+          <span className="font-mono text-[12px] font-semibold text-ink-muted">{items.length}</span>
+        )}
+      </div>
       {items.length === 0 ? (
-        <p className="py-4 text-[14px] leading-relaxed text-ink-muted">If an event you&apos;re going to changes its time or venue, it shows up here.</p>
+        <div className="mt-4 rounded-2xl border border-line bg-surface p-4 text-[13.5px] leading-relaxed text-ink-muted">
+          All quiet on your events. Time or venue changes from organizers show up here automatically.
+        </div>
       ) : (
-        <ul>
+        <ul className="mt-3 space-y-2.5">
           {items.slice(0, 4).map((a) => (
-            <li key={a.id} className="border-b border-line py-4">
+            <li key={a.id} className="rounded-2xl border border-line bg-surface p-4">
               <p className="flex items-baseline justify-between gap-3">
-                <span className="truncate text-[14.5px] font-semibold text-ink">{a.eventTitle}</span>
-                <time dateTime={a.createdAt.toISOString()} className="shrink-0 text-[12.5px] tabular-nums text-ink-subtle">
+                <span className="truncate text-[14px] font-semibold text-ink">{a.eventTitle}</span>
+                <time dateTime={a.createdAt.toISOString()} className="shrink-0 text-[12px] tabular-nums text-ink-subtle">
                   {relative(a.createdAt)}
                 </time>
               </p>
-              <p className="mt-1 text-[14px] leading-relaxed text-ink-2">
-                <span className="font-medium text-ink">{a.title}.</span> {a.body}
+              <p className="mt-1 text-[13.5px] leading-relaxed text-ink-2">
+                <span className="font-semibold text-ink">{a.title}.</span> {a.body}
               </p>
             </li>
           ))}
