@@ -31,5 +31,24 @@ export const toPgVector = (v: number[]) => `[${v.join(",")}]`;
 /** Cosine similarity of two normalised vectors. */
 export const similarity = (a: number[], b: number[]) => a.reduce((s, x, i) => s + x * b[i], 0);
 
+/**
+ * Compute the normalised centroid (mean direction) of multiple embeddings.
+ * Gives the "average face" representation across poses or expressions.
+ */
+export function centroidEmbedding(embeddings: number[][]): number[] | null {
+  if (!embeddings.length) return null;
+  if (embeddings.length === 1) return normalizeEmbedding(embeddings[0]);
+  const sum = new Array(EMBEDDING_DIM).fill(0);
+  let count = 0;
+  for (const emb of embeddings) {
+    const valid = normalizeEmbedding(emb);
+    if (!valid) continue;
+    for (let i = 0; i < EMBEDDING_DIM; i++) sum[i] += valid[i];
+    count++;
+  }
+  if (count === 0) return null;
+  return normalizeEmbedding(sum);
+}
+
 /** "96% Match" style label. Similarities below the threshold never reach the UI. */
 export const matchPercent = (sim: number) => Math.max(0, Math.min(100, Math.round(sim * 100)));

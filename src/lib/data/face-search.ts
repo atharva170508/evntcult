@@ -13,12 +13,7 @@ export const DEFAULT_THRESHOLD = 0.93;
 export const MAX_RESULTS = 60;
 export const LIMITS = { perMinute: 6, perHour: 40 } as const;
 
-export function matchThreshold(
-  env: Record<string, string | undefined> = process.env as Record<
-    string,
-    string | undefined
-  >,
-): number {
+export function matchThreshold(env: Record<string, string | undefined> = process.env as Record<string, string | undefined>): number {
   const t = Number(env.FACE_MATCH_THRESHOLD);
   return Number.isFinite(t) && t >= 0.5 && t < 1 ? t : DEFAULT_THRESHOLD;
 }
@@ -35,53 +30,21 @@ export class FaceSearchError extends Error {
 }
 
 /** Counts and records one search. Throws 429 past 6 a minute or 40 an hour (stops scraping by guessing faces). */
-export async function takeSearchSlot(
-  db: D1Database,
-  userId: string,
-  eventId: string,
-  now: Date = new Date(),
-) {
+export async function takeSearchSlot(db: D1Database, userId: string, eventId: string, now: Date = new Date()) {
   const row = await db
     .prepare(
       `SELECT SUM(created_at > ?2) AS minute, COUNT(*) AS hour
          FROM face_search_log WHERE user_id = ?1 AND created_at > ?3`,
     )
-    .bind(
-      userId,
-      new Date(now.getTime() - 60_000).toISOString(),
-      new Date(now.getTime() - 3_600_000).toISOString(),
-    )
+    .bind(userId, new Date(now.getTime() - 60_000).toISOString(), new Date(now.getTime() - 3_600_000).toISOString())
     .first<{ minute: number | null; hour: number }>();
-  if ((row?.minute ?? 0) >= LIMITS.perMinute)
-    throw new FaceSearchError(
-      429,
-      "rate_limited",
-      "Too many searches. Wait a minute and try again.",
-      60,
-    );
-  if ((row?.hour ?? 0) >= LIMITS.perHour)
-    throw new FaceSearchError(
-      429,
-      "rate_limited",
-      "You've searched a lot this hour. Try again later.",
-      3600,
-    );
-  await db
-    .prepare(
-      "INSERT INTO face_search_log (id, user_id, event_id, created_at) VALUES (?, ?, ?, ?)",
-    )
-    .bind(newId(), userId, eventId, now.toISOString())
-    .run();
+  if ((row?.minute ?? 0) >= LIMITS.perMinute) throw new FaceSearchError(429, "rate_limited", "Too many searches. Wait a minute and try again.", 60);
+  if ((row?.hour ?? 0) >= LIMITS.perHour) throw new FaceSearchError(429, "rate_limited", "You've searched a lot this hour. Try again later.", 3600);
+  await db.prepare("INSERT INTO face_search_log (id, user_id, event_id, created_at) VALUES (?, ?, ?, ?)").bind(newId(), userId, eventId, now.toISOString()).run();
 }
 
-export async function purgeFaceSearchLog(
-  db: D1Database,
-  now: Date = new Date(),
-) {
-  await db
-    .prepare("DELETE FROM face_search_log WHERE created_at < ?")
-    .bind(new Date(now.getTime() - 86_400_000).toISOString())
-    .run();
+export async function purgeFaceSearchLog(db: D1Database, now: Date = new Date()) {
+  await db.prepare("DELETE FROM face_search_log WHERE created_at < ?").bind(new Date(now.getTime() - 86_400_000).toISOString()).run();
 }
 
 export interface PhotoMatch {
@@ -94,35 +57,54 @@ export interface PhotoMatch {
   similarity: number;
 }
 
-type RpcRow = {
-  photo_id: string;
-  event_id: string;
-  thumbnail_url: string;
-  drive_file_id: string;
-  similarity: number;
-};
+type RpcRow = { photo_id: string; event_id: string; thumbnail_url: string; drive_file_id: string; similarity: number };
 
-/** Ask Supabase for this event's photos that contain the face. */
+/** Ask Supabase for this event's photos that contain the face (single vector or multi-vector ensemble). */
 export async function findMatches(
   cfg: SupabaseConfig,
-  opts: { eventId: string; embedding: number[]; threshold: number },
+  opts: { eventId: string; embedding?: number[]; embeddings?: number[][]; threshold: number },
 ): Promise<PhotoMatch[]> {
-  const rows = await supabaseRpc<RpcRow[]>(cfg, "match_attendee_photos", {
-    query_embedding: toPgVector(opts.embedding),
-    match_threshold: opts.threshold,
-    match_count: MAX_RESULTS,
-    filter_event_id: opts.eventId,
-  });
-  return rows
-    .filter((r) => r.event_id === opts.eventId) // belt and braces: never leak another event's photos
-    .map((r) => ({
-      photoId: r.photo_id,
-      driveFileId: r.drive_file_id,
-      thumbnailUrl: /^https:\/\//.test(r.thumbnail_url)
-        ? r.thumbnail_url
-        : driveThumbnailUrl(r.drive_file_id),
-      fallbackThumbnailUrl: driveThumbnailUrl(r.drive_file_id),
-      downloadUrl: driveDownloadUrl(r.drive_file_id),
-      similarity: r.similarity,
-    }));
+  const vectors: number[][] = opts.embeddings?.length
+    ? opts.embeddings
+    : opts.embedding
+      ? [opts.embedding]
+      : [];
+  if (vectors.length === 0) return [];
+
+  // Match each vector against Supabase in parallel
+  const matchSets = await Promise.all(
+    vectors.map((vec) =>
+      supabaseRpc<RpcRow[]>(cfg, "match_attendee_photos", {
+        query_embedding: toPgVector(vec),
+        match_threshold: opts.threshold,
+        match_count: MAX_RESULTS,
+        filter_event_id: opts.eventId,
+      }),
+    ),
+  );
+
+  // Merge results, taking the maximum similarity score for each photo across the ensemble
+  const bestByPhoto = new Map<string, RpcRow>();
+  for (const set of matchSets) {
+    for (const row of set) {
+      if (row.event_id !== opts.eventId) continue;
+      const existing = bestByPhoto.get(row.photo_id);
+      if (!existing || row.similarity > existing.similarity) {
+        bestByPhoto.set(row.photo_id, row);
+      }
+    }
+  }
+
+  const sorted = Array.from(bestByPhoto.values())
+    .sort((a, b) => b.similarity - a.similarity)
+    .slice(0, MAX_RESULTS);
+
+  return sorted.map((r) => ({
+    photoId: r.photo_id,
+    driveFileId: r.drive_file_id,
+    thumbnailUrl: /^https:\/\//.test(r.thumbnail_url) ? r.thumbnail_url : driveThumbnailUrl(r.drive_file_id),
+    fallbackThumbnailUrl: driveThumbnailUrl(r.drive_file_id),
+    downloadUrl: driveDownloadUrl(r.drive_file_id),
+    similarity: r.similarity,
+  }));
 }

@@ -2,7 +2,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { testDatabase } from "./helpers/d1";
 import { driveDownloadUrl, driveFileId, driveFileUrls, driveFolderId, driveThumbnailUrl, parseDriveLink } from "@/lib/googleDrive";
-import { matchPercent, normalizeEmbedding, toPgVector } from "@/lib/face/embedding";
+import { centroidEmbedding, matchPercent, normalizeEmbedding, toPgVector } from "@/lib/face/embedding";
 import { DEFAULT_THRESHOLD, FaceSearchError, LIMITS, findMatches, matchThreshold, takeSearchSlot } from "@/lib/data/face-search";
 import { SupabaseError, supabaseConfig } from "@/lib/supabase-rest";
 
@@ -70,6 +70,15 @@ describe("embeddings", () => {
     expect(toPgVector([0.5, -0.25])).toBe("[0.5,-0.25]");
     expect(matchPercent(0.9634)).toBe(96);
   });
+
+  it("computes the normalised centroid across multiple embeddings", () => {
+    const v1 = normalizeEmbedding(Array(128).fill(1))!;
+    const v2 = normalizeEmbedding(Array(128).fill(2))!;
+    const centroid = centroidEmbedding([v1, v2])!;
+    expect(centroid).toHaveLength(128);
+    expect(Math.hypot(...centroid)).toBeCloseTo(1, 4);
+    expect(centroidEmbedding([])).toBeNull();
+  });
 });
 
 describe("config", () => {
@@ -130,6 +139,32 @@ describe("findMatches", () => {
     expect(out.map((m) => m.photoId)).toEqual(["p1", "p3"]);
     expect(out[0].downloadUrl).toBe(driveDownloadUrl(FILE));
     expect(out[1].thumbnailUrl).toBe(driveThumbnailUrl(FILE)); // unsafe URL replaced by Drive's thumbnail
+  });
+
+  it("handles multi-vector ensemble matching, merging duplicates with max similarity", async () => {
+    let callIndex = 0;
+    const fetchMock = vi.fn(async () => {
+      callIndex++;
+      if (callIndex === 1) {
+        return Response.json([
+          { photo_id: "p1", event_id: "e1", thumbnail_url: "https://abcd1234.supabase.co/storage/v1/object/public/event-thumbs/e1/p1.jpg", drive_file_id: FILE, similarity: 0.94 },
+          { photo_id: "p2", event_id: "e1", thumbnail_url: "https://abcd1234.supabase.co/storage/v1/object/public/event-thumbs/e1/p2.jpg", drive_file_id: FILE, similarity: 0.91 },
+        ]);
+      }
+      return Response.json([
+        { photo_id: "p1", event_id: "e1", thumbnail_url: "https://abcd1234.supabase.co/storage/v1/object/public/event-thumbs/e1/p1.jpg", drive_file_id: FILE, similarity: 0.98 },
+        { photo_id: "p3", event_id: "e1", thumbnail_url: "https://abcd1234.supabase.co/storage/v1/object/public/event-thumbs/e1/p3.jpg", drive_file_id: FILE, similarity: 0.96 },
+      ]);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const v1 = normalizeEmbedding(Array(128).fill(1))!;
+    const v2 = normalizeEmbedding(Array(128).fill(2))!;
+    const out = await findMatches(cfg, { eventId: "e1", embeddings: [v1, v2], threshold: 0.9 });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(out.map((m) => m.photoId)).toEqual(["p1", "p3", "p2"]);
+    expect(out.find((m) => m.photoId === "p1")?.similarity).toBe(0.98); // Max similarity kept
   });
 
   it("sends new sb_secret_ keys only in the apikey header", async () => {
