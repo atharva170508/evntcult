@@ -20,6 +20,7 @@ const VIBES = [
     venues: ["Riverside Lawn", "Terrace Deck", "Amphitheatre"],
     slot: "Sat · 8:00 pm",
     tag: "Entry + QR",
+    callSign: "Velvet Comet",
   },
   {
     key: "TECH",
@@ -32,6 +33,7 @@ const VIBES = [
     venues: ["Main Auditorium", "Innovation Lab", "Seminar Hall B"],
     slot: "Fri · 6:30 pm",
     tag: "Team pass",
+    callSign: "Neon Falcon",
   },
   {
     key: "SPORTS",
@@ -44,6 +46,7 @@ const VIBES = [
     venues: ["North Turf", "Main Track", "East Court"],
     slot: "Sun · 6:00 am",
     tag: "Player pass",
+    callSign: "Solar Phoenix",
   },
   {
     key: "CULTURAL",
@@ -56,6 +59,7 @@ const VIBES = [
     venues: ["Central Quad", "OAT Steps", "Heritage Hall"],
     slot: "Sat · 7:00 pm",
     tag: "General entry",
+    callSign: "Crimson Echo",
   },
   {
     key: "WORKSHOP",
@@ -68,6 +72,7 @@ const VIBES = [
     venues: ["Design Studio", "Botanical Gate", "Craft Room 4"],
     slot: "Sun · 11:00 am",
     tag: "Seat + cert",
+    callSign: "Jade Prism",
   },
   {
     key: "GAMING",
@@ -80,6 +85,7 @@ const VIBES = [
     venues: ["Esports Arena", "Student Lounge", "Library Lawn"],
     slot: "Fri · 9:00 pm",
     tag: "Bracket slot",
+    callSign: "Sonic Nova",
   },
 ] as const;
 
@@ -367,9 +373,9 @@ export function EmptyTicket({ name, dateLine }: { name: string; dateLine: string
                           </dd>
                         </div>
                         <div>
-                          <dt className="text-[#FFFEF6]/60">Pass</dt>
-                          <dd className="mt-0.5 font-mono text-[13px] font-semibold text-[#FFFEF6]">
-                            EC-001
+                          <dt className="text-[#FFFEF6]/60">Call sign</dt>
+                          <dd className="mt-0.5 text-[13.5px] font-semibold text-[#FFFEF6]">
+                            {vibe.callSign}
                           </dd>
                         </div>
                       </dl>

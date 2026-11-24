@@ -1,5 +1,6 @@
 import { ApiError, handle } from "@/lib/api";
 import { first } from "@/lib/db";
+import { passName } from "@/lib/pass-name";
 import { requireUser } from "@/lib/rbac";
 import { buildIcs, icsFileName } from "@/lib/ics";
 
@@ -28,7 +29,7 @@ export const GET = handle(async (req: Request, { params }: Ctx) => {
     location: row.venue,
     description:
       row.status === "registered"
-        ? `Your pass: ${row.pass_code}. Show the QR code from My passes at the gate.\n${url}`
+        ? `Your pass: ${passName(row.pass_code).label}. Show the QR code from My passes at the gate.\n${url}`
         : `You're on the waitlist. If a seat opens, confirm it on EvntCult.\n${url}`,
     url,
   });

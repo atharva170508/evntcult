@@ -207,7 +207,7 @@ export function OnePassInteractive() {
                 <div className="stub-tear my-4" aria-hidden />
 
                 <div className="flex items-center justify-between text-[13px]">
-                  <span className="font-mono font-medium text-ink-muted">EC-041-CB</span>
+                  <span className="font-semibold text-ink-muted">Solar Falcon</span>
                   <AnimatePresence mode="wait">
                     {claimed ? (
                       <m.span

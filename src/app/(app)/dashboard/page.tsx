@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Award, ChevronRight, Download, Images, MapPinned, Plus, Ticket } from "lucide-react";
+import { ChevronRight, Download, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDashboardData } from "@/lib/data/dashboard";
 import { getLandingData } from "@/lib/data/landing";
@@ -15,7 +15,7 @@ import { AddPhoneCard } from "@/components/profile/AddPhoneCard";
 import { Agenda, UpdatesFeed, weekItems } from "@/components/dashboard/Agenda";
 import { HomeHero } from "@/components/dashboard/HomeHero";
 import { QuickDock } from "@/components/dashboard/QuickDock";
-import { CATEGORY_HUBS, CITIES } from "@/lib/discovery";
+import { CATEGORY_HUBS } from "@/lib/discovery";
 
 export const metadata: Metadata = { title: "Home" };
 export const dynamic = "force-dynamic";
@@ -120,102 +120,39 @@ export default async function DashboardPage({
 
           <UpdatesFeed items={data.announcements} />
 
-          {/* Quick personal desk — flat editorial rows */}
-          <section aria-labelledby="desk-h">
-            <h2 id="desk-h" className="border-b border-ink pb-3 text-[18px] font-semibold text-ink">
-              Your desk
-            </h2>
-            <div className="divide-y divide-line">
-              <Link
-                href="/passes"
-                className="group flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-ink"
-              >
-                <span className="flex items-center gap-3">
-                  <Ticket className="size-4 shrink-0 text-ink-muted transition-colors group-hover:text-ink" aria-hidden />
-                  <span>
-                    <span className="block text-[14.5px] font-semibold text-ink">My passes</span>
-                    <span className="block text-[13px] text-ink-muted">
-                      {data.stats.registered > 0 ? `${data.stats.registered} active` : "Gate QR codes & history"}
-                    </span>
-                  </span>
+          {/* Compact non-redundant account status & offline app strip */}
+          <section aria-labelledby="glance-h" className="divide-y divide-line border-t border-line">
+            <h2 id="glance-h" className="sr-only">Account shortcuts</h2>
+            <Link
+              href="/passes"
+              className="group flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-ink"
+            >
+              <span className="flex items-center gap-3">
+                <Ticket className="size-4 shrink-0 text-ink-muted group-hover:text-ink" aria-hidden />
+                <span className="text-[14px] font-semibold text-ink">
+                  {data.stats.registered === 0
+                    ? "No active passes yet"
+                    : data.stats.registered === 1
+                      ? "1 active pass"
+                      : `${data.stats.registered} active passes`}
                 </span>
-                <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
-              </Link>
+              </span>
+              <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+            </Link>
 
-              <Link
-                href="/vault"
-                className="group flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-ink"
-              >
-                <span className="flex items-center gap-3">
-                  <Images className="size-4 shrink-0 text-ink-muted transition-colors group-hover:text-ink" aria-hidden />
-                  <span>
-                    <span className="block text-[14.5px] font-semibold text-ink">Photo Vault</span>
-                    <span className="block text-[13px] text-ink-muted">Auto-matched event photos</span>
-                  </span>
+            <Link
+              href="/get-app"
+              className="group flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-ink"
+            >
+              <span className="flex items-center gap-3">
+                <Download className="size-4 shrink-0 text-ink-muted group-hover:text-ink" aria-hidden />
+                <span>
+                  <span className="block text-[14px] font-semibold text-ink">Install offline app</span>
+                  <span className="block text-[12.5px] text-ink-muted">Keep gate QR codes on your home screen</span>
                 </span>
-                <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
-              </Link>
-
-              <Link
-                href="/certificates"
-                className="group flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-ink"
-              >
-                <span className="flex items-center gap-3">
-                  <Award className="size-4 shrink-0 text-ink-muted transition-colors group-hover:text-ink" aria-hidden />
-                  <span>
-                    <span className="block text-[14.5px] font-semibold text-ink">Certificates</span>
-                    <span className="block text-[13px] text-ink-muted">Verified participation records</span>
-                  </span>
-                </span>
-                <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
-              </Link>
-
-              <Link
-                href="/venues"
-                className="group flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-ink"
-              >
-                <span className="flex items-center gap-3">
-                  <MapPinned className="size-4 shrink-0 text-ink-muted transition-colors group-hover:text-ink" aria-hidden />
-                  <span>
-                    <span className="block text-[14.5px] font-semibold text-ink">Venues & directions</span>
-                    <span className="block text-[13px] text-ink-muted">Campus halls, lawns & maps</span>
-                  </span>
-                </span>
-                <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
-              </Link>
-
-              <Link
-                href={viewer.verifiedOrganizer ? "/organizer" : "/host"}
-                className="group flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-ink"
-              >
-                <span className="flex items-center gap-3">
-                  <Plus className="size-4 shrink-0 text-ink-muted transition-colors group-hover:text-ink" aria-hidden />
-                  <span>
-                    <span className="block text-[14.5px] font-semibold text-ink">
-                      {viewer.verifiedOrganizer ? "Organizer studio" : "Host an event"}
-                    </span>
-                    <span className="block text-[13px] text-ink-muted">
-                      {viewer.verifiedOrganizer ? "Manage tickets & Drive vault" : "0% UPI fee for campus clubs"}
-                    </span>
-                  </span>
-                </span>
-                <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
-              </Link>
-
-              <Link
-                href="/get-app"
-                className="group flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-ink"
-              >
-                <span className="flex items-center gap-3">
-                  <Download className="size-4 shrink-0 text-ink-muted transition-colors group-hover:text-ink" aria-hidden />
-                  <span>
-                    <span className="block text-[14.5px] font-semibold text-ink">Install app</span>
-                    <span className="block text-[13px] text-ink-muted">Offline passes on your home screen</span>
-                  </span>
-                </span>
-                <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
-              </Link>
-            </div>
+              </span>
+              <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+            </Link>
           </section>
         </aside>
       </div>
@@ -257,11 +194,11 @@ export default async function DashboardPage({
         <MonthCalendar initial={month} signedIn />
       </section>
 
-      {/* 6. Quick City & Category Directory */}
+      {/* 6. Quick Category Directory */}
       <section aria-labelledby="dash-hubs-h" className="pt-12">
         <div className="mb-5 flex flex-wrap items-baseline justify-between gap-4 border-b border-ink pb-3">
           <h2 id="dash-hubs-h" className="text-[18px] font-semibold text-ink">
-            Browse by city &amp; category
+            Browse by category
           </h2>
           <Link
             href="/events"
@@ -270,35 +207,16 @@ export default async function DashboardPage({
             All events <ChevronRight className="size-4" aria-hidden />
           </Link>
         </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          <div>
-            <p className="mb-2.5 text-[13px] font-semibold text-ink-muted">Cities</p>
-            <div className="flex flex-wrap gap-2">
-              {CITIES.map((c) => (
-                <Link
-                  key={c.slug}
-                  href={`/city/${c.slug}`}
-                  className="inline-flex h-9 items-center rounded-full border border-line-strong bg-surface px-3.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink hover:bg-ink hover:text-[#FFFEF6]"
-                >
-                  {c.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="mb-2.5 text-[13px] font-semibold text-ink-muted">Categories</p>
-            <div className="flex flex-wrap gap-2">
-              {CATEGORY_HUBS.map((cat) => (
-                <Link
-                  key={cat.slug}
-                  href={`/category/${cat.slug}`}
-                  className="inline-flex h-9 items-center rounded-full border border-line-strong bg-surface px-3.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink hover:bg-ink hover:text-[#FFFEF6]"
-                >
-                  {cat.name}
-                </Link>
-              ))}
-            </div>
-          </div>
+        <div className="flex flex-wrap gap-2">
+          {CATEGORY_HUBS.map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/category/${cat.slug}`}
+              className="inline-flex h-9 items-center rounded-full border border-line-strong bg-surface px-3.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink hover:bg-ink hover:text-[#FFFEF6]"
+            >
+              {cat.name}
+            </Link>
+          ))}
         </div>
       </section>
 

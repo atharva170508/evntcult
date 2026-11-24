@@ -17,6 +17,7 @@ import { PhoneAccordion } from "./PhoneAccordion";
 import { ChevronLeft } from "lucide-react";
 import { SectionRail } from "./SectionRail";
 import { MISSING_LABEL, ORGANIZER_CATEGORIES, endsLabel, isValidCustomCode, isValidUpi, isValidLink, LINK_ERROR, istToIso, missingForPublish, normalizeCode, slugify, ticketDate, type PublishField } from "@/lib/organizer/shared";
+import { passCallSignCode } from "@/lib/pass-name";
 import { DatePicker, TimePicker } from "@/components/ui/DatePicker";
 
 export interface EditorInitial {
@@ -164,7 +165,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
       ...(v.paid && u && isValidUpi(u) ? { payoutUpi: u } : {}),
       ...(v.paid && !u ? { payoutUpi: null } : {}),
       access: v.access,
-      ...(v.access === "code" && c && isValidCustomCode(c) ? { accessCode: c } : {}),
+      ...(c && isValidCustomCode(c) ? { accessCode: c } : v.access === "public" && !c ? { accessCode: null } : {}),
     };
   }, []);
 
@@ -240,9 +241,9 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
     return () => clearTimeout(t);
   }, [f, customSlug, flush]);
 
-  // Is the typed join code free?
+  // Is the typed custom event code free?
   useEffect(() => {
-    if (f.access !== "code" || !isValidCustomCode(code)) {
+    if (!code || !isValidCustomCode(code)) {
       setCodeFree(null);
       return;
     }
@@ -251,7 +252,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
       if (r.ok) setCodeFree(r.data.available);
     }, 350);
     return () => clearTimeout(t);
-  }, [code, f.access]);
+  }, [code]);
 
   const missing: PublishField[] = useMemo(
     () =>
@@ -643,30 +644,47 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                     value={f.access}
                     options={[
                       ["public", "Public"],
-                      ["code", "Code"],
+                      ["code", "Private (code only)"],
                     ]}
                     onChange={(v) => set("access", v)}
                   />
                 </div>
               </div>
-              {f.access === "code" && (
-                <Field label="Join code" error={errors.code ?? (codeFree === false ? "That code is taken. Try another." : null)} >
-                  {(a) => (
-                    <div className="o-inline">
-                      <input {...a} className="o-input o-mono" maxLength={20} value={f.accessCode} onChange={(e) => set("accessCode", e.target.value)} onBlur={() => blur("code")} />
-                      <Button
-                        onClick={() => {
-                          const alphabet = "ACDEFGHJKMNPQRTUVWXY34679";
-                          const bytes = crypto.getRandomValues(new Uint8Array(7));
-                          set("accessCode", [...bytes].map((b) => alphabet[b % alphabet.length]).join("").toLowerCase());
-                        }}
-                      >
-                        Generate
-                      </Button>
-                    </div>
-                  )}
-                </Field>
-              )}
+              <Field
+                label="Event code"
+                error={errors.code ?? (codeFree === false ? "That code is taken. Try another." : null)}
+                hint={
+                  code && isValidCustomCode(code) && codeFree !== false ? (
+                    <span className="inline-flex flex-wrap items-center gap-2 text-[12.5px]">
+                      {codeFree === true && <span className="font-semibold text-live">Available</span>}
+                      <span className="font-mono text-ink-muted">
+                        {host}/c/{code.toLowerCase()}
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="text-[12.5px] text-ink-muted">
+                      {f.access === "code"
+                        ? "Set your own code (4–20 letters or numbers). Guests enter this to unlock the event."
+                        : "Set your own custom event code (4–20 letters or numbers) for direct entry."}
+                    </span>
+                  )
+                }
+              >
+                {(a) => (
+                  <div className="o-inline" style={{ flexWrap: "wrap", gap: 8 }}>
+                    <input
+                      {...a}
+                      className="o-input o-mono"
+                      style={{ flex: "1 1 220px" }}
+                      maxLength={20}
+                      placeholder="Set your own code, e.g. hacknight26"
+                      value={f.accessCode}
+                      onChange={(e) => set("accessCode", e.target.value)}
+                      onBlur={() => blur("code")}
+                    />
+                  </div>
+                )}
+              </Field>
             </Section>
 
             {id ? (
@@ -693,7 +711,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
               venue={venueOnTicket}
               tagline={f.tagline}
               qrValue={id ? `${host.startsWith("localhost") ? "http" : "https"}://${host}/e/${slug}` : null}
-              passCode={previewSlug ? `EC-${previewSlug.replace(/[^a-z0-9]/gi, "").slice(0, 4).toUpperCase()}-${String(taken + 1).padStart(4, "0")}` : null}
+              passCode={previewSlug ? passCallSignCode(taken + 1) : null}
               priceLabel={f.paid && pricePaise > 0 ? `₹${Math.round(pricePaise / 100)}` : f.paid ? "Paid" : "Free"}
               seatsLabel={cap === null ? "Unlimited" : `${Math.max(0, cap - taken)} / ${cap}`}
             />

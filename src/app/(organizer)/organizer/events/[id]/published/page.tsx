@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { passCallSignCode } from "@/lib/pass-name";
 import { redirect } from "next/navigation";
 import { ownedRow, siteHost } from "@/lib/organizer/page-data";
 import { istTime, ticketDate, ORGANIZER_CATEGORIES } from "@/lib/organizer/shared";
@@ -93,7 +94,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
             venue={e.venue_status === "tba" ? "Venue TBA" : e.venue}
             tagline={e.tagline}
             qrValue={link}
-            passCode={`EC-${e.slug.replace(/[^a-z0-9]/gi, "").slice(0, 4).toUpperCase()}-${String(e.taken + 1).padStart(4, "0")}`}
+            passCode={passCallSignCode(e.taken + 1)}
             priceLabel={e.price_paise ? `₹${Math.round(e.price_paise / 100)}` : "Free"}
             seatsLabel={e.capacity === null ? "Unlimited" : `${Math.max(0, e.capacity - e.taken)} / ${e.capacity}`}
           />

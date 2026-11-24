@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { FooterFootnote, FooterWordmark } from "./FooterWordmark";
 import type { NavViewer } from "./SiteHeader";
-import { CATEGORY_HUBS, CITIES } from "@/lib/discovery";
+import { CATEGORY_HUBS } from "@/lib/discovery";
 
 /** Monumental editorial footer: crisp directory columns, theme switcher, and full-bleed wordmark. */
 export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
@@ -16,10 +16,6 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
         { href: "/calendar", label: "Events calendar" },
         { href: "/venues", label: "Venues & directions" },
       ],
-    },
-    {
-      title: "Hubs",
-      links: CITIES.map((c) => ({ href: `/city/${c.slug}`, label: c.name })),
     },
     {
       title: "Categories",
@@ -60,7 +56,7 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
           </div>
 
           {/* Right directory columns */}
-          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4">
+          <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3">
             {columns.map((c) => (
               <div key={c.title}>
                 <h2 className="text-[13px] font-semibold text-ink">{c.title}</h2>

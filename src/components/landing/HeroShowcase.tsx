@@ -235,7 +235,7 @@ export function HeroShowcase({ qr }: { qr: string }) {
                     </dl>
                   </div>
                   <div className="flex items-center justify-between border-t border-line pt-3 text-[12px] text-ink-muted">
-                    <span className="font-mono">EC-2026-041</span>
+                    <span className="font-semibold">Velvet Comet</span>
                     <button
                       type="button"
                       onClick={() => setFlipped(false)}

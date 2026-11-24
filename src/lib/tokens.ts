@@ -51,10 +51,11 @@ export function extractPassToken(input: string): string {
 
 export const isWellFormedPassToken = (t: string) => /^[A-Z2-7]{26}$/.test(t);
 
-/** Display code like EC-VALO-0042 from the event slug and a sequence number. */
-export function passCode(eventSlug: string, sequence: number): string {
-  const prefix = eventSlug.replace(/[^a-z0-9]/gi, "").slice(0, 4).toUpperCase() || "EVNT";
-  return `EC-${prefix}-${String(sequence).padStart(4, "0")}`;
+import { passCallSignCode } from "./pass-name";
+
+/** Display code like VELVET-COMET-0042 from a sequence number. */
+export function passCode(_eventSlug: string, sequence: number): string {
+  return passCallSignCode(sequence);
 }
 
 /** Unbiased random index in [0, n). */

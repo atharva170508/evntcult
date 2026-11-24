@@ -140,6 +140,10 @@
   textarea {
     caret-color: #E3264F;
   }
+  ::selection {
+    background-color: rgb(var(--c-lavender));
+    color: #1A1A1A;
+  }
   body {
     overflow-x: clip;
     @apply min-h-dvh bg-canvas font-sans text-body;

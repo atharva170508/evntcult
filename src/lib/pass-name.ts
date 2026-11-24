@@ -1,31 +1,30 @@
 /**
- * Every pass gets a name, like a call sign: "Velvet Comet", plus its ticket number ("No. 0813").
- * Door staff can say a name; nobody can say "EC-ROBO-0813".
+ * Every pass gets a memorable call sign — like "Velvet Comet" or "Midnight Phoenix" — plus its
+ * ticket number ("No. 0813"). Door staff can actually say a name; nobody wants "EC-2098".
  *
- * The name is worked out from the pass number, so nothing new is stored. The number is mixed by
- * multiplying with an odd constant modulo 4096 (a bijection), so passes 1, 2, 3 don't read as
- * Amber Badger, Bright Badger, Calm Badger, and every number below 4096 gets its own name within
- * an event. Past 4096 a numeral is added ("Velvet Comet 2").
+ * The call sign is derived deterministically from the pass number using a bijection mod 4096
+ * (64 × 64), so passes 1, 2, 3 don't cluster together and every number below 4096 gets a unique
+ * name within an event. Past 4096 a numeral is added ("Velvet Comet 2").
  */
 
 const ADJ = [
-  "Amber", "Bright", "Calm", "Coral", "Cosmic", "Crimson", "Daring", "Dawn",
-  "Electric", "Ember", "Feather", "Fierce", "Gentle", "Gilded", "Golden", "Grand",
-  "Happy", "Indigo", "Ivory", "Jade", "Jolly", "Lucky", "Lunar", "Copper",
-  "Marble", "Mellow", "Midnight", "Misty", "Neon", "Noble", "Ocean", "Olive",
-  "Opal", "Pearl", "Plum", "Polar", "Quiet", "Radiant", "Rapid", "Rose",
-  "Royal", "Ruby", "Rustic", "Saffron", "Sapphire", "Scarlet", "Silent", "Silver",
-  "Solar", "Sonic", "Stellar", "Stormy", "Sunny", "Swift", "Teal", "Velvet",
-  "Violet", "Vivid", "Wild", "Winter", "Witty", "Zesty", "Breezy", "Hazel",
+  "Amber", "Astral", "Blazing", "Breezy", "Chrome", "Cobalt", "Copper", "Coral",
+  "Cosmic", "Crimson", "Crystal", "Daring", "Dawn", "Drift", "Electric", "Ember",
+  "Emerald", "Fierce", "Frost", "Gilded", "Golden", "Grand", "Hyper", "Indigo",
+  "Ivory", "Jade", "Laser", "Lucid", "Lunar", "Marble", "Midnight", "Misty",
+  "Neon", "Noble", "Obsidian", "Ocean", "Onyx", "Opal", "Pearl", "Phantom",
+  "Plum", "Polar", "Prism", "Radiant", "Rapid", "Rose", "Royal", "Ruby",
+  "Saffron", "Sapphire", "Scarlet", "Shadow", "Silver", "Solar", "Sonic", "Stellar",
+  "Stormy", "Sunny", "Swift", "Teal", "Velvet", "Violet", "Vivid", "Wild",
 ] as const;
 
 const NOUN = [
-  "Comet", "Falcon", "Tiger", "Lotus", "Otter", "Panda", "Raven", "Fox",
-  "Wolf", "Heron", "Koala", "Lynx", "Orca", "Owl", "Parrot", "Peacock",
-  "Phoenix", "Puma", "Robin", "Sparrow", "Swan", "Turtle", "Whale", "Zebra",
-  "Badger", "Bison", "Cobra", "Dolphin", "Eagle", "Gecko", "Hawk", "Jaguar",
-  "Kestrel", "Lion", "Moose", "Narwhal", "Panther", "Pelican", "Penguin", "Rhino",
-  "Seal", "Shark", "Stag", "Starling", "Tapir", "Toucan", "Meteor", "Yak",
+  "Comet", "Falcon", "Tiger", "Lotus", "Phoenix", "Raven", "Fox", "Wolf",
+  "Aurora", "Apex", "Lynx", "Orca", "Owl", "Mirage", "Peacock", "Puma",
+  "Vortex", "Sparrow", "Swan", "Drifter", "Raptor", "Titan", "Zenith", "Cipher",
+  "Nomad", "Cobra", "Dolphin", "Eagle", "Vinyl", "Hawk", "Jaguar", "Kestrel",
+  "Lion", "Horizon", "Narwhal", "Panther", "Zephyr", "Beacon", "Prism", "Voyager",
+  "Shark", "Stag", "Starling", "Nebula", "Catalyst", "Meteor", "Quasar", "Solstice",
   "Nova", "Orbit", "Rocket", "Pulse", "Echo", "Rhythm", "Tempo", "Spark",
   "Lantern", "Harbor", "Summit", "Canyon", "River", "Galaxy", "Glacier", "Monsoon",
 ] as const;
@@ -33,7 +32,6 @@ const NOUN = [
 const SPACE = ADJ.length * NOUN.length; // 4096
 const MIX = 1597; // odd, so multiplying by it mod 4096 is a permutation
 const UNMIX = (() => {
-  // modular inverse of MIX mod 4096
   for (let i = 1; i < SPACE; i += 2) if ((i * MIX) % SPACE === 1) return i;
   return 1;
 })();
@@ -47,7 +45,20 @@ function nameFor(seq: number): string {
 
 export type PassName = { name: string; no: string; label: string };
 
-/** "EC-ROBO-0813" -> { name: "Velvet Comet", no: "0813", label: "Velvet Comet, No. 0813" }. */
+/**
+ * Generates an interesting human-readable pass code from a sequence number,
+ * e.g. 42 -> "VELVET-COMET-0042" (instead of boring "EC-2098").
+ */
+export function passCallSignCode(sequence: number): string {
+  const seq = Math.max(0, Math.floor(sequence));
+  const slug = nameFor(seq).toUpperCase().replace(/\s+/g, "-");
+  return `${slug}-${String(seq).padStart(4, "0")}`;
+}
+
+/**
+ * Accepts either new call-sign codes ("VELVET-COMET-0813") or legacy codes ("EC-ROBO-0813")
+ * and returns { name: "Velvet Comet", no: "0813", label: "Velvet Comet, No. 0813" }.
+ */
 export function passName(code: string | null | undefined): PassName {
   const m = /(\d+)$/.exec(code ?? "");
   if (!m) return { name: code ?? "", no: "", label: code ?? "" };

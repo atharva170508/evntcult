@@ -15,7 +15,7 @@ export const POST = handle(async (req: Request) => {
   const notFound = () => new ApiError(404, "code_not_found", "That code didn't match an event. Check it with the organizer.");
   if (!isValidCustomCode(c)) throw notFound();
   const e = await first<{ title: string; slug: string }>(
-    "SELECT title, slug FROM events WHERE access = 'code' AND access_code = ? AND status = 'published'",
+    "SELECT title, slug FROM events WHERE access_code = ? AND status = 'published'",
     c,
   );
   if (!e) throw notFound();

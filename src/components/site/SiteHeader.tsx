@@ -235,16 +235,29 @@ export function SiteHeader({
 
             <div className="flex items-center justify-end gap-1.5">
               {ws === "attend" && (
-                <button
-                  type="button"
-                  onClick={onSearch}
-                  aria-label="Search events"
-                  className="hidden h-9 items-center gap-2 rounded-full border border-line-strong/80 bg-surface/75 px-3 text-[13px] font-medium text-ink-muted transition-colors duration-fast hover:border-ink-subtle hover:text-ink xl:flex"
-                >
-                  <Search className="size-3.5 text-ink-muted" strokeWidth={2.2} aria-hidden />
-                  <span>Search</span>
-                  <kbd className="kbd ml-1 text-[10px]">/</kbd>
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={onSearch}
+                    aria-label="Search events"
+                    className="hidden h-9 items-center gap-2 rounded-full border border-line-strong/80 bg-surface/75 px-3 text-[13px] font-medium text-ink-muted transition-colors duration-fast hover:border-ink-subtle hover:text-ink xl:flex"
+                  >
+                    <Search className="size-3.5 text-ink-muted" strokeWidth={2.2} aria-hidden />
+                    <span>Search</span>
+                    <kbd className="kbd ml-1 text-[10px]">/</kbd>
+                  </button>
+                  {viewer && (
+                    <button
+                      type="button"
+                      onClick={onEnterCode}
+                      aria-label="Enter event code"
+                      className="hidden h-9 items-center gap-1.5 rounded-full border border-line-strong/80 bg-surface/75 px-3 text-[13px] font-medium text-ink-2 transition-colors duration-fast hover:border-ink-subtle hover:text-ink xl:flex"
+                    >
+                      <KeyRound className="size-3.5 text-ink-muted" strokeWidth={2.1} aria-hidden />
+                      <span>Code</span>
+                    </button>
+                  )}
+                </>
               )}
               {ws === "host" ? (
                 <>

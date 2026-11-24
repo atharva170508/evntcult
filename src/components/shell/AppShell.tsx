@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { SiteHeader, type NavViewer } from "@/components/site/SiteHeader";
@@ -10,6 +10,7 @@ import { TabBar } from "@/components/site/TabBar";
 import { EnterCodeDialog } from "./EnterCodeDialog";
 import { SheenTracker } from "@/components/ui/SheenTracker";
 import { BackToTop } from "@/components/ui/BackToTop";
+import { NavigationProgress } from "@/components/ui/NavigationProgress";
 import { workspaceFor } from "./nav";
 
 export type { NavViewer };
@@ -53,6 +54,9 @@ export function AppShell({
 
   return (
     <div className="flex min-h-dvh flex-col overflow-x-clip">
+      <Suspense fallback={null}>
+        <NavigationProgress />
+      </Suspense>
       <SheenTracker />
       <SiteHeader viewer={viewer} wide={wide} onSearch={() => setSearchOpen(true)} onEnterCode={() => setCodeOpen(true)} />
       <main

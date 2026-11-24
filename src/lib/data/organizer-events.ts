@@ -164,12 +164,8 @@ export async function createDraft(
     input.venue === undefined ? await lastVenue(db, owner.id) : input.venue;
   const capacity = input.capacity === undefined ? 100 : input.capacity;
   const access = input.access ?? "public";
-  const code =
-    access === "code"
-      ? input.accessCode
-        ? normalizeCode(input.accessCode)
-        : newAccessCode()
-      : null;
+  // Organizers set their own custom event code; never auto-fill random gibberish.
+  const code = input.accessCode ? normalizeCode(input.accessCode) : null;
   const iso = now.toISOString();
   try {
     await db
@@ -254,8 +250,8 @@ export async function saveEvent(
       : input.accessCode
         ? normalizeCode(input.accessCode)
         : null;
-  // Switching to Code without typing one yet: generate it, so the row is always valid.
-  const code = access === "code" ? (wantedCode ?? newAccessCode()) : wantedCode;
+  // Keep whatever custom code the organizer typed (or null until they set one).
+  const code = wantedCode;
   const next = {
     title: input.title ?? cur.title,
     slug:
