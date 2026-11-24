@@ -52,11 +52,10 @@ export async function createUser(email: string, d: { name?: string; phone?: stri
 }
 
 export async function signedInResponse(userId: string) {
-  const db = await getDB();
-  const user = await db
-    .prepare("SELECT (face_embedding IS NOT NULL) AS has_face_id FROM users WHERE id = ?")
-    .bind(userId)
-    .first<{ has_face_id: number }>();
+  const user = await first<{ has_face_id: number }>(
+    "SELECT (face_embedding IS NOT NULL) AS has_face_id FROM users WHERE id = ?",
+    userId,
+  );
   const res = Response.json({ ok: true, hasFaceId: Boolean(user?.has_face_id) });
   res.headers.append("Set-Cookie", sessionCookieHeader(await createSessionValue(userId)));
   return res;
