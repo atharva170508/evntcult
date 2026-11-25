@@ -2,23 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Plus } from "lucide-react";
 import { m } from "motion/react";
 import { cn } from "@/lib/utils";
-import { ATTEND_NAV, HOST_NAV, VISITOR_HREF, isActive, isMainActive, workspaceFor } from "@/components/shell/nav";
+import { ATTEND_NAV, VISITOR_HREF, isMainActive, workspaceFor } from "@/components/shell/nav";
 
 /* Platform shapes, keyed off data-platform on <html> (set before paint):
    - iOS and others: a floating liquid-glass capsule above the home indicator, like an iOS tab bar.
    - Android: a flush, full-width glass bar with a pill behind the active icon, like Material 3. */
 
-/** Phone tab bar: Home · Discover · Calendar · Passes · Certs (or the hosting tabs). Visitors get it too. */
+/** Phone tab bar: the same Home · Discover · Calendar · Passes · Certs for everyone, organizers included. */
 export function TabBar({ signedIn = true }: { signedIn?: boolean }) {
   const pathname = usePathname();
   const ws = workspaceFor(pathname);
   // Admin has no tabs; an event's own page shows its price-and-register bar instead.
   if (ws === "admin" || /^\/events\/[^/]+$/.test(pathname)) return null;
 
-  const items = ws === "host" ? HOST_NAV : ATTEND_NAV;
+  const items = ATTEND_NAV;
 
   return (
     <nav
@@ -33,13 +32,12 @@ export function TabBar({ signedIn = true }: { signedIn?: boolean }) {
     >
       <ul
         className={cn(
-          "liquid-glass mx-auto grid max-w-md rounded-[28px] px-1.5 py-1",
+          "liquid-glass mx-auto grid max-w-md grid-cols-5 rounded-[28px] px-1.5 py-1",
           "[[data-platform=android]_&]:max-w-none [[data-platform=android]_&]:rounded-none [[data-platform=android]_&]:px-0 [[data-platform=android]_&]:py-0",
         )}
-        style={{ gridTemplateColumns: `repeat(${items.length + (ws === "host" ? 1 : 0)}, minmax(0, 1fr))` }}
       >
         {items.map((item) => {
-          const active = ws === "host" ? isActive(pathname, item) : isMainActive(pathname, item.href);
+          const active = isMainActive(pathname, item.href);
           const Icon = item.icon;
           return (
             <li key={item.href}>
@@ -75,22 +73,6 @@ export function TabBar({ signedIn = true }: { signedIn?: boolean }) {
             </li>
           );
         })}
-        {ws === "host" && (
-          <li>
-            <Link
-              href="/organizer/events/new"
-              className={cn(
-                "flex h-[58px] flex-col items-center justify-center gap-0.5 text-[10.5px] font-semibold text-ink active:scale-[0.94]",
-                "[[data-platform=android]_&]:h-[72px] [[data-platform=android]_&]:gap-1 [[data-platform=android]_&]:text-[12px]",
-              )}
-            >
-              <span className={cn("grid h-7 w-12 place-items-center rounded-full bg-ink text-white", "[[data-platform=android]_&]:h-8 [[data-platform=android]_&]:w-16")} aria-hidden>
-                <Plus className="size-[18px]" />
-              </span>
-              Create
-            </Link>
-          </li>
-        )}
       </ul>
     </nav>
   );

@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function HostPage() {
   const viewer = await getViewer();
   if (!viewer) redirect("/signin?next=/host");
-  if (viewer.verifiedOrganizer) redirect("/organizer");
+  if (viewer.verifiedOrganizer) redirect("/organizer/events/new");
   const status = await hostStatus(await getDB(), viewer.id);
 
   return (
@@ -29,7 +29,7 @@ export default async function HostPage() {
       {status?.status === "pending" ? (
         <Notice tone="accent">
           Your application for <b>{status.club}</b> is with the admins
-          {status.appliedAt ? ` (sent ${fmtDate(new Date(status.appliedAt), { day: "numeric", month: "short" })})` : ""}. Once it&apos;s approved, &ldquo;Switch to hosting&rdquo; appears in your account menu.
+          {status.appliedAt ? ` (sent ${fmtDate(new Date(status.appliedAt), { day: "numeric", month: "short" })})` : ""}. Once it&apos;s approved, &ldquo;Host an Event&rdquo; appears right in your navigation bar.
         </Notice>
       ) : (
         <div className="space-y-4">

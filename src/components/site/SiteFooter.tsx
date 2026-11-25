@@ -30,7 +30,10 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
         { href: "/get-app", label: "Install app" },
         // Hosting is for organizers verified by Synchronous Labs: students apply, visitors see nothing.
         ...(viewer?.isOrganizer
-          ? [{ href: "/organizer", label: "Organizer studio" }]
+          ? [
+              { href: "/organizer/events/new", label: "Host an event" },
+              { href: "/organizer", label: "My hosted events" },
+            ]
           : viewer
             ? [{ href: "/host", label: "Apply to host" }]
             : []),
