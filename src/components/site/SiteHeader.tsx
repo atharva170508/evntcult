@@ -140,7 +140,7 @@ export function SiteHeader({
 
   useEffect(() => setSheet(false), [pathname]);
 
-  const tabs = ws === "host" ? HOST_TABS : ws === "admin" ? [] : ATTEND_TABS;
+  const tabs = ws === "admin" ? [] : ATTEND_TABS;
 
   return (
     <>
@@ -160,13 +160,7 @@ export function SiteHeader({
           <div className="grid h-16 grid-cols-[auto_1fr_auto] items-center gap-4 md:h-[72px] md:grid-cols-[1fr_auto_1fr]">
             <div className="flex items-center gap-3">
               <Link
-                href={
-                  ws === "host"
-                    ? "/organizer"
-                    : ws === "admin"
-                      ? "/admin"
-                      : "/dashboard"
-                }
+                href={ws === "admin" ? "/admin" : "/dashboard"}
                 onClick={onLogoClick}
                 aria-label="EvntCult home"
                 className="rounded-lg py-1"
@@ -180,9 +174,9 @@ export function SiteHeader({
                   <BrandLogo className="text-[20px] md:text-[22px]" />
                 </m.span>
               </Link>
-              {ws !== "attend" && (
+              {ws === "admin" && (
                 <span className="hidden rounded-md border border-line-strong bg-sunken px-2 py-0.5 text-[11.5px] font-semibold text-ink-2 sm:inline">
-                  {ws === "host" ? "Hosting" : "Admin"}
+                  Admin
                 </span>
               )}
             </div>
@@ -195,7 +189,7 @@ export function SiteHeader({
                   onPointerLeave={() => setHoverTab(null)}
                 >
                   {tabs.map((t) => {
-                    const active = ws === "attend" ? isMainActive(pathname, t.href) : isActive(pathname, t);
+                    const active = isMainActive(pathname, t.href);
                     return (
                       <Link
                         key={t.href}
@@ -234,7 +228,7 @@ export function SiteHeader({
             </div>
 
             <div className="flex items-center justify-end gap-1.5">
-              {ws === "attend" && (
+              {ws !== "admin" && (
                 <>
                   <button
                     type="button"
@@ -259,28 +253,13 @@ export function SiteHeader({
                   )}
                 </>
               )}
-              {ws === "host" ? (
-                <>
-                  <Link
-                    href="/dashboard"
-                    className="hidden h-9 shrink-0 items-center whitespace-nowrap rounded-full px-3 text-[13.5px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
-                  >
-                    Attending
-                  </Link>
-                  <Link
-                    href="/organizer/events/new"
-                    className="ui-press mr-0.5 hidden h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-lavender px-3.5 text-[13.5px] font-semibold text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover md:flex"
-                  >
-                    <Plus className="size-4" strokeWidth={2.6} aria-hidden />{" "}
-                    Create event
-                  </Link>
-                </>
-              ) : ws === "attend" && viewer?.isOrganizer ? (
+              {ws !== "admin" && viewer?.isOrganizer ? (
                 <Link
-                  href="/organizer"
-                  className="hidden h-9 shrink-0 items-center whitespace-nowrap rounded-full px-3 text-[13.5px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
+                  href="/organizer/events/new"
+                  className="ui-press mr-0.5 hidden h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-lavender px-3.5 text-[13.5px] font-semibold text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover md:flex"
                 >
-                  Hosting
+                  <Plus className="size-4" strokeWidth={2.6} aria-hidden />
+                  Host an Event
                 </Link>
               ) : !viewer ? (
                 <>
@@ -450,17 +429,26 @@ function AccountMenu({
                 Profile
               </Link>
               <Sep />
-              {ws === "attend" ? (
-                <Link
-                  role="menuitem"
-                  href={viewer.isOrganizer ? "/organizer" : "/host"}
-                  className={menuItem}
-                >
-                  {viewer.isOrganizer ? "Switch to hosting" : "Apply to host events"}
-                </Link>
+              {viewer.isOrganizer ? (
+                <>
+                  <Link
+                    role="menuitem"
+                    href="/organizer/events/new"
+                    className={cn(menuItem, "font-semibold")}
+                  >
+                    Host an Event
+                  </Link>
+                  <Link
+                    role="menuitem"
+                    href="/organizer"
+                    className={menuItem}
+                  >
+                    My hosted events
+                  </Link>
+                </>
               ) : (
-                <Link role="menuitem" href="/dashboard" className={menuItem}>
-                  Switch to attending
+                <Link role="menuitem" href="/host" className={menuItem}>
+                  Apply to host events
                 </Link>
               )}
               {viewer.isAdmin && ws !== "admin" && (
@@ -548,9 +536,9 @@ function MenuSheet({
         <ChevronRight className="size-5 text-ink-subtle" aria-hidden />
       </Link>
 
-      {ws === "host" ? (
+      {viewer.isOrganizer ? (
         <Link href="/organizer/events/new" className="mt-3 flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-lavender text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink">
-          <Plus className="size-4" strokeWidth={2.6} aria-hidden /> Create event
+          <Plus className="size-4" strokeWidth={2.6} aria-hidden /> Host an Event
         </Link>
       ) : null}
 
@@ -564,15 +552,9 @@ function MenuSheet({
             </li>
           ))}
         <li>
-          {ws === "host" ? (
-            <Link href="/dashboard" className={row}>
-              <Repeat className={ic} aria-hidden /> Switch to attending
-            </Link>
-          ) : (
-            <Link href={viewer.isOrganizer ? "/organizer" : "/host"} className={row}>
-              <Repeat className={ic} aria-hidden /> {viewer.isOrganizer ? "Switch to hosting" : "Host an event"}
-            </Link>
-          )}
+          <Link href={viewer.isOrganizer ? "/organizer" : "/host"} className={row}>
+            <Repeat className={ic} aria-hidden /> {viewer.isOrganizer ? "My hosted events" : "Apply to host events"}
+          </Link>
         </li>
         <li>
           <button
@@ -585,7 +567,7 @@ function MenuSheet({
             <KeyRound className={ic} aria-hidden /> Enter an event code
           </button>
         </li>
-        {ws === "attend" && (
+        {ws !== "admin" && (
           <>
             <li>
               <Link href="/vault" className={row}>

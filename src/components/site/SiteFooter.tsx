@@ -29,7 +29,10 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
         { href: "/certificates", label: "Certificates" },
         { href: "/get-app", label: "Install app" },
         ...(viewer?.isOrganizer
-          ? [{ href: "/organizer", label: "Organizer studio" }]
+          ? [
+              { href: "/organizer/events/new", label: "Host an event" },
+              { href: "/organizer", label: "My hosted events" },
+            ]
           : [{ href: "/host", label: "Host an event" }]),
         ...(viewer
           ? [{ href: "/profile", label: "Account" }]

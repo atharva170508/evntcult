@@ -65,7 +65,7 @@ export function AppShell({
       >
         {children}
       </main>
-      {ws === "attend" && <SiteFooter viewer={viewer} />}
+      {ws !== "admin" && <SiteFooter viewer={viewer} />}
       <TabBar signedIn={!!viewer} />
       <BackToTop />
       <SearchDialog open={searchOpen} onClose={closeSearch} isOrganizer={!!viewer?.isOrganizer} />

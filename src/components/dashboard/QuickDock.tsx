@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Images, KeyRound, MapPinned, Plus } from "lucide-react";
+import { ArrowRight, Images, KeyRound, LayoutGrid, MapPinned, Plus } from "lucide-react";
 
 /**
  * Signed-in action bar: surfaces only the high-value tools NOT already sitting in the top header
@@ -72,12 +72,22 @@ export function QuickDock({
           Venues
         </Link>
 
+        {isOrganizer && (
+          <Link
+            href="/organizer"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+          >
+            <LayoutGrid className="size-3.5 text-ink-muted" aria-hidden />
+            My hosted events
+          </Link>
+        )}
+
         <Link
           href={isOrganizer ? "/organizer/events/new" : "/host"}
           className="inline-flex h-9 items-center gap-1.5 rounded-full bg-lavender px-3.5 text-[13px] font-semibold text-ink ring-1 ring-inset ring-ink/25 transition-colors hover:bg-lavender-hover"
         >
           <Plus className="size-3.5" strokeWidth={2.4} aria-hidden />
-          {isOrganizer ? "Create event" : "Host event"}
+          {isOrganizer ? "Host an Event" : "Host event"}
         </Link>
       </nav>
     </div>

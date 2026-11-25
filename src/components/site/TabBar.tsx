@@ -2,28 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Plus } from "lucide-react";
 import { m } from "motion/react";
 import { cn } from "@/lib/utils";
-import { ATTEND_NAV, HOST_NAV, VISITOR_HREF, isActive, isMainActive, workspaceFor } from "@/components/shell/nav";
+import { ATTEND_NAV, VISITOR_HREF, isMainActive, workspaceFor } from "@/components/shell/nav";
 
-/** Phone tab bar: Home · Discover · Calendar · Passes · Certs (or the hosting tabs). Visitors get it too. */
+/** Phone tab bar: unified Home · Discover · Calendar · Passes · Certs for all users & organizers. */
 export function TabBar({ signedIn = true }: { signedIn?: boolean }) {
   const pathname = usePathname();
   const ws = workspaceFor(pathname);
   // Admin has no tabs; an event's own page shows its price-and-register bar instead.
   if (ws === "admin" || /^\/events\/[^/]+$/.test(pathname)) return null;
 
-  const items = ws === "host" ? HOST_NAV : ATTEND_NAV;
+  const items = ATTEND_NAV;
 
   return (
     <nav
       aria-label="Tabs"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-line/70 bg-canvas/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 print:hidden supports-[not(backdrop-filter:blur(1px))]:bg-canvas md:hidden"
     >
-      <ul className={cn("mx-auto grid max-w-md", ws === "host" ? "grid-cols-3" : "grid-cols-5")}>
+      <ul className="mx-auto grid max-w-md grid-cols-5">
         {items.map((item) => {
-          const active = ws === "host" ? isActive(pathname, item) : isMainActive(pathname, item.href);
+          const active = isMainActive(pathname, item.href);
           const Icon = item.icon;
           return (
             <li key={item.href}>
@@ -51,16 +50,6 @@ export function TabBar({ signedIn = true }: { signedIn?: boolean }) {
             </li>
           );
         })}
-        {ws === "host" && (
-          <li>
-            <Link href="/organizer/events/new" className="flex h-[62px] flex-col items-center justify-center gap-1 text-[11px] font-semibold text-ink active:opacity-70">
-              <span className="grid h-7 w-14 place-items-center rounded-full bg-ink text-white" aria-hidden>
-                <Plus className="size-[18px]" />
-              </span>
-              Create
-            </Link>
-          </li>
-        )}
       </ul>
     </nav>
   );
