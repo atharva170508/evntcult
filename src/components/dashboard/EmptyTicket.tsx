@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { ArrowRight, RefreshCw, RotateCw, QrCode, Images, ShieldCheck } from "lucide-react";
 import { BrandMark } from "@/components/site/Brand";
+import { DashboardGreeting } from "./DashboardGreeting";
 import { EASE } from "@/components/motion/MotionProvider";
 import { cn } from "@/lib/utils";
 
@@ -171,16 +172,11 @@ export function EmptyTicket({ name, dateLine }: { name: string; dateLine: string
 
   return (
     <section aria-labelledby="home-greeting" className="pt-6 md:pt-10">
-      {/* Clean editorial header — no floating pill clutter */}
-      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-        <h1
-          id="home-greeting"
-          className="font-display text-[clamp(36px,4.4vw,56px)] leading-[0.96] tracking-[-0.03em] text-ink"
-        >
-          {greetingForNow()}, {firstName}.
-        </h1>
-        <p className="text-[14px] font-medium text-ink-muted">{dateLine}</p>
-      </div>
+      <DashboardGreeting
+        name={name}
+        dateLine={dateLine}
+        subtitle="Pick a vibe below to preview your first pass."
+      />
 
       {/* Single unified warm editorial stage — no nested cards */}
       <div

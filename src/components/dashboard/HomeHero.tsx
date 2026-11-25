@@ -7,16 +7,8 @@ import { ArrowUpRight } from "lucide-react";
 import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { EASE } from "@/components/motion/MotionProvider";
 import { EmptyTicket } from "./EmptyTicket";
+import { DashboardGreeting } from "./DashboardGreeting";
 import { passName } from "@/lib/pass-name";
-
-function greetingForNow(): string {
-  const hour = Number(
-    new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", hour12: false }).format(new Date()),
-  );
-  if (hour < 12) return "Good morning";
-  if (hour < 17) return "Good afternoon";
-  return "Good evening";
-}
 
 export type HeroEvent = {
   id: string;
@@ -65,16 +57,15 @@ export function HomeHero({ e, mine, dateLine, name }: { e: HeroEvent | null; min
   const tone = accentHex(e.accent);
   const when = `${new Date(e.startsAt).toLocaleDateString("en-IN", { ...IST, weekday: "short", day: "numeric", month: "short" })}, ${new Date(e.startsAt).toLocaleTimeString("en-IN", { ...IST, hour: "numeric", minute: "2-digit" }).toLowerCase()}`;
   const href = mine ? "/passes" : `/events/${e.slug}#register`;
-  const firstName = name.trim().split(/\s+/)[0] || name;
 
   return (
     <section aria-labelledby="hero-title" className="pt-6 md:pt-10">
-      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-        <p className="font-display text-[clamp(36px,4.4vw,56px)] leading-[0.96] tracking-[-0.03em] text-ink">
-          {greetingForNow()}, {firstName}.
-        </p>
-        <p className="text-[14px] font-medium text-ink-muted">{dateLine}</p>
-      </div>
+      <DashboardGreeting
+        name={name}
+        dateLine={dateLine}
+        subtitle={live ? "Doors are open — your pass is ready at the gate." : mine ? "Your next campus pass is locked in." : "Here's what's coming up next on campus."}
+        asHeading={false}
+      />
 
       <m.div
         initial={reduce ? false : { opacity: 0, y: 18 }}
