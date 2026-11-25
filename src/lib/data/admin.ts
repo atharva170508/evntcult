@@ -7,6 +7,7 @@
 import { newId } from "@/lib/tokens";
 import { csvCell } from "@/lib/data/organizer-actions";
 import { enqueueSchedule, onCancelled } from "@/lib/whatsapp";
+import { queueCancelledEmails } from "@/lib/mailer";
 
 export const ADMIN_EMAIL = "evntcult@gmail.com";
 export const MAX_MISSES = 5;
@@ -271,7 +272,10 @@ export async function ownerAction(
       .prepare("SELECT starts_at FROM events WHERE id = ?")
       .bind(id)
       .first<{ starts_at: string }>();
-    if (ev) await onCancelled(db, id, ev.starts_at, now);
+    if (ev) {
+      await onCancelled(db, id, ev.starts_at, now);
+      await queueCancelledEmails(db, id, now);
+    }
   } else if (kind === "restore") await enqueueSchedule(db, id, now);
   await db
     .prepare(

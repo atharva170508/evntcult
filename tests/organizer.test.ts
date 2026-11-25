@@ -48,7 +48,7 @@ beforeAll(async () => {
 afterAll(async () => dispose?.());
 
 const outbox = async () =>
-  (await db.prepare("SELECT user_id, template, payload, dedupe_key FROM notifications ORDER BY created_at, user_id").all<{ user_id: string; template: string; payload: string; dedupe_key: string }>()).results ?? [];
+  (await db.prepare("SELECT user_id, template, payload, dedupe_key FROM notifications WHERE channel = 'whatsapp' ORDER BY created_at, user_id").all<{ user_id: string; template: string; payload: string; dedupe_key: string }>()).results ?? [];
 
 describe("WhatsApp outbox", { timeout: 30_000 }, () => {
   it("an event update is queued only for registered students who opted in and have a number", async () => {

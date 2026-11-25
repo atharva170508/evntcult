@@ -599,8 +599,8 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.25fr)_340px] lg:gap-12">
           {/* LEFT: Calm, 30-second Essentials Flow */}
           <div className="space-y-5">
-            {/* 1. Big Hero Event Name + Category */}
-            <div className="rounded-[24px] border border-line-strong bg-surface p-5 shadow-card sm:p-6">
+            {/* 1. Sleek Luma-style Event Name + Category */}
+            <div className="rounded-2xl border border-line-strong bg-surface p-4 shadow-card transition-colors focus-within:border-ink/40 sm:p-5">
               <label htmlFor="ev-title" className="sr-only">
                 Event name
               </label>
@@ -612,7 +612,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                 value={f.title}
                 onChange={(e) => set("title", e.target.value)}
                 onBlur={() => blur("title")}
-                className="w-full border-0 bg-transparent font-display text-[clamp(30px,4vw,44px)] leading-[1.05] tracking-[-0.03em] text-ink placeholder:text-ink-subtle/60 focus:outline-none"
+                className="w-full border-0 bg-transparent font-display text-[clamp(24px,2.8vw,32px)] leading-[1.15] tracking-[-0.025em] text-ink placeholder:text-ink-subtle/60 focus:outline-none focus-visible:shadow-none focus-visible:ring-0"
               />
               {errors.title && (
                 <p className="mt-1 text-[13px] font-medium text-danger" role="alert">
@@ -627,7 +627,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                 value={f.tagline}
                 onChange={(e) => set("tagline", e.target.value)}
                 aria-invalid={!!blocked.tagline}
-                className="mt-2 w-full border-0 bg-transparent text-[15px] text-ink-2 placeholder:text-ink-subtle/70 focus:outline-none"
+                className="mt-1.5 w-full border-0 bg-transparent text-[14px] text-ink-2 placeholder:text-ink-subtle/70 focus:outline-none focus-visible:shadow-none focus-visible:ring-0"
               />
               {blocked.tagline && (
                 <p className="mt-1 text-[13px] font-medium text-danger" role="alert">
@@ -636,7 +636,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
               )}
 
               {/* 1-tap Category Pills */}
-              <div className="mt-5 flex flex-wrap gap-2 border-t border-line pt-4" role="radiogroup" aria-label="Category">
+              <div className="mt-4 flex flex-wrap gap-1.5 border-t border-line pt-3.5" role="radiogroup" aria-label="Category">
                 {ORGANIZER_CATEGORIES.map(([v, l]) => {
                   const active = f.category === v;
                   return (
@@ -647,7 +647,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                       aria-checked={active}
                       onClick={() => set("category", v)}
                       className={cn(
-                        "h-8 rounded-full px-3.5 text-[13px] font-semibold transition-colors",
+                        "h-7 rounded-full px-3 text-[12.5px] font-semibold transition-colors",
                         active
                           ? "bg-ink text-[#FFFEF6]"
                           : "bg-sunken text-ink-2 hover:bg-mist hover:text-ink",

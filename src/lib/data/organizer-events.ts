@@ -7,6 +7,7 @@
  * guard sits inside the one SQL statement that needs it.
  */
 import { enqueueSchedule, onMaterialChange } from "@/lib/whatsapp";
+import { queueEventUpdatedEmails } from "@/lib/mailer";
 import { detectClashes, type Clash } from "@/lib/clash";
 import { bufferFor } from "@/lib/venues";
 import { newAccessCode, newId } from "@/lib/tokens";
@@ -377,8 +378,10 @@ export async function saveEvent(
     (startsAt !== cur.starts_at ||
       endsAt !== cur.ends_at ||
       next.venue !== cur.venue)
-  )
+  ) {
     await onMaterialChange(db, id, startsAt, now);
+    await queueEventUpdatedEmails(db, id, startsAt, now);
+  }
   if (!row) {
     const now2 = await getRow(db, id);
     if (now2 && now2.version !== version)

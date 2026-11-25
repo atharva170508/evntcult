@@ -22,7 +22,7 @@ import { purgeOldCodes } from "./src/lib/data/login-codes";
 import { purgeFaceSearchLog } from "./src/lib/data/face-search";
 import { gateCounts } from "./src/lib/data/checkins";
 import { enqueueUpcoming, flush, type WaEnv } from "./src/lib/whatsapp";
-import { flushEmail, queueFeedbackEmails } from "./src/lib/mailer";
+import { flushEmail, queueFeedbackEmails, queueReminderEmails } from "./src/lib/mailer";
 import { readSessionValue, SESSION_COOKIE } from "./src/lib/session";
 
 export { EventLive } from "./src/lib/live/event-live";
@@ -79,6 +79,7 @@ export default {
         if (Math.floor(controller.scheduledTime / 60_000) % 5 === 0) {
           const holds = await sweepHolds(env.DB, now);
           await enqueueUpcoming(env.DB, now);
+          await queueReminderEmails(env.DB, now).catch((e) => console.error("[email] reminder queue", e));
           await queueFeedbackEmails(env.DB, now).catch((e) => console.error("[email] feedback queue", e));
           await purgeOldCodes(env.DB, now);
           await purgeFaceSearchLog(env.DB, now);

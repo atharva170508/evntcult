@@ -5,6 +5,7 @@
  */
 import { newId } from "@/lib/tokens";
 import { notifyRegistered } from "@/lib/notify";
+import { queueAnnouncementEmails } from "@/lib/mailer";
 import { seqFromPassName } from "@/lib/pass-name";
 
 export class ActionError extends Error {
@@ -315,6 +316,7 @@ export async function postEventUpdate(
         now,
       )
     : 0;
+  await queueAnnouncementEmails(db, event.id, id, KIND_LABEL[input.kind], input.body, now);
   await audit(
     db,
     input.actorId,

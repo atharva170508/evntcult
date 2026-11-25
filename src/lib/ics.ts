@@ -12,6 +12,13 @@ export interface IcsEvent {
   description?: string | null;
   url?: string | null;
   now?: Date;
+  method?: "PUBLISH" | "REQUEST" | "CANCEL";
+  sequence?: number;
+  status?: "CONFIRMED" | "CANCELLED";
+  organizerName?: string | null;
+  organizerEmail?: string | null;
+  attendeeName?: string | null;
+  attendeeEmail?: string | null;
 }
 
 /** 2026-11-20T04:30:00.000Z → 20261120T043000Z */
@@ -42,30 +49,60 @@ export function foldLine(line: string): string {
 }
 
 export function buildIcs(e: IcsEvent): string {
+  const method = e.method ?? "PUBLISH";
+  const alarms =
+    method === "CANCEL"
+      ? []
+      : [
+          "BEGIN:VALARM",
+          "ACTION:DISPLAY",
+          "DESCRIPTION:Event tomorrow",
+          "TRIGGER:-P1D",
+          "END:VALARM",
+          "BEGIN:VALARM",
+          "ACTION:DISPLAY",
+          "DESCRIPTION:Starts in 1 hour",
+          "TRIGGER:-PT1H",
+          "END:VALARM",
+        ];
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "PRODID:-//EvntCult//Events//EN",
     "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
+    `METHOD:${method}`,
     "BEGIN:VEVENT",
     `UID:${e.uid}`,
     `DTSTAMP:${icsDate((e.now ?? new Date()).toISOString())}`,
     `DTSTART:${icsDate(e.startsAt)}`,
     `DTEND:${icsDate(e.endsAt)}`,
+    ...(e.sequence != null ? [`SEQUENCE:${e.sequence}`] : []),
+    ...(e.status ? [`STATUS:${e.status}`] : []),
     `SUMMARY:${icsEscape(e.title)}`,
     ...(e.location ? [`LOCATION:${icsEscape(e.location)}`] : []),
     ...(e.description ? [`DESCRIPTION:${icsEscape(e.description)}`] : []),
     ...(e.url ? [`URL:${e.url}`] : []),
-    "BEGIN:VALARM",
-    "ACTION:DISPLAY",
-    "DESCRIPTION:Reminder",
-    "TRIGGER:-PT1H",
-    "END:VALARM",
+    ...(e.organizerEmail
+      ? [`ORGANIZER;CN=${icsEscape(e.organizerName || "EvntCult")}:mailto:${e.organizerEmail}`]
+      : []),
+    ...(e.attendeeEmail
+      ? [
+          `ATTENDEE;CN=${icsEscape(e.attendeeName || "Guest")};PARTSTAT=ACCEPTED:mailto:${e.attendeeEmail}`,
+        ]
+      : []),
+    ...alarms,
     "END:VEVENT",
     "END:VCALENDAR",
   ];
   return lines.map(foldLine).join("\r\n") + "\r\n";
+}
+
+/** Encode a UTF-8 string (such as an .ics file) to base64 for email attachments. */
+export function toBase64Utf8(input: string): string {
+  const bytes = new TextEncoder().encode(input);
+  let bin = "";
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
 }
 
 /** A subscribable calendar with many events (no alarms: calendar apps refetch it every few hours). */
