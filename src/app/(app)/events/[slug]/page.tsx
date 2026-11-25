@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   ArrowUpRight,
   CalendarClock,
-  CalendarPlus,
   Camera,
   ChevronRight,
   Link as LinkIcon,
@@ -34,6 +33,7 @@ import { getDB } from "@/lib/db";
 import { siteHost } from "@/lib/organizer/page-data";
 import { listQuestions } from "@/lib/data/questions";
 import { ShareEvent } from "@/components/events/ShareEvent";
+import { ShareEventBar } from "@/components/events/ShareEventBar";
 import { WhatsAppPrompt } from "@/components/events/WhatsAppPrompt";
 import { InterestedButton } from "@/components/events/InterestedButton";
 import { CategoryPills, CategorySections, categorySectionList } from "@/components/events/CategoryFacts";
@@ -331,7 +331,12 @@ export default async function EventPage({
       )}
       {isPublic && (
         <div className="pt-5">
-          <ShareEvent url={shareUrl} title={e.title} />
+          <ShareEvent
+            url={shareUrl}
+            title={e.title}
+            whenLabel={`${fmtDate(s.startsAt, { weekday: "short", day: "numeric", month: "short" })}, ${fmtRange(s.startsAt, s.endsAt)} IST`}
+            whereLabel={e.event_type === "virtual" ? "Online" : (e.venue ?? "Campus")}
+          />
         </div>
       )}
       <div className="mt-3 border-t border-line pt-1">
@@ -724,9 +729,9 @@ export default async function EventPage({
             </div>
           </section>
 
-          {/* Partiful-style secondary actions */}
+          {/* Partiful / Posh-inspired 1-tap invite & calendar bar */}
           {(isPublic || (!reg && !d.isOwner && canSell)) && !ended && (
-            <div className="mt-2 flex flex-wrap gap-1">
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               {!reg && !d.isOwner && canSell && (
                 <InterestedButton
                   slug={e.slug}
@@ -735,14 +740,13 @@ export default async function EventPage({
                 />
               )}
               {isPublic && (
-                <a
-                  href={`/api/events/${e.slug}/ics`}
-                  download
-                  className="inline-flex h-10 items-center gap-2 rounded-lg px-3 text-[14.5px] font-semibold text-ink-2 transition-colors hover:bg-sunken hover:text-ink"
-                >
-                  <CalendarPlus className="size-[18px]" aria-hidden /> Add to
-                  calendar
-                </a>
+                <ShareEventBar
+                  slug={e.slug}
+                  url={shareUrl}
+                  title={e.title}
+                  whenLabel={`${fmtDate(s.startsAt, { weekday: "short", day: "numeric", month: "short" })}, ${fmtRange(s.startsAt, s.endsAt)} IST`}
+                  whereLabel={e.event_type === "virtual" ? "Online" : (e.venue ?? "Campus")}
+                />
               )}
             </div>
           )}

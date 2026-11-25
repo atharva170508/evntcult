@@ -6,29 +6,33 @@ import {
   Award,
   CalendarDays,
   CalendarRange,
+  Clock,
   Compass,
   CornerDownLeft,
   House,
   Images,
+  KeyRound,
   LayoutGrid,
+  Link2,
   MapPin,
   Plus,
   Search,
-  Sparkles,
   Ticket,
   UserRound,
   type LucideIcon,
 } from "lucide-react";
 import { CATEGORY_NAMES } from "./categories";
 import { ModalDialog } from "@/components/ui/ModalDialog";
+import { toast } from "@/components/ui/Toaster";
 import { fmtDate, fmtTime } from "@/lib/utils";
 
 interface Item {
   id: string;
-  group: "Events" | "Recent" | "Go to" | "Hosting" | "Browse";
+  group: "Events" | "Recent" | "Actions" | "Go to" | "Hosting" | "Browse";
   label: string;
   hint?: string;
   href: string;
+  run?: () => void;
   icon?: LucideIcon;
   /** For event results: date line. */
   meta?: string;
@@ -63,7 +67,7 @@ const saveRecent = (it: Item) => {
 const PAGES: Item[] = [
   { id: "p-home", group: "Go to", label: "Home", href: "/dashboard", icon: House },
   { id: "p-disc", group: "Go to", label: "Discover events", href: "/events", icon: Compass },
-  { id: "p-today", group: "Go to", label: "Happening today", href: "/events?when=today", icon: Sparkles },
+  { id: "p-today", group: "Go to", label: "Happening today", href: "/events?when=today", icon: Clock },
   { id: "p-free", group: "Go to", label: "Free events", href: "/events?price=free", icon: Ticket },
   { id: "p-cal", group: "Go to", label: "My calendar", href: "/calendar", icon: CalendarDays },
   { id: "p-pass", group: "Go to", label: "My passes", href: "/passes", icon: Ticket },
@@ -86,7 +90,17 @@ const HOSTING: Item[] = [
  * to any page; organizers also get their hosting shortcuts. Arrow keys move a highlight that
  * glides between rows; Enter opens; Esc closes. Recently opened events show first.
  */
-export function SearchDialog({ open, onClose, isOrganizer = false }: { open: boolean; onClose: () => void; isOrganizer?: boolean }) {
+export function SearchDialog({
+  open,
+  onClose,
+  isOrganizer = false,
+  onEnterCode,
+}: {
+  open: boolean;
+  onClose: () => void;
+  isOrganizer?: boolean;
+  onEnterCode?: () => void;
+}) {
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLDivElement>(null);
@@ -147,15 +161,34 @@ export function SearchDialog({ open, onClose, isOrganizer = false }: { open: boo
     }));
     const kinds: Item[] = Object.entries(CATEGORY_NAMES).map(([k, label]) => ({ id: `k-${k}`, group: "Browse", label, href: `/events?type=${k}`, icon: Compass }));
     const search: Item[] = term ? [{ id: "s-all", group: "Events", label: `Search all events for "${q.trim()}"`, href: `/events?q=${encodeURIComponent(q.trim())}`, icon: Search }] : [];
+    const quickActions: Item[] = [
+      ...(onEnterCode
+        ? [{ id: "a-code", group: "Actions" as const, label: "Enter an event code", href: "#code", icon: KeyRound, run: onEnterCode }]
+        : []),
+      {
+        id: "a-copy",
+        group: "Actions" as const,
+        label: "Copy current page link",
+        href: "#copy",
+        icon: Link2,
+        run: () => {
+          navigator.clipboard?.writeText(window.location.href).then(
+            () => toast("Link copied to clipboard.", { tone: "ok" }),
+            () => toast("Couldn't copy link.", { tone: "error" }),
+          );
+        },
+      },
+    ];
     return [
       ...(term ? [] : recent),
       ...events,
       ...search,
+      ...quickActions.filter(match),
       ...(isOrganizer ? HOSTING.filter(match) : []),
       ...PAGES.filter(match),
       ...(term ? kinds.filter(match) : []),
     ];
-  }, [q, found, recent, isOrganizer]);
+  }, [q, found, recent, isOrganizer, onEnterCode]);
 
   useEffect(() => setActive(0), [q, found]);
 
@@ -172,6 +205,11 @@ export function SearchDialog({ open, onClose, isOrganizer = false }: { open: boo
   if (!open) return null;
 
   const go = (it: Item) => {
+    if (it.run) {
+      onClose();
+      it.run();
+      return;
+    }
     if (it.group === "Events" && it.id.startsWith("e-")) saveRecent(it);
     if (it.group === "Recent") saveRecent(it);
     onClose();

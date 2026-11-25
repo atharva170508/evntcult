@@ -5,7 +5,7 @@ import { getViewer } from "@/lib/rbac";
 import { formatINR } from "@/lib/money";
 import { organizerEvents, type HomeEvent } from "@/lib/data/organizer-events";
 import { MISSING_LABEL, istTime, missingForPublish, ticketDate } from "@/lib/organizer/shared";
-import { ArrowRight, CalendarPlus, Plus } from "lucide-react";
+import { ArrowRight, CalendarDays, CalendarPlus, Plus, ScanLine } from "lucide-react";
 import { DuplicateButton } from "@/components/organizer-ui/EventActions";
 import { EventArt } from "@/components/ui/EventArt";
 import { Chip } from "@/components/ui/Chip";
@@ -68,9 +68,14 @@ function EventRow({ e, draft }: { e: HomeEvent; draft?: boolean }) {
             Finish setup
           </LinkButton>
         ) : (
-          <LinkButton href={`/organizer/events/${e.id}/manage`} size="sm" variant="secondary">
-            Manage <ArrowRight className="size-3.5" aria-hidden />
-          </LinkButton>
+          <>
+            <LinkButton href={`/organizer/scan/${e.id}`} size="sm" variant="ghost" className="hidden sm:inline-flex">
+              <ScanLine className="size-3.5" aria-hidden /> Gate
+            </LinkButton>
+            <LinkButton href={`/organizer/events/${e.id}/manage`} size="sm" variant="secondary">
+              Manage <ArrowRight className="size-3.5" aria-hidden />
+            </LinkButton>
+          </>
         )}
       </div>
     </li>
@@ -111,11 +116,32 @@ export default async function OrganizerHome() {
   const firstName = viewer.name.split(/\s+/)[0] ?? "there";
 
   return (
-    <div className="pb-8 pt-8 md:pt-12">
-      <header className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
-        <h1 className="font-display text-[clamp(40px,5vw,56px)] leading-none tracking-[-0.03em]">
-          Welcome back, {firstName}
-        </h1>
+    <div className="pb-12 pt-8 md:pt-10">
+      <header className="flex flex-col gap-5 border-b border-line pb-7 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="font-display text-[clamp(40px,5vw,60px)] leading-[0.95] tracking-[-0.03em] text-ink">
+            Your hosted <em>events.</em>
+          </h1>
+          <p className="mt-2 text-[15px] text-ink-muted">
+            Create events, send announcements, verify UPI payments, link Drive albums, and run the gate.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Link
+            href="/organizer/calendar"
+            className="inline-flex h-11 items-center gap-2 rounded-xl border border-line-strong bg-surface px-4 text-[14px] font-semibold text-ink transition-colors hover:bg-sunken"
+          >
+            <CalendarDays className="size-4 text-ink-muted" aria-hidden />
+            Schedule
+          </Link>
+          <Link
+            href="/organizer/events/new"
+            className="ui-press ui-sheen inline-flex h-11 items-center gap-2 rounded-xl bg-lavender px-5 text-[14.5px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink hover:bg-lavender-hover"
+          >
+            <Plus className="size-4" strokeWidth={2.5} aria-hidden />
+            Host an Event
+          </Link>
+        </div>
       </header>
 
       <div className="mt-6">

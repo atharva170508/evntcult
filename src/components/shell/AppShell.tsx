@@ -11,6 +11,8 @@ import { EnterCodeDialog } from "./EnterCodeDialog";
 import { SheenTracker } from "@/components/ui/SheenTracker";
 import { BackToTop } from "@/components/ui/BackToTop";
 import { NavigationProgress } from "@/components/ui/NavigationProgress";
+import { OfflineBanner } from "@/components/ui/OfflineBanner";
+import { KeyboardShortcuts } from "@/components/ui/KeyboardShortcuts";
 import { workspaceFor } from "./nav";
 
 export type { NavViewer };
@@ -57,6 +59,7 @@ export function AppShell({
       <Suspense fallback={null}>
         <NavigationProgress />
       </Suspense>
+      <OfflineBanner />
       <SheenTracker />
       <SiteHeader viewer={viewer} wide={wide} onSearch={() => setSearchOpen(true)} onEnterCode={() => setCodeOpen(true)} />
       <main
@@ -68,8 +71,13 @@ export function AppShell({
       {ws !== "admin" && <SiteFooter viewer={viewer} />}
       <TabBar signedIn={!!viewer} />
       <BackToTop />
-      <SearchDialog open={searchOpen} onClose={closeSearch} isOrganizer={!!viewer?.isOrganizer} />
+      <SearchDialog open={searchOpen} onClose={closeSearch} isOrganizer={!!viewer?.isOrganizer} onEnterCode={viewer ? () => setCodeOpen(true) : undefined} />
       <EnterCodeDialog open={codeOpen} onClose={() => setCodeOpen(false)} />
+      <KeyboardShortcuts
+        isOrganizer={!!viewer?.isOrganizer}
+        signedIn={!!viewer}
+        onEnterCode={() => setCodeOpen(true)}
+      />
     </div>
   );
 }
