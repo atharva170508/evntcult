@@ -110,6 +110,34 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     ),
   },
   {
+    id: "language",
+    title: "Language and content",
+    body: (
+      <>
+        <p>
+          Everything you write on EvntCult must be respectful and suitable for a college campus. This covers event names, taglines, descriptions,
+          venues, announcements, posts, questions, comments, feedback, names and host applications.
+        </p>
+        <ul>
+          <li>No abusive or strong language, insults or slurs, in English, Hindi, Marathi or any other language or script.</li>
+          <li>No content that promotes or refers to drugs or other prohibited substances or activities, even as a joke or in an event name.</li>
+          <li>
+            Don&apos;t try to get around the rules with spacing, symbols, numbers for letters, look-alike characters, hidden characters or deliberate
+            misspellings. These count the same as the word itself.
+          </li>
+        </ul>
+        <p>
+          EvntCult checks text automatically when you save it. If something breaks these rules it isn&apos;t saved or published, and you&apos;ll be
+          asked to change it. The check is strict, so it can occasionally stop an innocent phrase; rewording usually fixes it, and you can write to us
+          if you think it got something wrong.
+        </p>
+        <p>
+          Content that slips through can still be removed, and accounts that keep breaking these rules may lose hosting access or be blocked.
+        </p>
+      </>
+    ),
+  },
+  {
     id: "information",
     title: "Your information",
     body: (
