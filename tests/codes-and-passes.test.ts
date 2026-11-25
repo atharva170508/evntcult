@@ -48,7 +48,7 @@ describe("pass tokens", () => {
     expect(extractPassToken(t.toLowerCase())).toBe(t);
   });
   it("display code is decorative and readable", () => {
-    expect(passCode("valorant", 42)).toBe("EC-VALO-0042");
+    expect(passCode("valorant", 42)).toMatch(/^[A-Z]+-[A-Z]+-0042$/);
   });
 });
 

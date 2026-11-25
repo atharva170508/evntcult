@@ -18,14 +18,20 @@ export const POST = handle(async (req: Request) => {
   assertDomainAllowed(email);
 
   const existing = await findUserId(email);
-  // Ask for the sign-up details BEFORE using up a try, so a new student doesn't lose tries filling the form.
-  if (!existing) assertSignupDetails(details);
+  const needsSignup = !existing && (!details.name || !details.phone || details.acceptTerms !== true);
 
+  // Always verify the 6-digit code FIRST so wrong codes can never enumerate registered emails.
   try {
-    await verifyCode(await getDB(), { email, code, secret: process.env.SESSION_SECRET ?? "" });
+    await verifyCode(await getDB(), {
+      email,
+      code,
+      secret: process.env.SESSION_SECRET ?? "",
+      consume: !needsSignup,
+    });
   } catch (e) {
     if (e instanceof LoginCodeError) throw new ApiError(e.status, e.code, e.message);
     throw e;
   }
+  if (!existing) assertSignupDetails(details);
   return signedInResponse(existing ?? (await createUser(email, details)));
 });

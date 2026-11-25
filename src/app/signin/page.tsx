@@ -5,6 +5,7 @@ import { ArrowLeft, QrCode, ScanFace, ShieldCheck } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { BrandLogo } from "@/components/site/Brand";
 import { codeLoginOn } from "@/lib/email";
+import { safeNextPath } from "@/lib/auth-shared";
 import { SignInForm } from "./SignInForm";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -17,7 +18,7 @@ export default async function SignInPage({
 }) {
   const { next: nextParam, mode } = await searchParams;
   const signup = mode === "signup";
-  const next = nextParam?.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/dashboard";
+  const next = safeNextPath(nextParam);
   if (await getViewer()) redirect(next);
 
   return (

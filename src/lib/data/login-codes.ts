@@ -187,7 +187,7 @@ export async function pendingCode(
 /** Check a code. Every check uses up one try. On success the code is used up and can't be used again. */
 export async function verifyCode(
   db: D1Database,
-  opts: { email: string; code: string; secret: string; now?: Date },
+  opts: { email: string; code: string; secret: string; now?: Date; consume?: boolean },
 ): Promise<void> {
   const now = opts.now ?? new Date();
   const row = await pendingCode(db, opts.email, now);
@@ -241,6 +241,7 @@ export async function verifyCode(
       left,
     );
   }
+  if (opts.consume === false) return;
   const used = await db
     .prepare(
       "UPDATE login_codes SET used_at = ? WHERE id = ? AND used_at IS NULL",

@@ -51,12 +51,26 @@ export async function createUser(email: string, d: { name?: string; phone?: stri
   return id;
 }
 
+/** Rejects external, protocol-relative (// or /\), or control-char open redirects. */
+export function safeNextPath(raw: string | undefined | null, fallback = "/dashboard"): string {
+  if (!raw) return fallback;
+  if (!raw.startsWith("/") || raw.startsWith("//") || raw.startsWith("/\\")) return fallback;
+  if (/[\u0000-\u001f\u007f\\]/.test(raw)) return fallback;
+  return raw;
+}
+
 export async function signedInResponse(userId: string) {
-  const user = await first<{ has_face_id: number }>(
-    "SELECT (face_embedding IS NOT NULL) AS has_face_id FROM users WHERE id = ?",
+  const user = await first<{ has_face_id: number; blocked_at: string | null }>(
+    "SELECT (face_embedding IS NOT NULL) AS has_face_id, blocked_at FROM users WHERE id = ?",
     userId,
   );
-  const res = Response.json({ ok: true, hasFaceId: Boolean(user?.has_face_id) });
+  if (!user || user.blocked_at) {
+    throw new ApiError(403, "account_blocked", "This account has been suspended.");
+  }
+  const res = Response.json(
+    { ok: true, hasFaceId: Boolean(user.has_face_id) },
+    { headers: { "Cache-Control": "no-store" } },
+  );
   res.headers.append("Set-Cookie", sessionCookieHeader(await createSessionValue(userId)));
   return res;
 }

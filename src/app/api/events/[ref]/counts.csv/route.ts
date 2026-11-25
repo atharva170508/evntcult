@@ -2,14 +2,12 @@ import { ApiError, handle } from "@/lib/api";
 import { first, getDB } from "@/lib/db";
 import { requireEventOwner } from "@/lib/rbac";
 import { choiceTallies } from "@/lib/data/questions";
+import { csvCell } from "@/lib/data/organizer-actions";
 
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ ref: string }> };
 
-const cell = (v: string | number) => {
-  const s = String(v);
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-};
+const cell = (v: string | number) => csvCell(v);
 
 /** GET /api/events/:id/counts.csv — the caterer and vendor sheet: every choice question, counted. */
 export const GET = handle(async (_req: Request, { params }: Ctx) => {

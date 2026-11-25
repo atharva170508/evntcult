@@ -1,6 +1,8 @@
 import "server-only";
 import { z } from "zod";
 
+const DEFAULT_MAX_BODY_BYTES = 256 * 1024; // 256 KB cap against payload DoS
+
 /** Every API error has the shape { error: { code, message } }. Never a stack trace. */
 export class ApiError extends Error {
   constructor(
@@ -13,7 +15,7 @@ export class ApiError extends Error {
 }
 
 export const errorJson = (status: number, code: string, message: string) =>
-  Response.json({ error: { code, message } }, { status });
+  Response.json({ error: { code, message } }, { status, headers: { "Cache-Control": "no-store" } });
 
 /** Wrap a route handler: turns ApiError into JSON and hides unexpected errors. */
 export function handle<A extends unknown[]>(fn: (...args: A) => Promise<Response>) {
@@ -28,11 +30,31 @@ export function handle<A extends unknown[]>(fn: (...args: A) => Promise<Response
   };
 }
 
-/** Parse a JSON body with a strict schema (unknown fields are rejected). */
-export async function parseBody<T extends z.ZodTypeAny>(req: Request, schema: T): Promise<z.infer<T>> {
+/** Parse a JSON body with a strict schema and payload size cap (unknown fields are rejected). */
+export async function parseBody<T extends z.ZodTypeAny>(
+  req: Request,
+  schema: T,
+  opts?: { maxBytes?: number },
+): Promise<z.infer<T>> {
+  const maxBytes = opts?.maxBytes ?? DEFAULT_MAX_BODY_BYTES;
+  const contentLen = Number(req.headers.get("content-length") ?? "0");
+  if (Number.isFinite(contentLen) && contentLen > maxBytes) {
+    throw new ApiError(413, "payload_too_large", "Request body is too large.");
+  }
+
+  let text: string;
+  try {
+    text = await req.text();
+  } catch {
+    throw new ApiError(400, "bad_json", "The request body must be JSON.");
+  }
+  if (text.length > maxBytes) {
+    throw new ApiError(413, "payload_too_large", "Request body is too large.");
+  }
+
   let raw: unknown;
   try {
-    raw = await req.json();
+    raw = JSON.parse(text);
   } catch {
     throw new ApiError(400, "bad_json", "The request body must be JSON.");
   }

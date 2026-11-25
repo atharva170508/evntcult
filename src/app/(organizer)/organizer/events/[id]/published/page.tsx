@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { ownedRow, siteHost } from "@/lib/organizer/page-data";
 import { istTime, ticketDate, ORGANIZER_CATEGORIES } from "@/lib/organizer/shared";
 import { Ticket } from "@/components/organizer-ui/Ticket";
-import { ArrowRight, CircleCheck, ExternalLink, Link2, ScanLine, Users } from "lucide-react";
+import { ArrowUpRight, ExternalLink, KeyRound, Link2, MessageCircle, ScanLine, Users } from "lucide-react";
 import { CopyLink, DuplicateButton, UnpublishButton } from "@/components/organizer-ui/EventActions";
 
 export const metadata: Metadata = { title: "Published" };
@@ -16,13 +16,20 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
   const [{ row: e }, host] = await Promise.all([ownedRow(id), siteHost()]);
   if (e.status !== "published") redirect(`/organizer/events/${id}`);
   const base = `${host.startsWith("localhost") ? "http" : "https"}://${host}`;
-  const link = e.access === "code" && e.access_code ? `${base}/c/${e.access_code.toLowerCase()}` : `${base}/e/${e.slug}`;
+  const link = e.access_code ? `${base}/c/${e.access_code.toLowerCase()}` : `${base}/e/${e.slug}`;
   const cat = ORGANIZER_CATEGORIES.find(([v]) => v === e.category)?.[1] ?? null;
-  const steps = [
-    { icon: ExternalLink, title: "Open the event page", body: "See exactly what attendees see.", href: `/events/${e.slug}`, cta: "Open page" },
-    { icon: Users, title: "Watch registrations", body: "Attendees, payments, updates and certificates.", href: `/organizer/events/${e.id}/manage`, cta: "Manage" },
-    { icon: ScanLine, title: "Run the gate", body: "Scan passes on the night, even offline.", href: `/organizer/scan/${e.id}`, cta: "Scanner" },
+  const venueLabel = e.venue_status === "tba" ? "Venue TBA" : e.venue;
+  const waText = encodeURIComponent(
+    `${e.title} is live on EvntCult!\n${ticketDate(e.starts_at)} · ${istTime(new Date(e.starts_at))} IST${venueLabel ? ` · ${venueLabel}` : ""}\nGrab your pass: ${link}`,
+  );
+  const waHref = `https://wa.me/?text=${waText}`;
+
+  const actions = [
+    { icon: ExternalLink, title: "Open attendee page", body: "See the live page exactly as students see it.", href: `/events/${e.slug}` },
+    { icon: Users, title: "Manage attendees & Drive vault", body: "Track sign-ups, UPI payments, announcements, and event photos.", href: `/organizer/events/${e.id}/manage` },
+    { icon: ScanLine, title: "Open gate scanner", body: "Scan QR passes at the door — works even offline.", href: `/organizer/scan/${e.id}` },
   ];
+
   return (
     <>
       <header className="o-top">
@@ -30,7 +37,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
           <Link href="/organizer">Events</Link> <span aria-hidden>/</span> <b>{e.title}</b>
         </div>
         <span className="o-status">
-          <span className="size-1.5 rounded-full bg-live-dot" aria-hidden /> Published
+          <span className="size-1.5 rounded-full bg-live-dot" aria-hidden /> Live
         </span>
         <span className="o-spacer" />
         <UnpublishButton id={e.id} version={e.version} />
@@ -39,66 +46,99 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
           Edit
         </Link>
       </header>
-      <div className="mx-auto grid max-w-[1180px] items-start gap-10 py-10 lg:grid-cols-[minmax(0,1fr)_440px] lg:py-14">
-        <div className="min-w-0">
-          <span className="inline-flex items-center gap-2 rounded-xl bg-live-soft px-3 py-1 text-[13px] font-medium text-live">
-            <CircleCheck className="size-4" aria-hidden /> Your event is live
-          </span>
-          <h1 className="mt-5 text-display-lg font-semibold">
-            It&apos;s live.
-          </h1>
-          <p className="mt-3 max-w-lg text-lead text-ink-muted">Share the link and people can register straight away. Passes, reminders and the gate scanner are ready.</p>
 
-          <section aria-labelledby="share-h" className="card mt-8 p-5 md:p-6">
-            <h2 id="share-h" className="flex items-center gap-2 text-h4 font-semibold">
-              <Link2 className="size-4 text-ink-subtle" aria-hidden /> Share link
-            </h2>
+      <div className="mx-auto grid max-w-[1160px] items-start gap-10 px-gutter py-10 lg:grid-cols-[minmax(0,1.15fr)_380px] lg:gap-14 lg:py-14">
+        <div className="min-w-0">
+          <span className="inline-flex items-center gap-2 rounded-full bg-live-soft px-3.5 py-1 text-[13px] font-semibold text-live">
+            <span className="size-2 animate-pulse rounded-full bg-live" aria-hidden />
+            Live on campus
+          </span>
+
+          <h1 className="mt-4 font-display text-[clamp(44px,5.6vw,68px)] leading-[0.94] tracking-[-0.03em] text-ink">
+            {e.title} is <em>live.</em>
+          </h1>
+          <p className="mt-3 max-w-[48ch] text-[16px] leading-relaxed text-ink-2">
+            Share the link below and students can claim their offline QR pass immediately. Gate scanning, reminders, and Photo Vault are ready.
+          </p>
+
+          {/* 1-Tap Share Hub */}
+          <section aria-labelledby="share-h" className="mt-8 rounded-[24px] border border-line-strong bg-surface p-6 shadow-card">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 id="share-h" className="flex items-center gap-2 text-[15px] font-semibold text-ink">
+                <Link2 className="size-4 text-ink-muted" aria-hidden />
+                Share your event
+              </h2>
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-9 items-center gap-1.5 rounded-full bg-ink px-4 text-[13px] font-semibold text-[#FFFEF6] transition-opacity hover:opacity-90"
+              >
+                <MessageCircle className="size-3.5" aria-hidden />
+                Share on WhatsApp
+              </a>
+            </div>
             <div className="mt-4">
               <CopyLink url={link} />
             </div>
-            {e.access === "code" && e.access_code && (
-              <p className="mt-3 text-[13px] text-ink-muted">
-                Private event, join code <span className="font-mono font-medium tracking-[0.12em] text-ink">{e.access_code.toLowerCase()}</span>
+            {e.access_code && (
+              <p className="mt-3.5 flex items-center gap-2 text-[13px] text-ink-muted">
+                <KeyRound className="size-3.5 shrink-0" aria-hidden />
+                <span>
+                  {e.access === "code" ? "Private join code:" : "Custom quick-join code:"}{" "}
+                  <span className="font-mono font-semibold tracking-[0.06em] text-ink">{e.access_code.toLowerCase()}</span>
+                </span>
               </p>
             )}
           </section>
 
-          <h2 className="eyebrow mt-10">What&apos;s next</h2>
-          <ol className="mt-3 grid gap-3 sm:grid-cols-3">
-            {steps.map((st, i) => (
-              <li key={st.title}>
-                <Link href={st.href} className="card card-hover group flex h-full flex-col p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="grid size-9 place-items-center text-ink-2">
-                      <st.icon className="size-[17px]" aria-hidden />
+          {/* Clean hairline-divided next steps */}
+          <section aria-labelledby="next-h" className="mt-10">
+            <h2 id="next-h" className="border-b border-ink pb-3 text-[16px] font-semibold text-ink">
+              Ready when you are
+            </h2>
+            <ul className="divide-y divide-line">
+              {actions.map((a) => (
+                <li key={a.title}>
+                  <Link
+                    href={a.href}
+                    className="group flex items-center justify-between gap-4 py-4 transition-colors hover:text-ink"
+                  >
+                    <span className="flex items-start gap-3.5">
+                      <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-xl bg-sunken text-ink">
+                        <a.icon className="size-4" aria-hidden />
+                      </span>
+                      <span>
+                        <span className="block text-[15px] font-semibold text-ink group-hover:underline group-hover:underline-offset-4">
+                          {a.title}
+                        </span>
+                        <span className="mt-0.5 block text-[13.5px] text-ink-muted">{a.body}</span>
+                      </span>
                     </span>
-                    <span className="font-mono text-[12px] text-ink-subtle">0{i + 1}</span>
-                  </div>
-                  <p className="mt-8 text-[15px] font-semibold">{st.title}</p>
-                  <p className="mt-1 text-[13px] text-ink-muted">{st.body}</p>
-                  <span className="mt-4 inline-flex items-center gap-1 text-[13px] font-medium text-ink">
-                    {st.cta} <ArrowRight className="size-3.5 transition-transform duration-base ease-out group-hover:translate-x-0.5" aria-hidden />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ol>
+                    <ArrowUpRight className="size-4 shrink-0 text-ink-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
-        <div className="lg:sticky lg:top-[calc(var(--header-h)+var(--toolbar-h)+24px)]">
-          <p className="eyebrow mb-3">Attendee pass preview</p>
+
+        {/* Sticky Live Pass Preview */}
+        <aside className="lg:sticky lg:top-24">
+          <p className="mb-3 px-1 text-[12.5px] font-semibold text-ink-muted">Attendee pass preview</p>
           <Ticket
             category={cat}
             title={e.title}
             dateLabel={ticketDate(e.starts_at)}
             time={istTime(new Date(e.starts_at))}
-            venue={e.venue_status === "tba" ? "Venue TBA" : e.venue}
+            venue={venueLabel}
             tagline={e.tagline}
             qrValue={link}
             passCode={passCallSignCode(e.taken + 1)}
             priceLabel={e.price_paise ? `₹${Math.round(e.price_paise / 100)}` : "Free"}
             seatsLabel={e.capacity === null ? "Unlimited" : `${Math.max(0, e.capacity - e.taken)} / ${e.capacity}`}
           />
-        </div>
+        </aside>
       </div>
     </>
   );
