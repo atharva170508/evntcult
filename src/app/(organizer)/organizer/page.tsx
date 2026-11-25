@@ -12,6 +12,7 @@ import { Chip } from "@/components/ui/Chip";
 import { Meter } from "@/components/ui/Meter";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
 import { FirstVisitCard } from "@/components/ui/FirstVisitCard";
+import { DeleteDraftButton } from "@/components/organizer-ui/DeleteDraftButton";
 
 export const metadata: Metadata = { title: "Your events" };
 export const dynamic = "force-dynamic";
@@ -64,9 +65,13 @@ function EventRow({ e, draft }: { e: HomeEvent; draft?: boolean }) {
           <DuplicateButton id={e.id} />
         </span>
         {draft ? (
-          <LinkButton href={`/organizer/events/${e.id}`} size="sm">
-            Finish setup
-          </LinkButton>
+          <>
+            {/* Always visible on drafts; asks first. */}
+            <DeleteDraftButton id={e.id} title={e.title} />
+            <LinkButton href={`/organizer/events/${e.id}`} size="sm">
+              Finish setup
+            </LinkButton>
+          </>
         ) : (
           <>
             <LinkButton href={`/organizer/scan/${e.id}`} size="sm" variant="ghost" className="hidden sm:inline-flex">
@@ -94,7 +99,8 @@ function Group({ title, count, children }: { title: string; count: number; child
   );
 }
 
-export default async function OrganizerHome() {
+export default async function OrganizerHome({ searchParams }: { searchParams: Promise<{ deleted?: string }> }) {
+  const { deleted } = await searchParams;
   const viewer = (await getViewer())!;
   const db = await getDB();
   const events = await organizerEvents(db, viewer.id);
@@ -117,6 +123,11 @@ export default async function OrganizerHome() {
 
   return (
     <div className="pb-12 pt-8 md:pt-10">
+      {deleted && (
+        <p role="status" className="mb-6 rounded-xl bg-sunken px-4 py-3 text-[14.5px] font-medium text-ink">
+          Draft deleted.
+        </p>
+      )}
       <header className="flex flex-col gap-5 border-b border-line pb-7 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="font-display text-[clamp(40px,5vw,60px)] leading-[0.95] tracking-[-0.03em] text-ink">
