@@ -173,6 +173,7 @@ export function EmptyTicket({ name, dateLine }: { name: string; dateLine: string
   return (
     <section aria-labelledby="home-greeting" className="pt-6 md:pt-10">
       <DashboardGreeting
+        headline="What's the plan"
         name={name}
         dateLine={dateLine}
         subtitle="Pick a vibe below to preview your first pass."

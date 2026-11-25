@@ -5,20 +5,7 @@ import { useEffect, useState } from "react";
 function istParts(d: Date) {
   const fmt = (o: Intl.DateTimeFormatOptions) =>
     new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", ...o }).format(d);
-  const hour = Number(fmt({ hour: "numeric", hour12: false }));
-  const greeting =
-    hour < 5
-      ? "Late night"
-      : hour < 12
-        ? "Good morning"
-        : hour < 17
-          ? "Good afternoon"
-          : hour < 22
-            ? "Good evening"
-            : "Late night";
   return {
-    greeting,
-    weekday: fmt({ weekday: "long" }),
     monthShort: fmt({ month: "short" }).toUpperCase(),
     dayNum: fmt({ day: "numeric" }),
     clock: fmt({ hour: "numeric", minute: "2-digit" }).toLowerCase(),
@@ -26,15 +13,18 @@ function istParts(d: Date) {
 }
 
 /**
- * Editorial greeting masthead for signed-in Home:
- * Physical mini tear-off calendar date tile + warm time-aware greeting + live IST clock.
+ * Editorial header for signed-in Home:
+ * Physical mini tear-off calendar date tile + punchy contextual headline (no generic "Good morning")
+ * + live IST clock pill.
  */
 export function DashboardGreeting({
+  headline,
   name,
   subtitle,
   dateLine,
   asHeading = true,
 }: {
+  headline: string;
   name: string;
   subtitle: string;
   dateLine: string;
@@ -73,8 +63,7 @@ export function DashboardGreeting({
             id={asHeading ? "home-greeting" : undefined}
             className="font-display text-[clamp(30px,3.8vw,46px)] leading-[0.98] tracking-[-0.03em] text-ink"
           >
-            {parts ? parts.greeting : "Welcome back"},{" "}
-            <em className="italic">{firstName}.</em>
+            {headline}, <em className="italic">{firstName}{headline.startsWith("What") ? "?" : "."}</em>
           </Heading>
           <p className="mt-1 text-[13.5px] font-medium text-ink-muted">
             {subtitle}

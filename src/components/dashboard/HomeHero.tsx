@@ -61,9 +61,10 @@ export function HomeHero({ e, mine, dateLine, name }: { e: HeroEvent | null; min
   return (
     <section aria-labelledby="hero-title" className="pt-6 md:pt-10">
       <DashboardGreeting
+        headline={live ? "Doors are open" : mine ? "You're all set" : "Up next on campus"}
         name={name}
         dateLine={dateLine}
-        subtitle={live ? "Doors are open — your pass is ready at the gate." : mine ? "Your next campus pass is locked in." : "Here's what's coming up next on campus."}
+        subtitle={live ? "Your pass is ready to scan at the gate." : mine ? "Your next campus pass is locked in." : "Claim your seat in one tap."}
         asHeading={false}
       />
 
