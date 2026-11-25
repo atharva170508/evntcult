@@ -2,7 +2,7 @@ import { kindFor } from "@/lib/categories";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Award, CalendarPlus, ChevronRight, Star, Ticket } from "lucide-react";
+import { Award, CalendarPlus, ChevronRight, Download, QrCode, Star, Ticket } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { all } from "@/lib/db";
 import { passQrPayload } from "@/lib/tokens";
@@ -138,11 +138,88 @@ export default async function PassesPage() {
   }
 
   return (
-    <div className="space-y-12 pb-8">
-      <PageHero title="Passes" />
+    <div className="space-y-12 pb-12">
+      {/* Editorial Wallet Masthead */}
+      <header className="flex flex-col gap-6 border-b border-line pb-7 pt-8 md:flex-row md:items-end md:justify-between md:pt-10">
+        <div>
+          <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
+            Your pass <em>wallet.</em>
+          </h1>
+          <p className="mt-2.5 text-[15px] text-ink-muted">
+            Every ticket you claim lands here with an offline-ready gate QR code.
+          </p>
+        </div>
+
+        {/* Clean typographic wallet counters */}
+        <dl className="flex flex-wrap items-baseline gap-x-8 gap-y-3">
+          <div>
+            <dt className="text-[12px] font-semibold text-ink-muted">Upcoming</dt>
+            <dd className="font-display text-[32px] leading-none tabular-nums text-ink">{upcoming.length}</dd>
+          </div>
+          <div>
+            <dt className="text-[12px] font-semibold text-ink-muted">Interested</dt>
+            <dd className="font-display text-[32px] leading-none tabular-nums text-ink">{saved.length}</dd>
+          </div>
+          <div>
+            <dt className="text-[12px] font-semibold text-ink-muted">Attended</dt>
+            <dd className="font-display text-[32px] leading-none tabular-nums text-ink">{past.length}</dd>
+          </div>
+        </dl>
+      </header>
 
       {upcoming.length === 0 ? (
-        <EmptyState art="pass" icon={Ticket} title="Your next pass goes here." body="Register for any event and your pass appears here, ready to scan at the gate, even offline." action={{ label: "Find an event", href: "/events" }} secondary={{ label: "Open the calendar", href: "/calendar" }} />
+        <section className="grid items-center gap-8 rounded-[28px] border border-line-strong bg-sunken/75 p-7 sm:p-10 lg:grid-cols-[1.15fr_0.85fr]">
+          <div>
+            <h2 className="font-display text-[clamp(30px,3.6vw,44px)] leading-[1.02] tracking-[-0.025em] text-ink">
+              Your next gate pass goes right here.
+            </h2>
+            <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-ink-2">
+              Register for any campus event and your scannable holographic pass appears instantly. Save it as an image or install the app so it scans even without signal.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-4">
+              <Link
+                href="/events"
+                className="ui-press ui-sheen inline-flex h-12 items-center gap-2 rounded-xl bg-lavender px-6 text-[15px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink hover:bg-lavender-hover"
+              >
+                <Ticket className="size-4" aria-hidden />
+                Find an event
+              </Link>
+              <Link
+                href="/calendar"
+                className="text-[14.5px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] hover:decoration-ink"
+              >
+                Open calendar
+              </Link>
+              <Link
+                href="/get-app"
+                className="inline-flex items-center gap-1.5 text-[14.5px] font-semibold text-ink-2 hover:text-ink"
+              >
+                <Download className="size-4" aria-hidden />
+                Offline app
+              </Link>
+            </div>
+          </div>
+
+          {/* Quiet tactile pass silhouette preview */}
+          <div className="mx-auto w-full max-w-[330px] rounded-[22px] border border-dashed border-line-strong bg-surface p-6 shadow-card">
+            <div className="flex items-center justify-between text-[12px] font-semibold text-ink-muted">
+              <span>ADMIT ONE</span>
+              <span className="font-mono">OFFLINE READY</span>
+            </div>
+            <p className="mt-4 font-display text-[28px] leading-none text-ink">{viewer.name}</p>
+            <p className="mt-1 text-[13px] text-ink-muted">Waiting for your next registration</p>
+            <div className="my-5 border-t border-dashed border-line-strong" />
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-[12.5px] text-ink-muted">
+                <span className="block font-semibold text-ink">1-second gate scan</span>
+                Works with zero internet
+              </div>
+              <span className="grid size-12 place-items-center rounded-xl bg-sunken text-ink">
+                <QrCode className="size-6" aria-hidden />
+              </span>
+            </div>
+          </div>
+        </section>
       ) : (
         <div className="grid justify-items-center gap-x-8 gap-y-16 sm:grid-cols-2 xl:grid-cols-3">
           {upcoming.map((r) => {

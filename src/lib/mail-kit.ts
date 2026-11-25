@@ -135,7 +135,7 @@ export function layout(o: { title: string; preheader: string; heading: string; b
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:540px">
     <tr><td style="padding:0 6px 18px">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-        <td><a href="${esc(o.siteUrl)}" style="font-family:${SANS};font-size:23px;font-weight:800;letter-spacing:-0.8px;color:${CRIMSON};text-decoration:none">evntcult</a></td>
+        <td><a href="${esc(o.siteUrl)}" style="font-family:${SANS};font-size:23px;font-weight:800;letter-spacing:-1.1px;color:${INK};text-decoration:none">evntcult<span style="color:${CRIMSON}">.</span></a></td>
         <td align="right" valign="middle" style="font-family:${SANS};font-size:12px;font-weight:600;color:${SUBTLE}">Every event, one pass</td>
       </tr></table>
     </td></tr>

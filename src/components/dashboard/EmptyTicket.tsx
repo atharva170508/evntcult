@@ -328,7 +328,7 @@ export function EmptyTicket({ name, dateLine }: { name: string; dateLine: string
 
                     <div className="relative flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <BrandMark className="size-4" />
+                        <BrandMark tone="white" className="size-4" />
                         <span className="font-mono text-[11px] font-medium tracking-[0.06em] text-[#FFFEF6]/80">
                           EVNTCULT
                         </span>

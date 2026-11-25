@@ -28,11 +28,29 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
   for (const name of byVenue.keys()) if (!venues.some((v) => v.name === name)) venues.push({ name, capacity: 0, bufferMinutes: 30 });
   if (target) venues.sort((a, b) => Number(b.name === target) - Number(a.name === target));
 
+  const liveCount = venues.filter((v) => (byVenue.get(v.name) ?? []).some((e) => e.live)).length;
+
   return (
-    <div className="space-y-8 pb-8">
-      <PageHero
-        title="Venues"
-      />
+    <div className="space-y-10 pb-14">
+      <header className="flex flex-col gap-4 border-b border-line pb-7 pt-8 sm:flex-row sm:items-end sm:justify-between md:pt-10">
+        <div>
+          <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
+            Campus <em>venues.</em>
+          </h1>
+          <p className="mt-2.5 text-[15px] text-ink-muted">
+            Halls, lawns, and auditoriums — see what&apos;s on next and open turn-by-turn directions.
+          </p>
+        </div>
+        <div className="flex items-center gap-4 text-[13.5px] font-semibold text-ink-muted">
+          <span className="font-mono tabular-nums">{venues.length} spaces</span>
+          {liveCount > 0 && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E3264F]/12 px-3 py-1 text-[#E3264F]">
+              <span className="size-1.5 animate-pulse rounded-full bg-[#E3264F]" aria-hidden />
+              {liveCount} live now
+            </span>
+          )}
+        </div>
+      </header>
 
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
