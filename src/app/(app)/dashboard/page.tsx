@@ -55,6 +55,7 @@ export default async function DashboardPage({
       {/* 1. Personal Hero: Active Boarding Pass OR 3-Pass Interactive Studio */}
       <HomeHero
         name={viewer.name}
+        isOrganizer={viewer.verifiedOrganizer}
         mine={!!next}
         dateLine={new Intl.DateTimeFormat("en-IN", {
           timeZone: "Asia/Kolkata",

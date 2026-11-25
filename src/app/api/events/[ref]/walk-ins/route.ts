@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { first } from "@/lib/db";
 import { requireGateAccess } from "@/lib/volunteers";
@@ -10,7 +11,7 @@ type Ctx = { params: Promise<{ ref: string }> };
 
 const body = z
   .object({
-    name: z.string().trim().min(1, "Add their name.").max(80),
+    name: z.string().trim().min(1, "Add their name.").max(80).superRefine(moderated("Name")),
     email: z.string().trim().email("That email doesn't look right.").max(200).nullable().optional(),
   })
   .strict();

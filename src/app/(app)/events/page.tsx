@@ -11,6 +11,7 @@ import { cn, fmtDate, fmtTime } from "@/lib/utils";
 import { EventTimeline } from "@/components/events/EventTimeline";
 import { EventPeek } from "@/components/events/EventPeek";
 import { getDB } from "@/lib/db";
+import { getViewer } from "@/lib/rbac";
 import { CATEGORY_HUBS, getCategoryEventCounts } from "@/lib/discovery";
 import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { formatINR } from "@/lib/money";
@@ -31,6 +32,7 @@ export default async function EventsPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const raw = await searchParams;
+  const isOrganizer = (await getViewer())?.verifiedOrganizer ?? false;
   const parsed = listQuerySchema.safeParse(Object.fromEntries(Object.entries(raw).filter(([, v]) => v)));
   const q = parsed.success ? parsed.data : {};
   const [{ events, nextCursor }, catCounts] = await Promise.all([
@@ -241,11 +243,12 @@ export default async function EventsPage({
                 Show all events
               </Link>
             )}
+            {/* Organizers create; students can only apply to host. */}
             <Link
-              href="/host"
+              href={isOrganizer ? "/organizer/events/new" : "/host"}
               className="inline-flex h-11 items-center rounded-xl bg-lavender px-5 text-[14.5px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors hover:bg-lavender-hover"
             >
-              Host an event
+              {isOrganizer ? "Create an event" : "Apply to host"}
             </Link>
           </div>
         </div>

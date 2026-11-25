@@ -1,6 +1,7 @@
 import { ADMIN_EMAIL } from "@/lib/data/admin";
 import "server-only";
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { first, run } from "@/lib/db";
 import { ApiError } from "@/lib/api";
 import { newId } from "@/lib/tokens";
@@ -13,7 +14,7 @@ export const emailSchema = z.string().trim().toLowerCase().email().max(200);
 
 /** Name + number asked for when a new account is created. */
 export const signupFields = {
-  name: z.string().trim().min(2).max(80).optional(),
+  name: z.string().trim().min(2).max(80).superRefine(moderated("Name")).optional(),
   phone: phoneSchema.optional(),
   whatsappOptIn: z.boolean().optional(),
   /** The sign-up checkbox: "I have read, understand, and agree to the Terms & Conditions and User Rules". */

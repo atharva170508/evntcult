@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { getDB } from "@/lib/db";
 import { requireEventOwner } from "@/lib/rbac";
@@ -9,7 +10,7 @@ export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ ref: string }> };
 
 const body = z
-  .object({ label: z.string().trim().min(1).max(120), kind: z.enum(["text", "choice"]), options: z.array(z.string().max(60)).max(30).optional(), required: z.boolean().optional() })
+  .object({ label: z.string().trim().min(1).max(120).superRefine(moderated("Question")), kind: z.enum(["text", "choice"]), options: z.array(z.string().max(60).superRefine(moderated("Answer option"))).max(30).optional(), required: z.boolean().optional() })
   .strict();
 
 export const GET = handle(async (_req: Request, { params }: Ctx) => {

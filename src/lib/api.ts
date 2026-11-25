@@ -60,6 +60,9 @@ export async function parseBody<T extends z.ZodTypeAny>(
   }
   const parsed = schema.safeParse(raw);
   if (!parsed.success) {
+    // Text that breaks the content rules gets its own clear error (see src/lib/moderation).
+    const blocked = parsed.error.issues.find((i) => i.code === "custom" && (i as { params?: { contentBlocked?: boolean } }).params?.contentBlocked);
+    if (blocked) throw new ApiError(422, "content_blocked", blocked.message);
     const issue = parsed.error.issues[0];
     throw new ApiError(400, "invalid", issue ? `${issue.path.join(".") || "body"}: ${issue.message}` : "Invalid request.");
   }

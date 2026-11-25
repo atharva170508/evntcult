@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { first, getDB } from "@/lib/db";
 import { requireEventOwner } from "@/lib/rbac";
@@ -21,11 +22,11 @@ const body = z
   .object({
     regClosesAt: z.string().datetime().nullable(),
     requiresApproval: z.boolean(),
-    agenda: z.string().max(2000).nullable(),
+    agenda: z.string().max(2000).superRefine(moderated("Agenda")).nullable(),
     effect: z.enum(EFFECT_KEYS).nullable().optional(),
-    refundPolicy: z.string().max(600).nullable().optional(),
+    refundPolicy: z.string().max(600).superRefine(moderated("Refund policy")).nullable().optional(),
     look: z.string().regex(/^[a-z]+:[a-z]+$/).max(30).nullable().optional(),
-    confirmMessage: z.string().max(500).nullable().optional(),
+    confirmMessage: z.string().max(500).superRefine(moderated("Confirmation message")).nullable().optional(),
   })
   .strict();
 

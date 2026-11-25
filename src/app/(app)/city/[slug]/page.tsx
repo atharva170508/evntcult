@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { getDB } from "@/lib/db";
 import { getViewer } from "@/lib/rbac";
 import { listEvents } from "@/lib/data/events";
@@ -61,13 +61,6 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="space-y-10 pb-12 pt-4">
-      <Link
-        href="/events"
-        className="inline-flex items-center gap-1.5 text-[14px] font-medium text-ink-muted transition-colors hover:text-ink"
-      >
-        <ArrowLeft className="size-4" aria-hidden /> All events
-      </Link>
-
       {/* Editorial city hero card */}
       <section className="overflow-hidden rounded-[24px] bg-surface shadow-card">
         <div className="relative h-44 overflow-hidden md:h-56">

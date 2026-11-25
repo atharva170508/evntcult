@@ -150,7 +150,7 @@ export async function createDraft(
     throw new OrganizerError(
       403,
       "not_approved",
-      "Hosting is for approved organizers. Apply from your account menu.",
+      "Hosting is for organizers verified by Synchronous Labs. Apply from your account menu.",
     );
   const date = input.date ?? istDate(now);
   const time = input.time ?? "18:00";
@@ -585,6 +585,8 @@ export async function duplicateEvent(
   id: string,
   now = new Date(),
 ) {
+  if (owner.role !== "organizer" && owner.role !== "admin")
+    throw new OrganizerError(403, "not_approved", "Hosting is for organizers verified by Synchronous Labs. Apply from your account menu.");
   const cur = await getRow(db, id);
   if (!cur) throw new OrganizerError(404, "not_found", "Event not found.");
   const newEventId = newId();

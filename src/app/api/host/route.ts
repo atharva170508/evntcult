@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { getDB } from "@/lib/db";
 import { requireUser } from "@/lib/rbac";
@@ -8,8 +9,8 @@ export const dynamic = "force-dynamic";
 
 const body = z
   .object({
-    club: z.string().trim().min(2, "Name the organization or group you host for.").max(80),
-    note: z.string().trim().min(10, "Say in a sentence what you plan to run.").max(500),
+    club: z.string().trim().min(2, "Name the organization or group you host for.").max(80).superRefine(moderated("Club or group")),
+    note: z.string().trim().min(10, "Say in a sentence what you plan to run.").max(500).superRefine(moderated("What you'll run")),
   })
   .strict();
 

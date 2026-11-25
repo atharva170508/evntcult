@@ -71,12 +71,6 @@ export function Hero() {
                 Sign up free
               </Link>
             </Magnetic>
-            <Link
-              href="/host"
-              className="text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors duration-fast hover:decoration-ink"
-            >
-              Host an event
-            </Link>
           </Entrance>
         </div>
         <Entrance delay={0.2}>

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { first, getDB } from "@/lib/db";
 import { canManageEvent, getViewer, requireUser } from "@/lib/rbac";
@@ -79,7 +80,7 @@ export const GET = handle(async (_req: Request, { params }: Ctx) => {
 });
 
 const post = z.union([
-  z.object({ body: z.string().trim().min(1).max(500) }).strict(),
+  z.object({ body: z.string().trim().min(1).max(500).superRefine(moderated("Post")) }).strict(),
   z.object({ react: z.string(), emoji: z.enum(WALL_EMOJI) }).strict(),
 ]);
 

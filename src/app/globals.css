@@ -865,7 +865,10 @@ tr[data-picked] { background: rgb(240 215 255 / 0.35); }
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: none; }
 }
-.page-in { animation: page-in 260ms var(--ease-enter) both; }
+/* "backwards", not "both": once the entrance ends nothing stays applied. A kept transform (even
+   translateY(0)) would make this wrapper the containing block for everything position: fixed
+   inside it, pinning the phone tab bar and other fixed UI to the bottom of the page. */
+.page-in { animation: page-in 260ms var(--ease-enter) backwards; }
 
 /* Ticket card: a dashed tear line with a notch bitten out of each side. */
 .stub-tear { position: relative; height: 0; border-top: 1.5px dashed rgb(var(--c-line-strong)); margin: 0 14px; }
@@ -885,4 +888,95 @@ tr[data-picked] { background: rgb(240 215 255 / 0.35); }
 
 @media (prefers-reduced-motion: reduce) {
   .page-in { animation: none; }
+}
+
+/* ── Phones and the installed app (iOS and Android) ───────────────────────────────────────────
+   <html> carries data-platform="ios|android|other" and data-standalone (opened from the home
+   screen), set before first paint by THEME_SCRIPT. */
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+a,
+button,
+[role="button"],
+label,
+summary {
+  touch-action: manipulation; /* no double-tap zoom delay */
+}
+/* Landscape notches: keep content clear of the sides. */
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+/* The installed app shouldn't rubber-band the whole page or pull-to-refresh by accident. */
+html[data-standalone],
+html[data-standalone] body {
+  overscroll-behavior-y: none;
+}
+/* iOS zooms into any field under 16px when you tap it; keep fields at 16px on phones. */
+@media (max-width: 767px) {
+  html[data-platform="ios"] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select) {
+    font-size: max(16px, 1em) !important;
+  }
+}
+
+/* Liquid glass: a translucent, blurred surface with a soft specular rim, for the phone tab bar.
+   Follows the theme (light glass on light pages, dark glass in dark mode). */
+.liquid-glass {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(180deg, rgb(var(--c-canvas) / 0.72) 0%, rgb(var(--c-canvas) / 0.56) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgb(255 255 255 / 0.65);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.85),
+    inset 0 -1px 0 rgb(0 0 0 / 0.04),
+    0 1px 2px rgb(40 30 10 / 0.06),
+    0 18px 40px -18px rgb(40 30 10 / 0.38);
+}
+/* The specular highlight: a soft sheen across the top edge. */
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(120% 70% at 50% -20%, rgb(255 255 255 / 0.55), transparent 60%);
+}
+.dark .liquid-glass {
+  background: linear-gradient(180deg, rgb(var(--c-canvas) / 0.7) 0%, rgb(var(--c-canvas) / 0.55) 100%);
+  border-color: rgb(255 255 255 / 0.12);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    inset 0 -1px 0 rgb(0 0 0 / 0.3),
+    0 18px 40px -16px rgb(0 0 0 / 0.7);
+}
+.dark .liquid-glass::before {
+  background: radial-gradient(120% 70% at 50% -20%, rgb(255 255 255 / 0.1), transparent 60%);
+}
+/* Android: a flush, full-width bar (Material), so no floating shadow or side rim. */
+html[data-platform="android"] .liquid-glass {
+  border-width: 1px 0 0;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.6);
+}
+html[data-platform="android"].dark .liquid-glass {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
+}
+/* People who ask for less transparency, and browsers without blur, get a solid bar. */
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-glass {
+    background: rgb(var(--c-canvas));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .liquid-glass {
+    background: rgb(var(--c-canvas) / 0.97);
+  }
 }
