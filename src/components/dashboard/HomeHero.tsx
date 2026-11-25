@@ -42,11 +42,11 @@ function useNow() {
  * poster and the name; the perforated stub carries a live countdown and the one action. With no
  * pass yet, the stub offers the best event coming up instead ("Claim your seat").
  */
-export function HomeHero({ e, mine, dateLine, name }: { e: HeroEvent | null; mine: boolean; dateLine: string; name: string }) {
+export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: HeroEvent | null; mine: boolean; dateLine: string; name: string; isOrganizer?: boolean }) {
   const now = useNow();
   const reduce = useReducedMotion();
 
-  if (!e) return <EmptyTicket name={name} dateLine={dateLine} />;
+  if (!e) return <EmptyTicket name={name} dateLine={dateLine} isOrganizer={isOrganizer} />;
 
   const start = Date.parse(e.startsAt);
   const end = Date.parse(e.endsAt);

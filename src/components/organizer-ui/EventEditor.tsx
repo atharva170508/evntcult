@@ -7,7 +7,6 @@ import {
   Calendar,
   Check,
   ChevronDown,
-  ChevronLeft,
   Clock,
   ExternalLink,
   KeyRound,
@@ -50,6 +49,8 @@ import {
 } from "@/lib/organizer/shared";
 import { passCallSignCode } from "@/lib/pass-name";
 import { cn } from "@/lib/utils";
+import { blockedMessage, findBlocked } from "@/lib/moderation";
+import { BackButton } from "@/components/shell/BackButton";
 
 export interface EditorInitial {
   id: string;
@@ -215,8 +216,17 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
   const upi = f.payoutUpi.trim().toLowerCase();
   const code = normalizeCode(f.accessCode);
 
+  // Platform guidelines: the same filter the server uses, shown as you type.
+  const blocked = {
+    title: findBlocked(f.title) ? blockedMessage("Event name") : null,
+    tagline: findBlocked(f.tagline) ? blockedMessage("Tagline") : null,
+    description: findBlocked(f.description) ? blockedMessage("Description") : null,
+    venue: f.venueStatus !== "tba" && findBlocked(f.venue) ? blockedMessage("Venue") : null,
+  };
+  const anyBlocked = Object.values(blocked).find(Boolean) ?? null;
+
   const errors = {
-    title: touched.title && !f.title.trim() ? "Give your event a name." : null,
+    title: blocked.title ?? (touched.title && !f.title.trim() ? "Give your event a name." : null),
     price: touched.price && f.paid && !(pricePaise > 0) ? "Enter a ticket price above ₹0." : null,
     upi: touched.upi && f.paid && (!upi || !isValidUpi(upi)) ? "Enter a valid UPI ID, like club@okaxis." : null,
     capacity:
@@ -261,6 +271,18 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
     if (!dirtyRef.current && idRef.current) return true;
     const body = payload();
     if (!body.title || !latest.current.date || !latest.current.time) return false;
+    // Never send text that breaks the platform guidelines; the field shows why.
+    const bad = [
+      ["Event name", body.title],
+      ["Tagline", body.tagline],
+      ["Description", body.description],
+      ["Venue", body.venue],
+    ].find(([, v]) => findBlocked(v));
+    if (bad) {
+      setSaveError(blockedMessage(bad[0] as string));
+      setSave("failed");
+      return false;
+    }
     dirtyRef.current = false;
     setSave("saving");
     let ok = false;
@@ -300,6 +322,9 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
         setSave("conflict");
       } else if (err?.code === "code_taken") {
         setFieldError({ code: err.message });
+        setSave("failed");
+      } else if (err?.code === "content_blocked") {
+        setSaveError(err.message);
         setSave("failed");
       } else if (err?.code === "slug_taken") {
         setFieldError({ slug: err.message });
@@ -384,6 +409,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
     const savedOk = await flush();
     if (inFlight.current) await inFlight.current;
     if (!savedOk || !idRef.current || conflictRef.current) {
+      if (anyBlocked) setPublishError(anyBlocked);
       setPublishing(false);
       return;
     }
@@ -451,10 +477,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
     <>
       {/* Clean top bar — Publish is ALWAYS 1 tap away */}
       <header className="o-top">
-        <Link href="/organizer" aria-label="Back to events" className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-ink-2 hover:text-ink">
-          <ChevronLeft size={18} aria-hidden />
-          <span className="o-hide-phone">Events</span>
-        </Link>
+        <BackButton href="/organizer" label="Your events" />
 
         <span className="ml-2 rounded-full bg-sunken px-2.5 py-0.5 text-[12px] font-semibold text-ink-2">
           {pill}
@@ -603,8 +626,14 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                 placeholder="Add a one-line hook (optional)"
                 value={f.tagline}
                 onChange={(e) => set("tagline", e.target.value)}
+                aria-invalid={!!blocked.tagline}
                 className="mt-2 w-full border-0 bg-transparent text-[15px] text-ink-2 placeholder:text-ink-subtle/70 focus:outline-none"
               />
+              {blocked.tagline && (
+                <p className="mt-1 text-[13px] font-medium text-danger" role="alert">
+                  {blocked.tagline}
+                </p>
+              )}
 
               {/* 1-tap Category Pills */}
               <div className="mt-5 flex flex-wrap gap-2 border-t border-line pt-4" role="radiogroup" aria-label="Category">
@@ -735,6 +764,11 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                     }}
                   />
                 </div>
+                {blocked.venue && (
+                  <p className="mt-1.5 text-[13px] font-medium text-danger" role="alert">
+                    {blocked.venue}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -884,8 +918,15 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
                   placeholder="What's happening, who it's for, and what to bring…"
                   value={f.description}
                   onChange={(e) => set("description", e.target.value)}
+                  aria-invalid={!!blocked.description}
+                  aria-describedby={blocked.description ? "ev-about-err" : undefined}
                   className="mt-2.5 w-full rounded-xl border border-line-strong bg-canvas p-3.5 text-[14.5px] leading-relaxed text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none"
                 />
+                {blocked.description && (
+                  <p id="ev-about-err" className="mt-1.5 text-[13px] font-medium text-danger" role="alert">
+                    {blocked.description}
+                  </p>
+                )}
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                   <input
                     aria-label="External link (optional)"

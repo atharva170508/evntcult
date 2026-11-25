@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { first, getDB } from "@/lib/db";
 import { requireUser } from "@/lib/rbac";
@@ -6,7 +7,7 @@ import { requireUser } from "@/lib/rbac";
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ ref: string }> };
 
-const body = z.object({ rating: z.number().int().min(1).max(5), comment: z.string().trim().max(600).optional() }).strict();
+const body = z.object({ rating: z.number().int().min(1).max(5), comment: z.string().trim().max(600).superRefine(moderated("Comment")).optional() }).strict();
 
 /** POST — rate an event you registered for, once it has started. Sending again updates your answer. */
 export const POST = handle(async (req: Request, { params }: Ctx) => {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { getDB } from "@/lib/db";
 import { getViewer } from "@/lib/rbac";
 import { findCity } from "@/lib/discovery";
@@ -6,9 +7,9 @@ import { newId } from "@/lib/tokens";
 import { nowIso } from "@/lib/time";
 
 const schema = z.object({
-  title: z.string().trim().min(3, "Add an event name.").max(120),
+  title: z.string().trim().min(3, "Add an event name.").max(120).superRefine(moderated("Event name")),
   eventUrl: z.string().trim().url("Enter a valid link (https://...)").max(400).optional().or(z.literal("")),
-  note: z.string().trim().max(400).optional().or(z.literal("")),
+  note: z.string().trim().max(400).superRefine(moderated("Note")).optional().or(z.literal("")),
 });
 
 export async function POST(

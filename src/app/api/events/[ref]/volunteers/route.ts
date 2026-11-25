@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { brandQr } from "@/lib/qr-art";
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { first } from "@/lib/db";
@@ -10,7 +11,7 @@ type Ctx = { params: Promise<{ ref: string }> };
 
 const createBody = z
   .object({
-    label: z.string().trim().min(1, "Give the link a name, like “Gate 2, Rohan”.").max(60),
+    label: z.string().trim().min(1, "Give the link a name, like “Gate 2, Rohan”.").max(60).superRefine(moderated("Link name")),
     role: z.enum(["gate", "gate_merch"]),
     expires: z.enum(["event_end", "12h", "24h"]),
   })

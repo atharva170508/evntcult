@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { SiteHeader, type NavViewer } from "@/components/site/SiteHeader";
@@ -12,6 +12,7 @@ import { SheenTracker } from "@/components/ui/SheenTracker";
 import { BackToTop } from "@/components/ui/BackToTop";
 import { NavigationProgress } from "@/components/ui/NavigationProgress";
 import { workspaceFor } from "./nav";
+import { AutoBack, onPopState, trackNavigation } from "./BackButton";
 
 export type { NavViewer };
 
@@ -52,6 +53,17 @@ export function AppShell({
 
   useEffect(() => setSearchOpen(false), [pathname]);
 
+  // In-app history depth, so the top-left Back can go back like a native app.
+  const firstNav = useRef(true);
+  useEffect(() => {
+    trackNavigation(firstNav.current);
+    firstNav.current = false;
+  }, [pathname]);
+  useEffect(() => {
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
   return (
     <div className="flex min-h-dvh flex-col overflow-x-clip">
       <Suspense fallback={null}>
@@ -61,8 +73,12 @@ export function AppShell({
       <SiteHeader viewer={viewer} wide={wide} onSearch={() => setSearchOpen(true)} onEnterCode={() => setCodeOpen(true)} />
       <main
         id="main"
-        className={cn("mx-auto w-full flex-1 px-gutter pb-28 md:pb-12", wide ? "max-w-[1440px]" : "max-w-[1360px]")}
+        className={cn(
+          "mx-auto w-full flex-1 px-gutter pb-[calc(112px+env(safe-area-inset-bottom))] md:pb-12",
+          wide ? "max-w-[1440px]" : "max-w-[1360px]",
+        )}
       >
+        <AutoBack pathname={pathname} />
         {children}
       </main>
       {ws === "attend" && <SiteFooter viewer={viewer} />}

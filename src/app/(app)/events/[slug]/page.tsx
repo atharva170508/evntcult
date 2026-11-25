@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { brandQr } from "@/lib/qr-art";
 import {
-  ArrowLeft,
   ArrowUpRight,
   CalendarClock,
   CalendarPlus,
@@ -371,12 +370,6 @@ export default async function EventPage({
       )}
       <EventEffect effect={e.effect ?? null} />
       {e.status !== "draft" && <ViewBeacon slug={e.slug} />}
-      <Link
-        href="/events"
-        className="inline-flex min-h-11 items-center gap-1.5 text-[14px] font-medium text-ink-muted transition-colors duration-fast hover:text-ink md:hidden"
-      >
-        <ArrowLeft className="size-4" aria-hidden /> Events
-      </Link>
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-14 xl:grid-cols-[minmax(0,380px)_minmax(0,1fr)]">
         {/* Left: cover, host, going (desktop) */}

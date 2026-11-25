@@ -138,7 +138,7 @@ function MiniBarcode() {
  * Full-width warm editorial canvas (zero nested boxes) with a tactile fanned 3-pass Apple Wallet
  * stack on the right, live cursor-tracking foil sheen, 3D flip, and instant vibe switching.
  */
-export function EmptyTicket({ name, dateLine }: { name: string; dateLine: string }) {
+export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: string; dateLine: string; isOrganizer?: boolean }) {
   const reduce = !!useReducedMotion();
   const [vibeIdx, setVibeIdx] = useState(1);
   const [titleIdx, setTitleIdx] = useState(0);
@@ -245,10 +245,10 @@ export function EmptyTicket({ name, dateLine }: { name: string; dateLine: string
                 Browse all events
               </Link>
               <Link
-                href="/host"
+                href={isOrganizer ? "/organizer/events/new" : "/host"}
                 className="text-[14.5px] font-semibold text-ink-2 underline decoration-line-strong underline-offset-[6px] transition-colors hover:text-ink hover:decoration-ink"
               >
-                Host your own
+                {isOrganizer ? "Create an event" : "Apply to host"}
               </Link>
             </div>
           </div>

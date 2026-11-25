@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { CATEGORIES } from "@/lib/data/types";
 import { UPI_PATTERN, isValidCustomCode, isValidLink, LINK_ERROR } from "@/lib/organizer/shared";
 
@@ -80,7 +81,7 @@ export const upiClaimSchema = z
 export const eventUpdateSchema = z
   .object({
     kind: z.enum(["schedule", "venue", "update"]),
-    body: z.string().trim().min(3).max(500),
+    body: z.string().trim().min(3).max(500).superRefine(moderated("Announcement")),
     whatsapp: z.boolean().default(false),
   })
   .strict();
@@ -89,12 +90,12 @@ const upi = z.string().trim().toLowerCase().regex(UPI_PATTERN, "Enter a UPI ID l
 
 /** Everything the organizer editor can send. All optional: anything left out keeps its value. */
 const eventFields = {
-  title: z.string().trim().min(1, "Give your event a name.").max(60),
+  title: z.string().trim().min(1, "Give your event a name.").max(60).superRefine(moderated("Event name")),
   slug: z.string().trim().min(1).max(60).regex(/^[a-z0-9-]+$/, "Use lowercase letters, numbers and hyphens.").optional(),
-  tagline: z.string().trim().max(140).nullable().optional(),
-  description: z.string().trim().max(5000).nullable().optional(),
+  tagline: z.string().trim().max(140).superRefine(moderated("Tagline")).nullable().optional(),
+  description: z.string().trim().max(5000).superRefine(moderated("Description")).nullable().optional(),
   category: z.enum(CATEGORIES).nullable().optional(),
-  venue: z.string().trim().max(160).nullable().optional(),
+  venue: z.string().trim().max(160).superRefine(moderated("Venue")).nullable().optional(),
   venueStatus: z.enum(["confirmed", "tba", "online"]).optional(),
   date: ymd.optional(),
   time: hm.optional(),
@@ -106,7 +107,7 @@ const eventFields = {
   venuePlaceId: z.string().trim().regex(/^[\w-]{1,300}$/).nullable().optional(),
   venueLat: z.number().min(-90).max(90).nullable().optional(),
   venueLng: z.number().min(-180).max(180).nullable().optional(),
-  venueAddress: z.string().trim().max(300).nullable().optional(),
+  venueAddress: z.string().trim().max(300).superRefine(moderated("Venue address")).nullable().optional(),
   linkUrl: z.string().trim().refine(isValidLink, LINK_ERROR).nullable().optional(),
   accessCode: z
     .string()

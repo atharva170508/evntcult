@@ -147,7 +147,7 @@ export function SiteHeader({
       <header
         ref={ref}
         className={cn(
-          "sticky top-0 z-40 border-b border-line/70 bg-canvas/80 backdrop-blur-xl backdrop-saturate-150 transition-[box-shadow,background-color] duration-base ease-out supports-[not(backdrop-filter:blur(1px))]:bg-canvas print:hidden",
+          "sticky top-0 z-40 pt-[env(safe-area-inset-top)] border-b border-line/70 bg-canvas/80 backdrop-blur-xl backdrop-saturate-150 transition-[box-shadow,background-color] duration-base ease-out supports-[not(backdrop-filter:blur(1px))]:bg-canvas print:hidden",
           scrolled && "bg-canvas/90 shadow-[0_12px_32px_-16px_rgba(10,10,20,0.45)]",
         )}
       >
@@ -570,7 +570,7 @@ function MenuSheet({
             </Link>
           ) : (
             <Link href={viewer.isOrganizer ? "/organizer" : "/host"} className={row}>
-              <Repeat className={ic} aria-hidden /> {viewer.isOrganizer ? "Switch to hosting" : "Host an event"}
+              <Repeat className={ic} aria-hidden /> {viewer.isOrganizer ? "Switch to hosting" : "Apply to host"}
             </Link>
           )}
         </li>

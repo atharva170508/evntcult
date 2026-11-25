@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Camera, Images, Lock, ScanFace } from "lucide-react";
+import { Camera, Images, Lock, ScanFace } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { first, getDB } from "@/lib/db";
 import { eventPhotos, photoAccess } from "@/lib/data/photos";
@@ -32,16 +32,10 @@ export default async function EventPhotosPage({ params, searchParams }: { params
   const db = await getDB();
   const access = await photoAccess(db, viewer, event.id);
   const storageReady = await photoStorageReady();
-  const back = (
-    <Link href={`/events/${event.slug}`} className="group inline-flex items-center gap-1.5 text-[13px] font-medium text-ink-muted transition-colors hover:text-ink">
-      <ArrowLeft className="size-4 transition-transform duration-base ease-out group-hover:-translate-x-0.5" aria-hidden /> {event.title}
-    </Link>
-  );
 
   if (!access.view) {
     return (
       <div className="space-y-8 pb-8 pt-6 md:pt-8">
-        {back}
         <section className="card flex flex-col items-start p-8 md:p-12">
           <span className="grid size-11 place-items-center text-ink-2">
             <Lock className="size-5" aria-hidden />
@@ -66,7 +60,6 @@ export default async function EventPhotosPage({ params, searchParams }: { params
 
   return (
     <div className="space-y-8 pb-8 pt-6 md:pt-8">
-      {back}
       <PageHero
         className="pt-0 md:pt-0"
         eyebrow={`Photos, ${fmtDate(new Date(event.starts_at), { day: "numeric", month: "short", year: "numeric" })}`}

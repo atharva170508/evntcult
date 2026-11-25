@@ -28,9 +28,12 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
         { href: "/vault", label: "Photo Vault" },
         { href: "/certificates", label: "Certificates" },
         { href: "/get-app", label: "Install app" },
+        // Hosting is for organizers verified by Synchronous Labs: students apply, visitors see nothing.
         ...(viewer?.isOrganizer
           ? [{ href: "/organizer", label: "Organizer studio" }]
-          : [{ href: "/host", label: "Host an event" }]),
+          : viewer
+            ? [{ href: "/host", label: "Apply to host" }]
+            : []),
         ...(viewer
           ? [{ href: "/profile", label: "Account" }]
           : [{ href: "/signin?mode=signup", label: "Sign up free" }]),

@@ -7,6 +7,9 @@ import { cn } from "@/lib/utils";
 type Theme = "light" | "dark" | "system";
 const KEY = "ec_theme";
 
+/* THEME_SCRIPT (below) also marks <html> with data-platform="ios|android|other" and data-standalone when
+   opened from the home screen, before first paint, so CSS can tailor the app to the phone. */
+
 /** Apply a theme to <html>. "system" follows the device setting, live. */
 export function applyTheme(t: Theme) {
   const dark = t === "dark" || (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -112,4 +115,4 @@ export function ThemeToggle({ className }: { className?: string }) {
 }
 
 /** Inline, before first paint: sets .dark so the page never flashes the wrong theme. */
-export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('${KEY}')||'light';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}})()`;
+export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('${KEY}')||'light';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}try{var h=document.documentElement,u=navigator.userAgent;h.dataset.platform=/iPhone|iPad|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)?'ios':/Android/.test(u)?'android':'other';if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)h.dataset.standalone=''}catch(e){}})()`;

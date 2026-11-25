@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moderated } from "@/lib/moderation/zod";
 import { run } from "@/lib/db";
 import { handle, parseBody } from "@/lib/api";
 import { requireUser } from "@/lib/rbac";
@@ -15,7 +16,7 @@ export const GET = handle(async () => {
 });
 
 const patch = z
-  .object({ name: z.string().trim().min(2).max(80).optional(), phone: phoneSchema, whatsappOptIn: z.boolean() })
+  .object({ name: z.string().trim().min(2).max(80).superRefine(moderated("Name")).optional(), phone: phoneSchema, whatsappOptIn: z.boolean() })
   .strict();
 
 /** PATCH /api/me — change your name, mobile number and WhatsApp consent (dashboard card and /profile). */

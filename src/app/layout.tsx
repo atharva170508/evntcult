@@ -50,6 +50,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: "#FFFEF6",
   colorScheme: "light dark",
+  // Draw edge to edge on notched phones; the header, tab bar and page pad themselves with env(safe-area-inset-*).
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

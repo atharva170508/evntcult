@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { getDB } from "@/lib/db";
 import { getViewer } from "@/lib/rbac";
 import { listEvents } from "@/lib/data/events";
@@ -54,14 +53,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           background: `radial-gradient(760px 320px at 25% 0%, ${accentHex(hub.accent)}, transparent 75%)`,
         }}
       />
-
-      <Link
-        href="/events"
-        className="inline-flex items-center gap-1.5 text-[14px] font-medium text-ink-muted transition-colors hover:text-ink"
-      >
-        <ArrowLeft className="size-4" aria-hidden /> All events
-      </Link>
-
       {/* Category Hero */}
       <section className="flex flex-col justify-between gap-6 rounded-[24px] bg-surface p-7 shadow-card md:flex-row md:items-end md:p-10">
         <div>
