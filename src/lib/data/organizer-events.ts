@@ -754,3 +754,42 @@ export async function organizerEvents(
     .all<HomeEvent>();
   return rows.results;
 }
+
+/**
+ * Everything stored against an event, deepest first, so a draft can be removed completely.
+ * Rows that point at an event's own rows (reactions, claims, answers, photo tags) go before them.
+ * tests/organizer-delete.test.ts fails if a table with an event_id column is missing here.
+ */
+export const EVENT_CHILD_DELETES: string[] = [
+  "DELETE FROM event_post_reactions WHERE post_id IN (SELECT id FROM event_posts WHERE event_id = ?1)",
+  "DELETE FROM merch_claims WHERE item_id IN (SELECT id FROM merch_items WHERE event_id = ?1)",
+  "DELETE FROM registration_answers WHERE question_id IN (SELECT id FROM event_questions WHERE event_id = ?1)",
+  "DELETE FROM photo_tags WHERE photo_id IN (SELECT id FROM photos WHERE event_id = ?1)",
+  ...[
+    "event_posts", "merch_items", "event_questions", "auto_photo_matches", "photos", "teams", "volunteer_links", "event_posters",
+    "event_views", "event_saves", "event_updates", "notifications", "event_reports", "event_feedback", "face_search_log", "checkins",
+    "certificates", "registrations",
+  ].map((t) => `DELETE FROM ${t} WHERE event_id = ?1`),
+];
+
+/**
+ * Delete a draft for good. Only drafts: a published event is cancelled instead, so the people who
+ * registered are told. Refuses if anyone is registered. Organizer-only, and the route checks ownership.
+ */
+export async function deleteDraft(db: D1Database, owner: Owner, id: string, now = new Date()) {
+  if (owner.role !== "organizer" && owner.role !== "admin")
+    throw new OrganizerError(403, "not_approved", "Hosting is for organizers verified by Synchronous Labs. Apply from your account menu.");
+  const cur = await db.prepare("SELECT status, title FROM events WHERE id = ?").bind(id).first<{ status: string; title: string }>();
+  if (!cur) throw new OrganizerError(404, "not_found", "Event not found.");
+  if (cur.status !== "draft")
+    throw new OrganizerError(409, "not_draft", "Only drafts can be deleted. To call off a published event, cancel it so the people who registered are told.");
+  const regs = await db.prepare("SELECT COUNT(*) AS n FROM registrations WHERE event_id = ?").bind(id).first<{ n: number }>();
+  if (regs && regs.n > 0) throw new OrganizerError(409, "has_registrations", "Someone is registered for this event, so it can't be deleted.");
+  // One batch: all or nothing.
+  await db.batch([
+    ...EVENT_CHILD_DELETES.map((sql) => db.prepare(sql).bind(id)),
+    db.prepare("DELETE FROM events WHERE id = ? AND status = 'draft'").bind(id),
+  ]);
+  await audit(db, owner.id, "event_delete_draft", id, { title: cur.title }, now);
+  return { ok: true as const };
+}

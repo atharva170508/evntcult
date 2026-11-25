@@ -1,7 +1,7 @@
 import { ApiError, handle, parseBody } from "@/lib/api";
 import { requireUser } from "@/lib/rbac";
 import { getEventDetail } from "@/lib/data/events";
-import { saveEvent } from "@/lib/data/organizer-events";
+import { deleteDraft, saveEvent } from "@/lib/data/organizer-events";
 import { orgHandle, ownedEvent, type RefCtx } from "@/lib/organizer/route";
 import { saveEventSchema } from "@/lib/validation";
 import { passQrPayload } from "@/lib/tokens";
@@ -51,4 +51,10 @@ export const PATCH = orgHandle(async (req: Request, ctx: RefCtx) => {
   const { id, viewer, db } = await ownedEvent(ctx);
   const { version, ...fields } = await parseBody(req, saveEventSchema);
   return Response.json(await saveEvent(db, viewer, id, version, fields));
+});
+
+/** DELETE /api/events/:id — delete a draft (never-published event) for good. Owner only. */
+export const DELETE = orgHandle(async (_req: Request, ctx: RefCtx) => {
+  const { id, viewer, db } = await ownedEvent(ctx);
+  return Response.json(await deleteDraft(db, viewer, id));
 });

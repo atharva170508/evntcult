@@ -51,6 +51,7 @@ import { passCallSignCode } from "@/lib/pass-name";
 import { cn } from "@/lib/utils";
 import { blockedMessage, findBlocked } from "@/lib/moderation";
 import { BackButton } from "@/components/shell/BackButton";
+import { DeleteDraftButton } from "./DeleteDraftButton";
 
 export interface EditorInitial {
   id: string;
@@ -513,6 +514,9 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
             ]}
           />
         )}
+
+        {/* Drafts can be deleted for good; published events are cancelled instead. */}
+        {id && status === "draft" && <DeleteDraftButton id={id} title={f.title} variant="bar" />}
 
         {status === "published" ? (
           <Link className="o-btn o-btn-primary" href={`/organizer/events/${id}/published`}>
