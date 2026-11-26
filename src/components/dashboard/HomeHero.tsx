@@ -12,6 +12,9 @@ import { passName } from "@/lib/pass-name";
 import { BorderTrail } from "@/components/shadcn/border-trail";
 import { TextScramble } from "@/components/shadcn/text-scramble";
 import { SlidingNumber } from "@/components/shadcn/sliding-number";
+import { GlowEffect } from "@/components/shadcn/glow-effect";
+import { TextShimmer } from "@/components/shadcn/text-shimmer";
+import { QOUT } from "@/lib/motion-curves";
 
 export type HeroEvent = {
   id: string;
@@ -71,6 +74,15 @@ export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: 
         asHeading={false}
       />
 
+      <div className="relative">
+        {!reduce && (
+          <GlowEffect
+            colors={["#F0D7FF", "#E3264F", "#F0D7FF"]}
+            mode="breathe"
+            blur="strongest"
+            className="pointer-events-none -inset-1 rounded-[32px] opacity-20 dark:opacity-30"
+          />
+        )}
       <m.div
         initial={reduce ? false : { opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
@@ -86,20 +98,30 @@ export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: 
         )}
         {/* Body: the poster and the name */}
         <Link href={`/events/${e.slug}`} className="group relative block min-h-[300px] overflow-hidden md:min-h-[380px]" style={{ background: tone }}>
-          <div className="absolute inset-0 transition-transform duration-[1200ms] ease-[var(--ease-enter)] group-hover:scale-[1.03]">
-            {e.bannerUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={e.bannerUrl} alt="" className="size-full object-cover" />
-            ) : (
-              <EventArt accent={e.accent} seed={e.id} scrim={false} />
-            )}
-          </div>
+          <m.div
+            initial={reduce ? false : { scale: 1.12 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.15, ease: QOUT }}
+            className="absolute inset-0"
+          >
+            <div className="size-full transition-transform duration-[900ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.04]">
+              {e.bannerUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={e.bannerUrl} alt="" className="size-full object-cover" />
+              ) : (
+                <EventArt accent={e.accent} seed={e.id} scrim={false} />
+              )}
+            </div>
+          </m.div>
           <div aria-hidden className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0)_20%,rgba(0,0,0,.62)_100%)]" />
           <div className="relative flex h-full min-h-[300px] flex-col justify-end p-6 text-[#FFFEF6] md:min-h-[380px] md:p-9">
             <p className="text-[14px] font-semibold text-[#FFFEF6]/85">
               {live ? (
                 <span className="inline-flex items-center gap-2">
-                  <span className="size-2 animate-pulse rounded-full bg-[#FF5C7A]" aria-hidden /> Happening now
+                  <span className="size-2 animate-pulse rounded-full bg-[#FF5C7A]" aria-hidden />
+                  <TextShimmer as="span" className="[--base-color:#FFFEF6] [--base-gradient-color:#F0D7FF]">
+                    Happening now
+                  </TextShimmer>
                 </span>
               ) : mine ? (
                 "Your next pass"
@@ -182,6 +204,7 @@ export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: 
           </div>
         </m.div>
       </m.div>
+      </div>
     </section>
   );
 }

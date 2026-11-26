@@ -9,6 +9,7 @@ import { myAutoMatchedPhotos, syncUserAutoVault, type AutoVaultPhoto } from "@/l
 import { fmtDate } from "@/lib/utils";
 import { LinkButton } from "@/components/ui/Button";
 import { FaceIdEnrollCard } from "@/components/photos/FaceIdEnrollCard";
+import { BorderTrail } from "@/components/shadcn/border-trail";
 
 export const metadata: Metadata = { title: "Photo Vault" };
 export const dynamic = "force-dynamic";
@@ -110,7 +111,12 @@ export default async function VaultPage() {
       )}
 
       {byEvent.size === 0 ? (
-        <section className="grid items-center gap-8 overflow-hidden rounded-[28px] bg-[#141312] p-7 text-[#FFFEF6] shadow-[0_32px_64px_-32px_rgba(20,14,6,0.6)] sm:p-10 lg:grid-cols-[1.15fr_0.85fr]">
+        <section className="relative grid items-center gap-8 overflow-hidden rounded-[28px] bg-[#141312] p-7 text-[#FFFEF6] shadow-[0_32px_64px_-32px_rgba(20,14,6,0.6)] sm:p-10 lg:grid-cols-[1.15fr_0.85fr]">
+          <BorderTrail
+            size={84}
+            className="bg-gradient-to-l from-[#F0D7FF] via-[#E3264F] to-transparent opacity-65"
+            transition={{ repeat: Infinity, duration: 7, ease: "linear" }}
+          />
           <div>
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 font-mono text-[11px] font-semibold tracking-[0.06em] text-[#F0D7FF]">
               <Images className="size-3.5" aria-hidden />

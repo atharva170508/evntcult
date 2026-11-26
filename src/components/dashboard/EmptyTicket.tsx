@@ -8,6 +8,9 @@ import { BrandMark } from "@/components/site/Brand";
 import { DashboardGreeting } from "./DashboardGreeting";
 import { EASE } from "@/components/motion/MotionProvider";
 import { cn } from "@/lib/utils";
+import { BorderTrail } from "@/components/shadcn/border-trail";
+import { TextScramble } from "@/components/shadcn/text-scramble";
+import { QOUT } from "@/lib/motion-curves";
 
 const VIBES = [
   {
@@ -180,12 +183,22 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
       />
 
       {/* Single unified warm editorial stage — no nested cards */}
-      <div
+      <m.div
+        initial={reduce ? false : { opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.65, ease: QOUT }}
         className="relative overflow-hidden rounded-[28px] border border-line-strong bg-sunken/75 transition-colors duration-500"
         style={{
           backgroundImage: `radial-gradient(620px circle at 82% 28%, ${vibe.tint}, transparent 68%)`,
         }}
       >
+        {!reduce && (
+          <BorderTrail
+            size={92}
+            className="bg-gradient-to-l from-[#E3264F] via-[#F0D7FF] to-transparent opacity-55"
+            transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+          />
+        )}
         <div className="grid items-center gap-10 p-6 sm:p-9 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 lg:p-11">
           {/* LEFT: Editorial copy, spring vibe selector, direct actions */}
           <div className="relative z-10 flex flex-col">
@@ -256,27 +269,33 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
           {/* RIGHT: Tactile Fanned 3-Pass Stack floating freely on the stage */}
           <div className="relative flex flex-col items-center">
             <div className="relative mx-auto w-full max-w-[400px] pt-5" style={{ perspective: 1200 }}>
-              {/* Back-left peeking pass (click to switch to previous vibe) */}
-              <button
+              {/* Back-left peeking pass (fans out like dealing cards on load) */}
+              <m.button
                 type="button"
+                initial={reduce ? false : { opacity: 0, x: 24, rotate: 0 }}
+                animate={{ opacity: 0.85, x: 0, rotate: -4.5 }}
+                transition={{ delay: 0.16, duration: 0.78, ease: QOUT }}
                 aria-label={`Preview ${prevVibe.label} pass`}
                 onClick={() => selectVibe((vibeIdx + VIBES.length - 1) % VIBES.length)}
                 style={{ background: prevVibe.cardBg }}
-                className="pointer-events-auto absolute inset-x-4 top-0 h-[120px] -rotate-[4.5deg] cursor-pointer rounded-[22px] p-4 text-left text-[#FFFEF6]/80 opacity-85 shadow-lg ring-1 ring-white/15 transition-transform duration-300 hover:-translate-y-2 hover:-rotate-[6deg] hover:opacity-100"
+                className="pointer-events-auto absolute inset-x-4 top-0 h-[120px] cursor-pointer rounded-[22px] p-4 text-left text-[#FFFEF6]/80 shadow-lg ring-1 ring-white/15 transition-transform duration-300 hover:-translate-y-2 hover:-rotate-[6deg] hover:opacity-100"
               >
                 <span className="font-mono text-[10px] tracking-[0.06em] opacity-80">{prevVibe.label}</span>
-              </button>
+              </m.button>
 
-              {/* Back-right peeking pass (click to switch to next vibe) */}
-              <button
+              {/* Back-right peeking pass (fans out right on load) */}
+              <m.button
                 type="button"
+                initial={reduce ? false : { opacity: 0, x: -24, rotate: 0 }}
+                animate={{ opacity: 0.9, x: 0, rotate: 4 }}
+                transition={{ delay: 0.22, duration: 0.78, ease: QOUT }}
                 aria-label={`Preview ${nextVibe.label} pass`}
                 onClick={() => selectVibe((vibeIdx + 1) % VIBES.length)}
                 style={{ background: nextVibe.cardBg }}
-                className="pointer-events-auto absolute inset-x-4 top-2 h-[120px] rotate-[4deg] cursor-pointer rounded-[22px] p-4 text-right text-[#FFFEF6]/85 opacity-90 shadow-lg ring-1 ring-white/15 transition-transform duration-300 hover:-translate-y-2 hover:rotate-[5.5deg] hover:opacity-100"
+                className="pointer-events-auto absolute inset-x-4 top-2 h-[120px] cursor-pointer rounded-[22px] p-4 text-right text-[#FFFEF6]/85 shadow-lg ring-1 ring-white/15 transition-transform duration-300 hover:-translate-y-2 hover:rotate-[5.5deg] hover:opacity-100"
               >
                 <span className="font-mono text-[10px] tracking-[0.06em] opacity-85">{nextVibe.label}</span>
-              </button>
+              </m.button>
 
               {/* Front active 3D Pass with cursor-tracking foil glare */}
               <div
@@ -331,7 +350,7 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
                         </span>
                       </div>
                       <span className="rounded-md bg-black/25 px-2.5 py-0.5 font-mono text-[11px] font-medium text-[#FFFEF6]/95 backdrop-blur-sm">
-                        {vibe.tag}
+                        {reduce ? vibe.callSign : <TextScramble key={vibe.key}>{vibe.callSign}</TextScramble>}
                       </span>
                     </div>
 
@@ -445,7 +464,7 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
             </div>
           </div>
         </div>
-      </div>
+      </m.div>
     </section>
   );
 }

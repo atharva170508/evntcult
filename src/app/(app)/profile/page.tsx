@@ -6,6 +6,8 @@ import { getViewer } from "@/lib/rbac";
 import { ProfileForm } from "@/components/profile/ProfileForm";
 import { ProfileFaceId } from "@/components/profile/ProfileFaceId";
 import { BrandMark } from "@/components/site/Brand";
+import { BorderTrail } from "@/components/shadcn/border-trail";
+import { GlowEffect } from "@/components/shadcn/glow-effect";
 import { initials } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Your profile" };
@@ -33,7 +35,19 @@ export default async function ProfilePage() {
       <div className="mt-10 grid items-start gap-10 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14">
         {/* Left: Physical Obsidian Campus Member ID Card + Quick Links */}
         <aside className="space-y-6">
+          <div className="relative">
+            <GlowEffect
+              colors={["#E3264F", "#F0D7FF", "#5D3827", "#E3264F"]}
+              mode="breathe"
+              blur="strong"
+              className="pointer-events-none -inset-0.5 rounded-[26px] opacity-25"
+            />
           <div className="relative overflow-hidden rounded-[24px] bg-[#141312] p-6 text-[#FFFEF6] shadow-[0_30px_60px_-28px_rgba(20,14,6,0.65)] ring-1 ring-white/10">
+            <BorderTrail
+              size={64}
+              className="bg-gradient-to-l from-[#F0D7FF] via-[#E3264F] to-transparent opacity-70"
+              transition={{ repeat: Infinity, duration: 6.5, ease: "linear" }}
+            />
             <div
               aria-hidden
               className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-[#E3264F]/20 blur-[60px]"
@@ -85,6 +99,7 @@ export default async function ProfilePage() {
                 ))}
               </div>
             </div>
+          </div>
           </div>
 
           <p className="text-[12.5px] leading-relaxed text-ink-muted">

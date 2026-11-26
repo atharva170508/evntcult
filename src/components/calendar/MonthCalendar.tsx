@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { ArrowUpRight, CalendarDays, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import type { MonthPayload } from "@/lib/data/calendar";
 import { Chip, type ChipTone } from "@/components/ui/Chip";
 import { cn } from "@/lib/utils";
+import { COUT } from "@/lib/motion-curves";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const time = (iso: string) =>
@@ -61,6 +63,7 @@ export function MonthCalendar({
   className?: string;
 }) {
   const [data, setData] = useState(initial);
+  const reduced = !!useReducedMotion();
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
   const [selected, setSelected] = useState<string>(() => startDay(initial));
@@ -333,7 +336,14 @@ export function MonthCalendar({
           aria-label={`Events on ${dayLabel(selected)}`}
           className="flex min-w-0 flex-col justify-between border-t border-line bg-sunken/45 p-5 sm:p-6 lg:border-l lg:border-t-0"
         >
-          <div>
+          <AnimatePresence mode="wait" initial={false}>
+          <m.div
+            key={selected}
+            initial={reduced ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduced ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.2, ease: COUT }}
+          >
             {/* Editorial date block */}
             <div className="flex items-start justify-between gap-3 border-b border-line pb-4">
               <div className="flex items-baseline gap-3">
@@ -419,7 +429,8 @@ export function MonthCalendar({
                 })}
               </ul>
             )}
-          </div>
+          </m.div>
+          </AnimatePresence>
 
           {!signedIn && dayEvents.length > 0 && (
             <Link

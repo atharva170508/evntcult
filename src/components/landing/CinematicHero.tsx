@@ -26,6 +26,7 @@ import { BrandLogo } from "@/components/site/Brand";
 import { BorderTrail } from "@/components/shadcn/border-trail";
 import { TextScramble } from "@/components/shadcn/text-scramble";
 import { ScrollProgress } from "@/components/shadcn/scroll-progress";
+import { ProgressiveBlur } from "@/components/shadcn/progressive-blur";
 import { COUT, QOUT } from "@/lib/motion-curves";
 
 const WORD_LETTERS = ["E", "v", "n", "t", "c", "u", "l", "t"];
@@ -729,6 +730,11 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
                         backgroundSize: "200% 200%",
                         backgroundPosition: card.bgPos,
                       }}
+                    />
+                    <ProgressiveBlur
+                      direction="bottom"
+                      blurIntensity={0.45}
+                      className="pointer-events-none absolute bottom-0 left-0 h-[44%] w-full"
                     />
                     <div
                       aria-hidden

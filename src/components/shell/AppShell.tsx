@@ -15,6 +15,7 @@ import { OfflineBanner } from "@/components/ui/OfflineBanner";
 import { KeyboardShortcuts } from "@/components/ui/KeyboardShortcuts";
 import { workspaceFor } from "./nav";
 import { AutoBack, onPopState, trackNavigation } from "./BackButton";
+import { RouteStage } from "@/components/motion/RouteStage";
 
 export type { NavViewer };
 
@@ -108,7 +109,7 @@ export function AppShell({
         )}
       >
         <AutoBack pathname={pathname} />
-        {children}
+        <RouteStage routeKey={pathname}>{children}</RouteStage>
       </main>
       {ws !== "admin" && <SiteFooter viewer={viewer} />}
       <TabBar signedIn={!!viewer} />

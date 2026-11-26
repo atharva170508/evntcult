@@ -23,9 +23,19 @@ export default async function SignInPage({
 
   return (
     <main id="main" className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
-      {/* Left half: Obsidian editorial welcome canvas (desktop) */}
-      <aside className="relative hidden flex-col justify-between overflow-hidden bg-night p-12 text-cream lg:flex xl:p-16">
-        <div className="flex items-center justify-between">
+      {/* Left half: Obsidian twilight editorial welcome canvas (desktop) */}
+      <aside className="relative hidden flex-col justify-between overflow-hidden bg-[#121110] p-12 text-[#EDE3DA] lg:flex xl:p-16">
+        <img
+          src="/images/cinematic/hero-plate.jpg"
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-35"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#121110]/80 via-[#121110]/65 to-[#121110]/95"
+        />
+        <div className="relative z-10 flex items-center justify-between">
           <Link href="/dashboard" aria-label="EvntCult home">
             <BrandLogo tone="white" className="text-[22px]" />
           </Link>
@@ -38,7 +48,7 @@ export default async function SignInPage({
           </Link>
         </div>
 
-        <div className="my-auto py-12">
+        <div className="relative z-10 my-auto py-12">
           <h1 className="max-w-[13ch] font-display text-[clamp(48px,5vw,76px)] leading-[0.92] tracking-[-0.03em] text-cream">
             One pass for every night on <em>campus.</em>
           </h1>
@@ -64,7 +74,7 @@ export default async function SignInPage({
           </dl>
         </div>
 
-        <p className="text-[13px] text-cream/45">
+        <p className="relative z-10 text-[13px] text-cream/45">
           EvntCult · Synchronous Labs
         </p>
       </aside>
