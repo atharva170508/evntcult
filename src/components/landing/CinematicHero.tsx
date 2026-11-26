@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowDown,
@@ -25,11 +25,12 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { BrandLogo } from "@/components/site/Brand";
+import { BrandLogo, BrandMark } from "@/components/site/Brand";
 import { BorderTrail } from "@/components/shadcn/border-trail";
 import { TextScramble } from "@/components/shadcn/text-scramble";
 import { ScrollProgress } from "@/components/shadcn/scroll-progress";
 import { ProgressiveBlur } from "@/components/shadcn/progressive-blur";
+import { CinemaStageCanvas } from "./CinemaStageCanvas";
 import { COUT, QOUT } from "@/lib/motion-curves";
 
 const WORD_LETTERS = ["E", "v", "n", "t", "c", "u", "l", "t"];
@@ -102,7 +103,7 @@ function CascadeLetter({
       initial={reduced ? false : { opacity: 0, y: "0.1em" }}
       animate={{ opacity: 1, y: "0em" }}
       transition={{
-        delay: 0.48 + (LETTER_DELAYS[idx] ?? idx * 0.05),
+        delay: 0.92 + (LETTER_DELAYS[idx] ?? idx * 0.05),
         duration: 0.48,
         ease: COUT,
       }}
@@ -207,25 +208,30 @@ function TwilightEmbers({ reduced }: { reduced: boolean }) {
 }
 
 /**
- * Sticky, scroll-scrubbed 320vh 2-Act Cinematic Stage:
- * - Act 1: Full, completely readable "Evntcult" wordmark gently framed by low sculptural wings,
- *   masked headline/body/captions, live twilight embers, and multi-plane mouse parallax.
- * - Scroll Transition: Letters cascade downward left-to-right individually, wings part smoothly,
- *   camera arcs cleanly into the three-quarter plate, and 9 rich Act 2 elements rise up in
- *   staggered waves from below the viewport (eyebrow, title, story, live pills, CTAs, QR pass,
- *   and 3 tall hover-zoom cards) before seamlessly handing off to OnePass Engine.
+ * Sticky 320vh EvntCult Cinema Hero combining both film mechanics:
+ * 1. Split-open architectural center-seam doors + WebGL2 8-slice outward fan-out on load.
+ * 2. Scroll-driven WebGL2 perspective camera tilt (r(d) = 0.022 + 1.02|d|^1.5) + dusk-to-neon-night
+ *    crossfade + rising obsidian architectural ledge + 9 staggered rising Act 2 elements.
  */
 export function CinematicHero({ qrSvg }: { qrSvg: string }) {
   const reduced = !!useReducedMotion();
   const runwayRef = useRef<HTMLDivElement>(null);
+  const canvasClipRef = useRef<HTMLDivElement>(null);
+  const doorLeftRef = useRef<HTMLDivElement>(null);
+  const doorRightRef = useRef<HTMLDivElement>(null);
+  const scrollProgressRef = useRef(0);
+  const mouseRef = useRef({ x: 0, y: 0 });
+
   const [scrambleTick, setScrambleTick] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [doorsHidden, setDoorsHidden] = useState(false);
   const [navFrosted, setNavFrosted] = useState(false);
   const [act2Interactive, setAct2Interactive] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (reduced) setDoorsHidden(true);
+  }, [reduced]);
 
   const { scrollYProgress } = useScroll({
     target: runwayRef,
@@ -242,6 +248,7 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
 
   useEffect(() => {
     const unsub = scrollYProgress.on("change", (v) => {
+      scrollProgressRef.current = v;
       setAct2Interactive(v > 0.34);
     });
     const onScroll = () => setNavFrosted(window.scrollY > 40);
@@ -253,14 +260,36 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
     };
   }, [scrollYProgress]);
 
+  // Direct DOM update from the 60fps WebGL2 loop for zero-jank split doors & center clip window
+  const handleDoorFrame = useCallback(
+    (doorS: number, clipInsetPx: number, doorsGone: boolean) => {
+      if (canvasClipRef.current) {
+        canvasClipRef.current.style.clipPath =
+          clipInsetPx > 0.5 ? `inset(0 ${clipInsetPx.toFixed(1)}px 0 ${clipInsetPx.toFixed(1)}px)` : "none";
+      }
+      if (doorLeftRef.current && doorRightRef.current) {
+        if (doorsGone) {
+          doorLeftRef.current.style.display = "none";
+          doorRightRef.current.style.display = "none";
+        } else {
+          const pct = (doorS * 200).toFixed(3); // relative to each 50% door width
+          doorLeftRef.current.style.transform = `translate3d(-${pct}%, 0, 0)`;
+          doorRightRef.current.style.transform = `translate3d(${pct}%, 0, 0)`;
+        }
+      }
+      if (doorsGone) {
+        setDoorsHidden((prev) => (prev ? prev : true));
+      }
+    },
+    [],
+  );
+
   // Multi-plane 3D mouse depth parallax
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const smx = useSpring(mx, { stiffness: 70, damping: 20 });
   const smy = useSpring(my, { stiffness: 70, damping: 20 });
 
-  const plateMouseX = useTransform(smx, [-1, 1], [10, -10]);
-  const plateMouseY = useTransform(smy, [-1, 1], [6, -6]);
   const wordMouseX = useTransform(smx, [-1, 1], [14, -14]);
   const wingMouseX = useTransform(smx, [-1, 1], [24, -24]);
   const spotX = useTransform(smx, [-1, 1], ["28%", "72%"]);
@@ -278,19 +307,11 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
     const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
     mx.set(nx);
     my.set(ny);
+    mouseRef.current.x = -nx;
+    mouseRef.current.y = -ny;
   };
 
-  // ── Non-overlapping, rock-steady scroll curves ──
-  // Camera Plate 1 -> Plate 2 arc (0.14 -> 0.50)
-  const p1Scale = useTransform(p, [0, 0.5], [1, 1.15]);
-  const p1X = useTransform(p, [0, 0.5], ["0%", "-5.5%"]);
-  const p1Opacity = useTransform(p, [0.16, 0.48], [1, 0]);
-
-  const p2Scale = useTransform(p, [0.18, 0.62, 1], [1.13, 1, 1.03]);
-  const p2X = useTransform(p, [0.18, 0.62], ["5.5%", "0%"]);
-  const p2Opacity = useTransform(p, [0.18, 0.5], [0, 1]);
-
-  // Act 1 Hero UI exits cleanly (0.02 -> 0.28)
+  // ── Act 1 exits (0.02 -> 0.28) ──
   const h1ExitY = useTransform(p, [0.02, 0.24], ["0%", "-115%"]);
   const h1ExitOp = useTransform(p, [0.06, 0.24], [1, 0]);
   const bodyExitY = useTransform(p, [0.03, 0.26], ["0%", "115%"]);
@@ -300,12 +321,15 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
   const capsExitY = useTransform(p, [0.03, 0.24], ["0%", "120%"]);
   const capsExitOp = useTransform(p, [0.06, 0.24], [1, 0]);
 
-  // Foreground sculptural wings part cleanly left & right (0.04 -> 0.36)
   const wingLeftX = useTransform(p, [0.04, 0.38], ["0%", "-65%"]);
   const wingRightX = useTransform(p, [0.06, 0.4], ["0%", "65%"]);
   const wingOp = useTransform(p, [0.18, 0.38], [1, 0]);
 
-  // Act 2: 9 rich staggered rising elements coming up from below the screen (0.30 -> 0.80)
+  // ── Rising Obsidian Architectural Ledge Band (inspired by Noche Viva's stone ledge) ──
+  const ledgeY = useTransform(p, [0.46, 0.78], ["104%", "0%"]);
+  const ledgeOp = useTransform(p, [0.46, 0.62], [0, 1]);
+
+  // ── Act 2: 9 Staggered Rising Elements (0.28 -> 0.82) ──
   const s2EyebrowY = useTransform(p, [0.28, 0.52], [180, 0]);
   const s2EyebrowOp = useTransform(p, [0.28, 0.48], [0, 1]);
 
@@ -324,7 +348,6 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
   const s2QrY = useTransform(p, [0.34, 0.62], [220, 0]);
   const s2QrOp = useTransform(p, [0.34, 0.58], [0, 1]);
 
-  // 3 Tall Cards rising in dramatic staggered waterfall from deep below viewport
   const card1Y = useTransform(p, [0.34, 0.66], [360, 0]);
   const card1Op = useTransform(p, [0.34, 0.58], [0, 1]);
   const card2Y = useTransform(p, [0.41, 0.73], [440, 0]);
@@ -338,12 +361,7 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
     { y: card3Y, opacity: card3Op },
   ];
 
-  // Bottom status bar rising late in Act 2
-  const s2FootY = useTransform(p, [0.56, 0.82], [90, 0]);
-  const s2FootOp = useTransform(p, [0.56, 0.78], [0, 1]);
-
-  // Seamless dark veil handoff into Chapter 01
-  const handoffVeilOp = useTransform(p, [0.88, 1], [0, 0.6]);
+  const handoffVeilOp = useTransform(p, [0.88, 1], [0, 0.58]);
 
   const scrollToProgress = (frac: number) => {
     const el = runwayRef.current;
@@ -378,7 +396,7 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
                   <m.div
                     initial={reduced ? false : { y: "-115%" }}
                     animate={{ y: "0%" }}
-                    transition={{ delay: 0.08 + i * 0.07, duration: 0.34, ease: COUT }}
+                    transition={{ delay: 0.52 + i * 0.07, duration: 0.34, ease: COUT }}
                   >
                     <Link
                       href={item.href}
@@ -395,7 +413,7 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
           <m.div
             initial={reduced ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.42, duration: 0.25 }}
+            transition={{ delay: 0.85, duration: 0.25 }}
             className="flex items-center gap-3.5"
           >
             <Link
@@ -430,35 +448,15 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
           aria-label="EvntCult cinematic showcase"
           className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-[#121110] text-[#EDE3DA]"
         >
-          {/* 1. Camera Plates with Opening Zoom-Out + Mouse Depth + Scroll Camera Arc */}
-          <m.div
-            className="pointer-events-none absolute -inset-4 overflow-hidden"
-            style={{ x: plateMouseX, y: plateMouseY }}
-          >
-            <m.div
-              initial={reduced ? false : { scale: 1.24 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 1.3, ease: QOUT }}
-              className="absolute inset-0"
-            >
-              <m.img
-                src="/images/cinematic/hero-plate.jpg"
-                alt=""
-                fetchPriority="high"
-                decoding="async"
-                style={{ scale: p1Scale, x: p1X, opacity: p1Opacity }}
-                className="h-full w-full object-cover object-center will-change-transform"
-              />
-            </m.div>
-
-            <m.img
-              src="/images/cinematic/scene2-plate.jpg"
-              alt=""
-              decoding="async"
-              style={{ scale: p2Scale, x: p2X, opacity: p2Opacity }}
-              className="absolute inset-0 h-full w-full object-cover object-center will-change-transform"
+          {/* 1. WebGL2 8-Slice Fan-Out + Perspective Camera Tilt Stage (clipped inside widening door gap on load) */}
+          <div ref={canvasClipRef} className="pointer-events-none absolute inset-0 z-[2]">
+            <CinemaStageCanvas
+              scrollProgressRef={scrollProgressRef}
+              mouseRef={mouseRef}
+              reduced={reduced}
+              onDoorFrame={handleDoorFrame}
             />
-          </m.div>
+          </div>
 
           {/* 2. Interactive Volumetric Cursor Light Halo */}
           {mounted && !reduced && (
@@ -478,23 +476,22 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
             className="pointer-events-none absolute inset-0 z-[6]"
             style={{
               background:
-                "linear-gradient(to bottom, rgba(18,17,16,0.78) 0%, rgba(18,17,16,0.22) 26%, rgba(18,17,16,0.06) 46%, rgba(18,17,16,0.18) 72%, rgba(18,17,16,0.86) 100%)",
+                "linear-gradient(to bottom, rgba(18,17,16,0.78) 0%, rgba(18,17,16,0.2) 26%, rgba(18,17,16,0.06) 46%, rgba(18,17,16,0.18) 72%, rgba(18,17,16,0.88) 100%)",
             }}
           />
 
-          {/* 5. Seamless Bottom Handoff Veil into Chapter 01 */}
+          {/* 5. Seamless Bottom Handoff Veil into ScrollPassStory */}
           <m.div
             aria-hidden
             style={{ opacity: handoffVeilOp }}
             className="pointer-events-none absolute inset-0 z-[18] bg-gradient-to-b from-transparent via-[#121110]/45 to-[#121110]"
           />
 
-          {/* 6. Foreground Depth Layer: 100% Readable Giant "Evntcult" Wordmark + Low Sculptural Framing Wings */}
+          {/* 6. Foreground Depth Layer: 100% Visible Giant "Evntcult" Wordmark + Low Sculptural Wings */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[54vh] overflow-hidden md:h-[58vh]"
           >
-            {/* Fully visible, edge-safe giant Evntcult wordmark with per-letter scroll cascade */}
             <m.div
               style={{ x: wordMouseX }}
               className="absolute inset-x-0 bottom-[14vh] flex justify-center whitespace-nowrap px-4 font-display text-[clamp(62px,14.8vw,224px)] font-semibold leading-[0.88] tracking-[-0.035em] text-[#F5EDE4] drop-shadow-[0_12px_36px_rgba(0,0,0,0.65)] md:bottom-[12.5vh]"
@@ -504,17 +501,14 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
               ))}
             </m.div>
 
-            {/* Low Sculptural Left Wing (frames bottom edge without hiding Evntcult) */}
+            {/* Low Sculptural Left Wing */}
             <m.div
               initial={reduced ? false : { x: "-42%" }}
               animate={{ x: "0%" }}
-              transition={{ delay: 0.04, duration: 1.5, ease: QOUT }}
+              transition={{ delay: 0.45, duration: 1.45, ease: QOUT }}
               className="absolute bottom-0 left-0 h-[34%] w-[52%] md:h-[36%]"
             >
-              <m.div
-                style={{ x: wingLeftX, opacity: wingOp }}
-                className="h-full w-full will-change-transform"
-              >
+              <m.div style={{ x: wingLeftX, opacity: wingOp }} className="h-full w-full will-change-transform">
                 <m.div style={{ x: wingMouseX }} className="h-full w-full">
                   <div
                     className="h-full w-full"
@@ -532,13 +526,10 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
             <m.div
               initial={reduced ? false : { x: "42%" }}
               animate={{ x: "0%" }}
-              transition={{ delay: 0, duration: 1.5, ease: QOUT }}
+              transition={{ delay: 0.41, duration: 1.45, ease: QOUT }}
               className="absolute bottom-0 right-0 h-[34%] w-[52%] md:h-[36%]"
             >
-              <m.div
-                style={{ x: wingRightX, opacity: wingOp }}
-                className="h-full w-full will-change-transform"
-              >
+              <m.div style={{ x: wingRightX, opacity: wingOp }} className="h-full w-full will-change-transform">
                 <m.div style={{ x: wingMouseX }} className="h-full w-full">
                   <div
                     className="h-full w-full"
@@ -558,7 +549,7 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
             aria-hidden
             initial={reduced ? false : { opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.55, duration: 0.4, ease: COUT }}
+            transition={{ delay: 0.95, duration: 0.4, ease: COUT }}
             className="pointer-events-none absolute left-6 top-[27vh] z-20 hidden flex-col gap-3.5 text-[#EDE3DA]/75 lg:flex"
           >
             <Ticket className="size-4" strokeWidth={1.5} />
@@ -575,12 +566,11 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
             aria-hidden={act2Interactive}
             className="pointer-events-none absolute inset-0 z-[12]"
           >
-            {/* Masked Editorial Headline */}
             <h1 className="absolute left-5 right-5 top-[88px] overflow-hidden pb-2 font-display text-[clamp(28px,3.6vw,52px)] font-normal uppercase leading-[1.12] tracking-[-0.015em] text-[#EDE3DA] md:left-[56px] md:right-[320px] md:top-[96px]">
               <m.span
                 initial={reduced ? false : { y: "-108%" }}
                 animate={{ y: "0%" }}
-                transition={{ delay: 0.34, duration: 0.88, ease: COUT }}
+                transition={{ delay: 0.72, duration: 0.88, ease: COUT }}
                 className="block"
               >
                 <m.span style={{ y: h1ExitY, opacity: h1ExitOp }} className="block">
@@ -589,12 +579,11 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
               </m.span>
             </h1>
 
-            {/* Masked Top-Right Lead */}
             <p className="absolute left-5 top-[174px] w-[min(300px,62vw)] overflow-hidden text-[12.5px] leading-[1.45] text-[#EDE3DA]/86 md:left-auto md:right-[40px] md:top-[102px] md:w-[230px] md:text-[13px]">
               <m.span
                 initial={reduced ? false : { y: "108%" }}
                 animate={{ y: "0%" }}
-                transition={{ delay: 0.42, duration: 0.84, ease: COUT }}
+                transition={{ delay: 0.8, duration: 0.84, ease: COUT }}
                 className="block"
               >
                 <m.span style={{ y: bodyExitY, opacity: bodyExitOp }} className="block">
@@ -606,11 +595,11 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
             {/* Interactive Preview Tile */}
             <m.button
               type="button"
-              onClick={() => scrollToProgress(0.74)}
+              onClick={() => scrollToProgress(0.76)}
               onMouseEnter={() => setScrambleTick((t) => t + 1)}
               initial={reduced ? false : { opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.54, duration: 0.35 }}
+              transition={{ delay: 0.92, duration: 0.35 }}
               style={{ opacity: cardExitOp, y: cardExitY }}
               aria-label="Scroll into Scene 2"
               className={`group absolute right-5 top-[174px] h-[84px] w-[124px] overflow-hidden rounded-lg border border-[#EDE3DA]/20 bg-[#1F1815] text-left transition-transform duration-300 hover:scale-[1.04] md:left-[88px] md:right-auto md:top-[232px] md:h-[118px] md:w-[178px] ${
@@ -646,13 +635,13 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
             {/* Scroll Cue Pill */}
             <m.button
               type="button"
-              onClick={() => scrollToProgress(0.74)}
+              onClick={() => scrollToProgress(0.76)}
               style={{ opacity: cardExitOp, y: cardExitY }}
               className={`absolute bottom-[84px] right-6 hidden items-center gap-2 rounded-full border border-[#EDE3DA]/22 bg-[#121110]/65 px-3.5 py-1.5 text-[11.5px] font-medium uppercase tracking-[0.08em] text-[#EDE3DA]/90 backdrop-blur-md transition-colors hover:border-[#EDE3DA]/55 hover:text-white md:inline-flex ${
                 act2Interactive ? "pointer-events-none" : "pointer-events-auto"
               }`}
             >
-              Scroll to explore <ArrowDown className="size-3.5 animate-bounce" aria-hidden />
+              Scroll to tilt <ArrowDown className="size-3.5 animate-bounce" aria-hidden />
             </m.button>
 
             {/* Bottom 01–04 Numbered Masked Captions */}
@@ -662,7 +651,7 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
                   <m.div
                     initial={reduced ? false : { y: "108%" }}
                     animate={{ y: "0%" }}
-                    transition={{ delay: 0.7 + idx * 0.08, duration: 0.28, ease: COUT }}
+                    transition={{ delay: 1.04 + idx * 0.08, duration: 0.28, ease: COUT }}
                   >
                     <m.div
                       style={{ y: capsExitY, opacity: capsExitOp }}
@@ -682,14 +671,33 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
             </div>
           </section>
 
+          {/* ═══════════════════ RISING OBSIDIAN ARCHITECTURAL LEDGE BAND ═══════════════════ */}
+          <m.div
+            aria-hidden
+            style={reduced ? { opacity: act2Interactive ? 1 : 0 } : { y: ledgeY, opacity: ledgeOp }}
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-[13] h-[18vh] border-t border-white/15 bg-gradient-to-b from-[#171513]/92 via-[#121110]/96 to-[#121110] shadow-[0_-24px_60px_rgba(0,0,0,0.85)] backdrop-blur-md"
+          >
+            <div className="mx-auto flex h-full max-w-[1440px] items-end justify-between px-5 pb-4 md:px-[74px]">
+              <div className="hidden items-center gap-4 font-mono text-[10.5px] uppercase tracking-[0.12em] text-[#EDE3DA]/55 md:flex">
+                <span>0% COMMISSION</span>
+                <span>·</span>
+                <span>AUTO .ICS SYNC</span>
+                <span>·</span>
+                <span>ON-DEVICE PHOTO VAULT</span>
+              </div>
+              <span className="ml-auto font-display text-[clamp(22px,2.4vw,32px)] tracking-[0.04em] text-[#EDE3DA]/30 drop-shadow-[0_0_16px_rgba(240,215,255,0.22)]">
+                EVNTCULT<span className="text-[#E3264F]">.</span>
+              </span>
+            </div>
+          </m.div>
+
           {/* ═══════════════════ ACT 02: STAGGERED RISING STAGE (9 RISING ELEMENTS) ═══════════════════ */}
           <section
             aria-hidden={!act2Interactive}
-            className={`absolute inset-0 z-[14] ${
+            className={`absolute inset-0 z-[15] ${
               act2Interactive ? "pointer-events-auto" : "pointer-events-none"
             }`}
           >
-            {/* 1. Chapter Eyebrow rises first */}
             <m.p
               style={{ y: s2EyebrowY, opacity: s2EyebrowOp }}
               className="absolute left-5 top-[86px] font-mono text-[11px] uppercase tracking-[0.14em] text-[#F0D7FF] md:left-[74px] md:top-[102px]"
@@ -697,7 +705,6 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
               02 · THE CAMPUS SYSTEM
             </m.p>
 
-            {/* 2. Giant 3-line Display Title rises */}
             <m.h2
               style={{ y: s2TitleY, opacity: s2TitleOp }}
               className="absolute left-5 top-[110px] font-display text-[clamp(28px,3.3vw,48px)] font-normal uppercase leading-[1.04] tracking-[-0.015em] text-[#EDE3DA] md:left-[74px] md:top-[128px]"
@@ -709,7 +716,6 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
               on campus.
             </m.h2>
 
-            {/* 3. Editorial Story Paragraph trails smoothly */}
             <m.p
               style={{ y: s2ParaY, opacity: s2ParaOp }}
               className="absolute left-5 top-[214px] w-[min(330px,calc(100vw-40px))] text-[13px] leading-[1.58] text-[#EDE3DA]/86 md:left-[74px] md:top-[296px] md:w-[290px] md:text-[14px]"
@@ -717,7 +723,6 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
               Step into one calm instrument built for campus clubs and attendees. Publish an event in thirty seconds, scan offline QR passes at the gate, sync calendar invites automatically, and collect face-matched photos in your Vault.
             </m.p>
 
-            {/* 4. Rising Feature Pills Strip */}
             <m.div
               style={{ y: s2PillsY, opacity: s2PillsOp }}
               className="absolute left-5 top-[328px] hidden flex-wrap gap-2 md:left-[74px] md:top-[424px] md:flex"
@@ -733,7 +738,6 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
               ))}
             </m.div>
 
-            {/* 5. Action CTAs rise in */}
             <m.div
               style={{ y: s2ActY, opacity: s2ActOp }}
               className="absolute left-5 top-[348px] flex flex-wrap items-center gap-3 md:left-[74px] md:top-[472px]"
@@ -760,7 +764,7 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
               </a>
             </m.div>
 
-            {/* 6. Floating Live Gate QR Pass Card rises on the top-right */}
+            {/* Floating Live Gate QR Pass Card */}
             <m.div
               style={{ opacity: s2QrOp, y: s2QrY }}
               className="pointer-events-none absolute right-9 top-[112px] hidden items-center gap-3.5 overflow-hidden rounded-2xl border border-[#EDE3DA]/18 bg-[#121110]/78 p-3.5 shadow-[0_24px_50px_-20px_rgba(0,0,0,0.85)] backdrop-blur-xl lg:flex"
@@ -784,17 +788,17 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
               </div>
             </m.div>
 
-            {/* 7, 8, 9. Three Tall Hover-Zoom Cards Rising in Staggered Waterfall */}
-            <div className="absolute inset-x-5 bottom-8 grid grid-cols-3 gap-2.5 md:inset-x-auto md:bottom-[58px] md:right-[44px] md:flex md:gap-5">
+            {/* 3 Tall Hover-Zoom Cards Rising Above the Obsidian Ledge */}
+            <div className="absolute inset-x-5 bottom-12 grid grid-cols-3 gap-2.5 md:inset-x-auto md:bottom-[72px] md:right-[44px] md:flex md:gap-5">
               {SCENE2_CARDS.map((card, idx) => (
                 <m.div
                   key={card.label}
                   style={cardTransforms[idx]}
-                  className="aspect-[216/246] will-change-transform md:h-[252px] md:w-[218px]"
+                  className="aspect-[216/246] will-change-transform md:h-[248px] md:w-[216px]"
                 >
                   <Link
                     href={card.href}
-                    className="group relative block h-full w-full overflow-hidden rounded-sm border border-[#EDE3DA]/15 bg-[#1F1815] transition-colors duration-300 hover:border-[#F0D7FF]/50"
+                    className="group relative block h-full w-full overflow-hidden rounded-sm border border-[#EDE3DA]/18 bg-[#1F1815] shadow-[0_24px_50px_-18px_rgba(0,0,0,0.9)] transition-colors duration-300 hover:border-[#F0D7FF]/55"
                   >
                     <div
                       className="absolute inset-0 bg-cover transition-transform duration-[900ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.07]"
@@ -832,19 +836,63 @@ export function CinematicHero({ qrSvg }: { qrSvg: string }) {
                 </m.div>
               ))}
             </div>
-
-            {/* Bottom Rising Status Line */}
-            <m.div
-              style={{ y: s2FootY, opacity: s2FootOp }}
-              className="pointer-events-none absolute bottom-4 left-5 hidden items-center gap-4 font-mono text-[10.5px] uppercase tracking-[0.12em] text-[#EDE3DA]/55 md:left-[74px] md:flex"
-            >
-              <span>0% COMMISSION</span>
-              <span>·</span>
-              <span>AUTO .ICS SYNC</span>
-              <span>·</span>
-              <span>ON-DEVICE PHOTO VAULT</span>
-            </m.div>
           </section>
+
+          {/* ═══════════════════ SPLIT-OPEN CENTER-SEAM ARCHITECTURAL DOORS (INTRO) ═══════════════════ */}
+          {!doorsHidden && (
+            <>
+              <div
+                ref={doorLeftRef}
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 left-0 z-[30] w-[calc(50%-2px)] overflow-hidden border-r border-[#E3264F]/45 bg-[#121110] will-change-transform"
+              >
+                <div
+                  className="absolute inset-0 opacity-20"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right, rgba(237,227,218,0.16) 1px, transparent 1px), linear-gradient(to bottom, rgba(237,227,218,0.16) 1px, transparent 1px)",
+                    backgroundSize: "56px 56px",
+                  }}
+                />
+                <div
+                  className="absolute inset-y-0 right-0 w-32"
+                  style={{
+                    background:
+                      "linear-gradient(to left, rgba(227,38,79,0.22), transparent)",
+                  }}
+                />
+                <div className="absolute right-6 top-1/2 flex -translate-y-1/2 items-center gap-3 text-[#EDE3DA]/70">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.22em]">ADMIT</span>
+                  <BrandMark tone="white" className="h-7 w-8 opacity-90" />
+                </div>
+              </div>
+
+              <div
+                ref={doorRightRef}
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 right-0 z-[30] w-[calc(50%-2px)] overflow-hidden border-l border-[#F0D7FF]/45 bg-[#121110] will-change-transform"
+              >
+                <div
+                  className="absolute inset-0 opacity-20"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to right, rgba(237,227,218,0.16) 1px, transparent 1px), linear-gradient(to bottom, rgba(237,227,218,0.16) 1px, transparent 1px)",
+                    backgroundSize: "56px 56px",
+                  }}
+                />
+                <div
+                  className="absolute inset-y-0 left-0 w-32"
+                  style={{
+                    background:
+                      "linear-gradient(to right, rgba(240,215,255,0.18), transparent)",
+                  }}
+                />
+                <div className="absolute left-6 top-1/2 flex -translate-y-1/2 items-center gap-3 text-[#EDE3DA]/70">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.22em]">ONE</span>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>
