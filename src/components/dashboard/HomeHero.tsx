@@ -14,6 +14,7 @@ import { TextScramble } from "@/components/shadcn/text-scramble";
 import { SlidingNumber } from "@/components/shadcn/sliding-number";
 import { GlowEffect } from "@/components/shadcn/glow-effect";
 import { TextShimmer } from "@/components/shadcn/text-shimmer";
+import { TextLoop } from "@/components/shadcn/text-loop";
 import { QOUT } from "@/lib/motion-curves";
 
 export type HeroEvent = {
@@ -51,8 +52,24 @@ function useNow() {
 export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: HeroEvent | null; mine: boolean; dateLine: string; name: string; isOrganizer?: boolean }) {
   const now = useNow();
   const reduce = useReducedMotion();
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0, gx: 50, gy: 40, on: false });
 
   if (!e) return <EmptyTicket name={name} dateLine={dateLine} isOrganizer={isOrganizer} />;
+
+  const onHeroMove = (ev: React.PointerEvent<HTMLDivElement>) => {
+    if (reduce || ev.pointerType !== "mouse") return;
+    const r = ev.currentTarget.getBoundingClientRect();
+    const px = ((ev.clientX - r.left) / r.width) * 100;
+    const py = ((ev.clientY - r.top) / r.height) * 100;
+    setTilt({
+      rx: ((50 - py) / 50) * 2.4,
+      ry: ((px - 50) / 50) * 2.8,
+      gx: px,
+      gy: py,
+      on: true,
+    });
+  };
+  const onHeroLeave = () => setTilt((t) => ({ ...t, rx: 0, ry: 0, on: false }));
 
   const start = Date.parse(e.startsAt);
   const end = Date.parse(e.endsAt);
@@ -74,7 +91,12 @@ export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: 
         asHeading={false}
       />
 
-      <div className="relative">
+      <div
+        className="relative"
+        style={{ perspective: 1400 }}
+        onPointerMove={onHeroMove}
+        onPointerLeave={onHeroLeave}
+      >
         {!reduce && (
           <GlowEffect
             colors={["#F0D7FF", "#E3264F", "#F0D7FF"]}
@@ -85,10 +107,24 @@ export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: 
         )}
       <m.div
         initial={reduce ? false : { opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: EASE }}
+        animate={{ opacity: 1, y: 0, rotateX: tilt.rx, rotateY: tilt.ry }}
+        transition={
+          tilt.on
+            ? { type: "spring", stiffness: 220, damping: 24 }
+            : { duration: 0.6, ease: EASE }
+        }
         className="hero-ticket paper-keep relative grid overflow-hidden rounded-[28px] shadow-[0_40px_80px_-48px_rgba(40,25,5,.55),0_0_0_1px_rgba(26,26,26,.06)] md:grid-cols-[minmax(0,1fr)_300px]"
       >
+        {!reduce && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-10 transition-opacity duration-300"
+            style={{
+              opacity: tilt.on ? 1 : 0,
+              background: `radial-gradient(460px circle at ${tilt.gx}% ${tilt.gy}%, rgba(255,254,246,0.16), transparent 60%)`,
+            }}
+          />
+        )}
         {!reduce && (
           <BorderTrail
             size={96}
@@ -148,7 +184,19 @@ export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: 
           className="hero-stub relative flex flex-col justify-between bg-[#FFFEF6] p-6 md:p-7"
         >
           <div>
-            <p className="text-[13.5px] font-medium text-[#6A6A6A]">{live ? "Doors are open" : mine ? "Doors open in" : "Starts in"}</p>
+            <div className="text-[13.5px] font-medium text-[#6A6A6A]">
+              {live ? (
+                "Doors are open"
+              ) : mine ? (
+                <TextLoop interval={3.2}>
+                  <span>Doors open in</span>
+                  <span>Offline QR ready</span>
+                  <span>Auto .ics synced</span>
+                </TextLoop>
+              ) : (
+                "Starts in"
+              )}
+            </div>
             {live ? (
               <>
                 <p className="mt-1 font-display text-[88px] leading-[0.85] tracking-[-0.04em] text-[#1A1A1A]">Now</p>

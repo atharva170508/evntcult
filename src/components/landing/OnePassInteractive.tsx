@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Check, QrCode, ScanLine, Ticket } from "lucide-react";
-import { AnimatePresence, m } from "motion/react";
+import { AnimatePresence, m, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { cn } from "@/lib/utils";
 import { TransitionPanel } from "@/components/motion/TransitionPanel";
 import { EASE } from "@/components/motion/MotionProvider";
 import { BorderTrail } from "@/components/shadcn/border-trail";
 import { TextScramble } from "@/components/shadcn/text-scramble";
+import { TextLoop } from "@/components/shadcn/text-loop";
 import { InView } from "@/components/shadcn/in-view";
 import { COUT } from "@/lib/motion-curves";
 
@@ -42,10 +43,21 @@ const STEPS = [
  * and a live crimson-emerald laser scanline beam on gate check-in.
  */
 export function OnePassInteractive() {
+  const reduced = !!useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
   const [step, setStep] = useState(0);
   const [filter, setFilter] = useState<string>("All");
   const [claimed, setClaimed] = useState(false);
   const [scanState, setScanState] = useState<"idle" | "scanning" | "admitted">("idle");
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const cardParallaxY = useSpring(useTransform(scrollYProgress, [0, 1], [36, -28]), {
+    stiffness: 90,
+    damping: 22,
+  });
 
   const filtered = filter === "All" ? SAMPLE_EVENTS : SAMPLE_EVENTS.filter((e) => e.kind === filter);
 
@@ -61,9 +73,10 @@ export function OnePassInteractive() {
 
   return (
     <section
+      ref={sectionRef}
       id="onepass"
       aria-labelledby="onepass-h"
-      className="w-full scroll-mt-24 border-t border-white/10 bg-[#121110] py-20 text-[#EDE3DA] md:py-28"
+      className="relative z-10 w-full scroll-mt-24 border-t border-white/10 bg-[#121110]/60 py-20 text-[#EDE3DA] backdrop-blur-[2px] md:py-28"
     >
       <div className="mx-auto max-w-[1360px] px-gutter">
         <InView
@@ -137,20 +150,26 @@ export function OnePassInteractive() {
             </div>
           </div>
 
-          {/* Right: Obsidian architectural preview well with BorderTrail */}
-          <div
+          {/* Right: Frosted Obsidian architectural preview well with scroll parallax & BorderTrail */}
+          <m.div
             data-sample="true"
-            className="relative overflow-hidden rounded-[24px] border border-white/12 bg-[#1A1816] p-6 shadow-[0_32px_70px_-28px_rgba(0,0,0,0.9)] md:p-8"
+            style={reduced ? undefined : { y: cardParallaxY }}
+            className="relative overflow-hidden rounded-[24px] border border-white/15 bg-[#1A1816]/78 p-6 shadow-[0_32px_70px_-28px_rgba(0,0,0,0.9)] backdrop-blur-xl md:p-8"
           >
             <BorderTrail
               size={84}
               className="bg-gradient-to-l from-[#F0D7FF] via-[#E3264F] to-transparent opacity-60"
               transition={{ repeat: Infinity, duration: 7, ease: "linear" }}
             />
-            <div className="mb-5 flex items-center justify-between">
-              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#EDE3DA]/45">
-                Interactive preview
-              </p>
+            <div className="mb-5 flex items-center justify-between gap-3">
+              <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#EDE3DA]/55">
+                <TextLoop interval={2.6}>
+                  <span>Interactive preview</span>
+                  <span>0.4s offline scan</span>
+                  <span>Auto .ics sync</span>
+                  <span>Zero platform cut</span>
+                </TextLoop>
+              </div>
               <span className="font-mono text-[11px] text-[#F0D7FF]/80">
                 STEP 0{step + 1} / 03
               </span>
@@ -374,7 +393,7 @@ export function OnePassInteractive() {
                 </div>
               </div>
             </TransitionPanel>
-          </div>
+          </m.div>
         </InView>
       </div>
     </section>

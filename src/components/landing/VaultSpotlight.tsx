@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Check, Download, ScanFace, ShieldCheck } from "lucide-react";
-import { AnimatePresence, m } from "motion/react";
+import { AnimatePresence, m, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { cn } from "@/lib/utils";
 import { EventArt } from "@/components/ui/EventArt";
 import { Magnetic } from "@/components/motion/Magnetic";
@@ -30,7 +30,17 @@ const FRAMES = [
  * GlowEffect bloom on matched frames, and SlidingNumber confidence counters.
  */
 export function VaultSpotlight() {
+  const reduced = !!useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
   const [phase, setPhase] = useState<"idle" | "scanning" | "matched">("idle");
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "center center"],
+  });
+  const smooth = useSpring(scrollYProgress, { stiffness: 95, damping: 24 });
+  const sheetRotX = useTransform(smooth, [0, 1], [12, 0]);
+  const sheetScale = useTransform(smooth, [0, 1], [0.94, 1]);
 
   const runMatch = () => {
     if (phase === "scanning") return;
@@ -44,8 +54,9 @@ export function VaultSpotlight() {
 
   return (
     <section
+      ref={sectionRef}
       aria-labelledby="vault-usp-h"
-      className="w-full border-t border-white/10 bg-[#121110] py-20 text-[#EDE3DA] md:py-28"
+      className="relative z-10 w-full border-t border-white/10 bg-[#121110]/60 py-20 text-[#EDE3DA] backdrop-blur-[2px] md:py-28"
     >
       <div className="mx-auto max-w-[1360px] px-gutter">
         <InView
@@ -107,8 +118,12 @@ export function VaultSpotlight() {
             </div>
           </div>
 
-          {/* Right interactive darkroom contact sheet */}
-          <div className="relative">
+          {/* Right interactive darkroom contact sheet with scroll-linked 3D tilt-in */}
+          <div className="relative" style={{ perspective: 1200 }}>
+            <m.div
+              style={reduced ? undefined : { rotateX: sheetRotX, scale: sheetScale }}
+              className="relative will-change-transform"
+            >
             {phase === "matched" && (
               <GlowEffect
                 colors={["#F0D7FF", "#E3264F", "#5D3827", "#F0D7FF"]}
@@ -119,7 +134,7 @@ export function VaultSpotlight() {
             )}
             <div
               data-sample="true"
-              className="relative rounded-[24px] border border-white/12 bg-[#1A1816] p-6 shadow-[0_32px_70px_-28px_rgba(0,0,0,0.85)] md:p-8"
+              className="relative rounded-[24px] border border-white/15 bg-[#1A1816]/80 p-6 shadow-[0_32px_70px_-28px_rgba(0,0,0,0.85)] backdrop-blur-xl md:p-8"
             >
               <div className="flex items-center justify-between gap-3">
                 <div>
@@ -210,6 +225,7 @@ export function VaultSpotlight() {
                 </span>
               </div>
             </div>
+            </m.div>
           </div>
         </InView>
       </div>

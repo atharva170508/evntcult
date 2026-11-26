@@ -40,7 +40,7 @@ export function SavingsCalculator() {
   const typicalFee = Math.round(gross * 0.05);
 
   return (
-    <section aria-labelledby="calc-h" className="w-full border-t border-white/10 bg-[#121110] py-16 text-[#EDE3DA] md:py-24">
+    <section aria-labelledby="calc-h" className="relative z-10 w-full border-t border-white/10 bg-[#121110]/60 py-16 text-[#EDE3DA] backdrop-blur-[2px] md:py-24">
       <div className="mx-auto max-w-[1360px] px-gutter">
         <InView
           once
@@ -49,7 +49,7 @@ export function SavingsCalculator() {
             visible: { opacity: 1, y: 0 },
           }}
           transition={{ duration: 0.7, ease: COUT }}
-          className="relative overflow-hidden rounded-[24px] border border-white/12 bg-[#1A1816] shadow-[0_32px_70px_-28px_rgba(0,0,0,0.85)]"
+          className="relative overflow-hidden rounded-[24px] border border-white/15 bg-[#1A1816]/75 shadow-[0_32px_70px_-28px_rgba(0,0,0,0.85)] backdrop-blur-xl"
         >
           <BorderTrail
             size={90}
@@ -127,7 +127,7 @@ export function SavingsCalculator() {
             </div>
 
             {/* Right: live breakdown */}
-            <div className="flex flex-col justify-between border-t border-white/10 bg-[#141312] p-8 md:p-12 lg:border-l lg:border-t-0">
+            <div className="flex flex-col justify-between border-t border-white/10 bg-[#141312]/70 p-8 md:p-12 lg:border-l lg:border-t-0">
               <div>
                 <p className="text-[13px] font-medium text-[#EDE3DA]/55">Club keeps on EvntCult</p>
                 <p className="mt-2 flex items-baseline font-display text-[clamp(44px,5.6vw,68px)] leading-none tracking-[-0.03em] text-[#EDE3DA]">

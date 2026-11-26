@@ -18,6 +18,9 @@ import {
 import { OnePassInteractive } from "./OnePassInteractive";
 import { VaultSpotlight } from "./VaultSpotlight";
 import { SavingsCalculator } from "./SavingsCalculator";
+import { ScrollPassStory } from "./ScrollPassStory";
+import { ClosingFinale } from "./ClosingFinale";
+import { TwilightBackdrop } from "./TwilightBackdrop";
 import { DiscoverFeed } from "./DiscoverFeed";
 import { OrganizerBento } from "./OrganizerBento";
 import { EventArt } from "@/components/ui/EventArt";
@@ -143,20 +146,24 @@ function CampusCalendar({ month }: { month: MonthPayload }) {
  */
 export function PublicHome() {
   return (
-    <div className="relative w-full bg-[#121110] text-[#EDE3DA]">
-      <Hero />
-      <OnePassInteractive />
-      <VaultSpotlight />
-      <SavingsCalculator />
-      <Closing tone="dark" />
-      <PublicDarkFooter />
+    <div className="relative w-full text-[#EDE3DA]">
+      <TwilightBackdrop />
+      <div className="relative z-10">
+        <Hero />
+        <ScrollPassStory />
+        <OnePassInteractive />
+        <VaultSpotlight />
+        <SavingsCalculator />
+        <ClosingFinale />
+        <PublicDarkFooter />
+      </div>
     </div>
   );
 }
 
 function PublicDarkFooter() {
   return (
-    <footer className="w-full border-t border-white/10 bg-[#0D0C0B] text-[#EDE3DA]">
+    <footer className="relative z-10 w-full border-t border-white/10 bg-[#0D0C0B]/88 text-[#EDE3DA] backdrop-blur-xl">
       <div className="mx-auto flex max-w-[1360px] flex-col gap-6 px-gutter py-10 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="font-display text-[22px] leading-tight text-[#EDE3DA]">
