@@ -9,6 +9,9 @@ import { EASE } from "@/components/motion/MotionProvider";
 import { EmptyTicket } from "./EmptyTicket";
 import { DashboardGreeting } from "./DashboardGreeting";
 import { passName } from "@/lib/pass-name";
+import { BorderTrail } from "@/components/shadcn/border-trail";
+import { TextScramble } from "@/components/shadcn/text-scramble";
+import { SlidingNumber } from "@/components/shadcn/sliding-number";
 
 export type HeroEvent = {
   id: string;
@@ -74,6 +77,13 @@ export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: 
         transition={{ duration: 0.6, ease: EASE }}
         className="hero-ticket paper-keep relative grid overflow-hidden rounded-[28px] shadow-[0_40px_80px_-48px_rgba(40,25,5,.55),0_0_0_1px_rgba(26,26,26,.06)] md:grid-cols-[minmax(0,1fr)_300px]"
       >
+        {!reduce && (
+          <BorderTrail
+            size={96}
+            className="z-20 bg-gradient-to-l from-[#E3264F] via-[#F0D7FF] to-transparent opacity-70"
+            transition={{ repeat: Infinity, duration: 7, ease: "linear" }}
+          />
+        )}
         {/* Body: the poster and the name */}
         <Link href={`/events/${e.slug}`} className="group relative block min-h-[300px] overflow-hidden md:min-h-[380px]" style={{ background: tone }}>
           <div className="absolute inset-0 transition-transform duration-[1200ms] ease-[var(--ease-enter)] group-hover:scale-[1.03]">
@@ -128,7 +138,9 @@ export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: 
             ) : days !== null && days >= 1 ? (
               <>
                 <p className="mt-1 flex items-baseline gap-2 text-[#1A1A1A]">
-                  <span className="font-display text-[104px] leading-[0.8] tracking-[-0.05em] tabular-nums">{days}</span>
+                  <span className="font-display text-[104px] leading-[0.8] tracking-[-0.05em] tabular-nums">
+                    {reduce ? days : <SlidingNumber value={days} />}
+                  </span>
                   <span className="font-display text-[28px]">{days === 1 ? "day" : "days"}</span>
                 </p>
                 <p className="mt-3 font-mono text-[20px] tabular-nums tracking-[0.04em] text-[#3F3F3F]" aria-live="off">
@@ -145,8 +157,10 @@ export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: 
           <div className="mt-8">
             {mine && e.passSerial && (
               <p className="mb-3">
-                <span className="block font-display text-[22px] leading-tight text-[#1A1A1A]">{passName(e.passSerial).name}</span>
-                <span className="block text-[12.5px] tabular-nums text-[#6A6A6A]">No. {passName(e.passSerial).no}</span>
+                <span className="block font-display text-[22px] leading-tight text-[#1A1A1A]">
+                  {reduce ? passName(e.passSerial).name : <TextScramble>{passName(e.passSerial).name}</TextScramble>}
+                </span>
+                <span className="block font-mono text-[12px] tabular-nums text-[#6A6A6A]">No. {passName(e.passSerial).no}</span>
               </p>
             )}
             {!mine && (

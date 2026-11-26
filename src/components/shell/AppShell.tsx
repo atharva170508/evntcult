@@ -20,8 +20,8 @@ export type { NavViewer };
 
 /**
  * The frame around every page: one header bar, the page, the footer on attendee and public
- * pages, and the phone tab bar. Pages that need full-width bands
- * break out of the column with the `.bleed` class.
+ * pages, and the phone tab bar. For the logged-out public landing page (/dashboard), renders
+ * a dedicated full-width Obsidian Twilight shell with zero light-chrome clashes.
  */
 export function AppShell({
   viewer,
@@ -40,7 +40,9 @@ export function AppShell({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const typing = e.target instanceof HTMLElement && (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName));
+      const typing =
+        e.target instanceof HTMLElement &&
+        (e.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName));
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setSearchOpen((o) => !o);
@@ -65,6 +67,30 @@ export function AppShell({
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
+
+  const isPublicCinema = !viewer && pathname === "/dashboard";
+
+  if (isPublicCinema) {
+    return (
+      <div className="flex min-h-dvh w-full flex-col overflow-x-clip bg-[#121110] text-[#EDE3DA]">
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
+        <OfflineBanner />
+        <main id="main" className="w-full flex-1">
+          {children}
+        </main>
+        <BackToTop />
+        <SearchDialog open={searchOpen} onClose={closeSearch} isOrganizer={false} />
+        <EnterCodeDialog open={codeOpen} onClose={() => setCodeOpen(false)} />
+        <KeyboardShortcuts
+          isOrganizer={false}
+          signedIn={false}
+          onEnterCode={() => setCodeOpen(true)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-dvh flex-col overflow-x-clip">

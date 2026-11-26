@@ -60,7 +60,7 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
 
   const art = (
     <>
-      <EventArt accent={e.accent} seed={e.id} scrim={false} className="transition-transform duration-500 ease-out group-hover:scale-[1.04]" />
+      <EventArt accent={e.accent} seed={e.id} scrim={false} className="transition-transform duration-[900ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.05]" />
       <span
         className={cn(
           "paper-keep absolute left-3 top-3 z-[2] grid min-w-[44px] place-items-center rounded-xl bg-white/95 px-2 py-1.5 text-ink shadow-[0_4px_14px_-4px_rgba(60,40,10,0.28)] ring-1 ring-ink/10",

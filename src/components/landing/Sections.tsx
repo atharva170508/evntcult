@@ -22,6 +22,8 @@ import { CountUp, Countdown } from "./Live";
 import { seatState } from "./EventCard";
 import { HeroSearch } from "./HeroSearch";
 import { HeroShowcase } from "./HeroShowcase";
+import { CinematicHero } from "./CinematicHero";
+import { BorderTrail } from "@/components/shadcn/border-trail";
 import { qrArtSvg } from "@/lib/qr-art";
 
 const cta =
@@ -38,64 +40,7 @@ export function Hero() {
     ink: "#1A1A1A",
     accent: "#E3264F",
   });
-  return (
-    <section
-      aria-labelledby="hero-h"
-      className="pb-14 pt-8 md:pt-14 lg:pb-20"
-    >
-      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-12">
-        <div>
-          <h1
-            id="hero-h"
-            className="font-display text-[clamp(58px,8.4vw,122px)] leading-[0.88] tracking-[-0.04em] text-ink"
-          >
-            <MaskedLines
-              lines={["Every event,", <em key="em">one pass.</em>]}
-            />
-          </h1>
-          <Entrance delay={0.3}>
-            <p className="mt-7 max-w-[38ch] text-[18px] leading-snug text-ink-2 md:text-[20px]">
-              Concerts, meetups, workshops, parties and hackathons, all on one
-              calendar. Register in a tap and walk in with your phone.
-            </p>
-          </Entrance>
-          <Entrance delay={0.36} className="relative z-10">
-            <HeroSearch />
-          </Entrance>
-          <Entrance
-            delay={0.42}
-            className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3"
-          >
-            <Magnetic>
-              <Link href="/signin?mode=signup" className={cta}>
-                Sign up free
-              </Link>
-            </Magnetic>
-          </Entrance>
-        </div>
-        <Entrance delay={0.2}>
-          <HeroShowcase qr={qr} />
-        </Entrance>
-      </div>
-
-      {/* Editorial architectural truth strip — real product mechanics, zero invented stats */}
-      <Entrance delay={0.5}>
-        <dl className="mt-14 grid grid-cols-2 divide-y divide-line border-t border-line pt-6 sm:grid-cols-4 sm:divide-x sm:divide-y-0">
-          {[
-            ["0% platform fee", "Direct UPI straight to clubs"],
-            ["Offline QR gates", "Scans in under a second without Wi-Fi"],
-            ["On-device Face ID", "Event photos land in your Vault"],
-            ["Verified certificates", "Tamper-proof codes on every issue"],
-          ].map(([head, sub]) => (
-            <div key={head} className="py-3 sm:px-5 sm:py-0 sm:first:pl-0 sm:last:pr-0">
-              <dt className="text-[14px] font-semibold text-ink">{head}</dt>
-              <dd className="mt-0.5 text-[13px] text-ink-muted">{sub}</dd>
-            </div>
-          ))}
-        </dl>
-      </Entrance>
-    </section>
-  );
+  return <CinematicHero qrSvg={qr} />;
 }
 
 /* ── Featured event ─────────────────────────────────────── */
@@ -475,7 +420,63 @@ export function AppBand() {
 
 /* ── Closing ────────────────────────────────────────────── */
 
-export function Closing() {
+export function Closing({ tone = "light" }: { tone?: "light" | "dark" }) {
+  if (tone === "dark") {
+    return (
+      <section className="relative w-full overflow-hidden border-t border-white/10 bg-[#121110] py-20 text-[#EDE3DA] md:py-28">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(700px circle at 80% 100%, rgba(227,38,79,0.2), transparent 60%), radial-gradient(640px circle at 15% 0%, rgba(240,215,255,0.12), transparent 55%)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 -bottom-8 select-none text-center font-display text-[clamp(96px,22vw,280px)] font-semibold leading-[0.8] tracking-[-0.045em] text-[#EDE3DA]/[0.05]"
+        >
+          evntcult
+        </div>
+        <div className="relative z-10 mx-auto max-w-[1360px] px-gutter">
+          <Reveal className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#F0D7FF]/80">
+                05 · Ready for campus
+              </p>
+              <h2 className="mt-3 max-w-[14ch] font-display text-[clamp(48px,6.5vw,92px)] leading-[0.92] tracking-[-0.03em] text-[#EDE3DA]">
+                See you at <em className="italic text-[#F0D7FF]">the gate.</em>
+              </h2>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+              <Magnetic>
+                <Link
+                  href="/signin?mode=signup"
+                  className="relative inline-flex h-12 items-center justify-center gap-2 overflow-hidden rounded-[14px] bg-[#F0D7FF] px-6 text-[16px] font-semibold text-[#121110] transition-colors hover:bg-white"
+                >
+                  <BorderTrail
+                    size={54}
+                    className="bg-gradient-to-l from-[#E3264F] via-[#121110] to-transparent"
+                    transition={{ repeat: Infinity, duration: 4.5, ease: "linear" }}
+                  />
+                  <span className="relative z-10 inline-flex items-center gap-2">
+                    Sign up free <ArrowUpRight className="size-4" aria-hidden />
+                  </span>
+                </Link>
+              </Magnetic>
+              <Link
+                href="/events"
+                className="text-[16px] font-semibold text-[#EDE3DA]/85 underline decoration-white/30 decoration-2 underline-offset-[6px] transition-colors duration-fast hover:text-white hover:decoration-[#F0D7FF]"
+              >
+                Browse events
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <Reveal
       as="section"
