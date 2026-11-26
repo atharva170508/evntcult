@@ -20,6 +20,7 @@ import { SubscribeCalendar } from "@/components/calendar/SubscribeCalendar";
 import { FirstVisitCard } from "@/components/ui/FirstVisitCard";
 import { calendarFeedToken } from "@/lib/session";
 import { siteHost } from "@/lib/organizer/page-data";
+import { CinemaReveal, CinemaSpotlightFrame } from "@/components/motion/CinemaReveal";
 
 export const metadata: Metadata = { title: "Calendar" };
 export const dynamic = "force-dynamic";
@@ -159,8 +160,8 @@ export default async function CalendarPage({
       )}
 
       {/* Month grid */}
+      <CinemaSpotlightFrame className="bg-surface/90 p-3 sm:p-5">
       <section
-        className="overflow-hidden rounded-[24px] border border-line-strong bg-surface p-3 shadow-card sm:p-5"
         aria-label={`${monthName} month view`}
       >
         <div className="grid grid-cols-7 pb-2">
@@ -280,8 +281,10 @@ export default async function CalendarPage({
           </span>
         </p>
       </section>
+      </CinemaSpotlightFrame>
 
       {/* Agenda */}
+      <CinemaReveal delay={0.08}>
       <section aria-labelledby="agenda-heading" className="space-y-5">
         <h2 id="agenda-heading" className="text-display-md font-semibold">
           Agenda
@@ -368,6 +371,7 @@ export default async function CalendarPage({
           </div>
         )}
       </section>
+      </CinemaReveal>
     </div>
   );
 }

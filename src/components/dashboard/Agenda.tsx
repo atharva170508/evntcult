@@ -8,6 +8,7 @@ import { formatINR } from "@/lib/money";
 import { istYmd } from "@/lib/time";
 import { fmtDate, fmtTime, relative } from "@/lib/utils";
 import { passName } from "@/lib/pass-name";
+import { CinemaReveal } from "@/components/motion/CinemaReveal";
 
 /**
  * Home, written like a page of a diary (after Things 3's Today): the date set big, a one-line
@@ -77,6 +78,7 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
   const nextOutside = next && !items.some((e) => e.id === next.id) ? next : null;
 
   return (
+    <CinemaReveal>
     <section aria-labelledby="week-h">
       <div className="flex items-baseline justify-between border-b border-ink pb-3">
         <h2 id="week-h" className="text-[18px] font-semibold text-ink">
@@ -101,11 +103,11 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
               href="/calendar"
               className={
                 isToday
-                  ? "flex flex-col items-center rounded-2xl bg-ink py-2.5 text-[#FFFEF6] shadow-sm transition-transform hover:-translate-y-0.5"
-                  : "flex flex-col items-center rounded-2xl border border-line bg-surface py-2.5 text-ink transition-colors hover:border-line-strong hover:bg-sunken"
+                  ? "flex flex-col items-center rounded-2xl bg-ink py-2.5 text-[#FFFEF6] shadow-sm transition-transform hover:-translate-y-0.5 dark:bg-[#F0D7FF] dark:text-[#121110] dark:shadow-[0_8px_24px_-8px_rgba(240,215,255,0.45)]"
+                  : "flex flex-col items-center rounded-2xl border border-line bg-surface/85 py-2.5 text-ink backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-line-strong hover:bg-sunken dark:border-white/10 dark:bg-[#1A1816]/75 dark:hover:border-white/22 dark:hover:bg-white/[0.08]"
               }
             >
-              <span className={isToday ? "text-[11px] font-medium text-[#FFFEF6]/70" : "text-[11px] font-medium text-ink-muted"}>
+              <span className={isToday ? "text-[11px] font-medium text-[#FFFEF6]/70 dark:text-[#121110]/70" : "text-[11px] font-medium text-ink-muted"}>
                 {fmtDate(d, { weekday: "short" })}
               </span>
               <span className="mt-0.5 font-display text-[22px] leading-none tracking-[-0.02em] tabular-nums">
@@ -211,6 +213,7 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
         </div>
       )}
     </section>
+    </CinemaReveal>
   );
 }
 
@@ -219,7 +222,7 @@ function PassRow({ e, serial, pending }: { e: EventSummary; serial: string | nul
   const live = seatState(e) === "live";
   return (
     <div>
-      <Link href="/passes" className="group flex items-stretch gap-4 rounded-2xl bg-white p-1.5 pr-4 shadow-[0_0_0_1px_rgb(var(--c-line-strong))] transition-shadow hover:shadow-[0_0_0_1px_rgb(var(--c-ink)),0_12px_28px_-18px_rgba(30,20,5,.45)]">
+      <Link href="/passes" className="group flex items-stretch gap-4 rounded-2xl bg-surface/90 p-1.5 pr-4 shadow-[0_0_0_1px_rgb(var(--c-line-strong))] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_rgb(var(--c-ink)),0_12px_28px_-18px_rgba(30,20,5,.45)] dark:bg-[#1A1816]/80 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12)] dark:hover:shadow-[0_0_0_1px_rgba(240,215,255,0.45),0_14px_32px_-16px_rgba(0,0,0,0.85)]">
         <span aria-hidden className="w-2 shrink-0 rounded-[10px]" style={{ background: accentHex(e.accent) }} />
         <span className="min-w-0 flex-1 py-2.5">
           <span className="flex items-center gap-2 text-[13px] font-medium text-ink-muted">
@@ -278,6 +281,7 @@ function OtherRow({ e, now }: { e: EventSummary; now: Date }) {
 /** Changes to events you're going to, as a plain feed. */
 export function UpdatesFeed({ items }: { items: AnnouncementItem[] }) {
   return (
+    <CinemaReveal delay={0.08}>
     <section aria-labelledby="upd-feed-h">
       <div className="flex items-baseline justify-between border-b border-ink pb-3">
         <h2 id="upd-feed-h" className="text-[18px] font-semibold text-ink">
@@ -309,5 +313,6 @@ export function UpdatesFeed({ items }: { items: AnnouncementItem[] }) {
         </ul>
       )}
     </section>
+    </CinemaReveal>
   );
 }

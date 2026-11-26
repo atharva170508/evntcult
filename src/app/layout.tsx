@@ -48,15 +48,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FFFEF6",
-  colorScheme: "light dark",
+  themeColor: "#121110",
+  colorScheme: "dark light",
   // Draw edge to edge on notched phones; the header, tab bar and page pad themselves with env(safe-area-inset-*).
   viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${sans.variable} ${serif.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en-IN" className={`dark ${sans.variable} ${serif.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>

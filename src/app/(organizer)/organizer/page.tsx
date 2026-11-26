@@ -13,6 +13,7 @@ import { Meter } from "@/components/ui/Meter";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
 import { FirstVisitCard } from "@/components/ui/FirstVisitCard";
 import { DeleteDraftButton } from "@/components/organizer-ui/DeleteDraftButton";
+import { CinemaHeadline, CinemaReveal } from "@/components/motion/CinemaReveal";
 
 export const metadata: Metadata = { title: "Your events" };
 export const dynamic = "force-dynamic";
@@ -89,6 +90,7 @@ function EventRow({ e, draft }: { e: HomeEvent; draft?: boolean }) {
 
 function Group({ title, count, children }: { title: string; count: number; children: React.ReactNode }) {
   return (
+    <CinemaReveal>
     <section className="mt-10">
       <div className="mb-3 flex items-baseline gap-2.5">
         <h2 className="text-h4 font-semibold">{title}</h2>
@@ -96,6 +98,7 @@ function Group({ title, count, children }: { title: string; count: number; child
       </div>
       <ul className="card overflow-hidden">{children}</ul>
     </section>
+    </CinemaReveal>
   );
 }
 
@@ -130,9 +133,11 @@ export default async function OrganizerHome({ searchParams }: { searchParams: Pr
       )}
       <header className="flex flex-col gap-5 border-b border-line pb-7 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="font-display text-[clamp(40px,5vw,60px)] leading-[0.95] tracking-[-0.03em] text-ink">
-            Your hosted <em>events.</em>
-          </h1>
+          <CinemaHeadline>
+            <h1 className="font-display text-[clamp(40px,5vw,60px)] leading-[0.95] tracking-[-0.03em] text-ink">
+              Your hosted <em>events.</em>
+            </h1>
+          </CinemaHeadline>
           <p className="mt-2 text-[15px] text-ink-muted">
             Create events, send announcements, verify UPI payments, link Drive albums, and run the gate.
           </p>
@@ -140,14 +145,14 @@ export default async function OrganizerHome({ searchParams }: { searchParams: Pr
         <div className="flex flex-wrap items-center gap-2.5">
           <Link
             href="/organizer/calendar"
-            className="inline-flex h-11 items-center gap-2 rounded-xl border border-line-strong bg-surface px-4 text-[14px] font-semibold text-ink transition-colors hover:bg-sunken"
+            className="inline-flex h-11 items-center gap-2 rounded-xl border border-line-strong bg-surface/85 px-4 text-[14px] font-semibold text-ink backdrop-blur-md transition-colors hover:bg-sunken dark:border-white/12 dark:bg-[#1A1816]/80"
           >
             <CalendarDays className="size-4 text-ink-muted" aria-hidden />
             Schedule
           </Link>
           <Link
             href="/organizer/events/new"
-            className="ui-press ui-sheen inline-flex h-11 items-center gap-2 rounded-xl bg-lavender px-5 text-[14.5px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink hover:bg-lavender-hover"
+            className="ui-press ui-sheen inline-flex h-11 items-center gap-2 rounded-xl bg-lavender px-5 text-[14.5px] font-semibold text-[#121110] shadow-button ring-2 ring-inset ring-ink hover:bg-lavender-hover dark:ring-white/25"
           >
             <Plus className="size-4" strokeWidth={2.5} aria-hidden />
             Host an Event
@@ -168,19 +173,21 @@ export default async function OrganizerHome({ searchParams }: { searchParams: Pr
         />
       </div>
 
-      <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-card bg-line shadow-card lg:grid-cols-4">
+      <CinemaReveal delay={0.06}>
+      <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-card bg-line shadow-card backdrop-blur-xl dark:bg-white/10 lg:grid-cols-4">
         {[
           { l: "Upcoming events", v: String(upcoming.length) },
           { l: "Registrations (upcoming)", v: registrations.toLocaleString("en-IN") },
           { l: "Fees collected", v: money?.collected ? formatINR(money.collected) : "₹0" },
           { l: "UPI to verify", v: money?.to_verify ? formatINR(money.to_verify) : "₹0", warn: !!money?.to_verify },
         ].map((k) => (
-          <div key={k.l} className="bg-surface p-5">
+          <div key={k.l} className="bg-surface/90 p-5 dark:bg-[#1A1816]/85">
             <dt className="text-[12.5px] text-ink-muted">{k.l}</dt>
             <dd className={k.warn ? "mt-3 font-mono text-[28px] font-medium leading-none tracking-[-0.04em] tabular-nums text-warn" : "mt-3 font-mono text-[28px] font-medium leading-none tracking-[-0.04em] tabular-nums"}>{k.v}</dd>
           </div>
         ))}
       </dl>
+      </CinemaReveal>
 
       {events.length === 0 ? (
         <section className="card relative isolate mt-10 flex flex-col items-start overflow-hidden p-8 md:p-12">

@@ -147,8 +147,8 @@ export function SiteHeader({
       <header
         ref={ref}
         className={cn(
-          "sticky top-0 z-40 pt-[env(safe-area-inset-top)] border-b border-line/70 bg-canvas/80 backdrop-blur-xl backdrop-saturate-150 transition-[box-shadow,background-color] duration-base ease-out supports-[not(backdrop-filter:blur(1px))]:bg-canvas print:hidden",
-          scrolled && "bg-canvas/90 shadow-[0_12px_32px_-16px_rgba(10,10,20,0.45)]",
+          "sticky top-0 z-40 pt-[env(safe-area-inset-top)] border-b border-line/70 bg-canvas/80 backdrop-blur-xl backdrop-saturate-150 transition-[box-shadow,background-color] duration-base ease-out supports-[not(backdrop-filter:blur(1px))]:bg-canvas dark:border-white/10 dark:bg-[#121110]/74 print:hidden",
+          scrolled && "bg-canvas/90 shadow-[0_12px_32px_-16px_rgba(10,10,20,0.45)] dark:bg-[#121110]/88 dark:shadow-[0_14px_38px_-14px_rgba(0,0,0,0.75)]",
         )}
       >
         <div
@@ -185,7 +185,7 @@ export function SiteHeader({
               {tabs.length > 0 && (
                 <nav
                   aria-label="Main"
-                  className="flex items-center gap-0.5 rounded-full border border-line-strong/80 bg-sunken/80 p-1 shadow-[inset_0_1px_2px_rgba(60,40,10,0.05)]"
+                  className="flex items-center gap-0.5 rounded-full border border-line-strong/80 bg-sunken/80 p-1 shadow-[inset_0_1px_2px_rgba(60,40,10,0.05)] dark:border-white/12 dark:bg-white/[0.04]"
                   onPointerLeave={() => setHoverTab(null)}
                 >
                   {tabs.map((t) => {
@@ -207,7 +207,7 @@ export function SiteHeader({
                           <m.span
                             layoutId="nav-active-pill"
                             aria-hidden
-                            className="absolute inset-0 -z-10 rounded-full bg-surface shadow-[0_1px_3px_rgba(60,40,10,0.12),0_0_0_1px_rgba(26,26,26,0.06)]"
+                            className="absolute inset-0 -z-10 rounded-full bg-surface shadow-[0_1px_3px_rgba(60,40,10,0.12),0_0_0_1px_rgba(26,26,26,0.06)] dark:bg-white/[0.12] dark:shadow-[0_2px_10px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.14)]"
                             transition={{ type: "spring", stiffness: 460, damping: 36 }}
                           />
                         )}
@@ -215,7 +215,7 @@ export function SiteHeader({
                           <m.span
                             layoutId="nav-hover"
                             aria-hidden
-                            className="absolute inset-0 -z-20 rounded-full bg-surface/50"
+                            className="absolute inset-0 -z-20 rounded-full bg-surface/50 dark:bg-white/[0.06]"
                             transition={{ type: "spring", stiffness: 520, damping: 40 }}
                           />
                         )}
@@ -256,7 +256,7 @@ export function SiteHeader({
               {ws !== "admin" && viewer?.isOrganizer ? (
                 <Link
                   href="/organizer/events/new"
-                  className="ui-press mr-0.5 hidden h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-lavender px-3.5 text-[13.5px] font-semibold text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover md:flex"
+                  className="ui-press mr-0.5 hidden h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-lavender px-3.5 text-[13.5px] font-semibold text-[#141311] ring-2 ring-inset ring-[#141311] hover:bg-lavender-hover dark:ring-white/25 dark:shadow-[0_0_24px_-6px_rgba(240,215,255,0.45)] md:flex"
                 >
                   <Plus className="size-4" strokeWidth={2.6} aria-hidden />
                   Host an Event
@@ -271,7 +271,7 @@ export function SiteHeader({
                   </Link>
                   <Link
                     href="/signin?mode=signup"
-                    className="ui-press mr-0.5 hidden h-9 items-center whitespace-nowrap rounded-xl bg-lavender px-4 text-[13.5px] font-semibold text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover md:flex"
+                    className="ui-press mr-0.5 hidden h-9 items-center whitespace-nowrap rounded-xl bg-lavender px-4 text-[13.5px] font-semibold text-[#141311] ring-2 ring-inset ring-[#141311] hover:bg-lavender-hover dark:ring-white/25 md:flex"
                   >
                     Sign up
                   </Link>
@@ -302,7 +302,7 @@ export function SiteHeader({
               ) : (
                 <Link
                   href="/signin"
-                  className="ml-1 flex h-9 items-center whitespace-nowrap rounded-[10px] bg-lavender px-3.5 text-[13.5px] font-bold text-ink ring-2 ring-inset ring-ink md:hidden"
+                  className="ml-1 flex h-9 items-center whitespace-nowrap rounded-[10px] bg-lavender px-3.5 text-[13.5px] font-bold text-[#141311] ring-2 ring-inset ring-[#141311] dark:ring-white/25 md:hidden"
                 >
                   Log in
                 </Link>
@@ -347,7 +347,7 @@ function Avatar({ name, className }: { name: string; className?: string }) {
     <span
       aria-hidden
       className={cn(
-        "grid shrink-0 place-items-center rounded-full bg-ink font-semibold text-white",
+        "grid shrink-0 place-items-center rounded-full bg-ink font-semibold text-canvas",
         className,
       )}
     >
@@ -394,7 +394,7 @@ function AccountMenu({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-[52px] z-50 w-64 origin-top-right overflow-hidden rounded-xl bg-white py-2 text-ink shadow-pop ring-1 ring-black/[0.04] motion-safe:animate-scale-in"
+          className="absolute right-0 top-[52px] z-50 w-64 origin-top-right overflow-hidden rounded-xl bg-surface/95 py-2 text-ink shadow-pop ring-1 ring-line-strong backdrop-blur-xl dark:bg-[#181614]/95 dark:ring-white/12 motion-safe:animate-scale-in"
         >
           {viewer ? (
             <>
@@ -527,7 +527,7 @@ function MenuSheet({
 
   return (
     <BottomSheet label="Account and more" onClose={onClose}>
-      <Link href="/profile" className="mt-1 flex items-center gap-3.5 rounded-2xl bg-white p-3.5 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-line active:bg-sunken">
+      <Link href="/profile" className="mt-1 flex items-center gap-3.5 rounded-2xl bg-surface/90 p-3.5 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-line-strong active:bg-sunken">
         <Avatar name={viewer.name} className="size-12 text-[15px]" />
         <span className="min-w-0 flex-1">
           <span className="block truncate font-serif text-[22px] leading-tight">{viewer.name}</span>
@@ -537,7 +537,7 @@ function MenuSheet({
       </Link>
 
       {viewer.isOrganizer ? (
-        <Link href="/organizer/events/new" className="mt-3 flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-lavender text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink">
+        <Link href="/organizer/events/new" className="mt-3 flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-lavender text-[16px] font-semibold text-[#141311] ring-2 ring-inset ring-[#141311] dark:ring-white/25">
           <Plus className="size-4" strokeWidth={2.6} aria-hidden /> Host an Event
         </Link>
       ) : null}

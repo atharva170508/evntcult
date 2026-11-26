@@ -91,7 +91,7 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
         className="group flex items-center gap-4 rounded-card outline-offset-4 sm:block"
       >
         <div className="relative aspect-square w-[104px] shrink-0 overflow-hidden rounded-card bg-sunken sm:hidden">{art}</div>
-        <div className="hidden overflow-hidden rounded-card border border-line-strong bg-surface shadow-card transition-[transform,box-shadow] duration-slow ease-out hover:-translate-y-0.5 hover:shadow-raised sm:block">
+        <div className="hidden overflow-hidden rounded-card border border-line-strong bg-surface/90 shadow-card backdrop-blur-md transition-[transform,box-shadow,border-color] duration-slow ease-out hover:-translate-y-1 hover:shadow-raised dark:border-white/12 dark:bg-[#1A1816]/80 dark:hover:border-white/24 sm:block">
           <div className="relative aspect-[4/3] overflow-hidden bg-sunken">{art}</div>
           <div className="stub-tear" aria-hidden />
           <div className="p-4 pt-3.5">{facts}</div>
@@ -106,7 +106,7 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
 
   return (
     <Link href={`/events/${e.slug}`} className="group block rounded-card outline-offset-4">
-      <Tilt max={5} className="overflow-hidden rounded-card border border-line-strong bg-surface shadow-card transition-shadow duration-slow ease-out group-hover:shadow-raised">
+      <Tilt max={5} className="overflow-hidden rounded-card border border-line-strong bg-surface/90 shadow-card backdrop-blur-md transition-[box-shadow,border-color] duration-slow ease-out group-hover:shadow-raised dark:border-white/12 dark:bg-[#1A1816]/80 dark:group-hover:border-white/24">
         <div className="relative aspect-[4/3] overflow-hidden bg-sunken">{art}</div>
         <div className="stub-tear" aria-hidden />
         <div className="p-4 pt-3.5">{facts}</div>

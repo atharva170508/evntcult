@@ -10,6 +10,7 @@ import { cn, fmtDate, fmtTime } from "@/lib/utils";
 import { PageHero } from "@/components/brand/PageHero";
 import { Chip } from "@/components/ui/Chip";
 import { buttonClass } from "@/components/ui/Button";
+import { CinemaHeadline, CinemaReveal } from "@/components/motion/CinemaReveal";
 
 export const metadata: Metadata = { title: "Venues" };
 export const dynamic = "force-dynamic";
@@ -34,11 +35,13 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
     <div className="space-y-10 pb-14">
       <header className="flex flex-col gap-4 border-b border-line pb-7 pt-8 sm:flex-row sm:items-end sm:justify-between md:pt-10">
         <div>
-          <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-            Campus <em>venues.</em>
-          </h1>
+          <CinemaHeadline>
+            <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
+              Campus <em>venues.</em>
+            </h1>
+          </CinemaHeadline>
           <p className="mt-2.5 text-[15px] text-ink-muted">
-            Halls, lawns, and auditoriums — see what&apos;s on next and open turn-by-turn directions.
+            Halls, lawns, and auditoriums. See what&apos;s on next and open turn-by-turn directions.
           </p>
         </div>
         <div className="flex items-center gap-4 text-[13.5px] font-semibold text-ink-muted">
@@ -54,13 +57,14 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
 
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {venues.map((v) => {
+        {venues.map((v, i) => {
           const list = byVenue.get(v.name) ?? [];
           const url = directionsUrl(v) ?? mapsUrl({ venue: v.name });
           const live = list.find((e) => e.live);
           const highlighted = v.name === target;
           return (
-            <article key={v.name} id={encodeURIComponent(v.name)} className={cn("card flex flex-col p-5 md:p-6", highlighted && "ring-2 ring-ink ring-offset-2 ring-offset-canvas")}>
+            <CinemaReveal key={v.name} delay={Math.min(i, 5) * 0.04} className="flex">
+            <article id={encodeURIComponent(v.name)} className={cn("card flex w-full flex-col p-5 transition-transform duration-base hover:-translate-y-0.5 md:p-6", highlighted && "ring-2 ring-ink ring-offset-2 ring-offset-canvas")}>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   {highlighted && <p className="eyebrow mb-1.5 text-accent-ink">Your event is here</p>}
@@ -115,6 +119,7 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
                 )}
               </div>
             </article>
+            </CinemaReveal>
           );
         })}
       </div>

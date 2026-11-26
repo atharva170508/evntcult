@@ -10,6 +10,7 @@ import { EASE } from "@/components/motion/MotionProvider";
 import { cn } from "@/lib/utils";
 import { BorderTrail } from "@/components/shadcn/border-trail";
 import { TextScramble } from "@/components/shadcn/text-scramble";
+import { GlowEffect } from "@/components/shadcn/glow-effect";
 import { QOUT } from "@/lib/motion-curves";
 
 const VIBES = [
@@ -182,30 +183,59 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
         subtitle="Pick a vibe below to preview your first pass."
       />
 
-      {/* Single unified warm editorial stage — no nested cards */}
+      {/* Unified Obsidian Twilight Cinema Hero stage */}
       <m.div
         initial={reduce ? false : { opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.65, ease: QOUT }}
-        className="relative overflow-hidden rounded-[28px] border border-line-strong bg-sunken/75 transition-colors duration-500"
+        className="relative overflow-hidden rounded-[28px] border border-line-strong bg-sunken/75 backdrop-blur-2xl transition-colors duration-500 dark:border-white/15 dark:bg-[#161412]/80 dark:shadow-[0_44px_96px_-36px_rgba(0,0,0,0.9)]"
         style={{
-          backgroundImage: `radial-gradient(620px circle at 82% 28%, ${vibe.tint}, transparent 68%)`,
+          backgroundImage: `radial-gradient(660px circle at 82% 28%, ${vibe.tint}, transparent 68%)`,
         }}
       >
+        {/* Semi-opaque twilight amphitheatre hero plate layer (Dark mode cinema continuity) */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 hidden dark:block">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/cinematic/hero-plate.jpg"
+            alt=""
+            className="size-full object-cover object-center opacity-[0.22] saturate-[1.08]"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(100deg, rgba(18,17,16,0.92) 0%, rgba(18,17,16,0.74) 52%, rgba(18,17,16,0.58) 100%)",
+            }}
+          />
+        </div>
+
+        {/* Architectural ambient watermark */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -bottom-8 left-6 hidden select-none font-display text-[clamp(80px,13vw,160px)] leading-none tracking-[-0.04em] text-white/[0.03] dark:block"
+        >
+          evntcult
+        </span>
+
         {!reduce && (
           <BorderTrail
-            size={92}
-            className="bg-gradient-to-l from-[#E3264F] via-[#F0D7FF] to-transparent opacity-55"
+            size={104}
+            className="z-20 bg-gradient-to-l from-[#E3264F] via-[#F0D7FF] to-transparent opacity-65"
             transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
           />
         )}
-        <div className="grid items-center gap-10 p-6 sm:p-9 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 lg:p-11">
+        <div className="relative z-10 grid items-center gap-10 p-6 sm:p-9 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 lg:p-11">
           {/* LEFT: Editorial copy, spring vibe selector, direct actions */}
           <div className="relative z-10 flex flex-col">
-            <h2 className="max-w-[16ch] font-display text-[clamp(32px,3.6vw,48px)] leading-[1.02] tracking-[-0.025em] text-ink">
+            <span className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-line-strong bg-surface/80 px-3 py-1 font-mono text-[11px] font-medium tracking-[0.12em] uppercase text-ink-muted backdrop-blur-md dark:border-white/15 dark:bg-white/[0.05] dark:text-[#F0D7FF]">
+              <span className="size-1.5 rounded-full bg-[#E3264F]" aria-hidden />
+              CAMPUS PASS STAGE
+            </span>
+            <h2 className="max-w-[16ch] font-display text-[clamp(34px,4vw,54px)] leading-[0.98] tracking-[-0.03em] text-ink">
               Your first pass is waiting for a plan.
             </h2>
-            <p className="mt-3 max-w-[44ch] text-[15.5px] leading-relaxed text-ink-2">
+            <p className="mt-3.5 max-w-[44ch] text-[15.5px] leading-relaxed text-ink-2">
               {vibe.blurb}
             </p>
 
@@ -221,14 +251,16 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
                     onClick={() => selectVibe(idx)}
                     className={cn(
                       "relative inline-flex h-10 items-center gap-2 rounded-full px-4 text-[14px] font-semibold transition-colors",
-                      active ? "text-[#FFFEF6]" : "bg-surface/90 text-ink-2 ring-1 ring-line hover:text-ink",
+                      active
+                        ? "text-[#FFFEF6] dark:text-[#121110]"
+                        : "bg-surface/90 text-ink-2 ring-1 ring-line hover:text-ink dark:bg-white/[0.05] dark:ring-white/12 dark:hover:bg-white/[0.09]",
                     )}
                   >
                     {active && (
                       <m.span
                         layoutId="dashboard-vibe-pill"
                         transition={reduce ? { duration: 0.01 } : { type: "spring", stiffness: 420, damping: 32 }}
-                        className="absolute inset-0 rounded-full bg-ink"
+                        className="absolute inset-0 rounded-full bg-ink dark:bg-[#F0D7FF] dark:shadow-[0_0_24px_-4px_rgba(240,215,255,0.55)]"
                       />
                     )}
                     <span
@@ -246,7 +278,7 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
               <Link
                 href={`/events?type=${vibe.key}`}
-                className="ui-press ui-sheen inline-flex h-12 items-center gap-2 rounded-xl bg-lavender px-6 text-[15.5px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink transition-colors hover:bg-lavender-hover"
+                className="ui-press ui-sheen inline-flex h-12 items-center gap-2 rounded-xl bg-lavender px-6 text-[15.5px] font-semibold text-[#121110] shadow-button ring-2 ring-inset ring-[#1A1A1A] transition-colors hover:bg-lavender-hover dark:ring-white/25 dark:shadow-[0_12px_32px_-8px_rgba(240,215,255,0.45)]"
               >
                 Explore {vibe.label.toLowerCase()}
                 <ArrowRight className="size-4" strokeWidth={2.3} aria-hidden />
@@ -268,6 +300,14 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
 
           {/* RIGHT: Tactile Fanned 3-Pass Stack floating freely on the stage */}
           <div className="relative flex flex-col items-center">
+            {!reduce && (
+              <GlowEffect
+                colors={[vibe.swatch, "#F0D7FF", "#E3264F"]}
+                mode="breathe"
+                blur="strongest"
+                className="pointer-events-none inset-6 rounded-full opacity-25 dark:opacity-40"
+              />
+            )}
             <div className="relative mx-auto w-full max-w-[400px] pt-5" style={{ perspective: 1200 }}>
               {/* Back-left peeking pass (fans out like dealing cards on load) */}
               <m.button
@@ -375,9 +415,9 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
 
                     {/* Perforated tear divider with side notches */}
                     <div className="relative -mx-6 my-1 flex items-center">
-                      <span className="size-3.5 -translate-x-1/2 rounded-full bg-sunken" aria-hidden />
+                      <span className="size-3.5 -translate-x-1/2 rounded-full bg-sunken dark:bg-[#161412]" aria-hidden />
                       <div className="flex-1 border-t border-dashed border-white/25" />
-                      <span className="size-3.5 translate-x-1/2 rounded-full bg-sunken" aria-hidden />
+                      <span className="size-3.5 translate-x-1/2 rounded-full bg-sunken dark:bg-[#161412]" aria-hidden />
                     </div>
 
                     <div className="relative mt-2 flex items-end justify-between gap-3">
@@ -441,14 +481,14 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
             </div>
 
             {/* Quiet tactile controls right under the pass */}
-            <div className="mt-4 flex items-center gap-2">
+            <div className="relative z-10 mt-4 flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => {
                   setFlipped(false);
                   setTitleIdx((n) => n + 1);
                 }}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface px-3.5 text-[12.5px] font-semibold text-ink ring-1 ring-line transition-colors hover:bg-canvas"
+                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface/90 px-3.5 text-[12.5px] font-semibold text-ink ring-1 ring-line backdrop-blur-md transition-colors hover:bg-canvas dark:bg-white/[0.08] dark:ring-white/15 dark:hover:bg-white/[0.14]"
               >
                 <RefreshCw className="size-3 text-ink-muted" aria-hidden />
                 Shuffle idea
@@ -456,7 +496,7 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
               <button
                 type="button"
                 onClick={() => setFlipped((f) => !f)}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface px-3.5 text-[12.5px] font-semibold text-ink ring-1 ring-line transition-colors hover:bg-canvas"
+                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-surface/90 px-3.5 text-[12.5px] font-semibold text-ink ring-1 ring-line backdrop-blur-md transition-colors hover:bg-canvas dark:bg-white/[0.08] dark:ring-white/15 dark:hover:bg-white/[0.14]"
               >
                 <RotateCw className="size-3 text-ink-muted" aria-hidden />
                 {flipped ? "Show front" : "Flip pass"}

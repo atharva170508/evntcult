@@ -49,7 +49,7 @@ export function QuickDock({
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="Have an event code?"
-            className="h-9 w-full rounded-full border border-line-strong bg-surface pl-9 pr-3.5 text-[13px] font-medium text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none md:w-[220px]"
+            className="h-9 w-full rounded-full border border-line-strong bg-surface/85 pl-9 pr-3.5 text-[13px] font-medium text-ink backdrop-blur-md placeholder:text-ink-subtle focus:border-ink focus:outline-none dark:border-white/12 dark:bg-[#1A1816]/80 md:w-[220px]"
           />
         </div>
         <button
@@ -67,7 +67,7 @@ export function QuickDock({
       <nav aria-label="Quick tools" className="flex flex-wrap items-center gap-2">
         <Link
           href="/vault"
-          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface/85 px-3.5 text-[13px] font-semibold text-ink backdrop-blur-md transition-colors hover:bg-sunken dark:border-white/12 dark:bg-[#1A1816]/75 dark:hover:bg-white/[0.08]"
         >
           <Images className="size-3.5 text-ink-muted" aria-hidden />
           Photo Vault
@@ -75,7 +75,7 @@ export function QuickDock({
 
         <Link
           href="/venues"
-          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface/85 px-3.5 text-[13px] font-semibold text-ink backdrop-blur-md transition-colors hover:bg-sunken dark:border-white/12 dark:bg-[#1A1816]/75 dark:hover:bg-white/[0.08]"
         >
           <MapPinned className="size-3.5 text-ink-muted" aria-hidden />
           Venues
@@ -84,7 +84,7 @@ export function QuickDock({
         {isOrganizer && (
           <Link
             href="/organizer"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface/85 px-3.5 text-[13px] font-semibold text-ink backdrop-blur-md transition-colors hover:bg-sunken dark:border-white/12 dark:bg-[#1A1816]/75 dark:hover:bg-white/[0.08]"
           >
             <LayoutGrid className="size-3.5 text-ink-muted" aria-hidden />
             My hosted events
@@ -95,7 +95,7 @@ export function QuickDock({
         {!isOrganizer ? (
           <Link
             href="/host"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface/85 px-3.5 text-[13px] font-semibold text-ink backdrop-blur-md transition-colors hover:bg-sunken dark:border-white/12 dark:bg-[#1A1816]/75 dark:hover:bg-white/[0.08]"
           >
             <BadgeCheck className="size-3.5 text-ink-muted" aria-hidden />
             Apply to host
@@ -103,7 +103,7 @@ export function QuickDock({
         ) : (
         <Link
           href="/organizer/events/new"
-          className="relative inline-flex h-9 items-center gap-1.5 overflow-hidden rounded-full bg-lavender px-3.5 text-[13px] font-semibold text-ink ring-1 ring-inset ring-ink/25 transition-colors hover:bg-lavender-hover"
+          className="relative inline-flex h-9 items-center gap-1.5 overflow-hidden rounded-full bg-lavender px-3.5 text-[13px] font-semibold text-[#121110] ring-1 ring-inset ring-ink/25 transition-colors hover:bg-lavender-hover dark:ring-white/25"
         >
           {!reduced && (
             <BorderTrail

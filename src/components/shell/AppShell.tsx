@@ -16,6 +16,7 @@ import { KeyboardShortcuts } from "@/components/ui/KeyboardShortcuts";
 import { workspaceFor } from "./nav";
 import { AutoBack, onPopState, trackNavigation } from "./BackButton";
 import { RouteStage } from "@/components/motion/RouteStage";
+import { AppTwilightBackdrop } from "./AppTwilightBackdrop";
 
 export type { NavViewer };
 
@@ -94,7 +95,8 @@ export function AppShell({
   }
 
   return (
-    <div className="flex min-h-dvh flex-col overflow-x-clip">
+    <div className="relative flex min-h-dvh flex-col overflow-x-clip">
+      <AppTwilightBackdrop />
       <Suspense fallback={null}>
         <NavigationProgress />
       </Suspense>
@@ -104,7 +106,7 @@ export function AppShell({
       <main
         id="main"
         className={cn(
-          "mx-auto w-full flex-1 px-gutter pb-[calc(112px+env(safe-area-inset-bottom))] md:pb-12",
+          "relative z-10 mx-auto w-full flex-1 px-gutter pb-[calc(112px+env(safe-area-inset-bottom))] md:pb-12",
           wide ? "max-w-[1440px]" : "max-w-[1360px]",
         )}
       >
