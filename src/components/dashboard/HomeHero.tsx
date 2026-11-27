@@ -106,14 +106,15 @@ export function HomeHero({
         asHeading={false}
       />
 
-      <m.div
-        initial={reduce ? false : { opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: EASE }}
-        onPointerMove={onMove}
-        onPointerLeave={onLeave}
-        className="hero-ticket paper-keep relative grid overflow-hidden rounded-[28px] shadow-[0_36px_74px_-42px_rgba(40,25,5,.52),0_0_0_1px_rgba(26,26,26,.08)] md:grid-cols-[minmax(0,1fr)_324px]"
-      >
+      <div className="rounded-[32px] bg-[#12110F] p-2 shadow-[0_40px_90px_-42px_rgba(20,14,6,0.72),0_0_0_1px_rgba(255,255,255,0.08)] [--stub-cut:#12110F] dark:bg-[#191714] dark:[--stub-cut:#191714] sm:p-2.5">
+        <m.div
+          initial={reduce ? false : { opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: EASE }}
+          onPointerMove={onMove}
+          onPointerLeave={onLeave}
+          className="hero-ticket paper-keep relative grid overflow-hidden rounded-[24px] shadow-[0_24px_60px_-30px_rgba(0,0,0,0.65)] md:grid-cols-[minmax(0,1fr)_332px]"
+        >
         {!reduce && (
           <span
             aria-hidden
@@ -231,21 +232,22 @@ export function HomeHero({
               href={href}
               className={
                 mine
-                  ? "ui-press flex h-12 items-center justify-center rounded-xl bg-[#1A1A1A] text-[15.5px] font-semibold text-[#FFFEF6] transition-colors hover:bg-black"
-                  : "ui-press flex h-12 items-center justify-center rounded-xl bg-[#F0D7FF] text-[15.5px] font-semibold text-[#1A1A1A] ring-2 ring-inset ring-[#1A1A1A] transition-colors hover:bg-[#E6C4FB]"
+                  ? "ui-press flex h-12 items-center justify-center rounded-full bg-[#1A1A1A] text-[15px] font-semibold text-[#FFFEF6] shadow-[0_10px_24px_-12px_rgba(26,26,26,0.6)] transition-colors hover:bg-black"
+                  : "ui-press flex h-12 items-center justify-center rounded-full bg-[#C81E45] text-[15px] font-semibold text-white shadow-[0_12px_24px_-12px_rgba(200,30,69,0.65)] transition-colors hover:bg-[#AE173A]"
               }
             >
               {live ? (mine ? "Show pass at the gate" : "Go now") : mine ? "Show pass" : "Claim your seat"}
             </Link>
             <Link
               href={`/events/${e.slug}`}
-              className="mt-2.5 flex min-h-[36px] items-center justify-center text-[13px] font-semibold text-[#3F3F3F] underline decoration-[#DCD6C6] underline-offset-4 transition-colors hover:text-[#1A1A1A] hover:decoration-[#1A1A1A]"
+              className="mt-2.5 flex min-h-[44px] items-center justify-center text-[13.5px] font-semibold text-[#3F3F3F] underline decoration-[#DCD6C6] underline-offset-4 transition-colors hover:text-[#1A1A1A] hover:decoration-[#1A1A1A]"
             >
               View event details
             </Link>
           </div>
         </div>
-      </m.div>
+        </m.div>
+      </div>
     </section>
   );
 }

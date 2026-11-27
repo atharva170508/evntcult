@@ -26,11 +26,12 @@ import { HeroShowcase } from "./HeroShowcase";
 import { qrArtSvg } from "@/lib/qr-art";
 
 const cta =
-  "group ui-press ui-sheen relative inline-flex h-12 items-center justify-center gap-2 rounded-[14px] whitespace-nowrap border border-ink/20 bg-lavender px-6 text-[15.5px] font-semibold text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_12px_26px_-14px_rgba(70,35,110,0.42)] hover:border-ink/35 hover:bg-lavender-hover";
+  "group ui-press ui-sheen relative inline-flex h-12 items-center justify-center gap-2 rounded-full whitespace-nowrap bg-ink px-7 text-[15px] font-semibold text-canvas shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_16px_32px_-16px_rgba(26,26,26,0.55)] hover:bg-black";
 
 /**
- * The visitor's first screen: what EvntCult is on the left, with a search and one primary action;
- * on the right, an architectural studio stage with an interactive pass deck and thermal printer.
+ * Complete Chiaroscuro Editorial Gatehouse Hero:
+ * Full-width asymmetric broadsheet masthead + command search capsule flowing directly into
+ * the full-width museum-lit Obsidian Gallery Theater with interactive 3D pass deck & printer.
  */
 export function Hero() {
   const qr = qrArtSvg("https://evntcult.caliper.workers.dev", {
@@ -40,39 +41,38 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-h"
-      className="pb-12 pt-7 md:pt-12 lg:pb-20"
+      className="pb-14 pt-6 md:pt-10 lg:pb-20"
     >
-      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-14">
-        <div>
-          <Entrance delay={0.04}>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line-strong/90 bg-surface/90 px-3.5 py-1.5 text-[12.5px] font-medium text-ink-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_1px_2px_rgba(60,40,10,0.05)]">
-              <span className="size-1.5 rounded-full bg-live" aria-hidden />
-              <span className="font-semibold text-ink">Campus edition</span>
-              <span className="text-line-strong" aria-hidden>·</span>
-              <span className="text-ink-muted">Offline QR passes &amp; zero fees</span>
-            </div>
-          </Entrance>
-          <h1
-            id="hero-h"
-            className="font-display leading-[0.91] tracking-[-0.025em] text-ink"
-            style={{ fontSize: "clamp(64px, 8.6vw, 130px)" }}
-          >
-            <MaskedLines
-              lines={["Every event,", <em key="em">one pass.</em>]}
-            />
-          </h1>
-          <Entrance delay={0.28}>
-            <p className="mt-6 max-w-[42ch] text-[17.5px] leading-[1.54] tracking-[-0.01em] text-ink-2 md:text-[18.5px]">
-              Concerts, hackathons, workshops, and club nights on one campus calendar. Claim your seat in a tap and walk in with your phone.
-            </p>
-          </Entrance>
-          <Entrance delay={0.34} className="relative z-10">
-            <HeroSearch />
-          </Entrance>
-          <Entrance
-            delay={0.4}
-            className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3"
-          >
+      {/* Top editorial broadsheet hairline ledger */}
+      <Entrance delay={0.02}>
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-line-strong pb-3.5 text-[13px] text-ink-muted">
+          <div className="flex items-center gap-2.5">
+            <span className="size-2 rounded-full bg-live" aria-hidden />
+            <span className="font-semibold text-ink">EvntCult Campus Passbook</span>
+          </div>
+          <p className="tabular-nums">
+            Direct UPI · Offline QR entry · Private Face ID Photo Vault
+          </p>
+        </div>
+      </Entrance>
+
+      {/* Act I: Asymmetric 65/35 Editorial Poster Masthead */}
+      <div className="mt-8 grid grid-cols-1 items-end gap-8 lg:mt-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:gap-12">
+        <h1
+          id="hero-h"
+          className="font-display leading-[0.89] tracking-[-0.028em] text-ink"
+          style={{ fontSize: "clamp(58px, 7.6vw, 118px)" }}
+        >
+          <MaskedLines
+            lines={["Every event,", <em key="em">one pass.</em>]}
+          />
+        </h1>
+
+        <Entrance delay={0.2} className="pb-1">
+          <p className="max-w-[38ch] text-[17px] leading-[1.54] tracking-[-0.01em] text-ink-2 md:text-[18px]">
+            Concerts, hackathons, workshops, and club nights on one campus calendar. Claim your seat in a tap and walk in with your phone.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Magnetic>
               <Link href="/signin?mode=signup" className={cta}>
                 Sign up free
@@ -82,33 +82,33 @@ export function Hero() {
                 />
               </Link>
             </Magnetic>
-            <a
-              href="#onepass"
-              className="inline-flex min-h-[44px] items-center gap-1 text-[15px] font-semibold text-ink underline decoration-line-strong decoration-[1.5px] underline-offset-[6px] transition-colors hover:decoration-ink"
-            >
-              See how passes work
-            </a>
-            <span className="hidden text-line-strong sm:inline" aria-hidden>·</span>
             <Link
               href="/host"
-              className="group inline-flex min-h-[44px] items-center gap-1 text-[15px] font-medium text-ink-muted transition-colors hover:text-ink"
+              className="group inline-flex min-h-[44px] items-center gap-1 text-[15px] font-semibold text-ink underline decoration-line-strong decoration-[1.5px] underline-offset-[6px] transition-colors hover:decoration-ink"
             >
               Host for your club
               <ArrowUpRight
-                className="size-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                className="size-4 text-ink-muted transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
                 aria-hidden
               />
             </Link>
-          </Entrance>
-        </div>
-        <Entrance delay={0.18}>
-          <HeroShowcase qr={qr} />
+          </div>
         </Entrance>
       </div>
 
-      {/* Architectural ledger of real product mechanics */}
-      <Entrance delay={0.46}>
-        <dl className="mt-14 grid grid-cols-2 gap-y-6 border-y border-line-strong/90 py-6 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-line">
+      {/* Command search bar spanning cleanly into the showcase */}
+      <Entrance delay={0.28} className="relative z-20 mt-8 lg:mt-10">
+        <HeroSearch />
+      </Entrance>
+
+      {/* Act II: Full-width Obsidian Gallery Theater */}
+      <Entrance delay={0.34} className="mt-6 lg:mt-8">
+        <HeroShowcase qr={qr} />
+      </Entrance>
+
+      {/* Act III: Architectural proof ledger */}
+      <Entrance delay={0.42}>
+        <dl className="mt-10 grid grid-cols-2 gap-y-6 border-y border-line-strong py-6 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-line lg:mt-12">
           {[
             ["01", "₹0", "Platform fee", "Direct UPI straight to your club"],
             ["02", "Offline", "QR gate pass", "Scans in under a second without Wi-Fi"],

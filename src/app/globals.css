@@ -858,7 +858,7 @@ tr[data-picked] { background: rgb(240 215 255 / 0.35); }
 .hero-stub { border-top: 2px dashed #E4DFD0; }
 .hero-stub::before, .hero-stub::after {
   content: ""; position: absolute; width: 28px; height: 28px; border-radius: 999px;
-  background: rgb(var(--c-canvas) / 1); top: -15px;
+  background: var(--stub-cut, rgb(var(--c-canvas) / 1)); top: -15px;
 }
 .hero-stub::before { left: -14px; }
 .hero-stub::after { right: -14px; }
