@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { EventArt } from "@/components/ui/EventArt";
-import { Tilt } from "@/components/motion/Tilt";
 import { formatINR } from "@/lib/money";
 import { cn, fmtDate, fmtTime } from "@/lib/utils";
 import type { EventSummary } from "@/lib/data/types";
@@ -17,15 +16,15 @@ export function seatState(
 }
 
 /**
- * Event card, built as a physical ticket stub: artwork on top, warm paper date stub in the
- * corner, a dashed tear line with notches, then the facts. Tilts gently toward the pointer.
+ * Editorial event sleeve card: 1px hairline border, zero drop shadows,
+ * Gloock title, IBM Plex Mono date/venue/price facts.
  */
 export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean }) {
   const state = seatState(e);
   const left = e.capacity ? Math.max(0, e.capacity - e.registered) : null;
   const badge =
     state === "live"
-      ? "Live now"
+      ? "Live"
       : state === "full"
         ? "Full"
         : state === "filling"
@@ -36,23 +35,23 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
 
   const facts = (
     <>
-      <h3 className={cn("truncate font-semibold tracking-[-0.01em] text-ink", rows ? "text-[16px] sm:text-[16px]" : "text-[16px]")}>
+      <h3 className="truncate font-display text-[22px] leading-[1.08] tracking-[-0.015em] text-ink transition-colors group-hover:text-[#C9A26B]">
         {e.title}
       </h3>
-      <p className="mt-1 truncate text-[13.5px] text-ink-muted">
-        {fmtDate(e.startsAt, { weekday: "short" })}, {fmtTime(e.startsAt)} · {e.venueName ?? "Venue TBA"}
+      <p className="tr-meta mt-2 truncate text-ink-muted">
+        {fmtDate(e.startsAt, { weekday: "short" })} · {fmtTime(e.startsAt)} · {e.venueName ?? "Venue TBA"}
       </p>
-      <p className="mt-2.5 flex items-center justify-between gap-3 text-[14px]">
-        <span className="font-semibold tabular-nums text-ink">
+      <p className="mt-3 flex items-center justify-between gap-3 border-t border-line pt-3">
+        <span className="tr-meta text-[#C9A26B]">
           {e.feePaise ? formatINR(e.feePaise) : "Free"}
         </span>
         {state === "ended" ? (
-          <span className="text-ink-muted">{e.registered} went</span>
+          <span className="tr-meta text-ink-muted">{e.registered} went</span>
         ) : (
           left !== null &&
           state !== "full" &&
           state !== "live" &&
-          left <= 50 && <span className="text-[13px] font-medium text-ink-muted">{left} left</span>
+          left <= 50 && <span className="tr-meta text-ink-muted">{left} left</span>
         )}
       </p>
     </>
@@ -60,24 +59,29 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
 
   const art = (
     <>
-      <EventArt accent={e.accent} seed={e.id} scrim={false} className="transition-transform duration-500 ease-out group-hover:scale-[1.04]" />
+      <EventArt
+        accent={e.accent}
+        seed={e.id}
+        scrim={false}
+        className="transition-transform duration-slow ease-out group-hover:scale-[1.03]"
+      />
       <span
         className={cn(
-          "paper-keep absolute left-3 top-3 z-[2] grid min-w-[44px] place-items-center rounded-xl bg-white/95 px-2 py-1.5 text-ink shadow-[0_4px_14px_-4px_rgba(60,40,10,0.28)] ring-1 ring-ink/10",
+          "absolute left-3 top-3 z-[2] inline-flex items-baseline gap-1.5 rounded-[6px] bg-[#151412]/90 px-2.5 py-1 text-[#EEE8DD]",
           rows && "max-sm:hidden",
         )}
       >
-        <span className="font-display text-[21px] leading-none tabular-nums text-ink">{day}</span>
-        <span className="mt-0.5 text-[10.5px] font-semibold uppercase tracking-[0.04em] text-accent-ink">{month}</span>
+        <span className="font-display text-[17px] leading-none tabular-nums">{day}</span>
+        <span className="tr-meta text-[#C9A26B]">{month}</span>
       </span>
       {badge && (
         <span
           className={cn(
             rows && "max-sm:hidden",
-            "paper-keep absolute bottom-3 left-3 z-[2] inline-flex items-center gap-1.5 rounded-lg bg-white/95 px-2.5 py-1 text-[12px] font-semibold text-ink shadow-[0_4px_12px_-4px_rgba(60,40,10,0.25)]",
+            "tr-meta absolute bottom-3 left-3 z-[2] inline-flex items-center gap-1.5 rounded-[6px] bg-[#151412]/90 px-2.5 py-1 text-[#EEE8DD]",
           )}
         >
-          {state === "live" && <span className="size-1.5 rounded-full bg-accent" aria-hidden />}
+          {state === "live" && <span className="size-1.5 rounded-full bg-[#C9A26B]" aria-hidden />}
           {badge}
         </span>
       )}
@@ -88,16 +92,17 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
     return (
       <Link
         href={`/events/${e.slug}`}
-        className="group flex items-center gap-4 rounded-card outline-offset-4 sm:block"
+        className="group flex items-center gap-4 rounded-[8px] outline-offset-4 sm:block"
       >
-        <div className="relative aspect-square w-[104px] shrink-0 overflow-hidden rounded-card bg-sunken sm:hidden">{art}</div>
-        <div className="hidden overflow-hidden rounded-card border border-line-strong bg-surface shadow-card transition-[transform,box-shadow] duration-slow ease-out hover:-translate-y-0.5 hover:shadow-raised sm:block">
+        <div className="relative aspect-square w-[96px] shrink-0 overflow-hidden rounded-[8px] border border-line bg-sunken sm:hidden">
+          {art}
+        </div>
+        <div className="hidden overflow-hidden rounded-[8px] border border-line bg-surface transition-colors duration-base hover:border-line-strong sm:block">
           <div className="relative aspect-[4/3] overflow-hidden bg-sunken">{art}</div>
-          <div className="stub-tear" aria-hidden />
-          <div className="p-4 pt-3.5">{facts}</div>
+          <div className="p-4">{facts}</div>
         </div>
         <div className="min-w-0 flex-1 sm:hidden">
-          {badge && <p className="mb-0.5 text-[12.5px] font-semibold text-accent-ink sm:hidden">{badge}</p>}
+          {badge && <p className="tr-meta mb-1 text-[#C9A26B]">{badge}</p>}
           {facts}
         </div>
       </Link>
@@ -105,12 +110,12 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
   }
 
   return (
-    <Link href={`/events/${e.slug}`} className="group block rounded-card outline-offset-4">
-      <Tilt max={5} className="overflow-hidden rounded-card border border-line-strong bg-surface shadow-card transition-shadow duration-slow ease-out group-hover:shadow-raised">
-        <div className="relative aspect-[4/3] overflow-hidden bg-sunken">{art}</div>
-        <div className="stub-tear" aria-hidden />
-        <div className="p-4 pt-3.5">{facts}</div>
-      </Tilt>
+    <Link
+      href={`/events/${e.slug}`}
+      className="group block overflow-hidden rounded-[8px] border border-line bg-surface transition-colors duration-base hover:border-line-strong"
+    >
+      <div className="relative aspect-[4/3] overflow-hidden bg-sunken">{art}</div>
+      <div className="p-4">{facts}</div>
     </Link>
   );
 }

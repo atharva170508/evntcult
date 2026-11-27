@@ -25,6 +25,7 @@ import { ChapterNav } from "./ChapterNav";
 import { DiscoverFeed } from "./DiscoverFeed";
 import { OrganizerBento } from "./OrganizerBento";
 import { EventArt } from "@/components/ui/EventArt";
+import { TapeLanding } from "./TapeLanding";
 
 const FAQ: [string, string][] = [
   [
@@ -147,22 +148,7 @@ function CampusCalendar({ month }: { month: MonthPayload }) {
  * even loaded until someone signs in.
  */
 export function PublicHome() {
-  return (
-    <div className="pb-6">
-      <Hero />
-      <OnePassInteractive />
-      <VaultSpotlight />
-      <ThemeStudioDemo />
-      <SocialPulseDemo />
-      <ExploreHubsBand />
-      <HostsBand />
-      <SavingsCalculator />
-      <AppBand />
-      <Questions />
-      <Closing />
-      <ChapterNav />
-    </div>
-  );
+  return <TapeLanding />;
 }
 
 function Questions() {

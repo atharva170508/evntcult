@@ -4,32 +4,30 @@ import { useEffect, useState } from "react";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Theme = "light" | "dark" | "system";
-const KEY = "ec_theme";
+type Theme = "dark" | "light" | "system";
+const KEY = "ec_theme_v2";
 
-/* THEME_SCRIPT (below) also marks <html> with data-platform="ios|android|other" and data-standalone when
-   opened from the home screen, before first paint, so CSS can tailor the app to the phone. */
-
-/** Apply a theme to <html>. "system" follows the device setting, live. */
+/** Apply dark (default record-sleeve ink) or light (archival paper) to <html>. */
 export function applyTheme(t: Theme) {
-  const dark = t === "dark" || (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  document.documentElement.classList.toggle("dark", dark);
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#141311" : "#FFFEF6");
+  const light = t === "light" || (t === "system" && window.matchMedia("(prefers-color-scheme: light)").matches);
+  document.documentElement.classList.toggle("light", light);
+  document.documentElement.classList.toggle("dark", !light);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", light ? "#EEE8DD" : "#151412");
 }
 
-/** Light, Dark or System, remembered on this device. */
+/** Dark (default), Paper, or System, remembered on this device. */
 export function ThemeSwitch({ className }: { className?: string }) {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("dark");
   useEffect(() => {
     try {
-      setTheme((localStorage.getItem(KEY) as Theme) || "light");
+      setTheme((localStorage.getItem(KEY) as Theme) || "dark");
     } catch {
       // private mode
     }
   }, []);
   useEffect(() => {
     if (theme !== "system") return;
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const mq = window.matchMedia("(prefers-color-scheme: light)");
     const on = () => applyTheme("system");
     mq.addEventListener("change", on);
     return () => mq.removeEventListener("change", on);
@@ -45,13 +43,20 @@ export function ThemeSwitch({ className }: { className?: string }) {
     applyTheme(t);
   };
 
-  const opts: [Theme, string, typeof Sun][] = [
-    ["light", "Light", Sun],
-    ["dark", "Dark", Moon],
-    ["system", "System", Monitor],
+  const opts: [Theme, string, typeof Moon][] = [
+    ["dark", "Ink", Moon],
+    ["light", "Paper", Sun],
+    ["system", "Auto", Monitor],
   ];
   return (
-    <div role="radiogroup" aria-label="Appearance" className={cn("grid grid-cols-3 gap-1 rounded-xl bg-sunken p-1", className)}>
+    <div
+      role="radiogroup"
+      aria-label="Appearance"
+      className={cn(
+        "grid grid-cols-3 gap-1 rounded-[8px] border border-line bg-surface p-1",
+        className,
+      )}
+    >
       {opts.map(([v, l, Icon]) => (
         <button
           key={v}
@@ -60,23 +65,25 @@ export function ThemeSwitch({ className }: { className?: string }) {
           aria-checked={theme === v}
           onClick={() => pick(v)}
           className={cn(
-            "flex h-8 items-center justify-center gap-1.5 rounded-lg text-[12.5px] font-semibold transition-colors",
-            theme === v ? "bg-surface text-ink shadow-[0_1px_2px_rgba(0,0,0,0.12),0_0_0_1px_var(--hair)]" : "text-ink-muted hover:text-ink",
+            "flex h-8 items-center justify-center gap-1.5 rounded-[6px] font-mono text-[11px] uppercase tracking-[0.06em] transition-colors",
+            theme === v
+              ? "bg-[#C9A26B] text-[#151412]"
+              : "text-ink-muted hover:text-ink",
           )}
         >
-          <Icon className="size-3.5" aria-hidden /> {l}
+          <Icon className="size-3" aria-hidden /> {l}
         </button>
       ))}
     </div>
   );
 }
 
-/** Compact 1-click Light <-> Dark toggle for the top header bar. */
+/** Compact 1-click Ink <-> Paper toggle. */
 export function ThemeToggle({ className }: { className?: string }) {
-  const [dark, setDark] = useState(false);
+  const [light, setLight] = useState(false);
 
   useEffect(() => {
-    const sync = () => setDark(document.documentElement.classList.contains("dark"));
+    const sync = () => setLight(document.documentElement.classList.contains("light"));
     sync();
     const obs = new MutationObserver(sync);
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
@@ -84,35 +91,31 @@ export function ThemeToggle({ className }: { className?: string }) {
   }, []);
 
   const flip = () => {
-    const next: Theme = dark ? "light" : "dark";
+    const next: Theme = light ? "dark" : "light";
     try {
       localStorage.setItem(KEY, next);
     } catch {
       // private mode
     }
     applyTheme(next);
-    setDark(next === "dark");
+    setLight(next === "light");
   };
 
   return (
     <button
       type="button"
       onClick={flip}
-      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-      title={dark ? "Light mode" : "Dark mode"}
+      aria-label={light ? "Switch to ink mode" : "Switch to paper mode"}
+      title={light ? "Ink mode" : "Paper mode"}
       className={cn(
-        "ui-press grid size-9 shrink-0 place-items-center rounded-full border border-line-strong/80 bg-surface text-ink transition-[border-color,background-color,transform] duration-fast hover:border-ink-subtle hover:bg-sunken",
+        "grid size-9 shrink-0 place-items-center rounded-full border border-line bg-transparent text-ink transition-colors hover:border-[#C9A26B] hover:text-[#C9A26B]",
         className,
       )}
     >
-      {dark ? (
-        <Sun className="size-4" strokeWidth={2} aria-hidden />
-      ) : (
-        <Moon className="size-4" strokeWidth={2} aria-hidden />
-      )}
+      {light ? <Moon className="size-3.5" aria-hidden /> : <Sun className="size-3.5" aria-hidden />}
     </button>
   );
 }
 
-/** Inline, before first paint: sets .dark so the page never flashes the wrong theme. */
-export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('${KEY}')||'light';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}try{var h=document.documentElement,u=navigator.userAgent;h.dataset.platform=/iPhone|iPad|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)?'ios':/Android/.test(u)?'android':'other';if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)h.dataset.standalone=''}catch(e){}})()`;
+/** Inline, before first paint: defaults to dark-led record sleeve (.dark), honours saved light preference. */
+export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('${KEY}')||'dark';var l=t==='light'||(t==='system'&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.classList.toggle('light',l);document.documentElement.classList.toggle('dark',!l)}catch(e){document.documentElement.classList.add('dark')}try{var h=document.documentElement,u=navigator.userAgent;h.dataset.platform=/iPhone|iPad|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)?'ios':/Android/.test(u)?'android':'other';if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)h.dataset.standalone=''}catch(e){}})()`;

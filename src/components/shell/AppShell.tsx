@@ -66,6 +66,8 @@ export function AppShell({
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
+  const isPublicLanding = !viewer && pathname === "/dashboard";
+
   return (
     <div className="flex min-h-dvh flex-col overflow-x-clip">
       <Suspense fallback={null}>
@@ -77,11 +79,16 @@ export function AppShell({
       <main
         id="main"
         className={cn(
-          "mx-auto w-full flex-1 px-gutter pb-[calc(112px+env(safe-area-inset-bottom))] md:pb-12",
-          wide ? "max-w-[1440px]" : "max-w-[1360px]",
+          "w-full flex-1",
+          isPublicLanding
+            ? "pb-0"
+            : cn(
+                "mx-auto px-5 pb-[calc(112px+env(safe-area-inset-bottom))] pt-8 md:px-10 md:pb-16 md:pt-10",
+                wide ? "max-w-[1320px]" : "max-w-[1200px]",
+              ),
         )}
       >
-        <AutoBack pathname={pathname} />
+        {!isPublicLanding && <AutoBack pathname={pathname} />}
         {children}
       </main>
       {ws !== "admin" && <SiteFooter viewer={viewer} />}

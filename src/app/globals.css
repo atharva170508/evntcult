@@ -2,104 +2,104 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Theme colours as RGB channels, read by tailwind.config.ts. */
+/* EvntCult Record-Sleeve Editorial Design System
+ * Dark-led by default: --ink (#151412) ground, --paper (#EEE8DD) ink,
+ * --surface (#1D1B18) tinted dark ground, --accent (#C9A26B) warm gold.
+ * Structured strictly by 1px hairlines and tints. No drop shadows, no glow, no glass.
+ */
 :root {
-  --c-canvas: 255 254 246;
-  --c-surface: 255 255 255;
-  --c-sunken: 246 243 234;
-  --c-mist: 236 232 220;
-  --c-line: 236 232 221;
-  --c-line-strong: 220 214 198;
-  --c-lavender: 240 215 255;
-  --c-lavender-hover: 230 196 251;
-  --c-ink: 26 26 26;
-  --c-ink-2: 63 63 63;
-  --c-ink-muted: 106 106 106;
-  --c-ink-subtle: 102 102 102;
-  --c-accent-soft: 253 236 239;
-  --c-accent-ink: 184 23 63;
-  --c-gold-soft: 247 240 225;
-  --c-gold-ink: 122 93 31;
-  --c-live: 11 122 84;
-  --c-live-soft: 227 243 236;
-  --c-warn: 138 83 0;
-  --c-warn-soft: 251 240 220;
-  --c-danger: 180 35 24;
-  --c-danger-soft: 253 236 234;
-  --edge-hi-c: rgba(255, 255, 255, 0.9);
-  color-scheme: light;
-}
-.dark {
-  /* Warm charcoal, not pure black; ink becomes warm off-white. */
-  --c-canvas: 20 19 17;
+  --paper: #EEE8DD;
+  --ink-raw: #151412;
+  --accent-gold: #C9A26B;
+  --on-accent: #151412;
+  --surface-dark: #1D1B18;
+  --muted-raw: #9A9284;
+  --line: rgba(238, 232, 221, 0.15);
+  --line-strong: rgba(238, 232, 221, 0.28);
+  --radius: 8px;
+  --panel-radius: 24px;
+
+  /* RGB channels consumed by Tailwind utilities across every page */
+  --c-canvas: 21 20 18;
   --c-surface: 29 27 24;
-  --c-sunken: 37 35 31;
+  --c-sunken: 36 33 29;
   --c-mist: 46 43 38;
-  --c-line: 44 41 36;
-  --c-line-strong: 62 58 51;
-  --c-lavender: 214 180 245;
-  --c-lavender-hover: 226 199 250;
-  --c-ink: 241 237 228;
-  --c-ink-2: 214 209 198;
-  --c-ink-muted: 166 160 148;
-  --c-ink-subtle: 156 150 139;
-  --c-accent-soft: 58 22 31;
-  --c-accent-ink: 255 138 160;
-  --c-gold-soft: 52 43 25;
-  --c-gold-ink: 226 196 132;
-  --c-live: 94 224 168;
-  --c-live-soft: 18 50 38;
-  --c-warn: 255 194 102;
-  --c-warn-soft: 56 41 16;
-  --c-danger: 255 133 122;
-  --c-danger-soft: 60 24 22;
-  --edge-hi-c: rgba(255, 255, 255, 0.04);
-  --hair: rgba(255, 255, 255, 0.08);
-  --hair-strong: rgba(255, 255, 255, 0.14);
-  --focus-ring: 0 0 0 2px #141311, 0 0 0 3.5px #f1ede4, 0 0 0 8px rgba(214, 180, 245, 0.35);
-  --focus-field: 0 0 0 1px #f1ede4, 0 0 0 5px rgba(214, 180, 245, 0.3);
-  --lift-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--hair);
-  --lift-2: 0 16px 40px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--hair);
+  --c-line: 53 50 45;
+  --c-line-strong: 76 72 64;
+  --c-lavender: 201 162 107;
+  --c-lavender-hover: 215 180 127;
+  --c-ink: 238 232 221;
+  --c-ink-2: 206 199 186;
+  --c-ink-muted: 154 146 132;
+  --c-ink-subtle: 154 146 132;
+  --c-accent-soft: 44 37 26;
+  --c-accent-ink: 201 162 107;
+  --c-gold-soft: 44 37 26;
+  --c-gold-ink: 201 162 107;
+  --c-live: 132 199 162;
+  --c-live-soft: 24 44 34;
+  --c-warn: 216 176 108;
+  --c-warn-soft: 48 39 24;
+  --c-danger: 226 122 110;
+  --c-danger-soft: 54 27 24;
+  --edge-hi-c: transparent;
+  --hair: rgba(238, 232, 221, 0.15);
+  --hair-strong: rgba(238, 232, 221, 0.28);
+  --edge-hi: none;
+  --lift-1: 0 0 0 1px var(--line);
+  --lift-2: 0 0 0 1px var(--line-strong);
+  --focus-ring: 0 0 0 2px #151412, 0 0 0 4px #C9A26B;
+  --focus-field: 0 0 0 1px #C9A26B;
   color-scheme: dark;
 }
 
-
-/*
- * EvntCult. Tokens live in tailwind.config.ts; the rules here are the few
- * patterns that are easier to express as classes than as utility strings.
- */
+/* Optional Paper-led mode when explicitly selected */
+.light {
+  --line: rgba(21, 20, 18, 0.16);
+  --line-strong: rgba(21, 20, 18, 0.30);
+  --c-canvas: 238 232 221;
+  --c-surface: 245 240 231;
+  --c-sunken: 229 222 209;
+  --c-mist: 219 211 196;
+  --c-line: 206 198 184;
+  --c-line-strong: 179 170 155;
+  --c-lavender: 201 162 107;
+  --c-lavender-hover: 186 146 90;
+  --c-ink: 21 20 18;
+  --c-ink-2: 56 52 46;
+  --c-ink-muted: 96 90 80;
+  --c-ink-subtle: 96 90 80;
+  --c-accent-soft: 230 218 197;
+  --c-accent-ink: 126 91 42;
+  --c-gold-soft: 230 218 197;
+  --c-gold-ink: 126 91 42;
+  --c-live: 18 110 74;
+  --c-live-soft: 216 234 224;
+  --c-warn: 138 88 18;
+  --c-warn-soft: 240 227 204;
+  --c-danger: 168 38 28;
+  --c-danger-soft: 244 224 220;
+  --hair: rgba(21, 20, 18, 0.16);
+  --hair-strong: rgba(21, 20, 18, 0.30);
+  --focus-ring: 0 0 0 2px #EEE8DD, 0 0 0 4px #151412;
+  --focus-field: 0 0 0 1px #151412;
+  color-scheme: light;
+}
 
 @layer base {
   :root {
-    color-scheme: light;
-    /* One navigation bar; the shell keeps this in sync with its real height. */
-    --header-h: 80px;
-    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-    /* Motion tokens (DESIGN.md "Motion"): composited properties only. */
+    --header-h: 76px;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
     --ease-exit: cubic-bezier(0.4, 0, 1, 1);
-    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* small overshoot, for stamps and snaps */
+    --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
     --dur-tap: 160ms;
     --dur-ui: 220ms;
-    --dur-enter: 280ms;
-    --dur-ambient: 9s;
+    --dur-enter: 600ms;
     --ease-menu: cubic-bezier(0.22, 1, 0.36, 1);
-    --dur-menu: 160ms;
-    /* Surfaces and edges */
-    --hair: rgba(26, 26, 26, 0.08);
-    --hair-strong: rgba(26, 26, 26, 0.14);
-    --edge-hi: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    --lift-1: 0 1px 2px rgba(60, 40, 10, 0.06), 0 0 0 1px var(--hair);
-    --lift-2: 0 12px 32px -12px rgba(60, 40, 10, 0.22), 0 2px 6px -2px rgba(60, 40, 10, 0.08), 0 0 0 1px var(--hair);
-    --focus-ring: 0 0 0 2px #fffef6, 0 0 0 3.5px #1a1a1a, 0 0 0 8px rgba(240, 215, 255, 0.75);
-    --focus-field: 0 0 0 1px #1a1a1a, 0 0 0 5px rgba(240, 215, 255, 0.8);
+    --dur-menu: 180ms;
   }
-  @media (min-width: 768px) {
-    :root {
-      --header-h: 80px;
-    }
-  }
-  /* Base interaction affordances: pointer for enabled controls, not-allowed for disabled. */
+
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   [role="tab"]:not([aria-disabled="true"]),
@@ -125,87 +125,65 @@
     @apply bg-canvas text-ink antialiased;
     text-rendering: optimizeLegibility;
     -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     scroll-padding-top: calc(var(--header-h) + 16px);
     scrollbar-color: rgb(var(--c-line-strong)) transparent;
     scrollbar-width: thin;
   }
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: rgb(var(--c-line-strong));
-    border-radius: 999px;
-    border: 3px solid transparent;
-    background-clip: content-box;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(var(--c-ink-subtle));
-  }
-  input,
-  textarea {
-    caret-color: #E3264F;
-  }
-  ::selection {
-    background-color: rgb(var(--c-lavender));
-    color: #1A1A1A;
-  }
+
   body {
     overflow-x: clip;
-    @apply min-h-dvh bg-canvas font-sans text-body;
-    font-optical-sizing: auto;
-    letter-spacing: -0.011em;
+    @apply min-h-dvh bg-canvas font-sans text-[16px] font-light leading-[1.55] text-ink;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  /* Big headlines are set in the editorial display serif; an <em> inside one turns italic. */
+
+  ::selection {
+    background-color: #C9A26B;
+    color: #151412;
+  }
+
+  input,
+  textarea {
+    caret-color: #C9A26B;
+  }
+
   .font-display,
   .text-display-2xl,
   .text-display-xl {
     font-family: var(--font-serif), ui-serif, Georgia, serif;
     font-weight: 400;
-    letter-spacing: -0.018em;
+    letter-spacing: -0.02em;
+    line-height: 0.98;
   }
+
   .font-display em,
   .text-display-2xl em,
   .text-display-xl em {
     font-style: italic;
+    color: #C9A26B;
   }
-  .text-display-lg,
-  .text-display-md {
-    font-weight: 600;
-  }
-  h1,
-  h2,
-  h3,
-  h4 {
+
+  h1, h2, h3, h4 {
     text-wrap: balance;
   }
+
   p {
     text-wrap: pretty;
   }
-  ::selection {
-    background: #F0D7FF;
-  }
-  /* Emphasis inside headlines carries no special styling. */
+
   em {
-    font-style: normal;
+    font-style: italic;
   }
-  /* Focus: a crisp ink ring inside a soft lavender halo, instead of the browser outline. */
+
   :focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
   }
-  /* Text boxes show focus through their own border (see .field), not a square ring. */
-  input:not([type="checkbox"]):not([type="radio"]):focus-visible,
-  textarea:focus-visible,
-  select:focus-visible {
-    @apply ring-offset-0;
-  }
-  /* Browser autofill must not paint a coloured box over the paper fields. */
+
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus {
@@ -213,7 +191,7 @@
     caret-color: currentColor;
     transition: background-color 99999s ease-out;
   }
-  /* Phones zoom the whole page when a text box is smaller than 16px. */
+
   @media (pointer: coarse) {
     input:not([type="checkbox"]):not([type="radio"]),
     textarea,
@@ -221,7 +199,11 @@
       font-size: 16px !important;
     }
   }
-  /* Tabular numerals wherever numbers line up. */
+
+  a, button, [role="button"], label, summary {
+    touch-action: manipulation;
+  }
+
   .tabular,
   [data-numeric] {
     font-variant-numeric: tabular-nums;
@@ -229,247 +211,138 @@
 }
 
 @layer components {
-  /* Surfaces */
-
-  /* The core container: white with a hairline edge. Depth only appears on interaction. */
-  .card {
-    @apply relative rounded-card bg-surface shadow-card;
+  /* Tape Room meta layer: IBM Plex Mono 400, 11px, uppercase, 0.06em */
+  .tr-meta {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
-  /* A card that responds to the pointer. */
+
+  /* Quiet link underline growing from the left */
+  .tr-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+  .tr-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .tr-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Hairline surfaces — zero drop shadows */
+  .card {
+    @apply relative rounded-[8px] border border-line bg-surface;
+  }
   .card-hover {
-    @apply transition-[transform,box-shadow] duration-base ease-out hover:-translate-y-0.5 hover:shadow-raised;
+    @apply transition-colors duration-base hover:border-line-strong;
   }
   .lift {
-    @apply transition-[transform,box-shadow] duration-base ease-out hover:-translate-y-0.5 hover:shadow-raised;
+    @apply transition-colors duration-base hover:border-line-strong;
   }
-  /* Recessed well inside a card (stats, meters, form groups). */
   .well {
-    @apply rounded-tile bg-sunken/70;
+    @apply rounded-[8px] border border-line bg-sunken;
   }
-  /* Frosted bar for sticky navigation. */
   .glass {
-    @apply bg-white/85 backdrop-blur-xl backdrop-saturate-150;
+    @apply bg-canvas border-b border-line;
   }
 
-  /* Typography helpers */
-
-  /* Small context line above a heading. */
   .eyebrow {
-    @apply font-sans text-[14px] font-medium tracking-normal text-ink-muted;
+    @apply tr-meta text-ink-muted;
   }
   .title-xl {
-    @apply text-display-lg font-medium text-ink;
+    @apply font-display text-display-lg text-ink;
   }
   .headline {
-    @apply font-semibold tracking-tighter text-ink;
+    @apply font-display text-ink;
   }
   .shout {
-    @apply font-display font-medium tracking-tightest;
-  }
-  .text-metal {
-    color: currentColor;
+    @apply font-display tracking-[-0.02em];
   }
 
-  /* Cursor-lit surfaces (components/motion/Spotlight). */
-  .spotlight::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    border-radius: inherit;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .spotlight:hover::before {
-    opacity: 1;
-  }
-  .spotlight-dark::before {
-    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 235, 0.09), transparent 45%);
-  }
-  .spotlight-light::before {
-    background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.35), transparent 50%);
-  }
-  .spotlight-dark::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    padding: 1px;
-    background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 235, 0.35), rgba(255, 255, 255, 0.08) 60%);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-  }
-
-  /* Full-width band inside the centred page column. */
+  /* Full-width bleed inside centred columns */
   .bleed {
     width: 100vw;
     margin-left: calc(50% - 50vw);
   }
 
-  /* Controls */
-
   .field {
-    @apply w-full rounded-lg border border-[#B5AF9F] bg-surface px-3.5 py-3 text-body text-ink transition-[border-color,box-shadow] duration-fast ease-out placeholder:text-ink-subtle hover:border-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-muted aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/10;
+    @apply w-full rounded-[8px] border border-line-strong bg-surface px-3.5 py-3 text-[15px] font-normal text-ink transition-colors duration-fast placeholder:text-ink-muted hover:border-ink-muted focus:border-[#C9A26B] focus:outline-none disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-muted;
   }
   .kbd {
-    @apply inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-line bg-surface px-1.5 font-sans text-[11px] font-semibold text-ink-subtle;
+    @apply inline-flex h-5 min-w-5 items-center justify-center rounded-[4px] border border-line bg-surface px-1.5 font-mono text-[10px] text-ink-muted;
   }
   .link {
-    @apply font-semibold text-ink underline decoration-line-strong decoration-[1.5px] underline-offset-[3px] transition-colors duration-fast hover:decoration-ink;
+    @apply text-ink underline decoration-line-strong underline-offset-4 transition-colors duration-fast hover:decoration-[#C9A26B] hover:text-[#C9A26B];
   }
 
-  /* Texture and scrollbars */
-
-  .grain::after {
-    content: none;
-    @apply pointer-events-none absolute inset-0 opacity-[0.22] mix-blend-multiply;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
   .no-scrollbar {
     scrollbar-width: none;
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  /* Ticket perforation: dashed rule with two notches cut into the card edges. */
-  .ticket-cut {
-    @apply relative h-6;
-  }
-  .ticket-cut::before {
-    content: "";
-    @apply absolute left-5 right-5 top-1/2 border-t border-dashed border-line-strong;
-  }
-  .ticket-cut::after {
-    content: "";
-    @apply pointer-events-none absolute inset-y-0 -left-3 -right-3;
-    background:
-      radial-gradient(circle at 12px 50%, var(--cut-bg, #fff) 11px, transparent 11.5px) left / 24px 24px no-repeat,
-      radial-gradient(circle at 12px 50%, var(--cut-bg, #fff) 11px, transparent 11.5px) right / 24px 24px no-repeat;
-  }
-  /* Retired motif: kept as a no-op so older markup renders cleanly. */
-  .dot-grid {
-    background-image: none;
-  }
-  /* Skeleton shimmer. */
+
   .skeleton {
-    @apply rounded-tile bg-sunken;
-    background-image: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+    @apply rounded-[8px] bg-sunken;
+    background-image: linear-gradient(90deg, transparent 0, rgba(238, 232, 221, 0.06) 50%, transparent 100%);
     background-size: 400px 100%;
     background-repeat: no-repeat;
     @apply motion-safe:animate-shimmer;
   }
 
-  /* Scroll reveal paired with <Reveal>. */
   [data-reveal] {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(16px);
     transition:
-      opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+      opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
     transition-delay: var(--reveal-delay, 0ms);
   }
   [data-reveal="in"] {
     opacity: 1;
     transform: none;
   }
-}
 
-@media print {
-  html,
-  body {
-    background: #fff !important;
-    color: #000;
-  }
-}
-
-/* ---------- Motion suites ---------- */
-
-/* Rolling digits */
-.odo { display: inline-flex; font-variant-numeric: tabular-nums; line-height: 1; }
-.odo-col { display: inline-block; height: 1em; overflow: hidden; }
-.odo-strip { display: flex; flex-direction: column; transition: transform var(--dur-enter) var(--ease-enter); will-change: transform; }
-.odo-strip > span { height: 1em; line-height: 1; }
-
-/* "Who's going": cascade in, and neighbours nudge aside on hover */
-@keyframes av-in { from { opacity: 0; transform: translateX(-6px) scale(0.92); } to { opacity: 1; transform: none; } }
-.avstack > * { animation: av-in var(--dur-enter) var(--ease-enter) both; animation-delay: calc(var(--i, 0) * 35ms); transition: transform var(--dur-ui) var(--ease-enter); }
-.avstack > *:hover { transform: translateY(-3px); z-index: 1; }
-.avstack > *:hover ~ * { transform: translateX(5px); }
-.avstack > *:has(~ *:hover) { transform: translateX(-3px); }
-
-
-/* Face scan sweep */
-@keyframes scanline { 0% { transform: translateY(-10%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(1000%); opacity: 0; } }
-.scanline { animation: scanline 1.6s var(--ease-enter) infinite; }
-@keyframes rise-in { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: none; } }
-.rise-in { animation: rise-in var(--dur-enter) var(--ease-enter) both; animation-delay: calc(var(--i, 0) * 45ms); }
-
-/* Gate verdicts */
-@keyframes shockwave { from { opacity: 0.55; transform: translate(-50%, -50%) scale(0.2); } to { opacity: 0; transform: translate(-50%, -50%) scale(3.2); } }
-.shockwave { animation: shockwave 700ms var(--ease-enter) both; }
-@keyframes shake { 0%, 100% { transform: translateX(0); } 15% { transform: translateX(-14px); } 30% { transform: translateX(11px); } 45% { transform: translateX(-7px); } 60% { transform: translateX(4px); } 75% { transform: translateX(-2px); } }
-.shake { animation: shake 480ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
-@keyframes edge-flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
-.edge-flash { animation: edge-flash 900ms var(--ease-exit) both; }
-
-/* Sonar ping next to a live counter */
-@keyframes sonar { from { opacity: 0.6; transform: scale(1); } to { opacity: 0; transform: scale(3.4); } }
-.sonar { animation: sonar 900ms var(--ease-enter) both; }
-
-/* Tick drawn on success */
-@keyframes draw { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
-.draw-check { stroke-dasharray: 24; animation: draw 320ms var(--ease-enter) both; }
-
-@media (prefers-reduced-motion: reduce) {
-  .aura, .scanline { animation: none !important; }
-  .avstack > *:hover, .avstack > *:hover ~ *, .avstack > *:has(~ *:hover) { transform: none; }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-  [data-reveal] {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* ── Primitives: fields, menus, segmented control, button sheen, grain ─────────── */
-@layer components {
+  /* Hairline form primitives */
   .ui-field {
     display: inline-flex;
     width: 100%;
     align-items: center;
     gap: 8px;
-    border-radius: 12px;
-    background: #fff;
-    box-shadow: var(--lift-1), var(--edge-hi);
-    transition: box-shadow var(--dur-ui) var(--ease-enter), transform var(--dur-tap) var(--ease-enter);
+    border-radius: 8px;
+    background: rgb(var(--c-surface));
+    border: 1px solid var(--line);
+    transition: border-color 180ms cubic-bezier(0.22, 1, 0.36, 1);
     font-variant-numeric: tabular-nums;
   }
   .ui-field:hover {
-    box-shadow: 0 1px 2px rgba(60, 40, 10, 0.08), 0 0 0 1px var(--hair-strong), var(--edge-hi);
+    border-color: var(--line-strong);
   }
   .ui-field:focus-visible,
   .ui-field:focus-within:has(input:focus-visible),
   .ui-field[aria-expanded="true"] {
-    box-shadow: var(--focus-field);
-  }
-  .ui-select-trigger:active {
-    transform: scale(0.985);
+    border-color: #C9A26B;
   }
 
   .ui-menu {
     padding: 6px;
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: var(--lift-2), var(--edge-hi);
+    border-radius: 8px;
+    background: rgb(var(--c-surface));
+    border: 1px solid var(--line-strong);
     max-height: 320px;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -483,17 +356,16 @@
     left: 6px;
     right: 6px;
     top: 0;
-    border-radius: 10px;
-    background: #f6f3ea;
+    border-radius: 6px;
+    background: rgb(var(--c-sunken));
     transition: transform var(--dur-menu) var(--ease-menu), height var(--dur-menu) var(--ease-menu);
-    will-change: transform;
   }
   .ui-check {
     stroke-dasharray: 16;
     stroke-dashoffset: 16;
     animation: ui-draw 260ms var(--ease-enter) 60ms forwards;
   }
-  /* Toggle switch and checkbox: the input is a visually hidden peer right before them. */
+
   .ui-switch {
     position: relative;
     display: inline-block;
@@ -501,7 +373,7 @@
     height: 22px;
     border-radius: 999px;
     background: rgb(var(--c-line-strong) / 1);
-    transition: background-color var(--dur-ui) var(--ease-enter);
+    transition: background-color 200ms var(--ease-enter);
   }
   .ui-switch-knob {
     position: absolute;
@@ -510,57 +382,33 @@
     width: 18px;
     height: 18px;
     border-radius: 999px;
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(20, 14, 4, 0.25), 0 2px 6px rgba(20, 14, 4, 0.12);
-    transition: transform 260ms var(--ease-menu), width 160ms var(--ease-enter);
+    background: #EEE8DD;
+    transition: transform 220ms var(--ease-menu);
   }
-  .peer:checked + .ui-switch { background: rgb(var(--c-ink) / 1); }
-  .peer:checked + .ui-switch .ui-switch-knob { transform: translateX(16px); }
-  label:active .ui-switch-knob { width: 22px; }
-  .peer:checked + .ui-switch:active .ui-switch-knob,
-  label:active .peer:checked + .ui-switch .ui-switch-knob { transform: translateX(12px); }
+  .peer:checked + .ui-switch { background: #C9A26B; }
+  .peer:checked + .ui-switch .ui-switch-knob { transform: translateX(16px); background: #151412; }
   .peer:focus-visible + .ui-switch,
-  .peer:focus-visible + .ui-checkbox { box-shadow: var(--focus-field); }
+  .peer:focus-visible + .ui-checkbox { box-shadow: var(--focus-ring); }
+
   .ui-checkbox {
     display: grid;
     place-items: center;
     width: 18px;
     height: 18px;
-    border-radius: 6px;
-    background: #fff;
+    border-radius: 4px;
+    background: transparent;
     color: transparent;
-    box-shadow: inset 0 0 0 1.5px rgb(var(--c-line-strong) / 1);
-    transition: background-color 140ms var(--ease-enter), box-shadow 140ms var(--ease-enter), transform 120ms var(--ease-enter);
+    border: 1px solid var(--line-strong);
+    transition: background-color 140ms var(--ease-enter), border-color 140ms var(--ease-enter);
   }
   .ui-checkbox path { stroke-dasharray: 14; stroke-dashoffset: 14; transition: stroke-dashoffset 220ms var(--ease-enter) 40ms; }
-  label:active .ui-checkbox { transform: scale(0.9); }
-  .peer:checked + .ui-checkbox { background: rgb(var(--c-ink) / 1); color: #fff; box-shadow: none; }
+  .peer:checked + .ui-checkbox { background: #C9A26B; border-color: #C9A26B; color: #151412; }
   .peer:checked + .ui-checkbox path { stroke-dashoffset: 0; }
-  .dark .ui-switch-knob { background: #fffef6; }
-  .dark .ui-checkbox { background: transparent; }
-  .dark .peer:checked + .ui-switch .ui-switch-knob { background: rgb(var(--c-canvas) / 1); }
-  .dark .peer:checked + .ui-checkbox { color: rgb(var(--c-canvas) / 1); }
-
-  @keyframes ui-menu-in {
-    from { opacity: 0; transform: scale(0.96) translateY(-4px); }
-    to { opacity: 1; transform: none; }
-  }
-  @keyframes ui-menu-out {
-    to { opacity: 0; transform: scale(0.98) translateY(-2px); }
-  }
-  @keyframes ui-draw {
-    to { stroke-dashoffset: 0; }
-  }
 
   .ui-seg-scroll {
     max-width: 100%;
     overflow-x: auto;
     scrollbar-width: none;
-    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent);
-    mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent);
-  }
-  @media (min-width: 768px) {
-    .ui-seg-scroll { -webkit-mask-image: none; mask-image: none; }
   }
   .ui-seg-scroll::-webkit-scrollbar { display: none; }
   .ui-seg {
@@ -568,20 +416,18 @@
     display: inline-flex;
     gap: 2px;
     padding: 4px;
-    border-radius: 14px;
-    background: #f6f3ea;
-    box-shadow: inset 0 0 0 1px var(--hair);
+    border-radius: 8px;
+    background: rgb(var(--c-surface));
+    border: 1px solid var(--line);
   }
   .ui-seg-pill {
     position: absolute;
     top: 4px;
     bottom: 4px;
     left: 0;
-    border-radius: 10px;
-    background: #1a1a1a;
-    box-shadow: 0 6px 14px -6px rgba(26, 26, 26, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    transition: transform 320ms var(--ease-enter), width 320ms var(--ease-enter);
-    will-change: transform;
+    border-radius: 6px;
+    background: #C9A26B;
+    transition: transform 260ms var(--ease-enter), width 260ms var(--ease-enter);
   }
   .ui-seg-item {
     position: relative;
@@ -591,404 +437,167 @@
     align-items: center;
     gap: 6px;
     white-space: nowrap;
-    border-radius: 10px;
+    border-radius: 6px;
     padding: 0 14px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #4a4740;
-    transition: color var(--dur-ui) var(--ease-enter);
+    font-size: 13px;
+    font-weight: 400;
+    color: rgb(var(--c-ink-muted));
+    transition: color 180ms var(--ease-enter);
   }
-  .ui-seg-item:hover { color: #1a1a1a; }
-  .ui-seg-item[aria-checked="true"] { color: #fff; }
+  .ui-seg-item:hover { color: rgb(var(--c-ink)); }
+  .ui-seg-item[aria-checked="true"],
+  .ui-seg-item[aria-current="true"],
+  .ui-seg-item[aria-selected="true"] { color: #151412 !important; font-weight: 500; }
   .ui-seg-count {
-    font-size: 12px;
-    font-weight: 500;
+    font-family: var(--font-mono), monospace;
+    font-size: 11px;
     font-variant-numeric: tabular-nums;
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
-  /* Buttons: a soft light that follows the cursor, a 1px lift, and a firm press. */
   .ui-press {
-    transition: transform var(--dur-tap) var(--ease-enter), background-color var(--dur-tap) ease, box-shadow var(--dur-ui) var(--ease-enter);
+    transition: transform 160ms var(--ease-enter), background-color 180ms ease, border-color 180ms ease, color 180ms ease;
   }
-  @media (hover: hover) {
-    .ui-press:hover { transform: translateY(-1px); }
-  }
-  .ui-press:active { transform: scale(0.975); transition-duration: 70ms; }
-  .ui-sheen { isolation: isolate; overflow: hidden; }
-  .ui-sheen::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.55), transparent 70%);
-    opacity: 0;
-    transition: opacity var(--dur-ui) ease;
-    pointer-events: none;
-  }
-  .ui-sheen:hover::after { opacity: 1; }
-
-  /* Paper grain: tactile, never visible as a pattern. */
-  .grain {
-    position: relative;
-  }
-  .grain::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.028;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    border-radius: inherit;
-  }
+  .ui-press:active { transform: scale(0.985); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ui-menu, .ui-menu[data-state="closing"], .ui-check { animation-duration: 1ms; animation-delay: 0ms; }
-  .ui-seg-pill, .ui-menu-pill { transition: none; }
-  .ui-press:hover, .ui-press:active { transform: none; }
+/* Signature twin-reel kinetic rotation (6s idle, 3s on hover, still under reduced-motion) */
+@keyframes tr-spin-cw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes tr-spin-ccw {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+.tr-reel-cw {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: tr-spin-cw 6s linear infinite;
+}
+.tr-reel-ccw {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: tr-spin-ccw 6s linear infinite;
+}
+.tr-reel-stage:hover .tr-reel-cw,
+.tr-reel-stage:hover .tr-reel-ccw {
+  animation-duration: 3s;
 }
 
-/* Hero mini printer (MiniPrinter.tsx): thermal paper, a stepped feed, a tear, a pile, confetti. */
-.hp-paper {
-  background:
-    radial-gradient(120% 60% at 50% 0%, rgba(240, 215, 255, 0.18), transparent 60%),
-    linear-gradient(180deg, #fffefa, #fbf8ee);
-  box-shadow: 0 10px 22px -12px rgba(60, 40, 10, 0.45), 0 0 0 0.5px rgba(26, 26, 26, 0.08);
-  -webkit-mask:
-    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / 8px 5px repeat-x,
-    linear-gradient(#000 0 0) center / 100% calc(100% - 10px) no-repeat,
-    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 8px 5px repeat-x;
-  mask:
-    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / 8px 5px repeat-x,
-    linear-gradient(#000 0 0) center / 100% calc(100% - 10px) no-repeat,
-    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 8px 5px repeat-x;
-  filter: drop-shadow(0 8px 10px rgba(60, 40, 10, 0.18));
-}
-.hp-feeding { animation: hp-feed 1.5s steps(16, end) both; }
-.hp-tearing { animation: hp-tear 520ms var(--ease-enter) both; }
-.hp-land { animation: hp-land 420ms var(--ease-spring) both; }
-.hp-hum { animation: hp-hum 90ms linear infinite; }
-.hp-head { animation: hp-head 300ms ease-in-out infinite alternate; }
-.hp-blink { animation: hp-blink 160ms steps(2, jump-none) infinite; }
-.hp-confetti { animation: hp-confetti 900ms cubic-bezier(0.2, 0.7, 0.4, 1) both; }
-@keyframes hp-feed {
-  from { transform: translateY(102%); }
-  to { transform: translateY(0); }
-}
-@keyframes hp-tear {
-  0% { transform: translateY(0) rotate(0); }
-  30% { transform: translateY(-6px) rotate(-3deg); }
-  100% { transform: translate(-8px, -16px) rotate(-5deg); opacity: 0.95; }
-}
-@keyframes hp-land {
-  0% { translate: 0 -10px; }
-  100% { translate: 0 0; }
-}
-@keyframes hp-hum {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(0.5px, -0.3px); }
-  50% { transform: translate(-0.4px, 0.3px); }
-  75% { transform: translate(0.3px, 0.4px); }
-  100% { transform: translate(0, 0); }
-}
-@keyframes hp-head {
-  from { opacity: 0.35; transform: scaleX(0.55); }
-  to { opacity: 1; transform: scaleX(1); }
-}
-@keyframes hp-blink { to { opacity: 0.25; } }
-@keyframes hp-confetti {
-  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
-  70% { opacity: 1; }
-  100% { transform: translate(var(--dx), calc(var(--dy) + 70px)) rotate(var(--r)); opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hp-feeding, .hp-tearing, .hp-land, .hp-hum, .hp-head, .hp-blink, .hp-confetti { animation: none; }
-}
-
-/* Paper grain over the whole site at 2.5%: surfaces read as paper, not flat screen. */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-@media print { body::after { display: none; } }
-
-/* Empty-state pass: a slow sway on its lanyard. */
-@keyframes es-sway {
-  0%, 100% { transform: rotate(-3deg); }
-  50% { transform: rotate(3deg); }
-}
-
-/* "I'm interested": eight sparks fly out from the star. */
-.star-spark {
-  left: -2.5px;
-  top: -2.5px;
-  animation: star-spark 560ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
-}
-@keyframes star-spark {
-  0% { transform: rotate(var(--a)) translateY(0) scale(1); opacity: 1; }
-  100% { transform: rotate(var(--a)) translateY(-22px) scale(0.3); opacity: 0; }
-}
-/* Cards settle in when a filter changes the list. */
-.feed-in { animation: feed-in 420ms var(--ease-enter) both; }
-@keyframes feed-in {
-  from { opacity: 0; transform: translateY(10px) scale(0.985); }
+@keyframes ui-menu-in {
+  from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: none; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .star-spark, .feed-in { animation: none; }
+@keyframes ui-menu-out {
+  to { opacity: 0; transform: translateY(-2px); }
 }
-.month-in-right { animation: month-in-right 340ms var(--ease-enter) both; }
-.month-in-left { animation: month-in-left 340ms var(--ease-enter) both; }
-@keyframes month-in-right { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
-@keyframes month-in-left { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .month-in-right, .month-in-left { animation: none; } }
-
-/* Dark mode compatibility.
- * Tokens switch on their own (see .dark above). These rules cover the few hard-coded values
- * in components: white cards become the dark surface, ink buttons turn light with dark text,
- * and the primitives get dark fills. Passes, tickets, printed paper and QR codes keep their
- * paper white on purpose: they are objects, and QR codes need it to scan. */
-.dark .bg-white { background-color: rgb(var(--c-surface)); }
-.dark .bg-white\/95,
-.dark .bg-white\/90 { background-color: rgb(var(--c-surface) / 0.92); }
-.dark .bg-ink.text-white,
-.dark .bg-ink .text-white,
-.dark .bg-ink.text-white svg { color: rgb(20 19 17); }
-.dark .hover\:bg-black:hover { background-color: #fff; }
-.dark .ring-canvas { --tw-ring-color: rgb(var(--c-canvas)); }
-.dark .shadow-card { box-shadow: 0 0 0 1px rgb(var(--c-line-strong)); }
-.dark .ui-field { background: rgb(var(--c-surface)); }
-.dark .ui-field:hover { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--hair-strong); }
-.dark .ui-menu { background: rgb(var(--c-surface)); }
-.dark .ui-menu-pill { background: rgb(var(--c-sunken)); }
-.dark .ui-seg { background: rgb(var(--c-sunken)); }
-.dark .ui-seg-item { color: rgb(var(--c-ink-muted)); }
-.dark .ui-seg-item:hover { color: rgb(var(--c-ink)); }
-.dark .ui-seg-pill { background: rgb(var(--c-ink)); box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.6); }
-.dark .ui-seg-item[aria-checked="true"],
-.dark .ui-seg-item[aria-current="true"],
-.dark .ui-seg-item[aria-selected="true"] { color: rgb(20 19 17) !important; }
-.dark .skeleton { background-image: linear-gradient(90deg, transparent 0, rgba(255, 255, 255, 0.06) 50%, transparent 100%); }
-.dark .ui-sheen::after { background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.12), transparent 70%); }
-.dark body::after { opacity: 0.035; mix-blend-mode: screen; }
-.dark .kbd { background: rgb(var(--c-sunken)); color: rgb(var(--c-ink-2)); border-color: rgb(var(--c-line-strong)); }
-/* Things that are paper on purpose (passes, printed tickets, certificates) keep the light
-   palette inside, whatever the theme. */
-.dark .paper-keep {
-  --c-canvas: 255 254 246;
-  --c-surface: 255 255 255;
-  --c-sunken: 246 243 234;
-  --c-mist: 236 232 220;
-  --c-line: 236 232 221;
-  --c-line-strong: 220 214 198;
-  --c-lavender: 240 215 255;
-  --c-lavender-hover: 230 196 251;
-  --c-ink: 26 26 26;
-  --c-ink-2: 63 63 63;
-  --c-ink-muted: 106 106 106;
-  --c-ink-subtle: 113 113 113;
-  --c-accent-soft: 253 236 239;
-  --c-accent-ink: 184 23 63;
-  --c-gold-soft: 247 240 225;
-  --c-gold-ink: 122 93 31;
-  --c-live: 11 122 84;
-  --c-live-soft: 227 243 236;
-  --c-warn: 138 83 0;
-  --c-warn-soft: 251 240 220;
-  --c-danger: 180 35 24;
-  --c-danger-soft: 253 236 234;
-  --edge-hi-c: rgba(255, 255, 255, 0.9);
-  color-scheme: light;
-}
-.dark .paper-keep .bg-white { background-color: #fff; }
-/* Lavender (and cream) fills keep dark text in both themes. */
-.dark .bg-lavender,
-.dark .bg-lavender .text-ink,
-.dark .bg-lavender.text-ink,
-.dark [class*="bg-lavender/"] .text-ink { color: rgb(20 19 17); }
-.dark .bg-lavender svg { color: rgb(20 19 17); }
-.dark .bg-night { background-color: #0e0d0c; }
-.dark .ring-ink { --tw-ring-color: rgb(var(--c-ink) / 0.9); }
-.dark .bg-ink [class*="text-white/"] { color: rgb(20 19 17 / 0.7); }
-.dark .avstack > * { color: rgb(20 19 17); }
-
-/* Event page effect: emoji drifting down (EventEffect). */
-.fx-drop {
-  position: absolute;
-  top: -40px;
-  opacity: 0.55;
-  will-change: transform;
-  animation-name: fx-fall, fx-sway;
-  animation-timing-function: linear, ease-in-out;
-  animation-iteration-count: infinite, infinite;
-  animation-direction: normal, alternate;
-}
-@keyframes fx-fall {
-  from { transform: translate3d(0, 0, 0) rotate(0deg); }
-  to { transform: translate3d(0, 110vh, 0) rotate(var(--spin)); }
-}
-@keyframes fx-sway {
-  from { margin-left: calc(var(--sway) * -1); }
-  to { margin-left: var(--sway); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .fx-layer { display: none; }
+@keyframes ui-draw {
+  to { stroke-dashoffset: 0; }
 }
 
-/* Live pass band (HoloPass gate view). Keeps moving even with reduced motion: it is the proof. */
+/* Utility animations retained for gate scanner, countdowns, and calendar */
+.odo { display: inline-flex; font-variant-numeric: tabular-nums; line-height: 1; }
+.odo-col { display: inline-block; height: 1em; overflow: hidden; }
+.odo-strip { display: flex; flex-direction: column; transition: transform 300ms var(--ease-enter); }
+.odo-strip > span { height: 1em; line-height: 1; }
+@keyframes scanline { 0% { transform: translateY(-10%); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(1000%); opacity: 0; } }
+.scanline { animation: scanline 1.6s var(--ease-enter) infinite; }
+@keyframes shockwave { from { opacity: 0.55; transform: translate(-50%, -50%) scale(0.2); } to { opacity: 0; transform: translate(-50%, -50%) scale(3.2); } }
+.shockwave { animation: shockwave 700ms var(--ease-enter) both; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 15% { transform: translateX(-14px); } 30% { transform: translateX(11px); } 45% { transform: translateX(-7px); } 60% { transform: translateX(4px); } 75% { transform: translateX(-2px); } }
+.shake { animation: shake 480ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
+@keyframes edge-flash { 0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; } }
+.edge-flash { animation: edge-flash 900ms var(--ease-exit) both; }
+@keyframes draw { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+.draw-check { stroke-dasharray: 24; animation: draw 320ms var(--ease-enter) both; }
 .live-sweep { animation: live-sweep 1.8s linear infinite; }
 @keyframes live-sweep { from { left: -33%; } to { left: 100%; } }
+.month-in-right { animation: month-in-right 340ms var(--ease-enter) both; }
+.month-in-left { animation: month-in-left 340ms var(--ease-enter) both; }
+@keyframes month-in-right { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: none; } }
+@keyframes month-in-left { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: none; } }
 
-/* Discover quick view: the row that's open in the side panel. */
-[data-peek] { border-radius: 18px; transition: outline-color 160ms; outline: 2px solid transparent; outline-offset: 4px; }
-[data-peek][data-active] { outline-color: rgb(var(--c-ink) / 1); }
+/* Dark-led compatibility across ALL inner pages:
+ * Legacy bg-white cards resolve cleanly to tinted #1D1B18 surface with 1px hairline.
+ * Legacy bg-lavender buttons resolve to warm #C9A26B gold with #151412 ink text.
+ * Physical QR passes (.paper-keep) stay crisp archival #EEE8DD paper so scanners read flawlessly.
+ */
+:root:not(.light) .bg-white { background-color: rgb(var(--c-surface)); }
+:root:not(.light) .bg-white\/95,
+:root:not(.light) .bg-white\/90 { background-color: rgb(var(--c-surface) / 0.95); }
+:root:not(.light) .bg-ink.text-white,
+:root:not(.light) .bg-ink .text-white,
+:root:not(.light) .bg-ink.text-white svg { color: #151412; }
+:root:not(.light) .hover\:bg-black:hover { background-color: #EEE8DD; color: #151412; }
+:root:not(.light) .bg-lavender,
+:root:not(.light) .bg-lavender .text-ink,
+:root:not(.light) .bg-lavender.text-ink,
+:root:not(.light) [class*="bg-lavender/"] .text-ink,
+:root:not(.light) .bg-lavender svg { color: #151412; }
+:root:not(.light) .bg-lavender.ring-2,
+.light .bg-lavender.ring-2 { --tw-ring-shadow: 0 0 #0000; }
+:root:not(.light) .ring-ink { --tw-ring-color: rgba(238, 232, 221, 0.25); }
 
-/* Attendee table: rows ticked for a bulk action. */
-tr[data-picked] { background: rgb(240 215 255 / 0.35); }
-.dark tr[data-picked] { background: rgb(240 215 255 / 0.08); }
-
-/* Home hero ticket: a dashed tear line between body and stub, with a notch bitten out at each end. */
-.hero-stub { border-top: 2px dashed #E4DFD0; }
-.hero-stub::before, .hero-stub::after {
-  content: ""; position: absolute; width: 28px; height: 28px; border-radius: 999px;
-  background: var(--stub-cut, rgb(var(--c-canvas) / 1)); top: -15px;
+/* Paper sections and scannable physical passes keep archival #EEE8DD paper & #151412 ink */
+.paper-keep,
+.tr-paper {
+  --c-canvas: 238 232 221;
+  --c-surface: 245 240 231;
+  --c-sunken: 229 222 209;
+  --c-line: 206 198 184;
+  --c-line-strong: 179 170 155;
+  --c-ink: 21 20 18;
+  --c-ink-2: 56 52 46;
+  --c-ink-muted: 96 90 80;
+  --c-ink-subtle: 96 90 80;
+  --line: rgba(21, 20, 18, 0.16);
+  --line-strong: rgba(21, 20, 18, 0.28);
+  color-scheme: light;
 }
-.hero-stub::before { left: -14px; }
-.hero-stub::after { right: -14px; }
+.paper-keep .bg-white { background-color: #EEE8DD; }
+
+.stub-tear {
+  position: relative;
+  height: 0;
+  border-top: 1px dashed var(--line-strong);
+  margin: 0 14px;
+}
+
+.hero-stub {
+  border-top: 1px dashed var(--line-strong);
+}
 @media (min-width: 768px) {
-  .hero-stub { border-top: 0; border-left: 2px dashed #E4DFD0; }
-  .hero-stub::before { left: -15px; top: -14px; }
-  .hero-stub::after { left: -15px; right: auto; top: auto; bottom: -14px; }
+  .hero-stub {
+    border-top: 0;
+    border-left: 1px dashed var(--line-strong);
+  }
 }
 
-/* Empty home ticket: the typing caret and the chip that shows when the next kind comes up. */
-@keyframes caret { 50% { opacity: 0; } }
-@keyframes chip-timer { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-
-/* Page entrance: calm 6px rise on navigation. */
-@keyframes page-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: none; }
-}
-/* "backwards", not "both": once the entrance ends nothing stays applied. A kept transform (even
-   translateY(0)) would make this wrapper the containing block for everything position: fixed
-   inside it, pinning the phone tab bar and other fixed UI to the bottom of the page. */
-.page-in { animation: page-in 260ms var(--ease-enter) backwards; }
-
-/* Ticket card: a dashed tear line with a notch bitten out of each side. */
-.stub-tear { position: relative; height: 0; border-top: 1.5px dashed rgb(var(--c-line-strong)); margin: 0 14px; }
-.stub-tear::before,
-.stub-tear::after {
-  content: "";
-  position: absolute;
-  top: -10px;
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
+.liquid-glass {
   background: rgb(var(--c-canvas));
-  box-shadow: inset 0 0 0 1px rgb(var(--c-line-strong));
+  border-top: 1px solid var(--line);
 }
-.stub-tear::before { left: -23px; clip-path: inset(0 0 0 50%); }
-.stub-tear::after { right: -23px; clip-path: inset(0 50% 0 0); }
+
+tr[data-picked] { background: rgba(201, 162, 107, 0.12); }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-in { animation: none; }
-}
-
-/* Phones and the installed app (iOS and Android).
-   <html> carries data-platform="ios|android|other" and data-standalone (opened from the home
-   screen), set before first paint by THEME_SCRIPT. */
-
-html {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-a,
-button,
-[role="button"],
-label,
-summary {
-  touch-action: manipulation; /* no double-tap zoom delay */
-}
-/* Landscape notches: keep content clear of the sides. */
-body {
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-}
-/* The installed app shouldn't rubber-band the whole page or pull-to-refresh by accident. */
-html[data-standalone],
-html[data-standalone] body {
-  overscroll-behavior-y: none;
-}
-/* iOS zooms into any field under 16px when you tap it; keep fields at 16px on phones. */
-@media (max-width: 767px) {
-  html[data-platform="ios"] :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea, select) {
-    font-size: max(16px, 1em) !important;
+  .tr-reel-cw, .tr-reel-ccw, .scanline { animation: none !important; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
   }
 }
 
-/* Liquid glass: a translucent, blurred surface with a soft specular rim, for the phone tab bar.
-   Follows the theme (light glass on light pages, dark glass in dark mode). */
-.liquid-glass {
-  position: relative;
-  isolation: isolate;
-  background: linear-gradient(180deg, rgb(var(--c-canvas) / 0.72) 0%, rgb(var(--c-canvas) / 0.56) 100%);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  backdrop-filter: blur(22px) saturate(180%);
-  border: 1px solid rgb(255 255 255 / 0.65);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.85),
-    inset 0 -1px 0 rgb(0 0 0 / 0.04),
-    0 1px 2px rgb(40 30 10 / 0.06),
-    0 18px 40px -18px rgb(40 30 10 / 0.38);
-}
-/* The specular highlight: a soft sheen across the top edge. */
-.liquid-glass::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: inherit;
-  pointer-events: none;
-  background: radial-gradient(120% 70% at 50% -20%, rgb(255 255 255 / 0.55), transparent 60%);
-}
-.dark .liquid-glass {
-  background: linear-gradient(180deg, rgb(var(--c-canvas) / 0.7) 0%, rgb(var(--c-canvas) / 0.55) 100%);
-  border-color: rgb(255 255 255 / 0.12);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.14),
-    inset 0 -1px 0 rgb(0 0 0 / 0.3),
-    0 18px 40px -16px rgb(0 0 0 / 0.7);
-}
-.dark .liquid-glass::before {
-  background: radial-gradient(120% 70% at 50% -20%, rgb(255 255 255 / 0.1), transparent 60%);
-}
-/* Android: a flush, full-width bar (Material), so no floating shadow or side rim. */
-html[data-platform="android"] .liquid-glass {
-  border-width: 1px 0 0;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.6);
-}
-html[data-platform="android"].dark .liquid-glass {
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
-}
-/* People who ask for less transparency, and browsers without blur, get a solid bar. */
-@media (prefers-reduced-transparency: reduce) {
-  .liquid-glass {
-    background: rgb(var(--c-canvas));
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .liquid-glass {
-    background: rgb(var(--c-canvas) / 0.97);
+@media print {
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
   }
 }

@@ -1,40 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ThemeSwitch } from "./ThemeSwitch";
 import { usePathname } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
-import {
-  Download,
-  Images,
-  KeyRound,
-  LogOut,
-  MapPinned,
-  Menu,
-  Plus,
-  Search,
-  ShieldCheck,
-  UserRound,
-  ChevronRight,
-  Repeat,
-} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { cn, initials } from "@/lib/utils";
-import { m } from "motion/react";
-import { EASE } from "@/components/motion/MotionProvider";
 import { NotificationBell } from "@/components/shell/NotificationBell";
-import { ATTEND_NAV, VISITOR_HREF, isActive, isMainActive, workspaceFor, type Workspace } from "@/components/shell/nav";
+import { workspaceFor, type Workspace } from "@/components/shell/nav";
 import { BrandLogo } from "./Brand";
+import { ThemeSwitch } from "./ThemeSwitch";
 import { BottomSheet } from "@/components/ui/BottomSheet";
-import { toast } from "@/components/ui/Toaster";
-import { CompactSearch, HeaderSearch } from "./HeaderSearch";
-import {
-  CalendarIcon,
-  CertificateIcon,
-  EventsIcon,
-  HomeIcon,
-  HostIcon,
-  PassIcon,
-} from "./TabIcons";
 
 export interface NavViewer {
   name: string;
@@ -49,38 +24,29 @@ async function logout() {
   window.location.href = "/dashboard";
 }
 
-type Tab = {
-  href: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  exact?: boolean;
-};
-
-const TAB_ICONS: Record<string, Tab["icon"]> = {
-  "/dashboard": HomeIcon,
-  "/events": EventsIcon,
-  "/calendar": CalendarIcon,
-  "/passes": PassIcon,
-  "/certificates": CertificateIcon,
-};
-/** Home · Discover · Calendar · My Passes · Certificates, with the illustrated icons. */
-const ATTEND_TABS: Tab[] = ATTEND_NAV.map((n) => ({ href: n.href, label: n.label, icon: TAB_ICONS[n.href] }));
-const HOST_TABS: Tab[] = [
-  { href: "/organizer", label: "Your events", icon: HostIcon, exact: true },
-  { href: "/organizer/calendar", label: "Calendar", icon: CalendarIcon },
+const PUBLIC_LINKS = [
+  { href: "/events", label: "Events" },
+  { href: "/calendar", label: "Calendar" },
+  { href: "/passes", label: "Passes" },
+  { href: "/host", label: "Host" },
 ];
 
-/** Pages that open with the big search bar under the tabs. */
-const SEARCH_PAGES = ["/dashboard", "/events"];
+const SIGNED_IN_LINKS = [
+  { href: "/dashboard", label: "Home" },
+  { href: "/events", label: "Events" },
+  { href: "/calendar", label: "Calendar" },
+  { href: "/passes", label: "Passes" },
+  { href: "/certificates", label: "Certs" },
+];
 
 /**
- * The header. Logo on the left, illustrated tabs in the middle, hosting switch, notifications
- * and the account menu on the right. Home and Discover add the big search bar underneath; it
- * folds into a compact pill once you scroll. Phones get a search button and a menu.
+ * Tape Room style 76px editorial navbar:
+ * Transparent over the public full-bleed hero, becoming solid #151412 after 80px of scroll.
+ * Wordmark left, mono links right, one gold pill CTA with a separate round arrow circle.
+ * Mobile keeps wordmark, CTA, and a clean text "Menu" toggle.
  */
 export function SiteHeader({
   viewer,
-  wide = false,
   onSearch,
   onEnterCode,
 }: {
@@ -91,233 +57,180 @@ export function SiteHeader({
 }) {
   const pathname = usePathname();
   const ws = workspaceFor(pathname);
-  const hasSearch = ws === "attend" && SEARCH_PAGES.includes(pathname);
+  const isPublicHero = !viewer && pathname === "/dashboard";
   const [scrolled, setScrolled] = useState(false);
-  const [hoverTab, setHoverTab] = useState<string | null>(null);
-  const [sheet, setSheet] = useState(false);
-  const [logoWobble, setLogoWobble] = useState(0);
-  const logoTaps = useRef<number[]>([]);
-  const logoUnlockCount = useRef(0);
+  const [mobileMenu, setMobileMenu] = useState(false);
   const ref = useRef<HTMLElement>(null);
 
-  const onLogoClick = () => {
-    const now = Date.now();
-    logoTaps.current = [...logoTaps.current.filter((t) => now - t < 2200), now];
-    if (logoTaps.current.length >= 5) {
-      logoTaps.current = [];
-      const quips = [
-        "Secret backstage door found. Act casual.",
-        "Still no free merch, sorry.",
-        "Okay fine, you're officially on the guest list.",
-      ];
-      const msg = quips[logoUnlockCount.current % quips.length];
-      logoUnlockCount.current += 1;
-      setLogoWobble((w) => w + 1);
-      toast(msg, { tone: "info" });
-    }
-  };
-
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const set = () =>
-      document.documentElement.style.setProperty(
-        "--header-h",
-        `${el.offsetHeight}px`,
-      );
-    set();
-    const ro = new ResizeObserver(set);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 80);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setSheet(false), [pathname]);
+  useEffect(() => setMobileMenu(false), [pathname]);
 
-  const tabs = ws === "admin" ? [] : ATTEND_TABS;
+  const navLinks = ws === "admin" ? [] : viewer ? SIGNED_IN_LINKS : PUBLIC_LINKS;
+  const transparent = isPublicHero && !scrolled && !mobileMenu;
 
   return (
     <>
       <header
         ref={ref}
         className={cn(
-          "sticky top-0 z-40 pt-[env(safe-area-inset-top)] border-b border-line/70 bg-canvas/80 backdrop-blur-xl backdrop-saturate-150 transition-[box-shadow,background-color] duration-base ease-out supports-[not(backdrop-filter:blur(1px))]:bg-canvas print:hidden",
-          scrolled && "bg-canvas/90 shadow-[0_12px_32px_-16px_rgba(10,10,20,0.45)]",
+          "z-40 h-[76px] pt-[env(safe-area-inset-top)] transition-colors duration-base print:hidden",
+          isPublicHero ? "fixed inset-x-0 top-0" : "sticky top-0",
+          transparent
+            ? "border-b border-transparent bg-transparent text-[#EEE8DD]"
+            : "border-b border-line bg-canvas text-ink",
         )}
       >
-        <div
-          className={cn(
-            "mx-auto px-gutter",
-            wide ? "max-w-[1440px]" : "max-w-[1360px]",
-          )}
-        >
-          <div className="grid h-16 grid-cols-[auto_1fr_auto] items-center gap-4 md:h-[72px] md:grid-cols-[1fr_auto_1fr]">
-            <div className="flex items-center gap-3">
-              <Link
-                href={ws === "admin" ? "/admin" : "/dashboard"}
-                onClick={onLogoClick}
-                aria-label="EvntCult home"
-                className="rounded-lg py-1"
-              >
-                <m.span
-                  key={logoWobble}
-                  animate={logoWobble > 0 ? { rotate: [0, -10, 10, -6, 4, 0] } : undefined}
-                  transition={{ duration: 0.45 }}
-                  className="inline-flex"
-                >
-                  <BrandLogo className="text-[20px] md:text-[22px]" />
-                </m.span>
-              </Link>
-              {ws === "admin" && (
-                <span className="hidden rounded-md border border-line-strong bg-sunken px-2 py-0.5 text-[11.5px] font-semibold text-ink-2 sm:inline">
-                  Admin
-                </span>
-              )}
-            </div>
+        <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between gap-6 px-5 md:px-10">
+          <div className="flex items-center gap-3">
+            <Link
+              href={ws === "admin" ? "/admin" : "/dashboard"}
+              aria-label="EvntCult home"
+              className="py-1"
+            >
+              <BrandLogo
+                tone={transparent ? "white" : "brand"}
+                className="text-[20px] md:text-[22px]"
+              />
+            </Link>
+            {ws === "admin" && (
+              <span className="tr-meta border border-line px-2 py-0.5 text-ink-muted">
+                Admin
+              </span>
+            )}
+          </div>
 
-            <div className="hidden justify-center md:flex">
-              {tabs.length > 0 && (
-                <nav
-                  aria-label="Main"
-                  className="flex items-center gap-0.5 rounded-full border border-line-strong/80 bg-sunken/80 p-1 shadow-[inset_0_1px_2px_rgba(60,40,10,0.05)]"
-                  onPointerLeave={() => setHoverTab(null)}
-                >
-                  {tabs.map((t) => {
-                    const active = isMainActive(pathname, t.href);
-                    return (
-                      <Link
-                        key={t.href}
-                        href={!viewer && VISITOR_HREF[t.href] ? VISITOR_HREF[t.href] : t.href}
-                        aria-current={active ? "page" : undefined}
-                        onPointerEnter={() => setHoverTab(t.href)}
-                        className={cn(
-                          "relative flex h-9 items-center gap-2 whitespace-nowrap rounded-full px-3.5 text-[14px] transition-colors duration-fast",
-                          active
-                            ? "font-semibold text-ink"
-                            : "font-medium text-ink-muted hover:text-ink",
-                        )}
-                      >
-                        {active && (
-                          <m.span
-                            layoutId="nav-active-pill"
-                            aria-hidden
-                            className="absolute inset-0 -z-10 rounded-full bg-surface shadow-[0_1px_3px_rgba(60,40,10,0.12),0_0_0_1px_rgba(26,26,26,0.06)]"
-                            transition={{ type: "spring", stiffness: 460, damping: 36 }}
-                          />
-                        )}
-                        {!active && hoverTab === t.href && (
-                          <m.span
-                            layoutId="nav-hover"
-                            aria-hidden
-                            className="absolute inset-0 -z-20 rounded-full bg-surface/50"
-                            transition={{ type: "spring", stiffness: 520, damping: 40 }}
-                          />
-                        )}
-                        {t.label}
-                      </Link>
-                    );
-                  })}
-                </nav>
-              )}
-            </div>
-
-            <div className="flex items-center justify-end gap-1.5">
-              {ws !== "admin" && (
-                <>
+          {/* Desktop links + single gold pill with separate round arrow circle */}
+          <div className="hidden items-center gap-8 md:flex">
+            {navLinks.length > 0 && (
+              <nav aria-label="Main" className="flex items-center gap-7">
+                {navLinks.map((item) => {
+                  const active = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(`${item.href}/`));
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        "tr-meta tr-link py-1 transition-colors",
+                        active
+                          ? "text-[#C9A26B]"
+                          : transparent
+                            ? "text-[#EEE8DD]/80 hover:text-[#EEE8DD]"
+                            : "text-ink-muted hover:text-ink",
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+                {ws !== "admin" && (
                   <button
                     type="button"
                     onClick={onSearch}
-                    aria-label="Search events"
-                    className="hidden h-9 items-center gap-2 rounded-full border border-line-strong/80 bg-surface/75 px-3 text-[13px] font-medium text-ink-muted transition-colors duration-fast hover:border-ink-subtle hover:text-ink xl:flex"
+                    className={cn(
+                      "tr-meta tr-link py-1 transition-colors",
+                      transparent
+                        ? "text-[#EEE8DD]/80 hover:text-[#EEE8DD]"
+                        : "text-ink-muted hover:text-ink",
+                    )}
                   >
-                    <Search className="size-3.5 text-ink-muted" strokeWidth={2.2} aria-hidden />
-                    <span>Search</span>
-                    <kbd className="kbd ml-1 text-[10px]">/</kbd>
+                    Search
                   </button>
-                  {viewer && (
-                    <button
-                      type="button"
-                      onClick={onEnterCode}
-                      aria-label="Enter event code"
-                      className="hidden h-9 items-center gap-1.5 rounded-full border border-line-strong/80 bg-surface/75 px-3 text-[13px] font-medium text-ink-2 transition-colors duration-fast hover:border-ink-subtle hover:text-ink xl:flex"
-                    >
-                      <KeyRound className="size-3.5 text-ink-muted" strokeWidth={2.1} aria-hidden />
-                      <span>Code</span>
-                    </button>
-                  )}
-                </>
-              )}
-              {ws !== "admin" && viewer?.isOrganizer ? (
+                )}
+              </nav>
+            )}
+
+            <div className="flex items-center gap-3">
+              {viewer && <NotificationBell />}
+              {!viewer ? (
+                <Link
+                  href="/signin?mode=signup"
+                  className="group inline-flex items-center gap-1.5"
+                >
+                  <span className="inline-flex h-10 items-center rounded-full bg-[#C9A26B] px-5 font-mono text-[11px] uppercase tracking-[0.06em] text-[#151412] transition-colors group-hover:bg-[#D7B47F]">
+                    Sign up
+                  </span>
+                  <span
+                    aria-hidden
+                    className="grid size-10 place-items-center rounded-full bg-[#C9A26B] text-[#151412] transition-transform duration-base ease-out group-hover:translate-x-1 group-hover:bg-[#D7B47F]"
+                  >
+                    <ArrowUpRight className="size-4" strokeWidth={1.75} />
+                  </span>
+                </Link>
+              ) : viewer.isOrganizer && ws !== "admin" ? (
                 <Link
                   href="/organizer/events/new"
-                  className="ui-press mr-0.5 hidden h-9 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl bg-lavender px-3.5 text-[13.5px] font-semibold text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover md:flex"
+                  className="group inline-flex items-center gap-1.5"
                 >
-                  <Plus className="size-4" strokeWidth={2.6} aria-hidden />
-                  Host an Event
+                  <span className="inline-flex h-10 items-center rounded-full bg-[#C9A26B] px-5 font-mono text-[11px] uppercase tracking-[0.06em] text-[#151412] transition-colors group-hover:bg-[#D7B47F]">
+                    Host event
+                  </span>
+                  <span
+                    aria-hidden
+                    className="grid size-10 place-items-center rounded-full bg-[#C9A26B] text-[#151412] transition-transform duration-base ease-out group-hover:translate-x-1 group-hover:bg-[#D7B47F]"
+                  >
+                    <ArrowUpRight className="size-4" strokeWidth={1.75} />
+                  </span>
                 </Link>
-              ) : !viewer ? (
-                <>
-                  <Link
-                    href="/signin"
-                    className="hidden h-9 items-center whitespace-nowrap rounded-full px-3 text-[13.5px] font-semibold text-ink transition-colors duration-fast hover:bg-sunken xl:flex"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    href="/signin?mode=signup"
-                    className="ui-press mr-0.5 hidden h-9 items-center whitespace-nowrap rounded-xl bg-lavender px-4 text-[13.5px] font-semibold text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover md:flex"
-                  >
-                    Sign up
-                  </Link>
-                </>
               ) : null}
 
-              <button
-                onClick={onSearch}
-                aria-label="Search events"
-                className="grid size-11 place-items-center rounded-full text-ink transition-colors duration-fast active:bg-sunken xl:hidden"
-              >
-                <Search className="size-[19px]" strokeWidth={2.1} aria-hidden />
-              </button>
               {viewer && (
-                <span className="hidden md:block">
-                  <NotificationBell />
-                </span>
-              )}
-              <AccountMenu viewer={viewer} ws={ws} onEnterCode={onEnterCode} />
-              {viewer ? (
-                <button
-                  onClick={() => setSheet(true)}
-                  aria-label="Account and more"
-                  className="ml-0.5 grid size-11 place-items-center rounded-full transition-transform duration-fast active:scale-95 md:hidden"
-                >
-                  <Avatar name={viewer.name} className="size-8 text-[12px]" />
-                </button>
-              ) : (
-                <Link
-                  href="/signin"
-                  className="ml-1 flex h-11 items-center whitespace-nowrap rounded-[10px] bg-lavender px-4 text-[13.5px] font-bold text-ink ring-2 ring-inset ring-ink md:hidden"
-                >
-                  Log in
-                </Link>
+                <AccountMenu
+                  viewer={viewer}
+                  ws={ws}
+                  onEnterCode={onEnterCode}
+                />
               )}
             </div>
           </div>
+
+          {/* Mobile: CTA + quiet text Menu toggle */}
+          <div className="flex items-center gap-3 md:hidden">
+            {!viewer ? (
+              <Link
+                href="/signin?mode=signup"
+                className="inline-flex min-h-[44px] items-center rounded-full bg-[#C9A26B] px-4 font-mono text-[11px] uppercase tracking-[0.06em] text-[#151412]"
+              >
+                Sign up
+              </Link>
+            ) : (
+              <button
+                type="button"
+                onClick={onSearch}
+                className="tr-meta inline-flex min-h-[44px] items-center px-2 text-ink-muted hover:text-ink"
+              >
+                Search
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setMobileMenu(true)}
+              aria-expanded={mobileMenu}
+              aria-label="Open menu"
+              className={cn(
+                "tr-meta inline-flex min-h-[44px] items-center px-2",
+                transparent ? "text-[#EEE8DD]" : "text-ink",
+              )}
+            >
+              Menu
+            </button>
+          </div>
         </div>
       </header>
-      {sheet && viewer && (
-        <MenuSheet
+
+      {mobileMenu && (
+        <MobileDrawer
           viewer={viewer}
           ws={ws}
           pathname={pathname}
-          tabs={tabs}
-          onClose={() => setSheet(false)}
+          onClose={() => setMobileMenu(false)}
+          onSearch={onSearch}
           onEnterCode={onEnterCode}
         />
       )}
@@ -342,29 +255,15 @@ function useDismiss(open: boolean, close: () => void) {
   return box;
 }
 
-function Avatar({ name, className }: { name: string; className?: string }) {
-  return (
-    <span
-      aria-hidden
-      className={cn(
-        "grid shrink-0 place-items-center rounded-full bg-ink font-semibold text-white",
-        className,
-      )}
-    >
-      {initials(name)}
-    </span>
-  );
-}
-
 const menuItem =
-  "flex w-full items-center gap-3 px-4 py-3 text-left text-[14px] text-ink transition-colors hover:bg-sunken";
+  "flex w-full items-center justify-between px-4 py-3 text-left text-[14px] text-ink transition-colors hover:bg-sunken";
 
 function AccountMenu({
   viewer,
   ws,
   onEnterCode,
 }: {
-  viewer: NavViewer | null;
+  viewer: NavViewer;
   ws: Workspace;
   onEnterCode: () => void;
 }) {
@@ -374,231 +273,170 @@ function AccountMenu({
   useEffect(() => setOpen(false), [pathname]);
 
   return (
-    <div ref={box} className="relative ml-1 hidden md:block">
+    <div ref={box} className="relative">
       <button
+        type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label="Account menu"
         className={cn(
-          "grid size-9 cursor-pointer place-items-center rounded-full border border-line-strong/80 bg-surface text-ink transition-[border-color,box-shadow,transform] duration-fast hover:border-ink-subtle hover:shadow-raised active:scale-95",
-          open && "border-ink shadow-raised",
+          "grid size-10 place-items-center rounded-full border border-line font-mono text-[11px] uppercase text-ink transition-colors hover:border-[#C9A26B] hover:text-[#C9A26B]",
+          open && "border-[#C9A26B] text-[#C9A26B]",
         )}
       >
-        {viewer ? (
-          <Avatar name={viewer.name} className="size-7 text-[11px]" />
-        ) : (
-          <Menu className="size-4 text-ink" strokeWidth={2.2} aria-hidden />
-        )}
+        {initials(viewer.name)}
       </button>
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-[52px] z-50 w-64 origin-top-right overflow-hidden rounded-xl bg-white py-2 text-ink shadow-pop ring-1 ring-black/[0.04] motion-safe:animate-scale-in"
+          className="absolute right-0 top-[52px] z-50 w-64 overflow-hidden rounded-[8px] border border-line-strong bg-surface py-2 text-ink"
         >
-          {viewer ? (
-            <>
-              <div className="px-4 pb-2 pt-1">
-                <p className="truncate text-[14px] font-semibold">
-                  {viewer.name}
-                </p>
-                <p className="truncate text-[12.5px] text-ink-subtle">
-                  {viewer.email}
-                </p>
-              </div>
-              <Sep />
-              <Link
-                role="menuitem"
-                href="/vault"
-                className={cn(menuItem, "font-semibold")}
-              >
-                Photo Vault
-              </Link>
-              <Link
-                role="menuitem"
-                href="/venues"
-                className={cn(menuItem, "font-semibold")}
-              >
-                Venues
-              </Link>
-              <Link
-                role="menuitem"
-                href="/profile"
-                className={cn(menuItem, "font-semibold")}
-              >
-                Profile
-              </Link>
-              <Sep />
-              {viewer.isOrganizer ? (
-                <>
-                  <Link
-                    role="menuitem"
-                    href="/organizer/events/new"
-                    className={cn(menuItem, "font-semibold")}
-                  >
-                    Host an Event
-                  </Link>
-                  <Link
-                    role="menuitem"
-                    href="/organizer"
-                    className={menuItem}
-                  >
-                    My hosted events
-                  </Link>
-                </>
-              ) : (
-                <Link role="menuitem" href="/host" className={menuItem}>
-                  Apply to host events
-                </Link>
-              )}
-              {viewer.isAdmin && ws !== "admin" && (
-                <Link role="menuitem" href="/admin" className={menuItem}>
-                  Admin
-                </Link>
-              )}
-              <button
-                role="menuitem"
-                onClick={() => {
-                  setOpen(false);
-                  onEnterCode();
-                }}
-                className={menuItem}
-              >
-                Enter an event code
-              </button>
-              <Sep />
-              <div className="px-3 py-2">
-                <p className="mb-1.5 text-[12px] font-semibold text-ink-muted">Appearance</p>
-                <ThemeSwitch />
-              </div>
-              <Sep />
-              <button role="menuitem" onClick={logout} className={menuItem}>
-                Log out
-              </button>
-            </>
+          <div className="border-b border-line px-4 pb-3 pt-1">
+            <p className="truncate font-display text-[19px] leading-tight text-ink">{viewer.name}</p>
+            <p className="mt-0.5 truncate font-mono text-[11px] text-ink-muted">{viewer.email}</p>
+          </div>
+          <Link role="menuitem" href="/vault" className={menuItem}>Photo Vault</Link>
+          <Link role="menuitem" href="/venues" className={menuItem}>Venues</Link>
+          <Link role="menuitem" href="/profile" className={menuItem}>Profile</Link>
+          <div className="my-1 h-px bg-line" />
+          {viewer.isOrganizer ? (
+            <Link role="menuitem" href="/organizer" className={menuItem}>My hosted events</Link>
           ) : (
-            <>
-              <Link
-                role="menuitem"
-                href="/signin?mode=signup"
-                className={cn(menuItem, "font-semibold")}
-              >
-                Sign up
-              </Link>
-              <Link role="menuitem" href="/signin" className={menuItem}>
-                Log in
-              </Link>
-              <Sep />
-              <Link role="menuitem" href="/venues" className={menuItem}>
-                Venues
-              </Link>
-              <Link role="menuitem" href="/get-app" className={menuItem}>
-                Get the app
-              </Link>
-            </>
+            <Link role="menuitem" href="/host" className={menuItem}>Apply to host</Link>
           )}
+          {viewer.isAdmin && ws !== "admin" && (
+            <Link role="menuitem" href="/admin" className={menuItem}>Admin</Link>
+          )}
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              setOpen(false);
+              onEnterCode();
+            }}
+            className={menuItem}
+          >
+            Enter event code
+          </button>
+          <div className="my-1 h-px bg-line" />
+          <div className="px-3 py-2">
+            <ThemeSwitch />
+          </div>
+          <div className="my-1 h-px bg-line" />
+          <button type="button" role="menuitem" onClick={logout} className={cn(menuItem, "text-ink-muted hover:text-ink")}>
+            Log out
+          </button>
         </div>
       )}
     </div>
   );
 }
 
-function Sep() {
-  return <div className="my-2 h-px bg-line" />;
-}
-
-function MenuSheet({
+function MobileDrawer({
   viewer,
   ws,
   pathname,
-  tabs,
   onClose,
+  onSearch,
   onEnterCode,
 }: {
-  viewer: NavViewer;
+  viewer: NavViewer | null;
   ws: Workspace;
   pathname: string;
-  tabs: Tab[];
   onClose: () => void;
+  onSearch: () => void;
   onEnterCode: () => void;
 }) {
-  const row = "flex min-h-[52px] w-full items-center gap-3.5 text-left text-[16px] text-ink active:opacity-60";
-  const ic = "size-[20px] shrink-0 text-ink-muted";
+  const row = "flex min-h-[48px] w-full items-center justify-between text-left font-display text-[26px] text-ink";
 
   return (
-    <BottomSheet label="Account and more" onClose={onClose}>
-      <Link href="/profile" className="mt-1 flex items-center gap-3.5 rounded-2xl bg-white p-3.5 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-line active:bg-sunken">
-        <Avatar name={viewer.name} className="size-12 text-[15px]" />
-        <span className="min-w-0 flex-1">
-          <span className="block truncate font-serif text-[22px] leading-tight">{viewer.name}</span>
-          <span className="block text-[13.5px] text-ink-subtle">Profile and settings</span>
-        </span>
-        <ChevronRight className="size-5 text-ink-subtle" aria-hidden />
-      </Link>
-
-      {viewer.isOrganizer ? (
-        <Link href="/organizer/events/new" className="mt-3 flex h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-lavender text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink">
-          <Plus className="size-4" strokeWidth={2.6} aria-hidden /> Host an Event
-        </Link>
-      ) : null}
-
-      <ul className="mt-2 divide-y divide-line">
-        {ws === "admin" &&
-          tabs.map((t) => (
-            <li key={t.href}>
-              <Link href={t.href} aria-current={isActive(pathname, t) ? "page" : undefined} className={cn(row, isActive(pathname, t) && "font-semibold")}>
-                {t.label}
-              </Link>
-            </li>
-          ))}
-        <li>
-          <Link href={viewer.isOrganizer ? "/organizer" : "/host"} className={row}>
-            <Repeat className={ic} aria-hidden /> {viewer.isOrganizer ? "My hosted events" : "Apply to host events"}
-          </Link>
-        </li>
-        <li>
-          <button
-            onClick={() => {
-              onClose();
-              onEnterCode();
-            }}
-            className={row}
+    <BottomSheet label="Navigation menu" onClose={onClose}>
+      <nav aria-label="Mobile navigation" className="divide-y divide-line border-t border-line">
+        {(viewer ? SIGNED_IN_LINKS : PUBLIC_LINKS).map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={onClose}
+            aria-current={pathname === item.href ? "page" : undefined}
+            className={cn(row, pathname === item.href && "text-[#C9A26B]")}
           >
-            <KeyRound className={ic} aria-hidden /> Enter an event code
-          </button>
-        </li>
-        {ws !== "admin" && (
+            <span>{item.label}</span>
+            <ArrowUpRight className="size-4 text-ink-muted" aria-hidden />
+          </Link>
+        ))}
+        <button
+          type="button"
+          onClick={() => {
+            onClose();
+            onSearch();
+          }}
+          className={row}
+        >
+          <span>Search</span>
+          <ArrowUpRight className="size-4 text-ink-muted" aria-hidden />
+        </button>
+        {viewer && (
           <>
-            <li>
-              <Link href="/vault" className={row}>
-                <Images className={ic} aria-hidden /> Photo Vault
+            <Link href="/vault" onClick={onClose} className={row}>
+              <span>Photo Vault</span>
+              <ArrowUpRight className="size-4 text-ink-muted" aria-hidden />
+            </Link>
+            <Link href="/venues" onClick={onClose} className={row}>
+              <span>Venues</span>
+              <ArrowUpRight className="size-4 text-ink-muted" aria-hidden />
+            </Link>
+            <Link href="/profile" onClick={onClose} className={row}>
+              <span>Profile</span>
+              <ArrowUpRight className="size-4 text-ink-muted" aria-hidden />
+            </Link>
+            {viewer.isOrganizer && (
+              <Link href="/organizer" onClick={onClose} className={row}>
+                <span>Organizer</span>
+                <ArrowUpRight className="size-4 text-ink-muted" aria-hidden />
               </Link>
-            </li>
-            <li>
-              <Link href="/venues" className={row}>
-                <MapPinned className={ic} aria-hidden /> Venues
+            )}
+            {viewer.isAdmin && ws !== "admin" && (
+              <Link href="/admin" onClick={onClose} className={row}>
+                <span>Admin</span>
+                <ArrowUpRight className="size-4 text-ink-muted" aria-hidden />
               </Link>
-            </li>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onEnterCode();
+              }}
+              className={row}
+            >
+              <span>Event code</span>
+              <ArrowUpRight className="size-4 text-ink-muted" aria-hidden />
+            </button>
           </>
         )}
-        {viewer.isAdmin && ws !== "admin" && (
-          <li>
-            <Link href="/admin" className={row}>
-              <ShieldCheck className={ic} aria-hidden /> Admin
-            </Link>
-          </li>
-        )}
-        <li>
-          <Link href="/get-app" className={row}>
-            <Download className={ic} aria-hidden /> Get the app
-          </Link>
-        </li>
-      </ul>
+      </nav>
 
-      <ThemeSwitch className="mt-3" />
-      <button onClick={logout} className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[15px] font-semibold text-ink-muted active:bg-sunken">
-        <LogOut className="size-4" aria-hidden /> Log out
-      </button>
+      <div className="mt-5 space-y-3 border-t border-line pt-4">
+        <ThemeSwitch />
+        {viewer ? (
+          <button
+            type="button"
+            onClick={logout}
+            className="tr-meta flex min-h-[44px] w-full items-center justify-center rounded-[8px] border border-line text-ink-muted"
+          >
+            Log out
+          </button>
+        ) : (
+          <Link
+            href="/signin"
+            onClick={onClose}
+            className="tr-meta flex min-h-[44px] w-full items-center justify-center rounded-[8px] border border-line text-ink"
+          >
+            Log in
+          </Link>
+        )}
+      </div>
     </BottomSheet>
   );
 }
