@@ -25,46 +25,46 @@ colors:
   error: "#B42318"
 typography:
   display-xl:
-    fontFamily: EB Garamond
+    fontFamily: Instrument Serif
     fontSize: 96px
     fontWeight: 400
-    lineHeight: 0.95
-    letterSpacing: -0.035em
+    lineHeight: 0.92
+    letterSpacing: -0.025em
   display-lg:
-    fontFamily: EB Garamond
+    fontFamily: Instrument Serif
     fontSize: 72px
     fontWeight: 400
-    lineHeight: 1
-    letterSpacing: -0.03em
+    lineHeight: 0.95
+    letterSpacing: -0.02em
   headline-lg:
-    fontFamily: Figtree
+    fontFamily: Plus Jakarta Sans
     fontSize: 32px
     fontWeight: 600
     lineHeight: 1.2
     letterSpacing: -0.02em
   headline-md:
-    fontFamily: Figtree
+    fontFamily: Plus Jakarta Sans
     fontSize: 22px
     fontWeight: 600
     lineHeight: 1.3
     letterSpacing: -0.01em
   title-md:
-    fontFamily: Figtree
+    fontFamily: Plus Jakarta Sans
     fontSize: 15px
     fontWeight: 600
     lineHeight: 1.35
   body-lg:
-    fontFamily: Figtree
+    fontFamily: Plus Jakarta Sans
     fontSize: 18px
     fontWeight: 400
-    lineHeight: 1.5
+    lineHeight: 1.52
   body-md:
-    fontFamily: Figtree
+    fontFamily: Plus Jakarta Sans
     fontSize: 15px
     fontWeight: 400
     lineHeight: 1.55
   label-md:
-    fontFamily: Figtree
+    fontFamily: Plus Jakarta Sans
     fontSize: 13px
     fontWeight: 600
     lineHeight: 1.3
@@ -73,7 +73,7 @@ typography:
     fontSize: 15px
     fontWeight: 500
     lineHeight: 1.3
-    letterSpacing: 0.1em
+    letterSpacing: 0.08em
 rounded:
   sm: 8px
   md: 12px
@@ -200,13 +200,13 @@ A paper-and-ink system with two signals.
 
 ## Typography
 
-**EB Garamond** speaks only at the big moments: the homepage welcome, dark bands, "Good
-questions", sign-in, the hosting welcome. It sets tight (−0.03em) and puts the second phrase in
+**Instrument Serif** speaks only at the big moments: the homepage welcome, dark bands, "Good
+questions", sign-in, section headers, and pass titles. It sets tight (−0.025em) and puts the second phrase in
 italic — "Every event, *one pass.*" — the whole phrase, never a single accented word.
 
-**Figtree** does all the work: page titles {typography.headline-lg}, shelf titles
+**Plus Jakarta Sans** does all the work: page titles {typography.headline-lg}, shelf titles
 {typography.headline-md}, card titles {typography.title-md}, body {typography.body-md}.
-Labels are sentence case. **JetBrains Mono** appears only in pass codes.
+Labels are sentence case. **JetBrains Mono** appears only in pass serials, live clocks, and codes.
 
 ## Layout
 

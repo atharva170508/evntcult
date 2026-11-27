@@ -429,9 +429,9 @@ export function MiniPrinter() {
           </div>
 
           {/* Miniature recessed OLED status strip */}
-          <div className="mt-2 flex items-center justify-between rounded-md bg-black/65 px-2 py-1 font-mono text-[8.5px] tracking-[0.08em] text-white/60 ring-1 ring-inset ring-white/[0.06]">
-            <span className={cn(busy && "text-[#F0D7FF]")}>{oledText}</span>
-            <span className="truncate pl-2 text-white/40">
+          <div className="mt-2 flex items-center justify-between rounded-md bg-black/75 px-2.5 py-1.5 font-mono text-[8.5px] tracking-[0.08em] text-[#A8E6CF]/85 ring-1 ring-inset ring-white/[0.08]">
+            <span className={cn(busy ? "text-[#F0D7FF]" : "text-[#A8E6CF]")}>{oledText}</span>
+            <span className="truncate pl-2 text-white/55">
               {TICKETS[count % TICKETS.length].title.split(" ")[0]}
             </span>
           </div>
@@ -441,7 +441,7 @@ export function MiniPrinter() {
             type="button"
             onClick={print}
             disabled={busy}
-            className="mt-2.5 h-10 w-full rounded-[12px] bg-lavender text-[13.5px] font-semibold text-ink shadow-[0_3px_0_#0b0a0a,inset_0_1px_0_rgba(255,255,255,0.7),inset_0_-2px_0_rgba(26,26,26,0.14)] transition-[transform,box-shadow,background-color] duration-100 hover:bg-lavender-hover active:translate-y-[3px] active:shadow-[0_0_0_#0b0a0a,inset_0_1px_2px_rgba(26,26,26,0.2)] disabled:cursor-default disabled:opacity-85"
+            className="mt-2.5 h-11 w-full rounded-[12px] bg-lavender text-[13.5px] font-semibold text-ink shadow-[0_3px_0_#0b0a0a,inset_0_1px_0_rgba(255,255,255,0.8),inset_0_-2px_0_rgba(26,26,26,0.14)] transition-[transform,box-shadow,background-color] duration-100 hover:bg-lavender-hover active:translate-y-[3px] active:shadow-[0_0_0_#0b0a0a,inset_0_1px_2px_rgba(26,26,26,0.2)] disabled:cursor-default disabled:opacity-85"
           >
             {phase === "warm"
               ? "Warming…"

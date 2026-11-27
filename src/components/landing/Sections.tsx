@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {
+  ArrowRight,
   ArrowUpRight,
   Check,
   MapPin,
@@ -25,13 +26,11 @@ import { HeroShowcase } from "./HeroShowcase";
 import { qrArtSvg } from "@/lib/qr-art";
 
 const cta =
-  "ui-press ui-sheen relative inline-flex h-12 items-center justify-center gap-2 rounded-[14px] whitespace-nowrap bg-lavender px-6 text-[16px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink hover:bg-lavender-hover";
-/* ── Hero: split, text left, the real "up next" list right (antislop layouts §17a) ── */
+  "group ui-press ui-sheen relative inline-flex h-12 items-center justify-center gap-2 rounded-[14px] whitespace-nowrap border border-ink/20 bg-lavender px-6 text-[15.5px] font-semibold text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_12px_26px_-14px_rgba(70,35,110,0.42)] hover:border-ink/35 hover:bg-lavender-hover";
 
 /**
  * The visitor's first screen: what EvntCult is on the left, with a search and one primary action;
- * on the right, an example pass you can tilt and a tiny printer that prints one. No real events:
- * names, dates and venues are only for signed-in people.
+ * on the right, an architectural studio stage with an interactive pass deck and thermal printer.
  */
 export function Hero() {
   const qr = qrArtSvg("https://evntcult.caliper.workers.dev", {
@@ -41,21 +40,29 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-h"
-      className="pb-12 pt-8 md:pt-14 lg:pb-20"
+      className="pb-12 pt-7 md:pt-12 lg:pb-20"
     >
-      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:gap-14">
+      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-14">
         <div>
+          <Entrance delay={0.04}>
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line-strong/90 bg-surface/90 px-3.5 py-1.5 text-[12.5px] font-medium text-ink-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_1px_2px_rgba(60,40,10,0.05)]">
+              <span className="size-1.5 rounded-full bg-live" aria-hidden />
+              <span className="font-semibold text-ink">Campus edition</span>
+              <span className="text-line-strong" aria-hidden>·</span>
+              <span className="text-ink-muted">Offline QR passes &amp; zero fees</span>
+            </div>
+          </Entrance>
           <h1
             id="hero-h"
-            className="font-display leading-[0.92] tracking-[-0.02em] text-ink"
-            style={{ fontSize: "clamp(64px, 8.8vw, 132px)" }}
+            className="font-display leading-[0.91] tracking-[-0.025em] text-ink"
+            style={{ fontSize: "clamp(64px, 8.6vw, 130px)" }}
           >
             <MaskedLines
               lines={["Every event,", <em key="em">one pass.</em>]}
             />
           </h1>
           <Entrance delay={0.28}>
-            <p className="mt-6 max-w-[40ch] text-[17.5px] leading-[1.52] tracking-[-0.01em] text-ink-2 md:text-[19px]">
+            <p className="mt-6 max-w-[42ch] text-[17.5px] leading-[1.54] tracking-[-0.01em] text-ink-2 md:text-[18.5px]">
               Concerts, hackathons, workshops, and club nights on one campus calendar. Claim your seat in a tap and walk in with your phone.
             </p>
           </Entrance>
@@ -69,19 +76,28 @@ export function Hero() {
             <Magnetic>
               <Link href="/signin?mode=signup" className={cta}>
                 Sign up free
+                <ArrowRight
+                  className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                  aria-hidden
+                />
               </Link>
             </Magnetic>
             <a
               href="#onepass"
-              className="inline-flex min-h-[44px] items-center text-[15px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors hover:decoration-ink"
+              className="inline-flex min-h-[44px] items-center gap-1 text-[15px] font-semibold text-ink underline decoration-line-strong decoration-[1.5px] underline-offset-[6px] transition-colors hover:decoration-ink"
             >
               See how passes work
             </a>
+            <span className="hidden text-line-strong sm:inline" aria-hidden>·</span>
             <Link
               href="/host"
-              className="inline-flex min-h-[44px] items-center text-[15px] font-medium text-ink-muted transition-colors hover:text-ink"
+              className="group inline-flex min-h-[44px] items-center gap-1 text-[15px] font-medium text-ink-muted transition-colors hover:text-ink"
             >
               Host for your club
+              <ArrowUpRight
+                className="size-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                aria-hidden
+              />
             </Link>
           </Entrance>
         </div>
@@ -92,18 +108,23 @@ export function Hero() {
 
       {/* Architectural ledger of real product mechanics */}
       <Entrance delay={0.46}>
-        <dl className="mt-14 grid grid-cols-2 gap-y-6 border-y border-line-strong py-6 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-line">
+        <dl className="mt-14 grid grid-cols-2 gap-y-6 border-y border-line-strong/90 py-6 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-line">
           {[
-            ["₹0", "Platform fee", "Direct UPI straight to your club"],
-            ["Offline", "QR gate pass", "Scans in under a second without Wi-Fi"],
-            ["On-device", "Face ID Vault", "Your event photos gathered privately"],
-            ["Signed", "Certificates", "Permanent verification link on each issue"],
-          ].map(([mark, head, sub]) => (
+            ["01", "₹0", "Platform fee", "Direct UPI straight to your club"],
+            ["02", "Offline", "QR gate pass", "Scans in under a second without Wi-Fi"],
+            ["03", "On-device", "Face ID Vault", "Your event photos gathered privately"],
+            ["04", "Signed", "Certificates", "Permanent verification link on each issue"],
+          ].map(([num, mark, head, sub]) => (
             <div key={head} className="pr-4 sm:px-6 sm:first:pl-0 sm:last:pr-0">
-              <p className="font-display text-[28px] leading-none tracking-[-0.02em] text-ink">
-                {mark}
-              </p>
-              <dt className="mt-1.5 text-[14px] font-semibold text-ink">{head}</dt>
+              <div className="flex items-baseline justify-between gap-2">
+                <p className="font-display text-[30px] leading-none tracking-[-0.02em] text-ink">
+                  {mark}
+                </p>
+                <span className="font-mono text-[10.5px] font-medium text-ink-subtle">
+                  {num}
+                </span>
+              </div>
+              <dt className="mt-2 text-[14px] font-semibold text-ink">{head}</dt>
               <dd className="mt-0.5 text-[13px] leading-snug text-ink-muted">{sub}</dd>
             </div>
           ))}
