@@ -38,14 +38,14 @@ export default async function VenuesPage({ searchParams }: { searchParams: Promi
             Campus <em>venues.</em>
           </h1>
           <p className="mt-2.5 text-[15px] text-ink-muted">
-            Halls, lawns, and auditoriums — see what&apos;s on next and open turn-by-turn directions.
+            Halls, lawns, and auditoriums. See what&apos;s on next and open turn-by-turn directions.
           </p>
         </div>
         <div className="flex items-center gap-4 text-[13.5px] font-semibold text-ink-muted">
           <span className="font-mono tabular-nums">{venues.length} spaces</span>
           {liveCount > 0 && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#E3264F]/12 px-3 py-1 text-[#E3264F]">
-              <span className="size-1.5 animate-pulse rounded-full bg-[#E3264F]" aria-hidden />
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-accent-ink">
+              <span className="size-1.5 rounded-full bg-accent" aria-hidden />
               {liveCount} live now
             </span>
           )}

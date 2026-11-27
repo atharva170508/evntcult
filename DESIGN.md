@@ -1,7 +1,7 @@
 ---
 version: alpha
 name: EvntCult
-description: Campus events, browsed like a marketplace and felt like a warm product. Cream paper, white cards, ink, lavender actions with a dark outline, brand red for search and live moments. Figtree for the interface, EB Garamond for the big moments.
+description: Campus events, browsed like a marketplace and felt like a warm product. Cream paper, white cards, ink, lavender actions with a dark outline, brand red for search and live moments. Plus Jakarta Sans for the interface, Instrument Serif for the big moments.
 colors:
   primary: "#1A1A1A"
   on-primary: "#FFFFFF"
@@ -11,7 +11,7 @@ colors:
   surface-mist: "#ECE8DC"
   on-surface: "#1A1A1A"
   on-surface-variant: "#6A6A6A"
-  on-surface-subtle: "#717171"
+  on-surface-subtle: "#666666"
   outline: "#DCD6C6"
   outline-variant: "#ECE8DD"
   secondary: "#F0D7FF"

@@ -131,7 +131,7 @@ export function EventPeek({ events, children }: { events: EventSummary[]; childr
                   )}
                   {state === "live" && (
                     <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1 text-[12px] font-semibold text-ink shadow">
-                      <span className="size-1.5 animate-pulse rounded-full bg-brand" /> Live now
+                      <span className="size-1.5 rounded-full bg-brand" aria-hidden /> Live now
                     </span>
                   )}
                 </div>

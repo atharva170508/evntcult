@@ -40,7 +40,7 @@ export function QuickDock({
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="Have an event code?"
-            className="h-9 w-full rounded-full border border-line-strong bg-surface pl-9 pr-3.5 text-[13px] font-medium text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none md:w-[220px]"
+            className="h-10 w-full rounded-full border border-line-strong bg-surface pl-9 pr-3.5 text-[13px] font-medium text-ink placeholder:text-ink-subtle focus:border-ink focus-visible:shadow-[var(--focus-field)] md:w-[220px]"
           />
         </div>
         <button

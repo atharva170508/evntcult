@@ -38,7 +38,7 @@ export default async function CertificatesPage() {
               No certificates earned yet.
             </h2>
             <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-ink-2">
-              Attend workshops, hackathons, or talks that issue participation records. Once checked in, your signed certificate lands here automatically — ready to share on LinkedIn or your resume.
+              Attend workshops, hackathons, or talks that issue participation records. Once checked in, your signed certificate lands here automatically, ready to share on LinkedIn or your resume.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-4">
               <Link
@@ -84,7 +84,7 @@ export default async function CertificatesPage() {
                 {/* Stationery miniature diploma */}
                 <div className="paper-keep relative border-b border-line bg-[#FFFEF6] p-3">
                   <div className="flex min-h-[146px] flex-col items-center justify-center rounded-[14px] border border-dashed border-[#D8D1BE] px-5 py-6 text-center">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#E3264F]">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-accent-ink">
                       <ShieldCheck className="size-3.5" aria-hidden />
                       {c.kind === "participation" ? "Certificate of attendance" : c.kind}
                     </span>

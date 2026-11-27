@@ -70,7 +70,7 @@ export function OtpInput({
       className={cn("relative select-none", hasError && "shake")}
       onClick={() => inputRef.current?.focus()}
     >
-      {/* Native input covers the full slot row for effortless tap, paste, and OS OTP autofill */}
+      {/* Native input covers the full slot row for tap, paste, and OS OTP autofill */}
       <input
         ref={inputRef}
         type="text"

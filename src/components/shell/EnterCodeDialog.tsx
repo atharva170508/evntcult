@@ -90,7 +90,7 @@ export function EnterCodeDialog({ open, onClose }: { open: boolean; onClose: () 
           )}
         >
           {state.status === "ok" && <Check className="size-3.5" aria-hidden />}
-          {state.message ?? "—"}
+          {state.message ?? "\u00A0"}
         </p>
 
         <Button type="submit" size="lg" className="mt-3 w-full" disabled={!ready} loading={state.status === "loading"}>

@@ -27,7 +27,7 @@ export function Countdown({ to, endsAt, compact }: { to: Date; endsAt: Date; com
   if (now >= +to) {
     return (
       <p className="inline-flex h-8 items-center gap-2 rounded-xl bg-accent-soft px-3 text-[13px] font-medium text-accent-ink">
-        <span className="size-1.5 rounded-full bg-accent motion-safe:animate-pulse-dot" aria-hidden /> Happening now
+        <span className="size-1.5 rounded-full bg-accent" aria-hidden /> Happening now
       </p>
     );
   }

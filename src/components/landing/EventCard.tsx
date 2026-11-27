@@ -68,7 +68,7 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
         )}
       >
         <span className="font-display text-[21px] leading-none tabular-nums text-ink">{day}</span>
-        <span className="mt-0.5 text-[10.5px] font-semibold uppercase tracking-[0.04em] text-accent">{month}</span>
+        <span className="mt-0.5 text-[10.5px] font-semibold uppercase tracking-[0.04em] text-accent-ink">{month}</span>
       </span>
       {badge && (
         <span
@@ -77,7 +77,7 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
             "paper-keep absolute bottom-3 left-3 z-[2] inline-flex items-center gap-1.5 rounded-lg bg-white/95 px-2.5 py-1 text-[12px] font-semibold text-ink shadow-[0_4px_12px_-4px_rgba(60,40,10,0.25)]",
           )}
         >
-          {state === "live" && <span className="size-1.5 rounded-full bg-accent motion-safe:animate-pulse" aria-hidden />}
+          {state === "live" && <span className="size-1.5 rounded-full bg-accent" aria-hidden />}
           {badge}
         </span>
       )}
@@ -97,7 +97,7 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
           <div className="p-4 pt-3.5">{facts}</div>
         </div>
         <div className="min-w-0 flex-1 sm:hidden">
-          {badge && <p className="mb-0.5 text-[12.5px] font-semibold text-accent sm:hidden">{badge}</p>}
+          {badge && <p className="mb-0.5 text-[12.5px] font-semibold text-accent-ink sm:hidden">{badge}</p>}
           {facts}
         </div>
       </Link>

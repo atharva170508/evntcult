@@ -66,7 +66,7 @@ export function Countdown({
     return (
       <span className={className}>
         <span
-          className="mr-2 inline-block size-2 rounded-full bg-accent align-middle motion-safe:animate-pulse"
+          className="mr-2 inline-block size-2 rounded-full bg-accent align-middle"
           aria-hidden
         />
         Happening now

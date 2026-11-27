@@ -39,7 +39,7 @@ export function Chip({
     >
       {pulse && (
         <span
-          className="size-1.5 rounded-full bg-live-dot motion-safe:animate-pulse-dot"
+          className="size-1.5 rounded-full bg-live-dot"
           aria-hidden
         />
       )}

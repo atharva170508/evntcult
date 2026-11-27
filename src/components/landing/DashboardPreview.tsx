@@ -108,7 +108,7 @@ export function DashboardPreview() {
                     />
                   </div>
                   <div className="flex min-w-0 flex-1 flex-col p-4 sm:p-5">
-                    <p className="text-[12.5px] font-semibold text-accent">
+                    <p className="text-[12.5px] font-semibold text-accent-ink">
                       Your next event, in 2 days
                     </p>
                     <p className="mt-1 truncate text-[17px] font-semibold leading-snug text-ink sm:text-[19px]">

@@ -101,7 +101,7 @@ export function detectClashes(
           reason:
             raw > 0
               ? `${ev.venueName ?? "This venue"} is already booked for "${ev.title}".`
-              : `Too close to "${ev.title}" — ${ev.venueName ?? "the venue"} needs ${
+              : `Too close to "${ev.title}", ${ev.venueName ?? "the venue"} needs ${
                   buffer / MIN
                 } min for setup/teardown.`,
         });
@@ -127,7 +127,7 @@ export function detectClashes(
         endsAt: ev.endsAt,
         overlapMinutes: overlap,
         reason: sameCategory
-          ? `Overlaps a similar ${ev.category?.toLowerCase()} event — you may split the crowd.`
+          ? `Overlaps a similar ${ev.category?.toLowerCase()} event, so you may split the crowd.`
           : `Overlaps a large event (${ev.capacity ?? "300+"} expected).`,
       });
     }

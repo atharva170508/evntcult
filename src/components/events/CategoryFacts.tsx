@@ -1,4 +1,4 @@
-import { Mic2, Music2, Sparkles, Wrench } from "lucide-react";
+import { Layers, Mic2, Music2, Wrench } from "lucide-react";
 import { headlinePills, kindFor, parseConfig } from "@/lib/categories";
 
 /** Category pills under the title: "Teams of 2 to 4", "6v6 Turf", "18+ only", "Bring a laptop". */
@@ -42,7 +42,7 @@ export function CategorySections({
 
   if (kind.key === "hackathon" && Array.isArray(c.tracks) && c.tracks.length) {
     blocks.push(
-      <Block key="tracks" icon={Sparkles} title="Tracks">
+      <Block key="tracks" icon={Layers} title="Tracks">
         <ul className="flex flex-wrap gap-2">
           {(c.tracks as string[]).map((t) => (
             <li

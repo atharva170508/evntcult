@@ -244,7 +244,7 @@ function FeedCard({ e }: { e: Ev & { s: Date; en: Date } }) {
             <span className="absolute left-3 top-3 z-[2] inline-flex items-center gap-1.5 rounded-lg bg-ink px-2.5 py-1 text-[12.5px] font-semibold text-white">
               {live && (
                 <span
-                  className="size-1.5 rounded-full bg-accent motion-safe:animate-pulse"
+                  className="size-1.5 rounded-full bg-accent"
                   aria-hidden
                 />
               )}

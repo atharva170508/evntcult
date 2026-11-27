@@ -22,7 +22,7 @@ export function LocalClock() {
 
   return (
     <span className="inline-flex items-center gap-1.5 font-mono text-[12.5px] font-medium tabular-nums text-ink-muted">
-      <span className="size-1.5 rounded-full bg-live motion-safe:animate-pulse" aria-hidden />
+      <span className="size-1.5 rounded-full bg-live" aria-hidden />
       {time} IST
     </span>
   );

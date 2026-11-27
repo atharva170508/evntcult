@@ -82,7 +82,6 @@ export default async function DashboardPage({
         }
       />
 
-      {/* 2. Seamless 1-Tap Command Dock + Inline Event Code Jumper */}
       <QuickDock passCount={data.stats.registered} isOrganizer={viewer.verifiedOrganizer} />
 
       {params.denied === "organizer" && (
@@ -91,7 +90,6 @@ export default async function DashboardPage({
         </p>
       )}
 
-      {/* 3. Personal Weekly Agenda + Live Ops, Updates & Quick Desk */}
       <div className="grid items-start gap-x-14 gap-y-12 pt-9 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
         <Agenda
           items={week.all.filter((e) => e.id !== hero?.id)}
@@ -105,8 +103,7 @@ export default async function DashboardPage({
               href={`/organizer/events/${live.id}/manage`}
               className="flex items-center gap-4 rounded-2xl bg-ink p-5 text-white transition-colors duration-fast hover:bg-night-2"
             >
-              <span className="relative flex size-2.5 shrink-0">
-                <span className="absolute inset-0 rounded-full bg-accent motion-safe:animate-ping" />
+              <span className="relative flex size-2.5 shrink-0" aria-hidden>
                 <span className="relative size-2.5 rounded-full bg-accent" />
               </span>
               <span className="min-w-0 flex-1">

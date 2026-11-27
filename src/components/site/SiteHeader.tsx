@@ -281,7 +281,7 @@ export function SiteHeader({
               <button
                 onClick={onSearch}
                 aria-label="Search events"
-                className="grid size-10 place-items-center rounded-full text-ink transition-colors duration-fast active:bg-sunken xl:hidden"
+                className="grid size-11 place-items-center rounded-full text-ink transition-colors duration-fast active:bg-sunken xl:hidden"
               >
                 <Search className="size-[19px]" strokeWidth={2.1} aria-hidden />
               </button>
@@ -295,14 +295,14 @@ export function SiteHeader({
                 <button
                   onClick={() => setSheet(true)}
                   aria-label="Account and more"
-                  className="ml-0.5 grid size-10 place-items-center rounded-full transition-transform duration-fast active:scale-95 md:hidden"
+                  className="ml-0.5 grid size-11 place-items-center rounded-full transition-transform duration-fast active:scale-95 md:hidden"
                 >
                   <Avatar name={viewer.name} className="size-8 text-[12px]" />
                 </button>
               ) : (
                 <Link
                   href="/signin"
-                  className="ml-1 flex h-9 items-center whitespace-nowrap rounded-[10px] bg-lavender px-3.5 text-[13.5px] font-bold text-ink ring-2 ring-inset ring-ink md:hidden"
+                  className="ml-1 flex h-11 items-center whitespace-nowrap rounded-[10px] bg-lavender px-4 text-[13.5px] font-bold text-ink ring-2 ring-inset ring-ink md:hidden"
                 >
                   Log in
                 </Link>

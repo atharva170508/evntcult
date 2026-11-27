@@ -89,7 +89,7 @@ export function HomeHero({ e, mine, dateLine, name, isOrganizer = false }: { e: 
             <p className="text-[14px] font-semibold text-[#FFFEF6]/85">
               {live ? (
                 <span className="inline-flex items-center gap-2">
-                  <span className="size-2 animate-pulse rounded-full bg-[#FF5C7A]" aria-hidden /> Happening now
+                  <span className="size-2 rounded-full bg-[#FF5C7A]" aria-hidden /> Happening now
                 </span>
               ) : mine ? (
                 "Your next pass"

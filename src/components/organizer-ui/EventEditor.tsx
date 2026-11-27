@@ -458,7 +458,7 @@ export function EventEditor({ initial, host, today, lastVenue, defaultUpi, place
     if (!extrasOpen && !idRef.current) {
       if (!f.title.trim()) {
         setTouched((t) => ({ ...t, title: true }));
-        setToast({ message: "Add an event name first to unlock poster, themes & extras." });
+        setToast({ message: "Add an event name first to configure poster, themes, and extras." });
         return;
       }
       dirtyRef.current = true;

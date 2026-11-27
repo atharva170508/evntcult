@@ -8,16 +8,16 @@ import { Reveal } from "@/components/motion/Reveal";
 import { EASE } from "@/components/motion/MotionProvider";
 
 const INITIAL_REACTIONS = [
-  { id: "fire", label: "Hyped", glyph: "🔥", count: 14 },
-  { id: "hands", label: "Count me in", glyph: "🙌", count: 9 },
-  { id: "music", label: "Setlist ready", glyph: "🎶", count: 6 },
-  { id: "bolt", label: "Bringing crew", glyph: "⚡", count: 11 },
+  { id: "fire", label: "Hyped", count: 14 },
+  { id: "hands", label: "Count me in", count: 9 },
+  { id: "music", label: "Setlist ready", count: 6 },
+  { id: "bolt", label: "Bringing crew", count: 11 },
 ];
 
 const BLAST_PRESETS = [
   "Gates open in 15 mins at Riverside Lawn. Show your QR at Desk 1.",
   "Soundcheck just wrapped. First 40 people get front-row lawn mats.",
-  "Light rain cleared up — doors staying right on schedule at 7:30 pm.",
+  "Light rain cleared up, doors staying right on schedule at 7:30 pm.",
 ];
 
 /**
@@ -52,9 +52,9 @@ export function SocialPulseDemo() {
         <div>
           <h2
             id="social-h"
-            className="font-display text-[clamp(40px,4.8vw,62px)] leading-[0.94] tracking-[-0.03em] text-ink"
+            className="font-display text-[clamp(40px,4.8vw,62px)] leading-[0.94] tracking-[-0.02em] text-ink"
           >
-            Built for the crowd, <em>not just the spreadsheet.</em>
+            Built for the crowd <em>before doors open.</em>
           </h2>
           <p className="mt-5 max-w-[42ch] text-[16px] leading-relaxed text-ink-2">
             Every event page carries a live guest wall where attendees drop notes and reactions
@@ -75,7 +75,7 @@ export function SocialPulseDemo() {
             <div className="rounded-2xl bg-surface p-5 shadow-card">
               <div className="flex items-center justify-between gap-3">
                 <span className="inline-flex items-center gap-2 text-[13px] font-semibold text-ink">
-                  <Bell className="size-3.5 text-accent" aria-hidden />
+                  <Bell className="size-3.5 text-accent-ink" aria-hidden />
                   Host update
                 </span>
                 <span className="font-mono text-[11.5px] text-ink-muted tabular-nums">
@@ -142,14 +142,14 @@ export function SocialPulseDemo() {
                       onClick={() => toggleReact(r.id)}
                       aria-pressed={active}
                       className={cn(
-                        "ui-press inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-semibold transition-colors",
+                        "ui-press inline-flex min-h-[44px] items-center gap-2 rounded-full px-3.5 text-[13px] font-semibold transition-colors sm:min-h-[36px]",
                         active
                           ? "bg-lavender text-ink ring-2 ring-inset ring-ink"
                           : "bg-sunken text-ink-2 hover:bg-mist hover:text-ink",
                       )}
                     >
-                      <span aria-hidden>{r.glyph}</span>
-                      <span className="tabular-nums">{counts[r.id]}</span>
+                      <span>{r.label}</span>
+                      <span className="font-mono text-[12px] tabular-nums opacity-75">{counts[r.id]}</span>
                     </button>
                   );
                 })}

@@ -21,7 +21,6 @@ import {
   Plus,
   ScanFace,
   ScanLine,
-  Sparkles,
   Sun,
   Ticket,
   Trophy,
@@ -71,7 +70,7 @@ function calendarLink(e: EventSummary) {
   return `https://calendar.google.com/calendar/render?${p}`;
 }
 
-/* ─── Quick filters ─────────────────────────────────────────────────────── */
+/* Quick filters */
 
 const TILES = [
   { href: "/events?when=today", label: "Today", icon: Sun },
@@ -103,7 +102,7 @@ export function QuickTiles() {
   );
 }
 
-/* ─── Stats ─────────────────────────────────────────────────────────────── */
+/* Stats */
 
 export function StatTile({
   label,
@@ -138,7 +137,7 @@ export function StatTile({
   );
 }
 
-/* ─── Next up ───────────────────────────────────────────────────────────── */
+/* Next up */
 
 export function NextUpHero({ event }: { event: NextUp }) {
   const badge = eventBadge(event);
@@ -236,7 +235,7 @@ export function EmptyNextUp() {
   );
 }
 
-/* ─── Organizer ─────────────────────────────────────────────────────────── */
+/* Organizer */
 
 export function OrgKpis({ data }: { data: OrganizerPanel }) {
   const registrations = data.hosted.reduce((a, h) => a + h.registered, 0);
@@ -391,7 +390,7 @@ function QuickAction({
   );
 }
 
-/* ─── Announcements ─────────────────────────────────────────────────────── */
+/* Announcements */
 
 const kindTone: Record<string, ChipTone> = { INFO: "neutral", SCHEDULE_CHANGE: "warn", VENUE_CHANGE: "warn", URGENT: "danger" };
 const kindLabel: Record<string, string> = { INFO: "Update", SCHEDULE_CHANGE: "Schedule", VENUE_CHANGE: "Venue", URGENT: "Urgent" };
@@ -426,7 +425,7 @@ export function Announcements({ items }: { items: AnnouncementItem[] }) {
   );
 }
 
-/* ─── Link cards ────────────────────────────────────────────────────────── */
+/* Link cards */
 
 export function LinkCard({
   href,
@@ -454,7 +453,7 @@ export function LinkCard({
   );
 }
 
-/* ─── Upcoming (mine) ───────────────────────────────────────────────────── */
+/* Upcoming (mine) */
 
 export function DateBlock({ date, accent, className }: { date: Date; accent: string; className?: string }) {
   return (
@@ -496,7 +495,7 @@ export function UpcomingList({ events }: { events: EventSummary[] }) {
   );
 }
 
-/* ─── Campus events ─────────────────────────────────────────────────────── */
+/* Campus events */
 
 export function CampusRail({ events }: { events: EventSummary[] }) {
   return (
@@ -565,7 +564,7 @@ export function EventCard({ e }: { e: EventSummary }) {
   );
 }
 
-/* ─── Vault + navigator teasers ─────────────────────────────────────────── */
+/* Vault and navigator teasers */
 
 export function VaultTeaser({ photosOfYou, preview = [] }: { photosOfYou: number; preview?: string[] }) {
   const tiles = ["violet", "orange", "teal", "pink", "blue", "green"];
@@ -621,7 +620,7 @@ export function NavigatorTeaser({ next }: { next: NextUp | null }) {
 export function UpiPending({ amountPaise }: { amountPaise: number }) {
   return (
     <div role="status" className="flex items-center gap-3 rounded-tile bg-warn-soft px-4 py-3 text-[13.5px]">
-      <Sparkles className="size-4 shrink-0 text-warn" aria-hidden />
+      <Clock className="size-4 shrink-0 text-warn" aria-hidden />
       <span className="text-ink-2">
         <span className="font-mono font-medium text-warn">{formatINR(amountPaise)}</span> due, UPI payments are coming soon. Pay the organizer at the desk for now.
       </span>

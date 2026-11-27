@@ -11,13 +11,13 @@ import { Reveal } from "@/components/motion/Reveal";
 
 const FRAMES = [
   { id: "v0", frame: "EXP 01", accent: "orange", match: false },
-  { id: "v1", frame: "EXP 02", accent: "violet", match: true, score: "99%" },
+  { id: "v1", frame: "EXP 02", accent: "violet", match: true },
   { id: "v2", frame: "EXP 03", accent: "teal", match: false },
-  { id: "v3", frame: "EXP 04", accent: "pink", match: true, score: "98%" },
+  { id: "v3", frame: "EXP 04", accent: "pink", match: true },
   { id: "v4", frame: "EXP 05", accent: "blue", match: false },
-  { id: "v5", frame: "EXP 06", accent: "green", match: true, score: "97%" },
+  { id: "v5", frame: "EXP 06", accent: "green", match: true },
   { id: "v6", frame: "EXP 07", accent: "red", match: false },
-  { id: "v7", frame: "EXP 08", accent: "violet", match: true, score: "99%" },
+  { id: "v7", frame: "EXP 08", accent: "violet", match: true },
   { id: "v8", frame: "EXP 09", accent: "orange", match: false },
 ] as const;
 
@@ -63,15 +63,15 @@ export function VaultSpotlight() {
 
             <dl className="mt-8 grid grid-cols-3 gap-6 border-y border-white/12 py-5 text-[13.5px]">
               <div>
-                <dt className="text-cream/50">Processing</dt>
+                <dt className="text-cream/75">Processing</dt>
                 <dd className="mt-1 font-semibold text-cream">On your phone</dd>
               </div>
               <div>
-                <dt className="text-cream/50">Selfie stored</dt>
+                <dt className="text-cream/75">Selfie stored</dt>
                 <dd className="mt-1 font-semibold text-cream">Never</dd>
               </div>
               <div>
-                <dt className="text-cream/50">Delivery</dt>
+                <dt className="text-cream/75">Delivery</dt>
                 <dd className="mt-1 font-semibold text-cream">Full HD</dd>
               </div>
             </dl>
@@ -86,7 +86,7 @@ export function VaultSpotlight() {
                   Set up Photo Vault
                 </Link>
               </Magnetic>
-              <span className="inline-flex items-center gap-1.5 text-[13.5px] text-cream/60">
+              <span className="inline-flex items-center gap-1.5 text-[13.5px] text-cream/80">
                 <ShieldCheck className="size-4 text-[#5EE0A8]" aria-hidden />
                 Clear Face ID anytime
               </span>
@@ -100,7 +100,7 @@ export function VaultSpotlight() {
           >
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-[12px] text-cream/45">Example contact sheet</p>
+                <p className="text-[12px] text-cream/75">Example contact sheet</p>
                 <p className="mt-0.5 text-[14.5px] font-medium text-cream" role="status">
                   {phase === "idle"
                     ? "9 frames from an event album"
@@ -113,7 +113,7 @@ export function VaultSpotlight() {
                 type="button"
                 onClick={runMatch}
                 disabled={phase === "scanning"}
-                className="ui-press inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-lavender px-4 text-[13.5px] font-semibold text-[#1A1A1A] hover:bg-lavender-hover disabled:opacity-60"
+                className="ui-press inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl bg-lavender px-4 text-[13.5px] font-semibold text-[#1A1A1A] hover:bg-lavender-hover disabled:opacity-60"
               >
                 {phase === "matched" ? "Show all" : phase === "scanning" ? "Scanning…" : "Try match"}
               </button>
@@ -138,13 +138,13 @@ export function VaultSpotlight() {
                     aria-hidden
                   >
                     <EventArt accent={item.accent} seed={`vault-${item.id}`} scrim={false} flat />
-                    <span className="absolute bottom-1.5 left-2 font-mono text-[9.5px] tracking-[0.06em] text-white/75">
+                    <span className="absolute bottom-1.5 left-2 font-mono text-[9.5px] tracking-[0.06em] text-white/85">
                       {item.frame}
                     </span>
-                    {isHit && "score" in item && (
+                    {isHit && (
                       <span className="paper-keep absolute right-1.5 top-1.5 inline-flex items-center gap-1 rounded-md bg-white/95 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-ink shadow-sm">
                         <Check className="size-2.5 text-live" strokeWidth={3} />
-                        {item.score}
+                        Match
                       </span>
                     )}
                   </m.div>
@@ -159,7 +159,7 @@ export function VaultSpotlight() {
               )}
             </div>
 
-            <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4 text-[12.5px] text-cream/55">
+            <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4 text-[12.5px] text-cream/75">
               <span>Visible only to registered attendees</span>
               {phase === "matched" && (
                 <span className="inline-flex items-center gap-1.5 font-semibold text-lavender">

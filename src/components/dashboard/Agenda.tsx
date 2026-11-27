@@ -225,7 +225,7 @@ function PassRow({ e, serial, pending }: { e: EventSummary; serial: string | nul
           <span className="flex items-center gap-2 text-[13px] font-medium text-ink-muted">
             {live ? (
               <span className="inline-flex items-center gap-1.5 font-semibold text-brand">
-                <span className="size-1.5 animate-pulse rounded-full bg-brand" aria-hidden /> Happening now
+                <span className="size-1.5 rounded-full bg-brand" aria-hidden /> Happening now
               </span>
             ) : (
               <>

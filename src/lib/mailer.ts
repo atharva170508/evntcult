@@ -246,7 +246,7 @@ export function announcementEmail(r: Row, base: string) {
 export function cancelledEmail(r: Row, base: string) {
   const first = r.name.split(/\s+/)[0] || "there";
   const body =
-    P(`Sorry, ${esc(first)} — ${esc(r.title)} scheduled for ${esc(when(r.starts_at, r.ends_at))} has been cancelled.`) +
+    P(`Sorry, ${esc(first)}: ${esc(r.title)} scheduled for ${esc(when(r.starts_at, r.ends_at))} has been cancelled.`) +
     P(`We attached a cancellation invite so it clears from your calendar automatically.`, "color:#6A6A6A;font-size:14px") +
     button(`${base}/events`, "Browse other events");
   const text = `Cancelled: ${r.title}\n\nThe event scheduled for ${when(r.starts_at, r.ends_at)} has been cancelled.\n\nBrowse other events: ${base}/events`;

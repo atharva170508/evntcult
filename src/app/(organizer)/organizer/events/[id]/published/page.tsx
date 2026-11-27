@@ -27,7 +27,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
   const actions = [
     { icon: ExternalLink, title: "Open attendee page", body: "See the live page exactly as students see it.", href: `/events/${e.slug}` },
     { icon: Users, title: "Manage attendees & Drive vault", body: "Track sign-ups, UPI payments, announcements, and event photos.", href: `/organizer/events/${e.id}/manage` },
-    { icon: ScanLine, title: "Open gate scanner", body: "Scan QR passes at the door — works even offline.", href: `/organizer/scan/${e.id}` },
+    { icon: ScanLine, title: "Open gate scanner", body: "Scan QR passes at the door; works even offline.", href: `/organizer/scan/${e.id}` },
   ];
 
   return (
@@ -50,7 +50,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
       <div className="mx-auto grid max-w-[1160px] items-start gap-10 px-gutter py-10 lg:grid-cols-[minmax(0,1.15fr)_380px] lg:gap-14 lg:py-14">
         <div className="min-w-0">
           <span className="inline-flex items-center gap-2 rounded-full bg-live-soft px-3.5 py-1 text-[13px] font-semibold text-live">
-            <span className="size-2 animate-pulse rounded-full bg-live" aria-hidden />
+            <span className="size-2 rounded-full bg-live" aria-hidden />
             Live on campus
           </span>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera, CheckCircle2, ImageUp, Layers, Loader2, RotateCcw, ScanFace, ShieldCheck, Sparkles } from "lucide-react";
+import { Camera, CheckCircle2, ImageUp, Layers, Loader2, RotateCcw, ScanFace, ShieldCheck } from "lucide-react";
 import type { PhotoMatch } from "@/lib/data/face-search";
 import { PhotoMatchCard } from "./PhotoMatchCard";
 
@@ -26,9 +26,8 @@ const DEFAULT_SLOTS: AngleSlot[] = [
 ];
 
 /**
- * AI Face Search: Multi-angle ensemble capture + on-device feature extraction.
- * Employs multi-pose vector matching to push real-world accuracy to 99%+.
- * The photos never leave the phone: only 128-d numerical descriptors are sent.
+ * Multi-angle face search with on-device feature extraction.
+ * Photos stay on the device; only 128-d numerical descriptors are sent.
  */
 export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventTitle: string }) {
   const [mode, setMode] = useState<"ultra" | "quick">("ultra");
@@ -136,16 +135,13 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
   return (
     <section aria-labelledby="ai-search-title" className="space-y-5">
       <div className="card relative overflow-hidden p-6 md:p-8">
-        <div aria-hidden className="absolute -right-20 -top-20 size-72 rounded-full bg-volt/10 blur-3xl" />
-
         <div className="relative space-y-6">
-          {/* Header & Badges */}
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.14em] text-volt">
-              <ScanFace className="size-4" aria-hidden /> AI Face Search
+            <p className="flex items-center gap-2 text-[13px] font-semibold text-accent-ink">
+              <ScanFace className="size-4" aria-hidden /> Face photo search
             </p>
-            <div className="flex items-center gap-1.5 rounded-full border border-volt/30 bg-volt/10 px-3 py-1 text-[12px] font-semibold text-volt">
-              <Sparkles className="size-3.5" aria-hidden /> 99%+ Accuracy Ensemble
+            <div className="flex items-center gap-1.5 rounded-full border border-line-strong bg-sunken px-3 py-1 text-[12px] font-semibold text-ink-2">
+              <ShieldCheck className="size-3.5 text-live" aria-hidden /> On-device matching
             </div>
           </div>
 
@@ -158,84 +154,81 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
             </p>
           </div>
 
-          {/* Mode Switcher */}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setMode("ultra")}
-              className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13.5px] font-semibold transition-all ${
+              className={`inline-flex min-h-[44px] items-center gap-2 rounded-full border px-4 py-2 text-[13.5px] font-semibold transition-all ${
                 mode === "ultra"
-                  ? "border-volt bg-volt text-ink-inverse shadow-sm"
-                  : "border-white/10 bg-white/[0.03] text-ink-2 hover:border-volt/50"
+                  ? "border-ink bg-ink text-white shadow-sm"
+                  : "border-line-strong bg-sunken text-ink-2 hover:border-ink hover:text-ink"
               }`}
             >
-              <Layers className="size-4" aria-hidden /> Ultra Scan (3 Angles · 99%+ Accuracy)
+              <Layers className="size-4" aria-hidden /> 3-Angle Scan (Better in crowds)
             </button>
             <button
               type="button"
               onClick={() => setMode("quick")}
-              className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13.5px] font-semibold transition-all ${
+              className={`inline-flex min-h-[44px] items-center gap-2 rounded-full border px-4 py-2 text-[13.5px] font-semibold transition-all ${
                 mode === "quick"
-                  ? "border-volt bg-volt text-ink-inverse shadow-sm"
-                  : "border-white/10 bg-white/[0.03] text-ink-2 hover:border-volt/50"
+                  ? "border-ink bg-ink text-white shadow-sm"
+                  : "border-line-strong bg-sunken text-ink-2 hover:border-ink hover:text-ink"
               }`}
             >
               <Camera className="size-4" aria-hidden /> Quick Scan (1 Photo)
             </button>
           </div>
 
-          {/* Consent Checkbox */}
-          <label className="flex max-w-xl cursor-pointer items-start gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-3.5 text-[13px] text-ink-2">
+          <label className="flex max-w-xl cursor-pointer items-start gap-3 rounded-2xl border border-line-strong bg-sunken/70 p-3.5 text-[13px] text-ink-2">
             <input
               type="checkbox"
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
-              className="mt-0.5 size-4 shrink-0 accent-volt"
+              className="mt-0.5 size-4 shrink-0 accent-ink"
             />
             <span>
               I agree to my photo being turned into numerical facial descriptors <b>locally on this device</b>. Photos are never uploaded or stored on any server.
             </span>
           </label>
 
-          {/* Slot Cards for Ultra Scan Mode */}
           {mode === "ultra" && (
             <div className="space-y-4">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {slots.map((s) => (
                   <div
                     key={s.id}
-                    className={`relative flex flex-col justify-between overflow-hidden rounded-[24px] border p-4 transition-all ${
+                    className={`relative flex flex-col justify-between overflow-hidden rounded-[20px] border p-4 transition-all ${
                       s.file
-                        ? "border-volt/50 bg-volt/[0.04]"
-                        : "border-white/10 bg-white/[0.02] hover:border-white/20"
+                        ? "border-ink bg-sunken"
+                        : "border-line-strong bg-sunken/50 hover:border-ink-subtle"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <p className="text-[14px] font-bold text-ink">{s.title}</p>
+                        <p className="text-[14px] font-semibold text-ink">{s.title}</p>
                         <p className="text-[12px] text-ink-muted">{s.hint}</p>
                       </div>
                       {s.file ? (
-                        <CheckCircle2 className="size-5 text-volt" aria-hidden />
+                        <CheckCircle2 className="size-5 text-live" aria-hidden />
                       ) : (
-                        <span className="size-2 rounded-full bg-white/20" />
+                        <span className="size-2 rounded-full bg-line-strong" aria-hidden />
                       )}
                     </div>
 
                     <div className="my-3 flex justify-center">
                       {s.previewUrl ? (
-                        <div className="relative size-20 overflow-hidden rounded-2xl border border-volt/40">
+                        <div className="relative size-20 overflow-hidden rounded-2xl border border-line-strong">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={s.previewUrl} alt={s.title} className="size-full object-cover" />
+                          <img src={s.previewUrl} alt={s.title} width={80} height={80} className="size-full object-cover" />
                         </div>
                       ) : (
-                        <div className="flex size-20 items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/[0.02] text-ink-subtle">
+                        <div className="flex size-20 items-center justify-center rounded-2xl border border-dashed border-line-strong bg-surface text-ink-subtle">
                           <ScanFace className="size-8" aria-hidden />
                         </div>
                       )}
                     </div>
 
-                    <div className="flex gap-1.5">
+                    <div className="flex gap-2">
                       <button
                         type="button"
                         disabled={!consent || busy}
@@ -243,7 +236,7 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
                           setActiveSlotId(s.id);
                           slotCameraRef.current?.click();
                         }}
-                        className="flex-1 rounded-full border border-white/15 py-1.5 text-center text-[12px] font-semibold text-ink transition-colors hover:border-volt/60 disabled:opacity-40"
+                        className="flex-1 min-h-[44px] rounded-xl border border-line-strong bg-surface py-2 text-center text-[12.5px] font-semibold text-ink transition-colors hover:border-ink disabled:opacity-40 sm:min-h-[36px]"
                       >
                         Snap
                       </button>
@@ -254,7 +247,7 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
                           setActiveSlotId(s.id);
                           slotUploadRef.current?.click();
                         }}
-                        className="flex-1 rounded-full border border-white/15 py-1.5 text-center text-[12px] font-semibold text-ink-muted transition-colors hover:border-volt/60 disabled:opacity-40"
+                        className="flex-1 min-h-[44px] rounded-xl border border-line-strong bg-surface py-2 text-center text-[12.5px] font-semibold text-ink-2 transition-colors hover:border-ink hover:text-ink disabled:opacity-40 sm:min-h-[36px]"
                       >
                         Upload
                       </button>
@@ -263,17 +256,16 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
                 ))}
               </div>
 
-              {/* Action row for Ultra Scan */}
               <div className="flex flex-wrap items-center gap-3">
                 <button
                   type="button"
                   disabled={!consent || busy || filledCount === 0}
                   onClick={runUltra}
-                  className="inline-flex items-center gap-2 rounded-full bg-volt px-6 py-3 text-[14.5px] font-bold text-ink-inverse transition-colors hover:bg-volt-hover disabled:opacity-40 shadow-brand"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-lavender px-6 py-2.5 text-[14.5px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors hover:bg-lavender-hover disabled:opacity-40"
                 >
-                  <Sparkles className="size-4" aria-hidden />
+                  <ScanFace className="size-4" aria-hidden />
                   {filledCount === 3
-                    ? "Start Ultra Scan (3 Angles · 99%+ Accuracy)"
+                    ? "Start 3-Angle Scan"
                     : `Scan with ${filledCount} Angle${filledCount > 1 ? "s" : ""}`}
                 </button>
 
@@ -281,7 +273,7 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
                   type="button"
                   disabled={!consent || busy}
                   onClick={() => singleUploadRef.current?.click()}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-3 text-[13.5px] font-semibold text-ink transition-colors hover:border-volt/60 disabled:opacity-40"
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-line-strong bg-surface px-4 py-2.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink disabled:opacity-40"
                 >
                   <ImageUp className="size-4" aria-hidden /> Batch select 3 photos
                 </button>
@@ -290,7 +282,7 @@ export function AIFaceMatcher({ eventId, eventTitle }: { eventId: string; eventT
                   <button
                     type="button"
                     onClick={reset}
-                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[13px] font-semibold text-ink-muted hover:text-volt"
+                    className="inline-flex min-h-[44px] items-center gap-1.5 rounded-xl px-3 py-2 text-[13px] font-semibold text-ink-muted hover:text-ink"
                   >
                     <RotateCcw className="size-3.5" aria-hidden /> Clear
                   </button>

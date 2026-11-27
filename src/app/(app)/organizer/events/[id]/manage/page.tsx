@@ -131,7 +131,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
   const th = "px-4 py-3 text-[12.5px] font-medium ";
   const kpis: { l: string; v: string; sub?: string; meter?: [number, number | null]; tone?: "warn" }[] = [
     { l: "Registered", v: String(s.registered), sub: e.capacity === null ? "No limit" : `of ${e.capacity}`, meter: [s.registered, e.capacity] },
-    { l: "Checked in", v: String(s.checkedIn), sub: s.registered ? `${Math.round((s.checkedIn / Math.max(1, s.registered)) * 100)}% of registered` : "—", meter: [s.checkedIn, Math.max(1, s.registered)] },
+    { l: "Checked in", v: String(s.checkedIn), sub: s.registered ? `${Math.round((s.checkedIn / Math.max(1, s.registered)) * 100)}% of registered` : "-", meter: [s.checkedIn, Math.max(1, s.registered)] },
     { l: "Waitlist", v: String(s.waitlisted) },
     ...(paidEvent
       ? [
@@ -255,7 +255,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
       </div>
 
       <div className="mt-6 grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
-        {/* Attendees — the main job */}
+        {/* Attendees */}
         <section aria-labelledby="att-h" className={`card min-w-0 overflow-hidden ${pane("guests")}`}>
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3.5 md:px-5">
             <h2 id="att-h" className="text-h4 font-semibold">
@@ -371,11 +371,11 @@ export default async function ManageEventPage({ params, searchParams }: { params
                       </td>
                       <td className="whitespace-nowrap px-4 py-3 max-md:px-0 max-md:text-right"><span className="block text-[14px] font-medium">{passName(a.pass_code).name}</span><span className="block text-[12px] tabular-nums text-ink-muted">No. {passName(a.pass_code).no}</span></td>
                       <td className="px-4 py-3 max-md:hidden">{a.status === "registered" ? <Chip tone="outline">Registered</Chip> : a.hold_expires_at ? <Chip tone="warn">Seat held</Chip> : <Chip>Waitlist</Chip>}</td>
-                      <td className="px-4 py-3 max-md:hidden">{a.checked_in_at ? <span className="font-mono font-medium text-live">{fmtTime(new Date(a.checked_in_at))}</span> : <span className="text-ink-subtle">—</span>}</td>
-                      <td className="px-4 py-3 max-md:hidden">{a.checked_in_at ? <AttendeeCert regId={a.id} certs={certs.filter((c) => c.registrationId === a.id)} /> : <span className="text-ink-subtle">—</span>}</td>
+                      <td className="px-4 py-3 max-md:hidden">{a.checked_in_at ? <span className="font-mono font-medium text-live">{fmtTime(new Date(a.checked_in_at))}</span> : <span className="text-ink-subtle">-</span>}</td>
+                      <td className="px-4 py-3 max-md:hidden">{a.checked_in_at ? <AttendeeCert regId={a.id} certs={certs.filter((c) => c.registrationId === a.id)} /> : <span className="text-ink-subtle">-</span>}</td>
                       {paidEvent && (
                         <td className="px-4 py-3 max-md:hidden">
-                          {a.status === "registered" ? <PaymentCell regId={a.id} paid={a.payment_status === "paid"} method={a.payment_method} refCode={a.payment_ref} utr={a.upi_utr} /> : <span className="text-ink-subtle">—</span>}
+                          {a.status === "registered" ? <PaymentCell regId={a.id} paid={a.payment_status === "paid"} method={a.payment_method} refCode={a.payment_ref} utr={a.upi_utr} /> : <span className="text-ink-subtle">-</span>}
                         </td>
                       )}
                     </tr>

@@ -78,7 +78,7 @@ export default async function VaultPage() {
             Your photo <em>vault.</em>
           </h1>
           <p className="mt-2.5 text-[15px] text-ink-muted">
-            Every photo of you from campus events — automatically matched via on-device Face ID.
+            Every photo of you from campus events, automatically matched via on-device Face ID.
           </p>
         </div>
 

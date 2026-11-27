@@ -352,7 +352,7 @@ export function MonthCalendar({
                 </div>
               </div>
               {selected === data.today && (
-                <span className="rounded-full bg-[#E3264F]/12 px-2.5 py-0.5 text-[11.5px] font-semibold text-[#E3264F]">
+                <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-[11.5px] font-semibold text-accent-ink">
                   Today
                 </span>
               )}

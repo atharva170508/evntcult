@@ -280,7 +280,7 @@ export function HoloPass(p: HoloPassProps) {
                           {p.state === "live" && (
                             <span className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-md bg-white px-2 py-1 text-[12px] font-semibold text-ink">
                               <span
-                                className="size-1.5 rounded-full bg-accent motion-safe:animate-pulse"
+                                className="size-1.5 rounded-full bg-accent"
                                 aria-hidden
                               />{" "}
                               Live now
@@ -378,7 +378,7 @@ export function HoloPass(p: HoloPassProps) {
                                   >
                                     {soon.live && !p.admittedAt && (
                                       <span
-                                        className="size-1.5 rounded-full bg-white motion-safe:animate-pulse"
+                                        className="size-1.5 rounded-full bg-white"
                                         aria-hidden
                                       />
                                     )}

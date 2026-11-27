@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Theme colours (RGB channels, used by tailwind.config.ts) ─────────────────────────────── */
+/* Theme colours as RGB channels, read by tailwind.config.ts. */
 :root {
   --c-canvas: 255 254 246;
   --c-surface: 255 255 255;
@@ -15,7 +15,7 @@
   --c-ink: 26 26 26;
   --c-ink-2: 63 63 63;
   --c-ink-muted: 106 106 106;
-  --c-ink-subtle: 113 113 113;
+  --c-ink-subtle: 102 102 102;
   --c-accent-soft: 253 236 239;
   --c-accent-ink: 184 23 63;
   --c-gold-soft: 247 240 225;
@@ -42,7 +42,7 @@
   --c-ink: 241 237 228;
   --c-ink-2: 214 209 198;
   --c-ink-muted: 166 160 148;
-  --c-ink-subtle: 150 144 133;
+  --c-ink-subtle: 156 150 139;
   --c-accent-soft: 58 22 31;
   --c-accent-ink: 255 138 160;
   --c-gold-soft: 52 43 25;
@@ -99,15 +99,24 @@
       --header-h: 80px;
     }
   }
-  /* Anything you can click shows it (antislop: cursor-pointer on all clickables). */
+  /* Base interaction affordances: pointer for enabled controls, not-allowed for disabled. */
   button:not(:disabled),
-  [role="button"],
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"]:not([aria-disabled="true"]),
+  [role="switch"]:not([aria-disabled="true"]),
   summary,
-  select,
+  select:not(:disabled),
   label[for],
-  input[type="checkbox"],
-  input[type="radio"] {
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
     cursor: pointer;
+  }
+  button:disabled,
+  [aria-disabled="true"],
+  input:disabled,
+  select:disabled,
+  textarea:disabled {
+    cursor: not-allowed;
   }
 
   html {
@@ -220,7 +229,7 @@
 }
 
 @layer components {
-  /* ── Surfaces ─────────────────────────────────────────── */
+  /* Surfaces */
 
   /* The core container: white with a hairline edge. Depth only appears on interaction. */
   .card {
@@ -242,7 +251,7 @@
     @apply bg-white/85 backdrop-blur-xl backdrop-saturate-150;
   }
 
-  /* ── Type ─────────────────────────────────────────────── */
+  /* Typography helpers */
 
   /* Small context line above a heading. */
   .eyebrow {
@@ -300,7 +309,7 @@
     margin-left: calc(50% - 50vw);
   }
 
-  /* ── Controls ─────────────────────────────────────────── */
+  /* Controls */
 
   .field {
     @apply w-full rounded-lg border border-[#B5AF9F] bg-surface px-3.5 py-3 text-body text-ink transition-[border-color,box-shadow] duration-fast ease-out placeholder:text-ink-subtle hover:border-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink disabled:cursor-not-allowed disabled:bg-sunken disabled:text-ink-muted aria-[invalid=true]:border-danger aria-[invalid=true]:focus:ring-danger/10;
@@ -312,7 +321,7 @@
     @apply font-semibold text-ink underline decoration-line-strong decoration-[1.5px] underline-offset-[3px] transition-colors duration-fast hover:decoration-ink;
   }
 
-  /* ── Texture & motifs ─────────────────────────────────── */
+  /* Texture and scrollbars */
 
   .grain::after {
     content: none;
@@ -353,7 +362,7 @@
     @apply motion-safe:animate-shimmer;
   }
 
-  /* ── Scroll reveal (paired with <Reveal>) ─────────────── */
+  /* Scroll reveal paired with <Reveal>. */
   [data-reveal] {
     opacity: 0;
     transform: translateY(14px);
@@ -741,7 +750,7 @@ body::after {
 @keyframes month-in-left { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .month-in-right, .month-in-left { animation: none; } }
 
-/* ══ Dark mode compatibility ════════════════════════════════════════════════════════════════
+/* Dark mode compatibility.
  * Tokens switch on their own (see .dark above). These rules cover the few hard-coded values
  * in components: white cards become the dark surface, ink buttons turn light with dark text,
  * and the primitives get dark fills. Passes, tickets, printed paper and QR codes keep their
@@ -893,7 +902,7 @@ tr[data-picked] { background: rgb(240 215 255 / 0.35); }
   .page-in { animation: none; }
 }
 
-/* ── Phones and the installed app (iOS and Android) ───────────────────────────────────────────
+/* Phones and the installed app (iOS and Android).
    <html> carries data-platform="ios|android|other" and data-standalone (opened from the home
    screen), set before first paint by THEME_SCRIPT. */
 

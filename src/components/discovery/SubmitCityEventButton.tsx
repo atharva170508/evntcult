@@ -66,7 +66,7 @@ export function SubmitCityEventButton({ citySlug, cityName }: { citySlug: string
             <div className="w-full max-w-md rounded-panel border border-line-strong bg-surface p-6 shadow-pop">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[12px] font-semibold text-accent">{cityName}</p>
+                  <p className="text-[12px] font-semibold text-accent-ink">{cityName}</p>
                   <h2 className="mt-0.5 font-display text-[28px] leading-tight text-ink">
                     Submit an event
                   </h2>

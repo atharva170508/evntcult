@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Camera, CheckCircle2, ImageUp, Loader2, RotateCcw, ScanFace, ShieldCheck, Sparkles } from "lucide-react";
+import { Camera, CheckCircle2, ImageUp, Loader2, RotateCcw, ScanFace, ShieldCheck } from "lucide-react";
 
 interface FaceIdEnrollCardProps {
   onSuccess?: (matchedCount: number) => void;
@@ -103,18 +103,14 @@ export function FaceIdEnrollCard({
 
   return (
     <div className={`overflow-hidden rounded-2xl border border-line-strong bg-white p-6 shadow-card ${compact ? "max-w-md" : "w-full"}`}>
-      {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="space-y-1">
-          <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-volt">
+          <p className="flex items-center gap-1.5 text-[12.5px] font-semibold text-accent-ink">
             <ScanFace className="size-3.5" aria-hidden /> Photo Vault Face ID
           </p>
           <h3 className="text-[20px] font-bold leading-snug tracking-[-0.02em] text-ink">{title}</h3>
           <p className="text-[13.5px] leading-relaxed text-ink-muted">{subtitle}</p>
         </div>
-        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-volt/15 text-volt">
-          <Sparkles className="size-4" aria-hidden />
-        </span>
       </div>
 
       {/* Success State */}
@@ -189,11 +185,10 @@ export function FaceIdEnrollCard({
             </div>
           )}
 
-          {/* Privacy Guarantee Note */}
           <div className="flex items-start gap-2 rounded-xl bg-sunken/60 p-3 text-[12px] text-ink-2">
             <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-live" aria-hidden />
             <span>
-              <b>100% Private:</b> Your selfie is turned into numbers locally on your device. Your actual photo is never uploaded or saved to any server.
+              <b>Processed on your device:</b> Your selfie is turned into numerical descriptors locally. Your photo is never uploaded or saved to any server.
             </span>
           </div>
 

@@ -114,7 +114,7 @@ export default async function EventsPage({
               name="q"
               defaultValue={q.q ?? ""}
               placeholder="Search events, clubs, venues…"
-              className="h-11 w-full rounded-full border border-line-strong bg-surface pl-10 pr-4 text-[14px] text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none"
+              className="h-11 w-full rounded-full border border-line-strong bg-surface pl-10 pr-4 text-[14px] text-ink placeholder:text-ink-subtle focus:border-ink focus-visible:shadow-[var(--focus-field)]"
             />
           </div>
         </form>
