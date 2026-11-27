@@ -231,7 +231,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
 
       <div className={pane("stats")}>
       {/* KPIs */}
-      <dl className="mt-6 grid grid-cols-2 overflow-hidden rounded-2xl border border-line-strong bg-white sm:flex sm:divide-x sm:divide-line">
+      <dl className="mt-6 grid grid-cols-2 overflow-hidden rounded-[4px] border border-line bg-surface sm:flex sm:divide-x sm:divide-line">
         {kpis.map((k, i) => (
           <div
             key={k.l}
@@ -270,7 +270,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
                 <Search className="size-4 shrink-0 text-ink-subtle" aria-hidden />
                 {filter.key !== "all" && <input type="hidden" name="f" value={filter.key} />}
                 <input id="att-search" name="q" type="search" defaultValue={q} placeholder="Search guests" aria-label="Search attendees" aria-keyshortcuts="/" className="w-full min-w-0 bg-transparent text-[13.5px] focus:outline-none sm:w-52" />
-                <kbd className="hidden rounded border border-line-strong bg-white px-1.5 font-mono text-[11px] text-ink-muted md:inline" aria-hidden>
+                <kbd className="hidden rounded-[3px] border border-line bg-canvas px-1.5 font-mono text-[11px] text-ink-muted md:inline" aria-hidden>
                   /
                 </kbd>
                 <button className={buttonClass("primary", "sm", "hidden h-7 sm:inline-flex")}>Search</button>
@@ -290,10 +290,10 @@ export default async function ManageEventPage({ params, searchParams }: { params
                   key={x.key}
                   href={filterHref(x.key)}
                   aria-current={on ? "page" : undefined}
-                  className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg px-3 text-[13.5px] font-medium transition-colors duration-fast ${on ? "bg-ink text-white" : "text-ink-2 hover:bg-sunken"}`}
+                  className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-[4px] px-3 text-[13px] font-medium transition-colors duration-fast ${on ? "bg-[#D4B87A] text-[#161820]" : "text-ink-2 hover:bg-sunken"}`}
                 >
                   {x.label}
-                  <span className={`font-mono text-[12px] tabular-nums ${on ? "text-white/70" : x.key === "verify" && n ? "font-semibold text-warn" : "text-ink-subtle"}`}>{n}</span>
+                  <span className={`font-mono text-[12px] tabular-nums ${on ? "text-[#161820]/70" : x.key === "verify" && n ? "font-semibold text-warn" : "text-ink-subtle"}`}>{n}</span>
                 </Link>
               );
             })}
@@ -348,7 +348,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
                       data-email={a.email}
                       data-pass={a.pass_code}
                       data-utr={a.status === "registered" && a.payment_status === "unpaid" && a.upi_utr ? a.upi_utr : undefined}
-                      className="scroll-mt-24 align-top transition-colors max-md:grid max-md:grid-cols-[40px_minmax(0,1fr)_auto] max-md:items-center max-md:pr-4 hover:bg-sunken/60 data-[selected=true]:bg-lavender/30 data-[selected=true]:shadow-[inset_3px_0_0_#1A1A1A]"
+                      className="scroll-mt-24 align-top transition-colors max-md:grid max-md:grid-cols-[40px_minmax(0,1fr)_auto] max-md:items-center max-md:pr-4 hover:bg-sunken/60 data-[selected=true]:bg-[#D4B87A]/15 data-[selected=true]:shadow-[inset_3px_0_0_#D4B87A]"
                     >
                       <td className="py-3 pl-4">
                         <label className="relative inline-flex cursor-pointer pt-0.5">
@@ -403,7 +403,7 @@ export default async function ManageEventPage({ params, searchParams }: { params
           {e.status === "published" && e.access === "public" && <EmbedCode slug={e.slug} origin={SITE_URL} />}
           {teams && kind && <TeamsCard teams={teams} rule={teamRule(kind, parseConfig(e.category_config))} noun={kind.key === "tournament" ? "Squads" : "Teams"} />}
           {tallies.length > 0 && (
-            <section aria-labelledby="counts-h" className="rounded-2xl border border-line-strong bg-white">
+            <section aria-labelledby="counts-h" className="rounded-[4px] border border-line bg-surface">
               <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
                 <div>
                   <h2 id="counts-h" className="text-[16px] font-semibold text-ink">

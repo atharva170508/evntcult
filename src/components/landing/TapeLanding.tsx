@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { m, useReducedMotion } from "motion/react";
 import { ArrowRight, Search } from "lucide-react";
@@ -22,110 +21,44 @@ const STEPS = [
   { num: "04", title: "Keep", sub: "Photos & signed certs." },
 ] as const;
 
-/** Minimal interactive Offline Gate QR Scanner Aperture (1.5px champagne gold SVG). */
-function GatePassAperture() {
-  const [verified, setVerified] = useState(false);
-
-  return (
-    <div className="relative overflow-hidden rounded-[6px] border border-[#2E3342] bg-[#161820]">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/images/gate-desk.jpg"
-        alt=""
-        className="absolute inset-0 size-full object-cover opacity-35"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(22,24,32,0.68), rgba(22,24,32,0.92))",
-        }}
-      />
-
-      <div className="tr-reel-stage relative z-10 flex flex-col items-center justify-center px-6 py-14 text-center">
-        <button
-          type="button"
-          onClick={() => setVerified((v) => !v)}
-          aria-pressed={verified}
-          className="group flex flex-col items-center focus-visible:outline-none"
-        >
-          <svg
-            viewBox="0 0 280 200"
-            fill="none"
-            className="w-full max-w-[250px] text-[#D4B87A]"
-            role="img"
-            aria-label="Interactive offline QR gate scanner"
-          >
-            <g className="tr-reel-cw">
-              <circle
-                cx="140"
-                cy="100"
-                r="76"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeDasharray="16 8"
-              />
-            </g>
-            <g className="tr-reel-ccw">
-              <circle
-                cx="140"
-                cy="100"
-                r="58"
-                stroke="currentColor"
-                strokeOpacity="0.45"
-                strokeWidth="1.1"
-                strokeDasharray="5 9"
-              />
-            </g>
-            <g stroke="currentColor" strokeWidth="1.4">
-              <path d="M106 78V66h12" />
-              <path d="M174 78V66h-12" />
-              <path d="M106 122v12h12" />
-              <path d="M174 122v12h-12" />
-            </g>
-            {verified ? (
-              <path
-                d="M124 100l11 11 22-24"
-                stroke="#EFEAE0"
-                strokeWidth="1.8"
-                strokeLinecap="square"
-              />
-            ) : (
-              <g stroke="currentColor" strokeWidth="1.3">
-                <rect x="118" y="78" width="13" height="13" />
-                <rect x="149" y="78" width="13" height="13" />
-                <rect x="118" y="109" width="13" height="13" />
-                <path d="M148 111h14M148 120h9M136 98h8" />
-                <line x1="108" y1="100" x2="172" y2="100" stroke="#EFEAE0" strokeOpacity="0.6" strokeWidth="1.1" />
-              </g>
-            )}
-          </svg>
-
-          <span className="mt-7 inline-flex min-h-[44px] items-center rounded-[4px] border border-[#D4B87A] px-5 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[#D4B87A] transition-colors group-hover:bg-[#D4B87A] group-hover:text-[#161820]">
-            {verified ? "Admitted · 0.3s Offline" : "Test Offline Scan"}
-          </span>
-        </button>
-      </div>
-    </div>
-  );
-}
+const GALLERY = [
+  {
+    src: "/images/rooftop-night.jpg",
+    title: "Rooftop Evenings",
+    href: "/category/party",
+    aspect: "aspect-[4/3]",
+  },
+  {
+    src: "/images/stage-spotlight.jpg",
+    title: "Keynotes & Panels",
+    href: "/category/talk",
+    aspect: "aspect-[3/4]",
+  },
+  {
+    src: "/images/hero-hall.jpg",
+    title: "Live Concerts",
+    href: "/category/cultural",
+    aspect: "aspect-[3/4]",
+  },
+  {
+    src: "/images/gate-desk.jpg",
+    title: "Instant Gate Entry",
+    href: "/passes",
+    aspect: "aspect-[4/3]",
+  },
+] as const;
 
 /**
- * Ultra-minimal Luxury Editorial EvntCult Landing Page:
+ * Luxury Minimal EvntCult Landing Page:
  * Deep charcoal (#161820), warm ivory (#EFEAE0), champagne gold (#D4B87A),
- * Cormorant Garamond 700 italic + Inter 300 — radical subtraction, zero paragraphs.
+ * Cormorant Garamond 700 italic + Inter 300 — zero tag-strip clutter, zero calculators.
  */
 export function TapeLanding() {
   const reduce = useReducedMotion();
-  const [attendees, setAttendees] = useState(400);
-  const [price, setPrice] = useState(250);
-
-  const saved = Math.round(attendees * price * 0.08);
 
   return (
     <div className="bg-[#161820] text-[#EFEAE0]">
-      {/* 1. HERO — Pure photography, monumental headline, search & CTAs */}
+      {/* 1. HERO — Pure full-bleed photography, monumental serif, search & CTAs */}
       <section
         aria-labelledby="hero-h"
         className="relative flex min-h-[clamp(560px,92vh,880px)] flex-col items-center justify-end overflow-hidden bg-[#161820] px-5 pb-[8vh] pt-28 text-center md:px-10"
@@ -147,22 +80,13 @@ export function TapeLanding() {
         />
 
         <div className="relative z-10 mx-auto flex w-full max-w-[920px] flex-col items-center">
-          <m.p
-            initial={reduce ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0, ease: EASE }}
-            className="tr-meta text-[#D4B87A]"
-          >
-            Live Events · Offline QR · Direct UPI
-          </m.p>
-
           <m.h1
             id="hero-h"
             initial={reduce ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.14, ease: EASE }}
-            className="mt-4 font-display font-bold italic leading-[0.88] tracking-[-0.02em] text-[#EFEAE0]"
-            style={{ fontSize: "clamp(58px, 9.2vw, 136px)" }}
+            transition={{ duration: 0.7, ease: EASE }}
+            className="font-display font-bold italic leading-[0.88] tracking-[-0.02em] text-[#EFEAE0]"
+            style={{ fontSize: "clamp(60px, 9.4vw, 140px)" }}
           >
             Every Event.
             <br />
@@ -172,7 +96,7 @@ export function TapeLanding() {
           <m.div
             initial={reduce ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.3, ease: EASE }}
+            transition={{ duration: 0.65, delay: 0.2, ease: EASE }}
             className="mt-10 flex w-full max-w-[500px] flex-col items-center gap-5"
           >
             <form
@@ -233,13 +157,13 @@ export function TapeLanding() {
               <h2 className="font-display text-[28px] font-semibold italic leading-tight text-[#D4B87A]">
                 {item.title}
               </h2>
-              <p className="tr-meta mt-2 text-[#9D978C]">{item.sub}</p>
+              <p className="mt-1.5 text-[13.5px] font-light text-[#9D978C]">{item.sub}</p>
             </m.div>
           ))}
         </div>
       </section>
 
-      {/* 3. CATEGORIES — Pure architectural index rows, zero blurb clutter */}
+      {/* 3. CATEGORIES — Pure architectural index rows */}
       <section className="bg-[#161820] py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-5 md:px-10">
           <div className="flex items-end justify-between gap-4">
@@ -288,8 +212,50 @@ export function TapeLanding() {
         </div>
       </section>
 
-      {/* 4. FOUR STEPS — Ultra-short editorial cadence */}
-      <section className="border-y border-[#2E3342] bg-[#1E212B] py-24 md:py-28">
+      {/* 4. EDITORIAL GALLERY — Sharp 3px-gap photography showcase */}
+      <section className="border-y border-[#2E3342] bg-[#1E212B] py-24 md:py-32">
+        <div className="mx-auto max-w-[1200px] px-5 md:px-10">
+          <h2 className="font-display text-[clamp(42px,5.4vw,72px)] font-bold italic leading-[0.94] text-[#EFEAE0]">
+            The Atmosphere
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 gap-[3px] md:grid-cols-2">
+            {GALLERY.map((item, idx) => (
+              <m.div
+                key={item.title}
+                initial={reduce ? false : { opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.55, delay: idx * 0.08, ease: EASE }}
+              >
+                <Link
+                  href={item.href}
+                  className={`group relative block overflow-hidden bg-[#161820] ${item.aspect}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.src}
+                    alt={item.title}
+                    loading="lazy"
+                    className="size-full object-cover transition-transform duration-slow ease-out group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 flex items-end bg-[#161820]/0 p-6 transition-colors duration-base group-hover:bg-[#161820]/70 md:p-8">
+                    <div className="flex w-full items-center justify-between opacity-95 transition-opacity duration-base md:opacity-0 md:group-hover:opacity-100">
+                      <span className="font-display text-[32px] font-semibold italic leading-none text-[#EFEAE0]">
+                        {item.title}
+                      </span>
+                      <ArrowRight className="size-5 text-[#D4B87A]" aria-hidden />
+                    </div>
+                  </div>
+                </Link>
+              </m.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. FOUR STEPS — Minimal editorial cadence */}
+      <section className="bg-[#161820] py-24 md:py-28">
         <div className="mx-auto max-w-[1200px] px-5 md:px-10">
           <ol className="grid grid-cols-2 gap-10 lg:grid-cols-4 lg:gap-8">
             {STEPS.map((step) => (
@@ -310,65 +276,6 @@ export function TapeLanding() {
               </li>
             ))}
           </ol>
-        </div>
-      </section>
-
-      {/* 5. INTERACTIVE TOOLS — Zero-Fee Calculator + Live Offline Scan */}
-      <section className="bg-[#161820] py-24 md:py-32">
-        <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-12 px-5 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 md:px-10">
-          <div>
-            <p className="tr-meta text-[#D4B87A]">For Organizers</p>
-            <h2 className="mt-3 font-display text-[clamp(44px,5.4vw,72px)] font-bold italic leading-[0.92] text-[#EFEAE0]">
-              Zero Cut.
-            </h2>
-
-            <div className="mt-10 grid gap-7 sm:grid-cols-2">
-              <label className="block">
-                <span className="flex items-baseline justify-between">
-                  <span className="tr-meta text-[#9D978C]">Guests</span>
-                  <span className="font-display text-[32px] font-semibold italic tabular-nums text-[#EFEAE0]">
-                    {attendees.toLocaleString("en-IN")}
-                  </span>
-                </span>
-                <input
-                  type="range"
-                  min={50}
-                  max={2000}
-                  step={50}
-                  value={attendees}
-                  onChange={(e) => setAttendees(Number(e.target.value))}
-                  className="mt-3 w-full accent-[#D4B87A]"
-                />
-              </label>
-
-              <label className="block">
-                <span className="flex items-baseline justify-between">
-                  <span className="tr-meta text-[#9D978C]">Ticket</span>
-                  <span className="font-display text-[32px] font-semibold italic tabular-nums text-[#EFEAE0]">
-                    INR {price}
-                  </span>
-                </span>
-                <input
-                  type="range"
-                  min={50}
-                  max={1000}
-                  step={50}
-                  value={price}
-                  onChange={(e) => setPrice(Number(e.target.value))}
-                  className="mt-3 w-full accent-[#D4B87A]"
-                />
-              </label>
-            </div>
-
-            <div className="mt-10 flex items-baseline justify-between border-y border-[#2E3342] py-5">
-              <span className="tr-meta text-[#9D978C]">Saved vs 8% fee</span>
-              <span className="font-display text-[44px] font-bold italic tabular-nums text-[#D4B87A]">
-                INR {saved.toLocaleString("en-IN")}
-              </span>
-            </div>
-          </div>
-
-          <GatePassAperture />
         </div>
       </section>
 

@@ -121,18 +121,18 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected, onDo
       <ol className="space-y-6">
         <li>
           <p className="flex items-center gap-2 text-[14px] font-semibold text-ink">
-            <span className="grid size-6 place-items-center rounded-full bg-ink text-[12px] text-white" aria-hidden>
+            <span className="grid size-6 place-items-center rounded-[3px] bg-[#D4B87A] text-[12px] font-semibold text-[#161820]" aria-hidden>
               1
             </span>
             Pay with any UPI app
           </p>
-          <div className="mt-3 flex flex-col items-center gap-3 rounded-2xl border border-line-strong bg-white p-4">
-            <div className="relative w-[188px] rounded-xl bg-white p-1">
+          <div className="mt-3 flex flex-col items-center gap-3 rounded-[4px] border border-line bg-surface p-4">
+            <div className="relative w-[188px] rounded-[4px] bg-white p-1.5">
               <Viewfinder />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={svgSrc(qrSvg)} alt={`UPI QR code to pay ${formatINR(pricePaise)} to ${vpa}`} className="block aspect-square w-full" />
             </div>
-            <div className="flex max-w-full items-center gap-2 rounded-lg bg-sunken px-3 py-1.5">
+            <div className="flex max-w-full items-center gap-2 rounded-[4px] bg-sunken px-3 py-1.5">
               <span className="min-w-0 truncate font-mono text-[13px] text-ink">{vpa}</span>
               <button type="button" onClick={copy} className={buttonClass("secondary", "sm", "h-8 shrink-0 px-2.5 text-[12.5px]")}>
                 {copied ? <Check className="size-3.5" aria-hidden /> : <Copy className="size-3.5" aria-hidden />}
@@ -147,7 +147,7 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected, onDo
         <li>
           <form onSubmit={submit} noValidate>
             <label htmlFor="upi-utr" className="flex items-center gap-2 text-[14px] font-semibold text-ink">
-              <span className="grid size-6 place-items-center rounded-full bg-ink text-[12px] text-white" aria-hidden>
+              <span className="grid size-6 place-items-center rounded-[3px] bg-[#D4B87A] text-[12px] font-semibold text-[#161820]" aria-hidden>
                 2
               </span>
               Enter the transaction ID
@@ -168,7 +168,7 @@ export function UpiPay({ regId, pricePaise, vpa, uri, qrSvg, utr, rejected, onDo
                 maxLength={20}
                 aria-describedby="upi-utr-help upi-utr-state"
                 aria-invalid={!!error || badChars || undefined}
-                className={`h-12 pr-20 font-mono text-[16px] tracking-[0.08em] transition-shadow duration-slow ${back ? "shadow-[0_0_0_4px_rgba(240,215,255,0.9)] motion-safe:animate-pulse" : ""}`}
+                className={`h-12 pr-20 font-mono text-[16px] tracking-[0.08em] transition-shadow duration-slow ${back ? "shadow-[0_0_0_3px_rgba(212,184,122,0.55)] motion-safe:animate-pulse" : ""}`}
               />
               <span id="upi-utr-state" className="pointer-events-none absolute inset-y-0 right-3 flex items-center gap-1 text-[12.5px] tabular-nums" aria-live="polite">
                 {valid ? (
@@ -221,11 +221,11 @@ function SubmitMorph({ busy, sent, disabled }: { busy: boolean; sent: boolean; d
       type="submit"
       disabled={disabled || state !== "idle"}
       aria-busy={state === "busy"}
-      className="relative h-12 flex-1 bg-ink text-[16px] font-semibold text-white disabled:cursor-default"
+      className="relative h-12 flex-1 bg-[#D4B87A] text-[13px] font-semibold uppercase tracking-[0.1em] text-[#161820] disabled:cursor-default"
       initial={false}
       animate={{
-        clipPath: state === "idle" ? "inset(0px 0px round 12px)" : "inset(0px calc(50% - 24px) round 999px)",
-        backgroundColor: state === "sent" ? "#0F8A5F" : disabled && state === "idle" ? "#9C988C" : "#1A1A1A",
+        clipPath: state === "idle" ? "inset(0px 0px round 4px)" : "inset(0px calc(50% - 24px) round 999px)",
+        backgroundColor: state === "sent" ? "#0F8A5F" : disabled && state === "idle" ? "#3B3E4A" : "#D4B87A",
       }}
       transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
     >

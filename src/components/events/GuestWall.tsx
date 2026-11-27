@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 type Post = { id: string; body: string; at: string; name: string; mine: boolean; host: boolean; reactions: Record<string, { n: number; mine: boolean }> };
 type Wall = { locked: true; count: number } | { locked: false; posts: Post[] };
 
-const TINTS = ["#F0D7FF", "#FFE4C7", "#D6EEDF", "#FCD9DF", "#DCE7FB", "#F4EBC9"];
+const TINTS = ["#D4B87A", "#EFEAE0", "#C7B48A", "#DFD5C3", "#B9A682", "#E5D8BF"];
 const tint = (s: string) => TINTS[[...s].reduce((a, c) => a + c.charCodeAt(0), 0) % TINTS.length];
 const ini = (n: string) => {
   const p = n.trim().split(/\s+/);
@@ -57,9 +57,9 @@ export function GuestWall({ slug, signedIn, registerHref }: { slug: string; sign
 
   if (wall.locked) {
     return (
-      <div className="relative overflow-hidden rounded-2xl border border-line bg-white/60">
+      <div className="relative overflow-hidden rounded-[4px] border border-line bg-surface/60">
         <div aria-hidden className="pointer-events-none select-none space-y-4 p-5 blur-[6px]">
-          {["Can't wait for this!! who else is coming from comps?", "Saving seats in the front row 🙌", "Is there parking near the gate?"].map((t, i) => (
+          {["Can't wait for this! Who else is heading in early?", "Saving seats near the front row", "Is there parking near the main gate?"].map((t, i) => (
             <div key={i} className="flex gap-3">
               <span className="size-9 shrink-0 rounded-full" style={{ background: TINTS[i] }} />
               <div>
@@ -69,16 +69,16 @@ export function GuestWall({ slug, signedIn, registerHref }: { slug: string; sign
             </div>
           ))}
         </div>
-        <div className="absolute inset-0 grid place-items-center bg-gradient-to-b from-canvas/30 to-canvas/80 p-6 text-center">
+        <div className="absolute inset-0 grid place-items-center bg-gradient-to-b from-canvas/40 to-canvas/90 p-6 text-center">
           <div>
-            <span className="mx-auto grid place-items-center text-ink">
+            <span className="mx-auto grid place-items-center text-[#D4B87A]">
               <Lock className="size-5" aria-hidden />
             </span>
             <p className="mt-3 text-[16px] font-semibold text-ink">Only guests can see the wall</p>
             <p className="mt-1 text-[13.5px] text-ink-muted">
               {wall.count > 0 ? `${wall.count} ${wall.count === 1 ? "post" : "posts"} from people who are going.` : "Register to say hi to everyone who's going."}
             </p>
-            <a href={signedIn ? "#register" : registerHref} className="mt-4 inline-flex h-10 items-center rounded-xl whitespace-nowrap bg-lavender px-5 text-[14px] font-semibold text-ink ring-2 ring-inset ring-ink">
+            <a href={signedIn ? "#register" : registerHref} className="mt-4 inline-flex h-10 items-center whitespace-nowrap rounded-[4px] bg-[#D4B87A] px-5 text-[12px] font-medium uppercase tracking-[0.12em] text-[#161820] hover:opacity-90">
               {signedIn ? "Register to join in" : "Log in to join in"}
             </a>
           </div>
@@ -118,7 +118,7 @@ export function GuestWall({ slug, signedIn, registerHref }: { slug: string; sign
         />
         <div className="flex items-center justify-between px-1.5 pb-0.5">
           <span className="text-[11.5px] tabular-nums text-ink-subtle">{body.length > 400 ? `${500 - body.length} left` : "Ctrl + Enter to post"}</span>
-          <button type="submit" disabled={!body.trim() || busy} className="h-8 rounded-[10px] bg-ink px-3.5 text-[13px] font-semibold text-white transition-opacity disabled:opacity-40">
+          <button type="submit" disabled={!body.trim() || busy} className="h-8 rounded-[4px] bg-[#D4B87A] px-3.5 text-[12px] font-medium uppercase tracking-[0.1em] text-[#161820] transition-opacity disabled:opacity-40">
             Post
           </button>
         </div>
@@ -139,7 +139,7 @@ export function GuestWall({ slug, signedIn, registerHref }: { slug: string; sign
                 <div className="min-w-0 flex-1">
                   <p className="flex items-center gap-2 text-[13.5px]">
                     <span className="font-semibold text-ink">{p.name}</span>
-                    {p.host && <span className="rounded-lg bg-lavender px-2 py-px text-[11px] font-semibold text-ink">Host</span>}
+                    {p.host && <span className="rounded-[3px] border border-[#D4B87A]/40 bg-[#D4B87A]/15 px-2 py-px font-mono text-[10px] uppercase tracking-[0.1em] text-[#D4B87A]">Host</span>}
                     <time dateTime={p.at} className="text-ink-subtle">
                       {ago(p.at)}
                     </time>
@@ -167,7 +167,7 @@ export function GuestWall({ slug, signedIn, registerHref }: { slug: string; sign
                           onClick={() => void send("POST", { react: p.id, emoji: em })}
                           className={cn(
                             "inline-flex h-7 items-center gap-1 rounded-lg px-2 text-[13px] tabular-nums transition-all active:scale-90",
-                            r?.mine ? "whitespace-nowrap bg-lavender font-semibold text-ink ring-1 ring-inset ring-ink/20" : r ? "bg-sunken text-ink-2" : "text-ink-subtle opacity-0 hover:bg-sunken focus-visible:opacity-100 group-hover:opacity-100 max-sm:opacity-60",
+                            r?.mine ? "whitespace-nowrap bg-[#D4B87A]/20 font-semibold text-[#D4B87A] ring-1 ring-inset ring-[#D4B87A]/40" : r ? "bg-sunken text-ink-2" : "text-ink-subtle opacity-0 hover:bg-sunken focus-visible:opacity-100 group-hover:opacity-100 max-sm:opacity-60",
                           )}
                         >
                           <span aria-hidden>{em}</span>

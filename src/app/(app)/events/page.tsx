@@ -181,14 +181,14 @@ export default async function EventsPage({
         )}
       </div>
 
-      {/* Featured Spotlight Card (when browsing unfiltered grid) */}
+      {/* Featured Spotlight Card */}
       {spotlight && (
         <Link
           href={`/events/${spotlight.slug}`}
-          className="group mt-7 grid overflow-hidden rounded-[26px] border border-line-strong bg-surface shadow-card transition-shadow hover:shadow-raised md:grid-cols-[1.1fr_1fr]"
+          className="group mt-8 grid overflow-hidden rounded-[6px] border border-line bg-surface transition-colors hover:border-[#D4B87A]/60 md:grid-cols-[1.15fr_1fr]"
         >
-          <div className="relative min-h-[220px] overflow-hidden md:min-h-[290px]" style={{ background: accentHex(spotlight.accent) }}>
-            <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.03]">
+          <div className="relative min-h-[240px] overflow-hidden md:min-h-[300px]" style={{ background: accentHex(spotlight.accent) }}>
+            <div className="absolute inset-0 transition-transform duration-slow ease-out group-hover:scale-[1.03]">
               {spotlight.bannerUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={spotlight.bannerUrl} alt="" className="size-full object-cover" />
@@ -197,26 +197,28 @@ export default async function EventsPage({
               )}
             </div>
           </div>
-          <div className="flex flex-col justify-between p-6 sm:p-8">
+          <div className="flex flex-col justify-between p-6 sm:p-9">
             <div>
-              <div className="flex items-center justify-between gap-2 text-[13px] font-semibold text-ink-muted">
-                <span>Featured next up</span>
-                <span className="font-mono text-ink">
+              <div className="flex items-center justify-between gap-2">
+                <span className="tr-meta text-[#D4B87A]">Featured</span>
+                <span className="tr-meta tabular-nums text-ink">
                   {spotlight.feePaise > 0 ? formatINR(spotlight.feePaise) : "Free"}
                 </span>
               </div>
-              <h2 className="mt-2 font-display text-[clamp(30px,3.2vw,44px)] leading-[0.98] tracking-[-0.025em] text-ink group-hover:underline group-hover:decoration-line-strong group-hover:underline-offset-4">
+              <h2 className="mt-3 font-display text-[clamp(32px,3.6vw,48px)] font-bold italic leading-[0.95] text-ink transition-colors group-hover:text-[#D4B87A]">
                 {spotlight.title}
               </h2>
-              <p className="mt-3 text-[14.5px] text-ink-2">
-                {fmtDate(spotlight.startsAt, { weekday: "long", day: "numeric", month: "short" })} · {fmtTime(spotlight.startsAt)}
+              <p className="tr-meta mt-4 text-ink-muted">
+                {fmtDate(spotlight.startsAt, { weekday: "short", day: "numeric", month: "short" })} · {fmtTime(spotlight.startsAt)}
                 {spotlight.venueName ? ` · ${spotlight.venueName}` : ""}
               </p>
             </div>
-            <div className="mt-6 flex items-center justify-between border-t border-line pt-4 text-[14px] font-semibold text-ink">
-              <span>{spotlight.registered > 0 ? `${spotlight.registered.toLocaleString("en-IN")} going` : "Open for registration"}</span>
-              <span className="inline-flex items-center gap-1">
-                View event <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
+            <div className="mt-8 flex items-center justify-between border-t border-line pt-4">
+              <span className="tr-meta text-ink-muted">
+                {spotlight.registered > 0 ? `${spotlight.registered.toLocaleString("en-IN")} going` : "Open"}
+              </span>
+              <span className="tr-meta inline-flex items-center gap-1 text-[#D4B87A]">
+                View <ArrowUpRight className="size-3.5" aria-hidden />
               </span>
             </div>
           </div>

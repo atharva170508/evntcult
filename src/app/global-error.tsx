@@ -4,14 +4,14 @@
 export default function GlobalError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <html lang="en-IN">
-      <body style={{ margin: 0, minHeight: "100dvh", display: "grid", placeItems: "center", background: "#FFFEF6", color: "#1A1A1A", fontFamily: "system-ui, sans-serif" }}>
+      <body style={{ margin: 0, minHeight: "100dvh", display: "grid", placeItems: "center", background: "#161820", color: "#EFEAE0", fontFamily: "system-ui, sans-serif" }}>
         <main style={{ textAlign: "center", padding: 24 }}>
-          <h1 style={{ fontSize: 32, margin: 0 }}>EvntCult didn&apos;t load.</h1>
-          <p style={{ color: "#4A4740", marginTop: 12 }}>Check your connection and try again.</p>
+          <h1 style={{ fontSize: 32, margin: 0, fontWeight: 600 }}>EvntCult didn&apos;t load.</h1>
+          <p style={{ color: "#9C968B", marginTop: 12 }}>Check your connection and try again.</p>
           <button
             type="button"
             onClick={reset}
-            style={{ marginTop: 20, height: 44, padding: "0 20px", borderRadius: 12, border: "2px solid #1A1A1A", background: "#F0D7FF", fontWeight: 600, fontSize: 15, cursor: "pointer" }}
+            style={{ marginTop: 20, height: 44, padding: "0 24px", borderRadius: 4, border: "1px solid #D4B87A", background: "#D4B87A", color: "#161820", fontWeight: 600, fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer" }}
           >
             Try again
           </button>

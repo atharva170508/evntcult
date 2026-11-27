@@ -35,23 +35,23 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
 
   const facts = (
     <>
-      <h3 className="truncate font-display text-[22px] leading-[1.08] tracking-[-0.015em] text-ink transition-colors group-hover:text-[#C9A26B]">
+      <h3 className="truncate font-display text-[24px] italic leading-[1.06] tracking-[-0.015em] text-ink transition-colors group-hover:text-[#D4B87A]">
         {e.title}
       </h3>
-      <p className="tr-meta mt-2 truncate text-ink-muted">
+      <p className="mt-2 truncate font-mono text-[10.5px] uppercase tracking-[0.12em] text-ink-muted">
         {fmtDate(e.startsAt, { weekday: "short" })} · {fmtTime(e.startsAt)} · {e.venueName ?? "Venue TBA"}
       </p>
       <p className="mt-3 flex items-center justify-between gap-3 border-t border-line pt-3">
-        <span className="tr-meta text-[#C9A26B]">
+        <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[#D4B87A]">
           {e.feePaise ? formatINR(e.feePaise) : "Free"}
         </span>
         {state === "ended" ? (
-          <span className="tr-meta text-ink-muted">{e.registered} went</span>
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-ink-muted">{e.registered} went</span>
         ) : (
           left !== null &&
           state !== "full" &&
           state !== "live" &&
-          left <= 50 && <span className="tr-meta text-ink-muted">{left} left</span>
+          left <= 50 && <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-ink-muted">{left} left</span>
         )}
       </p>
     </>
@@ -67,21 +67,21 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
       />
       <span
         className={cn(
-          "absolute left-3 top-3 z-[2] inline-flex items-baseline gap-1.5 rounded-[6px] bg-[#151412]/90 px-2.5 py-1 text-[#EEE8DD]",
+          "absolute left-3 top-3 z-[2] inline-flex items-baseline gap-1.5 rounded-[4px] border border-line bg-[#161820]/90 px-2.5 py-1 text-[#EFEAE0]",
           rows && "max-sm:hidden",
         )}
       >
-        <span className="font-display text-[17px] leading-none tabular-nums">{day}</span>
-        <span className="tr-meta text-[#C9A26B]">{month}</span>
+        <span className="font-display text-[17px] italic leading-none tabular-nums">{day}</span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#D4B87A]">{month}</span>
       </span>
       {badge && (
         <span
           className={cn(
             rows && "max-sm:hidden",
-            "tr-meta absolute bottom-3 left-3 z-[2] inline-flex items-center gap-1.5 rounded-[6px] bg-[#151412]/90 px-2.5 py-1 text-[#EEE8DD]",
+            "absolute bottom-3 left-3 z-[2] inline-flex items-center gap-1.5 rounded-[4px] border border-line bg-[#161820]/90 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[#EFEAE0]",
           )}
         >
-          {state === "live" && <span className="size-1.5 rounded-full bg-[#C9A26B]" aria-hidden />}
+          {state === "live" && <span className="size-1.5 rounded-full bg-[#D4B87A]" aria-hidden />}
           {badge}
         </span>
       )}
@@ -92,17 +92,17 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
     return (
       <Link
         href={`/events/${e.slug}`}
-        className="group flex items-center gap-4 rounded-[8px] outline-offset-4 sm:block"
+        className="group flex items-center gap-4 rounded-[4px] outline-offset-4 sm:block"
       >
-        <div className="relative aspect-square w-[96px] shrink-0 overflow-hidden rounded-[8px] border border-line bg-sunken sm:hidden">
+        <div className="relative aspect-square w-[96px] shrink-0 overflow-hidden rounded-[4px] border border-line bg-sunken sm:hidden">
           {art}
         </div>
-        <div className="hidden overflow-hidden rounded-[8px] border border-line bg-surface transition-colors duration-base hover:border-line-strong sm:block">
+        <div className="hidden overflow-hidden rounded-[4px] border border-line bg-surface transition-colors duration-base hover:border-[#D4B87A]/40 sm:block">
           <div className="relative aspect-[4/3] overflow-hidden bg-sunken">{art}</div>
           <div className="p-4">{facts}</div>
         </div>
         <div className="min-w-0 flex-1 sm:hidden">
-          {badge && <p className="tr-meta mb-1 text-[#C9A26B]">{badge}</p>}
+          {badge && <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[#D4B87A]">{badge}</p>}
           {facts}
         </div>
       </Link>
@@ -112,7 +112,7 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
   return (
     <Link
       href={`/events/${e.slug}`}
-      className="group block overflow-hidden rounded-[8px] border border-line bg-surface transition-colors duration-base hover:border-line-strong"
+      className="group block overflow-hidden rounded-[4px] border border-line bg-surface transition-colors duration-base hover:border-[#D4B87A]/40"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-sunken">{art}</div>
       <div className="p-4">{facts}</div>

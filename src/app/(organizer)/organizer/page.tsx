@@ -11,7 +11,6 @@ import { EventArt } from "@/components/ui/EventArt";
 import { Chip } from "@/components/ui/Chip";
 import { Meter } from "@/components/ui/Meter";
 import { LinkButton, buttonClass } from "@/components/ui/Button";
-import { FirstVisitCard } from "@/components/ui/FirstVisitCard";
 import { DeleteDraftButton } from "@/components/organizer-ui/DeleteDraftButton";
 
 export const metadata: Metadata = { title: "Your events" };
@@ -119,56 +118,37 @@ export default async function OrganizerHome({ searchParams }: { searchParams: Pr
   const past = events.filter((e) => e.status !== "draft" && !upcoming.includes(e)).reverse().slice(0, 12);
 
   const registrations = upcoming.reduce((a, e) => a + e.taken, 0);
-  const firstName = viewer.name.split(/\s+/)[0] ?? "there";
 
   return (
     <div className="pb-12 pt-8 md:pt-10">
       {deleted && (
-        <p role="status" className="mb-6 rounded-xl bg-sunken px-4 py-3 text-[14.5px] font-medium text-ink">
+        <p role="status" className="mb-6 rounded-[4px] border border-line bg-surface px-4 py-3 text-[14.5px] font-medium text-ink">
           Draft deleted.
         </p>
       )}
       <header className="flex flex-col gap-5 border-b border-line pb-7 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="font-display text-[clamp(40px,5vw,60px)] leading-[0.95] tracking-[-0.03em] text-ink">
-            Your hosted <em>events.</em>
-          </h1>
-          <p className="mt-2 text-[15px] text-ink-muted">
-            Create events, send announcements, verify UPI payments, link Drive albums, and run the gate.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-2.5">
+        <h1 className="font-display text-[clamp(42px,5.2vw,64px)] font-bold italic leading-[0.94] tracking-[-0.02em] text-ink">
+          Hosted <span className="text-[#D4B87A]">Events.</span>
+        </h1>
+        <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/organizer/calendar"
-            className="inline-flex h-11 items-center gap-2 rounded-xl border border-line-strong bg-surface px-4 text-[14px] font-semibold text-ink transition-colors hover:bg-sunken"
+            className="tr-meta inline-flex h-11 items-center gap-2 rounded-[4px] border border-line-strong px-4 text-ink transition-colors hover:border-[#D4B87A] hover:text-[#D4B87A]"
           >
-            <CalendarDays className="size-4 text-ink-muted" aria-hidden />
+            <CalendarDays className="size-3.5" aria-hidden />
             Schedule
           </Link>
           <Link
             href="/organizer/events/new"
-            className="ui-press ui-sheen inline-flex h-11 items-center gap-2 rounded-xl bg-lavender px-5 text-[14.5px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink hover:bg-lavender-hover"
+            className="tr-meta inline-flex h-11 items-center gap-2 rounded-[4px] bg-[#D4B87A] px-5 text-[#161820] transition-colors hover:bg-[#E0C78E]"
           >
-            <Plus className="size-4" strokeWidth={2.5} aria-hidden />
-            Host an Event
+            <Plus className="size-3.5" strokeWidth={2.5} aria-hidden />
+            New Event
           </Link>
         </div>
       </header>
 
-      <div className="mt-6">
-        <FirstVisitCard
-          storageKey="ec_welcome_organizer_v1"
-          eyebrow="Hosting on EvntCult"
-          title="Launch an event in two minutes."
-          steps={[
-            { num: "01", label: "Create the essentials", detail: "Name, date, venue, and ticket type. Publish as soon as it's ready." },
-            { num: "02", label: "Style & customize", detail: "Shuffle page looks, upload a poster, and add custom signup questions or merch." },
-            { num: "03", label: "Scan at the gate", detail: "Verify UPI payments in one tap and scan QR passes offline on event day." },
-          ]}
-        />
-      </div>
-
-      <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-card bg-line shadow-card lg:grid-cols-4">
+      <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-[4px] border border-line bg-line lg:grid-cols-4">
         {[
           { l: "Upcoming events", v: String(upcoming.length) },
           { l: "Registrations (upcoming)", v: registrations.toLocaleString("en-IN") },

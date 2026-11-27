@@ -161,7 +161,7 @@ export function RegisterPanel(props: {
                     role="radio"
                     aria-checked={on}
                     onClick={() => setAnswers((a) => ({ ...a, [q.id]: on && !q.required ? "" : o }))}
-                    className={`ui-press h-10 rounded-[11px] px-3.5 text-[14px] font-semibold ring-1 ring-inset ${on ? "bg-ink text-white ring-ink" : "bg-white text-ink ring-line-strong hover:ring-ink/40"}`}
+                    className={`ui-press h-10 rounded-[4px] px-3.5 text-[13.5px] font-medium ring-1 ring-inset ${on ? "bg-[#D4B87A] text-[#161820] ring-[#D4B87A]" : "bg-surface text-ink ring-line hover:ring-[#D4B87A]/50"}`}
                   >
                     {o}
                   </button>
@@ -210,7 +210,7 @@ export function RegisterPanel(props: {
     </div>
   );
   const teamCard = props.myTeam && (
-    <div className="rounded-2xl border border-line-strong bg-white p-4">
+    <div className="rounded-[4px] border border-line bg-surface p-4">
       <div className="flex items-baseline justify-between gap-3">
         <p className="min-w-0 truncate text-[16px] font-semibold text-ink">{props.myTeam.name}</p>
         {props.teamSignup && (
@@ -221,13 +221,13 @@ export function RegisterPanel(props: {
       </div>
       <ul className="mt-2 flex flex-wrap gap-1.5">
         {props.myTeam.members.map((m, i) => (
-          <li key={i} className="rounded-lg bg-sunken px-2.5 py-1 text-[13px] text-ink-2">
+          <li key={i} className="rounded-[3px] bg-sunken px-2.5 py-1 text-[13px] text-ink-2">
             {m.you ? "You" : m.name.split(" ")[0]}
             {m.captain && <span className="text-ink-muted"> (captain)</span>}
           </li>
         ))}
       </ul>
-      <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-lavender/50 px-3 py-2.5">
+      <div className="mt-3 flex items-center justify-between gap-3 rounded-[4px] border border-[#D4B87A]/30 bg-[#D4B87A]/10 px-3 py-2.5">
         <div>
           <p className="text-[12px] text-ink-muted">Join code</p>
           <p className="font-mono text-[18px] font-medium tracking-[0.16em] text-ink">{props.myTeam.code}</p>
@@ -271,11 +271,11 @@ export function RegisterPanel(props: {
                 aria-checked={on}
                 disabled={soldOut}
                 onClick={() => (setTier(t.id), setPromo(null))}
-                className={`ui-press flex min-h-12 items-center justify-between rounded-[14px] px-4 text-left ring-inset transition-shadow disabled:cursor-not-allowed disabled:opacity-50 ${on ? "whitespace-nowrap bg-lavender/60 ring-2 ring-ink" : "bg-white ring-1 ring-line-strong hover:ring-ink/40"}`}
+                className={`ui-press flex min-h-12 items-center justify-between rounded-[4px] px-4 text-left ring-inset transition-shadow disabled:cursor-not-allowed disabled:opacity-50 ${on ? "whitespace-nowrap bg-[#D4B87A]/15 ring-1 ring-[#D4B87A]" : "bg-canvas/50 ring-1 ring-line hover:ring-[#D4B87A]/50"}`}
               >
-                <span className="flex items-center gap-2.5 text-[15px] font-semibold text-ink">
-                  <span className={`grid size-4 place-items-center rounded-full ring-2 ${on ? "ring-ink" : "ring-line-strong"}`} aria-hidden>
-                    {on && <span className="size-2 rounded-full bg-ink" />}
+                <span className="flex items-center gap-2.5 text-[15px] font-medium text-ink">
+                  <span className={`grid size-4 place-items-center rounded-full ring-1 ${on ? "ring-[#D4B87A]" : "ring-line-strong"}`} aria-hidden>
+                    {on && <span className="size-2 rounded-full bg-[#D4B87A]" />}
                   </span>
                   {t.name}
                   {left !== undefined && left > 0 && left <= 20 && <span className="text-[12.5px] font-medium text-accent-ink">{left} left</span>}
@@ -387,13 +387,13 @@ export function RegisterPanel(props: {
         )}
         {err}
         {props.hostNote && (
-          <div className="border-l-2 border-lavender pl-3">
+          <div className="border-l-2 border-[#D4B87A] pl-3">
             <p className="text-[12.5px] text-ink-muted">A note from {props.hostNote.from}</p>
-            <p className="mt-0.5 whitespace-pre-line font-display text-[18px] leading-snug text-ink">{props.hostNote.text}</p>
+            <p className="mt-0.5 whitespace-pre-line font-display text-[18px] italic leading-snug text-ink">{props.hostNote.text}</p>
           </div>
         )}
         {props.ready && (
-          <details className="group rounded-xl border border-line bg-canvas/50 open:bg-white">
+          <details className="group rounded-[4px] border border-line bg-canvas/50 open:bg-canvas/80">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-3.5 py-3 text-[14px]">
               <span>
                 <span className="font-semibold text-ink">Get ready for the event</span>
@@ -410,8 +410,8 @@ export function RegisterPanel(props: {
                 { done: false, label: "Add it to your calendar", href: `/api/events/${props.slug}/ics`, cta: "Add" },
                 { done: false, label: "Put EvntCult on your home screen", href: "/get-app", cta: "How" },
               ].map((i) => (
-                <li key={i.label} className="flex min-h-10 items-center gap-2.5 rounded-lg px-1.5">
-                  <span className={`grid size-5 shrink-0 place-items-center rounded-md ${i.done ? "bg-ink text-white" : "ring-1 ring-inset ring-line-strong"}`} aria-hidden>
+                <li key={i.label} className="flex min-h-10 items-center gap-2.5 rounded-[4px] px-1.5">
+                  <span className={`grid size-5 shrink-0 place-items-center rounded-[3px] ${i.done ? "bg-[#D4B87A] text-[#161820]" : "ring-1 ring-inset ring-line-strong"}`} aria-hidden>
                     {i.done && <Check className="size-3" />}
                   </span>
                   <span className={`min-w-0 flex-1 ${i.done ? "text-ink-muted" : "text-ink"}`}>{i.label}</span>

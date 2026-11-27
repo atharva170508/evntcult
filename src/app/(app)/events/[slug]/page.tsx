@@ -196,7 +196,7 @@ export default async function EventPage({
 
   const cover = (cls: string, aspect = "aspect-square") => (
     <div
-      className={`relative ${aspect} overflow-hidden rounded-[20px] bg-sunken ${cls}`}
+      className={`relative ${aspect} overflow-hidden rounded-[4px] border border-line bg-sunken ${cls}`}
     >
       <EventArt accent={s.accent} seed={s.id} scrim={false} />
       {e.banner_url && (
@@ -222,7 +222,7 @@ export default async function EventPage({
           className="group -mx-2 mt-1.5 flex items-center gap-3 rounded-lg p-2 transition-colors duration-fast hover:bg-sunken"
         >
           <span
-            className="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-[13px] font-semibold text-white"
+            className="grid size-9 shrink-0 place-items-center rounded-[4px] border border-line bg-surface font-mono text-[12px] font-medium text-[#D4B87A]"
             aria-hidden
           >
             {initials(hostRow?.name ?? "EvntCult")}
@@ -277,7 +277,7 @@ export default async function EventPage({
               {goingInitials.map((ini, i) => (
                 <span
                   key={i}
-                  className="relative grid size-9 place-items-center rounded-full border-2 border-canvas text-[12px] font-semibold text-ink"
+                  className="relative grid size-9 place-items-center rounded-full border-2 border-canvas text-[12px] font-semibold text-[#161820]"
                   style={{ background: AVATAR_TINTS[i % AVATAR_TINTS.length], ["--i" as string]: i }}
                   aria-hidden
                 >
@@ -334,7 +334,7 @@ export default async function EventPage({
             url={shareUrl}
             title={e.title}
             whenLabel={`${fmtDate(s.startsAt, { weekday: "short", day: "numeric", month: "short" })}, ${fmtRange(s.startsAt, s.endsAt)} IST`}
-            whereLabel={e.event_type === "virtual" ? "Online" : (e.venue ?? "Campus")}
+            whereLabel={e.event_type === "virtual" ? "Online" : (e.venue ?? "Venue TBA")}
           />
         </div>
       )}
@@ -383,11 +383,11 @@ export default async function EventPage({
           className="hidden lg:sticky lg:top-[calc(var(--header-h)+40px)] lg:block lg:self-start"
         >
           <Entrance delay={0.04}>
-            {cover("shadow-[0_24px_48px_-28px_rgba(60,40,10,0.45)]")}
+            {cover("")}
             {e.category && (
               <Link
                 href={`/category/${e.category.toLowerCase()}`}
-                className="mt-3 flex items-center justify-between gap-3 rounded-2xl border border-line-strong bg-surface px-4 py-2.5 text-[13px] transition-colors duration-fast hover:bg-sunken"
+                className="mt-3 flex items-center justify-between gap-3 rounded-[4px] border border-line bg-surface px-4 py-2.5 text-[13px] transition-colors duration-fast hover:border-[#D4B87A]/50"
               >
                 <span className="text-ink-muted">
                   Featured in <strong className="font-semibold text-ink">{kind}</strong>
@@ -402,7 +402,7 @@ export default async function EventPage({
         {/* Right: what, when, where, register, about */}
         <div className="min-w-0">
           <Entrance delay={0.02} className="mt-2 lg:hidden">
-            {cover("rounded-[18px]", "aspect-[2/1]")}
+            {cover("", "aspect-[2/1]")}
           </Entrance>
 
           <Entrance delay={0.06} className="mt-6 lg:mt-0">
@@ -431,13 +431,13 @@ export default async function EventPage({
             <div className="flex items-center gap-4">
               <dt className="sr-only">When</dt>
               <span
-                className="flex w-12 shrink-0 flex-col overflow-hidden rounded-lg border border-line-strong bg-white text-center leading-none"
+                className="flex w-12 shrink-0 flex-col overflow-hidden rounded-[4px] border border-line bg-surface text-center leading-none"
                 aria-hidden
               >
-                <span className="bg-sunken py-1 text-[10.5px] font-semibold text-ink-muted">
+                <span className="border-b border-line bg-sunken py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[#D4B87A]">
                   {fmtDate(s.startsAt, { month: "short" })}
                 </span>
-                <span className="py-1.5 font-display text-[20px] tabular-nums text-ink">
+                <span className="py-1.5 font-display text-[20px] italic tabular-nums text-ink">
                   {fmtDate(s.startsAt, { day: "numeric" })}
                 </span>
               </span>
@@ -526,9 +526,9 @@ export default async function EventPage({
           <section
             id="register"
             aria-labelledby="reg-h"
-            className="mt-8 scroll-mt-28 overflow-hidden rounded-[20px] border border-line-strong bg-white"
+            className="mt-8 scroll-mt-28 overflow-hidden rounded-[4px] border border-line bg-surface"
           >
-            <div className="flex items-center justify-between gap-3 border-b border-line bg-sunken/50 px-5 py-3">
+            <div className="flex items-center justify-between gap-3 border-b border-line bg-canvas/50 px-5 py-3">
               <h2 id="reg-h" className="text-[14px] font-semibold text-ink">
                 {d.isOwner
                   ? "Your event"
@@ -738,7 +738,7 @@ export default async function EventPage({
                   url={shareUrl}
                   title={e.title}
                   whenLabel={`${fmtDate(s.startsAt, { weekday: "short", day: "numeric", month: "short" })}, ${fmtRange(s.startsAt, s.endsAt)} IST`}
-                  whereLabel={e.event_type === "virtual" ? "Online" : (e.venue ?? "Campus")}
+                  whereLabel={e.event_type === "virtual" ? "Online" : (e.venue ?? "Venue TBA")}
                 />
               )}
             </div>
@@ -891,8 +891,8 @@ export default async function EventPage({
                   className="pointer-events-none relative h-56 w-full grayscale-[35%] transition-[filter] duration-300 group-hover:grayscale-0 dark:invert dark:hue-rotate-180"
                   src={`https://www.openstreetmap.org/export/embed.html?bbox=${e.venue_lng - 0.006}%2C${e.venue_lat - 0.0035}%2C${e.venue_lng + 0.006}%2C${e.venue_lat + 0.0035}&layer=mapnik&marker=${e.venue_lat}%2C${e.venue_lng}`}
                 />
-                <span className="absolute bottom-3 right-3 inline-flex h-9 items-center gap-1.5 rounded-xl bg-white px-3 text-[13px] font-semibold text-ink shadow-[var(--lift-2)]">
-                  <Navigation className="size-3.5" aria-hidden /> Directions
+                <span className="absolute bottom-3 right-3 inline-flex h-9 items-center gap-1.5 rounded-[4px] border border-line bg-surface px-3 text-[12px] font-medium uppercase tracking-[0.1em] text-ink">
+                  <Navigation className="size-3.5 text-[#D4B87A]" aria-hidden /> Directions
                 </span>
               </a>
             </section>
@@ -926,7 +926,7 @@ export default async function EventPage({
           </div>
           <Link
             href="/passes"
-            className="inline-flex h-12 shrink-0 items-center gap-2 whitespace-nowrap rounded-xl bg-ink px-5 text-[16px] font-semibold text-white active:scale-[0.97]"
+            className="inline-flex h-12 shrink-0 items-center gap-2 whitespace-nowrap rounded-[4px] bg-[#D4B87A] px-5 text-[13px] font-medium uppercase tracking-[0.12em] text-[#161820] active:scale-[0.97]"
           >
             <Ticket className="size-[18px]" aria-hidden /> Show pass
           </Link>
@@ -935,7 +935,7 @@ export default async function EventPage({
 
       {/* Phones: price and the main action stay in reach. */}
       {(canRegister || !viewer) && (
-        <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-line-strong bg-white px-gutter pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-line bg-canvas/95 px-gutter pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 backdrop-blur-md lg:hidden">
           <div>
             <p className="text-[17px] font-semibold tabular-nums text-ink">
               {priceLabel}
@@ -955,7 +955,7 @@ export default async function EventPage({
                 ? "#register"
                 : `/signin?next=${encodeURIComponent(`/events/${e.slug}`)}`
             }
-            className="inline-flex h-12 items-center rounded-xl whitespace-nowrap bg-lavender px-6 text-[16px] font-semibold text-ink ring-2 ring-inset ring-ink"
+            className="inline-flex h-12 items-center whitespace-nowrap rounded-[4px] bg-[#D4B87A] px-6 text-[13px] font-medium uppercase tracking-[0.12em] text-[#161820]"
           >
             {viewer
               ? d.seatsLeft === 0
@@ -975,12 +975,12 @@ const UPDATE_LABEL: Record<string, string> = {
   update: "Update",
 };
 const AVATAR_TINTS = [
-  "#F0D7FF",
-  "#FFE4C7",
-  "#D6EEDF",
-  "#FCD9DF",
-  "#DCE7FB",
-  "#F4EBC9",
+  "#D4B87A",
+  "#EFEAE0",
+  "#C7B48A",
+  "#DFD5C3",
+  "#B9A682",
+  "#E5D8BF",
 ];
 
 function initials(name: string) {

@@ -545,9 +545,9 @@ export function HoloPass(p: HoloPassProps) {
           <button
             type="button"
             onClick={() => setGate(true)}
-            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-ink px-4 text-[15px] font-semibold text-white transition-colors duration-fast hover:bg-ink-2"
+            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-[4px] bg-[#D4B87A] px-4 text-[13px] font-medium uppercase tracking-[0.1em] text-[#161820] transition-opacity duration-fast hover:opacity-90"
           >
-            <Maximize2 className="size-4" aria-hidden /> Show at the gate
+            <Maximize2 className="size-4" aria-hidden /> Show at gate
           </button>
         )}
         <button
@@ -555,7 +555,7 @@ export function HoloPass(p: HoloPassProps) {
           onClick={() => setFlipped((f) => !f)}
           aria-pressed={flipped}
           className={cn(
-            "inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-4 text-[15px] font-semibold text-ink transition-colors duration-fast hover:border-ink",
+            "inline-flex h-11 items-center justify-center gap-2 rounded-[4px] border border-line bg-surface px-4 text-[13px] font-medium uppercase tracking-[0.1em] text-ink transition-colors duration-fast hover:border-[#D4B87A]/60",
             !canEnter && "flex-1",
           )}
         >
@@ -572,7 +572,7 @@ export function HoloPass(p: HoloPassProps) {
           disabled={sharing}
           aria-label="Share to your story"
           title="Share to your story (QR hidden)"
-          className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-line-strong bg-white text-ink transition-colors duration-fast hover:border-ink disabled:opacity-60"
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-[4px] border border-line bg-surface text-ink transition-colors duration-fast hover:border-[#D4B87A]/60 disabled:opacity-60"
         >
           <Share2 className="size-4" aria-hidden />
         </button>

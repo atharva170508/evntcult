@@ -14,10 +14,7 @@ import { istYmd } from "@/lib/time";
 import { cn, fmtTime } from "@/lib/utils";
 import { PageHero } from "@/components/brand/PageHero";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { Chip } from "@/components/ui/Chip";
-import { buttonClass } from "@/components/ui/Button";
 import { SubscribeCalendar } from "@/components/calendar/SubscribeCalendar";
-import { FirstVisitCard } from "@/components/ui/FirstVisitCard";
 import { calendarFeedToken } from "@/lib/session";
 import { siteHost } from "@/lib/organizer/page-data";
 
@@ -27,11 +24,10 @@ export const dynamic = "force-dynamic";
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function eventTone(e: CalendarEvent) {
-  if (e.status === "cancelled")
-    return "bg-danger-soft text-danger line-through";
-  if (e.mine === "registered") return "bg-night text-white";
+  if (e.status === "cancelled") return "bg-danger-soft text-danger line-through";
+  if (e.mine === "registered") return "bg-[#D4B87A] text-[#161820] font-medium";
   if (e.mine === "waitlisted") return "bg-warn-soft text-warn";
-  if (e.hosting) return "bg-accent-soft text-accent-ink";
+  if (e.hosting) return "border border-[#D4B87A]/50 bg-accent-soft text-[#D4B87A]";
   return "bg-sunken text-ink-2";
 }
 
@@ -77,32 +73,16 @@ export default async function CalendarPage({
     : null;
 
   return (
-    <div className="space-y-10 pb-8">
-      <FirstVisitCard
-        storageKey="ec_welcome_calendar_v1"
-        eyebrow="Welcome to your calendar"
-        title="Every campus event, synced in one place."
-        steps={[
-          { num: "01", label: "See what's on", detail: "Browse every upcoming event across campus, colour-coded by your status." },
-          { num: "02", label: "Filter to yours", detail: "Toggle My events to focus only on passes you hold and events you host." },
-          { num: "03", label: "Subscribe via iCal", detail: "Connect Apple or Google Calendar once and new registrations appear automatically." },
-        ]}
-      />
+    <div className="space-y-10 pb-14">
       <PageHero
         title={monthName}
-        sub={
-          <>
-            {events.length} event{events.length === 1 ? "" : "s"}
-            {onlyMine ? " you're in" : ""}
-          </>
-        }
         actions={
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-3">
             {feedUrl && <SubscribeCalendar feedUrl={feedUrl} />}
-            <div className="flex items-center gap-0.5 rounded-full border border-line-strong bg-sunken/70 p-0.5">
+            <div className="flex items-center rounded-[4px] border border-line bg-surface p-0.5">
               <Link
                 href={href(range.prev)}
-                className="grid size-8 place-items-center rounded-full text-ink-2 transition-colors hover:bg-surface hover:text-ink"
+                className="grid size-9 place-items-center text-ink-muted transition-colors hover:text-[#D4B87A]"
                 aria-label="Previous month"
               >
                 <ChevronLeft className="size-4" aria-hidden />
@@ -110,8 +90,8 @@ export default async function CalendarPage({
               <Link
                 href={href(thisMonth)}
                 className={cn(
-                  "inline-flex h-8 items-center rounded-full px-3 text-[13px] font-semibold text-ink transition-colors hover:bg-surface",
-                  range.key === thisMonth && "pointer-events-none opacity-45",
+                  "tr-meta inline-flex h-9 items-center px-3 text-ink transition-colors hover:text-[#D4B87A]",
+                  range.key === thisMonth && "pointer-events-none opacity-40",
                 )}
                 aria-disabled={range.key === thisMonth || undefined}
               >
@@ -119,7 +99,7 @@ export default async function CalendarPage({
               </Link>
               <Link
                 href={href(range.next)}
-                className="grid size-8 place-items-center rounded-full text-ink-2 transition-colors hover:bg-surface hover:text-ink"
+                className="grid size-9 place-items-center text-ink-muted transition-colors hover:text-[#D4B87A]"
                 aria-label="Next month"
               >
                 <ChevronRight className="size-4" aria-hidden />
@@ -130,13 +110,10 @@ export default async function CalendarPage({
       />
 
       {viewer && (
-        <nav
-          aria-label="Which events"
-          className="inline-flex rounded-full bg-sunken p-1"
-        >
+        <nav aria-label="Filter events" className="inline-flex rounded-[4px] border border-line bg-surface p-1">
           {[
-            { view: undefined, text: "All events" },
-            { view: "mine", text: "Only mine" },
+            { view: undefined, text: "All" },
+            { view: "mine", text: "Mine" },
           ].map((t) => {
             const active = (t.view === "mine") === onlyMine;
             return (
@@ -145,10 +122,8 @@ export default async function CalendarPage({
                 href={href(range.key, t.view)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "rounded-full px-4 py-1.5 text-[13.5px] font-semibold transition-[background-color,color,box-shadow] duration-fast",
-                  active
-                    ? "bg-surface text-ink shadow-sm"
-                    : "text-ink-muted hover:text-ink",
+                  "tr-meta rounded-[3px] px-4 py-2 transition-colors",
+                  active ? "bg-[#D4B87A] text-[#161820]" : "text-ink-muted hover:text-ink",
                 )}
               >
                 {t.text}
@@ -158,208 +133,129 @@ export default async function CalendarPage({
         </nav>
       )}
 
-      {/* Month grid */}
+      {/* Architectural hairline calendar grid */}
       <section
-        className="overflow-hidden rounded-[24px] border border-line-strong bg-surface p-3 shadow-card sm:p-5"
+        className="overflow-hidden rounded-[6px] border border-line bg-surface"
         aria-label={`${monthName} month view`}
       >
-        <div className="grid grid-cols-7 pb-2">
-          {WEEKDAYS.map((d, idx) => (
-            <div
-              key={d}
-              className={cn(
-                "py-1.5 text-center text-[12px] font-semibold",
-                idx >= 5 ? "text-ink-subtle" : "text-ink-muted",
-              )}
-            >
+        <div className="grid grid-cols-7 border-b border-line">
+          {WEEKDAYS.map((d) => (
+            <div key={d} className="tr-meta py-3 text-center text-ink-muted">
               {d}
             </div>
           ))}
         </div>
+
         <MonthSlide month={`${range.year}-${String(range.month + 1).padStart(2, "0")}`}>
-        <div className="grid grid-cols-7 gap-1">
-          {cells.map((day, i) => {
-            if (!day)
+          <div className="grid grid-cols-7 divide-x divide-y divide-line">
+            {cells.map((day, i) => {
+              if (!day) return <div key={`b${i}`} className="min-h-[58px] bg-canvas/30 md:min-h-[112px]" />;
+              const list = byDay.get(day) ?? [];
+              const isToday = day === today;
               return (
                 <div
-                  key={`b${i}`}
-                  className="min-h-[54px] rounded-xl md:min-h-[104px]"
-                />
-              );
-            const list = byDay.get(day) ?? [];
-            const isToday = day === today;
-            const isWeekend = i % 7 >= 5;
-            return (
-              <div
-                key={day}
-                className={cn(
-                  "relative min-h-[54px] rounded-xl py-1.5 transition-colors md:min-h-[104px] md:p-2",
-                  isToday
-                    ? "bg-[#E3264F]/[0.06] ring-1 ring-inset ring-[#E3264F]/25"
-                    : isWeekend
-                      ? "bg-canvas/60 hover:bg-sunken/70"
-                      : "hover:bg-sunken/70",
-                )}
-              >
-                {list.length > 0 && (
-                  <a href={`#d-${day}`} aria-label={`Go to ${Number(day.slice(8))} in the agenda`} className="absolute inset-0 z-[1] active:bg-ink/5 md:hidden" />
-                )}
-                <p
+                  key={day}
                   className={cn(
-                    "mx-auto grid size-7 place-items-center rounded-full text-[13px] tabular-nums md:mx-0 md:size-7",
-                    isToday
-                      ? "bg-[#E3264F] font-semibold text-white"
-                      : list.length
-                        ? "font-semibold text-ink"
-                        : "font-medium text-ink-2",
+                    "relative min-h-[58px] p-1.5 transition-colors md:min-h-[112px] md:p-2.5",
+                    isToday ? "bg-[#D4B87A]/[0.07]" : "hover:bg-sunken/60",
                   )}
                 >
-                  {Number(day.slice(8))}
-                  {isToday && <span className="sr-only"> (today)</span>}
-                </p>
-                {/* Phones: dots. Laptops: event pills. */}
-                {list.length > 0 && (
-                  <div
-                    className="mt-1 flex flex-wrap justify-center gap-1 md:hidden"
-                    aria-label={`${list.length} event${list.length > 1 ? "s" : ""}`}
-                  >
-                    {list.slice(0, 4).map((e) => (
-                      <span
-                        key={e.id}
-                        className={cn(
-                          "size-1.5 rounded-full",
-                          e.mine || e.hosting ? "bg-accent" : "bg-ink-subtle",
-                        )}
-                      />
-                    ))}
-                  </div>
-                )}
-                <ul className="mt-1.5 hidden space-y-1 md:block">
-                  {list.slice(0, 3).map((e) => (
-                    <li key={e.id}>
-                      <Link
-                        href={`/events/${e.slug}`}
-                        className={cn(
-                          "block truncate rounded-md px-1.5 py-1 text-[11.5px] font-medium leading-tight transition-opacity duration-fast hover:opacity-80",
-                          eventTone(e),
-                        )}
-                      >
-                        <span className="font-mono tabular-nums opacity-70">
-                          {fmtTime(new Date(e.startsAt))}
-                        </span>{" "}
-                        {e.title}
-                      </Link>
-                    </li>
-                  ))}
-                  {list.length > 3 && (
-                    <li className="px-1.5 text-[11px] text-ink-muted">
-                      +{list.length - 3} more
-                    </li>
+                  {list.length > 0 && (
+                    <a
+                      href={`#d-${day}`}
+                      aria-label={`Go to ${Number(day.slice(8))} in the agenda`}
+                      className="absolute inset-0 z-[1] md:hidden"
+                    />
                   )}
-                </ul>
-              </div>
-            );
-          })}
-        </div>
+                  <p
+                    className={cn(
+                      "mx-auto grid size-7 place-items-center rounded-full font-mono text-[12px] tabular-nums md:mx-0",
+                      isToday ? "bg-[#D4B87A] font-medium text-[#161820]" : list.length ? "text-ink" : "text-ink-muted",
+                    )}
+                  >
+                    {Number(day.slice(8))}
+                    {isToday && <span className="sr-only"> (today)</span>}
+                  </p>
+                  {list.length > 0 && (
+                    <div className="mt-1 flex flex-wrap justify-center gap-1 md:hidden">
+                      {list.slice(0, 4).map((e) => (
+                        <span
+                          key={e.id}
+                          className={cn("size-1.5 rounded-full", e.mine || e.hosting ? "bg-[#D4B87A]" : "bg-ink-muted")}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  <ul className="mt-2 hidden space-y-1 md:block">
+                    {list.slice(0, 3).map((e) => (
+                      <li key={e.id}>
+                        <Link
+                          href={`/events/${e.slug}`}
+                          className={cn(
+                            "block truncate rounded-[3px] px-1.5 py-1 text-[11.5px] leading-tight transition-opacity hover:opacity-85",
+                            eventTone(e),
+                          )}
+                        >
+                          <span className="font-mono tabular-nums opacity-75">{fmtTime(new Date(e.startsAt))}</span> {e.title}
+                        </Link>
+                      </li>
+                    ))}
+                    {list.length > 3 && <li className="px-1.5 font-mono text-[10.5px] text-ink-muted">+{list.length - 3}</li>}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
         </MonthSlide>
-        <p className="flex flex-wrap gap-x-5 gap-y-1.5 border-t border-line px-4 py-3 text-[12px] text-ink-muted">
-          <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-sm bg-night" /> Going
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-sm bg-warn-soft ring-1 ring-inset ring-warn/30" />{" "}
-            Waitlist
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-sm bg-accent-soft ring-1 ring-inset ring-accent/30" />{" "}
-            Hosting
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="size-2.5 rounded-sm bg-sunken ring-1 ring-inset ring-line-strong" />{" "}
-            All events
-          </span>
-        </p>
       </section>
 
-      {/* Agenda */}
-      <section aria-labelledby="agenda-heading" className="space-y-5">
-        <h2 id="agenda-heading" className="text-display-md font-semibold">
+      {/* Hairline Agenda */}
+      <section aria-labelledby="agenda-heading" className="space-y-4">
+        <h2 id="agenda-heading" className="border-b border-line pb-3 font-display text-[clamp(28px,3.2vw,42px)] font-bold italic text-ink">
           Agenda
         </h2>
         {events.length === 0 ? (
           <EmptyState
             icon={CalendarDays}
-            title={
-              onlyMine ? "Nothing of yours this month" : "No events this month"
-            }
-            body={
-              onlyMine
-                ? "Register for an event and it shows up here."
-                : "Try the next month, or check back when organizers publish more."
-            }
-            action={{ label: "Discover events", href: "/events" }}
+            title="No events this month"
+            body=""
+            action={{ label: "Explore events", href: "/events" }}
           />
         ) : (
-          <div className="card divide-y divide-line">
+          <div className="divide-y divide-line border-b border-line">
             {[...byDay.entries()].map(([day, list]) => (
               <div
                 key={day}
                 id={`d-${day}`}
-                className="grid scroll-mt-[calc(var(--header-h)+16px)] gap-3 p-4 target:bg-accent-soft/30 md:grid-cols-[112px_1fr] md:gap-6 md:p-5"
+                className="grid scroll-mt-[calc(var(--header-h)+16px)] gap-4 py-5 md:grid-cols-[120px_1fr]"
               >
                 <div className="flex items-baseline gap-2 md:block">
-                  <p
-                    className={cn(
-                      "text-[12.5px] ",
-                      day === today ? "text-accent-ink" : "text-ink-subtle",
-                    )}
-                  >
-                    {new Intl.DateTimeFormat("en-IN", {
-                      weekday: "short",
-                      timeZone: "UTC",
-                    }).format(new Date(`${day}T00:00:00Z`))}
-                    {day === today && ", Today"}
+                  <p className={cn("tr-meta", day === today ? "text-[#D4B87A]" : "text-ink-muted")}>
+                    {new Intl.DateTimeFormat("en-IN", { weekday: "short", timeZone: "UTC" }).format(new Date(`${day}T00:00:00Z`))}
                   </p>
-                  <p className="text-[32px] font-semibold leading-none tracking-[-0.04em] tabular-nums">
+                  <p className="font-display text-[36px] font-semibold italic leading-none tabular-nums text-ink">
                     {Number(day.slice(8))}
                   </p>
                 </div>
                 <ul className="min-w-0 divide-y divide-line">
                   {list.map((e) => (
-                    <li
-                      key={e.id}
-                      className="flex flex-wrap items-center gap-x-4 gap-y-1 py-2.5 first:pt-0 last:pb-0"
-                    >
-                      <span className="w-[76px] shrink-0 font-mono text-[13px] tabular-nums text-ink-muted">
+                    <li key={e.id} className="flex flex-wrap items-center gap-x-5 gap-y-1 py-3 first:pt-0 last:pb-0">
+                      <span className="w-[72px] shrink-0 font-mono text-[12px] tabular-nums text-ink-muted">
                         {fmtTime(new Date(e.startsAt))}
                       </span>
                       <Link
                         href={`/events/${e.slug}`}
                         className={cn(
-                          "min-w-0 flex-1 truncate text-[15px] font-medium hover:underline hover:decoration-line-strong hover:underline-offset-4",
-                          e.status === "cancelled" && "line-through opacity-60",
+                          "min-w-0 flex-1 truncate font-display text-[22px] font-semibold italic text-ink transition-colors hover:text-[#D4B87A]",
+                          e.status === "cancelled" && "line-through opacity-55",
                         )}
                       >
                         {e.title}
                       </Link>
-                      <span className="flex items-center gap-1 text-[12.5px] text-ink-muted">
+                      <span className="flex items-center gap-1 text-[13px] font-light text-ink-muted">
                         <MapPin className="size-3.5" aria-hidden /> {e.venue}
                       </span>
-                      {label(e) && (
-                        <Chip
-                          tone={
-                            e.mine === "registered"
-                              ? "dark"
-                              : e.status === "cancelled"
-                                ? "danger"
-                                : e.hosting
-                                  ? "accent"
-                                  : "outline"
-                          }
-                        >
-                          {label(e)}
-                        </Chip>
-                      )}
+                      {label(e) && <span className="tr-meta text-[#D4B87A]">{label(e)}</span>}
                     </li>
                   ))}
                 </ul>

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowUpRight, Award, ShieldCheck } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ShieldCheck } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDB } from "@/lib/db";
 import { myCertificates } from "@/lib/data/certificates";
 import { fmtDate } from "@/lib/utils";
+import { PageHero } from "@/components/brand/PageHero";
 
 export const metadata: Metadata = { title: "Certificates" };
 export const dynamic = "force-dynamic";
@@ -16,95 +17,79 @@ export default async function CertificatesPage() {
   const certs = await myCertificates(await getDB(), viewer.id);
 
   return (
-    <div className="space-y-10 pb-14">
-      <header className="flex flex-col gap-4 border-b border-line pb-7 pt-8 sm:flex-row sm:items-end sm:justify-between md:pt-10">
-        <div>
-          <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-            Verified <em>credentials.</em>
-          </h1>
-          <p className="mt-2.5 text-[15px] text-ink-muted">
-            Every certificate issued by a campus organizer comes with a permanent verification link.
-          </p>
-        </div>
-        <p className="font-mono text-[13px] font-semibold tabular-nums text-ink-muted">
-          {certs.length} {certs.length === 1 ? "certificate" : "certificates"}
-        </p>
-      </header>
+    <div className="space-y-12 pb-16">
+      <PageHero
+        title={
+          <>
+            Verified <span className="text-[#D4B87A]">Certificates.</span>
+          </>
+        }
+        actions={
+          <span className="tr-meta text-ink-muted">
+            {certs.length} {certs.length === 1 ? "record" : "records"}
+          </span>
+        }
+      />
 
       {certs.length === 0 ? (
-        <section className="grid items-center gap-8 rounded-[28px] border border-line-strong bg-sunken/75 p-7 sm:p-10 lg:grid-cols-[1.15fr_0.85fr]">
+        <section className="grid items-center gap-10 rounded-[6px] border border-line bg-surface p-8 md:grid-cols-[1.1fr_0.9fr] md:p-12">
           <div>
-            <h2 className="font-display text-[clamp(30px,3.6vw,44px)] leading-[1.02] tracking-[-0.025em] text-ink">
-              No certificates earned yet.
+            <h2 className="font-display text-[clamp(32px,4vw,52px)] font-bold italic leading-[0.95] text-ink">
+              No certificates yet.
             </h2>
-            <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-ink-2">
-              Attend workshops, hackathons, or talks that issue participation records. Once checked in, your signed certificate lands here automatically, ready to share on LinkedIn or your resume.
-            </p>
-            <div className="mt-7 flex flex-wrap items-center gap-4">
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
                 href="/events?type=WORKSHOP"
-                className="ui-press ui-sheen inline-flex h-12 items-center gap-2 rounded-xl bg-lavender px-6 text-[15px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink hover:bg-lavender-hover"
+                className="group inline-flex h-12 items-center gap-2 rounded-[4px] bg-[#D4B87A] px-7 text-[11px] font-medium uppercase tracking-[0.14em] text-[#161820] transition-colors hover:bg-[#E0C78E]"
               >
-                <Award className="size-4" aria-hidden />
-                Find a workshop
+                <span>Workshops</span>
+                <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden />
               </Link>
               <Link
                 href="/events?type=TECH"
-                className="text-[14.5px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] hover:decoration-ink"
+                className="inline-flex h-12 items-center rounded-[4px] border border-line-strong px-6 text-[11px] font-medium uppercase tracking-[0.14em] text-ink transition-colors hover:border-[#D4B87A] hover:text-[#D4B87A]"
               >
-                Explore hackathons
+                Hackathons
               </Link>
             </div>
           </div>
 
-          {/* Stationery diploma preview */}
-          <div className="paper-keep mx-auto w-full max-w-[340px] rounded-[20px] border border-[#D8D1BE] bg-[#FFFEF6] p-3 shadow-card">
-            <div className="rounded-[14px] border border-dashed border-[#D8D1BE] px-5 py-6 text-center text-[#1A1A1A]">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#F0D7FF] px-3 py-1 text-[11px] font-semibold text-[#1A1A1A]">
-                <ShieldCheck className="size-3.5" aria-hidden />
+          <div className="tr-paper mx-auto w-full max-w-[340px] rounded-[4px] border border-[#D4B87A]/40 bg-[#EFEAE0] p-3">
+            <div className="border border-dashed border-[#161820]/25 px-6 py-8 text-center text-[#161820]">
+              <span className="tr-meta inline-flex items-center gap-1.5 text-[#161820]/70">
+                <ShieldCheck className="size-3.5 text-[#161820]" aria-hidden />
                 Verified by EvntCult
               </span>
-              <p className="mt-4 font-display text-[26px] leading-tight text-[#1A1A1A]">
+              <p className="mt-5 font-display text-[32px] font-bold italic leading-none text-[#161820]">
                 {viewer.name}
-              </p>
-              <p className="mt-1 text-[12.5px] text-[#6A6A6A]">
-                Certificate of participation · Permanent verify URL
               </p>
             </div>
           </div>
         </section>
       ) : (
-        <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <ul className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {certs.map((c) => (
             <li key={c.id}>
               <Link
                 href={`/certificates/${c.id}`}
-                className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-line-strong bg-surface shadow-card transition-[transform,box-shadow] duration-fast hover:-translate-y-0.5 hover:shadow-raised"
+                className="group flex h-full flex-col overflow-hidden rounded-[6px] border border-line bg-surface transition-colors hover:border-[#D4B87A]/60"
               >
-                {/* Stationery miniature diploma */}
-                <div className="paper-keep relative border-b border-line bg-[#FFFEF6] p-3">
-                  <div className="flex min-h-[146px] flex-col items-center justify-center rounded-[14px] border border-dashed border-[#D8D1BE] px-5 py-6 text-center">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-accent-ink">
-                      <ShieldCheck className="size-3.5" aria-hidden />
-                      {c.kind === "participation" ? "Certificate of attendance" : c.kind}
+                <div className="tr-paper border-b border-line bg-[#EFEAE0] p-3">
+                  <div className="flex min-h-[150px] flex-col items-center justify-center border border-dashed border-[#161820]/25 px-5 py-6 text-center text-[#161820]">
+                    <span className="tr-meta text-[#161820]/65">
+                      {c.kind === "participation" ? "Attendance" : c.kind}
                     </span>
-                    <p className="mt-2.5 line-clamp-2 font-display text-[24px] leading-[1.08] tracking-[-0.02em] text-[#1A1A1A]">
+                    <p className="mt-2.5 line-clamp-2 font-display text-[26px] font-bold italic leading-[1.06] text-[#161820]">
                       {c.eventTitle}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-5">
-                  <Award className="size-4 shrink-0 text-ink-muted" aria-hidden />
-                  <p className="min-w-0 flex-1 truncate text-[13.5px] text-ink-muted">
-                    <span className="font-mono text-ink">
-                      {fmtDate(new Date(c.startsAt), { day: "numeric", month: "short", year: "numeric" })}
-                    </span>
+                <div className="flex items-center justify-between gap-3 p-5">
+                  <p className="tr-meta truncate text-ink-muted">
+                    {fmtDate(new Date(c.startsAt), { day: "numeric", month: "short", year: "numeric" })}
                     {c.venue ? ` · ${c.venue}` : ""}
                   </p>
-                  <ArrowUpRight
-                    className="size-4 shrink-0 text-ink-subtle transition-transform duration-base ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink"
-                    aria-hidden
-                  />
+                  <ArrowUpRight className="size-4 shrink-0 text-[#D4B87A] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
                 </div>
               </Link>
             </li>

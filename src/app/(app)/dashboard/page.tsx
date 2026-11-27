@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronRight, Download, Ticket } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { getViewer } from "@/lib/rbac";
 import { getDashboardData } from "@/lib/data/dashboard";
 import { getLandingData } from "@/lib/data/landing";
@@ -26,7 +26,6 @@ export default async function DashboardPage({
   searchParams: Promise<{ denied?: string }>;
 }) {
   const viewer = await getViewer();
-  // Logged-out visitors get the dedicated public homepage; no user or event data is loaded.
   if (!viewer) return <PublicHome />;
 
   const [landing, month, data, params] = await Promise.all([
@@ -40,7 +39,6 @@ export default async function DashboardPage({
   const live = data.organizer?.live;
   const week = weekItems(data.upcoming, data.campus);
 
-  // The hero: your next pass, or else the best thing coming up (live first, then soonest).
   const hero =
     next ??
     data.campus.find((e) => +e.startsAt <= Date.now() && +e.endsAt > Date.now()) ??
@@ -51,7 +49,7 @@ export default async function DashboardPage({
   const recentRows = landing.rows.filter((r) => r.key === "recent" && r.events.length > 0);
 
   return (
-    <div className="pb-14">
+    <div className="pb-16">
       <HomeHero
         name={viewer.name}
         isOrganizer={viewer.verifiedOrganizer}
@@ -85,12 +83,12 @@ export default async function DashboardPage({
       <QuickDock passCount={data.stats.registered} isOrganizer={viewer.verifiedOrganizer} />
 
       {params.denied === "organizer" && (
-        <p role="status" className="mt-6 rounded-lg bg-warn-soft px-4 py-3 text-[14px] font-medium text-warn">
-          Hosting is only for verified organizers.
+        <p role="status" className="mt-6 border border-warn/40 bg-warn-soft px-4 py-3 text-[14px] text-warn">
+          Hosting is available to verified organizers.
         </p>
       )}
 
-      <div className="grid items-start gap-x-14 gap-y-12 pt-9 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
+      <div className="grid items-start gap-x-14 gap-y-12 pt-10 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
         <Agenda
           items={week.all.filter((e) => e.id !== hero?.id)}
           next={null}
@@ -101,69 +99,24 @@ export default async function DashboardPage({
           {live && (
             <Link
               href={`/organizer/events/${live.id}/manage`}
-              className="flex items-center gap-4 rounded-2xl bg-ink p-5 text-white transition-colors duration-fast hover:bg-night-2"
+              className="group flex items-center justify-between gap-4 border border-[#D4B87A]/40 bg-surface p-5 transition-colors hover:border-[#D4B87A]"
             >
-              <span className="relative flex size-2.5 shrink-0" aria-hidden>
-                <span className="relative size-2.5 rounded-full bg-accent" />
+              <span className="min-w-0">
+                <span className="tr-meta block text-[#D4B87A]">Live · {live.checkedIn}/{live.registered} checked in</span>
+                <span className="mt-1 block truncate font-display text-[24px] font-semibold italic text-ink">{live.title}</span>
               </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-[16px] font-semibold">{live.title}</span>
-                <span className="block text-[13.5px] tabular-nums text-white/70">
-                  Live now, {live.checkedIn} of {live.registered} checked in
-                </span>
-              </span>
-              <ChevronRight className="size-5 shrink-0" aria-hidden />
+              <ArrowRight className="size-4 shrink-0 text-[#D4B87A] transition-transform group-hover:translate-x-1" aria-hidden />
             </Link>
           )}
 
           <UpdatesFeed items={data.announcements} />
-
-          {/* Compact non-redundant account status & offline app strip */}
-          <section aria-labelledby="glance-h" className="divide-y divide-line border-t border-line">
-            <h2 id="glance-h" className="sr-only">Account shortcuts</h2>
-            <Link
-              href="/passes"
-              className="group flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-ink"
-            >
-              <span className="flex items-center gap-3">
-                <Ticket className="size-4 shrink-0 text-ink-muted group-hover:text-ink" aria-hidden />
-                <span className="text-[14px] font-semibold text-ink">
-                  {data.stats.registered === 0
-                    ? "No active passes yet"
-                    : data.stats.registered === 1
-                      ? "1 active pass"
-                      : `${data.stats.registered} active passes`}
-                </span>
-              </span>
-              <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
-            </Link>
-
-            <Link
-              href="/get-app"
-              className="group flex items-center justify-between gap-3 py-3.5 transition-colors hover:text-ink"
-            >
-              <span className="flex items-center gap-3">
-                <Download className="size-4 shrink-0 text-ink-muted group-hover:text-ink" aria-hidden />
-                <span>
-                  <span className="block text-[14px] font-semibold text-ink">Install offline app</span>
-                  <span className="block text-[12.5px] text-ink-muted">Keep gate QR codes on your home screen</span>
-                </span>
-              </span>
-              <ChevronRight className="size-4 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
-            </Link>
-          </section>
         </aside>
       </div>
 
-      {/* 4. Live Campus Discovery Feed (real events only, zero marketing fluff) */}
-      {landing.discover.length > 0 && (
-        <div className="pt-10">
-          <DiscoverFeed events={landing.discover} />
-        </div>
-      )}
+      {landing.discover.length > 0 && <DiscoverFeed events={landing.discover} />}
 
       {recentRows.length > 0 && (
-        <div className="pt-8">
+        <div className="pt-10">
           {recentRows.map((r) => (
             <Row key={r.key} title={r.title} href={r.href}>
               {r.events.map((e) => (
@@ -177,30 +130,30 @@ export default async function DashboardPage({
       )}
 
       <section aria-labelledby="dash-cal-h" className="pt-14">
-        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-4 border-b border-ink pb-3">
-          <h2 id="dash-cal-h" className="font-display text-[clamp(28px,2.8vw,38px)] leading-none tracking-[-0.02em] text-ink">
-            Your month
+        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-3">
+          <h2 id="dash-cal-h" className="font-display text-[clamp(28px,3vw,40px)] font-bold italic leading-none text-ink">
+            Your Month
           </h2>
           <Link
             href="/calendar"
-            className="inline-flex min-h-[44px] items-center gap-1 text-[14px] font-semibold text-ink-2 hover:text-ink"
+            className="tr-meta tr-link inline-flex min-h-[44px] items-center gap-1 text-ink-muted hover:text-[#D4B87A]"
           >
-            Full calendar <ChevronRight className="size-4" aria-hidden />
+            Calendar <ArrowRight className="size-3.5" aria-hidden />
           </Link>
         </div>
         <MonthCalendar initial={month} signedIn />
       </section>
 
       <section aria-labelledby="dash-hubs-h" className="pt-14">
-        <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4 border-b border-ink pb-3">
-          <h2 id="dash-hubs-h" className="font-display text-[clamp(28px,2.8vw,38px)] leading-none tracking-[-0.02em] text-ink">
-            Browse by <em>category.</em>
+        <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4 border-b border-line pb-3">
+          <h2 id="dash-hubs-h" className="font-display text-[clamp(28px,3vw,40px)] font-bold italic leading-none text-ink">
+            Explore
           </h2>
           <Link
             href="/events"
-            className="inline-flex min-h-[44px] items-center gap-1 text-[14px] font-semibold text-ink-2 hover:text-ink"
+            className="tr-meta tr-link inline-flex min-h-[44px] items-center gap-1 text-ink-muted hover:text-[#D4B87A]"
           >
-            All events <ChevronRight className="size-4" aria-hidden />
+            All events <ArrowRight className="size-3.5" aria-hidden />
           </Link>
         </div>
         <ul className="grid grid-cols-1 md:grid-cols-2 md:gap-x-10">
@@ -208,22 +161,18 @@ export default async function DashboardPage({
             <li key={cat.slug} className="border-b border-line">
               <Link
                 href={`/category/${cat.slug}`}
-                className="group flex min-h-[56px] items-center justify-between gap-4 py-3.5 transition-colors hover:text-ink"
+                className="group flex min-h-[58px] items-center justify-between gap-4 py-3.5 transition-colors hover:text-[#D4B87A]"
               >
-                <div className="min-w-0">
-                  <span className="block font-display text-[24px] leading-tight tracking-[-0.015em] text-ink transition-transform duration-fast group-hover:translate-x-1">
-                    {cat.name}
-                  </span>
-                  <span className="block truncate text-[13px] text-ink-muted">{cat.blurb}</span>
-                </div>
-                <ChevronRight className="size-4 shrink-0 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+                <span className="font-display text-[26px] font-semibold italic leading-tight text-ink transition-colors group-hover:text-[#D4B87A]">
+                  {cat.name}
+                </span>
+                <ArrowRight className="size-4 shrink-0 text-[#D4B87A] transition-transform group-hover:translate-x-1" aria-hidden />
               </Link>
             </li>
           ))}
         </ul>
       </section>
 
-      {/* 7. Optional Phone / WhatsApp prompt if missing */}
       {!viewer.phone && (
         <div className="pt-10">
           <AddPhoneCard />

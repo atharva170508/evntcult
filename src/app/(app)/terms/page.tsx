@@ -17,8 +17,8 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     body: (
       <>
         <p>
-          EvntCult is an events app built and run by <b>Synchronous Labs</b>, a student development group. These Terms &amp; Conditions and User Rules apply to everyone who uses
-          EvntCult: students who browse and register, organizers who host events, and anyone scanning passes at a gate.
+          EvntCult is an events platform built and run by <b>Synchronous Labs</b>. These Terms &amp; Conditions and User Rules apply to everyone who uses
+          EvntCult: guests who browse and register, organizers who host events, and anyone scanning passes at a gate.
         </p>
         <p>By creating an account or using EvntCult, you agree to them. If you don&apos;t agree, please don&apos;t use EvntCult.</p>
       </>
@@ -65,7 +65,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
         </p>
         <p>
           To the fullest extent the law allows, Synchronous Labs and the EvntCult developers are not liable for any loss, injury, damage, cost or claim connected with an event,
-          an organizer, another user, a payment, a pass, or your use of EvntCult. You attend events at your own risk and under your college&apos;s rules.
+          an organizer, another user, a payment, a pass, or your use of EvntCult. You attend events at your own risk and under the venue&apos;s rules.
         </p>
       </>
     ),
@@ -115,7 +115,7 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
     body: (
       <>
         <p>
-          Everything you write on EvntCult must be respectful and suitable for a college campus. This covers event names, taglines, descriptions,
+          Everything you write on EvntCult must be respectful and suitable for public live events. This covers event names, taglines, descriptions,
           venues, announcements, posts, questions, comments, feedback, names and host applications.
         </p>
         <ul>

@@ -25,7 +25,7 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
   const waHref = `https://wa.me/?text=${waText}`;
 
   const actions = [
-    { icon: ExternalLink, title: "Open attendee page", body: "See the live page exactly as students see it.", href: `/events/${e.slug}` },
+    { icon: ExternalLink, title: "Open attendee page", body: "See the live page exactly as guests see it.", href: `/events/${e.slug}` },
     { icon: Users, title: "Manage attendees & Drive vault", body: "Track sign-ups, UPI payments, announcements, and event photos.", href: `/organizer/events/${e.id}/manage` },
     { icon: ScanLine, title: "Open gate scanner", body: "Scan QR passes at the door; works even offline.", href: `/organizer/scan/${e.id}` },
   ];
@@ -49,30 +49,30 @@ export default async function PublishedPage({ params }: { params: Promise<{ id: 
 
       <div className="mx-auto grid max-w-[1160px] items-start gap-10 px-gutter py-10 lg:grid-cols-[minmax(0,1.15fr)_380px] lg:gap-14 lg:py-14">
         <div className="min-w-0">
-          <span className="inline-flex items-center gap-2 rounded-full bg-live-soft px-3.5 py-1 text-[13px] font-semibold text-live">
-            <span className="size-2 rounded-full bg-live" aria-hidden />
-            Live on campus
+          <span className="inline-flex items-center gap-2 rounded-[3px] border border-[#D4B87A]/40 bg-[#D4B87A]/15 px-3 py-1 font-mono text-[10.5px] uppercase tracking-[0.14em] text-[#D4B87A]">
+            <span className="size-1.5 rounded-full bg-[#D4B87A]" aria-hidden />
+            Live now
           </span>
 
-          <h1 className="mt-4 font-display text-[clamp(44px,5.6vw,68px)] leading-[0.94] tracking-[-0.03em] text-ink">
-            {e.title} is <em>live.</em>
+          <h1 className="mt-4 font-display text-[clamp(44px,5.6vw,68px)] italic leading-[0.94] tracking-[-0.03em] text-ink">
+            {e.title} is <span className="text-[#D4B87A]">live.</span>
           </h1>
-          <p className="mt-3 max-w-[48ch] text-[16px] leading-relaxed text-ink-2">
-            Share the link below and students can claim their offline QR pass immediately. Gate scanning, reminders, and Photo Vault are ready.
+          <p className="mt-3 max-w-[48ch] text-[15px] leading-relaxed text-ink-muted">
+            Share the link below so guests can claim their QR pass immediately. Gate scanning, reminders, and Photo Vault are ready.
           </p>
 
           {/* 1-Tap Share Hub */}
-          <section aria-labelledby="share-h" className="mt-8 rounded-[24px] border border-line-strong bg-surface p-6 shadow-card">
+          <section aria-labelledby="share-h" className="mt-8 rounded-[4px] border border-line bg-surface p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 id="share-h" className="flex items-center gap-2 text-[15px] font-semibold text-ink">
-                <Link2 className="size-4 text-ink-muted" aria-hidden />
+                <Link2 className="size-4 text-[#D4B87A]" aria-hidden />
                 Share your event
               </h2>
               <a
                 href={waHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-9 items-center gap-1.5 rounded-full bg-ink px-4 text-[13px] font-semibold text-[#FFFEF6] transition-opacity hover:opacity-90"
+                className="inline-flex h-9 items-center gap-1.5 rounded-[4px] bg-[#D4B87A] px-4 text-[12px] font-medium uppercase tracking-[0.1em] text-[#161820] transition-opacity hover:opacity-90"
               >
                 <MessageCircle className="size-3.5" aria-hidden />
                 Share on WhatsApp

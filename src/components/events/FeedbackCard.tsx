@@ -81,7 +81,7 @@ export function FeedbackCard({
     <section
       id="feedback"
       aria-labelledby="fb-h"
-      className="scroll-mt-36 overflow-hidden rounded-[22px] bg-surface p-6 shadow-card md:p-7"
+      className="scroll-mt-36 overflow-hidden rounded-[4px] border border-line bg-surface p-6 md:p-7"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
@@ -204,9 +204,9 @@ export function FeedbackCard({
                       aria-pressed={on}
                       onClick={() => toggleTag(tag)}
                       className={cn(
-                        "ui-press inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-[12.5px] font-semibold transition-colors",
+                        "ui-press inline-flex h-8 items-center gap-1.5 rounded-[4px] px-3 text-[12.5px] font-medium transition-colors",
                         on
-                          ? "bg-ink text-white"
+                          ? "bg-[#D4B87A] text-[#161820]"
                           : "bg-sunken text-ink-2 hover:bg-mist hover:text-ink",
                       )}
                     >
@@ -241,7 +241,7 @@ export function FeedbackCard({
                 <button
                   type="submit"
                   disabled={busy}
-                  className="ui-press ui-sheen inline-flex h-11 items-center gap-2 rounded-xl bg-lavender px-5 text-[14.5px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink hover:bg-lavender-hover disabled:opacity-50"
+                  className="ui-press inline-flex h-11 items-center gap-2 rounded-[4px] bg-[#D4B87A] px-5 text-[12.5px] font-medium uppercase tracking-[0.12em] text-[#161820] hover:opacity-90 disabled:opacity-50"
                 >
                   {busy ? "Sending…" : "Send feedback"}
                 </button>

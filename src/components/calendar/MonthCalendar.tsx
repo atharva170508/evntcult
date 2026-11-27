@@ -41,7 +41,7 @@ function tag(e: Ev): [string, ChipTone] | null {
 
 function pill(e: Ev) {
   if (e.status === "cancelled") return "bg-danger-soft text-danger line-through";
-  if (e.mine === "registered") return "bg-ink text-[#FFFEF6]";
+  if (e.mine === "registered") return "bg-[#D4B87A] text-[#161820]";
   if (e.mine === "waitlisted") return "bg-warn-soft text-warn";
   if (e.hosting) return "bg-accent-soft text-accent-ink";
   return "bg-sunken text-ink-2";
@@ -119,7 +119,7 @@ export function MonthCalendar({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-[24px] border border-line-strong bg-surface shadow-card",
+        "overflow-hidden rounded-[4px] border border-line bg-surface",
         className,
       )}
     >
@@ -130,17 +130,17 @@ export function MonthCalendar({
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-baseline gap-2.5">
               <h3
-                className="font-display text-[26px] leading-none tracking-[-0.02em] text-ink sm:text-[30px]"
+                className="font-display text-[28px] italic leading-none tracking-[-0.02em] text-ink sm:text-[32px]"
                 aria-live="polite"
               >
                 {data.label}
               </h3>
-              {loading && <span className="text-[12.5px] font-medium text-ink-subtle">Loading…</span>}
+              {loading && <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-subtle">Loading...</span>}
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
               {signedIn && (
-                <div role="group" aria-label="Filter calendar events" className="inline-flex rounded-full bg-sunken p-1">
+                <div role="group" aria-label="Filter calendar events" className="inline-flex rounded-[4px] border border-line bg-canvas p-0.5">
                   {[
                     { mine: false, label: "All" },
                     { mine: true, label: "Mine" },
@@ -151,9 +151,9 @@ export function MonthCalendar({
                       aria-pressed={onlyMine === opt.mine}
                       onClick={() => setOnlyMine(opt.mine)}
                       className={cn(
-                        "h-8 rounded-full px-3.5 text-[13px] font-semibold transition-colors",
+                        "h-8 rounded-[3px] px-3.5 text-[12px] font-medium uppercase tracking-[0.1em] transition-colors",
                         onlyMine === opt.mine
-                          ? "bg-surface text-ink shadow-sm"
+                          ? "bg-[#D4B87A] text-[#161820]"
                           : "text-ink-muted hover:text-ink",
                       )}
                     >
@@ -163,12 +163,12 @@ export function MonthCalendar({
                 </div>
               )}
 
-              <div className="inline-flex items-center rounded-full border border-line-strong bg-sunken/70 p-0.5">
+              <div className="inline-flex items-center rounded-[4px] border border-line bg-canvas p-0.5">
                 <button
                   type="button"
                   onClick={() => go(data.prev)}
                   aria-label="Previous month"
-                  className="grid size-8 place-items-center rounded-full text-ink-2 transition-colors hover:bg-surface hover:text-ink"
+                  className="grid size-8 place-items-center rounded-[3px] text-ink-2 transition-colors hover:bg-surface hover:text-ink"
                 >
                   <ChevronLeft className="size-4" aria-hidden />
                 </button>
@@ -176,7 +176,7 @@ export function MonthCalendar({
                   type="button"
                   onClick={() => go(initial.key)}
                   disabled={data.key === initial.key}
-                  className="h-8 rounded-full px-3 text-[13px] font-semibold text-ink transition-colors hover:bg-surface disabled:opacity-40"
+                  className="h-8 rounded-[3px] px-3 text-[12px] font-medium uppercase tracking-[0.1em] text-ink transition-colors hover:bg-surface disabled:opacity-40"
                 >
                   Today
                 </button>
@@ -184,7 +184,7 @@ export function MonthCalendar({
                   type="button"
                   onClick={() => go(data.next)}
                   aria-label="Next month"
-                  className="grid size-8 place-items-center rounded-full text-ink-2 transition-colors hover:bg-surface hover:text-ink"
+                  className="grid size-8 place-items-center rounded-[3px] text-ink-2 transition-colors hover:bg-surface hover:text-ink"
                 >
                   <ChevronRight className="size-4" aria-hidden />
                 </button>
@@ -193,7 +193,7 @@ export function MonthCalendar({
           </div>
 
           {failed && (
-            <p role="alert" className="mb-4 rounded-xl bg-danger-soft px-4 py-2.5 text-[13.5px] font-medium text-danger">
+            <p role="alert" className="mb-4 rounded-[4px] bg-danger-soft px-4 py-2.5 text-[13.5px] font-medium text-danger">
               That month didn&apos;t load. Try again.
             </p>
           )}
@@ -204,7 +204,7 @@ export function MonthCalendar({
               <div
                 key={d}
                 className={cn(
-                  "text-center text-[12px] font-semibold",
+                  "text-center font-mono text-[10px] uppercase tracking-[0.14em]",
                   idx >= 5 ? "text-ink-subtle" : "text-ink-muted",
                 )}
               >
@@ -213,7 +213,7 @@ export function MonthCalendar({
             ))}
           </div>
 
-          {/* Airy Apple-Calendar-style day cells */}
+          {/* Architectural day cells */}
           <div
             ref={grid}
             role="group"
@@ -226,7 +226,7 @@ export function MonthCalendar({
           >
             {data.cells.map((day, i) => {
               if (!day) {
-                return <div key={`b${i}`} role="presentation" className="min-h-[52px] rounded-xl md:min-h-[72px]" />;
+                return <div key={`b${i}`} role="presentation" className="min-h-[52px] rounded-[4px] md:min-h-[72px]" />;
               }
               const list = byDay.get(day) ?? [];
               const mine = list.filter(yours);
@@ -248,9 +248,9 @@ export function MonthCalendar({
                   }`}
                   onClick={() => setSelected(day)}
                   className={cn(
-                    "group relative flex min-h-[52px] min-w-0 flex-col items-center rounded-xl p-1.5 text-left transition-all duration-150 md:min-h-[72px] md:items-start md:p-2",
+                    "group relative flex min-h-[52px] min-w-0 flex-col items-center rounded-[4px] p-1.5 text-left transition-all duration-150 md:min-h-[72px] md:items-start md:p-2",
                     isSel
-                      ? "bg-sunken ring-1 ring-inset ring-ink/30"
+                      ? "bg-sunken ring-1 ring-inset ring-[#D4B87A]/60"
                       : isWeekend
                         ? "bg-canvas/55 hover:bg-sunken/70"
                         : "hover:bg-sunken/70",
@@ -258,11 +258,11 @@ export function MonthCalendar({
                 >
                   <span
                     className={cn(
-                      "grid size-7 place-items-center rounded-full text-[13px] tabular-nums transition-colors",
+                      "grid size-7 place-items-center rounded-[3px] text-[13px] tabular-nums transition-colors",
                       isToday
-                        ? "bg-[#E3264F] font-semibold text-white"
+                        ? "bg-[#D4B87A] font-semibold text-[#161820]"
                         : isSel
-                          ? "bg-ink font-semibold text-[#FFFEF6]"
+                          ? "bg-[#EFEAE0] font-semibold text-[#161820]"
                           : list.length
                             ? "font-semibold text-ink"
                             : "font-medium text-ink-2 group-hover:text-ink",
@@ -279,7 +279,7 @@ export function MonthCalendar({
                           key={e.id}
                           className={cn(
                             "size-1.5 rounded-full",
-                            yours(e) ? "bg-[#E3264F]" : "bg-ink/45",
+                            yours(e) ? "bg-[#D4B87A]" : "bg-ink/45",
                           )}
                         />
                       ))}
@@ -293,7 +293,7 @@ export function MonthCalendar({
                         <span
                           key={e.id}
                           className={cn(
-                            "truncate rounded-md px-1.5 py-0.5 text-[11px] font-semibold leading-tight",
+                            "truncate rounded-[3px] px-1.5 py-0.5 text-[11px] font-medium leading-tight",
                             pill(e),
                           )}
                         >
@@ -301,7 +301,7 @@ export function MonthCalendar({
                         </span>
                       ))}
                       {list.length > 1 && (
-                        <span className="px-1 text-[10.5px] font-semibold text-ink-muted">
+                        <span className="px-1 text-[10.5px] font-medium text-ink-muted">
                           +{list.length - 1} more
                         </span>
                       )}
@@ -313,15 +313,12 @@ export function MonthCalendar({
           </div>
 
           {signedIn && (
-            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-line pt-3 text-[12px] text-ink-muted">
+            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-line pt-3 font-mono text-[10.5px] uppercase tracking-[0.12em] text-ink-muted">
               <span className="inline-flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-[#E3264F]" aria-hidden /> Today
+                <span className="size-2 rounded-full bg-[#D4B87A]" aria-hidden /> Today &amp; Passes
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-ink" aria-hidden /> Your passes &amp; hosted
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-ink/30" aria-hidden /> Campus events
+                <span className="size-2 rounded-full bg-ink/40" aria-hidden /> All events
               </span>
             </div>
           )}
@@ -331,17 +328,17 @@ export function MonthCalendar({
         <aside
           aria-live="polite"
           aria-label={`Events on ${dayLabel(selected)}`}
-          className="flex min-w-0 flex-col justify-between border-t border-line bg-sunken/45 p-5 sm:p-6 lg:border-l lg:border-t-0"
+          className="flex min-w-0 flex-col justify-between border-t border-line bg-canvas/40 p-5 sm:p-6 lg:border-l lg:border-t-0"
         >
           <div>
             {/* Editorial date block */}
             <div className="flex items-start justify-between gap-3 border-b border-line pb-4">
               <div className="flex items-baseline gap-3">
-                <span className="font-display text-[48px] leading-[0.86] tracking-[-0.03em] tabular-nums text-ink">
+                <span className="font-display text-[48px] italic leading-[0.86] tracking-[-0.03em] tabular-nums text-[#D4B87A]">
                   {selDayNum}
                 </span>
                 <div>
-                  <p className="text-[14px] font-semibold text-ink">{dayWeekdayMonth(selected)}</p>
+                  <p className="text-[14px] font-medium text-ink">{dayWeekdayMonth(selected)}</p>
                   <p className="mt-0.5 text-[12.5px] text-ink-muted">
                     {selected === data.today
                       ? "Today"
@@ -352,7 +349,7 @@ export function MonthCalendar({
                 </div>
               </div>
               {selected === data.today && (
-                <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-[11.5px] font-semibold text-accent-ink">
+                <span className="rounded-[3px] border border-[#D4B87A]/40 bg-[#D4B87A]/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#D4B87A]">
                   Today
                 </span>
               )}
@@ -363,25 +360,22 @@ export function MonthCalendar({
                 <p className="text-[14.5px] font-medium text-ink-2">
                   No events on this day{onlyMine ? " for you" : ""}.
                 </p>
-                <p className="mt-1 text-[13px] leading-relaxed text-ink-muted">
-                  Click any marked date on the calendar or browse upcoming campus events.
-                </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {nextBusyDay && (
                     <button
                       type="button"
                       onClick={() => setSelected(nextBusyDay)}
-                      className="inline-flex h-9 items-center gap-1.5 rounded-full bg-ink px-3.5 text-[13px] font-semibold text-[#FFFEF6] transition-opacity hover:opacity-90"
+                      className="inline-flex h-9 items-center gap-1.5 rounded-[4px] bg-[#D4B87A] px-3.5 text-[12px] font-medium uppercase tracking-[0.1em] text-[#161820] transition-opacity hover:opacity-90"
                     >
                       <CalendarDays className="size-3.5" aria-hidden />
-                      Jump to {dayLabel(nextBusyDay).split(",")[1]?.trim() || nextBusyDay}
+                      Next: {dayLabel(nextBusyDay).split(",")[1]?.trim() || nextBusyDay}
                     </button>
                   )}
                   <Link
                     href="/events"
-                    className="inline-flex h-9 items-center gap-1 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-canvas"
+                    className="inline-flex h-9 items-center gap-1 rounded-[4px] border border-line bg-surface px-3.5 text-[12px] font-medium uppercase tracking-[0.1em] text-ink transition-colors hover:border-[#D4B87A]/60"
                   >
-                    Browse events
+                    Browse
                     <ArrowUpRight className="size-3.5" aria-hidden />
                   </Link>
                 </div>
@@ -393,23 +387,23 @@ export function MonthCalendar({
                   const href = e.hosting ? `/organizer/events/${e.id}` : `/events/${e.slug}`;
                   return (
                     <li key={e.id} className="py-3.5">
-                      <div className="flex items-center justify-between gap-2 text-[12.5px] tabular-nums text-ink-muted">
-                        <span className="font-mono font-medium">{time(e.startsAt)}</span>
+                      <div className="flex items-center justify-between gap-2 text-[12px] tabular-nums text-ink-muted">
+                        <span className="font-mono text-[#D4B87A]">{time(e.startsAt)}</span>
                         {t && <Chip tone={t[1]}>{t[0]}</Chip>}
                       </div>
                       {signedIn ? (
                         <Link
                           href={href}
-                          className="group mt-1 flex items-start justify-between gap-2 text-[15.5px] font-semibold text-ink hover:underline hover:underline-offset-4"
+                          className="group mt-1 flex items-start justify-between gap-2 font-display text-[20px] italic text-ink transition-colors hover:text-[#D4B87A]"
                         >
                           <span>{e.title}</span>
-                          <ArrowUpRight className="mt-1 size-4 shrink-0 text-ink-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+                          <ArrowUpRight className="mt-1 size-4 shrink-0 text-ink-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#D4B87A]" aria-hidden />
                         </Link>
                       ) : (
-                        <p className="mt-1 text-[15.5px] font-semibold text-ink">{e.title}</p>
+                        <p className="mt-1 font-display text-[20px] italic text-ink">{e.title}</p>
                       )}
                       {e.venue && (
-                        <p className="mt-1 flex items-center gap-1.5 truncate text-[13px] text-ink-muted">
+                        <p className="mt-1 flex items-center gap-1.5 truncate text-[12.5px] text-ink-muted">
                           <MapPin className="size-3.5 shrink-0" aria-hidden />
                           <span className="truncate">{e.venue}</span>
                         </p>
@@ -424,7 +418,7 @@ export function MonthCalendar({
           {!signedIn && dayEvents.length > 0 && (
             <Link
               href="/signin?mode=signup"
-              className="mt-4 flex h-11 w-full items-center justify-center rounded-xl bg-lavender text-[14.5px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors hover:bg-lavender-hover"
+              className="mt-4 flex h-11 w-full items-center justify-center rounded-[4px] bg-[#D4B87A] text-[12px] font-medium uppercase tracking-[0.14em] text-[#161820] transition-opacity hover:opacity-90"
             >
               Sign up to register
             </Link>
