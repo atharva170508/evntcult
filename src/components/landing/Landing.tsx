@@ -17,10 +17,11 @@ import {
 } from "./Sections";
 import { OnePassInteractive } from "./OnePassInteractive";
 import { VaultSpotlight } from "./VaultSpotlight";
+import { ThemeStudioDemo } from "./ThemeStudioDemo";
+import { SocialPulseDemo } from "./SocialPulseDemo";
 import { SavingsCalculator } from "./SavingsCalculator";
-import { ScrollPassStory } from "./ScrollPassStory";
-import { ClosingFinale } from "./ClosingFinale";
-import { TwilightBackdrop } from "./TwilightBackdrop";
+import { ExploreHubsBand } from "./ExploreHubsBand";
+import { ChapterNav } from "./ChapterNav";
 import { DiscoverFeed } from "./DiscoverFeed";
 import { OrganizerBento } from "./OrganizerBento";
 import { EventArt } from "@/components/ui/EventArt";
@@ -141,75 +142,46 @@ function CampusCalendar({ month }: { month: MonthPayload }) {
 }
 
 /**
- * The homepage for visitors: 100% cohesive Dark Obsidian Twilight (#121110) from top pixel to footer.
- * Zero horizontal scroll, zero 100vw bleed overflow, sticky scroll-scrubbed 2-act hero into 3 crisp chapters.
+ * The homepage for visitors: welcome, OnePass, a labelled example of the signed-in home, the app,
+ * questions and sign-up. Nothing real (event names, dates, venues, people or counts) is shown or
+ * even loaded until someone signs in.
  */
 export function PublicHome() {
   return (
-    <div className="relative w-full text-[#EDE3DA]">
-      <TwilightBackdrop />
-      <div className="relative z-10">
-        <Hero />
-        <ScrollPassStory />
-        <OnePassInteractive />
-        <VaultSpotlight />
-        <SavingsCalculator />
-        <ClosingFinale />
-        <PublicDarkFooter />
-      </div>
+    <div className="pb-6">
+      <Hero />
+      <OnePassInteractive />
+      <VaultSpotlight />
+      <ThemeStudioDemo />
+      <SocialPulseDemo />
+      <ExploreHubsBand />
+      <HostsBand />
+      <SavingsCalculator />
+      <AppBand />
+      <Questions />
+      <Closing />
+      <ChapterNav />
     </div>
   );
 }
 
-function PublicDarkFooter() {
-  return (
-    <footer className="relative z-10 w-full border-t border-white/10 bg-[#0D0C0B]/88 text-[#EDE3DA] backdrop-blur-xl">
-      <div className="mx-auto flex max-w-[1360px] flex-col gap-6 px-gutter py-10 md:flex-row md:items-center md:justify-between">
-        <div>
-          <p className="font-display text-[22px] leading-tight text-[#EDE3DA]">
-            evntcult<span className="text-[#E3264F]">.</span>
-          </p>
-          <p className="mt-1 text-[13px] text-[#EDE3DA]/55">
-            Built by Synchronous Labs for college clubs, fests, and campus communities.
-          </p>
-        </div>
-        <nav aria-label="Footer" className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] font-medium text-[#EDE3DA]/70">
-          <Link href="/events" className="transition-colors hover:text-[#F0D7FF]">Events</Link>
-          <Link href="/calendar" className="transition-colors hover:text-[#F0D7FF]">Calendar</Link>
-          <Link href="/venues" className="transition-colors hover:text-[#F0D7FF]">Venues</Link>
-          <Link href="/host" className="transition-colors hover:text-[#F0D7FF]">Host an event</Link>
-          <Link href="/signin" className="transition-colors hover:text-[#F0D7FF]">Sign in</Link>
-          <Link href="/terms" className="transition-colors hover:text-[#F0D7FF]">Terms</Link>
-        </nav>
-      </div>
-    </footer>
-  );
-}
-
-function Questions({ tone = "light" }: { tone?: "light" | "dark" }) {
-  const dark = tone === "dark";
+function Questions() {
   return (
     <section
       aria-labelledby="faq-h"
-      className={
-        dark
-          ? "bleed border-t border-white/10 bg-[#121110] py-20 text-[#EDE3DA] md:py-28"
-          : "grid gap-10 py-20 md:grid-cols-[1fr_1.4fr] md:py-28"
-      }
+      className="grid gap-10 py-20 md:grid-cols-[1fr_1.4fr] md:py-28"
     >
-      <div className={dark ? "mx-auto grid max-w-[1360px] gap-10 px-gutter md:grid-cols-[1fr_1.4fr]" : "contents"}>
-        <Reveal>
-          <h2
-            id="faq-h"
-            className={`font-display text-[clamp(44px,6vw,72px)] leading-none tracking-[-0.03em] ${dark ? "text-[#EDE3DA]" : "text-ink"}`}
-          >
-            Good questions.
-          </h2>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <Accordion items={FAQ} tone={tone} />
-        </Reveal>
-      </div>
+      <Reveal>
+        <h2
+          id="faq-h"
+          className="font-display text-[clamp(44px,6vw,72px)] leading-none tracking-[-0.03em]"
+        >
+          Good questions.
+        </h2>
+      </Reveal>
+      <Reveal delay={0.08}>
+        <Accordion items={FAQ} />
+      </Reveal>
     </section>
   );
 }
@@ -288,13 +260,13 @@ export function Landing({
 }
 
 /** How an event runs on EvntCult: a dark band with a run of show and working demos. Shown to visitors and signed-in people. */
-export function HostsBand({ isOrganizer = false, seamless = false }: { isOrganizer?: boolean; seamless?: boolean }) {
+export function HostsBand({ isOrganizer = false }: { isOrganizer?: boolean }) {
   const hostHref = isOrganizer ? "/organizer/events/new" : "/host";
   return (
     <section
       id="hosts"
       aria-labelledby="hosts-h"
-      className={`bleed scroll-mt-28 bg-[#121110] text-cream ${seamless ? "border-t border-white/10" : "mt-16"}`}
+      className="bleed mt-16 scroll-mt-28 bg-night text-cream"
     >
       <div className="mx-auto max-w-[1360px] px-gutter py-20 md:py-28">
         <Reveal className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">

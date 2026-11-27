@@ -45,7 +45,7 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
   ];
 
   return (
-    <footer className="relative z-10 overflow-hidden border-t border-line-strong bg-sunken/90 backdrop-blur-xl dark:border-white/10 dark:bg-[#0D0C0B]/84 print:hidden">
+    <footer className="overflow-hidden border-t border-line-strong bg-sunken print:hidden">
       <div className="mx-auto max-w-[1360px] px-gutter pb-28 pt-12 md:pb-10 md:pt-16">
         <div className="grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
           {/* Left editorial statement + theme switch */}

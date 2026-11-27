@@ -60,7 +60,7 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
 
   const art = (
     <>
-      <EventArt accent={e.accent} seed={e.id} scrim={false} className="transition-transform duration-[900ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.05]" />
+      <EventArt accent={e.accent} seed={e.id} scrim={false} className="transition-transform duration-500 ease-out group-hover:scale-[1.04]" />
       <span
         className={cn(
           "paper-keep absolute left-3 top-3 z-[2] grid min-w-[44px] place-items-center rounded-xl bg-white/95 px-2 py-1.5 text-ink shadow-[0_4px_14px_-4px_rgba(60,40,10,0.28)] ring-1 ring-ink/10",
@@ -91,7 +91,7 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
         className="group flex items-center gap-4 rounded-card outline-offset-4 sm:block"
       >
         <div className="relative aspect-square w-[104px] shrink-0 overflow-hidden rounded-card bg-sunken sm:hidden">{art}</div>
-        <div className="hidden overflow-hidden rounded-card border border-line-strong bg-surface/90 shadow-card backdrop-blur-md transition-[transform,box-shadow,border-color] duration-slow ease-out hover:-translate-y-1 hover:shadow-raised dark:border-white/12 dark:bg-[#1A1816]/80 dark:hover:border-white/24 sm:block">
+        <div className="hidden overflow-hidden rounded-card border border-line-strong bg-surface shadow-card transition-[transform,box-shadow] duration-slow ease-out hover:-translate-y-0.5 hover:shadow-raised sm:block">
           <div className="relative aspect-[4/3] overflow-hidden bg-sunken">{art}</div>
           <div className="stub-tear" aria-hidden />
           <div className="p-4 pt-3.5">{facts}</div>
@@ -106,7 +106,7 @@ export function EventCard({ e, rows = false }: { e: EventSummary; rows?: boolean
 
   return (
     <Link href={`/events/${e.slug}`} className="group block rounded-card outline-offset-4">
-      <Tilt max={5} className="overflow-hidden rounded-card border border-line-strong bg-surface/90 shadow-card backdrop-blur-md transition-[box-shadow,border-color] duration-slow ease-out group-hover:shadow-raised dark:border-white/12 dark:bg-[#1A1816]/80 dark:group-hover:border-white/24">
+      <Tilt max={5} className="overflow-hidden rounded-card border border-line-strong bg-surface shadow-card transition-shadow duration-slow ease-out group-hover:shadow-raised">
         <div className="relative aspect-[4/3] overflow-hidden bg-sunken">{art}</div>
         <div className="stub-tear" aria-hidden />
         <div className="p-4 pt-3.5">{facts}</div>

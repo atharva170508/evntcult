@@ -5,7 +5,7 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Theme = "light" | "dark" | "system";
-const KEY = "ec_theme_v2";
+const KEY = "ec_theme";
 
 /* THEME_SCRIPT (below) also marks <html> with data-platform="ios|android|other" and data-standalone when
    opened from the home screen, before first paint, so CSS can tailor the app to the phone. */
@@ -14,15 +14,15 @@ const KEY = "ec_theme_v2";
 export function applyTheme(t: Theme) {
   const dark = t === "dark" || (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
   document.documentElement.classList.toggle("dark", dark);
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#121110" : "#FFFEF6");
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#141311" : "#FFFEF6");
 }
 
 /** Light, Dark or System, remembered on this device. */
 export function ThemeSwitch({ className }: { className?: string }) {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
   useEffect(() => {
     try {
-      setTheme((localStorage.getItem(KEY) as Theme) || "dark");
+      setTheme((localStorage.getItem(KEY) as Theme) || "light");
     } catch {
       // private mode
     }
@@ -73,7 +73,7 @@ export function ThemeSwitch({ className }: { className?: string }) {
 
 /** Compact 1-click Light <-> Dark toggle for the top header bar. */
 export function ThemeToggle({ className }: { className?: string }) {
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     const sync = () => setDark(document.documentElement.classList.contains("dark"));
@@ -115,4 +115,4 @@ export function ThemeToggle({ className }: { className?: string }) {
 }
 
 /** Inline, before first paint: sets .dark so the page never flashes the wrong theme. */
-export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('${KEY}')||'dark';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d)}catch(e){}try{var h=document.documentElement,u=navigator.userAgent;h.dataset.platform=/iPhone|iPad|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)?'ios':/Android/.test(u)?'android':'other';if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)h.dataset.standalone=''}catch(e){}})()`;
+export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('${KEY}')||'light';var d=t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}try{var h=document.documentElement,u=navigator.userAgent;h.dataset.platform=/iPhone|iPad|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)?'ios':/Android/.test(u)?'android':'other';if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)h.dataset.standalone=''}catch(e){}})()`;

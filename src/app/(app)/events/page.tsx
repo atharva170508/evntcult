@@ -15,7 +15,6 @@ import { getViewer } from "@/lib/rbac";
 import { CATEGORY_HUBS, getCategoryEventCounts } from "@/lib/discovery";
 import { EventArt, accentHex } from "@/components/ui/EventArt";
 import { formatINR } from "@/lib/money";
-import { CinemaHeadline, CinemaReveal, CinemaSpotlightFrame } from "@/components/motion/CinemaReveal";
 
 export const metadata: Metadata = { title: "Discover" };
 export const dynamic = "force-dynamic";
@@ -59,10 +58,10 @@ export default async function EventsPage({
 
   const chip = (active: boolean) =>
     cn(
-      "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-4 text-[13.5px] font-semibold backdrop-blur-md transition-colors duration-fast",
+      "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-4 text-[13.5px] font-semibold transition-colors duration-fast",
       active
-        ? "border-ink bg-ink text-[#FFFEF6] dark:border-[#F0D7FF] dark:bg-[#F0D7FF] dark:text-[#121110]"
-        : "border-line-strong bg-surface/85 text-ink-2 hover:border-ink hover:text-ink dark:border-white/12 dark:bg-[#1A1816]/75 dark:hover:border-white/30",
+        ? "border-ink bg-ink text-[#FFFEF6]"
+        : "border-line-strong bg-surface text-ink-2 hover:border-ink hover:text-ink",
     );
 
   const nextHref = nextCursor
@@ -84,19 +83,17 @@ export default async function EventsPage({
       {/* Editorial Discovery Masthead */}
       <header className="flex flex-col gap-5 pb-6 pt-8 md:flex-row md:items-end md:justify-between md:pt-10">
         <div>
-          <CinemaHeadline>
-            <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-              {hasFilters && titleParts.length > 0 ? (
-                <>
-                  {titleParts.join(" ")} <em>events.</em>
-                </>
-              ) : (
-                <>
-                  What&apos;s on <em>across campus.</em>
-                </>
-              )}
-            </h1>
-          </CinemaHeadline>
+          <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
+            {hasFilters && titleParts.length > 0 ? (
+              <>
+                {titleParts.join(" ")} <em>events.</em>
+              </>
+            ) : (
+              <>
+                What&apos;s on <em>across campus.</em>
+              </>
+            )}
+          </h1>
           <p className="mt-2.5 text-[15px] text-ink-muted" role="status">
             {events.length === 0
               ? "No events match your current filters."
@@ -117,7 +114,7 @@ export default async function EventsPage({
               name="q"
               defaultValue={q.q ?? ""}
               placeholder="Search events, clubs, venues…"
-              className="h-11 w-full rounded-full border border-line-strong bg-surface/85 pl-10 pr-4 text-[14px] text-ink backdrop-blur-md placeholder:text-ink-subtle focus:border-ink focus:outline-none dark:border-white/12 dark:bg-[#1A1816]/80"
+              className="h-11 w-full rounded-full border border-line-strong bg-surface pl-10 pr-4 text-[14px] text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none"
             />
           </div>
         </form>
@@ -186,13 +183,12 @@ export default async function EventsPage({
 
       {/* Featured Spotlight Card (when browsing unfiltered grid) */}
       {spotlight && (
-        <CinemaSpotlightFrame className="mt-7 bg-surface/90">
         <Link
           href={`/events/${spotlight.slug}`}
-          className="group grid md:grid-cols-[1.1fr_1fr]"
+          className="group mt-7 grid overflow-hidden rounded-[26px] border border-line-strong bg-surface shadow-card transition-shadow hover:shadow-raised md:grid-cols-[1.1fr_1fr]"
         >
           <div className="relative min-h-[220px] overflow-hidden md:min-h-[290px]" style={{ background: accentHex(spotlight.accent) }}>
-            <div className="absolute inset-0 transition-transform duration-[900ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.05]">
+            <div className="absolute inset-0 transition-transform duration-700 ease-out group-hover:scale-[1.03]">
               {spotlight.bannerUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={spotlight.bannerUrl} alt="" className="size-full object-cover" />
@@ -225,7 +221,6 @@ export default async function EventsPage({
             </div>
           </div>
         </Link>
-        </CinemaSpotlightFrame>
       )}
 
       {/* Results Grid / List / Editorial Empty State */}
@@ -265,11 +260,9 @@ export default async function EventsPage({
             </div>
           ) : (
             <ul className="mt-7 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-5 sm:gap-y-10 md:gap-x-6 lg:grid-cols-3 xl:grid-cols-4">
-              {gridEvents.map((e, i) => (
+              {gridEvents.map((e) => (
                 <li key={e.id} data-peek={e.slug}>
-                  <CinemaReveal delay={Math.min(i, 7) * 0.04} y={16}>
-                    <EventCard e={e} rows />
-                  </CinemaReveal>
+                  <EventCard e={e} rows />
                 </li>
               ))}
             </ul>
@@ -305,7 +298,7 @@ export default async function EventsPage({
               <li key={c.slug}>
                 <Link
                   href={`/category/${c.slug}`}
-                  className="group flex flex-col justify-between rounded-2xl border border-line-strong bg-surface/85 p-4 shadow-card backdrop-blur-md transition-[transform,box-shadow,border-color] duration-fast hover:-translate-y-0.5 hover:shadow-raised dark:border-white/12 dark:bg-[#1A1816]/75 dark:hover:border-white/25"
+                  className="group flex flex-col justify-between rounded-2xl border border-line-strong bg-surface p-4 shadow-card transition-[transform,box-shadow] duration-fast hover:-translate-y-0.5 hover:shadow-raised"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <span className="text-[15px] font-semibold text-ink">{c.name}</span>

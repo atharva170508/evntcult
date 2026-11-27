@@ -6,7 +6,6 @@ import { getViewer } from "@/lib/rbac";
 import { getDB } from "@/lib/db";
 import { myCertificates } from "@/lib/data/certificates";
 import { fmtDate } from "@/lib/utils";
-import { CinemaHeadline, CinemaReveal, CinemaSpotlightFrame } from "@/components/motion/CinemaReveal";
 
 export const metadata: Metadata = { title: "Certificates" };
 export const dynamic = "force-dynamic";
@@ -20,11 +19,9 @@ export default async function CertificatesPage() {
     <div className="space-y-10 pb-14">
       <header className="flex flex-col gap-4 border-b border-line pb-7 pt-8 sm:flex-row sm:items-end sm:justify-between md:pt-10">
         <div>
-          <CinemaHeadline>
-            <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-              Verified <em>credentials.</em>
-            </h1>
-          </CinemaHeadline>
+          <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
+            Verified <em>credentials.</em>
+          </h1>
           <p className="mt-2.5 text-[15px] text-ink-muted">
             Every certificate issued by a campus organizer comes with a permanent verification link.
           </p>
@@ -35,8 +32,7 @@ export default async function CertificatesPage() {
       </header>
 
       {certs.length === 0 ? (
-        <CinemaSpotlightFrame>
-        <section className="grid items-center gap-8 p-7 sm:p-10 lg:grid-cols-[1.15fr_0.85fr]">
+        <section className="grid items-center gap-8 rounded-[28px] border border-line-strong bg-sunken/75 p-7 sm:p-10 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <h2 className="font-display text-[clamp(30px,3.6vw,44px)] leading-[1.02] tracking-[-0.025em] text-ink">
               No certificates earned yet.
@@ -77,15 +73,13 @@ export default async function CertificatesPage() {
             </div>
           </div>
         </section>
-        </CinemaSpotlightFrame>
       ) : (
         <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {certs.map((c, i) => (
+          {certs.map((c) => (
             <li key={c.id}>
-              <CinemaReveal delay={Math.min(i, 5) * 0.05}>
               <Link
                 href={`/certificates/${c.id}`}
-                className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-line-strong bg-surface/90 shadow-card backdrop-blur-md transition-[transform,box-shadow,border-color] duration-fast hover:-translate-y-1 hover:shadow-raised dark:border-white/12 dark:bg-[#1A1816]/80 dark:hover:border-white/25"
+                className="group flex h-full flex-col overflow-hidden rounded-[22px] border border-line-strong bg-surface shadow-card transition-[transform,box-shadow] duration-fast hover:-translate-y-0.5 hover:shadow-raised"
               >
                 {/* Stationery miniature diploma */}
                 <div className="paper-keep relative border-b border-line bg-[#FFFEF6] p-3">
@@ -113,7 +107,6 @@ export default async function CertificatesPage() {
                   />
                 </div>
               </Link>
-              </CinemaReveal>
             </li>
           ))}
         </ul>

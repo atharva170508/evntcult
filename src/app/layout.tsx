@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
 import { THEME_SCRIPT } from "@/components/site/ThemeSwitch";
@@ -7,14 +8,18 @@ import { MotionProvider } from "@/components/motion/MotionProvider";
 import { Toaster } from "@/components/ui/Toaster";
 import { PlayfulExtras } from "@/components/site/PlayfulExtras";
 
-/* Figtree for the interface, EB Garamond for big headlines, JetBrains Mono for pass codes.
-   Self-hosted (SIL OFL). */
-const sans = localFont({ src: "./fonts/Figtree-Variable.woff2", weight: "300 900", variable: "--font-sans", display: "swap" });
-const serif = localFont({
-  src: [
-    { path: "./fonts/EBGaramond-Variable.woff2", weight: "400 800", style: "normal" },
-    { path: "./fonts/EBGaramond-Italic-Variable.woff2", weight: "400 800", style: "italic" },
-  ],
+/* Plus Jakarta Sans for crisp modern UI, Instrument Serif for contemporary editorial display headlines,
+   and self-hosted JetBrains Mono for pass codes & timestamps. */
+const sans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sans",
+  display: "swap",
+});
+const serif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
   variable: "--font-serif",
   display: "swap",
 });
@@ -48,15 +53,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#121110",
-  colorScheme: "dark light",
+  themeColor: "#FFFEF6",
+  colorScheme: "light dark",
   // Draw edge to edge on notched phones; the header, tab bar and page pad themselves with env(safe-area-inset-*).
   viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`dark ${sans.variable} ${serif.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en-IN" className={`${sans.variable} ${serif.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>

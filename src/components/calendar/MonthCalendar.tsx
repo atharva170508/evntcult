@@ -3,12 +3,9 @@
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { ArrowUpRight, CalendarDays, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
-import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import type { MonthPayload } from "@/lib/data/calendar";
 import { Chip, type ChipTone } from "@/components/ui/Chip";
 import { cn } from "@/lib/utils";
-import { COUT } from "@/lib/motion-curves";
-import { BorderTrail } from "@/components/shadcn/border-trail";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const time = (iso: string) =>
@@ -64,7 +61,6 @@ export function MonthCalendar({
   className?: string;
 }) {
   const [data, setData] = useState(initial);
-  const reduced = !!useReducedMotion();
   const [loading, setLoading] = useState(false);
   const [failed, setFailed] = useState(false);
   const [selected, setSelected] = useState<string>(() => startDay(initial));
@@ -123,17 +119,10 @@ export function MonthCalendar({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-[26px] border border-line-strong bg-surface/90 shadow-card backdrop-blur-2xl dark:border-white/12 dark:bg-[#161412]/78 dark:shadow-[0_34px_72px_-32px_rgba(0,0,0,0.88)]",
+        "overflow-hidden rounded-[24px] border border-line-strong bg-surface shadow-card",
         className,
       )}
     >
-      {!reduced && (
-        <BorderTrail
-          size={90}
-          className="pointer-events-none z-20 bg-gradient-to-l from-[#E3264F] via-[#F0D7FF] to-transparent opacity-50"
-          transition={{ repeat: Infinity, duration: 9, ease: "linear" }}
-        />
-      )}
       <div className="grid lg:grid-cols-[minmax(0,1fr)_340px]">
         {/* LEFT: Unified Month Matrix */}
         <div className="min-w-0 p-4 sm:p-6">
@@ -261,27 +250,19 @@ export function MonthCalendar({
                   className={cn(
                     "group relative flex min-h-[52px] min-w-0 flex-col items-center rounded-xl p-1.5 text-left transition-all duration-150 md:min-h-[72px] md:items-start md:p-2",
                     isSel
-                      ? "bg-sunken/80"
+                      ? "bg-sunken ring-1 ring-inset ring-ink/30"
                       : isWeekend
-                        ? "bg-canvas/45 hover:bg-sunken/70 dark:bg-white/[0.02] dark:hover:bg-white/[0.06]"
-                        : "hover:bg-sunken/70 dark:hover:bg-white/[0.06]",
+                        ? "bg-canvas/55 hover:bg-sunken/70"
+                        : "hover:bg-sunken/70",
                   )}
                 >
-                  {isSel && (
-                    <m.span
-                      layoutId="cal-sel-ring"
-                      aria-hidden
-                      transition={reduced ? { duration: 0.01 } : { type: "spring", stiffness: 460, damping: 36 }}
-                      className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-ink/35 dark:bg-white/[0.07] dark:ring-[#F0D7FF]/55"
-                    />
-                  )}
                   <span
                     className={cn(
-                      "relative z-10 grid size-7 place-items-center rounded-full text-[13px] tabular-nums transition-colors",
+                      "grid size-7 place-items-center rounded-full text-[13px] tabular-nums transition-colors",
                       isToday
-                        ? "bg-[#E3264F] font-semibold text-white shadow-[0_0_16px_-2px_rgba(227,38,79,0.65)]"
+                        ? "bg-[#E3264F] font-semibold text-white"
                         : isSel
-                          ? "bg-ink font-semibold text-[#FFFEF6] dark:bg-[#F0D7FF] dark:text-[#121110]"
+                          ? "bg-ink font-semibold text-[#FFFEF6]"
                           : list.length
                             ? "font-semibold text-ink"
                             : "font-medium text-ink-2 group-hover:text-ink",
@@ -350,16 +331,9 @@ export function MonthCalendar({
         <aside
           aria-live="polite"
           aria-label={`Events on ${dayLabel(selected)}`}
-          className="flex min-w-0 flex-col justify-between border-t border-line bg-sunken/45 p-5 dark:border-white/10 dark:bg-white/[0.03] sm:p-6 lg:border-l lg:border-t-0"
+          className="flex min-w-0 flex-col justify-between border-t border-line bg-sunken/45 p-5 sm:p-6 lg:border-l lg:border-t-0"
         >
-          <AnimatePresence mode="wait" initial={false}>
-          <m.div
-            key={selected}
-            initial={reduced ? false : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduced ? undefined : { opacity: 0, y: -6 }}
-            transition={{ duration: 0.2, ease: COUT }}
-          >
+          <div>
             {/* Editorial date block */}
             <div className="flex items-start justify-between gap-3 border-b border-line pb-4">
               <div className="flex items-baseline gap-3">
@@ -445,8 +419,7 @@ export function MonthCalendar({
                 })}
               </ul>
             )}
-          </m.div>
-          </AnimatePresence>
+          </div>
 
           {!signedIn && dayEvents.length > 0 && (
             <Link

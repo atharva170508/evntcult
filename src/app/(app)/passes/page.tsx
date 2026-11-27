@@ -18,7 +18,6 @@ import { LinkButton, buttonClass } from "@/components/ui/Button";
 import { HoloPass } from "@/components/passes/HoloPass";
 import { brandQr, qrArtSvg } from "@/lib/qr-art";
 import { directionsUrl } from "@/lib/organizer/shared";
-import { CinemaHeadline, CinemaReveal, CinemaSpotlightFrame } from "@/components/motion/CinemaReveal";
 
 export const metadata: Metadata = { title: "My passes" };
 
@@ -143,11 +142,9 @@ export default async function PassesPage() {
       {/* Editorial Wallet Masthead */}
       <header className="flex flex-col gap-6 border-b border-line pb-7 pt-8 md:flex-row md:items-end md:justify-between md:pt-10">
         <div>
-          <CinemaHeadline>
-            <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-              Your pass <em>wallet.</em>
-            </h1>
-          </CinemaHeadline>
+          <h1 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
+            Your pass <em>wallet.</em>
+          </h1>
           <p className="mt-2.5 text-[15px] text-ink-muted">
             Every ticket you claim lands here with an offline-ready gate QR code.
           </p>
@@ -171,8 +168,7 @@ export default async function PassesPage() {
       </header>
 
       {upcoming.length === 0 ? (
-        <CinemaSpotlightFrame>
-        <section className="grid items-center gap-8 p-7 sm:p-10 lg:grid-cols-[1.15fr_0.85fr]">
+        <section className="grid items-center gap-8 rounded-[28px] border border-line-strong bg-sunken/75 p-7 sm:p-10 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <h2 className="font-display text-[clamp(30px,3.6vw,44px)] leading-[1.02] tracking-[-0.025em] text-ink">
               Your next gate pass goes right here.
@@ -224,10 +220,9 @@ export default async function PassesPage() {
             </div>
           </div>
         </section>
-        </CinemaSpotlightFrame>
       ) : (
         <div className="grid justify-items-center gap-x-8 gap-y-16 sm:grid-cols-2 xl:grid-cols-3">
-          {upcoming.map((r, i) => {
+          {upcoming.map((r) => {
             const starts = new Date(r.starts_at);
             const ends = new Date(r.ends_at);
             const cancelled = r.event_status === "cancelled";
@@ -235,7 +230,7 @@ export default async function PassesPage() {
             const accent = accentFor({ id: r.event_id, category: r.category });
             const qrArt = qrSvg ? qrArtSvg(passQrPayload(r.pass_token), { ink: accentInk(accent), accent: accentHex(accent) }) : null;
             return (
-              <CinemaReveal key={r.id} delay={Math.min(i, 5) * 0.06} className="flex w-full flex-col items-center">
+              <div key={r.id} className="flex w-full flex-col items-center">
                 <HoloPass
                   regId={r.id}
                   slug={r.slug}
@@ -301,7 +296,7 @@ export default async function PassesPage() {
                     </Link>
                   )}
                 </div>
-              </CinemaReveal>
+              </div>
             );
           })}
         </div>
@@ -317,7 +312,7 @@ export default async function PassesPage() {
               <li key={e.slug}>
                 <Link
                   href={`/events/${e.slug}#register`}
-                  className="group flex items-center gap-4 rounded-2xl border border-line-strong bg-surface/85 p-3 pr-4 backdrop-blur-md transition-[transform,box-shadow,border-color] duration-fast hover:-translate-y-0.5 hover:shadow-raised dark:border-white/12 dark:bg-[#1A1816]/80 dark:hover:border-white/24"
+                  className="group flex items-center gap-4 rounded-2xl border border-line-strong bg-white p-3 pr-4 transition-shadow duration-fast hover:shadow-raised"
                 >
                   <div className="relative size-14 shrink-0 overflow-hidden rounded-xl">
                     <EventArt accent={accentFor({ id: e.event_id, category: e.category })} seed={e.event_id} scrim={false} />

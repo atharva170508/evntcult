@@ -228,8 +228,8 @@ function FeedCard({ e }: { e: Ev & { s: Date; en: Date } }) {
       className="group block rounded-[20px] outline-offset-4"
     >
       <div className="relative">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-sunken shadow-[0_0_0_1px_rgba(26,26,26,0.06)] transition-transform duration-300 ease-[var(--ease-enter)] group-hover:-translate-y-1 dark:shadow-[0_0_0_1px_rgba(255,255,255,0.12)]">
-          <div className="absolute inset-0 transition-transform duration-[900ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.05]">
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-sunken shadow-[0_0_0_1px_rgba(26,26,26,0.06)] transition-transform duration-300 ease-[var(--ease-enter)] group-hover:-translate-y-1">
+          <div className="absolute inset-0 transition-transform duration-700 ease-[var(--ease-enter)] group-hover:scale-[1.03]">
             {e.bannerUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={e.bannerUrl} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />
@@ -237,7 +237,7 @@ function FeedCard({ e }: { e: Ev & { s: Date; en: Date } }) {
               <EventArt accent={e.accent} seed={e.id} scrim={false} />
             )}
           </div>
-          <span className="absolute right-3 top-3 z-[2] rounded-lg bg-white/95 px-2.5 py-1 text-[13px] font-semibold tabular-nums text-ink shadow-[0_2px_8px_rgba(0,0,0,0.12)] backdrop-blur dark:bg-[#121110]/82 dark:text-[#EDE3DA] dark:ring-1 dark:ring-white/15">
+          <span className="absolute right-3 top-3 z-[2] rounded-lg bg-white/95 px-2.5 py-1 text-[13px] font-semibold tabular-nums text-ink shadow-[0_2px_8px_rgba(0,0,0,0.12)] backdrop-blur">
             {e.feePaise ? formatINR(e.feePaise) : "Free"}
           </span>
           {(live || full) && (
