@@ -63,7 +63,7 @@ export function ChapterNav() {
                 aria-current={on ? "location" : undefined}
                 className={cn(
                   "relative rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-colors",
-                  on ? "text-white" : "text-ink-muted hover:text-ink",
+                  on ? "text-canvas" : "text-ink-muted hover:text-ink",
                 )}
               >
                 {on && (

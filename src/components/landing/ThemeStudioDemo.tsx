@@ -153,7 +153,7 @@ export function ThemeStudioDemo() {
               onClick={() => selectCategory(c.code)}
               className={cn(
                 "relative min-h-[44px] shrink-0 rounded-full px-4 py-2 text-[13.5px] font-semibold transition-colors sm:min-h-[38px]",
-                active ? "text-white" : "bg-sunken text-ink-2 hover:bg-mist hover:text-ink",
+                active ? "text-canvas" : "bg-sunken text-ink-2 hover:bg-mist hover:text-ink",
               )}
             >
               {active && (
