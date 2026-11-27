@@ -22,7 +22,7 @@ export function SiteFooter({ viewer }: { viewer: NavViewer | null }) {
               EvntCult
             </p>
             <p className="mt-3 max-w-[38ch] text-[14.5px] font-light text-[#9D978C]">
-              Campus events, direct club UPI, offline QR passes, and private Photo Vault.
+              Live events, direct organizer UPI, offline QR passes, and private Photo Vault.
             </p>
           </div>
 

@@ -1,7 +1,7 @@
 ---
 version: 3.0
 name: EvntCult
-description: Cinematic editorial campus event platform. Deep charcoal ground (#161820), warm ivory text (#EFEAE0), elevated surfaces (#1E212B / #262A36), champagne gold accent (#D4B87A). Cormorant Garamond 600/700 italic headlines paired with Inter 300/400/500 body and micro-tracked uppercase labels.
+description: Cinematic editorial live event and ticketing platform. Deep charcoal ground (#161820), warm ivory text (#EFEAE0), elevated surfaces (#1E212B / #262A36), champagne gold accent (#D4B87A). Cormorant Garamond 600/700 italic headlines paired with Inter 300/400/500 body and micro-tracked uppercase labels.
 colors:
   background: "#161820"
   foreground: "#EFEAE0"
@@ -45,4 +45,4 @@ rounded:
 
 ## Overview
 
-A cinematic, editorial campus event & passbook platform. Deep midnight charcoal ground, warm ivory typography, champagne gold accents, real architectural photography, and zero visual clutter — built specifically around offline QR passes, direct club UPI settlement, on-device Face ID Photo Vault, and verified certificates.
+A cinematic, editorial live event and ticketing platform. Deep midnight charcoal ground, warm ivory typography, champagne gold accents, real architectural photography, and zero visual clutter — built around offline QR passes, direct organizer UPI settlement, on-device Face ID Photo Vault, and verified certificates.

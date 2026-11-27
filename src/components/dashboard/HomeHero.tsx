@@ -79,7 +79,7 @@ export function HomeHero({
   return (
     <section aria-labelledby="hero-title" className="pt-2">
       <DashboardGreeting
-        headline={live ? "Doors are open" : mine ? "You are all set" : "Up next on campus"}
+        headline={live ? "Doors are open" : mine ? "You are all set" : "Up next"}
         name={name}
         dateLine={dateLine}
         passCount={passCount}
@@ -87,7 +87,7 @@ export function HomeHero({
           live
             ? "Your pass is ready to scan at the gate."
             : mine
-              ? "Your next campus pass is locked in."
+              ? "Your next event pass is locked in."
               : "Claim your seat in one tap."
         }
         asHeading={false}
@@ -117,7 +117,7 @@ export function HomeHero({
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="tr-meta inline-flex items-center gap-2 text-[#D4B87A]">
                 <span className="size-1.5 rounded-full bg-[#D4B87A]" aria-hidden />
-                {live ? "Live now" : mine ? "Your pass" : "Featured on campus"}
+                {live ? "Live now" : mine ? "Your pass" : "Featured event"}
               </span>
               <span className="tr-meta text-[#EFEAE0]/80">
                 {e.feePaise > 0 ? `INR ${(e.feePaise / 100).toLocaleString("en-IN")}` : "Free"}

@@ -90,7 +90,7 @@ export default async function EventsPage({
               </>
             ) : (
               <>
-                What&apos;s on <em>across campus.</em>
+                What&apos;s on <em>near you.</em>
               </>
             )}
           </h1>
@@ -113,7 +113,7 @@ export default async function EventsPage({
               type="search"
               name="q"
               defaultValue={q.q ?? ""}
-              placeholder="Search events, clubs, venues…"
+              placeholder="Search events, hosts, venues…"
               className="h-11 w-full rounded-full border border-line-strong bg-surface pl-10 pr-4 text-[14px] text-ink placeholder:text-ink-subtle focus:border-ink focus-visible:shadow-[var(--focus-field)]"
             />
           </div>
@@ -227,26 +227,25 @@ export default async function EventsPage({
       {events.length === 0 ? (
         <div className="mt-8 rounded-[26px] border border-line-strong bg-sunken/70 p-8 text-center sm:p-12">
           <p className="font-display text-[32px] leading-tight tracking-[-0.02em] text-ink">
-            {hasFilters ? "Nothing matches those filters yet." : "The campus board is clear."}
+            {hasFilters ? "Nothing matches those filters yet." : "The board is clear."}
           </p>
           <p className="mx-auto mt-2 max-w-[44ch] text-[15px] text-ink-muted">
             {hasFilters
               ? "Try clearing a filter or exploring another category below."
-              : "New events appear here the moment a club publishes them."}
+              : "New events appear here the moment an organizer publishes them."}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             {hasFilters && (
               <Link
                 href="/events"
-                className="inline-flex h-11 items-center rounded-xl bg-ink px-5 text-[14.5px] font-semibold text-[#FFFEF6] transition-opacity hover:opacity-90"
+                className="inline-flex h-11 items-center rounded-[4px] bg-ink px-5 text-[11px] font-medium uppercase tracking-[0.14em] text-canvas transition-opacity hover:opacity-90"
               >
                 Show all events
               </Link>
             )}
-            {/* Organizers create; students can only apply to host. */}
             <Link
               href={isOrganizer ? "/organizer/events/new" : "/host"}
-              className="inline-flex h-11 items-center rounded-xl bg-lavender px-5 text-[14.5px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors hover:bg-lavender-hover"
+              className="inline-flex h-11 items-center rounded-[4px] bg-[#D4B87A] px-5 text-[11px] font-medium uppercase tracking-[0.14em] text-[#161820] transition-colors hover:bg-[#E0C78E]"
             >
               {isOrganizer ? "Create an event" : "Apply to host"}
             </Link>

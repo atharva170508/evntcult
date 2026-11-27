@@ -14,8 +14,8 @@ const PILLARS = [
     desc: "Signed locally on your phone. Scans at the door in under a second even without WiFi.",
   },
   {
-    title: "Direct Club UPI",
-    desc: "Ticket payments go straight to your club UPI ID with built in UTR confirmation and zero cut.",
+    title: "Direct Organizer UPI",
+    desc: "Ticket payments settle straight into your UPI ID with built in UTR confirmation and zero cut.",
   },
   {
     title: "Face ID Photo Vault",
@@ -31,17 +31,17 @@ const PROCESS_STEPS = [
   {
     num: "01",
     title: "Pick an Event",
-    desc: "Search concerts, hackathons, workshops, sports, and club talks on one live campus board.",
+    desc: "Discover concerts, hackathons, workshops, sports, and live talks on one curated board.",
   },
   {
     num: "02",
     title: "Claim or Pay UPI",
-    desc: "Lock in free seats instantly or pay paid fests directly to the club with zero markup.",
+    desc: "Lock in free seats instantly or pay paid events directly to the organizer with zero markup.",
   },
   {
     num: "03",
     title: "Scan at the Gate",
-    desc: "Open your offline pass on your phone. Volunteers verify entries in under a second.",
+    desc: "Open your offline pass on your phone. Gate teams verify entries in under a second.",
   },
   {
     num: "04",
@@ -53,15 +53,15 @@ const PROCESS_STEPS = [
 const EVNTCULT_FAQ: [string, string][] = [
   [
     "Do I need to print my pass?",
-    "No. Show your QR on your phone at the gate. A saved pass or installed home screen app works even when auditorium WiFi drops.",
+    "No. Show your QR on your phone at the gate. A saved pass or installed home screen app works even when venue WiFi drops.",
   ],
   [
     "How do payments work for paid events?",
-    "Students pay directly to the club UPI ID and submit the UTR reference. Organizers confirm payments straight from their attendee table with zero platform commission.",
+    "Guests pay directly to the organizer UPI ID and submit the UTR reference. Organizers confirm payments straight from their attendee table with zero platform commission.",
   ],
   [
     "Can I cancel my registration?",
-    "Yes, anytime from My Passes before check in. Your freed seat automatically moves to the next student on the waitlist.",
+    "Yes, anytime from My Passes before check in. Your freed seat automatically moves to the next person on the waitlist.",
   ],
   [
     "How does the Photo Vault protect privacy?",
@@ -69,11 +69,11 @@ const EVNTCULT_FAQ: [string, string][] = [
   ],
   [
     "Where do my event certificates live?",
-    "Every certificate issued by a club appears inside Certificates with a permanent public verification code anyone can check.",
+    "Every certificate issued by an organizer appears inside Certificates with a permanent public verification code anyone can check.",
   ],
   [
-    "How does my campus club start hosting?",
-    "Create a free account and submit a club verification request on the Host page. Once verified, you can publish events and share volunteer scan links immediately.",
+    "How do I start hosting events?",
+    "Create a free account and submit a quick organizer verification request on the Host page. Once verified, you can publish events and share gate scan links immediately.",
   ],
 ];
 
@@ -198,7 +198,7 @@ export function TapeLanding() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/images/hero-hall.jpg"
-          alt="Warm timber college auditorium lit by tungsten pendant lamps"
+          alt="Warm timber performance hall lit by tungsten pendant lamps"
           fetchPriority="high"
           className="absolute inset-0 size-full object-cover object-center"
         />
@@ -218,7 +218,7 @@ export function TapeLanding() {
             transition={{ duration: 0.6, delay: 0, ease: EASE }}
             className="tr-meta text-[#D4B87A]"
           >
-            Campus Event Platform · Offline QR &amp; Direct UPI
+            Live Events &amp; Ticketing · Offline QR &amp; Direct UPI
           </m.p>
 
           <m.h1
@@ -229,7 +229,7 @@ export function TapeLanding() {
             className="mt-4 font-display font-bold italic leading-[0.88] tracking-[-0.02em] text-[#EFEAE0]"
             style={{ fontSize: "clamp(54px, 8.6vw, 128px)" }}
           >
-            Every Night on Campus.
+            Every Event.
             <br />
             <span className="text-[#D4B87A]">One Pass.</span>
           </m.h1>
@@ -240,7 +240,7 @@ export function TapeLanding() {
             transition={{ duration: 0.65, delay: 0.3, ease: EASE }}
             className="mt-6 max-w-[560px] text-[16px] font-light leading-[1.6] text-[#EFEAE0]/80 md:text-[17px]"
           >
-            Concerts, hackathons, workshops, sports, and club fests on one live campus calendar. Claim your seat in a tap and walk in with your phone.
+            Concerts, hackathons, workshops, sports, and live nights across your city. Claim your seat in a tap and walk in with your phone.
           </m.p>
 
           {/* Clean inline search + centered dual CTAs */}
@@ -258,13 +258,13 @@ export function TapeLanding() {
             >
               <Search className="size-4 shrink-0 text-[#D4B87A]" aria-hidden />
               <label htmlFor="hero-q" className="sr-only">
-                Search campus events
+                Search events
               </label>
               <input
                 id="hero-q"
                 name="q"
                 type="search"
-                placeholder="Search concerts, hackathons, workshops, or clubs..."
+                placeholder="Search concerts, hackathons, workshops, or venues..."
                 className="h-12 min-w-0 flex-1 bg-transparent text-[14.5px] font-light text-[#EFEAE0] outline-none placeholder:text-[#EFEAE0]/55 [&::-webkit-search-cancel-button]:hidden"
               />
               <button
@@ -316,14 +316,14 @@ export function TapeLanding() {
         </div>
       </section>
 
-      {/* 3. CAMPUS CATEGORIES — Full-width hover-raise rows wired to CATEGORY_HUBS */}
+      {/* 3. CATEGORIES — Full-width hover-raise rows wired to CATEGORY_HUBS */}
       <section className="bg-[#161820] py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-5 md:px-10">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
-              <p className="tr-meta text-[#D4B87A]">Campus Directory</p>
+              <p className="tr-meta text-[#D4B87A]">Directory</p>
               <h2 className="mt-3 font-display text-[clamp(42px,5.4vw,72px)] font-bold italic leading-[0.94] text-[#EFEAE0]">
-                What&apos;s On Campus
+                What&apos;s On Near You
               </h2>
             </div>
             <Link
@@ -396,16 +396,16 @@ export function TapeLanding() {
         </div>
       </section>
 
-      {/* 5. INTERACTIVE EVNTCULT SPLIT — Club UPI Calculator + Live Offline Gate Scanner */}
+      {/* 5. INTERACTIVE EVNTCULT SPLIT — Organizer UPI Calculator + Live Offline Gate Scanner */}
       <section className="bg-[#161820] py-24 md:py-32">
         <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-12 px-5 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 md:px-10">
           <div>
-            <p className="tr-meta text-[#D4B87A]">Built for Campus Clubs</p>
+            <p className="tr-meta text-[#D4B87A]">Built for Organizers</p>
             <h2 className="mt-3 font-display text-[clamp(40px,5vw,66px)] font-bold italic leading-[0.94] text-[#EFEAE0]">
               Zero Cut on Every Ticket
             </h2>
             <p className="mt-4 max-w-[46ch] text-[15.5px] font-light leading-[1.6] text-[#9D978C]">
-              Students pay directly to your club UPI ID and submit their UTR. Estimate what your club keeps compared to standard ticketing gateways.
+              Guests pay directly to your UPI ID and submit their UTR. Estimate what you keep compared to standard ticketing gateways.
             </p>
 
             <div className="mt-8 grid gap-6 sm:grid-cols-2">
@@ -519,10 +519,10 @@ export function TapeLanding() {
       <section className="bg-[#D4B87A] py-20 text-[#161820] md:py-28">
         <div className="mx-auto flex max-w-[920px] flex-col items-center px-5 text-center md:px-10">
           <h2 className="font-display text-[clamp(42px,6vw,84px)] font-bold italic leading-[0.92] tracking-[-0.02em] text-[#161820]">
-            Your Next Campus Night Starts Here.
+            Your Next Event Starts Here.
           </h2>
           <p className="mt-5 max-w-[540px] text-[16px] font-light leading-[1.6] text-[#161820]/80">
-            Free for every student and verified club. Claim your pass in seconds or publish your upcoming fest with direct UPI and offline check in.
+            Free for attendees and verified organizers. Claim your pass in seconds or publish your next live event with direct UPI and offline check in.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
             <Link

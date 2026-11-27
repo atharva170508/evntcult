@@ -23,7 +23,7 @@ export default async function HostPage() {
         <h1 className="font-display text-[clamp(40px,5vw,56px)] leading-none tracking-[-0.03em] text-ink">
           Host on EvntCult.
         </h1>
-        <p className="mt-3 text-[16px] text-ink-2">Every organizer is verified by Synchronous Labs, so each event on campus comes from a real club.</p>
+        <p className="mt-3 text-[16px] text-ink-2">Every organizer is verified by Synchronous Labs, so every listed event comes from a real host or venue.</p>
       </header>
 
       {status?.status === "pending" ? (

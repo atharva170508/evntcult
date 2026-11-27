@@ -55,13 +55,13 @@ export default async function SignInPage({
 
         <div className="relative z-10 my-auto py-12">
           <h1 className="max-w-[12ch] font-display text-[clamp(48px,5vw,76px)] font-bold italic leading-[0.92] tracking-[-0.02em] text-[#EFEAE0]">
-            One pass for every night on <span className="text-[#D4B87A]">campus.</span>
+            One pass for every <span className="text-[#D4B87A]">event.</span>
           </h1>
           <dl className="mt-10 divide-y divide-[#EFEAE0]/15 border-y border-[#EFEAE0]/15">
             {[
               ["Offline QR passes", "Works at the gate without WiFi"],
               ["On device Photo Vault", "Automatic event photo matching"],
-              ["Direct club UPI", "Zero platform fee on tickets"],
+              ["Direct organizer UPI", "Zero platform fee on tickets"],
             ].map(([title, desc]) => (
               <div key={title} className="flex items-baseline justify-between gap-4 py-4">
                 <dt className="font-display text-[22px] font-semibold italic text-[#EFEAE0]">{title}</dt>
