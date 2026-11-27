@@ -3,114 +3,57 @@
 import { useState } from "react";
 import Link from "next/link";
 import { m, useReducedMotion } from "motion/react";
-import { ArrowRight, Plus, Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { CATEGORY_HUBS } from "@/lib/discovery";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const PILLARS = [
-  {
-    title: "Offline QR Passes",
-    desc: "Signed locally on your phone. Scans at the door in under a second even without WiFi.",
-  },
-  {
-    title: "Direct Organizer UPI",
-    desc: "Ticket payments settle straight into your UPI ID with built in UTR confirmation and zero cut.",
-  },
-  {
-    title: "Face ID Photo Vault",
-    desc: "One private selfie after sign in gathers every photo of you from events you attended.",
-  },
-  {
-    title: "Verified Certificates",
-    desc: "Attendance and winner certificates issued in one click with permanent verification links.",
-  },
+  { title: "Offline QR", sub: "Works without WiFi" },
+  { title: "Direct UPI", sub: "Zero platform fee" },
+  { title: "Photo Vault", sub: "Private face match" },
+  { title: "Certificates", sub: "Verified by link" },
 ] as const;
 
-const PROCESS_STEPS = [
-  {
-    num: "01",
-    title: "Pick an Event",
-    desc: "Discover concerts, hackathons, workshops, sports, and live talks on one curated board.",
-  },
-  {
-    num: "02",
-    title: "Claim or Pay UPI",
-    desc: "Lock in free seats instantly or pay paid events directly to the organizer with zero markup.",
-  },
-  {
-    num: "03",
-    title: "Scan at the Gate",
-    desc: "Open your offline pass on your phone. Gate teams verify entries in under a second.",
-  },
-  {
-    num: "04",
-    title: "Vault & Certificates",
-    desc: "Event photos land automatically in your Vault and signed certificates arrive in your profile.",
-  },
+const STEPS = [
+  { num: "01", title: "Discover", sub: "Find what is on." },
+  { num: "02", title: "Claim", sub: "Free or direct UPI." },
+  { num: "03", title: "Enter", sub: "Scan offline at doors." },
+  { num: "04", title: "Keep", sub: "Photos & signed certs." },
 ] as const;
 
-const EVNTCULT_FAQ: [string, string][] = [
-  [
-    "Do I need to print my pass?",
-    "No. Show your QR on your phone at the gate. A saved pass or installed home screen app works even when venue WiFi drops.",
-  ],
-  [
-    "How do payments work for paid events?",
-    "Guests pay directly to the organizer UPI ID and submit the UTR reference. Organizers confirm payments straight from their attendee table with zero platform commission.",
-  ],
-  [
-    "Can I cancel my registration?",
-    "Yes, anytime from My Passes before check in. Your freed seat automatically moves to the next person on the waitlist.",
-  ],
-  [
-    "How does the Photo Vault protect privacy?",
-    "Face matching runs strictly across events you actually registered for. Outsiders cannot browse or search your photos.",
-  ],
-  [
-    "Where do my event certificates live?",
-    "Every certificate issued by an organizer appears inside Certificates with a permanent public verification code anyone can check.",
-  ],
-  [
-    "How do I start hosting events?",
-    "Create a free account and submit a quick organizer verification request on the Host page. Once verified, you can publish events and share gate scan links immediately.",
-  ],
-];
-
-/** Interactive Offline Gate QR Scanner Aperture (1.5px champagne gold SVG). */
+/** Minimal interactive Offline Gate QR Scanner Aperture (1.5px champagne gold SVG). */
 function GatePassAperture() {
   const [verified, setVerified] = useState(false);
 
   return (
-    <div className="relative overflow-hidden rounded-[8px] border border-[#2E3342] bg-[#161820]">
+    <div className="relative overflow-hidden rounded-[6px] border border-[#2E3342] bg-[#161820]">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/images/gate-desk.jpg"
-        alt="Walnut check in desk with passes and smartphone"
-        className="absolute inset-0 size-full object-cover opacity-30"
+        alt=""
+        className="absolute inset-0 size-full object-cover opacity-35"
       />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(22,24,32,0.72), rgba(22,24,32,0.92))",
+            "linear-gradient(to bottom, rgba(22,24,32,0.68), rgba(22,24,32,0.92))",
         }}
       />
 
-      <div className="tr-reel-stage relative z-10 flex flex-col items-center justify-center px-6 py-12 text-center">
-        <p className="tr-meta text-[#D4B87A]">Offline Gate Verification</p>
-
+      <div className="tr-reel-stage relative z-10 flex flex-col items-center justify-center px-6 py-14 text-center">
         <button
           type="button"
           onClick={() => setVerified((v) => !v)}
           aria-pressed={verified}
-          className="group mt-6 flex flex-col items-center focus-visible:outline-none"
+          className="group flex flex-col items-center focus-visible:outline-none"
         >
           <svg
             viewBox="0 0 280 200"
             fill="none"
-            className="w-full max-w-[260px] text-[#D4B87A]"
+            className="w-full max-w-[250px] text-[#D4B87A]"
             role="img"
             aria-label="Interactive offline QR gate scanner"
           >
@@ -159,41 +102,33 @@ function GatePassAperture() {
             )}
           </svg>
 
-          <span className="mt-6 inline-flex min-h-[44px] items-center rounded-[4px] border border-[#D4B87A] px-5 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[#D4B87A] transition-colors group-hover:bg-[#D4B87A] group-hover:text-[#161820]">
-            {verified ? "Admitted · Reset Scan" : "Test Offline Scan"}
+          <span className="mt-7 inline-flex min-h-[44px] items-center rounded-[4px] border border-[#D4B87A] px-5 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[#D4B87A] transition-colors group-hover:bg-[#D4B87A] group-hover:text-[#161820]">
+            {verified ? "Admitted · 0.3s Offline" : "Test Offline Scan"}
           </span>
         </button>
-
-        <p className="mt-4 max-w-[36ch] text-[13.5px] font-light text-[#9D978C]">
-          {verified
-            ? "Pass signature verified locally in 0.3 seconds with zero internet required."
-            : "Every pass carries a signed offline QR token checked in by gate volunteers."}
-        </p>
       </div>
     </div>
   );
 }
 
 /**
- * Custom EvntCult Cinematic Editorial Landing Page:
- * Deep midnight charcoal (#161820), warm ivory (#EFEAE0), champagne gold (#D4B87A),
- * Cormorant Garamond 700 italic + Inter 300/400/500 — built 100% for EvntCult's real workflows.
+ * Ultra-minimal Luxury Editorial EvntCult Landing Page:
+ * Deep charcoal (#161820), warm ivory (#EFEAE0), champagne gold (#D4B87A),
+ * Cormorant Garamond 700 italic + Inter 300 — radical subtraction, zero paragraphs.
  */
 export function TapeLanding() {
   const reduce = useReducedMotion();
   const [attendees, setAttendees] = useState(400);
   const [price, setPrice] = useState(250);
-  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
-  const gross = attendees * price;
-  const saved = Math.round(gross * 0.08);
+  const saved = Math.round(attendees * price * 0.08);
 
   return (
     <div className="bg-[#161820] text-[#EFEAE0]">
-      {/* 1. HERO — Full-bleed auditorium with bottom-centered cinematic typography */}
+      {/* 1. HERO — Pure photography, monumental headline, search & CTAs */}
       <section
         aria-labelledby="hero-h"
-        className="relative flex min-h-[clamp(560px,92vh,880px)] flex-col items-center justify-end overflow-hidden bg-[#161820] px-5 pb-[7vh] pt-28 text-center md:px-10"
+        className="relative flex min-h-[clamp(560px,92vh,880px)] flex-col items-center justify-end overflow-hidden bg-[#161820] px-5 pb-[8vh] pt-28 text-center md:px-10"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -207,48 +142,38 @@ export function TapeLanding() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(22,24,32,0.58) 0%, rgba(22,24,32,0.18) 38%, rgba(22,24,32,0.92) 100%)",
+              "linear-gradient(to bottom, rgba(22,24,32,0.52) 0%, rgba(22,24,32,0.16) 40%, rgba(22,24,32,0.94) 100%)",
           }}
         />
 
         <div className="relative z-10 mx-auto flex w-full max-w-[920px] flex-col items-center">
           <m.p
-            initial={reduce ? false : { opacity: 0, y: 14 }}
+            initial={reduce ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0, ease: EASE }}
             className="tr-meta text-[#D4B87A]"
           >
-            Live Events &amp; Ticketing · Offline QR &amp; Direct UPI
+            Live Events · Offline QR · Direct UPI
           </m.p>
 
           <m.h1
             id="hero-h"
             initial={reduce ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+            transition={{ duration: 0.7, delay: 0.14, ease: EASE }}
             className="mt-4 font-display font-bold italic leading-[0.88] tracking-[-0.02em] text-[#EFEAE0]"
-            style={{ fontSize: "clamp(54px, 8.6vw, 128px)" }}
+            style={{ fontSize: "clamp(58px, 9.2vw, 136px)" }}
           >
             Every Event.
             <br />
             <span className="text-[#D4B87A]">One Pass.</span>
           </m.h1>
 
-          <m.p
-            initial={reduce ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.3, ease: EASE }}
-            className="mt-6 max-w-[560px] text-[16px] font-light leading-[1.6] text-[#EFEAE0]/80 md:text-[17px]"
-          >
-            Concerts, hackathons, workshops, sports, and live nights across your city. Claim your seat in a tap and walk in with your phone.
-          </m.p>
-
-          {/* Clean inline search + centered dual CTAs */}
           <m.div
             initial={reduce ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.45, ease: EASE }}
-            className="mt-8 flex w-full max-w-[540px] flex-col items-center gap-5"
+            transition={{ duration: 0.65, delay: 0.3, ease: EASE }}
+            className="mt-10 flex w-full max-w-[500px] flex-col items-center gap-5"
           >
             <form
               action="/events"
@@ -264,7 +189,7 @@ export function TapeLanding() {
                 id="hero-q"
                 name="q"
                 type="search"
-                placeholder="Search concerts, hackathons, workshops, or venues..."
+                placeholder="Search events or venues..."
                 className="h-12 min-w-0 flex-1 bg-transparent text-[14.5px] font-light text-[#EFEAE0] outline-none placeholder:text-[#EFEAE0]/55 [&::-webkit-search-cancel-button]:hidden"
               />
               <button
@@ -287,50 +212,45 @@ export function TapeLanding() {
                 href="/events"
                 className="inline-flex h-12 items-center rounded-[4px] border border-[#EFEAE0]/30 px-7 text-[11px] font-medium uppercase tracking-[0.14em] text-[#EFEAE0] transition-colors hover:border-[#D4B87A] hover:text-[#D4B87A]"
               >
-                Explore events
+                Explore
               </Link>
             </div>
           </m.div>
         </div>
       </section>
 
-      {/* 2. PILLARS STRIP — Full-width surface with champagne gold top border */}
-      <section className="border-y border-[#2E3342] border-t-[#D4B87A]/70 bg-[#1E212B] py-14 md:py-16">
-        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-8 px-5 sm:grid-cols-2 lg:grid-cols-4 md:px-10">
+      {/* 2. PILLARS STRIP — 4 crisp phrases only */}
+      <section className="border-y border-[#2E3342] border-t-[#D4B87A]/70 bg-[#1E212B] py-12 md:py-14">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-2 gap-8 px-5 lg:grid-cols-4 md:px-10">
           {PILLARS.map((item, i) => (
             <m.div
               key={item.title}
-              initial={reduce ? false : { opacity: 0, x: -16 }}
+              initial={reduce ? false : { opacity: 0, x: -12 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: i * 0.1, ease: EASE }}
+              transition={{ duration: 0.45, delay: i * 0.08, ease: EASE }}
             >
-              <h2 className="font-display text-[26px] font-semibold italic leading-tight text-[#D4B87A]">
+              <h2 className="font-display text-[28px] font-semibold italic leading-tight text-[#D4B87A]">
                 {item.title}
               </h2>
-              <p className="mt-2 text-[14.5px] font-light leading-[1.6] text-[#9D978C]">
-                {item.desc}
-              </p>
+              <p className="tr-meta mt-2 text-[#9D978C]">{item.sub}</p>
             </m.div>
           ))}
         </div>
       </section>
 
-      {/* 3. CATEGORIES — Full-width hover-raise rows wired to CATEGORY_HUBS */}
+      {/* 3. CATEGORIES — Pure architectural index rows, zero blurb clutter */}
       <section className="bg-[#161820] py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-5 md:px-10">
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div>
-              <p className="tr-meta text-[#D4B87A]">Directory</p>
-              <h2 className="mt-3 font-display text-[clamp(42px,5.4vw,72px)] font-bold italic leading-[0.94] text-[#EFEAE0]">
-                What&apos;s On Near You
-              </h2>
-            </div>
+          <div className="flex items-end justify-between gap-4">
+            <h2 className="font-display text-[clamp(42px,5.4vw,72px)] font-bold italic leading-[0.94] text-[#EFEAE0]">
+              Explore
+            </h2>
             <Link
               href="/events"
               className="tr-meta tr-link inline-flex min-h-[44px] items-center text-[#9D978C] hover:text-[#D4B87A]"
             >
-              Browse all events
+              All events
             </Link>
           </div>
 
@@ -343,20 +263,22 @@ export function TapeLanding() {
           />
 
           <ul className="divide-y divide-[#2E3342] border-b border-[#2E3342]">
-            {CATEGORY_HUBS.map((hub) => (
+            {CATEGORY_HUBS.map((hub, i) => (
               <li key={hub.slug}>
                 <Link
                   href={`/category/${hub.slug}`}
-                  className="group grid grid-cols-1 items-center gap-3 px-2 py-7 transition-colors duration-base hover:bg-[#1E212B] md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_auto] md:gap-8 md:px-5 md:py-8"
+                  className="group flex items-center justify-between gap-6 px-2 py-6 transition-colors duration-base hover:bg-[#1E212B] md:px-5 md:py-7"
                 >
-                  <span className="font-display text-[clamp(28px,3.2vw,42px)] font-semibold italic leading-tight text-[#EFEAE0] transition-colors group-hover:text-[#D4B87A]">
-                    {hub.name}
-                  </span>
-                  <span className="text-[15px] font-light leading-[1.55] text-[#9D978C]">
-                    {hub.blurb}
-                  </span>
+                  <div className="flex items-baseline gap-5 md:gap-8">
+                    <span className="font-mono text-[11px] tabular-nums text-[#9D978C]">
+                      0{i + 1}
+                    </span>
+                    <span className="font-display text-[clamp(30px,3.6vw,48px)] font-semibold italic leading-tight text-[#EFEAE0] transition-colors group-hover:text-[#D4B87A]">
+                      {hub.name}
+                    </span>
+                  </div>
                   <ArrowRight
-                    className="size-5 text-[#D4B87A] transition-transform duration-base group-hover:translate-x-1.5"
+                    className="size-5 shrink-0 text-[#D4B87A] transition-transform duration-base group-hover:translate-x-1.5"
                     aria-hidden
                   />
                 </Link>
@@ -366,29 +288,24 @@ export function TapeLanding() {
         </div>
       </section>
 
-      {/* 4. HOW EVNTCULT WORKS — 4 horizontal steps with large faded gold numerals */}
-      <section className="border-y border-[#2E3342] bg-[#1E212B] py-24 md:py-32">
+      {/* 4. FOUR STEPS — Ultra-short editorial cadence */}
+      <section className="border-y border-[#2E3342] bg-[#1E212B] py-24 md:py-28">
         <div className="mx-auto max-w-[1200px] px-5 md:px-10">
-          <p className="tr-meta text-[#D4B87A]">The Experience</p>
-          <h2 className="mt-3 font-display text-[clamp(42px,5.4vw,72px)] font-bold italic leading-[0.94] text-[#EFEAE0]">
-            From Link to Gate
-          </h2>
-
-          <ol className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-            {PROCESS_STEPS.map((step) => (
+          <ol className="grid grid-cols-2 gap-10 lg:grid-cols-4 lg:gap-8">
+            {STEPS.map((step) => (
               <li key={step.num} className="relative pt-10">
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -top-2 left-0 select-none font-display text-[92px] font-bold italic leading-none text-[#D4B87A]/[0.09]"
+                  className="pointer-events-none absolute -top-2 left-0 select-none font-display text-[88px] font-bold italic leading-none text-[#D4B87A]/[0.09]"
                 >
                   {step.num}
                 </span>
                 <p className="tr-meta relative text-[#D4B87A]">{step.num}</p>
-                <h3 className="relative mt-2 font-display text-[28px] font-semibold italic leading-tight text-[#EFEAE0]">
+                <h3 className="relative mt-2 font-display text-[32px] font-semibold italic leading-tight text-[#EFEAE0]">
                   {step.title}
                 </h3>
-                <p className="relative mt-3 text-[14.5px] font-light leading-[1.6] text-[#9D978C]">
-                  {step.desc}
+                <p className="relative mt-2 text-[14.5px] font-light text-[#9D978C]">
+                  {step.sub}
                 </p>
               </li>
             ))}
@@ -396,23 +313,20 @@ export function TapeLanding() {
         </div>
       </section>
 
-      {/* 5. INTERACTIVE EVNTCULT SPLIT — Organizer UPI Calculator + Live Offline Gate Scanner */}
+      {/* 5. INTERACTIVE TOOLS — Zero-Fee Calculator + Live Offline Scan */}
       <section className="bg-[#161820] py-24 md:py-32">
-        <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-12 px-5 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 md:px-10">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-12 px-5 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 md:px-10">
           <div>
-            <p className="tr-meta text-[#D4B87A]">Built for Organizers</p>
-            <h2 className="mt-3 font-display text-[clamp(40px,5vw,66px)] font-bold italic leading-[0.94] text-[#EFEAE0]">
-              Zero Cut on Every Ticket
+            <p className="tr-meta text-[#D4B87A]">For Organizers</p>
+            <h2 className="mt-3 font-display text-[clamp(44px,5.4vw,72px)] font-bold italic leading-[0.92] text-[#EFEAE0]">
+              Zero Cut.
             </h2>
-            <p className="mt-4 max-w-[46ch] text-[15.5px] font-light leading-[1.6] text-[#9D978C]">
-              Guests pay directly to your UPI ID and submit their UTR. Estimate what you keep compared to standard ticketing gateways.
-            </p>
 
-            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+            <div className="mt-10 grid gap-7 sm:grid-cols-2">
               <label className="block">
                 <span className="flex items-baseline justify-between">
-                  <span className="tr-meta text-[#9D978C]">Attendees</span>
-                  <span className="font-display text-[30px] font-semibold italic tabular-nums text-[#EFEAE0]">
+                  <span className="tr-meta text-[#9D978C]">Guests</span>
+                  <span className="font-display text-[32px] font-semibold italic tabular-nums text-[#EFEAE0]">
                     {attendees.toLocaleString("en-IN")}
                   </span>
                 </span>
@@ -429,8 +343,8 @@ export function TapeLanding() {
 
               <label className="block">
                 <span className="flex items-baseline justify-between">
-                  <span className="tr-meta text-[#9D978C]">Ticket Price</span>
-                  <span className="font-display text-[30px] font-semibold italic tabular-nums text-[#EFEAE0]">
+                  <span className="tr-meta text-[#9D978C]">Ticket</span>
+                  <span className="font-display text-[32px] font-semibold italic tabular-nums text-[#EFEAE0]">
                     INR {price}
                   </span>
                 </span>
@@ -446,85 +360,25 @@ export function TapeLanding() {
               </label>
             </div>
 
-            <dl className="mt-8 divide-y divide-[#2E3342] border-y border-[#2E3342]">
-              <div className="flex items-baseline justify-between py-3.5">
-                <dt className="text-[14.5px] font-light text-[#9D978C]">Total collection</dt>
-                <dd className="font-mono text-[13px] tabular-nums text-[#EFEAE0]">
-                  INR {gross.toLocaleString("en-IN")}
-                </dd>
-              </div>
-              <div className="flex items-baseline justify-between py-3.5">
-                <dt className="text-[14.5px] font-light text-[#9D978C]">EvntCult platform fee</dt>
-                <dd className="font-mono text-[13px] tabular-nums text-[#D4B87A]">INR 0 (0%)</dd>
-              </div>
-              <div className="flex items-baseline justify-between py-4">
-                <dt className="font-display text-[26px] font-semibold italic text-[#EFEAE0]">
-                  Saved vs 8% ticketing platforms
-                </dt>
-                <dd className="font-display text-[36px] font-bold italic tabular-nums text-[#D4B87A]">
-                  INR {saved.toLocaleString("en-IN")}
-                </dd>
-              </div>
-            </dl>
+            <div className="mt-10 flex items-baseline justify-between border-y border-[#2E3342] py-5">
+              <span className="tr-meta text-[#9D978C]">Saved vs 8% fee</span>
+              <span className="font-display text-[44px] font-bold italic tabular-nums text-[#D4B87A]">
+                INR {saved.toLocaleString("en-IN")}
+              </span>
+            </div>
           </div>
 
           <GatePassAperture />
         </div>
       </section>
 
-      {/* 6. FAQ — Real EvntCult Questions on deep surface */}
-      <section className="border-t border-[#2E3342] bg-[#1E212B] py-24 md:py-32">
-        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-10 px-5 md:grid-cols-3 md:px-10">
-          <div>
-            <p className="tr-meta text-[#D4B87A]">Questions</p>
-            <h2 className="mt-3 font-display text-[clamp(38px,4.5vw,58px)] font-bold italic leading-[0.95] text-[#EFEAE0]">
-              Good to Know
-            </h2>
-          </div>
-
-          <div className="divide-y divide-[#2E3342] border-y border-[#2E3342] md:col-span-2">
-            {EVNTCULT_FAQ.map(([q, a], i) => {
-              const open = openFaq === i;
-              return (
-                <div key={q}>
-                  <button
-                    type="button"
-                    aria-expanded={open}
-                    onClick={() => setOpenFaq(open ? null : i)}
-                    className="flex min-h-[64px] w-full items-center justify-between gap-4 py-5 text-left"
-                  >
-                    <span className="font-display text-[24px] font-semibold italic leading-snug text-[#EFEAE0]">
-                      {q}
-                    </span>
-                    <Plus
-                      className={`size-4 shrink-0 text-[#D4B87A] transition-transform duration-base ${
-                        open ? "rotate-45" : ""
-                      }`}
-                      aria-hidden
-                    />
-                  </button>
-                  {open && (
-                    <p className="pb-6 pr-8 text-[15px] font-light leading-[1.6] text-[#9D978C]">
-                      {a}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. FULL-WIDTH CHAMPAGNE GOLD CTA BAND */}
+      {/* 6. CHAMPAGNE GOLD CTA BAND — Monumental & silent */}
       <section className="bg-[#D4B87A] py-20 text-[#161820] md:py-28">
         <div className="mx-auto flex max-w-[920px] flex-col items-center px-5 text-center md:px-10">
-          <h2 className="font-display text-[clamp(42px,6vw,84px)] font-bold italic leading-[0.92] tracking-[-0.02em] text-[#161820]">
+          <h2 className="font-display text-[clamp(44px,6.4vw,88px)] font-bold italic leading-[0.9] tracking-[-0.02em] text-[#161820]">
             Your Next Event Starts Here.
           </h2>
-          <p className="mt-5 max-w-[540px] text-[16px] font-light leading-[1.6] text-[#161820]/80">
-            Free for attendees and verified organizers. Claim your pass in seconds or publish your next live event with direct UPI and offline check in.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/signin?mode=signup"
               className="group inline-flex h-12 items-center gap-2 rounded-[4px] bg-[#161820] px-7 text-[11px] font-medium uppercase tracking-[0.14em] text-[#EFEAE0] transition-colors hover:bg-[#262A36]"
@@ -536,12 +390,9 @@ export function TapeLanding() {
               href="/host"
               className="inline-flex h-12 items-center rounded-[4px] border border-[#161820]/35 px-7 text-[11px] font-medium uppercase tracking-[0.14em] text-[#161820] transition-colors hover:border-[#161820]"
             >
-              Apply to host
+              Host an event
             </Link>
           </div>
-          <p className="tr-meta mt-7 text-[#161820]/70">
-            Offline QR · Direct UPI · On device Photo Vault
-          </p>
         </div>
       </section>
     </div>

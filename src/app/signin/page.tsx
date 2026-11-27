@@ -54,21 +54,11 @@ export default async function SignInPage({
         </div>
 
         <div className="relative z-10 my-auto py-12">
-          <h1 className="max-w-[12ch] font-display text-[clamp(48px,5vw,76px)] font-bold italic leading-[0.92] tracking-[-0.02em] text-[#EFEAE0]">
-            One pass for every <span className="text-[#D4B87A]">event.</span>
+          <h1 className="max-w-[11ch] font-display text-[clamp(52px,5.4vw,82px)] font-bold italic leading-[0.9] tracking-[-0.02em] text-[#EFEAE0]">
+            Every Event.
+            <br />
+            <span className="text-[#D4B87A]">One Pass.</span>
           </h1>
-          <dl className="mt-10 divide-y divide-[#EFEAE0]/15 border-y border-[#EFEAE0]/15">
-            {[
-              ["Offline QR passes", "Works at the gate without WiFi"],
-              ["On device Photo Vault", "Automatic event photo matching"],
-              ["Direct organizer UPI", "Zero platform fee on tickets"],
-            ].map(([title, desc]) => (
-              <div key={title} className="flex items-baseline justify-between gap-4 py-4">
-                <dt className="font-display text-[22px] font-semibold italic text-[#EFEAE0]">{title}</dt>
-                <dd className="text-[13.5px] font-light text-[#EFEAE0]/70">{desc}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
 
         <p className="tr-meta relative z-10 text-[#9D978C]">
@@ -102,11 +92,6 @@ export default async function SignInPage({
               </>
             )}
           </h2>
-          <p className="mt-3 text-[15px] font-light text-ink-muted">
-            {signup
-              ? "Sign up in seconds with your email. No password to remember."
-              : "Sign in with your email to open your passes and Photo Vault."}
-          </p>
 
           <SignInForm next={next} signup={signup} codeLogin={codeLoginOn()} />
 
