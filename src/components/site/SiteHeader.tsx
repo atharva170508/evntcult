@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { cn, initials } from "@/lib/utils";
 import { NotificationBell } from "@/components/shell/NotificationBell";
 import { workspaceFor, type Workspace } from "@/components/shell/nav";
@@ -40,10 +40,9 @@ const SIGNED_IN_LINKS = [
 ];
 
 /**
- * Tape Room style 76px editorial navbar:
- * Transparent over the public full-bleed hero, becoming solid #151412 after 80px of scroll.
- * Wordmark left, mono links right, one gold pill CTA with a separate round arrow circle.
- * Mobile keeps wordmark, CTA, and a clean text "Menu" toggle.
+ * Sticky charcoal editorial navbar:
+ * Cormorant italic champagne-gold "EvntCult" wordmark left,
+ * micro-tracked uppercase links right + gold outlined CTA button.
  */
 export function SiteHeader({
   viewer,
@@ -63,7 +62,7 @@ export function SiteHeader({
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -82,8 +81,8 @@ export function SiteHeader({
           "z-40 h-[76px] pt-[env(safe-area-inset-top)] transition-colors duration-base print:hidden",
           isPublicHero ? "fixed inset-x-0 top-0" : "sticky top-0",
           transparent
-            ? "border-b border-transparent bg-transparent text-[#EEE8DD]"
-            : "border-b border-line bg-canvas text-ink",
+            ? "border-b border-transparent bg-[#161820]/30 backdrop-blur-[10px] text-[#EFEAE0]"
+            : "border-b border-line bg-canvas/90 backdrop-blur-[14px] text-ink",
         )}
       >
         <div className="mx-auto flex h-full max-w-[1200px] items-center justify-between gap-6 px-5 md:px-10">
@@ -93,10 +92,7 @@ export function SiteHeader({
               aria-label="EvntCult home"
               className="py-1"
             >
-              <BrandLogo
-                tone={transparent ? "white" : "brand"}
-                className="text-[20px] md:text-[22px]"
-              />
+              <BrandLogo className="text-[28px] md:text-[32px]" />
             </Link>
             {ws === "admin" && (
               <span className="tr-meta border border-line px-2 py-0.5 text-ink-muted">
@@ -105,10 +101,9 @@ export function SiteHeader({
             )}
           </div>
 
-          {/* Desktop links + single gold pill with separate round arrow circle */}
-          <div className="hidden items-center gap-8 md:flex">
+          <div className="hidden items-center gap-7 md:flex">
             {navLinks.length > 0 && (
-              <nav aria-label="Main" className="flex items-center gap-7">
+              <nav aria-label="Main" className="flex items-center gap-6">
                 {navLinks.map((item) => {
                   const active = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(`${item.href}/`));
                   return (
@@ -119,9 +114,9 @@ export function SiteHeader({
                       className={cn(
                         "tr-meta tr-link py-1 transition-colors",
                         active
-                          ? "text-[#C9A26B]"
+                          ? "text-[#D4B87A]"
                           : transparent
-                            ? "text-[#EEE8DD]/80 hover:text-[#EEE8DD]"
+                            ? "text-[#EFEAE0]/80 hover:text-[#EFEAE0]"
                             : "text-ink-muted hover:text-ink",
                       )}
                     >
@@ -136,7 +131,7 @@ export function SiteHeader({
                     className={cn(
                       "tr-meta tr-link py-1 transition-colors",
                       transparent
-                        ? "text-[#EEE8DD]/80 hover:text-[#EEE8DD]"
+                        ? "text-[#EFEAE0]/80 hover:text-[#EFEAE0]"
                         : "text-ink-muted hover:text-ink",
                     )}
                   >
@@ -151,32 +146,18 @@ export function SiteHeader({
               {!viewer ? (
                 <Link
                   href="/signin?mode=signup"
-                  className="group inline-flex items-center gap-1.5"
+                  className="group inline-flex h-10 items-center gap-2 rounded-[4px] border border-[#D4B87A] px-5 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[#D4B87A] transition-colors hover:bg-[#D4B87A] hover:text-[#161820]"
                 >
-                  <span className="inline-flex h-10 items-center rounded-full bg-[#C9A26B] px-5 font-mono text-[11px] uppercase tracking-[0.06em] text-[#151412] transition-colors group-hover:bg-[#D7B47F]">
-                    Sign up
-                  </span>
-                  <span
-                    aria-hidden
-                    className="grid size-10 place-items-center rounded-full bg-[#C9A26B] text-[#151412] transition-transform duration-base ease-out group-hover:translate-x-1 group-hover:bg-[#D7B47F]"
-                  >
-                    <ArrowUpRight className="size-4" strokeWidth={1.75} />
-                  </span>
+                  <span>Sign up</span>
+                  <ArrowRight className="size-3.5 transition-transform duration-base group-hover:translate-x-0.5" aria-hidden />
                 </Link>
               ) : viewer.isOrganizer && ws !== "admin" ? (
                 <Link
                   href="/organizer/events/new"
-                  className="group inline-flex items-center gap-1.5"
+                  className="group inline-flex h-10 items-center gap-2 rounded-[4px] border border-[#D4B87A] px-5 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[#D4B87A] transition-colors hover:bg-[#D4B87A] hover:text-[#161820]"
                 >
-                  <span className="inline-flex h-10 items-center rounded-full bg-[#C9A26B] px-5 font-mono text-[11px] uppercase tracking-[0.06em] text-[#151412] transition-colors group-hover:bg-[#D7B47F]">
-                    Host event
-                  </span>
-                  <span
-                    aria-hidden
-                    className="grid size-10 place-items-center rounded-full bg-[#C9A26B] text-[#151412] transition-transform duration-base ease-out group-hover:translate-x-1 group-hover:bg-[#D7B47F]"
-                  >
-                    <ArrowUpRight className="size-4" strokeWidth={1.75} />
-                  </span>
+                  <span>Host event</span>
+                  <ArrowRight className="size-3.5 transition-transform duration-base group-hover:translate-x-0.5" aria-hidden />
                 </Link>
               ) : null}
 
@@ -190,12 +171,12 @@ export function SiteHeader({
             </div>
           </div>
 
-          {/* Mobile: CTA + quiet text Menu toggle */}
+          {/* Mobile: Gold CTA + clean Menu toggle */}
           <div className="flex items-center gap-3 md:hidden">
             {!viewer ? (
               <Link
                 href="/signin?mode=signup"
-                className="inline-flex min-h-[44px] items-center rounded-full bg-[#C9A26B] px-4 font-mono text-[11px] uppercase tracking-[0.06em] text-[#151412]"
+                className="inline-flex min-h-[44px] items-center rounded-[4px] border border-[#D4B87A] px-3.5 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[#D4B87A]"
               >
                 Sign up
               </Link>
@@ -215,7 +196,7 @@ export function SiteHeader({
               aria-label="Open menu"
               className={cn(
                 "tr-meta inline-flex min-h-[44px] items-center px-2",
-                transparent ? "text-[#EEE8DD]" : "text-ink",
+                transparent ? "text-[#EFEAE0]" : "text-ink",
               )}
             >
               Menu
@@ -281,8 +262,8 @@ function AccountMenu({
         aria-haspopup="menu"
         aria-label="Account menu"
         className={cn(
-          "grid size-10 place-items-center rounded-full border border-line font-mono text-[11px] uppercase text-ink transition-colors hover:border-[#C9A26B] hover:text-[#C9A26B]",
-          open && "border-[#C9A26B] text-[#C9A26B]",
+          "grid size-10 place-items-center rounded-full border border-line text-[11px] font-medium uppercase tracking-[0.06em] text-ink transition-colors hover:border-[#D4B87A] hover:text-[#D4B87A]",
+          open && "border-[#D4B87A] text-[#D4B87A]",
         )}
       >
         {initials(viewer.name)}
@@ -293,7 +274,7 @@ function AccountMenu({
           className="absolute right-0 top-[52px] z-50 w-64 overflow-hidden rounded-[8px] border border-line-strong bg-surface py-2 text-ink"
         >
           <div className="border-b border-line px-4 pb-3 pt-1">
-            <p className="truncate font-display text-[19px] leading-tight text-ink">{viewer.name}</p>
+            <p className="truncate font-display text-[22px] italic leading-tight text-ink">{viewer.name}</p>
             <p className="mt-0.5 truncate font-mono text-[11px] text-ink-muted">{viewer.email}</p>
           </div>
           <Link role="menuitem" href="/vault" className={menuItem}>Photo Vault</Link>
@@ -348,7 +329,7 @@ function MobileDrawer({
   onSearch: () => void;
   onEnterCode: () => void;
 }) {
-  const row = "flex min-h-[48px] w-full items-center justify-between text-left font-display text-[26px] text-ink";
+  const row = "flex min-h-[48px] w-full items-center justify-between text-left font-display text-[28px] italic text-ink";
 
   return (
     <BottomSheet label="Navigation menu" onClose={onClose}>
@@ -359,7 +340,7 @@ function MobileDrawer({
             href={item.href}
             onClick={onClose}
             aria-current={pathname === item.href ? "page" : undefined}
-            className={cn(row, pathname === item.href && "text-[#C9A26B]")}
+            className={cn(row, pathname === item.href && "text-[#D4B87A]")}
           >
             <span>{item.label}</span>
             <ArrowUpRight className="size-4 text-ink-muted" aria-hidden />
@@ -423,7 +404,7 @@ function MobileDrawer({
           <button
             type="button"
             onClick={logout}
-            className="tr-meta flex min-h-[44px] w-full items-center justify-center rounded-[8px] border border-line text-ink-muted"
+            className="tr-meta flex min-h-[44px] w-full items-center justify-center rounded-[6px] border border-line text-ink-muted"
           >
             Log out
           </button>
@@ -431,7 +412,7 @@ function MobileDrawer({
           <Link
             href="/signin"
             onClick={onClose}
-            className="tr-meta flex min-h-[44px] w-full items-center justify-center rounded-[8px] border border-line text-ink"
+            className="tr-meta flex min-h-[44px] w-full items-center justify-center rounded-[6px] border border-line text-ink"
           >
             Log in
           </Link>

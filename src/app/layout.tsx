@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Gloock, IBM_Plex_Mono, Inter } from "next/font/google";
+import { Cormorant_Garamond, IBM_Plex_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
 import { THEME_SCRIPT } from "@/components/site/ThemeSwitch";
@@ -7,9 +7,10 @@ import { MotionProvider } from "@/components/motion/MotionProvider";
 import { Toaster } from "@/components/ui/Toaster";
 import { PlayfulExtras } from "@/components/site/PlayfulExtras";
 
-const serif = Gloock({
+const serif = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "600", "700"],
+  style: ["normal", "italic"],
   variable: "--font-serif",
   display: "swap",
 });
@@ -33,12 +34,12 @@ export const metadata: Metadata = {
     siteName: "EvntCult",
     locale: "en_IN",
     title: "EvntCult: Every event, one pass",
-    description: "Concerts, hackathons, workshops, and club nights on one campus passbook. Register in a tap and walk in with your phone.",
+    description: "Concerts, hackathons, workshops, sports, and fests on one campus calendar. Claim your seat in a tap and walk in with your phone.",
     images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "EvntCult: every event, one pass" }],
   },
   twitter: { card: "summary_large_image", images: ["/og.jpg"] },
   title: { default: "EvntCult: Every event, one pass", template: "%s, EvntCult" },
-  description: "Every event, one pass. Find what is on, register, and walk in with a scan.",
+  description: "Every night on campus, one pass. Find what is on, register in a tap, and walk in offline.",
   applicationName: "EvntCult",
   authors: [{ name: "Synchronous Labs", url: "mailto:evntcult@gmail.com" }],
   creator: "Synchronous Labs",
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#151412",
+  themeColor: "#161820",
   colorScheme: "dark light",
   viewportFit: "cover",
 };
@@ -61,7 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <a
           href="#main"
-          className="fixed left-3 top-3 z-[100] -translate-y-20 rounded-[8px] bg-[#C9A26B] px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.06em] text-[#151412] transition-transform focus:translate-y-0"
+          className="fixed left-3 top-3 z-[100] -translate-y-20 rounded-[6px] bg-[#D4B87A] px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.14em] text-[#161820] transition-transform focus:translate-y-0"
         >
           Skip to content
         </a>

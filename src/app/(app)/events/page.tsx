@@ -58,10 +58,10 @@ export default async function EventsPage({
 
   const chip = (active: boolean) =>
     cn(
-      "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-4 text-[13.5px] font-semibold transition-colors duration-fast",
+      "tr-meta inline-flex h-10 shrink-0 items-center gap-1.5 rounded-[4px] border px-4 transition-colors duration-fast",
       active
-        ? "border-ink bg-ink text-[#FFFEF6]"
-        : "border-line-strong bg-surface text-ink-2 hover:border-ink hover:text-ink",
+        ? "border-[#D4B87A] bg-[#D4B87A] text-[#161820]"
+        : "border-line bg-surface text-ink-muted hover:border-[#D4B87A]/50 hover:text-ink",
     );
 
   const nextHref = nextCursor

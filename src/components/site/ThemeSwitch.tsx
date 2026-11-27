@@ -5,25 +5,22 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Theme = "dark" | "light" | "system";
-const KEY = "ec_theme_v2";
+const KEY = "ec_theme_v3";
 
-/** Apply dark (default record-sleeve ink) or light (archival paper) to <html>. */
+/** Apply deep charcoal (default) or archival ivory (.light) to <html>. */
 export function applyTheme(t: Theme) {
   const light = t === "light" || (t === "system" && window.matchMedia("(prefers-color-scheme: light)").matches);
   document.documentElement.classList.toggle("light", light);
   document.documentElement.classList.toggle("dark", !light);
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", light ? "#EEE8DD" : "#151412");
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", light ? "#EFEAE0" : "#161820");
 }
 
-/** Dark (default), Paper, or System, remembered on this device. */
 export function ThemeSwitch({ className }: { className?: string }) {
   const [theme, setTheme] = useState<Theme>("dark");
   useEffect(() => {
     try {
       setTheme((localStorage.getItem(KEY) as Theme) || "dark");
-    } catch {
-      // private mode
-    }
+    } catch {}
   }, []);
   useEffect(() => {
     if (theme !== "system") return;
@@ -37,15 +34,13 @@ export function ThemeSwitch({ className }: { className?: string }) {
     setTheme(t);
     try {
       localStorage.setItem(KEY, t);
-    } catch {
-      // private mode
-    }
+    } catch {}
     applyTheme(t);
   };
 
   const opts: [Theme, string, typeof Moon][] = [
-    ["dark", "Ink", Moon],
-    ["light", "Paper", Sun],
+    ["dark", "Dark", Moon],
+    ["light", "Ivory", Sun],
     ["system", "Auto", Monitor],
   ];
   return (
@@ -53,7 +48,7 @@ export function ThemeSwitch({ className }: { className?: string }) {
       role="radiogroup"
       aria-label="Appearance"
       className={cn(
-        "grid grid-cols-3 gap-1 rounded-[8px] border border-line bg-surface p-1",
+        "grid grid-cols-3 gap-1 rounded-[6px] border border-line bg-surface p-1",
         className,
       )}
     >
@@ -65,9 +60,9 @@ export function ThemeSwitch({ className }: { className?: string }) {
           aria-checked={theme === v}
           onClick={() => pick(v)}
           className={cn(
-            "flex h-8 items-center justify-center gap-1.5 rounded-[6px] font-mono text-[11px] uppercase tracking-[0.06em] transition-colors",
+            "flex h-8 items-center justify-center gap-1.5 rounded-[4px] text-[10px] font-medium uppercase tracking-[0.1em] transition-colors",
             theme === v
-              ? "bg-[#C9A26B] text-[#151412]"
+              ? "bg-[#D4B87A] text-[#161820]"
               : "text-ink-muted hover:text-ink",
           )}
         >
@@ -78,7 +73,6 @@ export function ThemeSwitch({ className }: { className?: string }) {
   );
 }
 
-/** Compact 1-click Ink <-> Paper toggle. */
 export function ThemeToggle({ className }: { className?: string }) {
   const [light, setLight] = useState(false);
 
@@ -94,9 +88,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     const next: Theme = light ? "dark" : "light";
     try {
       localStorage.setItem(KEY, next);
-    } catch {
-      // private mode
-    }
+    } catch {}
     applyTheme(next);
     setLight(next === "light");
   };
@@ -105,10 +97,9 @@ export function ThemeToggle({ className }: { className?: string }) {
     <button
       type="button"
       onClick={flip}
-      aria-label={light ? "Switch to ink mode" : "Switch to paper mode"}
-      title={light ? "Ink mode" : "Paper mode"}
+      aria-label={light ? "Switch to dark mode" : "Switch to ivory mode"}
       className={cn(
-        "grid size-9 shrink-0 place-items-center rounded-full border border-line bg-transparent text-ink transition-colors hover:border-[#C9A26B] hover:text-[#C9A26B]",
+        "grid size-9 shrink-0 place-items-center rounded-full border border-line bg-transparent text-ink transition-colors hover:border-[#D4B87A] hover:text-[#D4B87A]",
         className,
       )}
     >
@@ -117,5 +108,4 @@ export function ThemeToggle({ className }: { className?: string }) {
   );
 }
 
-/** Inline, before first paint: defaults to dark-led record sleeve (.dark), honours saved light preference. */
 export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem('${KEY}')||'dark';var l=t==='light'||(t==='system'&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.classList.toggle('light',l);document.documentElement.classList.toggle('dark',!l)}catch(e){document.documentElement.classList.add('dark')}try{var h=document.documentElement,u=navigator.userAgent;h.dataset.platform=/iPhone|iPad|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)?'ios':/Android/.test(u)?'android':'other';if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)h.dataset.standalone=''}catch(e){}})()`;

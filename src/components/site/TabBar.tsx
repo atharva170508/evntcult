@@ -35,7 +35,7 @@ export function TabBar({ signedIn = true }: { signedIn?: boolean }) {
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   "flex min-h-[58px] flex-col items-center justify-center gap-1 transition-colors",
-                  active ? "text-[#C9A26B]" : "text-ink-muted hover:text-ink",
+                  active ? "text-[#D4B87A]" : "text-ink-muted hover:text-ink",
                 )}
               >
                 <Icon className="size-[19px]" strokeWidth={active ? 2 : 1.5} aria-hidden />

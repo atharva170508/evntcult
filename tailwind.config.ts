@@ -2,10 +2,9 @@ import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
 /**
- * EvntCult Editorial Record-Sleeve Design Tokens.
- * Dark-led by default: --ink (#151412) ground, --paper (#EEE8DD) ink,
- * --surface (#1D1B18) tinted ground, --accent (#C9A26B) warm gold.
- * Structured strictly by 1px hairlines and surface tints — zero drop shadows.
+ * EvntCult Cinematic Editorial Design Tokens.
+ * Deep charcoal (#161820), warm ivory (#EFEAE0), champagne gold (#D4B87A),
+ * Cormorant Garamond 600/700 italic display, Inter 300/400/500 body & micro labels.
  */
 const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
@@ -13,7 +12,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: "#EEE8DD",
+        paper: "#EFEAE0",
         canvas: "rgb(var(--c-canvas) / <alpha-value>)",
         surface: "rgb(var(--c-surface) / <alpha-value>)",
         sunken: "rgb(var(--c-sunken) / <alpha-value>)",
@@ -22,7 +21,7 @@ const config: Config = {
           DEFAULT: "rgb(var(--c-line) / <alpha-value>)",
           strong: "rgb(var(--c-line-strong) / <alpha-value>)",
         },
-        cream: "#EEE8DD",
+        cream: "#EFEAE0",
         lavender: {
           DEFAULT: "rgb(var(--c-lavender) / <alpha-value>)",
           hover: "rgb(var(--c-lavender-hover) / <alpha-value>)",
@@ -32,20 +31,20 @@ const config: Config = {
           2: "rgb(var(--c-ink-2) / <alpha-value>)",
           muted: "rgb(var(--c-ink-muted) / <alpha-value>)",
           subtle: "rgb(var(--c-ink-subtle) / <alpha-value>)",
-          inverse: "#151412",
+          inverse: "#161820",
         },
         night: {
-          DEFAULT: "#151412",
-          2: "#1D1B18",
-          3: "#0F0E0C",
-          line: "rgba(238,232,221,0.15)",
+          DEFAULT: "#161820",
+          2: "#1E212B",
+          3: "#101218",
+          line: "rgba(239,234,224,0.14)",
         },
         accent: {
-          DEFAULT: "#C9A26B",
-          hover: "#D7B47F",
+          DEFAULT: "#D4B87A",
+          hover: "#E0C78E",
           soft: "rgb(var(--c-accent-soft) / <alpha-value>)",
           ink: "rgb(var(--c-accent-ink) / <alpha-value>)",
-          foreground: "#151412",
+          foreground: "#161820",
         },
         background: "rgb(var(--c-canvas) / <alpha-value>)",
         foreground: "rgb(var(--c-ink) / <alpha-value>)",
@@ -71,20 +70,20 @@ const config: Config = {
         },
         destructive: {
           DEFAULT: "rgb(var(--c-danger) / <alpha-value>)",
-          foreground: "#EEE8DD",
+          foreground: "#EFEAE0",
         },
         border: "rgb(var(--c-line) / <alpha-value>)",
         input: "rgb(var(--c-line-strong) / <alpha-value>)",
-        ring: "#C9A26B",
+        ring: "#D4B87A",
         gold: {
-          DEFAULT: "#C9A26B",
+          DEFAULT: "#D4B87A",
           soft: "rgb(var(--c-gold-soft) / <alpha-value>)",
           ink: "rgb(var(--c-gold-ink) / <alpha-value>)",
         },
         live: {
           DEFAULT: "rgb(var(--c-live) / <alpha-value>)",
           soft: "rgb(var(--c-live-soft) / <alpha-value>)",
-          dot: "#C9A26B",
+          dot: "#D4B87A",
         },
         warn: {
           DEFAULT: "rgb(var(--c-warn) / <alpha-value>)",
@@ -94,10 +93,10 @@ const config: Config = {
           DEFAULT: "rgb(var(--c-danger) / <alpha-value>)",
           soft: "rgb(var(--c-danger-soft) / <alpha-value>)",
         },
-        volt: { DEFAULT: "#C9A26B", hover: "#D7B47F" },
+        volt: { DEFAULT: "#D4B87A", hover: "#E0C78E" },
         brand: {
-          DEFAULT: "#C9A26B",
-          hover: "#D7B47F",
+          DEFAULT: "#D4B87A",
+          hover: "#E0C78E",
           soft: "rgb(var(--c-accent-soft) / <alpha-value>)",
           ink: "rgb(var(--c-accent-ink) / <alpha-value>)",
         },
@@ -112,20 +111,20 @@ const config: Config = {
         brand: ["var(--font-serif)", "ui-serif", "Georgia", "serif"],
       },
       fontSize: {
-        "display-2xl": ["clamp(48px, 6vw, 76px)", { lineHeight: "0.98", letterSpacing: "-0.02em" }],
-        "display-xl": ["clamp(36px, 4.2vw, 56px)", { lineHeight: "1.02", letterSpacing: "-0.02em" }],
-        "display-lg": ["clamp(28px, 3vw, 40px)", { lineHeight: "1.08", letterSpacing: "-0.02em" }],
-        "display-md": ["clamp(22px, 2.2vw, 28px)", { lineHeight: "1.18", letterSpacing: "-0.015em" }],
-        h3: ["20px", { lineHeight: "1.3", letterSpacing: "-0.01em" }],
+        "display-2xl": ["clamp(44px, 5.8vw, 76px)", { lineHeight: "0.94", letterSpacing: "-0.02em" }],
+        "display-xl": ["clamp(36px, 4.2vw, 56px)", { lineHeight: "0.98", letterSpacing: "-0.02em" }],
+        "display-lg": ["clamp(28px, 3vw, 42px)", { lineHeight: "1.04", letterSpacing: "-0.015em" }],
+        "display-md": ["clamp(22px, 2.2vw, 28px)", { lineHeight: "1.14", letterSpacing: "-0.01em" }],
+        h3: ["22px", { lineHeight: "1.25", letterSpacing: "-0.01em" }],
         h4: ["16px", { lineHeight: "1.35" }],
-        body: ["16px", { lineHeight: "1.55" }],
+        body: ["16px", { lineHeight: "1.6" }],
         lead: ["18px", { lineHeight: "1.55" }],
         small: ["14px", { lineHeight: "1.5" }],
-        micro: ["11px", { lineHeight: "1.3", letterSpacing: "0.06em" }],
+        micro: ["10.5px", { lineHeight: "1.3", letterSpacing: "0.14em" }],
       },
       letterSpacing: {
         tightest: "-0.025em",
-        tighter: "-0.02em",
+        tighter: "-0.018em",
       },
       spacing: {
         section: "clamp(88px, 10vw, 140px)",
@@ -138,10 +137,9 @@ const config: Config = {
       borderRadius: {
         tile: "8px",
         card: "8px",
-        panel: "24px",
+        panel: "20px",
         "4xl": "24px",
       },
-      /* Strictly hairline-only — zero drop shadows anywhere */
       boxShadow: {
         card: "0 0 0 1px var(--line)",
         raised: "0 0 0 1px var(--line-strong)",
@@ -162,7 +160,7 @@ const config: Config = {
       transitionDuration: {
         fast: "180ms",
         base: "250ms",
-        slow: "600ms",
+        slow: "550ms",
       },
       keyframes: {
         "caret-blink": {
@@ -171,7 +169,7 @@ const config: Config = {
           "100%": { opacity: "1" },
         },
         "fade-up": {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "0%": { opacity: "0", transform: "translateY(18px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "fade-in": {

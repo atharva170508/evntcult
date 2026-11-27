@@ -3,566 +3,545 @@
 import { useState } from "react";
 import Link from "next/link";
 import { m, useReducedMotion } from "motion/react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, Plus, Search } from "lucide-react";
+import { CATEGORY_HUBS } from "@/lib/discovery";
 
-const EASE_SLEEVE = [0.22, 1, 0.36, 1] as const;
+const EASE = [0.22, 1, 0.36, 1] as const;
 
-type CategoryItem = {
-  slug: string;
-  name: string;
-  note: string;
-  meta: string;
-  palette: [string, string, string];
-};
-
-const CAMPUS_ROOMS: CategoryItem[] = [
+const PILLARS = [
   {
-    slug: "cultural-music",
-    name: "Concerts & Cultural",
-    note: "Auditorium evenings, open mic nights, Garba under floodlights, and live campus sets.",
-    meta: "Live nights",
-    palette: ["#2A211C", "#C9A26B", "#EEE8DD"],
+    title: "Offline QR Passes",
+    desc: "Signed locally on your phone. Scans at the door in under a second even without WiFi.",
   },
   {
-    slug: "tech-hackathons",
-    name: "Hackathons",
-    note: "Overnight builds, team check ins, demo tables, and project showcases with instant badges.",
-    meta: "36h builds",
-    palette: ["#1A1F24", "#C9A26B", "#C4BEB2"],
+    title: "Direct Club UPI",
+    desc: "Ticket payments go straight to your club UPI ID with built in UTR confirmation and zero cut.",
   },
   {
-    slug: "workshops",
-    name: "Workshops",
-    note: "Hands on studio sessions, design sprints, and lab intensives with capped seating.",
-    meta: "Small rooms",
-    palette: ["#24211B", "#B79462", "#E6DFD2"],
+    title: "Face ID Photo Vault",
+    desc: "One private selfie after sign in gathers every photo of you from events you attended.",
   },
   {
-    slug: "sports-tournaments",
-    name: "Sports",
-    note: "Box cricket, midnight futsal, court finals, and inter college brackets across turf venues.",
-    meta: "Turf & court",
-    palette: ["#1C241E", "#C9A26B", "#DDD7CA"],
+    title: "Verified Certificates",
+    desc: "Attendance and winner certificates issued in one click with permanent verification links.",
   },
-  {
-    slug: "talks-panels",
-    name: "Talks & Panels",
-    note: "Founder evenings, alumni firesides, and quiet Q&A sessions with reserved front rows.",
-    meta: "Main hall",
-    palette: ["#231D1E", "#C9A26B", "#E8E2D5"],
-  },
-];
-
-const BUILT_IN = {
-  students: [
-    ["Offline QR pass", "LOCAL"],
-    ["One tap seat claim", "INSTANT"],
-    ["Waitlist auto hold", "2 HRS"],
-    ["Face ID Photo Vault", "ON DEVICE"],
-    ["Signed certificates", "VERIFY URL"],
-  ],
-  organizers: [
-    ["Direct UPI payout", "0% CUT"],
-    ["UTR verification", "BUILT IN"],
-    ["Team registration", "CODES"],
-    ["Approval queue", "MANUAL"],
-    ["Attendee CSV export", "ONE CLICK"],
-  ],
-  gate: [
-    ["Volunteer scan link", "NO LOGIN"],
-    ["Offline verification", "UNDER 1S"],
-    ["Live attendance tally", "REALTIME"],
-    ["Walk in guest desk", "AT DOOR"],
-    ["Duplicate scan guard", "LOCKED"],
-  ],
-} as const;
-
-const FEATURED_NIGHTS = [
-  {
-    title: "Sunset Sessions",
-    meta: "Example · Riverside Lawn · Live music",
-    href: "/events",
-    badge: "New",
-    offset: "md:mt-0",
-    variant: 0 as const,
-  },
-  {
-    title: "HackNight 26",
-    meta: "Example · Main Auditorium · 36h build",
-    href: "/events",
-    badge: null,
-    offset: "md:mt-16",
-    variant: 1 as const,
-  },
-  {
-    title: "Garba Under Stars",
-    meta: "Example · Central Quad · Cultural",
-    href: "/events",
-    badge: null,
-    offset: "md:mt-6",
-    variant: 2 as const,
-  },
-  {
-    title: "Design Critique",
-    meta: "Example · Studio Hall · Workshop",
-    href: "/events",
-    badge: null,
-    offset: "md:mt-24",
-    variant: 3 as const,
-  },
-];
-
-const FEE_ROWS = [
-  ["Student passbook and offline QR wallet", "0 INR"],
-  ["Club event page, waitlist, and guest list", "0 INR"],
-  ["Direct UPI ticket collection to your club", "0% CUT"],
-  ["On device Photo Vault and signed certificates", "INCLUDED"],
 ] as const;
 
-/** Abstract record-sleeve artwork (muted archival colors, zero text, zero drop shadow). */
-function SleeveArt({ variant }: { variant: 0 | 1 | 2 | 3 }) {
-  if (variant === 0) {
-    return (
-      <svg viewBox="0 0 400 400" className="size-full" aria-hidden>
-        <rect width="400" height="400" fill="#231D19" />
-        <circle cx="200" cy="200" r="118" fill="none" stroke="#C9A26B" strokeWidth="1.2" />
-        <circle cx="200" cy="200" r="76" fill="#32271F" />
-        <line x1="40" y1="200" x2="360" y2="200" stroke="#EEE8DD" strokeOpacity="0.22" strokeWidth="1" />
-        <circle cx="200" cy="200" r="14" fill="#C9A26B" />
-      </svg>
-    );
-  }
-  if (variant === 1) {
-    return (
-      <svg viewBox="0 0 400 400" className="size-full" aria-hidden>
-        <rect width="400" height="400" fill="#181C20" />
-        <g stroke="#EEE8DD" strokeOpacity="0.16" strokeWidth="1">
-          <line x1="80" y1="0" x2="80" y2="400" />
-          <line x1="200" y1="0" x2="200" y2="400" />
-          <line x1="320" y1="0" x2="320" y2="400" />
-          <line x1="0" y1="120" x2="400" y2="120" />
-          <line x1="0" y1="280" x2="400" y2="280" />
-        </g>
-        <rect x="116" y="116" width="168" height="168" fill="none" stroke="#C9A26B" strokeWidth="1.4" />
-        <rect x="164" y="164" width="72" height="72" fill="#C9A26B" fillOpacity="0.25" />
-      </svg>
-    );
-  }
-  if (variant === 2) {
-    return (
-      <svg viewBox="0 0 400 400" className="size-full" aria-hidden>
-        <rect width="400" height="400" fill="#26191D" />
-        <circle cx="200" cy="200" r="138" fill="none" stroke="#EEE8DD" strokeOpacity="0.16" strokeWidth="1" />
-        <circle cx="200" cy="200" r="96" fill="none" stroke="#C9A26B" strokeWidth="1.2" />
-        <circle cx="200" cy="200" r="52" fill="none" stroke="#C9A26B" strokeOpacity="0.6" strokeWidth="1.2" />
-        <path d="M200 62v276M62 200h276" stroke="#EEE8DD" strokeOpacity="0.14" strokeWidth="1" />
-      </svg>
-    );
-  }
-  return (
-    <svg viewBox="0 0 400 400" className="size-full" aria-hidden>
-      <rect width="400" height="400" fill="#1F1D19" />
-      <rect x="64" y="64" width="128" height="272" fill="#2B2720" />
-      <rect x="208" y="136" width="128" height="200" fill="none" stroke="#C9A26B" strokeWidth="1.3" />
-      <circle cx="272" cy="96" r="24" fill="#C9A26B" />
-    </svg>
-  );
-}
+const PROCESS_STEPS = [
+  {
+    num: "01",
+    title: "Pick an Event",
+    desc: "Search concerts, hackathons, workshops, sports, and club talks on one live campus board.",
+  },
+  {
+    num: "02",
+    title: "Claim or Pay UPI",
+    desc: "Lock in free seats instantly or pay paid fests directly to the club with zero markup.",
+  },
+  {
+    num: "03",
+    title: "Scan at the Gate",
+    desc: "Open your offline pass on your phone. Volunteers verify entries in under a second.",
+  },
+  {
+    num: "04",
+    title: "Vault & Certificates",
+    desc: "Event photos land automatically in your Vault and signed certificates arrive in your profile.",
+  },
+] as const;
 
-/** Small restrained thumbnail shown beside hovered Swiss list rows. */
-function CategoryThumb({ palette }: { palette: [string, string, string] }) {
-  return (
-    <svg viewBox="0 0 120 84" className="h-full w-full" aria-hidden>
-      <rect width="120" height="84" fill={palette[0]} />
-      <circle cx="60" cy="42" r="24" fill="none" stroke={palette[1]} strokeWidth="1.2" />
-      <line x1="16" y1="42" x2="104" y2="42" stroke={palette[2]} strokeOpacity="0.3" strokeWidth="1" />
-      <circle cx="60" cy="42" r="5" fill={palette[1]} />
-    </svg>
-  );
-}
+const EVNTCULT_FAQ: [string, string][] = [
+  [
+    "Do I need to print my pass?",
+    "No. Show your QR on your phone at the gate. A saved pass or installed home screen app works even when auditorium WiFi drops.",
+  ],
+  [
+    "How do payments work for paid events?",
+    "Students pay directly to the club UPI ID and submit the UTR reference. Organizers confirm payments straight from their attendee table with zero platform commission.",
+  ],
+  [
+    "Can I cancel my registration?",
+    "Yes, anytime from My Passes before check in. Your freed seat automatically moves to the next student on the waitlist.",
+  ],
+  [
+    "How does the Photo Vault protect privacy?",
+    "Face matching runs strictly across events you actually registered for. Outsiders cannot browse or search your photos.",
+  ],
+  [
+    "Where do my event certificates live?",
+    "Every certificate issued by a club appears inside Certificates with a permanent public verification code anyone can check.",
+  ],
+  [
+    "How does my campus club start hosting?",
+    "Create a free account and submit a club verification request on the Host page. Once verified, you can publish events and share volunteer scan links immediately.",
+  ],
+];
 
-/**
- * Signature SVG element: two single-stroke gold reels (1.5px, no fill, no glow, no shadow)
- * joined by a thin pass-tape path. Rotates at 6s idle, speeds to 3s on hover, still under reduced-motion.
- */
-function SignatureReels() {
-  const [hovered, setHovered] = useState(false);
+/** Interactive Offline Gate QR Scanner Aperture (1.5px champagne gold SVG). */
+function GatePassAperture() {
+  const [verified, setVerified] = useState(false);
 
   return (
-    <div
-      onPointerEnter={() => setHovered(true)}
-      onPointerLeave={() => setHovered(false)}
-      className="tr-reel-stage flex flex-col items-center justify-center py-16 md:py-24"
-    >
-      <svg
-        viewBox="0 0 420 180"
-        fill="none"
-        className="w-full max-w-[380px] text-[#C9A26B]"
-        role="img"
-        aria-label="Two gold reels turning slowly in opposite directions joined by a thin pass ribbon"
-      >
-        {/* Left reel — clockwise */}
-        <g className="tr-reel-cw">
-          <circle cx="110" cy="84" r="54" stroke="currentColor" strokeWidth="1.5" />
-          <circle cx="110" cy="84" r="14" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M110 38v32M110 98v32M64 84h32M124 84h32" stroke="currentColor" strokeWidth="1.5" />
-        </g>
+    <div className="relative overflow-hidden rounded-[8px] border border-[#2E3342] bg-[#161820]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/gate-desk.jpg"
+        alt="Walnut check in desk with passes and smartphone"
+        className="absolute inset-0 size-full object-cover opacity-30"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(22,24,32,0.72), rgba(22,24,32,0.92))",
+        }}
+      />
 
-        {/* Right reel — anticlockwise */}
-        <g className="tr-reel-ccw">
-          <circle cx="310" cy="84" r="54" stroke="currentColor" strokeWidth="1.5" />
-          <circle cx="310" cy="84" r="14" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M310 38v32M310 98v32M264 84h32M324 84h32" stroke="currentColor" strokeWidth="1.5" />
-        </g>
+      <div className="tr-reel-stage relative z-10 flex flex-col items-center justify-center px-6 py-12 text-center">
+        <p className="tr-meta text-[#D4B87A]">Offline Gate Verification</p>
 
-        {/* Thin tape path dipping gently between the two reels; tightens slightly on hover */}
-        <path
-          d={hovered ? "M 110 138 Q 210 150 310 138" : "M 110 138 Q 210 160 310 138"}
-          stroke="currentColor"
-          strokeWidth="1.5"
-          className="transition-[d] duration-500 ease-out"
-        />
-      </svg>
+        <button
+          type="button"
+          onClick={() => setVerified((v) => !v)}
+          aria-pressed={verified}
+          className="group mt-6 flex flex-col items-center focus-visible:outline-none"
+        >
+          <svg
+            viewBox="0 0 280 200"
+            fill="none"
+            className="w-full max-w-[260px] text-[#D4B87A]"
+            role="img"
+            aria-label="Interactive offline QR gate scanner"
+          >
+            <g className="tr-reel-cw">
+              <circle
+                cx="140"
+                cy="100"
+                r="76"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeDasharray="16 8"
+              />
+            </g>
+            <g className="tr-reel-ccw">
+              <circle
+                cx="140"
+                cy="100"
+                r="58"
+                stroke="currentColor"
+                strokeOpacity="0.45"
+                strokeWidth="1.1"
+                strokeDasharray="5 9"
+              />
+            </g>
+            <g stroke="currentColor" strokeWidth="1.4">
+              <path d="M106 78V66h12" />
+              <path d="M174 78V66h-12" />
+              <path d="M106 122v12h12" />
+              <path d="M174 122v12h-12" />
+            </g>
+            {verified ? (
+              <path
+                d="M124 100l11 11 22-24"
+                stroke="#EFEAE0"
+                strokeWidth="1.8"
+                strokeLinecap="square"
+              />
+            ) : (
+              <g stroke="currentColor" strokeWidth="1.3">
+                <rect x="118" y="78" width="13" height="13" />
+                <rect x="149" y="78" width="13" height="13" />
+                <rect x="118" y="109" width="13" height="13" />
+                <path d="M148 111h14M148 120h9M136 98h8" />
+                <line x1="108" y1="100" x2="172" y2="100" stroke="#EFEAE0" strokeOpacity="0.6" strokeWidth="1.1" />
+              </g>
+            )}
+          </svg>
 
-      <p className="tr-meta mt-8 max-w-[46ch] text-center text-[#9A9284]">
-        Offline QR pass, signed locally, verified in under a second. Still running without WiFi.
-      </p>
+          <span className="mt-6 inline-flex min-h-[44px] items-center rounded-[4px] border border-[#D4B87A] px-5 text-[10.5px] font-medium uppercase tracking-[0.14em] text-[#D4B87A] transition-colors group-hover:bg-[#D4B87A] group-hover:text-[#161820]">
+            {verified ? "Admitted · Reset Scan" : "Test Offline Scan"}
+          </span>
+        </button>
+
+        <p className="mt-4 max-w-[36ch] text-[13.5px] font-light text-[#9D978C]">
+          {verified
+            ? "Pass signature verified locally in 0.3 seconds with zero internet required."
+            : "Every pass carries a signed offline QR token checked in by gate volunteers."}
+        </p>
+      </div>
     </div>
   );
 }
 
-/** Pill CTA with a separate round arrow circle that slides 4px on hover. */
-function GoldAction({
-  href,
-  label,
-  tone = "gold",
-}: {
-  href: string;
-  label: string;
-  tone?: "gold" | "ink";
-}) {
-  const pill =
-    tone === "gold"
-      ? "bg-[#C9A26B] text-[#151412] group-hover:bg-[#D7B47F]"
-      : "bg-[#151412] text-[#EEE8DD] group-hover:bg-[#23211E]";
-  return (
-    <Link href={href} className="group inline-flex items-center gap-2">
-      <span
-        className={`inline-flex h-12 items-center rounded-full px-6 font-mono text-[11px] uppercase tracking-[0.06em] transition-colors ${pill}`}
-      >
-        {label}
-      </span>
-      <span
-        aria-hidden
-        className={`grid size-12 place-items-center rounded-full transition-transform duration-base ease-out group-hover:translate-x-1 ${pill}`}
-      >
-        <ArrowUpRight className="size-4" strokeWidth={1.75} />
-      </span>
-    </Link>
-  );
-}
-
 /**
- * Complete Tape Room editorial landing page tailored to EvntCult:
- * Alternating grounds (dark, paper, dark, surface inset, photo, dark, surface, paper, dark, gold inset)
- * with 1px hairlines, Gloock + Inter 300 + IBM Plex Mono, and zero drop shadows or boxed cards.
+ * Custom EvntCult Cinematic Editorial Landing Page:
+ * Deep midnight charcoal (#161820), warm ivory (#EFEAE0), champagne gold (#D4B87A),
+ * Cormorant Garamond 700 italic + Inter 300/400/500 — built 100% for EvntCult's real workflows.
  */
 export function TapeLanding() {
   const reduce = useReducedMotion();
-  const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+  const [attendees, setAttendees] = useState(400);
+  const [price, setPrice] = useState(250);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  const gross = attendees * price;
+  const saved = Math.round(gross * 0.08);
 
   return (
-    <div className="bg-[#151412] text-[#EEE8DD]">
-      {/* 1. HERO — Film title over full-bleed auditorium photograph */}
+    <div className="bg-[#161820] text-[#EFEAE0]">
+      {/* 1. HERO — Full-bleed auditorium with bottom-centered cinematic typography */}
       <section
         aria-labelledby="hero-h"
-        className="relative flex min-h-[clamp(460px,70vh,620px)] flex-col justify-end overflow-hidden bg-[#151412] md:min-h-[clamp(560px,82vh,860px)]"
+        className="relative flex min-h-[clamp(560px,92vh,880px)] flex-col items-center justify-end overflow-hidden bg-[#161820] px-5 pb-[7vh] pt-28 text-center md:px-10"
       >
-        <m.img
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/images/hero-hall.jpg"
-          alt="Warm timber college auditorium stage lit by tungsten pendant lamps"
+          alt="Warm timber college auditorium lit by tungsten pendant lamps"
           fetchPriority="high"
-          initial={reduce ? false : { scale: 1.03 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.1, ease: EASE_SLEEVE }}
           className="absolute inset-0 size-full object-cover object-center"
         />
-        {/* Bottom-third dark legibility scrim only */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[62%]"
+          className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "linear-gradient(to top, rgba(21,20,18,0.92) 0%, rgba(21,20,18,0.52) 48%, rgba(21,20,18,0) 100%)",
+              "linear-gradient(to bottom, rgba(22,24,32,0.58) 0%, rgba(22,24,32,0.18) 38%, rgba(22,24,32,0.92) 100%)",
           }}
         />
 
-        <div className="relative z-10 mx-auto w-full max-w-[1200px] px-5 pb-12 pt-28 md:px-10 md:pb-16">
-          <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)]">
-            <m.h1
-              id="hero-h"
-              initial={reduce ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, ease: EASE_SLEEVE }}
-              className="font-display leading-[0.96] tracking-[-0.02em] text-[#EEE8DD]"
-              style={{ fontSize: "clamp(54px, 8.6vw, 136px)" }}
+        <div className="relative z-10 mx-auto flex w-full max-w-[920px] flex-col items-center">
+          <m.p
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0, ease: EASE }}
+            className="tr-meta text-[#D4B87A]"
+          >
+            Campus Event Platform · Offline QR &amp; Direct UPI
+          </m.p>
+
+          <m.h1
+            id="hero-h"
+            initial={reduce ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: EASE }}
+            className="mt-4 font-display font-bold italic leading-[0.88] tracking-[-0.02em] text-[#EFEAE0]"
+            style={{ fontSize: "clamp(54px, 8.6vw, 128px)" }}
+          >
+            Every Night on Campus.
+            <br />
+            <span className="text-[#D4B87A]">One Pass.</span>
+          </m.h1>
+
+          <m.p
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.3, ease: EASE }}
+            className="mt-6 max-w-[560px] text-[16px] font-light leading-[1.6] text-[#EFEAE0]/80 md:text-[17px]"
+          >
+            Concerts, hackathons, workshops, sports, and club fests on one live campus calendar. Claim your seat in a tap and walk in with your phone.
+          </m.p>
+
+          {/* Clean inline search + centered dual CTAs */}
+          <m.div
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.45, ease: EASE }}
+            className="mt-8 flex w-full max-w-[540px] flex-col items-center gap-5"
+          >
+            <form
+              action="/events"
+              method="get"
+              role="search"
+              className="flex w-full items-center gap-2 rounded-[4px] border border-[#EFEAE0]/25 bg-[#161820]/75 px-4 backdrop-blur-md transition-colors focus-within:border-[#D4B87A]"
             >
-              Every event,
-              <br />
-              one <em className="italic text-[#C9A26B]">pass</em>.
-            </m.h1>
+              <Search className="size-4 shrink-0 text-[#D4B87A]" aria-hidden />
+              <label htmlFor="hero-q" className="sr-only">
+                Search campus events
+              </label>
+              <input
+                id="hero-q"
+                name="q"
+                type="search"
+                placeholder="Search concerts, hackathons, workshops, or clubs..."
+                className="h-12 min-w-0 flex-1 bg-transparent text-[14.5px] font-light text-[#EFEAE0] outline-none placeholder:text-[#EFEAE0]/55 [&::-webkit-search-cancel-button]:hidden"
+              />
+              <button
+                type="submit"
+                className="tr-meta inline-flex h-10 shrink-0 items-center gap-1 pl-2 text-[#D4B87A] hover:text-[#EFEAE0]"
+              >
+                Find <ArrowRight className="size-3.5" aria-hidden />
+              </button>
+            </form>
 
-            <div className="flex flex-col items-start gap-6 md:items-end md:pb-2 md:text-right">
-              <p className="max-w-[36ch] text-[16px] font-light leading-[1.55] text-[#EEE8DD]/80">
-                A campus passbook built around one offline QR, direct UPI payments, and a quiet calendar that actually stays current.
-              </p>
-              <GoldAction href="/signin?mode=signup" label="Claim a seat" />
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <Link
+                href="/signin?mode=signup"
+                className="group inline-flex h-12 items-center gap-2 rounded-[4px] bg-[#D4B87A] px-7 text-[11px] font-medium uppercase tracking-[0.14em] text-[#161820] transition-colors hover:bg-[#E0C78E]"
+              >
+                <span>Claim a seat</span>
+                <ArrowRight className="size-3.5 transition-transform duration-base group-hover:translate-x-0.5" aria-hidden />
+              </Link>
+              <Link
+                href="/events"
+                className="inline-flex h-12 items-center rounded-[4px] border border-[#EFEAE0]/30 px-7 text-[11px] font-medium uppercase tracking-[0.14em] text-[#EFEAE0] transition-colors hover:border-[#D4B87A] hover:text-[#D4B87A]"
+              >
+                Explore events
+              </Link>
             </div>
-          </div>
+          </m.div>
         </div>
       </section>
 
-      {/* 2. STATEMENT — Archival paper ground (#EEE8DD) */}
-      <section className="tr-paper bg-[#EEE8DD] py-24 text-[#151412] md:py-36">
-        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-8 px-5 md:grid-cols-3 md:px-10">
-          <div>
-            <p className="tr-meta text-[#605A50]">001/ The pass</p>
-          </div>
-          <div className="md:col-span-2">
-            <p className="font-display text-[clamp(26px,3.1vw,42px)] leading-[1.2] tracking-[-0.015em] text-[#151412]">
-              Campus nights should not live inside ten broken forms and buried group chats. Every concert, hackathon, club talk, and festival belongs on one quiet board. You claim a seat in seconds, pay your club straight by UPI, and carry a signed QR on your phone that opens the gate even when auditorium WiFi drops. It is a calmer way to run a campus and it keeps the evening about the room rather than the queue.
-            </p>
-          </div>
+      {/* 2. PILLARS STRIP — Full-width surface with champagne gold top border */}
+      <section className="border-y border-[#2E3342] border-t-[#D4B87A]/70 bg-[#1E212B] py-14 md:py-16">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-8 px-5 sm:grid-cols-2 lg:grid-cols-4 md:px-10">
+          {PILLARS.map((item, i) => (
+            <m.div
+              key={item.title}
+              initial={reduce ? false : { opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, delay: i * 0.1, ease: EASE }}
+            >
+              <h2 className="font-display text-[26px] font-semibold italic leading-tight text-[#D4B87A]">
+                {item.title}
+              </h2>
+              <p className="mt-2 text-[14.5px] font-light leading-[1.6] text-[#9D978C]">
+                {item.desc}
+              </p>
+            </m.div>
+          ))}
         </div>
       </section>
 
-      {/* 3. CAMPUS HUBS — Dark Swiss list with hover reveal */}
-      <section className="bg-[#151412] py-24 text-[#EEE8DD] md:py-36">
-        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-8 px-5 md:grid-cols-3 md:px-10">
-          <div>
-            <p className="tr-meta text-[#9A9284]">002/ On campus</p>
-          </div>
-          <div className="md:col-span-2">
-            <ul className="divide-y divide-[rgba(238,232,221,0.15)] border-y border-[rgba(238,232,221,0.15)]">
-              {CAMPUS_ROOMS.map((room) => {
-                const isHover = hoveredRow === room.slug;
-                return (
-                  <li key={room.slug}>
-                    <Link
-                      href={`/category/${room.slug}`}
-                      onPointerEnter={() => setHoveredRow(room.slug)}
-                      onPointerLeave={() => setHoveredRow(null)}
-                      className="group grid grid-cols-[56px_minmax(0,1fr)] items-center gap-4 py-7 transition-colors md:grid-cols-[minmax(0,1fr)_120px_auto] md:gap-8 md:py-9"
-                    >
-                      {/* Mobile left thumbnail */}
-                      <div className="h-[42px] w-[56px] overflow-hidden rounded-[6px] border border-[rgba(238,232,221,0.15)] md:hidden">
-                        <CategoryThumb palette={room.palette} />
-                      </div>
-
-                      <div className="min-w-0">
-                        <h2 className="font-display text-[clamp(34px,4.6vw,64px)] leading-[0.98] tracking-[-0.02em] text-[#EEE8DD] transition-colors group-hover:text-[#C9A26B]">
-                          {room.name}
-                        </h2>
-                        <p className="mt-2.5 max-w-[44ch] text-[15px] font-light leading-[1.55] text-[#9A9284]">
-                          {room.note}
-                        </p>
-                      </div>
-
-                      {/* Desktop hover preview */}
-                      <div
-                        aria-hidden
-                        className="hidden h-[84px] w-[120px] overflow-hidden rounded-[8px] border border-[rgba(238,232,221,0.15)] transition-opacity duration-base md:block"
-                        style={{ opacity: isHover ? 1 : 0 }}
-                      >
-                        <CategoryThumb palette={room.palette} />
-                      </div>
-
-                      <span className="tr-meta col-start-2 text-[#9A9284] md:col-start-auto md:text-right">
-                        {room.meta}
-                      </span>
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. SIGNATURE PANEL — Inset surface ground (#1D1B18) with turning gold reels */}
-      <section className="bg-[#151412] px-4 py-4">
-        <div className="mx-auto max-w-[1360px] rounded-[24px] border border-[rgba(238,232,221,0.12)] bg-[#1D1B18] px-5 md:px-10">
-          <SignatureReels />
-        </div>
-      </section>
-
-      {/* 5. THE GATE — Full-bleed photograph interlude */}
-      <section className="relative mt-16 overflow-hidden bg-[#151412] md:mt-24">
-        <div className="relative aspect-[16/10] w-full overflow-hidden md:aspect-[21/10]">
-          <m.img
-            src="/images/gate-desk.jpg"
-            alt="Walnut check in desk with cotton passes, matte black smartphone, and warm brass lamp"
-            initial={reduce ? false : { scale: 1.03 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true, amount: 0.25 }}
-            transition={{ duration: 1.1, ease: EASE_SLEEVE }}
-            className="size-full object-cover"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-28"
-            style={{
-              background: "linear-gradient(to top, rgba(21,20,18,0.82), rgba(21,20,18,0))",
-            }}
-          />
-          <p className="tr-meta absolute bottom-5 left-5 text-[#EEE8DD]/85 md:bottom-8 md:left-10">
-            The gate desk, phone in hand, no printouts required.
-          </p>
-        </div>
-      </section>
-
-      {/* 6. BUILT IN — Dense 3-column ruled hairline index (DARK) */}
-      <section className="bg-[#151412] py-24 text-[#EEE8DD] md:py-36">
+      {/* 3. CAMPUS CATEGORIES — Full-width hover-raise rows wired to CATEGORY_HUBS */}
+      <section className="bg-[#161820] py-24 md:py-32">
         <div className="mx-auto max-w-[1200px] px-5 md:px-10">
-          <div className="mb-12 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <p className="tr-meta text-[#9A9284]">003/ Built in</p>
-            <h2 className="font-display text-[clamp(40px,5vw,68px)] leading-[0.98] tracking-[-0.02em] text-[#EEE8DD]">
-              Everything the door <em className="italic text-[#C9A26B]">needs</em>.
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
-            {(
-              [
-                ["Students", BUILT_IN.students],
-                ["Organizers", BUILT_IN.organizers],
-                ["Gate & Vault", BUILT_IN.gate],
-              ] as const
-            ).map(([heading, rows]) => (
-              <div key={heading}>
-                <h3 className="tr-meta border-b border-[rgba(238,232,221,0.28)] pb-3 text-[#C9A26B]">
-                  {heading}
-                </h3>
-                <ul className="divide-y divide-[rgba(238,232,221,0.15)]">
-                  {rows.map(([label, spec]) => (
-                    <li
-                      key={label}
-                      className="flex items-baseline justify-between gap-4 py-3.5 text-[15px] font-light text-[#EEE8DD]"
-                    >
-                      <span>{label}</span>
-                      <span className="tr-meta shrink-0 text-[#9A9284]">{spec}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. FEATURED NIGHTS — Loose offset grid on surface ground (#1D1B18) */}
-      <section className="bg-[#1D1B18] py-24 text-[#EEE8DD] md:py-36">
-        <div className="mx-auto max-w-[1200px] px-5 md:px-10">
-          <div className="mb-14 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <p className="tr-meta text-[#9A9284]">004/ On the calendar</p>
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <p className="tr-meta text-[#D4B87A]">Campus Directory</p>
+              <h2 className="mt-3 font-display text-[clamp(42px,5.4vw,72px)] font-bold italic leading-[0.94] text-[#EFEAE0]">
+                What&apos;s On Campus
+              </h2>
+            </div>
             <Link
               href="/events"
-              className="tr-meta tr-link text-[#EEE8DD] hover:text-[#C9A26B]"
+              className="tr-meta tr-link inline-flex min-h-[44px] items-center text-[#9D978C] hover:text-[#D4B87A]"
             >
               Browse all events
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-            {FEATURED_NIGHTS.map((item) => (
-              <Link
-                key={item.title}
-                href={item.href}
-                className={`group block ${item.offset}`}
-              >
-                <div className="aspect-square overflow-hidden rounded-[8px] border border-[rgba(238,232,221,0.15)]">
-                  <div className="size-full transition-transform duration-slow ease-out group-hover:scale-[1.03]">
-                    <SleeveArt variant={item.variant} />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center justify-between gap-3">
-                  <h3 className="font-display text-[24px] leading-tight text-[#EEE8DD] transition-colors group-hover:text-[#C9A26B]">
-                    {item.title}
-                  </h3>
-                  {item.badge && (
-                    <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.06em] text-[#C9A26B]">
-                      <span className="size-1.5 rounded-full bg-[#C9A26B]" aria-hidden />
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
-                <p className="tr-meta mt-1.5 text-[#9A9284]">{item.meta}</p>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
+          <m.div
+            initial={reduce ? false : { scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55, ease: EASE }}
+            className="mt-8 h-px origin-left bg-[#D4B87A]/50"
+          />
 
-      {/* 8. ONE QUOTE — Centred Gloock 40px on archival paper ground (#EEE8DD) */}
-      <section className="tr-paper bg-[#EEE8DD] py-28 text-[#151412] md:py-40">
-        <div className="mx-auto max-w-[820px] px-5 text-center md:px-10">
-          <blockquote className="font-display text-[clamp(28px,3.6vw,44px)] leading-[1.18] tracking-[-0.02em] text-[#151412]">
-            &ldquo;We checked in six hundred students in twenty minutes while the auditorium WiFi was down. Nobody waited outside once.&rdquo;
-          </blockquote>
-          <p className="tr-meta mt-8 text-[#605A50]">
-            Cultural Secretary, Annual Campus Fest
-          </p>
-        </div>
-      </section>
-
-      {/* 9. TRANSPARENT FEES — Hairline rows on dark ground (#151412) */}
-      <section className="bg-[#151412] py-24 text-[#EEE8DD] md:py-36">
-        <div className="mx-auto max-w-[1200px] px-5 md:px-10">
-          <div className="mb-12 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <p className="tr-meta text-[#9A9284]">005/ Fees</p>
-            <h2 className="font-display text-[clamp(40px,5vw,68px)] leading-[0.98] tracking-[-0.02em] text-[#EEE8DD]">
-              Zero cut from your club.
-            </h2>
-          </div>
-
-          <ul className="divide-y divide-[rgba(238,232,221,0.15)] border-y border-[rgba(238,232,221,0.15)]">
-            {FEE_ROWS.map(([label, rate]) => (
-              <li
-                key={label}
-                className="flex flex-col justify-between gap-2 py-6 sm:flex-row sm:items-baseline"
-              >
-                <span className="text-[18px] font-light text-[#EEE8DD]">{label}</span>
-                <span className="tr-meta shrink-0 text-[#C9A26B]">{rate}</span>
+          <ul className="divide-y divide-[#2E3342] border-b border-[#2E3342]">
+            {CATEGORY_HUBS.map((hub) => (
+              <li key={hub.slug}>
+                <Link
+                  href={`/category/${hub.slug}`}
+                  className="group grid grid-cols-1 items-center gap-3 px-2 py-7 transition-colors duration-base hover:bg-[#1E212B] md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_auto] md:gap-8 md:px-5 md:py-8"
+                >
+                  <span className="font-display text-[clamp(28px,3.2vw,42px)] font-semibold italic leading-tight text-[#EFEAE0] transition-colors group-hover:text-[#D4B87A]">
+                    {hub.name}
+                  </span>
+                  <span className="text-[15px] font-light leading-[1.55] text-[#9D978C]">
+                    {hub.blurb}
+                  </span>
+                  <ArrowRight
+                    className="size-5 text-[#D4B87A] transition-transform duration-base group-hover:translate-x-1.5"
+                    aria-hidden
+                  />
+                </Link>
               </li>
             ))}
           </ul>
-
-          <p className="tr-meta mt-6 text-[#9A9284]">
-            Payments settle directly to your club UPI account. EvntCult takes nothing.
-          </p>
         </div>
       </section>
 
-      {/* 10. CLOSING CTA — Inset gold accent panel (#C9A26B) */}
-      <section className="bg-[#151412] px-4 pb-16 pt-4 md:pb-24">
-        <div className="mx-auto max-w-[1360px] rounded-[24px] bg-[#C9A26B] px-6 py-16 text-[#151412] md:px-16 md:py-24">
-          <div className="mx-auto max-w-[1120px]">
-            <h2 className="max-w-[15ch] font-display text-[clamp(42px,6vw,84px)] leading-[0.96] tracking-[-0.02em] text-[#151412]">
-              Bring your club and a Friday night.
+      {/* 4. HOW EVNTCULT WORKS — 4 horizontal steps with large faded gold numerals */}
+      <section className="border-y border-[#2E3342] bg-[#1E212B] py-24 md:py-32">
+        <div className="mx-auto max-w-[1200px] px-5 md:px-10">
+          <p className="tr-meta text-[#D4B87A]">The Experience</p>
+          <h2 className="mt-3 font-display text-[clamp(42px,5.4vw,72px)] font-bold italic leading-[0.94] text-[#EFEAE0]">
+            From Link to Gate
+          </h2>
+
+          <ol className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+            {PROCESS_STEPS.map((step) => (
+              <li key={step.num} className="relative pt-10">
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -top-2 left-0 select-none font-display text-[92px] font-bold italic leading-none text-[#D4B87A]/[0.09]"
+                >
+                  {step.num}
+                </span>
+                <p className="tr-meta relative text-[#D4B87A]">{step.num}</p>
+                <h3 className="relative mt-2 font-display text-[28px] font-semibold italic leading-tight text-[#EFEAE0]">
+                  {step.title}
+                </h3>
+                <p className="relative mt-3 text-[14.5px] font-light leading-[1.6] text-[#9D978C]">
+                  {step.desc}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* 5. INTERACTIVE EVNTCULT SPLIT — Club UPI Calculator + Live Offline Gate Scanner */}
+      <section className="bg-[#161820] py-24 md:py-32">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-12 px-5 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 md:px-10">
+          <div>
+            <p className="tr-meta text-[#D4B87A]">Built for Campus Clubs</p>
+            <h2 className="mt-3 font-display text-[clamp(40px,5vw,66px)] font-bold italic leading-[0.94] text-[#EFEAE0]">
+              Zero Cut on Every Ticket
             </h2>
-            <div className="mt-10 flex flex-wrap items-center gap-6">
-              <GoldAction href="/signin?mode=signup" label="Sign up free" tone="ink" />
-              <Link
-                href="/host"
-                className="tr-meta tr-link inline-flex min-h-[44px] items-center text-[#151412]"
-              >
-                Ask about hosting your fest
-              </Link>
-            </div>
-            <p className="tr-meta mt-10 text-[#151412]/70">
-              Open to every campus student and verified club.
+            <p className="mt-4 max-w-[46ch] text-[15.5px] font-light leading-[1.6] text-[#9D978C]">
+              Students pay directly to your club UPI ID and submit their UTR. Estimate what your club keeps compared to standard ticketing gateways.
             </p>
+
+            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+              <label className="block">
+                <span className="flex items-baseline justify-between">
+                  <span className="tr-meta text-[#9D978C]">Attendees</span>
+                  <span className="font-display text-[30px] font-semibold italic tabular-nums text-[#EFEAE0]">
+                    {attendees.toLocaleString("en-IN")}
+                  </span>
+                </span>
+                <input
+                  type="range"
+                  min={50}
+                  max={2000}
+                  step={50}
+                  value={attendees}
+                  onChange={(e) => setAttendees(Number(e.target.value))}
+                  className="mt-3 w-full accent-[#D4B87A]"
+                />
+              </label>
+
+              <label className="block">
+                <span className="flex items-baseline justify-between">
+                  <span className="tr-meta text-[#9D978C]">Ticket Price</span>
+                  <span className="font-display text-[30px] font-semibold italic tabular-nums text-[#EFEAE0]">
+                    INR {price}
+                  </span>
+                </span>
+                <input
+                  type="range"
+                  min={50}
+                  max={1000}
+                  step={50}
+                  value={price}
+                  onChange={(e) => setPrice(Number(e.target.value))}
+                  className="mt-3 w-full accent-[#D4B87A]"
+                />
+              </label>
+            </div>
+
+            <dl className="mt-8 divide-y divide-[#2E3342] border-y border-[#2E3342]">
+              <div className="flex items-baseline justify-between py-3.5">
+                <dt className="text-[14.5px] font-light text-[#9D978C]">Total collection</dt>
+                <dd className="font-mono text-[13px] tabular-nums text-[#EFEAE0]">
+                  INR {gross.toLocaleString("en-IN")}
+                </dd>
+              </div>
+              <div className="flex items-baseline justify-between py-3.5">
+                <dt className="text-[14.5px] font-light text-[#9D978C]">EvntCult platform fee</dt>
+                <dd className="font-mono text-[13px] tabular-nums text-[#D4B87A]">INR 0 (0%)</dd>
+              </div>
+              <div className="flex items-baseline justify-between py-4">
+                <dt className="font-display text-[26px] font-semibold italic text-[#EFEAE0]">
+                  Saved vs 8% ticketing platforms
+                </dt>
+                <dd className="font-display text-[36px] font-bold italic tabular-nums text-[#D4B87A]">
+                  INR {saved.toLocaleString("en-IN")}
+                </dd>
+              </div>
+            </dl>
           </div>
+
+          <GatePassAperture />
+        </div>
+      </section>
+
+      {/* 6. FAQ — Real EvntCult Questions on deep surface */}
+      <section className="border-t border-[#2E3342] bg-[#1E212B] py-24 md:py-32">
+        <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-10 px-5 md:grid-cols-3 md:px-10">
+          <div>
+            <p className="tr-meta text-[#D4B87A]">Questions</p>
+            <h2 className="mt-3 font-display text-[clamp(38px,4.5vw,58px)] font-bold italic leading-[0.95] text-[#EFEAE0]">
+              Good to Know
+            </h2>
+          </div>
+
+          <div className="divide-y divide-[#2E3342] border-y border-[#2E3342] md:col-span-2">
+            {EVNTCULT_FAQ.map(([q, a], i) => {
+              const open = openFaq === i;
+              return (
+                <div key={q}>
+                  <button
+                    type="button"
+                    aria-expanded={open}
+                    onClick={() => setOpenFaq(open ? null : i)}
+                    className="flex min-h-[64px] w-full items-center justify-between gap-4 py-5 text-left"
+                  >
+                    <span className="font-display text-[24px] font-semibold italic leading-snug text-[#EFEAE0]">
+                      {q}
+                    </span>
+                    <Plus
+                      className={`size-4 shrink-0 text-[#D4B87A] transition-transform duration-base ${
+                        open ? "rotate-45" : ""
+                      }`}
+                      aria-hidden
+                    />
+                  </button>
+                  {open && (
+                    <p className="pb-6 pr-8 text-[15px] font-light leading-[1.6] text-[#9D978C]">
+                      {a}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. FULL-WIDTH CHAMPAGNE GOLD CTA BAND */}
+      <section className="bg-[#D4B87A] py-20 text-[#161820] md:py-28">
+        <div className="mx-auto flex max-w-[920px] flex-col items-center px-5 text-center md:px-10">
+          <h2 className="font-display text-[clamp(42px,6vw,84px)] font-bold italic leading-[0.92] tracking-[-0.02em] text-[#161820]">
+            Your Next Campus Night Starts Here.
+          </h2>
+          <p className="mt-5 max-w-[540px] text-[16px] font-light leading-[1.6] text-[#161820]/80">
+            Free for every student and verified club. Claim your pass in seconds or publish your upcoming fest with direct UPI and offline check in.
+          </p>
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              href="/signin?mode=signup"
+              className="group inline-flex h-12 items-center gap-2 rounded-[4px] bg-[#161820] px-7 text-[11px] font-medium uppercase tracking-[0.14em] text-[#EFEAE0] transition-colors hover:bg-[#262A36]"
+            >
+              <span>Sign up free</span>
+              <ArrowRight className="size-3.5 transition-transform duration-base group-hover:translate-x-0.5" aria-hidden />
+            </Link>
+            <Link
+              href="/host"
+              className="inline-flex h-12 items-center rounded-[4px] border border-[#161820]/35 px-7 text-[11px] font-medium uppercase tracking-[0.14em] text-[#161820] transition-colors hover:border-[#161820]"
+            >
+              Apply to host
+            </Link>
+          </div>
+          <p className="tr-meta mt-7 text-[#161820]/70">
+            Offline QR · Direct UPI · On device Photo Vault
+          </p>
         </div>
       </section>
     </div>

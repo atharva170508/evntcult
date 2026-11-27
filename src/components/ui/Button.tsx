@@ -9,29 +9,26 @@ import { cn } from "@/lib/utils";
  * `primary` is solid dark; `secondary` is white with a dark outline.
  */
 const variants = {
-  primary: "bg-ink text-white hover:bg-black",
+  primary: "bg-ink text-canvas hover:opacity-90",
   accent:
-    "whitespace-nowrap bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
-  secondary: "bg-surface text-ink ring-1 ring-inset ring-ink hover:bg-sunken",
-  ghost: "text-ink-2 hover:bg-sunken hover:text-ink",
-  soft: "bg-sunken text-ink hover:bg-mist",
+    "whitespace-nowrap bg-[#D4B87A] text-[#161820] hover:bg-[#E0C78E]",
+  secondary:
+    "border border-line-strong bg-transparent text-ink hover:border-[#D4B87A] hover:text-[#D4B87A]",
+  ghost: "text-ink-muted hover:bg-surface hover:text-ink",
+  soft: "border border-line bg-surface text-ink hover:border-line-strong",
   danger:
-    "bg-surface text-danger ring-1 ring-inset ring-line-strong hover:bg-danger-soft",
-  /** White button for use on posters and dark bands. */
-  light: "bg-white text-ink hover:bg-white/90",
+    "border border-line-strong bg-surface text-danger hover:bg-danger-soft",
+  light: "bg-[#EFEAE0] text-[#161820] hover:bg-[#EFEAE0]/90",
 
-  /* legacy names → new anatomy */
-  volt: "whitespace-nowrap bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
-  brand:
-    "whitespace-nowrap bg-lavender text-ink ring-2 ring-inset ring-ink hover:bg-lavender-hover",
-  glass:
-    "bg-surface text-ink ring-1 ring-inset ring-line-strong hover:bg-sunken",
+  volt: "whitespace-nowrap bg-[#D4B87A] text-[#161820] hover:bg-[#E0C78E]",
+  brand: "whitespace-nowrap bg-[#D4B87A] text-[#161820] hover:bg-[#E0C78E]",
+  glass: "border border-line bg-surface text-ink hover:border-line-strong",
 } as const;
 
 const sizes = {
-  sm: "h-8 gap-1.5 rounded-[9px] px-3 text-[13px]",
-  md: "h-10 gap-2 rounded-[12px] px-4 text-[14px]",
-  lg: "h-12 gap-2 rounded-[14px] px-6 text-[16px]",
+  sm: "h-9 gap-1.5 rounded-[8px] px-3.5 text-[13px]",
+  md: "h-11 gap-2 rounded-[8px] px-5 text-[14px]",
+  lg: "h-12 gap-2 rounded-full px-6 text-[15px]",
 } as const;
 
 export type ButtonVariant = keyof typeof variants;
@@ -43,8 +40,8 @@ export const buttonClass = (
   className?: string,
 ) =>
   cn(
-    "relative inline-flex select-none items-center justify-center whitespace-nowrap font-semibold",
-    "ui-press ui-sheen",
+    "relative inline-flex select-none items-center justify-center whitespace-nowrap font-medium",
+    "ui-press",
     "disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45",
     variants[variant],
     sizes[size],

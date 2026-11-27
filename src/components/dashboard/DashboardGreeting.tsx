@@ -60,9 +60,9 @@ export function DashboardGreeting({
 
       <Heading
         id={asHeading ? "home-greeting" : undefined}
-        className="mt-4 font-display text-[clamp(38px,5vw,64px)] leading-[0.98] tracking-[-0.02em] text-ink"
+        className="mt-4 font-display text-[clamp(40px,5vw,66px)] font-bold italic leading-[0.94] tracking-[-0.02em] text-ink"
       >
-        {headline}, <em className="italic text-[#C9A26B]">{firstName}{headline.startsWith("What") ? "?" : "."}</em>
+        {headline}, <span className="text-[#D4B87A]">{firstName}{headline.startsWith("What") ? "?" : "."}</span>
       </Heading>
       <p className="mt-2 text-[15.5px] font-light text-ink-muted">
         {subtitle}

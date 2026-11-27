@@ -93,7 +93,7 @@ export function HomeHero({
         asHeading={false}
       />
 
-      <div className="relative overflow-hidden rounded-[24px] border border-line bg-[#1D1B18]">
+      <div className="relative overflow-hidden rounded-[8px] border border-[#2E3342] bg-[#1E212B]">
         <div className="relative min-h-[clamp(420px,60vh,620px)] overflow-hidden">
           <m.img
             src={e.bannerUrl || "/images/hero-hall.jpg"}
@@ -106,20 +106,20 @@ export function HomeHero({
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-[72%]"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[74%]"
             style={{
               background:
-                "linear-gradient(to top, rgba(21,20,18,0.95) 0%, rgba(21,20,18,0.58) 52%, rgba(21,20,18,0) 100%)",
+                "linear-gradient(to top, rgba(22,24,32,0.96) 0%, rgba(22,24,32,0.58) 52%, rgba(22,24,32,0) 100%)",
             }}
           />
 
-          <div className="relative z-10 flex min-h-[clamp(420px,60vh,620px)] flex-col justify-between p-6 text-[#EEE8DD] md:p-10">
+          <div className="relative z-10 flex min-h-[clamp(420px,60vh,620px)] flex-col justify-between p-6 text-[#EFEAE0] md:p-10">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <span className="tr-meta inline-flex items-center gap-2 text-[#C9A26B]">
-                <span className="size-1.5 rounded-full bg-[#C9A26B]" aria-hidden />
+              <span className="tr-meta inline-flex items-center gap-2 text-[#D4B87A]">
+                <span className="size-1.5 rounded-full bg-[#D4B87A]" aria-hidden />
                 {live ? "Live now" : mine ? "Your pass" : "Featured on campus"}
               </span>
-              <span className="tr-meta text-[#EEE8DD]/80">
+              <span className="tr-meta text-[#EFEAE0]/80">
                 {e.feePaise > 0 ? `INR ${(e.feePaise / 100).toLocaleString("en-IN")}` : "Free"}
                 {e.registered > 0 ? ` · ${e.registered.toLocaleString("en-IN")} going` : ""}
               </span>
@@ -129,11 +129,11 @@ export function HomeHero({
               <div>
                 <h1
                   id="hero-title"
-                  className="font-display text-[clamp(40px,5.8vw,78px)] leading-[0.96] tracking-[-0.02em] text-[#EEE8DD]"
+                  className="font-display text-[clamp(42px,5.8vw,80px)] font-bold italic leading-[0.94] tracking-[-0.02em] text-[#EFEAE0]"
                 >
                   {e.title}
                 </h1>
-                <p className="tr-meta mt-4 text-[#EEE8DD]/75">
+                <p className="tr-meta mt-4 text-[#EFEAE0]/75">
                   {when}
                   {e.venueName ? ` · ${e.venueName}` : ""}
                   {mine && e.passSerial ? ` · ${passName(e.passSerial).name} No. ${passName(e.passSerial).no}` : ""}
@@ -142,10 +142,10 @@ export function HomeHero({
 
               <div className="flex flex-col items-start gap-4 md:items-end md:text-right">
                 <div>
-                  <p className="tr-meta text-[#9A9284]">
+                  <p className="tr-meta text-[#9D978C]">
                     {live ? "In progress" : mine ? "Doors open in" : "Starts in"}
                   </p>
-                  <p className="mt-1 font-display text-[clamp(32px,3.6vw,48px)] leading-none tabular-nums text-[#EEE8DD]">
+                  <p className="mt-1 font-display text-[clamp(32px,3.6vw,48px)] font-semibold italic leading-none tabular-nums text-[#EFEAE0]">
                     {live
                       ? "Now"
                       : days !== null && days >= 1
@@ -155,20 +155,18 @@ export function HomeHero({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4">
-                  <Link href={href} className="group inline-flex items-center gap-2">
-                    <span className="inline-flex h-12 items-center rounded-full bg-[#C9A26B] px-6 font-mono text-[11px] uppercase tracking-[0.06em] text-[#151412] transition-colors group-hover:bg-[#D7B47F]">
+                  <Link
+                    href={href}
+                    className="group inline-flex h-12 items-center gap-2 rounded-[4px] bg-[#D4B87A] px-6 text-[11px] font-medium uppercase tracking-[0.14em] text-[#161820] transition-colors hover:bg-[#E0C78E]"
+                  >
+                    <span>
                       {live ? (mine ? "Show pass" : "Go now") : mine ? "Open pass" : "Claim seat"}
                     </span>
-                    <span
-                      aria-hidden
-                      className="grid size-12 place-items-center rounded-full bg-[#C9A26B] text-[#151412] transition-transform duration-base ease-out group-hover:translate-x-1 group-hover:bg-[#D7B47F]"
-                    >
-                      <ArrowUpRight className="size-4" strokeWidth={1.75} />
-                    </span>
+                    <ArrowUpRight className="size-4 transition-transform duration-base group-hover:translate-x-0.5" strokeWidth={1.75} aria-hidden />
                   </Link>
                   <Link
                     href={`/events/${e.slug}`}
-                    className="tr-meta tr-link inline-flex min-h-[44px] items-center text-[#EEE8DD]/80 hover:text-[#C9A26B]"
+                    className="tr-meta tr-link inline-flex min-h-[44px] items-center text-[#EFEAE0]/80 hover:text-[#D4B87A]"
                   >
                     Details
                   </Link>
