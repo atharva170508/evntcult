@@ -41,9 +41,9 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-h"
-      className="pb-14 pt-8 md:pt-14 lg:pb-20"
+      className="pb-12 pt-8 md:pt-14 lg:pb-20"
     >
-      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-12">
+      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:gap-14">
         <div>
           <h1
             id="hero-h"
@@ -54,17 +54,16 @@ export function Hero() {
               lines={["Every event,", <em key="em">one pass.</em>]}
             />
           </h1>
-          <Entrance delay={0.3}>
-            <p className="mt-6 max-w-[39ch] text-[17.5px] leading-[1.52] tracking-[-0.01em] text-ink-2 md:text-[19px]">
-              Concerts, meetups, workshops, parties and hackathons, all on one
-              calendar. Register in a tap and walk in with your phone.
+          <Entrance delay={0.28}>
+            <p className="mt-6 max-w-[40ch] text-[17.5px] leading-[1.52] tracking-[-0.01em] text-ink-2 md:text-[19px]">
+              Concerts, hackathons, workshops, and club nights on one campus calendar. Claim your seat in a tap and walk in with your phone.
             </p>
           </Entrance>
-          <Entrance delay={0.36} className="relative z-10">
+          <Entrance delay={0.34} className="relative z-10">
             <HeroSearch />
           </Entrance>
           <Entrance
-            delay={0.42}
+            delay={0.4}
             className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3"
           >
             <Magnetic>
@@ -72,25 +71,40 @@ export function Hero() {
                 Sign up free
               </Link>
             </Magnetic>
+            <a
+              href="#onepass"
+              className="inline-flex min-h-[44px] items-center text-[15px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors hover:decoration-ink"
+            >
+              See how passes work
+            </a>
+            <Link
+              href="/host"
+              className="inline-flex min-h-[44px] items-center text-[15px] font-medium text-ink-muted transition-colors hover:text-ink"
+            >
+              Host for your club
+            </Link>
           </Entrance>
         </div>
-        <Entrance delay={0.2}>
+        <Entrance delay={0.18}>
           <HeroShowcase qr={qr} />
         </Entrance>
       </div>
 
-      {/* Editorial architectural truth strip — real product mechanics, zero invented stats */}
-      <Entrance delay={0.5}>
-        <dl className="mt-14 grid grid-cols-2 divide-y divide-line border-t border-line pt-6 sm:grid-cols-4 sm:divide-x sm:divide-y-0">
+      {/* Architectural ledger of real product mechanics */}
+      <Entrance delay={0.46}>
+        <dl className="mt-14 grid grid-cols-2 gap-y-6 border-y border-line-strong py-6 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-line">
           {[
-            ["0% platform fee", "Direct UPI straight to clubs"],
-            ["Offline QR gates", "Scans in under a second without Wi-Fi"],
-            ["On-device Face ID", "Event photos land in your Vault"],
-            ["Verified certificates", "Tamper-proof codes on every issue"],
-          ].map(([head, sub]) => (
-            <div key={head} className="py-3 sm:px-5 sm:py-0 sm:first:pl-0 sm:last:pr-0">
-              <dt className="text-[14px] font-semibold text-ink">{head}</dt>
-              <dd className="mt-0.5 text-[13px] text-ink-muted">{sub}</dd>
+            ["₹0", "Platform fee", "Direct UPI straight to your club"],
+            ["Offline", "QR gate pass", "Scans in under a second without Wi-Fi"],
+            ["On-device", "Face ID Vault", "Your event photos gathered privately"],
+            ["Signed", "Certificates", "Permanent verification link on each issue"],
+          ].map(([mark, head, sub]) => (
+            <div key={head} className="pr-4 sm:px-6 sm:first:pl-0 sm:last:pr-0">
+              <p className="font-display text-[28px] leading-none tracking-[-0.02em] text-ink">
+                {mark}
+              </p>
+              <dt className="mt-1.5 text-[14px] font-semibold text-ink">{head}</dt>
+              <dd className="mt-0.5 text-[13px] leading-snug text-ink-muted">{sub}</dd>
             </div>
           ))}
         </dl>
@@ -407,19 +421,29 @@ export function Venues({ venues }: { venues: VenueCount[] }) {
   );
 }
 
-/* ── App ────────────────────────────────────────────────── */
+/* App install band */
 
 export function AppBand() {
   return (
-    <Reveal as="section" className="my-24 md:my-32">
+    <Reveal as="section" className="my-20 md:my-28">
       <div className="grid items-center gap-10 overflow-hidden rounded-3xl bg-lavender/60 px-7 pt-10 ring-1 ring-inset ring-[#E2C8F7] md:grid-cols-2 md:px-14 md:pt-0">
         <div className="md:py-14">
-          <h2 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.03em] text-ink">
-            Your pass, on your home screen.
+          <h2 className="font-display text-[clamp(40px,5vw,64px)] leading-[0.95] tracking-[-0.02em] text-ink">
+            Your pass, on your <em>home screen.</em>
           </h2>
-          <ul className="mt-6 space-y-2 text-[16px] text-ink-2">
-            <li>Opens straight to your passes</li>
-            <li>Works without internet at the gate</li>
+          <ul className="mt-6 space-y-2.5 text-[15.5px] text-ink-2">
+            <li className="flex items-center gap-2.5">
+              <Check className="size-4 shrink-0 text-ink" strokeWidth={2.4} aria-hidden />
+              Opens straight to your gate QR pass
+            </li>
+            <li className="flex items-center gap-2.5">
+              <Check className="size-4 shrink-0 text-ink" strokeWidth={2.4} aria-hidden />
+              Scans cleanly even when campus Wi-Fi drops
+            </li>
+            <li className="flex items-center gap-2.5">
+              <Check className="size-4 shrink-0 text-ink" strokeWidth={2.4} aria-hidden />
+              Auto-syncs schedule changes to your calendar
+            </li>
           </ul>
           <Link
             href="/get-app"
@@ -474,31 +498,43 @@ export function AppBand() {
   );
 }
 
-/* ── Closing ────────────────────────────────────────────── */
+/* Closing ticket invitation */
 
 export function Closing() {
   return (
     <Reveal
       as="section"
-      className="mb-4 mt-6 rounded-[24px] bg-surface p-8 shadow-card md:p-14"
+      className="relative mb-6 mt-8 overflow-hidden rounded-[26px] border border-line-strong bg-surface shadow-card"
     >
-      <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-        <h2 className="max-w-[14ch] font-display text-[clamp(44px,6vw,84px)] leading-[0.95] tracking-[-0.03em] text-ink">
-          See you at <em>the gate.</em>
-        </h2>
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
-          <Magnetic>
-            <Link href="/signin?mode=signup" className={cta}>
-              Sign up free
+      <div className="p-8 md:p-14">
+        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="font-mono text-[12px] font-medium text-ink-subtle">
+              ADMIT ONE · EVNTCULT CAMPUS PASS
+            </p>
+            <h2 className="mt-3 max-w-[14ch] font-display text-[clamp(48px,6.4vw,92px)] leading-[0.92] tracking-[-0.02em] text-ink">
+              See you at <em>the gate.</em>
+            </h2>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+            <Magnetic>
+              <Link href="/signin?mode=signup" className={cta}>
+                Sign up free
+              </Link>
+            </Magnetic>
+            <Link
+              href="/events"
+              className="inline-flex min-h-[44px] items-center text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors duration-fast hover:decoration-ink"
+            >
+              Browse events
             </Link>
-          </Magnetic>
-          <Link
-            href="/events"
-            className="text-[16px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors duration-fast hover:decoration-ink"
-          >
-            Browse events
-          </Link>
+          </div>
         </div>
+      </div>
+      <div className="stub-tear" aria-hidden />
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 bg-sunken/55 px-8 py-4 text-[13px] text-ink-muted md:px-14">
+        <span>Free for students and campus clubs</span>
+        <span className="font-mono text-[12px]">Direct UPI · Offline QR · On-device Face ID</span>
       </div>
     </Reveal>
   );

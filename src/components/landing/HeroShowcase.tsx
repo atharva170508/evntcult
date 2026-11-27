@@ -98,13 +98,8 @@ export function HeroShowcase({ qr }: { qr: string }) {
   };
 
   return (
-    <div className="relative mx-auto grid w-full max-w-[520px] grid-cols-1 items-end gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-6">
-      {/* Soft lavender light behind the pass. */}
-      <span
-        aria-hidden
-        className="absolute left-[8%] top-[6%] -z-10 size-[70%] rounded-full bg-lavender/70 blur-[70px]"
-      />
-
+    <div className="relative mx-auto w-full max-w-[540px] rounded-[28px] border border-line bg-sunken/55 p-4 sm:p-6">
+      <div className="grid grid-cols-1 items-end gap-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-5">
       {/* Interactive 3-pass deck */}
       <div className="min-w-0">
         <div style={{ perspective: 1100 }} className="relative">
@@ -147,7 +142,7 @@ export function HeroShowcase({ qr }: { qr: string }) {
                 }}
               >
                 {/* Front face */}
-                <div className="relative overflow-hidden rounded-[24px] bg-white shadow-[0_40px_80px_-30px_rgba(60,40,10,0.45),0_0_0_1px_rgba(26,26,26,0.06)] [backface-visibility:hidden]">
+                <div className="relative overflow-hidden rounded-[24px] bg-white shadow-[0_36px_72px_-30px_rgba(60,40,10,0.42),0_0_0_1px_rgba(26,26,26,0.08)] [backface-visibility:hidden]">
                   {/* Warm sunlit paper sheen on pointer tilt */}
                   <span
                     aria-hidden
@@ -159,22 +154,33 @@ export function HeroShowcase({ qr }: { qr: string }) {
                   />
                   <div className="relative aspect-[16/10]">
                     <EventArt accent={current.accent} seed={current.id} scrim={false} />
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-5 pt-12">
-                      <p className="font-display text-[30px] leading-none text-white">
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/65 to-transparent p-5 pt-12">
+                      <p className="font-display text-[32px] leading-none tracking-[-0.02em] text-white">
                         {current.title}
                       </p>
                     </div>
-                    <span className="absolute left-4 top-4 rounded-lg bg-white/90 px-2.5 py-1 text-[11.5px] font-semibold text-ink">
-                      Example pass
-                    </span>
+                    <div className="absolute inset-x-4 top-4 flex items-center justify-between gap-2">
+                      <span className="rounded-lg bg-white/95 px-2.5 py-1 text-[11.5px] font-semibold text-ink shadow-sm">
+                        Example pass
+                      </span>
+                      <span className="rounded-lg bg-black/45 px-2 py-1 font-mono text-[10.5px] font-medium text-white backdrop-blur-sm">
+                        NO. 00{index + 42}
+                      </span>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-[1fr_auto] gap-4 p-5">
+                  {/* Perforated tear divider */}
+                  <div className="relative flex items-center bg-white">
+                    <span className="size-4 -translate-x-1/2 rounded-full bg-sunken ring-1 ring-line-strong" aria-hidden />
+                    <div className="flex-1 border-t border-dashed border-line-strong" />
+                    <span className="size-4 translate-x-1/2 rounded-full bg-sunken ring-1 ring-line-strong" aria-hidden />
+                  </div>
+                  <div className="grid grid-cols-[1fr_auto] gap-4 p-5 pt-3.5">
                     <div className="min-w-0">
                       <p className="text-[12px] text-ink-muted">{current.seat}</p>
-                      <p className="mt-0.5 truncate font-display text-[26px] leading-none text-ink">
+                      <p className="mt-0.5 truncate font-display text-[28px] leading-none text-ink">
                         {current.holder}
                       </p>
-                      <dl className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 text-[12.5px]">
+                      <dl className="mt-3.5 grid grid-cols-2 gap-x-3 gap-y-2 text-[12.5px]">
                         <div>
                           <dt className="text-ink-muted">Date</dt>
                           <dd className="whitespace-nowrap font-semibold tabular-nums text-ink">
@@ -205,7 +211,7 @@ export function HeroShowcase({ qr }: { qr: string }) {
                 {/* Back face (Apple Wallet style reverse details) */}
                 <div
                   aria-hidden={!flipped}
-                  className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-[24px] bg-white p-6 text-ink shadow-[0_40px_80px_-30px_rgba(60,40,10,0.45),0_0_0_1px_rgba(26,26,26,0.06)] [backface-visibility:hidden] [transform:rotateY(180deg)]"
+                  className="absolute inset-0 flex flex-col justify-between overflow-hidden rounded-[24px] bg-white p-6 text-ink shadow-[0_36px_72px_-30px_rgba(60,40,10,0.42),0_0_0_1px_rgba(26,26,26,0.08)] [backface-visibility:hidden] [transform:rotateY(180deg)]"
                 >
                   <div>
                     <div className="flex items-center justify-between border-b border-line pb-3">
@@ -214,7 +220,7 @@ export function HeroShowcase({ qr }: { qr: string }) {
                         Offline ready
                       </span>
                     </div>
-                    <p className="mt-4 font-display text-[26px] leading-none text-ink">{current.title}</p>
+                    <p className="mt-4 font-display text-[28px] leading-none text-ink">{current.title}</p>
                     <dl className="mt-4 space-y-2.5 text-[13px]">
                       <div className="flex justify-between gap-3">
                         <dt className="text-ink-muted">Entry desk</dt>
@@ -250,23 +256,23 @@ export function HeroShowcase({ qr }: { qr: string }) {
           </AnimatePresence>
         </div>
 
-        {/* Quiet editorial pass switcher + 3D flip toggle */}
-        <div className="mt-3.5 flex items-center justify-between px-1 text-[12.5px] text-ink-muted">
-          <span className="font-mono tabular-nums">
+        {/* Tactile pass switcher + 3D flip controls */}
+        <div className="mt-4 flex items-center justify-between gap-2 px-0.5 text-[12.5px] text-ink-muted">
+          <span className="font-mono font-medium tabular-nums">
             0{index + 1} / 0{DECK.length}
           </span>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setFlipped((f) => !f)}
-              className="font-medium text-ink-2 underline decoration-line-strong underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+              className="inline-flex min-h-[44px] items-center rounded-full border border-line-strong bg-surface px-3.5 text-[12.5px] font-semibold text-ink transition-colors hover:border-ink sm:min-h-[34px]"
             >
               {flipped ? "Show front" : "Flip pass"}
             </button>
             <button
               type="button"
               onClick={next}
-              className="font-medium text-ink-2 underline decoration-line-strong underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+              className="inline-flex min-h-[44px] items-center rounded-full border border-line-strong bg-surface px-3.5 text-[12.5px] font-semibold text-ink transition-colors hover:border-ink sm:min-h-[34px]"
             >
               Next pass
             </button>
@@ -275,6 +281,7 @@ export function HeroShowcase({ qr }: { qr: string }) {
       </div>
 
       <MiniPrinter />
+      </div>
     </div>
   );
 }

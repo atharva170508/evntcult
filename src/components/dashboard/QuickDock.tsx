@@ -27,8 +27,7 @@ export function QuickDock({
 
   return (
     <div className="mt-5 flex flex-col gap-3 border-y border-line py-3.5 md:flex-row md:items-center md:justify-between">
-      {/* Inline Event Code quick-jump */}
-      <form onSubmit={submitCode} className="flex items-center gap-1.5">
+      <form onSubmit={submitCode} className="flex items-center gap-2">
         <label htmlFor="dash-event-code" className="sr-only">
           Enter event code
         </label>
@@ -40,25 +39,24 @@ export function QuickDock({
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="Have an event code?"
-            className="h-10 w-full rounded-full border border-line-strong bg-surface pl-9 pr-3.5 text-[13px] font-medium text-ink placeholder:text-ink-subtle focus:border-ink focus-visible:shadow-[var(--focus-field)] md:w-[220px]"
+            className="h-11 w-full rounded-full border border-line-strong bg-surface pl-9 pr-3.5 text-[13.5px] font-medium text-ink placeholder:text-ink-subtle focus:border-ink focus-visible:shadow-[var(--focus-field)] sm:h-10 md:w-[230px]"
           />
         </div>
         <button
           type="submit"
           disabled={!code.trim()}
           aria-label="Open event by code"
-          className="inline-flex h-9 items-center gap-1.5 rounded-full bg-ink px-3.5 text-[12.5px] font-semibold text-[#FFFEF6] transition-opacity hover:opacity-90 disabled:opacity-35"
+          className="inline-flex h-11 items-center gap-1.5 rounded-full bg-ink px-4 text-[13px] font-semibold text-canvas transition-opacity hover:opacity-90 disabled:opacity-35 sm:h-10"
         >
           <span>Join</span>
           <ArrowRight className="size-3.5" aria-hidden />
         </button>
       </form>
 
-      {/* Focused non-redundant campus tools */}
       <nav aria-label="Quick tools" className="flex flex-wrap items-center gap-2">
         <Link
           href="/vault"
-          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+          className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-line-strong bg-surface px-4 text-[13px] font-semibold text-ink transition-colors hover:border-ink hover:bg-sunken sm:min-h-[38px]"
         >
           <Images className="size-3.5 text-ink-muted" aria-hidden />
           Photo Vault
@@ -66,7 +64,7 @@ export function QuickDock({
 
         <Link
           href="/venues"
-          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+          className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-line-strong bg-surface px-4 text-[13px] font-semibold text-ink transition-colors hover:border-ink hover:bg-sunken sm:min-h-[38px]"
         >
           <MapPinned className="size-3.5 text-ink-muted" aria-hidden />
           Venues
@@ -75,18 +73,17 @@ export function QuickDock({
         {isOrganizer && (
           <Link
             href="/organizer"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-line-strong bg-surface px-4 text-[13px] font-semibold text-ink transition-colors hover:border-ink hover:bg-sunken sm:min-h-[38px]"
           >
             <LayoutGrid className="size-3.5 text-ink-muted" aria-hidden />
             My hosted events
           </Link>
         )}
 
-        {/* Organizers host; everyone else can only apply (hosting is verified by Synchronous Labs). */}
         {!isOrganizer ? (
           <Link
             href="/host"
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line-strong bg-surface px-3.5 text-[13px] font-semibold text-ink transition-colors hover:bg-sunken"
+            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-line-strong bg-surface px-4 text-[13px] font-semibold text-ink transition-colors hover:border-ink hover:bg-sunken sm:min-h-[38px]"
           >
             <BadgeCheck className="size-3.5 text-ink-muted" aria-hidden />
             Apply to host
@@ -94,7 +91,7 @@ export function QuickDock({
         ) : (
         <Link
           href="/organizer/events/new"
-          className="inline-flex h-9 items-center gap-1.5 rounded-full bg-lavender px-3.5 text-[13px] font-semibold text-ink ring-1 ring-inset ring-ink/25 transition-colors hover:bg-lavender-hover"
+          className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-lavender px-4 text-[13px] font-semibold text-ink ring-2 ring-inset ring-ink transition-colors hover:bg-lavender-hover sm:min-h-[38px]"
         >
           <Plus className="size-3.5" strokeWidth={2.4} aria-hidden />
           Host an Event

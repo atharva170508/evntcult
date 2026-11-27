@@ -179,7 +179,7 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
         subtitle="Pick a vibe below to preview your first pass."
       />
 
-      {/* Single unified warm editorial stage — no nested cards */}
+      {/* Unified warm editorial pass stage */}
       <div
         className="relative overflow-hidden rounded-[28px] border border-line-strong bg-sunken/75 transition-colors duration-500"
         style={{
@@ -187,16 +187,15 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
         }}
       >
         <div className="grid items-center gap-10 p-6 sm:p-9 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-12 lg:p-11">
-          {/* LEFT: Editorial copy, spring vibe selector, direct actions */}
           <div className="relative z-10 flex flex-col">
-            <h2 className="max-w-[16ch] font-display text-[clamp(32px,3.6vw,48px)] leading-[1.02] tracking-[-0.025em] text-ink">
+            <h2 className="max-w-[16ch] font-display text-[clamp(36px,4vw,54px)] leading-[0.96] tracking-[-0.02em] text-ink">
               Your first pass is waiting for a plan.
             </h2>
-            <p className="mt-3 max-w-[44ch] text-[15.5px] leading-relaxed text-ink-2">
+            <p className="mt-3.5 max-w-[44ch] text-[15.5px] leading-relaxed text-ink-2">
               {vibe.blurb}
             </p>
 
-            {/* Spring-animated tactile vibe pill bar */}
+            {/* Spring-animated tactile vibe selector */}
             <div className="mt-6 flex flex-wrap gap-2" role="group" aria-label="Pick a campus vibe">
               {VIBES.map((v, idx) => {
                 const active = idx === vibeIdx;
@@ -207,8 +206,8 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
                     aria-pressed={active}
                     onClick={() => selectVibe(idx)}
                     className={cn(
-                      "relative inline-flex h-10 items-center gap-2 rounded-full px-4 text-[14px] font-semibold transition-colors",
-                      active ? "text-[#FFFEF6]" : "bg-surface/90 text-ink-2 ring-1 ring-line hover:text-ink",
+                      "relative inline-flex min-h-[44px] items-center gap-2 rounded-full px-4 text-[14px] font-semibold transition-colors sm:min-h-[40px]",
+                      active ? "text-canvas" : "bg-surface/90 text-ink-2 ring-1 ring-line hover:text-ink",
                     )}
                   >
                     {active && (
@@ -229,24 +228,23 @@ export function EmptyTicket({ name, dateLine, isOrganizer = false }: { name: str
               })}
             </div>
 
-            {/* Primary + secondary actions */}
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
               <Link
                 href={`/events?type=${vibe.key}`}
                 className="ui-press ui-sheen inline-flex h-12 items-center gap-2 rounded-xl bg-lavender px-6 text-[15.5px] font-semibold text-ink shadow-button ring-2 ring-inset ring-ink transition-colors hover:bg-lavender-hover"
               >
-                Explore {vibe.label.toLowerCase()}
+                See {vibe.label.toLowerCase()} events
                 <ArrowRight className="size-4" strokeWidth={2.3} aria-hidden />
               </Link>
               <Link
                 href="/events"
-                className="text-[14.5px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors hover:decoration-ink"
+                className="inline-flex min-h-[44px] items-center text-[14.5px] font-semibold text-ink underline decoration-line-strong decoration-2 underline-offset-[6px] transition-colors hover:decoration-ink"
               >
                 Browse all events
               </Link>
               <Link
                 href={isOrganizer ? "/organizer/events/new" : "/host"}
-                className="text-[14.5px] font-semibold text-ink-2 underline decoration-line-strong underline-offset-[6px] transition-colors hover:text-ink hover:decoration-ink"
+                className="inline-flex min-h-[44px] items-center text-[14.5px] font-semibold text-ink-2 underline decoration-line-strong underline-offset-[6px] transition-colors hover:text-ink hover:decoration-ink"
               >
                 {isOrganizer ? "Create an event" : "Apply to host"}
               </Link>

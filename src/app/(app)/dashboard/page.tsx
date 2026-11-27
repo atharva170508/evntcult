@@ -52,10 +52,10 @@ export default async function DashboardPage({
 
   return (
     <div className="pb-14">
-      {/* 1. Personal Hero: Active Boarding Pass OR 3-Pass Interactive Studio */}
       <HomeHero
         name={viewer.name}
         isOrganizer={viewer.verifiedOrganizer}
+        passCount={data.stats.registered}
         mine={!!next}
         dateLine={new Intl.DateTimeFormat("en-IN", {
           timeZone: "Asia/Kolkata",
@@ -176,15 +176,14 @@ export default async function DashboardPage({
         </div>
       )}
 
-      {/* 5. Your Month Calendar */}
-      <section aria-labelledby="dash-cal-h" className="pt-12">
+      <section aria-labelledby="dash-cal-h" className="pt-14">
         <div className="mb-5 flex flex-wrap items-baseline justify-between gap-4 border-b border-ink pb-3">
-          <h2 id="dash-cal-h" className="text-[18px] font-semibold text-ink">
+          <h2 id="dash-cal-h" className="font-display text-[clamp(28px,2.8vw,38px)] leading-none tracking-[-0.02em] text-ink">
             Your month
           </h2>
           <Link
             href="/calendar"
-            className="inline-flex items-center gap-1 text-[14px] font-semibold text-ink-2 hover:text-ink"
+            className="inline-flex min-h-[44px] items-center gap-1 text-[14px] font-semibold text-ink-2 hover:text-ink"
           >
             Full calendar <ChevronRight className="size-4" aria-hidden />
           </Link>
@@ -192,30 +191,36 @@ export default async function DashboardPage({
         <MonthCalendar initial={month} signedIn />
       </section>
 
-      {/* 6. Quick Category Directory */}
-      <section aria-labelledby="dash-hubs-h" className="pt-12">
-        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-4 border-b border-ink pb-3">
-          <h2 id="dash-hubs-h" className="text-[18px] font-semibold text-ink">
-            Browse by category
+      <section aria-labelledby="dash-hubs-h" className="pt-14">
+        <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4 border-b border-ink pb-3">
+          <h2 id="dash-hubs-h" className="font-display text-[clamp(28px,2.8vw,38px)] leading-none tracking-[-0.02em] text-ink">
+            Browse by <em>category.</em>
           </h2>
           <Link
             href="/events"
-            className="inline-flex items-center gap-1 text-[14px] font-semibold text-ink-2 hover:text-ink"
+            className="inline-flex min-h-[44px] items-center gap-1 text-[14px] font-semibold text-ink-2 hover:text-ink"
           >
             All events <ChevronRight className="size-4" aria-hidden />
           </Link>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <ul className="grid grid-cols-1 md:grid-cols-2 md:gap-x-10">
           {CATEGORY_HUBS.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/category/${cat.slug}`}
-              className="inline-flex h-9 items-center rounded-full border border-line-strong bg-surface px-3.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-ink hover:bg-ink hover:text-[#FFFEF6]"
-            >
-              {cat.name}
-            </Link>
+            <li key={cat.slug} className="border-b border-line">
+              <Link
+                href={`/category/${cat.slug}`}
+                className="group flex min-h-[56px] items-center justify-between gap-4 py-3.5 transition-colors hover:text-ink"
+              >
+                <div className="min-w-0">
+                  <span className="block font-display text-[24px] leading-tight tracking-[-0.015em] text-ink transition-transform duration-fast group-hover:translate-x-1">
+                    {cat.name}
+                  </span>
+                  <span className="block truncate text-[13px] text-ink-muted">{cat.blurb}</span>
+                </div>
+                <ChevronRight className="size-4 shrink-0 text-ink-muted transition-transform group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden />
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       {/* 7. Optional Phone / WhatsApp prompt if missing */}

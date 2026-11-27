@@ -275,7 +275,7 @@ export function HostsBand({ isOrganizer = false }: { isOrganizer?: boolean }) {
             className="max-w-[30ch] font-display text-[clamp(30px,3.4vw,46px)] leading-[1.12] tracking-[-0.02em] text-cream"
           >
             Run the whole event from one place.{" "}
-            <span className="text-cream/45">Sign-ups, payments, the door, the photos.</span>
+            <span className="text-cream/70">Sign-ups, payments, the door, the photos.</span>
           </h2>
           <Magnetic className="inline-block shrink-0">
             <a

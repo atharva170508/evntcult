@@ -23,7 +23,7 @@ export function HeroSearch() {
       action="/events"
       method="get"
       role="search"
-      className="ui-field mt-9 h-auto max-w-[560px] rounded-[18px] p-1.5 pl-1.5"
+      className="ui-field mt-8 h-auto max-w-[560px] rounded-[18px] p-1.5 pl-1.5 shadow-search focus-within:shadow-[var(--focus-field)]"
     >
       {type && <input type="hidden" name="type" value={type} />}
       <Select
@@ -32,7 +32,7 @@ export function HeroSearch() {
         value={type}
         onChange={setType}
         options={KINDS}
-        className="shrink-0 [&_.ui-field]:shadow-none [&_.ui-field]:bg-sunken"
+        className="shrink-0 [&_.ui-field]:h-11 [&_.ui-field]:shadow-none [&_.ui-field]:bg-sunken"
       />
       <label className="flex min-w-0 flex-1 items-center gap-2 px-2">
         <Search className="size-4 shrink-0 text-ink-muted" aria-hidden />
@@ -40,13 +40,13 @@ export function HeroSearch() {
         <input
           name="q"
           type="search"
-          placeholder="Concerts, meetups, workshops…"
-          className="h-10 min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none focus-visible:shadow-none placeholder:text-ink-subtle [&::-webkit-search-cancel-button]:hidden"
+          placeholder="Concerts, hackathons, workshops…"
+          className="h-11 min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none focus-visible:shadow-none placeholder:text-ink-subtle [&::-webkit-search-cancel-button]:hidden"
         />
       </label>
       <button
         type="submit"
-        className="ui-press ui-sheen relative h-10 shrink-0 rounded-[12px] bg-ink px-4 text-[14px] font-semibold text-white hover:bg-black sm:px-5"
+        className="ui-press ui-sheen relative h-11 shrink-0 rounded-[12px] bg-ink px-4 text-[14px] font-semibold text-white hover:bg-black sm:px-5"
       >
         <span className="sm:hidden">Go</span>
         <span className="hidden sm:inline">Find events</span>

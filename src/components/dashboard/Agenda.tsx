@@ -79,7 +79,7 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
   return (
     <section aria-labelledby="week-h">
       <div className="flex items-baseline justify-between border-b border-ink pb-3">
-        <h2 id="week-h" className="text-[18px] font-semibold text-ink">
+        <h2 id="week-h" className="font-display text-[clamp(28px,2.8vw,36px)] leading-none tracking-[-0.02em] text-ink">
           This week
         </h2>
         <Link href="/calendar" className="-my-3 inline-flex min-h-11 items-center gap-1 text-[14px] font-semibold text-ink-2 hover:text-ink">
@@ -87,7 +87,7 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
         </Link>
       </div>
 
-      {/* 7-day visual strip (Cron / Things 3 style) */}
+      {/* 7-day strip */}
       <div className="mt-4 grid grid-cols-7 gap-1.5" aria-label="Next 7 days">
         {days.map((d, idx) => {
           const ymd = istYmd(d);
@@ -101,11 +101,11 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
               href="/calendar"
               className={
                 isToday
-                  ? "flex flex-col items-center rounded-2xl bg-ink py-2.5 text-[#FFFEF6] shadow-sm transition-transform hover:-translate-y-0.5"
+                  ? "flex flex-col items-center rounded-2xl bg-ink py-2.5 text-canvas shadow-sm transition-transform hover:-translate-y-0.5"
                   : "flex flex-col items-center rounded-2xl border border-line bg-surface py-2.5 text-ink transition-colors hover:border-line-strong hover:bg-sunken"
               }
             >
-              <span className={isToday ? "text-[11px] font-medium text-[#FFFEF6]/70" : "text-[11px] font-medium text-ink-muted"}>
+              <span className={isToday ? "text-[11px] font-medium text-canvas/75" : "text-[11px] font-medium text-ink-muted"}>
                 {fmtDate(d, { weekday: "short" })}
               </span>
               <span className="mt-0.5 font-display text-[22px] leading-none tracking-[-0.02em] tabular-nums">
@@ -114,7 +114,7 @@ export function Agenda({ items, next, later, now = new Date() }: { items: Item[]
               <span className="mt-1.5 flex h-1.5 items-center gap-1" aria-hidden>
                 {hasMine && <span className="size-1.5 rounded-full bg-[#E3264F]" />}
                 {hasOther && (
-                  <span className={isToday ? "size-1.5 rounded-full bg-[#FFFEF6]/70" : "size-1.5 rounded-full bg-ink/40"} />
+                  <span className={isToday ? "size-1.5 rounded-full bg-canvas/75" : "size-1.5 rounded-full bg-ink/40"} />
                 )}
               </span>
             </Link>
@@ -280,7 +280,7 @@ export function UpdatesFeed({ items }: { items: AnnouncementItem[] }) {
   return (
     <section aria-labelledby="upd-feed-h">
       <div className="flex items-baseline justify-between border-b border-ink pb-3">
-        <h2 id="upd-feed-h" className="text-[18px] font-semibold text-ink">
+        <h2 id="upd-feed-h" className="font-display text-[clamp(28px,2.8vw,36px)] leading-none tracking-[-0.02em] text-ink">
           Updates
         </h2>
         {items.length > 0 && (
